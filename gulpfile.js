@@ -13,21 +13,15 @@ var del = require('del');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
-var jsSources = [
-  '*.js', 'app/**/*.js',
-  '!**/bundle.js', '!**/bower_components/**/*.js',
-  '!app/**/vendor/**/*.js', '!Gruntfile.js'
-];
-var jsWatchDest = 'app/scripts';
-var jsBuildDest = 'dist/scripts';
+var jsSources = ['*.js', 'app/**/*.js', '!**/bundle.js'];
 var browserifyOpts = assign({}, watchify.args, {
-  entries: ['./app/scripts/app.js'],
+  entries: ['./app/index.js'],
   debug: true
 });
 var w = watchify(browserify(browserifyOpts));
 var b = browserify(browserifyOpts);
 
-function bundle(mode, dest) {
+function bundle(mode) {
   return function () {
     return mode.bundle()
       // log errors if they happen
@@ -39,11 +33,11 @@ function bundle(mode, dest) {
       .pipe($.sourcemaps.init({ loadMaps: true })) // loads map from browserify file
       // Add transformation tasks to the pipeline here.
       .pipe($.sourcemaps.write('./')) // writes .map file
-      .pipe(gulp.dest(dest));
+      .pipe(gulp.dest('dist/scripts'));
   };
 }
 
-w.on('update', bundle(w, jsWatchDest)); // on any dep update, runs the bundler
+w.on('update', bundle(w)); // on any dep update, runs the bundler
 w.on('log', $.util.log); // output build logs to terminal
 b.on('log', $.util.log); // output build logs to terminal
 
@@ -74,11 +68,11 @@ gulp.task('jscs', function () {
 
 // build/watch
 
-gulp.task('js', bundle(w, jsWatchDest));
-gulp.task('js:build', bundle(b, jsBuildDest));
+gulp.task('js', bundle(w));
+gulp.task('js:build', bundle(b));
 
 gulp.task('styles', function () {
-  return gulp.src('app/styles/**/*.scss')
+  return gulp.src('sass/**/*.scss')
     .pipe($.sourcemaps.init())
     .pipe($.sass({
       outputStyle: 'nested', // libsass doesn't support expanded yet
@@ -95,9 +89,9 @@ gulp.task('styles', function () {
 });
 
 gulp.task('html', ['styles'], function () {
-  var assets = $.useref.assets({ searchPath: ['.tmp', 'app', '.'] });
+  var assets = $.useref.assets({ searchPath: ['.tmp', 'public'] });
 
-  return gulp.src('app/*.html')
+  return gulp.src('public/*.html')
     .pipe(assets)
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.csso()))
@@ -111,7 +105,7 @@ gulp.task('html', ['styles'], function () {
 });
 
 gulp.task('images', function () {
-  return gulp.src('app/images/**/*')
+  return gulp.src('public/images/**/*')
     .pipe($.cache($.imagemin({
       progressive: true,
       interlaced: true,
@@ -125,18 +119,15 @@ gulp.task('images', function () {
 gulp.task('fonts', function () {
   return gulp.src(require('main-bower-files')({
     filter: '**/*.{eot,svg,ttf,woff,woff2}'
-  }).concat('app/fonts/**/*'))
+  }).concat('public/fonts/**/*'))
     .pipe(gulp.dest('.tmp/fonts'))
     .pipe(gulp.dest('dist/fonts'));
 });
 
 gulp.task('extras', function () {
-  return gulp.src([
-    'app/*.*',
-    '!app/*.html'
-  ], {
-    dot: true
-  }).pipe(gulp.dest('dist'));
+  return gulp.src(['public/*.*', '!public/*.html'
+  ], { dot: true })
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
@@ -146,7 +137,7 @@ gulp.task('serve', ['js', 'styles', 'fonts'], function () {
     notify: false,
     port: 9000,
     server: {
-      baseDir: ['.tmp', 'app'],
+      baseDir: ['.tmp', 'public', 'dist/scripts'],
       routes: {
         '/bower_components': 'bower_components'
       }
@@ -155,14 +146,14 @@ gulp.task('serve', ['js', 'styles', 'fonts'], function () {
 
   // watch for changes
   gulp.watch([
-    'app/*.html',
-    'app/scripts/bundle.js',
-    'app/images/**/*',
+    'public/*.html',
+    'dist/scripts/bundle.js',
+    'public/images/**/*',
     '.tmp/fonts/**/*'
   ]).on('change', reload);
 
-  gulp.watch('app/styles/**/*.scss', ['styles']);
-  gulp.watch('app/fonts/**/*', ['fonts']);
+  gulp.watch('sass/**/*.scss', ['styles']);
+  gulp.watch('public/fonts/**/*', ['fonts']);
   gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
 
@@ -197,17 +188,17 @@ gulp.task('serve:test', function () {
 gulp.task('wiredep', function () {
   var wiredep = require('wiredep').stream;
 
-  gulp.src('app/styles/*.scss')
+  gulp.src('sass/*.scss')
     .pipe(wiredep({
       ignorePath: /^(\.\.\/)+/
     }))
-    .pipe(gulp.dest('app/styles'));
+    .pipe(gulp.dest('sass/styles'));
 
-  gulp.src('app/*.html')
+  gulp.src('public/*.html')
     .pipe(wiredep({
       ignorePath: /^(\.\.\/)*\.\./
     }))
-    .pipe(gulp.dest('app'));
+    .pipe(gulp.dest('public'));
 });
 
 gulp.task('build:clean', ['clean'], function () {
