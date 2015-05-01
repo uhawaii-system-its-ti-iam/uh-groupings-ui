@@ -1,73 +1,73 @@
 <!-- TODO: replace php links -->
 <div id="wrapper-columns">
-	<div id="left">
-		<div id="left-top"></div>
-		<ul id="nav-left">
-			<li>
-				<a href="index.php?action=home">Home</a>
-			</li>
+  <div id="left">
+    <div id="left-top"></div>
+    <ul id="nav-left">
+      <li>
+        <a href="index.php?action=home">Home</a>
+      </li>
 
-			{{#if username}}
-      {{#if isSuperUser}}
-			<li>
-				<a href="index.php?action=editSuperUsers">Admins</a>
-			</li>
-			{{/if}}
-			{{#if isAdmin}}
-			<li>
-				<a href="index.php?action=editAdmins">Owners</a>
-			</li>
-			<li>
-				<a href="index.php?action=editGrouping">Grouping</a>
-			</li>
-			<li>
-				<a href="index.php?action=editMembers">Members</a>
-			</li>
-			{{/if}}
-			<li>
-				<a href="index.php?action=myMemberships">My Memberships</a>
-			</li>
-			<li>
-				<a href="index.php?action=feedback">Suggestions/Feedback</a>
-			</li>
-			<li>
-				<a href="docs/uhgroupingsManual.pdf">Manual</a>
-			</li>
-			<li>
-				<a href="index.php?action=logout">{{username}}</a>
-			</li>
-			{{#else}}
-			<li>
-				<a href="index.php?action=login">Login</a>
-			</li>
-			{{#/if}}
+      {{#if username}}
+        {{#if isSuperUser}}
+		      <li>
+		        <a href="index.php?action=editSuperUsers">Admins</a>
+		      </li>
+        {{/if}}
+        {{#if isAdmin}}
+		      <li>
+		        <a href="index.php?action=editAdmins">Owners</a>
+		      </li>
+		      <li>
+		        <a href="index.php?action=editGrouping">Grouping</a>
+		      </li>
+		      <li>
+		        <a href="index.php?action=editMembers">Members</a>
+		      </li>
+        {{/if}}
+	      <li>
+	        <a href="index.php?action=myMemberships">My Memberships</a>
+	      </li>
+	      <li>
+	        <a href="index.php?action=feedback">Suggestions/Feedback</a>
+	      </li>
+	      <li>
+	        <a href="docs/uhgroupingsManual.pdf">Manual</a>
+	      </li>
+	      <li>
+	        <a href="index.php?action=logout">{{username}}</a>
+	      </li>
+      {{else}}
+	      <li>
+	        <a href="index.php?action=login">Login</a>
+	      </li>
+      {{/if}}
 
       <!-- TODO: replace this with css padding -->
-			<li>
-				&nbsp;
-			</li>
-		</ul>
-		<div id="left-bottom"></div>
-	</div>
-	<div id="middle">
-		<a name="content"></a>
-		<!-- InstanceBeginEditable name="main_content" -->
-		<?php
-			echo $htmlResults;
-		?>
-		<!-- InstanceEndEditable -->
-	</div>
+      <li>
+        &nbsp;
+      </li>
+    </ul>
+    <div id="left-bottom"></div>
+  </div>
+  <div id="middle">
+    <a name="content"></a>
+    <!-- InstanceBeginEditable name="main_content" -->
+    <!-- <?php
+      echo $htmlResults;
+    ?> -->
+    <!-- InstanceEndEditable -->
+  </div>
 </div>
 
 <div id="footer">
 <div id="footer-left">
-	<div id="usage-policy">Use of this site implies consent with our <a href="http://www.hawaii.edu/infotech/policies/itpolicy.html">Usage Policy</a></div>
-	<div id="eeo">The University of Hawai'i is an <a href="http://www.hawaii.edu/site/policy/eoe.html">Equal Opportunity Employer</a></div>
-	<div id="copyright">copyright © 2013 <a href="http://www.hawaii.edu/">University of Hawai'i</a></div>
+  <div id="usage-policy">Use of this site implies consent with our <a href="http://www.hawaii.edu/infotech/policies/itpolicy.html">Usage Policy</a></div>
+  <div id="eeo">The University of Hawai'i is an <a href="http://www.hawaii.edu/site/policy/eoe.html">Equal Opportunity Employer</a></div>
+  <div id="copyright">copyright © 2013 <a href="http://www.hawaii.edu/">University of Hawai'i</a></div>
 </div>
 <div id="footer-right">
-	<div id="contact-link">
-		<a href="mailto:web-support-l@lists.hawaii.edu?subject=uhacer">Contact Us</a>
-	</div>
+  <div id="contact-link">
+    <a href="mailto:web-support-l@lists.hawaii.edu?subject=uhacer">Contact Us</a>
+  </div>
 </div>
 </div>
