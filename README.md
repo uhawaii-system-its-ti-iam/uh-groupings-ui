@@ -38,5 +38,5 @@ gulp serve:dist
 To see additional gulp commands:
 
 ```sh
-gulp help
+gulp
 ```
