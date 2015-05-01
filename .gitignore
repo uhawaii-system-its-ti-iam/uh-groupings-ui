@@ -2,7 +2,7 @@ node_modules
 temp
 dist
 .sass-cache
-app/bower_components
-.tmp/
+bower_components
+.tmp
 .DS_Store
 npm-debug.log
