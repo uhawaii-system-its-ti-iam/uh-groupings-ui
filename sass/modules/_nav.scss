@@ -4,53 +4,47 @@
   margin: 0;
   padding: 0;
   background: #a7cc6c url(/images/nav-left-rightbg.jpg) repeat-y top right;
-}
 
-#wrapper-columns #left #left-top {
-  background: #a7cc6c url(/images/nav-left-topcurve.jpg) no-repeat top right;
-  height: 23px;
-  width: 193px;
-}
+  #left-top {
+    background: #a7cc6c url(/images/nav-left-topcurve.jpg) no-repeat top right;
+    height: 23px;
+    width: 193px;
+  }
 
-#wrapper-columns #left #left-bottom {
-  background: #a7cc6c url(/images/nav-left-grad.jpg) repeat-x bottom left;
-  height: 35px;
-  width: 193px;
-}
+  #left-bottom {
+    background: #a7cc6c url(/images/nav-left-grad.jpg) repeat-x bottom left;
+    height: 35px;
+    width: 193px;
+  }
 
-#wrapper-columns #left #nav-left {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+  #nav-left {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 
-#wrapper-columns #left #nav-left li {
-  width: 100%; /* IE to remove padding from li */
-  margin: 0;
-  padding: 0;
-}
+    li {
+      width: 100%;
+      margin: 0;
+      padding: 0;
 
-#wrapper-columns #left #nav-left li a {
-  display: block;
-  margin: 0;
-  padding: 3px 3px 3px 1.25em;
-  width: 142px;
-  font-size: 90%;
-  color: #fff;
-  text-decoration: none;
-  border-bottom: 1px solid #bad68c;
-}
+      a {
+        display: block;
+        margin: 0;
+        padding: 3px 3px 3px 1.25em;
+        width: 142px;
+        font-size: 90%;
+        color: #fff;
+        text-decoration: none;
+        border-bottom: 1px solid #bad68c;
+      }
 
-#wrapper-columns #left #nav-left li.active a
-, #wrapper-columns #left #nav-left li a:hover  {
-  background: #e7edd5;
-  color: #5d8238;
-  font-weight: bold;
-}
-
-/* NOTE: Rest of #middle defined in main.css */
-#wrapper-columns #middle {
-  width: 75%;
+      &.active a, & a:hover {
+        background: #e7edd5;
+        color: #5d8238;
+        font-weight: bold;
+      }
+    }
+  }
 }
 
 .level2_menu {
