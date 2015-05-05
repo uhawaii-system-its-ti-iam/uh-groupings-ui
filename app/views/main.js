@@ -3,10 +3,10 @@
 var Backbone = require('backbone');
 var mainTmpl = require('../../templates/main.hbs');
 
-module.exports = Backbone.Marionette.LayoutView.extend({
+module.exports = new Backbone.Marionette.LayoutView({
   template: mainTmpl,
 
   regions: {
-    main: '#main-content'
+    content: '#middle'
   }
 });

@@ -8,18 +8,36 @@ require('backbone.marionette');
 var App = new Backbone.Marionette.Application();
 var Communicator = require('./communicator');
 
+function bootstrapModules() {
+  require('./modules/admins')(App);
+  require('./modules/admins-api')(App);
+}
 App.addRegions({
   main: '#main-wrapper'
 });
 
+App.on('before:start', bootstrapModules);
+
 App.on('start', function () {
   Backbone.history.start();
+});
 
-  var MainView = require('./views/main');
-  App.main.show(new MainView());
+var appRouter = new Backbone.Marionette.AppRouter({
+  controller: {
+    editAdmins: function () {
+      App.module('Admins').Controller.listAdmins();
+    }
+  },
+
+  appRoutes: {
+    'admins': 'editAdmins'
+  }
 });
 
 App.addInitializer(function () {
+  var mainView = require('./views/main');
+  App.main.show(mainView);
+
   Communicator.mediator.trigger('APP:START');
 });
 
