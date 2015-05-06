@@ -29,11 +29,20 @@ App.Router = new Backbone.Marionette.AppRouter({
   controller: {
     editAdmins: function () {
       App.module('Admins').Controller.listAdmins();
+    },
+    notFound: function () {
+      var mainView = require('./views/main');
+      var notFoundTmpl = require('../templates/404.hbs');
+
+      mainView.content.show(new Backbone.Marionette.LayoutView({
+        template: notFoundTmpl
+      }));
     }
   },
 
   appRoutes: {
-    admins: 'editAdmins'
+    admins: 'editAdmins',
+    '*notFound': 'notFound'
   }
 });
 
