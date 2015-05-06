@@ -13,9 +13,6 @@ function bootstrapModules() {
   require('./modules/admins')(App);
   require('./modules/admins-api')(App);
 }
-App.addRegions({
-  main: '#main-wrapper'
-});
 
 App.on('before:start', bootstrapModules);
 
@@ -23,7 +20,12 @@ App.on('start', function () {
   Backbone.history.start();
 });
 
-var appRouter = new Backbone.Marionette.AppRouter({
+App.addRegions({
+  nav: '#navbar-main',
+  main: '#main-wrapper'
+});
+
+App.Router = new Backbone.Marionette.AppRouter({
   controller: {
     editAdmins: function () {
       App.module('Admins').Controller.listAdmins();
@@ -36,8 +38,16 @@ var appRouter = new Backbone.Marionette.AppRouter({
 });
 
 App.addInitializer(function () {
+  var StateModel = require('./models/state');
+
+  App.State = new StateModel({
+  });
+
   var mainView = require('./views/main');
+  var navView = require('./views/nav');
+
   App.main.show(mainView);
+  App.nav.show(navView);
 
   Communicator.mediator.trigger('APP:START');
 });

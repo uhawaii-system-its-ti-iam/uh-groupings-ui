@@ -1,0 +1,33 @@
+<div class="container-fluid">
+  <div class="navbar-header">
+    <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+      <span class="sr-only">Toggle Navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a href="/" class="navbar-brand">UH Groupings</a>
+  </div>
+
+  <div class="collapse navbar-collapse" id="navbar-collapse">
+    <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="#admins">Designate Admins</a></li>
+          <li><a href="#groupings">Groupings I Manage</a></li>
+          <li><a href="#memberships">My Memberships</a></li>
+          <li><a href="#groupings/join">Groupings I Can Join</a></li>
+          <li><a href="#feedback">Suggestions / Feedback</a></li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+    {{#if authenticated}}
+      <li><a href="#logout">Logout</a></li>
+    {{else}}
+      <li><a href="#login">Login</a></li>
+    {{/if}}
+    </ul>
+  </div>
+</div>
