@@ -7,7 +7,6 @@ module.exports = function (App) {
   App.module('Admins', function (Admins, Core) {
     Admins.Controller = {
       listAdmins: function () {
-        console.debug('list admins')
 
         Core.request('admins:entities')
           .then(function (admins) {

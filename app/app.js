@@ -4,6 +4,7 @@
 var Backbone = require('backbone');
 Backbone.$ = require('jquery');
 require('backbone.marionette');
+require('bootstrap');
 
 var App = new Backbone.Marionette.Application();
 var Communicator = require('./communicator');
@@ -30,7 +31,7 @@ var appRouter = new Backbone.Marionette.AppRouter({
   },
 
   appRoutes: {
-    'admins': 'editAdmins'
+    admins: 'editAdmins'
   }
 });
 
@@ -41,7 +42,10 @@ App.addInitializer(function () {
   Communicator.mediator.trigger('APP:START');
 });
 
-App.start();
+// NOTE: This is necessary to ensure the App is exported properly
+setTimeout(function () {
+  App.start();
+}, 1);
 
 module.exports = App;
 
