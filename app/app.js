@@ -27,6 +27,14 @@ App.addRegions({
 
 App.Router = new Backbone.Marionette.AppRouter({
   controller: {
+    about: function () {
+      var mainView = require('./views/main');
+      var aboutTmpl = require('../templates/about.hbs');
+
+      mainView.content.show(new Backbone.Marionette.LayoutView({
+        template: aboutTmpl
+      }));
+    },
     editAdmins: function () {
       App.module('Admins').Controller.listAdmins();
     },
@@ -41,6 +49,7 @@ App.Router = new Backbone.Marionette.AppRouter({
   },
 
   appRoutes: {
+    '': 'about',
     admins: 'editAdmins',
     '*notFound': 'notFound'
   }
