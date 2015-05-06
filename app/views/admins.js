@@ -7,7 +7,7 @@ var adminsTmpl = require('../../templates/admins.hbs');
 module.exports = Backbone.Marionette.CompositeView.extend({
   template: adminsTmpl,
   tagName: 'div',
-  className: 'admins-container',
+  className: 'col-xs-12 admins-container',
   childView: AdminView,
   childViewContainer: 'tbody'
 });
