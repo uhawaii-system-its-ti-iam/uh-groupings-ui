@@ -26,17 +26,19 @@ module.exports = function (App) {
             console.error('Unable to get admins:entities');
           });
       },
-      removeAdmin: function (model) {
-        console.debug('Removing admin ' + model.get('id'));
-        Core.request('admins:remove', model)
+      removeAdmin: function (user) {
+        var userId = user.get('id');
+
+        console.debug('Removing admin ' + userId);
+        Core.request('admins:remove', user)
           .then(function (admin) {
-            if (admin.id === model.get('id')) {
-              console.debug('Removed admin ' + model.get('id'));
-              adminsCollection.remove(model);
+            if (admin.id === userId) {
+              console.debug('Removed admin ' + userId);
+              adminsCollection.remove(user);
             }
           })
           .fail(function () {
-            console.error('Unable to remove admin ' + model.get('id'));
+            console.error('Unable to remove admin ' + userId);
           });
       }
     };

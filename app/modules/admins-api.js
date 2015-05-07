@@ -33,10 +33,10 @@ module.exports = function (App) {
 
         return dfd.promise();
       },
-      postRemoveAdmin: function (model) {
+      postRemoveAdmin: function (user) {
         var dfd = $.Deferred();
 
-        dfd.resolve(model);
+        dfd.resolve(JSON.parse(JSON.stringify(user)));
 
         return dfd.promise();
       }
