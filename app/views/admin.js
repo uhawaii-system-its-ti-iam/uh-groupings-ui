@@ -14,7 +14,6 @@ module.exports = Backbone.Marionette.ItemView.extend({
   },
 
   removeAdmin: function () {
-    console.debug('Remove Admin', this.model.id);
-    App.request('admins:remove', this.model);
+    App.Admins.Controller.removeAdmin(this.model);
   }
 });

@@ -1,45 +1,42 @@
 'use strict';
 
 module.exports = function (App) {
-  var UserCollection = require('../collections/users');
   var $ = require('jquery');
 
   App.module('AdminsApi', function (AdminsApi, Core) {
-    var adminCollection = new UserCollection([
-      {
-        id: 1,
-        name: 'David Banner',
-        isAdmin: true
-      },
-      {
-        id: 2,
-        name: 'Johnny Storm',
-        isAdmin: true
-      },
-      {
-        id: 3,
-        name: 'Bruce Wayne',
-        isAdmin: true
-      },
-      {
-        id: 4,
-        name: 'Clark Kent',
-        isSuperUser: true
-      }
-    ]);
-
     var API = {
       getAdminsEntities: function () {
         var dfd = $.Deferred();
 
-        dfd.resolve(adminCollection);
+        dfd.resolve([
+          {
+            id: 1,
+            name: 'David Banner',
+            isAdmin: true
+          },
+          {
+            id: 2,
+            name: 'Johnny Storm',
+            isAdmin: true
+          },
+          {
+            id: 3,
+            name: 'Bruce Wayne',
+            isAdmin: true
+          },
+          {
+            id: 4,
+            name: 'Clark Kent',
+            isSuperUser: true
+          }
+        ]);
 
         return dfd.promise();
       },
       postRemoveAdmin: function (model) {
         var dfd = $.Deferred();
 
-        dfd.resolve(adminCollection.remove(model));
+        dfd.resolve(model);
 
         return dfd.promise();
       }
