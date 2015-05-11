@@ -12,6 +12,8 @@ var Communicator = require('./communicator');
 function bootstrapModules() {
   require('./modules/admins')(App);
   require('./modules/admins-api')(App);
+  require('./modules/groups')(App);
+  require('./modules/groups-api')(App);
 }
 
 App.on('before:start', bootstrapModules);
@@ -38,6 +40,9 @@ App.Router = new Backbone.Marionette.AppRouter({
     editAdmins: function () {
       App.module('Admins').Controller.listAdmins();
     },
+    listGroups: function () {
+      App.module('Groups').Controller.listGroups();
+    },
     notFound: function () {
       var mainView = require('./views/main');
       var notFoundTmpl = require('../templates/404.hbs');
@@ -51,6 +56,7 @@ App.Router = new Backbone.Marionette.AppRouter({
   appRoutes: {
     '': 'about',
     admins: 'editAdmins',
+    groupings: 'listGroups',
     '*notFound': 'notFound'
   }
 });
