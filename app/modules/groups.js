@@ -16,8 +16,8 @@ module.exports = function (App) {
           .then(function (groups) {
             groupsCollection = new GroupsCollection(groups, {
               fullCollection: groups,
-              comparator: function (model) {
-                return model.get('name');
+              state: {
+                sortKey: 'name'
               }
             });
 
