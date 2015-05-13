@@ -1,6 +1,12 @@
 @import 'modules/_bootstrap';
 @import 'modules/_nav';
 
+@mixin center-block($size) {
+  display: table;
+  margin: 0 auto;
+  max-width: $size;
+}
+
 img {
   border: none;
 }
@@ -10,7 +16,31 @@ img {
   top: 50px;
 }
 
+#paginator-nav {
+  margin: 0 auto;
+  padding: 0 10px 15px;
+  width: 250px;
+  @media screen and (min-width: 768px) {
+    width: 330px;
+  }
+
+  nav {
+    @include center-block(250px);
+    @media screen and (min-width: 768px) {
+      @include center-block(310px);
+    }
+  }
+}
+
 /* utility classes */
+.center-block {
+  @include center-block(310px);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
 td.align-center {
   text-align: center;
 }

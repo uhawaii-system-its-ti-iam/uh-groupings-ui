@@ -24,6 +24,7 @@ App.on('start', function () {
 
 App.addRegions({
   nav: '#navbar-main',
+  paginator: '#paginator',
   main: '#main-wrapper'
 });
 

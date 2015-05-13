@@ -1,0 +1,69 @@
+<nav>
+  <ul class="pagination">
+    {{#if hasPrevious}}
+    <li class="hidden-xs" id="paginator-first">
+      <a href="#" aria-label="First">
+        <span class="fa fa-fast-backward" aria-hidden="true"></span>
+      </a>
+    </li>
+    <li id="paginator-prev">
+      <a href="#" aria-label="Previous">
+        <span class="fa fa-step-backward" aria-hidden="true"></span>
+      </a>
+    </li>
+    {{else}}
+    <li class="hidden-xs disabled">
+      <span>
+        <span class="fa fa-fast-backward" aria-hidden="true"></span>
+      </span>
+    </li>
+    <li class="disabled">
+      <span>
+        <span class="fa fa-step-backward" aria-hidden="true"></span>
+      </span>
+    </li>
+    {{/if}}
+    {{#pages}}
+    <li{{#if isCurrent}} class="active"{{/if}}>
+      {{#if isCurrent}}
+      <span>{{number}} <span class="sr-only">(current)</span></span>
+      {{else}}
+      <a class="btn-paginator" href="#">{{number}}</a>
+      {{/if}}
+    </li>
+    {{/pages}}
+    {{#if hasNext}}
+    <li id="paginator-next">
+      <a href="#" aria-label="Next">
+        <span class="fa fa-step-forward" aria-hidden="true"></span>
+      </a>
+    </li>
+    <li class="hidden-xs" id="paginator-last">
+      <a href="#" aria-label="Next">
+        <span class="fa fa-fast-forward" aria-hidden="true"></span>
+      </a>
+    </li>
+    {{else}}
+    <li class="disabled">
+      <span>
+        <span class="fa fa-step-forward" aria-hidden="true"></span>
+      </span>
+    </li>
+    <li class="hidden-xs disabled">
+      <span>
+        <span class="fa fa-fast-forward" aria-hidden="true"></span>
+      </span>
+    </li>
+    {{/if}}
+  </ul>
+</nav>
+
+<div id="paginator-sizer" class="center-block">
+  <span>Display </span>
+  <div class="btn-group" role="group" aria-label="Display X Results">
+    <button class="btn btn-default{{#if sizeSm}} active{{/if}}">20</button>
+    <button class="btn btn-default{{#if sizeMd}} active{{/if}}"{{#if hasMoreThanSm}}{{else}} disabled{{/if}}>50</button>
+    <button class="btn btn-default{{#if sizeLg}} active{{/if}}"{{#if hasMoreThanSm}}{{else}} disabled{{/if}}>100</button>
+  </div>
+  <span> results</span>
+</div>
