@@ -4,6 +4,7 @@ var Backbone = require('backbone');
 var GroupView = require('../views/group');
 var groupsTmpl = require('../../templates/groups.hbs');
 var tableSorter = require('../table-sorter');
+var App = require('../app');
 
 module.exports = Backbone.Marionette.CompositeView.extend({
   template: groupsTmpl,
@@ -24,6 +25,10 @@ module.exports = Backbone.Marionette.CompositeView.extend({
       .find('span.fa');
 
     sortIcons.toggleClass('hidden', true);
+  },
+
+  onDestroy: function () {
+    App.paginator.empty();
   },
 
   sortByColumn: tableSorter

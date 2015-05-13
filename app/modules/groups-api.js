@@ -11,11 +11,11 @@ module.exports = function (App) {
         dfd.resolve([
           {
             id: 3,
-            name: 'example-group-1'
+            name: 'example-group-2'
           },
           {
             id: 1,
-            name: 'example-group-2'
+            name: 'example-group-1'
           },
           {
             id: 4,
@@ -24,6 +24,26 @@ module.exports = function (App) {
           {
             id: 2,
             name: 'example-group-4'
+          },
+          {
+            id: 7,
+            name: 'example-group-6'
+          },
+          {
+            id: 9,
+            name: 'example-group-5'
+          },
+          {
+            id: 6,
+            name: 'example-group-7'
+          },
+          {
+            id: 8,
+            name: 'example-group-8'
+          },
+          {
+            id: 5,
+            name: 'example-group-9'
           }
         ]);
 

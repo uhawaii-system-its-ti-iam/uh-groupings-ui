@@ -3,6 +3,7 @@
 module.exports = function (App) {
   var mainView = require('../views/main');
   var GroupsView = require('../views/groups');
+  var PaginatorView = require('../views/paginator');
   var GroupsCollection = require('../collections/groups');
 
   App.module('Groups', function (Groups, Core) {
@@ -25,7 +26,15 @@ module.exports = function (App) {
               collection: groupsCollection
             });
 
+            var paginatorView = new PaginatorView({
+              collection: groupsCollection
+            });
+
             mainView.content.show(groupsView);
+            mainView.on('destroy', function () {
+              console.log('destroy!');
+            });
+            App.paginator.show(paginatorView);
           })
           .fail(function () {
             console.error('Unable to get groups:entities');
