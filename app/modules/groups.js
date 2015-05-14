@@ -31,10 +31,7 @@ module.exports = function (App) {
             });
 
             mainView.content.show(groupsView);
-            mainView.on('destroy', function () {
-              console.log('destroy!');
-            });
-            App.paginator.show(paginatorView);
+            Core.paginator.show(paginatorView);
           })
           .fail(function () {
             console.error('Unable to get groups:entities');
