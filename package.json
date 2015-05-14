@@ -22,7 +22,7 @@
     "del": "^1.1.1",
     "express": "~3.2.4",
     "express-hbs": "~0.2.0",
-    "git-guppy": "git+https://github.com/therealklanni/git-guppy#1.0",
+    "git-guppy": "^1.0.0",
     "gulp": "^3.8.11",
     "gulp-cache": "^0.2.9",
     "gulp-csso": "^1.0.0",
