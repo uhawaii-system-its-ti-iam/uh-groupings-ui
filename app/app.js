@@ -1,8 +1,8 @@
-/* global window */
+/* global window, document */
 'use strict';
 
 var Backbone = require('backbone');
-Backbone.$ = require('jquery');
+var $ = Backbone.$ = require('jquery');
 require('backbone.marionette');
 require('bootstrap');
 
@@ -83,6 +83,14 @@ setTimeout(function () {
 }, 1);
 
 module.exports = App;
+
+// workaround for bootstrap nav collapse
+// (https://github.com/twbs/bootstrap/issues/9013#issuecomment-24096350)
+$(document).on('click.nav', '.navbar-collapse.in', function (e) {
+  if ($(e.target).is('a')) {
+    $(this).collapse('hide');
+  }
+});
 
 // NOTE: keep the following code at the bottom
 
