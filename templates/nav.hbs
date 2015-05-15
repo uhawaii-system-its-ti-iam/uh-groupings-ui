@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container">
   <div class="navbar-header">
     <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse">
       <span class="sr-only">Toggle Navigation</span>
@@ -34,11 +34,13 @@
     </ul>
     <ul class="nav navbar-nav navbar-right">
     {{#if authenticated}}
-      <li><a data-toggle="collapse" data-target="#navbar-collapse"
-        href="#logout">Logout</a></li>
+      <li>
+        <a data-toggle="collapse" data-target="#navbar-collapse" href="#logout">Logout</a>
+      </li>
     {{else}}
-      <li><a data-toggle="collapse" data-target="#navbar-collapse"
-        href="#login">Login</a></li>
+      <li>
+        <a data-toggle="collapse" data-target="#navbar-collapse" href="#login">Login</a>
+      </li>
     {{/if}}
     </ul>
   </div>
