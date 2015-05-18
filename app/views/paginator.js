@@ -21,8 +21,11 @@ module.exports = Backbone.Marionette.View.extend({
   template: paginatorTmpl,
   id: 'paginator-nav',
 
+  initialize: function () {
+    this.collection.on('reset', this.render);
+  },
+
   render: function () {
-    var _this = this;
     var $el = this.$el;
     var collection = this.collection;
     var state = collection.state;
@@ -64,9 +67,6 @@ module.exports = Backbone.Marionette.View.extend({
 
       collection.getPage(pageNumber);
 
-      // rerender paginator view
-      _this.render();
-
       return false;
     });
 
@@ -74,9 +74,6 @@ module.exports = Backbone.Marionette.View.extend({
 
     $firstBtn.on('click', function () {
       collection.getFirstPage();
-
-      // rerender paginator view
-      _this.render();
 
       return false;
     });
@@ -86,9 +83,6 @@ module.exports = Backbone.Marionette.View.extend({
     $prevBtn.on('click', function () {
       collection.getPreviousPage();
 
-      // rerender paginator view
-      _this.render();
-
       return false;
     });
 
@@ -97,9 +91,6 @@ module.exports = Backbone.Marionette.View.extend({
     $nextBtn.on('click', function () {
       collection.getNextPage();
 
-      // rerender paginator view
-      _this.render();
-
       return false;
     });
 
@@ -107,9 +98,6 @@ module.exports = Backbone.Marionette.View.extend({
 
     $lastBtn.on('click', function () {
       collection.getLastPage();
-
-      // rerender paginator view
-      _this.render();
 
       return false;
     });
@@ -125,9 +113,6 @@ module.exports = Backbone.Marionette.View.extend({
       $el.addClass('active');
 
       collection.setPageSize(+$el.text());
-
-      // rerender paginator view
-      _this.render();
 
       return false;
     });
