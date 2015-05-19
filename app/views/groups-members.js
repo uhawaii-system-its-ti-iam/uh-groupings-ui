@@ -33,7 +33,12 @@ module.exports = Backbone.Marionette.CompositeView.extend({
     App.paginator.empty();
   },
 
-  searchTable: tableSearch(App),
+  searchTable: function () {
+    var set = App.Groups.Controller
+      .getCachedGroupMembers(App.State.currentRoute().params.id);
+
+    return tableSearch(set).apply(this, arguments);
+  },
 
   sortByColumn: tableSorter
 });
