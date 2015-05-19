@@ -4,6 +4,7 @@ var Backbone = require('backbone');
 var GroupView = require('../views/group');
 var groupsTmpl = require('../../templates/groups.hbs');
 var tableSorter = require('../table-sorter');
+var tableSearch = require('../table-search');
 var App = require('../app');
 
 module.exports = Backbone.Marionette.CompositeView.extend({
@@ -14,7 +15,8 @@ module.exports = Backbone.Marionette.CompositeView.extend({
   childViewContainer: 'tbody',
 
   events: {
-    'click th': 'sortByColumn'
+    'click th': 'sortByColumn',
+    'keyup .table-search input': 'searchTable'
   },
 
   onRenderCollection: function () {
@@ -29,6 +31,14 @@ module.exports = Backbone.Marionette.CompositeView.extend({
 
   onDestroy: function () {
     App.paginator.empty();
+  },
+
+  searchTable: function () {
+    var set = App.Groups.Controller.getCachedGroups();
+
+    return tableSearch(set, {
+      omit: 'id'
+    }).apply(this, arguments);
   },
 
   sortByColumn: tableSorter
