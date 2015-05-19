@@ -13,6 +13,7 @@ module.exports = function (App) {
     var usersCollection;
 
     var memberHash = {};
+    var groupsCache;
 
     Groups.Controller = {
       listGroups: function () {
@@ -20,6 +21,8 @@ module.exports = function (App) {
 
         Core.request('groups:entities')
           .then(function (groups) {
+            groupsCache = groups;
+
             groupsCollection = new GroupsCollection(groups, {
               fullCollection: groups,
               state: {
@@ -76,6 +79,10 @@ module.exports = function (App) {
 
       getCachedGroupMembers: function (groupId) {
         return memberHash[groupId];
+      },
+
+      getCachedGroups: function () {
+        return groupsCache;
       }
     };
   });
