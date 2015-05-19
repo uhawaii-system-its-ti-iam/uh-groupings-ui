@@ -44,6 +44,9 @@ App.Router = new Backbone.Marionette.AppRouter({
     listGroups: function () {
       App.module('Groups').Controller.listGroups();
     },
+    listGroupMembers: function (groupId) {
+      App.module('Groups').Controller.listGroupMembers(groupId);
+    },
     notFound: function () {
       var mainView = require('./views/main');
       var notFoundTmpl = require('../templates/404.hbs');
