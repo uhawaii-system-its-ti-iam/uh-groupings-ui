@@ -3,19 +3,19 @@
 var _ = require('lodash');
 var $ = require('jquery');
 
+// set = Array [String|Object]
+//
 // (optional) options = {
 //  (optional) keys: Array|String,
 //  (optional) omit: Array|String
 // }
 //
 // return handler function
-module.exports = function (App, options) {
+module.exports = function (set, options) {
   options = options || {};
 
   return function (e) {
     var re = new RegExp($(e.currentTarget).val(), 'i');
-    var set = App.Groups.Controller
-      .getCachedGroupMembers(App.State.currentRoute().params.id);
 
     var results = _.filter(set, function (member) {
       return re.test(_.values(
