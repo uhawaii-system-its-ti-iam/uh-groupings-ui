@@ -61,6 +61,7 @@ App.Router = new Backbone.Marionette.AppRouter({
     '': 'about',
     admins: 'editAdmins',
     groupings: 'listGroups',
+    'groupings/:id/membership': 'listGroupMembers',
     '*notFound': 'notFound'
   }
 });
