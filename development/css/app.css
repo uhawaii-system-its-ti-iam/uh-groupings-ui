@@ -8453,6 +8453,8 @@ html {
 --------------------------------------*/
   /* Header
 --------------------------------------*/
+  /* List Navigation
+--------------------------------------*/
   /* Routes
  * Import LESS files for routes.
 --------------------------------------*/
@@ -8462,7 +8464,4 @@ html {
   /* Routes
  * Import LESS files for stack.
 --------------------------------------*/
-}
-.app .uhg-header {
-  background-color: #ffffff;
 }

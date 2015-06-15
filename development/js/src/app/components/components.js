@@ -6,5 +6,6 @@
  * @module components
  */
 angular.module('components', [
-    'components.header'
+    'components.header',
+    'components.list-navigation'
 ]);

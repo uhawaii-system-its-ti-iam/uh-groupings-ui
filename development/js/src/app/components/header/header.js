@@ -1,7 +1,7 @@
 /**
  * Module definition houses header implementation.
  *
- * @module scha.components.header
+ * @module components.header
  */
 angular.module('components.header', [
     'components.header.uhgHeader',

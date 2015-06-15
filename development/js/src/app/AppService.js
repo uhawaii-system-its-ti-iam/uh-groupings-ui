@@ -27,7 +27,46 @@ angular.module('app.AppService', ['app.development'])
              * @property api
              * @type {String}
              */
-            api: ((DEVELOP) ? '/api' : '/api')
+            api: ((DEVELOP) ? '/api' : '/api'),
+
+            /**
+             * Property houses API namespace.
+             *
+             * @property api
+             * @type {String}
+             */
+            navigation: [
+                {
+                    label: 'Login',
+                    key: 'NAVIGATION_LOGIN',
+                    route: 'login'
+                },
+                {
+                    label: 'About',
+                    key: 'NAVIGATION_ABOUT',
+                    route: 'about'
+                },
+                {
+                    label: 'Designate Admins',
+                    key: 'NAVIGATION_DESIGNATE',
+                    route: 'designate'
+                },
+                {
+                    label: 'Groupings',
+                    key: 'NAVIGATION_GROUPINGS',
+                    route: 'groupings'
+                },
+                {
+                    label: 'My Memberships',
+                    key: 'NAVIGATION_MEMBERSHIPS',
+                    route: 'memberships'
+                },
+                {
+                    label: 'Feedback',
+                    key: 'NAVIGATION_FEEDBACK',
+                    route: 'feedback'
+                }
+            ]
         };
 
         return service;

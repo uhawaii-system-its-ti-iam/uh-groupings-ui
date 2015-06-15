@@ -8,7 +8,8 @@ angular.module('app', [
     'routes',
     'templates',
     'components',
-    'app.AppService'
+    'app.AppService',
+    'app.AppController'
 ])
 .config(
     [

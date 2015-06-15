@@ -1,3 +1,10 @@
 {
-    "HEADER_BRAND_NAME": "UH Groupings"
+    "HEADER_BRAND_NAME": "UH Groupings",
+
+    "NAVIGATION_LOGIN": "Login",
+    "NAVIGATION_ABOUT": "About",
+    "NAVIGATION_DESIGNATE": "Designate Admins",
+    "NAVIGATION_GROUPINGS": "Groupings",
+    "NAVIGATION_MEMBERSHIPS": "My Memberships",
+    "NAVIGATION_FEEDBACK": "Feedback"
 }

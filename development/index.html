@@ -17,12 +17,21 @@
         <!--CSS Dependencies-->
         <link href="css/app.css" rel="stylesheet" type="text/css" media="screen">
     </head>
-    <body class="app">
+    <body class="app" ng-controller="appCtrl as AppController">
         <uhg-header
             brand-link="login">
         </uhg-header>
 
-        <main ui-view class="container" role="main"></main>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 col-lg-2">
+                    <uhg-list-navigation></uhg-list-navigation>
+                </div>
+                <div class="col-sm-9 col-md-10 col-lg-10">
+                    <main ui-view role="main"></main>
+                </div>
+            </div>
+        </div>
 
         <!--JS Dependencies-->
         <script type="text/javascript" src="js/lib/jquery/jquery.js"></script>
@@ -38,6 +47,7 @@
 
         <!--App-->
         <script type="text/javascript" src="js/src/app/app.js"></script>
+        <script type="text/javascript" src="js/src/app/AppController.js"></script>
         <script type="text/javascript" src="js/src/app/AppService.js"></script>
         <script type="text/javascript">angular.module("app.development", []).constant("DEVELOP", true);</script>
         <script type="text/javascript" src="js/src/templates.js"></script>
@@ -54,6 +64,11 @@
         <script type="text/javascript" src="js/src/app/components/header/header.js"></script>
         <script type="text/javascript" src="js/src/app/components/header/HeaderController.js"></script>
         <script type="text/javascript" src="js/src/app/components/header/HeaderDirective.js"></script>
+
+        <!--List Navigation-->
+        <script type="text/javascript" src="js/src/app/components/list-navigation/list-navigation.js"></script>
+        <script type="text/javascript" src="js/src/app/components/list-navigation/ListNavigationController.js"></script>
+        <script type="text/javascript" src="js/src/app/components/list-navigation/ListNavigationDirective.js"></script>
 
         <!--Stack-->
         <script type="text/javascript" src="js/src/stack/stack.js"></script>
