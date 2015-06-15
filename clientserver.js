@@ -20,6 +20,8 @@ _.each(applications, function (app) {
 
     // Iterate over application environments.
     var environments = app.ENVIRONMENTS;
+
+    // Serve environments.
     _.each(environments, function (environment) {
         // Express instantiation.
         environment.express = express();
@@ -44,13 +46,5 @@ _.each(applications, function (app) {
 
         // Server configuration.
         environment = server(environment);
-
-        // Build environment.
-        exec(environment.GRUNT_COMMAND, function (error, stdout, stderr) {
-            console.log(stdout);
-            if (stderr) {
-                console.log(stderr);
-            }
-        });
     });
 });

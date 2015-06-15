@@ -5,7 +5,9 @@
  */
 angular.module('app', [
     'ui.router',
-    'routes'
+    'routes',
+    'templates',
+    'app.AppService'
 ])
 .config(
     [
@@ -14,6 +16,7 @@ angular.module('app', [
         'TranslationConfigProvider',
         function ($locationProvider, $urlRouterProvider, TranslationConfigProvider) {
             'use strict';
+
             // Enable html5 push state.
             $locationProvider.html5Mode(true).hashPrefix('!');
 
@@ -24,10 +27,8 @@ angular.module('app', [
 
             // Redirect for unmatched urls.
             $urlRouterProvider.otherwise(function ($injector) {
-                var state = $injector.get('$state'),
-                    global = $injector.get('GLOBAL');
-
-                state.go(global.routes.login);
+                var state = $injector.get('$state');
+                state.go('login');
             });
         }
     ]

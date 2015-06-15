@@ -9,7 +9,8 @@ angular.module('stack.i18n.TranslationConfig', [])
  * @module stack.i18n.TranslationConfig
  */
 .provider('TranslationConfig', [
-    function () {
+    '$injector',
+    function ($injector) {
         'use strict';
 
         /**
