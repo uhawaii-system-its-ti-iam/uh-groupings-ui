@@ -4,5 +4,6 @@
  * @module routes
  */
 angular.module('routes', [
-    'routes.login'
+    'routes.login',
+    'routes.about'
 ]);

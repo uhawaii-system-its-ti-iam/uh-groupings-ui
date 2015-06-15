@@ -17,7 +17,7 @@
         <!--CSS Dependencies-->
         <link href="css/app.css" rel="stylesheet" type="text/css" media="screen">
     </head>
-    <body class="app" ng-controller="appCtrl as AppController">
+    <body class="app" ng-controller="AppController as appCtrl">
         <uhg-header
             brand-link="login">
         </uhg-header>
@@ -25,10 +25,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3 col-md-2 col-lg-2">
-                    <uhg-list-navigation></uhg-list-navigation>
+                    <aside>
+                        <uhg-list-navigation
+                            items="appCtrl.navigation">
+                        </uhg-list-navigation>
+                    </aside>
                 </div>
                 <div class="col-sm-9 col-md-10 col-lg-10">
-                    <main ui-view role="main"></main>
+                    <main ui-view class="well" role="main"></main>
                 </div>
             </div>
         </div>
@@ -54,8 +58,14 @@
 
         <!--Routes-->
         <script type="text/javascript" src="js/src/app/routes/routes.js"></script>
+
+        <!--Login-->
         <script type="text/javascript" src="js/src/app/routes/login/login.js"></script>
         <script type="text/javascript" src="js/src/app/routes/login/LoginController.js"></script>
+
+        <!--About-->
+        <script type="text/javascript" src="js/src/app/routes/about/about.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/about/AboutController.js"></script>
 
         <!--Components-->
         <script type="text/javascript" src="js/src/app/components/components.js"></script>

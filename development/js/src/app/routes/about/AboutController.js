@@ -1,28 +1,28 @@
-angular.module('routes.login.LoginController', [])
+angular.module('routes.about.AboutController', [])
 
 /**
- * The LoginController manages view logic rendered to the
- * login.html template for the /login route.
+ * The AboutController manages view logic rendered to the
+ * about.html template for the /about route.
  *
- * @class LoginController
+ * @class AboutController
  * @constructor
- * @module routes.login.LoginController
+ * @module routes.about.AboutController
  **/
-.controller('LoginController', [
+.controller('AboutController', [
     '$timeout',
     function ($timeout) {
         'use strict';
 
         // Define.
-        var loginCtrl;
+        var aboutCtrl;
 
         /**
-         * Property houses a reference to the login controller.
+         * Property houses a reference to the about controller.
          *
-         * @property loginCtrl
+         * @property aboutCtrl
          * @type {Object}
          */
-        loginCtrl = this;
+        aboutCtrl = this;
 
         /**
          * Method executes initialization process.
