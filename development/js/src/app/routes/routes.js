@@ -5,5 +5,6 @@
  */
 angular.module('routes', [
     'routes.login',
-    'routes.about'
+    'routes.about',
+    'routes.designate'
 ]);

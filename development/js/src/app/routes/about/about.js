@@ -1,6 +1,6 @@
 /**
  * Module definition for the about module. The about module manages
- * the application's top-level About view (i.e., /about).
+ * the application's top-level about view (i.e., /about).
  *
  * @module routes.about
  */
