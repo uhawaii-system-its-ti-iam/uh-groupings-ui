@@ -5,4 +5,6 @@
  *
  * @module components
  */
-angular.module('components', []);
+angular.module('components', [
+    'components.header'
+]);

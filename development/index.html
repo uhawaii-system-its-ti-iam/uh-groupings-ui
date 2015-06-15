@@ -18,6 +18,10 @@
         <link href="css/app.css" rel="stylesheet" type="text/css" media="screen">
     </head>
     <body class="app">
+        <uhg-header
+            brand-link="login">
+        </uhg-header>
+
         <main ui-view class="container" role="main"></main>
 
         <!--JS Dependencies-->
@@ -45,6 +49,11 @@
 
         <!--Components-->
         <script type="text/javascript" src="js/src/app/components/components.js"></script>
+
+        <!--Header-->
+        <script type="text/javascript" src="js/src/app/components/header/header.js"></script>
+        <script type="text/javascript" src="js/src/app/components/header/HeaderController.js"></script>
+        <script type="text/javascript" src="js/src/app/components/header/HeaderDirective.js"></script>
 
         <!--Stack-->
         <script type="text/javascript" src="js/src/stack/stack.js"></script>

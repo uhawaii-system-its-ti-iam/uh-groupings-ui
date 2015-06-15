@@ -7,6 +7,7 @@ angular.module('app', [
     'ui.router',
     'routes',
     'templates',
+    'components',
     'app.AppService'
 ])
 .config(
