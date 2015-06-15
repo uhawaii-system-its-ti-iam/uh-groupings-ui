@@ -1,2 +1,0 @@
-// browserify entrypoint
-require('./app');

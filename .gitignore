@@ -1,8 +1,5 @@
-node_modules
-temp
-dist
-.sass-cache
-bower_components
-.tmp
 .DS_Store
+node_modules
 npm-debug.log
+development/docs
+production

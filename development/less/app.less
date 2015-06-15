@@ -1,0 +1,29 @@
+/* Libs. */
+@import "./lib/bootstrap/bootstrap.less";
+@import "./lib/font-awesome/font-awesome.less";
+@import "./lib/angular/angular.less";
+
+/* Base. */
+@import "./base/variables.less";
+@import "./base/mixins.less";
+@import "./base/base.less";
+
+/* Namespace
+ *
+ * Everything in this stylesheet is scoped (nested) within ".app".
+ * As a best practice, anything added to this stylesheet (that is not a
+ * variable or mixin) should also be scoped within the namespace.
+--------------------------------------*/
+.app {
+    // Layout.
+    //@import "./layout/<layout>.less";
+
+    // Components.
+    @import "../js/src/app/components/components.less";
+
+    // Routes.
+    @import "../js/src/app/routes/routes.less";
+
+    // Stack.
+    @import "../js/src/stack/stack.less";
+}

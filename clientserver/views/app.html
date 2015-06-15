@@ -1,0 +1,75 @@
+{{=${ }=}}
+<!DOCTYPE html>
+<html lang="en" xmlns:ng="http://angularjs.org" ng-app="${id}">
+    <head>
+        <meta charset="utf-8" />
+        <meta equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="${description}" />
+        <meta name="author" content="${author}">
+        <title>${title}</title>
+
+        ${#dev}
+        <base href="/">
+        ${/dev}
+        ${^dev}
+        <base href="/">
+        ${/dev}
+
+        <!--Favicon-->
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+        <!--CSS Dependencies-->
+        <link href="css/app.css" rel="stylesheet" type="text/css" media="screen">
+    </head>
+    <body class="${id}">
+        <main ui-view class="container" role="main"></main>
+
+        <!--JS Dependencies-->
+        ${#dev}
+        <script type="text/javascript" src="js/lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="js/lib/angular/angular.js"></script>
+        <script type="text/javascript" src="js/lib/angular/angular-sanitize.js"></script>
+        <script type="text/javascript" src="js/lib/angular/angular-animate.js"></script>
+        <script type="text/javascript" src="js/lib/angular/angular-aria.js"></script>
+        <script type="text/javascript" src="js/lib/angular-cache/angular-cache.js"></script>
+        <script type="text/javascript" src="js/lib/angular-ui/ui-bootstrap-tpls.js"></script>
+        <script type="text/javascript" src="js/lib/ui-router/ui-router.js"></script>
+        <script type="text/javascript" src="js/lib/outside-events/outside-events.js"></script>
+        <script type="text/javascript" src="js/lib/underscore/underscore.js"></script>
+
+        <!--App-->
+        <script type="text/javascript" src="js/src/app/app.js"></script>
+        <script type="text/javascript" src="js/src/app/global.js"></script>
+        <script type="text/javascript" src="js/src/templates.js"></script>
+        <script type="text/javascript">angular.module("app.development", []).constant("DEVELOP", ${dev});</script>
+
+        <!--Routes-->
+        <script type="text/javascript" src="js/src/app/routes/routes.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/login/login.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/login/LoginController.js"></script>
+
+        <!--Components-->
+        <script type="text/javascript" src="js/src/app/components/components.js"></script>
+
+        <!--Stack-->
+        <script type="text/javascript" src="js/src/stack/stack.js"></script>
+
+        <!--i18n-->
+        <script type="text/javascript" src="js/src/stack/i18n/i18n.js"></script>
+        <script type="text/javascript" src="js/src/stack/i18n/LocalizeDirective.js"></script>
+        <script type="text/javascript" src="js/src/stack/i18n/LocalizeFilter.js"></script>
+        <script type="text/javascript" src="js/src/stack/i18n/TranslationConfigProvider.js"></script>
+        <script type="text/javascript" src="js/src/stack/i18n/TranslationModel.js"></script>
+        <script type="text/javascript" src="js/src/stack/i18n/TranslationResolver.js"></script>
+        <script type="text/javascript" src="js/src/stack/i18n/TranslationService.js"></script>
+        ${/dev}
+        ${^dev}
+        <script type="text/javascript" src="js/lib.min.js"></script>
+        <script type="text/javascript">angular.module("app.development", []).constant("DEVELOP", ${dev});</script>
+        <script type="text/javascript" src="js/app.min.js"></script>
+        <script type="text/javascript" src="js/stack.min.js"></script>
+        ${/dev}
+    </body>
+</html>

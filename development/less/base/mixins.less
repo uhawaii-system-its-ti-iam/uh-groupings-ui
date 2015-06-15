@@ -1,0 +1,81 @@
+/* Mixins
+ * Additional or custom mixins. Please review all
+ * the mixins provided by the bootstrap library
+ * before adding custom implementations.
+ * see: http://getbootstrap.com/css/#less
+--------------------------------------*/
+.truncate (@width: 100px) {
+    width: @width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cursor (@cursor: pointer) {
+    cursor: @cursor;
+}
+
+.list-unstyled {
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+    list-style: none;
+
+    > li {
+        padding: 0 0 0 0;
+        margin: 0 0 0 0;
+    }
+}
+
+.list-inline {
+  .list-unstyled();
+
+  > li {
+    display: inline-block;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+
+    > a {
+        display: block;
+    }
+  }
+}
+
+.list-inline-block {
+  .list-unstyled();
+
+  > li {
+    display: block;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+
+    > a {
+        display: block;
+    }
+  }
+}
+
+.border-radius (@radius: 5px) {
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}
+
+.text-shadow (@string: 0 1px 3px rgba(0, 0, 0, 0.25)) {
+    text-shadow: @string;
+}
+
+.drop-shadow (@x: 0, @y: 1px, @blur: 2px, @spread: 0, @alpha: 0.25) {
+    -webkit-box-shadow: @x @y @blur @spread rgba(0, 0, 0, @alpha);
+    -moz-box-shadow: @x @y @blur @spread rgba(0, 0, 0, @alpha);
+    box-shadow: @x @y @blur @spread rgba(0, 0, 0, @alpha);
+}
+
+.circle (@size: 40px) {
+    border-radius: 50%;
+    width: @size;
+    height: @size;
+}

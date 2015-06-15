@@ -1,91 +1,44 @@
 {
-  "name": "uhgroupings",
-  "version": "0.0.1",
+  "name": "UH Groupings",
+  "description": "Front-end for Grouper.",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node clientserver"
+  },
   "dependencies": {
-    "async": "~0.2.8",
-    "backbone": "^1.1.2",
-    "backbone.marionette": "^2.4.1",
-    "backbone.paginator": "^2.0.2",
-    "bootstrap": "^3.3.4",
-    "handlebars": "^1.3.0",
-    "jquery": "^2.1.4",
-    "lodash": "^3.7.0",
-    "request": "~2.21.0",
-    "require-directory": "^2.1.0",
-    "underscore": "^1.8.3"
+    "body-parser": "~1.10.2",
+    "method-override": "~2.3.1",
+    "cookie-parser": "~1.3.3",
+    "debug": "~2.1.1",
+    "express": "~4.11.1",
+    "hjs": "~0.0.6",
+    "less-middleware": "~1.0.4",
+    "morgan": "~1.5.1",
+    "serve-favicon": "~2.2.0",
+    "nconf": "~0.7.1",
+    "underscore": "~1.7.0"
   },
   "devDependencies": {
-    "autoprefixer-core": "^5.1.11",
-    "browser-sync": "^2.6.5",
-    "browserify": "^9.0.8",
-    "browserify-shim": "^3.8.5",
-    "del": "^1.1.1",
-    "express": "~3.2.4",
-    "express-hbs": "~0.2.0",
-    "git-guppy": "^1.0.0",
-    "gulp": "^3.8.11",
-    "gulp-cache": "^0.2.9",
-    "gulp-csso": "^1.0.0",
-    "gulp-filter": "^2.0.2",
-    "gulp-if": "^1.2.5",
-    "gulp-imagemin": "^2.2.1",
-    "gulp-jscs": "^1.6.0",
-    "gulp-jshint": "^1.10.0",
-    "gulp-load-plugins": "^0.10.0",
-    "gulp-minify-html": "^1.0.2",
-    "gulp-postcss": "^5.1.3",
-    "gulp-sass": "^1.3.3",
-    "gulp-size": "^1.2.1",
-    "gulp-sourcemaps": "^1.5.2",
-    "gulp-task-listing": "^1.0.0",
-    "gulp-uglify": "^1.2.0",
-    "gulp-useref": "^1.1.2",
-    "gulp-util": "^3.0.4",
-    "guppy-pre-commit": "^0.1.3",
-    "hbsfy": "^2.2.1",
-    "jshint-stylish": "^1.0.1",
-    "main-bower-files": "^2.7.0",
-    "matchdep": "~0.1.2",
-    "mocha-phantomjs": "~3.1.0",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.2.0"
-  },
-  "browser": {
-    "jquery": "./node_modules/jquery/dist/jquery.js",
-    "bootstrap": "./node_modules/bootstrap/dist/js/bootstrap.js"
-  },
-  "browserify": {
-    "transform": [
-      "hbsfy",
-      "browserify-shim"
-    ]
-  },
-  "browserify-shim": {
-    "jquery": "jQuery",
-    "underscore": {
-      "exports": "_"
-    },
-    "bootstrap": {
-      "depends": [
-        "jquery:jQuery"
-      ]
-    },
-    "backbone": {
-      "exports": "Backbone",
-      "depends": [
-        "underscore:_",
-        "jquery:jQuery"
-      ]
-    },
-    "backbone.marionette": {
-      "exports": "Marionette",
-      "depends": [
-        "underscore:_",
-        "jquery:jQuery",
-        "backbone:Backbone"
-      ]
-    }
-  },
-  "private": true
+    "grunt": "~0.4.5",
+    "grunt-angular-templates": "~0.5.7",
+    "grunt-cli": "0.1.13",
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-contrib-concat": "~0.5.0",
+    "grunt-contrib-copy": "~0.7.0",
+    "grunt-contrib-jshint": "~0.11.0",
+    "grunt-contrib-less": "~1.0.0",
+    "grunt-contrib-uglify": "~0.8.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-contrib-yuidoc": "~0.7.0",
+    "grunt-exec": "~0.4.6",
+    "grunt-jscs": "^1.5.0",
+    "grunt-karma": "~0.10.1",
+    "hogan.js": "~2.0.0",
+    "karma": "~0.12.31",
+    "karma-chrome-launcher": "~0.1.7",
+    "karma-jasmine": "~0.3.5",
+    "karma-phantomjs-launcher": "~0.1.4",
+    "proxy-middleware": "~0.11.0"
+  }
 }
