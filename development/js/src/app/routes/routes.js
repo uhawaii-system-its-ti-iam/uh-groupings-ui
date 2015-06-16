@@ -7,5 +7,6 @@ angular.module('routes', [
     'routes.login',
     'routes.about',
     'routes.designate',
-    'routes.grouping'
+    'routes.grouping',
+    'routes.membership'
 ]);
