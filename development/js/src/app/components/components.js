@@ -7,5 +7,6 @@
  */
 angular.module('components', [
     'components.header',
-    'components.list-navigation'
+    'components.list-navigation',
+    'components.footer'
 ]);
