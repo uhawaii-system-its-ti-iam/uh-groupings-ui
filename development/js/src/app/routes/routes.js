@@ -8,5 +8,6 @@ angular.module('routes', [
     'routes.about',
     'routes.designate',
     'routes.grouping',
-    'routes.membership'
+    'routes.membership',
+    'routes.feedback'
 ]);
