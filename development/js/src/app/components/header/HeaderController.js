@@ -13,14 +13,14 @@ angular.module('components.header.HeaderController', [])
         'use strict';
 
         // Define.
-        var header;
+        var headerCtrl;
 
         /**
-         * Property houses a reference to the header controller.
+         * Property houses a reference to the HeaderController.
          *
-         * @property header
+         * @property headerCtrl
          * @type {Object}
          */
-        header = this;
+        headerCtrl = this;
     }
 ]);

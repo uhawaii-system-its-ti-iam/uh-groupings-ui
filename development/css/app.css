@@ -8489,6 +8489,12 @@ body {
  * Import LESS files for stack.
 --------------------------------------*/
 }
+.app .uhg-list-navigation .navigation-minified {
+  margin: 0 0 1em 0;
+}
+.app .uhg-list-navigation .navigation-expanded .list-group-item {
+  white-space: nowrap;
+}
 .app .uhg-footer {
   background-color: #eeeeee;
   border-top: 1px solid #d0d0d0;

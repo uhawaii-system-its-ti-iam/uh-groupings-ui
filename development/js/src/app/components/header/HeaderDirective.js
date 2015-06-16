@@ -12,7 +12,7 @@ angular.module('components.header.uhgHeader', [
  * @module components.header.uhgHeader
  * @example
  *     <uhg-header
- *         brand-link="login">      // Route to link
+ *         brand-link="login">       // Route to link
  *     </uhg-header>
  */
 .directive('uhgHeader', [
@@ -25,7 +25,7 @@ angular.module('components.header.uhgHeader', [
                 brandLink: '@'
             },
             controller: 'HeaderController',
-            controllerAs: 'header',
+            controllerAs: 'headerCtrl',
             bindToController: true,
             templateUrl: 'js/src/app/components/header/header.html'
         };

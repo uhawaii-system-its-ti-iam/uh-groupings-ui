@@ -1,11 +1,12 @@
 angular.module('components.list-navigation.uhgListNavigation', [
     'components.list-navigation.ListNavigationController',
     'stack.i18n.stackLocalize',
-    'stack.i18n.localize'
+    'stack.i18n.localize',
+    'ui.bootstrap'
 ])
 
 /**
- * The ListNavigation directive houses the side navigation for the application.
+ * The ListNavigation directive houses the navigation for the application.
  *
  * @class ListNavigation
  * @constructor
