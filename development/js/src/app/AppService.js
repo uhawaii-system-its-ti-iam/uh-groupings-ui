@@ -54,12 +54,12 @@ angular.module('app.AppService', ['app.development'])
                 {
                     label: 'Groupings',
                     key: 'NAVIGATION_GROUPINGS',
-                    route: 'groupings'
+                    route: 'grouping'
                 },
                 {
                     label: 'My Memberships',
                     key: 'NAVIGATION_MEMBERSHIPS',
-                    route: 'memberships'
+                    route: 'membership'
                 },
                 {
                     label: 'Feedback',
