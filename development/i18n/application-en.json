@@ -9,5 +9,17 @@
     "NAVIGATION_MEMBERSHIPS": "My Memberships",
     "NAVIGATION_FEEDBACK": "Feedback",
 
+    "LOGIN_HEADER": "Login",
+
+    "ABOUT_HEADER": "About",
+
+    "DESIGNATE_HEADER": "Designate Admins",
+
+    "GROUPING_HEADER": "Groupings",
+
+    "MEMBERSHIP_HEADER": "My Memberships",
+
+    "FEEDBACK_HEADER": "Feedback",
+
     "FOOTER_COPYRIGHT": "Copyright © 2015 University of Hawaii"
 }

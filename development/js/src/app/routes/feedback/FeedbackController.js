@@ -1,4 +1,7 @@
-angular.module('routes.feedback.FeedbackController', [])
+angular.module('routes.feedback.FeedbackController', [
+    'stack.i18n.stackLocalize',
+    'stack.i18n.localize'
+])
 
 /**
  * The FeedbackController manages view logic rendered to the

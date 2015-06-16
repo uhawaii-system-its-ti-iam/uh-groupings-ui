@@ -1,4 +1,7 @@
-angular.module('routes.designate.DesignateController', [])
+angular.module('routes.designate.DesignateController', [
+    'stack.i18n.stackLocalize',
+    'stack.i18n.localize'
+])
 
 /**
  * The DesignateController manages view logic rendered to the

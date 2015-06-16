@@ -8385,6 +8385,8 @@ button.close {
 ------------------------------------*/
 /* Header
 ------------------------------------*/
+/* Main
+------------------------------------*/
 /* Footer
 ------------------------------------*/
 /* Mixins
@@ -8455,6 +8457,12 @@ body {
  * variable or mixin) should also be scoped within the namespace.
 --------------------------------------*/
 .app {
+  /* Container
+--------------------------------------*/
+  /* Main
+--------------------------------------*/
+  /* Page
+--------------------------------------*/
   /* Components
  * Import LESS files for components.
 --------------------------------------*/
@@ -8489,8 +8497,25 @@ body {
  * Import LESS files for stack.
 --------------------------------------*/
 }
+.app .uhg-container {
+  padding-top: 1em;
+  padding-bottom: 3em;
+}
+.app .uhg-main {
+  padding: 1.5em 1.5em 1.5em 1.5em;
+  border: 1px solid #d0d0d0;
+  -webkit-border-radius: 0.429em;
+  -moz-border-radius: 0.429em;
+  border-radius: 0.429em;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.app .uhg-page-header {
+  margin: 1.429em 0 1.429em 0;
+}
 .app .uhg-list-navigation .navigation-minified {
-  margin: 0 0 1em 0;
+  margin: 0 0 1.5em 0;
 }
 .app .uhg-list-navigation .navigation-expanded .list-group-item {
   white-space: nowrap;

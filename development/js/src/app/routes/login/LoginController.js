@@ -1,4 +1,7 @@
-angular.module('routes.login.LoginController', [])
+angular.module('routes.login.LoginController', [
+    'stack.i18n.stackLocalize',
+    'stack.i18n.localize'
+])
 
 /**
  * The LoginController manages view logic rendered to the

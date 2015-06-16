@@ -1,4 +1,7 @@
-angular.module('routes.membership.MembershipController', [])
+angular.module('routes.membership.MembershipController', [
+    'stack.i18n.stackLocalize',
+    'stack.i18n.localize'
+])
 
 /**
  * The MembershipController manages view logic rendered to the

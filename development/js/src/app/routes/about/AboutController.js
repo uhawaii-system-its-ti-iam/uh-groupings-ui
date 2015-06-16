@@ -1,4 +1,7 @@
-angular.module('routes.about.AboutController', [])
+angular.module('routes.about.AboutController', [
+    'stack.i18n.stackLocalize',
+    'stack.i18n.localize'
+])
 
 /**
  * The AboutController manages view logic rendered to the

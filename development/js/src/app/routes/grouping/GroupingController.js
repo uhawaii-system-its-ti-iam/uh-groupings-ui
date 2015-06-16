@@ -1,4 +1,7 @@
-angular.module('routes.grouping.GroupingController', [])
+angular.module('routes.grouping.GroupingController', [
+    'stack.i18n.stackLocalize',
+    'stack.i18n.localize'
+])
 
 /**
  * The GroupingController manages view logic rendered to the
