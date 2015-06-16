@@ -7,5 +7,8 @@
  * @module stack
  */
 angular.module('stack', [
-    'stack.i18n'
+    'stack.i18n',
+    'stack.page-loader',
+    'stack.location',
+    'stack.reveal'
 ]);

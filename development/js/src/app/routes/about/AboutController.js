@@ -1,6 +1,6 @@
 angular.module('routes.about.AboutController', [
-    'stack.i18n.stackLocalize',
-    'stack.i18n.localize'
+    'stack.page-loader',
+    'stack.i18n'
 ])
 
 /**

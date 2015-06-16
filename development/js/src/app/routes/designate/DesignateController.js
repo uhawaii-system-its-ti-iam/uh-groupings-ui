@@ -1,6 +1,6 @@
 angular.module('routes.designate.DesignateController', [
-    'stack.i18n.stackLocalize',
-    'stack.i18n.localize'
+    'stack.page-loader',
+    'stack.i18n'
 ])
 
 /**

@@ -17,11 +17,13 @@
         <!--CSS Dependencies-->
         <link href="css/app.css" rel="stylesheet" type="text/css" media="screen">
     </head>
-    <body class="app" ng-controller="AppController as appCtrl">
+    <body class="app invisible" stack-reveal="invisible" ng-controller="AppController as appCtrl">
+        <!--Page Header-->
         <uhg-header
             brand-link="login">
         </uhg-header>
 
+        <!--Page Container-->
         <div class="container uhg-container">
             <div class="row">
                 <div class="col-sm-3 col-md-3 col-lg-2">
@@ -37,7 +39,11 @@
             </div>
         </div>
 
+        <!--Page Footer-->
         <uhg-footer></uhg-footer>
+        
+        <!--Page Loader-->
+        <stack-page-loader trigger="appCtrl.pageLoading" center="true"></stack-page-loader>
 
         <!--JS Dependencies-->
         <script type="text/javascript" src="js/lib/jquery/jquery.js"></script>
@@ -56,7 +62,12 @@
         <script type="text/javascript" src="js/src/app/AppController.js"></script>
         <script type="text/javascript" src="js/src/app/AppService.js"></script>
         <script type="text/javascript">angular.module("app.development", []).constant("DEVELOP", true);</script>
+
+        <!--Templates-->
         <script type="text/javascript" src="js/src/templates.js"></script>
+
+        <!--Plugins-->
+        <script type="text/javascript" src="js/src/app/plugins.js"></script>
 
         <!--Routes-->
         <script type="text/javascript" src="js/src/app/routes/routes.js"></script>
@@ -115,5 +126,17 @@
         <script type="text/javascript" src="js/src/stack/i18n/TranslationModel.js"></script>
         <script type="text/javascript" src="js/src/stack/i18n/TranslationResolver.js"></script>
         <script type="text/javascript" src="js/src/stack/i18n/TranslationService.js"></script>
+
+        <!--Page Loader-->
+        <script type="text/javascript" src="js/src/stack/page-loader/page-loader.js"></script>
+        <script type="text/javascript" src="js/src/stack/page-loader/PageLoaderDirective.js"></script>
+
+        <!--Reveal-->
+        <script type="text/javascript" src="js/src/stack/reveal/reveal.js"></script>
+        <script type="text/javascript" src="js/src/stack/reveal/RevealDirective.js"></script>
+
+        <!--Location-->
+        <script type="text/javascript" src="js/src/stack/location/location.js"></script>
+        <script type="text/javascript" src="js/src/stack/location/LocationService.js"></script>
     </body>
 </html>

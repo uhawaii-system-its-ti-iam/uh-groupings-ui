@@ -4,10 +4,11 @@
  * @module app
  */
 angular.module('app', [
-    'ui.router',
+    'plugins',
     'routes',
     'templates',
     'components',
+    'stack',
     'app.AppService',
     'app.AppController'
 ])
@@ -34,4 +35,52 @@ angular.module('app', [
             });
         }
     ]
-);
+)
+.run([
+    '$filter',
+    '$rootScope',
+    function ($filter, $rootScope) {
+        /**
+         * Method returns true if an enumerable object contains
+         * no values (no enumerable own-properties). For strings
+         * and array-like objects the isEmpty() method checks if
+         * the length property is 0. This method is available
+         * globally and can be leveraged within template files
+         * using the $root.$isEmpty() syntax.
+         *
+         * @method isEmpty
+         * @param {Mixed} context value
+         * @return {Boolean} True or False
+         */
+        $rootScope.isEmpty = function (value) {
+            return _.isEmpty(value);
+        };
+
+        /**
+         * Method returns whether or not the object contains the given key.
+         * This method is available globally and can be leveraged within
+         * template files using the $root.$has() syntax.
+         *
+         * @method has
+         * @param {Object} object Object
+         * @param {String} property Name of property
+         * @return {Boolean}
+         */
+        $rootScope.has = function (object, property) {
+            return _.has(object, property);
+        };
+
+        /**
+         * Method returns a localized string based upon the key.
+         * This method is available globally and can be leveraged
+         * within template files using $root.localize() syntax.
+         *
+         * @method localize
+         * @param {String} key Localization key
+         * @return {String} Localized string
+         */
+        $rootScope.localize = function (key) {
+            return $filter('localize')(key);
+        };
+    }
+]);
