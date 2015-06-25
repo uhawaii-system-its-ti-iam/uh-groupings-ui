@@ -3,9 +3,12 @@
  * this file (i.e., h1, h2, h3, a, ul, etc).
 --------------------------------------*/
 html {
-    background-color: @html-bg;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-    background-color: @body-bg;
+    background: @body-bg url(@body-bg-image) repeat center;
+    margin-bottom: @footer-height;
+    min-height: 100%;
 }
