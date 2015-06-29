@@ -8,9 +8,6 @@
 @import "./base/mixins.less";
 @import "./base/base.less";
 
-/* Theme. */
-@import "./theme/hawaii.less";
-
 /* Namespace
  *
  * Everything in this stylesheet is scoped (nested) within ".app".
@@ -22,6 +19,7 @@
     @import "./layout/container.less";
     @import "./layout/main.less";
     @import "./layout/page.less";
+    @import "./layout/panel.less";
 
     // Components.
     @import "../js/src/app/components/components.less";
@@ -32,3 +30,6 @@
     // Stack.
     @import "../js/src/stack/stack.less";
 }
+
+/* Theme. */
+@import "./theme/hawaii/hawaii.less";

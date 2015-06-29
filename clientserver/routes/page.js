@@ -16,7 +16,6 @@ module.exports = function (environment) {
     };
 
     environment.express.route('/').get(initialize);
-    environment.express.route('/login').get(initialize);
     environment.express.route('/about').get(initialize);
     environment.express.route('/designate').get(initialize);
     environment.express.route('/grouping').get(initialize);

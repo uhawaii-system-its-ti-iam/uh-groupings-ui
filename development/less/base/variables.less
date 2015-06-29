@@ -21,14 +21,27 @@
 /* Scaffolding
 ------------------------------------*/
 @html-bg: @gray-lightest;
-@body-bg: @white;
-@body-bg-image: none;
+@body-bg: @gray-lightest;
+@body-bottom: 50px;
 @text-color: @gray-dark;
 @zindex: 1050;
 
 /* Typography
 ------------------------------------*/
 @font-family-sans-serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+/* Page
+------------------------------------*/
+@page-header-bg: lighten(@brand-primary, 45%);
+@page-header-title-color: @gray;
+@page-header-subtitle-color: @gray-light;
+@page-header-description-color: @text-color;
+@page-body-bg: @white;
+@page-body-title-color: @gray;
+
+/* Panel
+------------------------------------*/
+@panel-bg: @gray-lightest;
 
 /* Header
 ------------------------------------*/
@@ -41,15 +54,24 @@
 
 /* Main
 ------------------------------------*/
-@main-border: @gray-lighter;
-@main-bg: @white;
+@main-border: none;
+@main-bg: transparent;
+
+/* List Navigation
+------------------------------------*/
+@list-navigation-active-color: @white;
+@list-navigation-active-bg: @brand-primary;
+@list-navigation-active-border: darken(@brand-primary, 10%);
+@list-navigation-hover-color: @gray;
+@list-navigation-hover-bg: @gray-lightest;
+@list-navigation-hover-border: @gray-lighter;
 
 /* Footer
 ------------------------------------*/
+@footer-zindex: (@zindex - 30);
 @footer-bg: @gray-lightest;
 @footer-border: @gray-lighter;
 @footer-color: @gray-light;
-@footer-height: 100px;
 
 /* Page Loader
 ------------------------------------*/

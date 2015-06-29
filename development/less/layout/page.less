@@ -1,5 +1,38 @@
 /* Page
 --------------------------------------*/
-.uhg-page-header {
-    margin: 1.429em 0 1.429em 0;
+.uhg-page {
+
+    .uhg-page-header {
+        padding: 2.857em 1.429em 1.071em 1.429em;
+        background-color: @page-header-bg;
+
+        .uhg-page-title {
+            font-size: 2.143em;
+            color: @page-header-title-color;
+        }
+
+        .uhg-page-subtitle {
+            font-size: 1.429em;
+            margin-top: 0.714em;
+            margin-bottom: 0.714em;
+            color: @page-header-subtitle-color;
+        }
+
+        .uhg-page-description {
+            color: @page-header-description-color;
+        }
+    }
+
+    .uhg-page-body {
+        background-color: @page-body-bg;
+        padding: 1.429em 1.429em 2.143em 1.429em;
+
+        .uhg-page-body-title {
+            color: @page-body-title-color;
+            font-size: 1.429em;
+            margin-top: 0.714em;
+            margin-bottom: 1.429em;
+        }
+    }
 }
+

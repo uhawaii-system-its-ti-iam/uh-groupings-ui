@@ -1,0 +1,23 @@
+/* Theme - University of Hawaii
+--------------------------------------*/
+
+/* Base. */
+@import "./base/variables.less";
+@import "./base/base.less";
+
+/* Namespace
+ *
+ * Everything in this stylesheet is scoped (nested) within ".app".
+ * As a best practice, anything added to this stylesheet (that is not a
+ * variable or mixin) should also be scoped within the namespace.
+--------------------------------------*/
+.app {
+    // Layout.
+    @import "./layout/main.less";
+    @import "./layout/page.less";
+
+    // Components.
+    @import "./components/header.less";
+    @import "./components/list-navigation.less";
+    @import "./components/footer.less";
+}

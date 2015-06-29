@@ -37,11 +37,6 @@ angular.module('app.AppService', ['app.development'])
              */
             navigation: [
                 {
-                    label: 'Login',
-                    key: 'NAVIGATION_LOGIN',
-                    route: 'login'
-                },
-                {
                     label: 'About',
                     key: 'NAVIGATION_ABOUT',
                     route: 'about'

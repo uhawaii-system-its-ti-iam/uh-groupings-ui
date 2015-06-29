@@ -23,10 +23,12 @@
         <!--CSS Dependencies-->
         <link href="css/app.css" rel="stylesheet" type="text/css" media="screen">
     </head>
-    <body class="${id} invisible" stack-reveal="invisible" ng-controller="AppController as appCtrl">
+    <body class="${id} invisible" ng-cloak stack-reveal="invisible" ng-controller="AppController as appCtrl">
         <!--Page Header-->
         <uhg-header
-            brand-link="login">
+            brand-link="login"
+            brand-key="HEADER_BRAND_NAME"
+            logo-path="images/theme/{{appCtrl.theme}}/header-logo.png">
         </uhg-header>
 
         <!--Page Container-->
@@ -46,7 +48,10 @@
         </div>
 
         <!--Page Footer-->
-        <uhg-footer></uhg-footer>
+        <uhg-footer
+            copyright-key="FOOTER_COPYRIGHT"
+            logo-path="images/theme/{{appCtrl.theme}}/footer-logo.png">
+        </uhg-footer>
         
         <!--Page Loader-->
         <stack-page-loader trigger="appCtrl.pageLoading" center="true"></stack-page-loader>
@@ -63,6 +68,9 @@
         <script type="text/javascript" src="js/lib/ui-router/ui-router.js"></script>
         <script type="text/javascript" src="js/lib/outside-events/outside-events.js"></script>
         <script type="text/javascript" src="js/lib/underscore/underscore.js"></script>
+
+        <!--App-->
+        <script type="text/javascript" src="js/src/app/app.js"></script>
 
         <!--App-->
         <script type="text/javascript" src="js/src/app/app.js"></script>

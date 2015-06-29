@@ -13,7 +13,7 @@ angular.module('components.footer.FooterController', [])
         'use strict';
 
         // Define.
-        var footer;
+        var footerCtrl;
 
         /**
          * Property houses a reference to the footer controller.
@@ -21,6 +21,6 @@ angular.module('components.footer.FooterController', [])
          * @property footer
          * @type {Object}
          */
-        footer = this;
+        footerCtrl = this;
     }
 ]);

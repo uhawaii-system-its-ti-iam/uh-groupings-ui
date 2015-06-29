@@ -68,7 +68,13 @@
     text-shadow: @string;
 }
 
-.drop-shadow (@x: 0, @y: 1px, @blur: 2px, @spread: 0, @alpha: 0.25) {
+.box-shadow (@type: inset, @x: 0, @y: 10px, @blur: 18px, @spread: -15px, @alpha: 0.5) {
+    -webkit-box-shadow: @type @x @y @blur @spread rgba(0, 0, 0, @alpha);
+    -moz-box-shadow: @type @x @y @blur @spread rgba(0, 0, 0, @alpha);
+    box-shadow: @type @x @y @blur @spread rgba(0, 0, 0, @alpha);
+}
+
+.drop-shadow (@x: 0, @y: 1px, @blur: 5px, @spread: 0, @alpha: 0.25) {
     -webkit-box-shadow: @x @y @blur @spread rgba(0, 0, 0, @alpha);
     -moz-box-shadow: @x @y @blur @spread rgba(0, 0, 0, @alpha);
     box-shadow: @x @y @blur @spread rgba(0, 0, 0, @alpha);

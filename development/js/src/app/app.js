@@ -31,7 +31,7 @@ angular.module('app', [
             // Redirect for unmatched urls.
             $urlRouterProvider.otherwise(function ($injector) {
                 var state = $injector.get('$state');
-                state.go('login');
+                state.go('about');
             });
         }
     ]

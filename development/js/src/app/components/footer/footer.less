@@ -2,14 +2,52 @@
 --------------------------------------*/
 .uhg-footer {
     background-color: @footer-bg;
-    border-top: 1px solid @footer-border;
+    border-top: 0.071em solid @footer-border;
     color: @footer-color;
-    position: absolute;
+    position: fixed;
     bottom: 0;
-    width: 100%;
-    height: @footer-height;
+    right: 0;
+    left: 0;
+    z-index: @footer-zindex;
+    margin-bottom: 0;
+    padding: 1em 0 1em 0;
+    .clearfix();
 
     .copyright {
-        padding: 1em 1em 1em 1em;
+        padding: 0;
+        white-space: nowrap;
+    }
+
+    .footer-logo {
+        float: right;
+        padding: 0;
+    }
+}
+
+/* Responsive
+--------------------------------------*/
+@media (max-width: @screen-xs-min) {
+    .uhg-footer {
+        .copyright {
+            padding: 0 0 1em 0;
+        }
+
+        .footer-logo {
+            float: none;
+            padding: 0 0 1em 0;
+        }
+    }
+}
+
+@media (min-width: @screen-xs-min) and (max-width: @screen-xs-max) {
+    .uhg-footer {
+        .copyright {
+            padding: 0 0 1em 0;
+        }
+
+        .footer-logo {
+            float: none;
+            padding: 0 0 1em 0;
+        }
     }
 }

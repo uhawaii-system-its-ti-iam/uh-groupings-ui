@@ -1,12 +1,18 @@
 /* Header
 --------------------------------------*/
 .uhg-header {
-    .navbar-header {
-        .clearfix();
+    .navbar {
+        .box-shadow();
+        border-bottom: 1px solid @navbar-default-bottom-border;
+    }
 
+    .navbar-header {
         .header-logo {
-            float: left;
-            padding: 0.286em 0.714em 0 0;
+            padding: 0.5em 0.714em 0 0;
+        }
+
+        .navbar-brand {
+            .text-shadow();
         }
     }
 }
@@ -17,11 +23,7 @@
     .uhg-header {
         .navbar-header {
             .header-logo {
-                padding: 0.286em 0 0 1em;
-            }
-
-            .navbar-brand {
-                padding-left: 0.7em;
+                padding: 0.5em 0 0 1em;
             }
         }
     }
@@ -31,11 +33,7 @@
     .uhg-header {
         .navbar-header {
             .header-logo {
-                padding: 0.286em 0 0 1em;
-            }
-
-            .navbar-brand {
-                padding-left: 0.7em;
+                padding: 0.5em 0 0 1em;
             }
         }
     }

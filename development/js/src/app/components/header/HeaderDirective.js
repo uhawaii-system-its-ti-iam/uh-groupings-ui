@@ -12,7 +12,9 @@ angular.module('components.header.uhgHeader', [
  * @module components.header.uhgHeader
  * @example
  *     <uhg-header
- *         brand-link="login">       // Route to link
+ *         brand-link="login"                       // Route to link.
+ *         brand-key="HEADER_BRAND_NAME"            // Key for localized brand name.
+ *         logo-path="/path/to/image.png">          // Path to header logo.
  *     </uhg-header>
  */
 .directive('uhgHeader', [
@@ -22,7 +24,9 @@ angular.module('components.header.uhgHeader', [
         return {
             restrict: 'E',
             scope: {
-                brandLink: '@'
+                brandLink: '@',
+                brandKey: '@',
+                logoPath: '@'
             },
             controller: 'HeaderController',
             controllerAs: 'headerCtrl',

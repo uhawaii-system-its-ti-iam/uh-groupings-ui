@@ -13,7 +13,8 @@ angular.module('routes.login.LoginController', [
  **/
 .controller('LoginController', [
     '$timeout',
-    function ($timeout) {
+    'translate',
+    function ($timeout, translate) {
         'use strict';
 
         // Define.
@@ -26,6 +27,14 @@ angular.module('routes.login.LoginController', [
          * @type {Object}
          */
         loginCtrl = this;
+
+        /**
+         * Property houses a reference to the i18n object.
+         *
+         * @property loginCtrl.i18n
+         * @type {Object}
+         */
+        loginCtrl.i18n = translate;
 
         /**
          * Method executes initialization process.

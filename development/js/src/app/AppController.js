@@ -1,6 +1,7 @@
 angular.module('app.AppController', [
     'app.AppService',
-    'stack.location'
+    'stack.location',
+    'stack.i18n'
 ])
 
 /**
@@ -14,9 +15,11 @@ angular.module('app.AppController', [
     '$scope',
     '$state',
     '$timeout',
+    '$window',
     'AppService',
     'LocationService',
-    function ($scope, $state, $timeout, AppService, LocationService) {
+    'TranslationService',
+    function ($scope, $state, $timeout, $window, AppService, LocationService, TranslationService) {
         'use strict';
 
         // Define.
@@ -29,6 +32,14 @@ angular.module('app.AppController', [
          * @type {Object}
          */
         appCtrl = this;
+
+        /**
+         * Property houses a reference to application theme.
+         *
+         * @property appCtrl.theme
+         * @type {String}
+         */
+        appCtrl.theme = 'uofhawaii';
 
         /**
          * Property houses a loading flag. This flag is used
@@ -46,6 +57,22 @@ angular.module('app.AppController', [
          * @type {Array}
          */
         appCtrl.navigation = AppService.navigation;
+
+        /**
+         * Property houses a reference to localized strings.
+         *
+         * @property appCtrl.i18n
+         * @type {Object}
+         */
+        appCtrl.i18n = {};
+
+        /**
+         * Property houses a reference to application-level timeout setting.
+         *
+         * @property appCtrl.timeout
+         * @type {Object}
+         */
+        appCtrl.timeout = 1000;
 
         /**
          * Method redirects the user.
@@ -139,9 +166,10 @@ angular.module('app.AppController', [
          */
         function hideApplicationOverlay() {
             var t = $timeout(function () {
+                $window.scrollTo(0, 0);
                 appCtrl.pageLoading = false;
                 $timeout.cancel(t);
-            }, 500);
+            }, appCtrl.timeout);
         }
 
         /**
@@ -175,6 +203,31 @@ angular.module('app.AppController', [
         }
 
         /**
+         * Method populates the application-level i18n object.
+         *
+         * @method buildi18nObject
+         * @private
+         */
+        function buildi18nObject() {
+            appCtrl.pageLoading = true;
+
+            var t = $timeout(function () {
+                TranslationService.get().then(
+                    function (response) {
+                        appCtrl.i18n = response;
+                        appCtrl.pageLoading = false;
+                    },
+                    function (response) {
+                        appCtrl.i18n = {};
+                        appCtrl.pageLoading = false;
+                    }
+                );
+
+                $timeout.cancel(t);
+            }, 0);
+        }
+
+        /**
          * Method exectues initialization process.
          *
          * @method initialize
@@ -182,6 +235,7 @@ angular.module('app.AppController', [
          */
         function initialize() {
             eventListeners();
+            buildi18nObject();
         }
         initialize();
     }
