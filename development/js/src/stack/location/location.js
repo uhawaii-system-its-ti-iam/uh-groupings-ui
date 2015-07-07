@@ -1,5 +1,5 @@
 /**
- * Module definition houses location implementation.
+ * Module definition houses the location feature.
  *
  * @module stack.location
  */

@@ -1,4 +1,4 @@
-angular.module('app.AppService', ['app.development'])
+angular.module('app.AppService', [])
 
 /**
  * The AppService houses application-level properties and methods.
@@ -8,27 +8,10 @@ angular.module('app.AppService', ['app.development'])
  * @module app.AppService
  */
 .factory('AppService', [
-    'DEVELOP',
-    function (DEVELOP) {
+    function () {
         'use strict';
 
         var service = {
-            /**
-             * Property houses base namespace.
-             *
-             * @property base
-             * @type {String}
-             */
-            base: ((DEVELOP) ? '' : ''),
-
-            /**
-             * Property houses API namespace.
-             *
-             * @property api
-             * @type {String}
-             */
-            api: ((DEVELOP) ? '/api' : '/api'),
-
             /**
              * Property houses API namespace.
              *

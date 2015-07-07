@@ -13,7 +13,9 @@ angular.module('components.header.uhgHeader', [
  * @example
  *     <uhg-header
  *         brand-link="login"                       // Route to link.
- *         brand-key="HEADER_BRAND_NAME"            // Key for localized brand name.
+ *         authenticated="true"                     // Boolean flag that controls rendering of login/logout links.
+ *         authenticated-route="about"              // Route to redirect to on successful login.
+ *         unauthenticated-route="about"            // Route to redirect to on unsuccessful login.
  *         logo-path="/path/to/image.png">          // Path to header logo.
  *     </uhg-header>
  */
@@ -25,8 +27,10 @@ angular.module('components.header.uhgHeader', [
             restrict: 'E',
             scope: {
                 brandLink: '@',
-                brandKey: '@',
-                logoPath: '@'
+                logoPath: '@',
+                authenticated: '=',
+                authenticatedRoute: '@',
+                unauthenticatedRoute: '@'
             },
             controller: 'HeaderController',
             controllerAs: 'headerCtrl',

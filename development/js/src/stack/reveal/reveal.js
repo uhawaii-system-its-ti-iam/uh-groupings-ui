@@ -1,5 +1,5 @@
 /**
- * Module definition houses the Reveal implementation.
+ * Module definition houses the reveal feature.
  *
  * @module stack.reveal
  */

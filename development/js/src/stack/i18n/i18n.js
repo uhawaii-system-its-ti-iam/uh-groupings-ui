@@ -1,5 +1,5 @@
 /**
- * Module definition houses i18n implementation.
+ * Module definition houses the i18n feature.
  *
  * @module stack.i18n
  */

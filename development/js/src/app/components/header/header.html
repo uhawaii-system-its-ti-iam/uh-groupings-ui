@@ -2,12 +2,32 @@
     <div class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" aria-expanded="false" ng-click="headerCtrl.collapsed = !headerCtrl.collapsed">
+                    <span class="sr-only" stack-localize="HEADER_TOGGLE_NAVIGATION">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
                 <div class="header-logo" ng-show="headerCtrl.logoPath">
-                    <img ng-src="{{headerCtrl.logoPath}}" alt="Brand Logo">
+                    <img ng-src="{{headerCtrl.logoPath}}" alt="{{'HEADER_BRAND_ALT' | localize}}">
                 </div>
                 <a ui-sref="{{headerCtrl.brandLink}}" class="navbar-brand">
-                    <span stack-localize="{{headerCtrl.brandKey}}">Brand Name</span>
+                    <span stack-localize="HEADER_BRAND_NAME">Brand Name</span>
                 </a>
+            </div>
+
+            <div class="collapse navbar-collapse" collapse="headerCtrl.collapsed">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="" role="button" class="navbar-link" ng-if="!headerCtrl.authenticated" ng-click="headerCtrl.login()">
+                            <span stack-localize="BUTTON_LOGIN">Login</span>
+                        </a>
+                        <a href="" role="button" class="navbar-link" ng-if="headerCtrl.authenticated" ng-click="headerCtrl.logout()">
+                            <span stack-localize="BUTTON_LOGOUT">Logout</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

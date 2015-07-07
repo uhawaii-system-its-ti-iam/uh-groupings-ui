@@ -5,7 +5,8 @@
  * @module routes.about
  */
 angular.module('routes.about', [
-    'stack.i18n',
+    'stack.i18n.TranslationResolver',
+    'stack.authentication.PublicResolver',
     'routes.about.AboutController'
 ])
 .config(
@@ -23,6 +24,9 @@ angular.module('routes.about', [
                     resolve: {
                         translate: ['TranslationResolver', function (TranslationResolver) {
                             return new TranslationResolver();
+                        }],
+                        userStatus: ['PublicResolver', function (PublicResolver) {
+                            return new PublicResolver();
                         }]
                     }
                 }

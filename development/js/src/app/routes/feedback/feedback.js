@@ -5,7 +5,8 @@
  * @module routes.feedback
  */
 angular.module('routes.feedback', [
-    'stack.i18n',
+    'stack.i18n.TranslationResolver',
+    'stack.authentication.ProtectResolver',
     'routes.feedback.FeedbackController'
 ])
 .config(
@@ -23,6 +24,9 @@ angular.module('routes.feedback', [
                     resolve: {
                         translate: ['TranslationResolver', function (TranslationResolver) {
                             return new TranslationResolver();
+                        }],
+                        protect: ['ProtectResolver', function (ProtectResolver) {
+                            return new ProtectResolver();
                         }]
                     }
                 }

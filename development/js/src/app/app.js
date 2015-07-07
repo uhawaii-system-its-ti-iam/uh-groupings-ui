@@ -16,8 +16,10 @@ angular.module('app', [
     [
         '$locationProvider',
         '$urlRouterProvider',
+        'DSCacheFactoryProvider',
         'TranslationConfigProvider',
-        function ($locationProvider, $urlRouterProvider, TranslationConfigProvider) {
+        'AuthenticationConfigProvider',
+        function ($locationProvider, $urlRouterProvider, DSCacheFactoryProvider, TranslationConfigProvider, AuthenticationConfigProvider) {
             'use strict';
 
             // Enable html5 push state.
@@ -27,6 +29,18 @@ angular.module('app', [
             TranslationConfigProvider
                 .setMapPath('i18n/')
                 .setMapNamespace('application');
+
+            // Provide API base & authentication routes.
+            AuthenticationConfigProvider
+                .setDevelopmentAPIBase('/api')
+                .setProductionAPIBase('/api')
+                .setUnauthenticatedRoute('about')
+                .setAuthenticatedRoute('about');
+
+            // Configure global cache settings.
+            DSCacheFactoryProvider.setCacheDefaults({
+                storageMode: 'memory'
+            });
 
             // Redirect for unmatched urls.
             $urlRouterProvider.otherwise(function ($injector) {

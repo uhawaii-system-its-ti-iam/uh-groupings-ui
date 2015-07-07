@@ -5,7 +5,8 @@
  * @module routes.designate
  */
 angular.module('routes.designate', [
-    'stack.i18n',
+    'stack.i18n.TranslationResolver',
+    'stack.authentication.ProtectResolver',
     'routes.designate.DesignateController'
 ])
 .config(
@@ -23,6 +24,9 @@ angular.module('routes.designate', [
                     resolve: {
                         translate: ['TranslationResolver', function (TranslationResolver) {
                             return new TranslationResolver();
+                        }],
+                        protect: ['ProtectResolver', function (ProtectResolver) {
+                            return new ProtectResolver();
                         }]
                     }
                 }

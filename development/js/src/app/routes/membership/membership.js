@@ -5,7 +5,8 @@
  * @module routes.membership
  */
 angular.module('routes.membership', [
-    'stack.i18n',
+    'stack.i18n.TranslationResolver',
+    'stack.authentication.ProtectResolver',
     'routes.membership.MembershipController'
 ])
 .config(
@@ -23,6 +24,9 @@ angular.module('routes.membership', [
                     resolve: {
                         translate: ['TranslationResolver', function (TranslationResolver) {
                             return new TranslationResolver();
+                        }],
+                        protect: ['ProtectResolver', function (ProtectResolver) {
+                            return new ProtectResolver();
                         }]
                     }
                 }

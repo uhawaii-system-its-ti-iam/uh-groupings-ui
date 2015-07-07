@@ -6,15 +6,16 @@
     .loader {
         display: block;
         position: absolute;
-        top: 0; left: 0;
+        top: 155px; left: 0;
         bottom: 0; right: 0;
         text-align: center;
         padding: 0 0 0 0;
         z-index: @pageloader-loader-zindex;
         width: 14em;
-        margin: 4em auto 0 auto;
+        margin: 0 auto 0 auto;
 
         .loader-inner {
+            display: none;
             background-color: @pageloader-loader-bg;
             border: 1px solid @pageloader-loader-border;
             padding: 1em 1em 1em 1em;
@@ -40,7 +41,6 @@
         padding: 0 0 0 0;
         background: @pageloader-overlay-bg;
         z-index: @pageloader-overlay-zindex;
-        .border-radius (@radius: 0.571em);
         .opacity(@opacity: .7);
     }
 
@@ -51,6 +51,24 @@
 
 .stack-page-loader-center {
     .loader {
+        top: 0;
         margin: auto auto;
+    }
+}
+
+/* Responsive
+--------------------------------------*/
+@media (max-width: @screen-xs-min) {
+    .stack-page-loader {
+        .loader {
+            top: 75px;
+        }
+    }
+
+    .stack-page-loader-center {
+        .loader {
+            top: 0;
+            margin: auto auto;
+        }
     }
 }

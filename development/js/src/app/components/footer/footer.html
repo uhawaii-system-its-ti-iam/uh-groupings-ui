@@ -3,12 +3,12 @@
         <div class="row">
             <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
                 <div class="copyright">
-                    <small stack-localize="{{footerCtrl.copyrightKey}}">Copyright © 2015</small>
+                    <small stack-localize="FOOTER_COPYRIGHT">Copyright © 2015</small>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
                 <div class="footer-logo visible-md visible-lg" ng-show="footerCtrl.logoPath">
-                    <img ng-src="{{footerCtrl.logoPath}}" alt="Footer Logo">
+                    <img ng-src="{{footerCtrl.logoPath}}" alt="{{'FOOTER_LOGO_ALT' | localize}}">
                 </div>
             </div>
         </div>

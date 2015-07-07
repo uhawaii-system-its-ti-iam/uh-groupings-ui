@@ -23,38 +23,42 @@
         <!--CSS Dependencies-->
         <link href="css/app.css" rel="stylesheet" type="text/css" media="screen">
     </head>
-    <body class="${id} invisible" ng-cloak stack-reveal="invisible" ng-controller="AppController as appCtrl">
-        <!--Page Header-->
-        <uhg-header
-            brand-link="login"
-            brand-key="HEADER_BRAND_NAME"
-            logo-path="images/theme/{{appCtrl.theme}}/header-logo.png">
-        </uhg-header>
+    <body class="${id} invisible" ng-cloak stack-reveal="invisible" ng-controller="AuthenticationController as authCtrl">
+        <div ng-controller="AppController as appCtrl">
+            <!--Page Header-->
+            <uhg-header
+                brand-link="login"
+                logo-path="images/theme/{{appCtrl.theme}}/header-logo.png"
+                authenticated="authCtrl.authenticated"
+                authenticated-route="about"
+                unauthenticated-route="about">
+            </uhg-header>
 
-        <!--Page Container-->
-        <div class="container uhg-container">
-            <div class="row">
-                <div class="col-sm-3 col-md-3 col-lg-2">
-                    <aside>
-                        <uhg-list-navigation
-                            items="appCtrl.navigation">
-                        </uhg-list-navigation>
-                    </aside>
-                </div>
-                <div class="col-sm-9 col-md-9 col-lg-10">
-                    <main ui-view class="uhg-main" role="main"></main>
+            <!--Page-->
+            <div class="container uhg-container">
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-lg-2">
+                        <aside>
+                            <uhg-list-navigation
+                                authenticated="authCtrl.authenticated"
+                                items="appCtrl.navigation">
+                            </uhg-list-navigation>
+                        </aside>
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-lg-10">
+                        <main ui-view class="uhg-main" role="main">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!--Page Footer-->
-        <uhg-footer
-            copyright-key="FOOTER_COPYRIGHT"
-            logo-path="images/theme/{{appCtrl.theme}}/footer-logo.png">
-        </uhg-footer>
-        
-        <!--Page Loader-->
-        <stack-page-loader trigger="appCtrl.pageLoading" center="true"></stack-page-loader>
+            <!--Page Footer-->
+            <uhg-footer
+                logo-path="images/theme/{{appCtrl.theme}}/footer-logo.png">
+            </uhg-footer>
+
+            <!--Page Loader-->
+            <stack-page-loader trigger="appCtrl.pageLoading" opaque="appCtrl.pageLoadingOpaque"></stack-page-loader>
+        </div>
 
         <!--JS Dependencies-->
         ${#dev}
@@ -76,7 +80,6 @@
         <script type="text/javascript" src="js/src/app/app.js"></script>
         <script type="text/javascript" src="js/src/app/AppController.js"></script>
         <script type="text/javascript" src="js/src/app/AppService.js"></script>
-        <script type="text/javascript">angular.module("app.development", []).constant("DEVELOP", ${dev});</script>
 
         <!--Templates-->
         <script type="text/javascript" src="js/src/templates.js"></script>
@@ -86,10 +89,6 @@
 
         <!--Routes-->
         <script type="text/javascript" src="js/src/app/routes/routes.js"></script>
-
-        <!--Login-->
-        <script type="text/javascript" src="js/src/app/routes/login/login.js"></script>
-        <script type="text/javascript" src="js/src/app/routes/login/LoginController.js"></script>
 
         <!--About-->
         <script type="text/javascript" src="js/src/app/routes/about/about.js"></script>
@@ -133,6 +132,15 @@
         <!--Stack-->
         <script type="text/javascript" src="js/src/stack/stack.js"></script>
 
+        <!--Develop-->
+        <script type="text/javascript" src="js/src/stack/develop/develop.js"></script>
+        <script type="text/javascript" src="js/src/stack/develop/DevelopConfigProvider.js"></script>
+        <script type="text/javascript">
+            angular.module("app.develop", []).config(['DevelopConfigProvider', function (DevelopConfigProvider) {
+                DevelopConfigProvider.setDevelop(${dev});
+            }]);
+        </script>
+
         <!--i18n-->
         <script type="text/javascript" src="js/src/stack/i18n/i18n.js"></script>
         <script type="text/javascript" src="js/src/stack/i18n/LocalizeDirective.js"></script>
@@ -153,12 +161,25 @@
         <!--Location-->
         <script type="text/javascript" src="js/src/stack/location/location.js"></script>
         <script type="text/javascript" src="js/src/stack/location/LocationService.js"></script>
+
+        <!--Authentication-->
+        <script type="text/javascript" src="js/src/stack/authentication/authentication.js"></script>
+        <script type="text/javascript" src="js/src/stack/authentication/AuthenticationConfigProvider.js"></script>
+        <script type="text/javascript" src="js/src/stack/authentication/AuthenticationModel.js"></script>
+        <script type="text/javascript" src="js/src/stack/authentication/AuthenticationService.js"></script>
+        <script type="text/javascript" src="js/src/stack/authentication/AuthenticationController.js"></script>
+        <script type="text/javascript" src="js/src/stack/authentication/ProtectResolver.js"></script>
+        <script type="text/javascript" src="js/src/stack/authentication/PublicResolver.js"></script>
         ${/dev}
         ${^dev}
         <script type="text/javascript" src="js/lib.min.js"></script>
-        <script type="text/javascript">angular.module("app.development", []).constant("DEVELOP", ${dev});</script>
         <script type="text/javascript" src="js/app.min.js"></script>
         <script type="text/javascript" src="js/stack.min.js"></script>
+        <script type="text/javascript">
+            angular.module("app.develop", []).config(['DevelopConfigProvider', function (DevelopConfigProvider) {
+                DevelopConfigProvider.setDevelop(${dev});
+            }]);
+        </script>
         ${/dev}
     </body>
 </html>

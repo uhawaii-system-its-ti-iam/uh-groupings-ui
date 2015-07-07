@@ -10,5 +10,7 @@ angular.module('stack', [
     'stack.i18n',
     'stack.page-loader',
     'stack.location',
-    'stack.reveal'
+    'stack.reveal',
+    'stack.authentication',
+    'stack.develop'
 ]);

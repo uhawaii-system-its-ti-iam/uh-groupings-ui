@@ -1,7 +1,6 @@
 angular.module('app.AppController', [
     'app.AppService',
-    'stack.location',
-    'stack.i18n'
+    'ui.router'
 ])
 
 /**
@@ -17,9 +16,8 @@ angular.module('app.AppController', [
     '$timeout',
     '$window',
     'AppService',
-    'LocationService',
     'TranslationService',
-    function ($scope, $state, $timeout, $window, AppService, LocationService, TranslationService) {
+    function ($scope, $state, $timeout, $window, AppService, TranslationService) {
         'use strict';
 
         // Define.
@@ -51,6 +49,15 @@ angular.module('app.AppController', [
         appCtrl.pageLoading = true;
 
         /**
+         * Property houses a opacity flag. This flag is used
+         * to control the opacity of the application overlay.
+         *
+         * @property appCtrl.pageLoadingOpaque
+         * @type {Boolean}
+         */
+        appCtrl.pageLoadingOpaque = true;
+
+        /**
          * Property houses a collection of navigation objects.
          *
          * @property appCtrl.navigation
@@ -59,34 +66,12 @@ angular.module('app.AppController', [
         appCtrl.navigation = AppService.navigation;
 
         /**
-         * Property houses a reference to localized strings.
-         *
-         * @property appCtrl.i18n
-         * @type {Object}
-         */
-        appCtrl.i18n = {};
-
-        /**
          * Property houses a reference to application-level timeout setting.
          *
          * @property appCtrl.timeout
          * @type {Object}
          */
-        appCtrl.timeout = 1000;
-
-        /**
-         * Method redirects the user.
-         *
-         * @method redirect
-         * @param {String} path Path to evaluate
-         * @private
-         */
-        function redirect(path) {
-            path = (!path) ? 'login' : path;
-
-            // Redirect.
-            LocationService.redirect({route: path});
-        }
+        appCtrl.timeout = 1500;
 
         /**
          * Method is triggered when a state transition begins.
@@ -132,8 +117,6 @@ angular.module('app.AppController', [
          */
         function onRouteChangeError(evt, toState, toParams, fromState, fromParams, rejection) {
             if (rejection && rejection.hasOwnProperty('path')) {
-                redirect(rejection.path);
-
                 // In some cases the redirect 'path' can equal the 'current'
                 // path. When this happens, the ui-router implementation
                 // (i.e., $state.go()) does not redirect or refresh the interface.
@@ -168,6 +151,11 @@ angular.module('app.AppController', [
             var t = $timeout(function () {
                 $window.scrollTo(0, 0);
                 appCtrl.pageLoading = false;
+
+                if (appCtrl.pageLoadingOpaque) {
+                    appCtrl.pageLoadingOpaque = false;
+                }
+
                 $timeout.cancel(t);
             }, appCtrl.timeout);
         }
@@ -203,31 +191,6 @@ angular.module('app.AppController', [
         }
 
         /**
-         * Method populates the application-level i18n object.
-         *
-         * @method buildi18nObject
-         * @private
-         */
-        function buildi18nObject() {
-            appCtrl.pageLoading = true;
-
-            var t = $timeout(function () {
-                TranslationService.get().then(
-                    function (response) {
-                        appCtrl.i18n = response;
-                        appCtrl.pageLoading = false;
-                    },
-                    function (response) {
-                        appCtrl.i18n = {};
-                        appCtrl.pageLoading = false;
-                    }
-                );
-
-                $timeout.cancel(t);
-            }, 0);
-        }
-
-        /**
          * Method exectues initialization process.
          *
          * @method initialize
@@ -235,7 +198,6 @@ angular.module('app.AppController', [
          */
         function initialize() {
             eventListeners();
-            buildi18nObject();
         }
         initialize();
     }

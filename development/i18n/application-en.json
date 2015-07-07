@@ -1,5 +1,9 @@
 {
+    "BUTTON_LOGIN": "Login",
+    "BUTTON_LOGOUT": "Logout",
+
     "HEADER_BRAND_NAME": "UH Groupings",
+    "HEADER_BRAND_ALT": "University of Hawaii Logo",
     "HEADER_TOGGLE_NAVIGATION": "Toggle navigation",
 
     "NAVIGATION_LOGIN": "Login",

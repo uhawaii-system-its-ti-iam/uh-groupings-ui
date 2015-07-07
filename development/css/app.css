@@ -4464,14 +4464,14 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   background-color: transparent;
 }
 .navbar-default .navbar-toggle {
-  border-color: #dddddd;
+  border-color: #ffffff;
 }
 .navbar-default .navbar-toggle:hover,
 .navbar-default .navbar-toggle:focus {
-  background-color: #dddddd;
+  background-color: #ab6821;
 }
 .navbar-default .navbar-toggle .icon-bar {
-  background-color: #888888;
+  background-color: #ffffff;
 }
 .navbar-default .navbar-collapse,
 .navbar-default .navbar-form {
@@ -8559,9 +8559,6 @@ body {
   /* Routes
  * Import LESS files for routes.
 --------------------------------------*/
-  /* Login
- * Styles for the login route.
---------------------------------------*/
   /* About
  * Styles for the about route.
 --------------------------------------*/
@@ -8581,6 +8578,8 @@ body {
  * Import LESS files for stack.
 --------------------------------------*/
   /* PageLoader
+--------------------------------------*/
+  /* Responsive
 --------------------------------------*/
 }
 .app .uhg-container {
@@ -8756,7 +8755,7 @@ body {
 .app .stack-page-loader .loader {
   display: block;
   position: absolute;
-  top: 0;
+  top: 155px;
   left: 0;
   bottom: 0;
   right: 0;
@@ -8764,11 +8763,12 @@ body {
   padding: 0 0 0 0;
   z-index: 1040;
   width: 14em;
-  margin: 4em auto 0 auto;
+  margin: 0 auto 0 auto;
 }
 .app .stack-page-loader .loader .loader-inner {
+  display: none;
   background-color: #ffffff;
-  border: 1px solid #333333;
+  border: 1px solid #d0d0d0;
   padding: 1em 1em 1em 1em;
   -webkit-border-radius: 0.571em;
   -moz-border-radius: 0.571em;
@@ -8793,14 +8793,8 @@ body {
   right: 0;
   text-align: center;
   padding: 0 0 0 0;
-  background: #333333;
+  background: #eeeeee;
   z-index: 1030;
-  -webkit-border-radius: 0.571em;
-  -moz-border-radius: 0.571em;
-  border-radius: 0.571em;
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
   opacity: 0.7;
   filter: alpha(opacity=70);
 }
@@ -8809,7 +8803,17 @@ body {
   filter: alpha(opacity=100);
 }
 .app .stack-page-loader-center .loader {
+  top: 0;
   margin: auto auto;
+}
+@media (max-width: 480px) {
+  .app .stack-page-loader .loader {
+    top: 75px;
+  }
+  .app .stack-page-loader-center .loader {
+    top: 0;
+    margin: auto auto;
+  }
 }
 /* Theme. */
 /* Theme - University of Hawaii

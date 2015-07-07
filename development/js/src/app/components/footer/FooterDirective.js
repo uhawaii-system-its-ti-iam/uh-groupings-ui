@@ -12,8 +12,7 @@ angular.module('components.footer.uhgFooter', [
  * @module components.footer.uhgFooter
  * @example
  *     <uhg-footer
- *         logo-path="/path/to/image.png"           // Path to footer logo.
- *         copyrightKey="FOOTER_COPYRIGHT">         // Key for localized copyright.
+ *         logo-path="/path/to/image.png">           // Path to footer logo.
  *     </uhg-footer>
  */
 .directive('uhgFooter', [
@@ -23,8 +22,7 @@ angular.module('components.footer.uhgFooter', [
         return {
             restrict: 'E',
             scope: {
-                logoPath: '@',
-                copyrightKey: '@'
+                logoPath: '@'
             },
             controller: 'FooterController',
             controllerAs: 'footerCtrl',

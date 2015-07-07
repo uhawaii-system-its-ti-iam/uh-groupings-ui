@@ -26,13 +26,12 @@ angular.module('stack.page-loader.stackPageLoader', [])
             scope: {
                 trigger: '=',
                 center: '=',
-                opaque: '=',
-                focusOn: '@'
+                opaque: '='
             },
             templateUrl: 'js/src/stack/page-loader/page-loader.html',
             link: function (scope, element, attrs) {
                 // Define.
-                var timer, listen, position, opacity, watchTrigger, center, opaque, container;
+                var timer, listen, position, watchTrigger, watchOpacity, center, opaque, container;
 
                 // Set value for the center parameter.
                 center = (angular.isUndefined(scope.center)) ? false : scope.center;
@@ -60,15 +59,6 @@ angular.module('stack.page-loader.stackPageLoader', [])
                     }
                 };
 
-                // Set opacity of overlay.
-                opacity = function () {
-                    element.find('.overlay').removeClass('overlay-opaque');
-
-                    if (opaque) {
-                        element.find('.overlay').addClass('overlay-opaque');
-                    }
-                };
-
                 // Toggle event listener based upon trigger.
                 watchTrigger = function (value) {
                     if (angular.isUndefined(value)) {
@@ -80,6 +70,7 @@ angular.module('stack.page-loader.stackPageLoader', [])
                         angular.element(container).css({position: 'relative'});
                         timer = $timeout(function () {
                             element.find('.loader').height(element.find('.loader-inner').outerHeight());
+                            element.find('.loader-inner').fadeIn();
                             $timeout.cancel(timer);
                         }, 0);
 
@@ -91,9 +82,18 @@ angular.module('stack.page-loader.stackPageLoader', [])
                     }
                 };
 
+                // Toggle opacity based upon opaque property.
+                watchOpacity = function (value) {
+                    element.find('.overlay').removeClass('overlay-opaque');
+
+                    if (value) {
+                        element.find('.overlay').addClass('overlay-opaque');
+                    }
+                };
+
                 position();
-                opacity();
                 scope.$watch('trigger', watchTrigger);
+                scope.$watch('opaque', watchOpacity);
             }
         };
     }

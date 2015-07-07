@@ -13,7 +13,9 @@ angular.module('routes.membership.MembershipController', [
  **/
 .controller('MembershipController', [
     '$timeout',
-    function ($timeout) {
+    'translate',
+    'userStatus',
+    function ($timeout, translate, userStatus) {
         'use strict';
 
         // Define.
@@ -35,6 +37,8 @@ angular.module('routes.membership.MembershipController', [
          */
         function initialize() {
             var t = $timeout(function () {
+                // Call implementations here. Timeout is needed in order
+                // for all potentially nested directives to execute.
                 $timeout.cancel(t);
             }, 0);
         }

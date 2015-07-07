@@ -1,5 +1,5 @@
 /**
- * Module definition houses the PageLoader implementation.
+ * Module definition houses the PageLoader feature.
  *
  * @module stack.page-loader
  */
