@@ -14,8 +14,7 @@ angular.module('routes.membership.MembershipController', [
 .controller('MembershipController', [
     '$timeout',
     'translate',
-    'userStatus',
-    function ($timeout, translate, userStatus) {
+    function ($timeout, translate) {
         'use strict';
 
         // Define.

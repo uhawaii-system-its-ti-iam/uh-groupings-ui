@@ -14,8 +14,7 @@ angular.module('routes.designate.DesignateController', [
 .controller('DesignateController', [
     '$timeout',
     'translate',
-    'userStatus',
-    function ($timeout, translate, userStatus) {
+    function ($timeout, translate) {
         'use strict';
 
         // Define.

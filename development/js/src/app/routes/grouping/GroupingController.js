@@ -14,8 +14,7 @@ angular.module('routes.grouping.GroupingController', [
 .controller('GroupingController', [
     '$timeout',
     'translate',
-    'userStatus',
-    function ($timeout, translate, userStatus) {
+    function ($timeout, translate) {
         'use strict';
 
         // Define.

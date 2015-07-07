@@ -14,8 +14,7 @@ angular.module('routes.feedback.FeedbackController', [
 .controller('FeedbackController', [
     '$timeout',
     'translate',
-    'userStatus',
-    function ($timeout, translate, userStatus) {
+    function ($timeout, translate) {
         'use strict';
 
         // Define.
