@@ -1,5 +1,14 @@
+# Angular ignores
+# ---------------
 .DS_Store
 node_modules
 npm-debug.log
 development/docs
 production
+
+# Laravel related
+# ---------------
+/vendor
+/node_modules
+Homestead.yaml
+.env
