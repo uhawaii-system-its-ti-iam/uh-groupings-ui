@@ -1,20 +1,14 @@
-{{=${ }=}}
 <!DOCTYPE html>
-<html lang="en" xmlns:ng="http://angularjs.org" ng-app="${id}">
+<html lang="en" xmlns:ng="http://angularjs.org" ng-app="app">
     <head>
         <meta charset="utf-8" />
         <meta equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="${description}" />
-        <meta name="author" content="${author}">
-        <title>${title}</title>
+        <meta name="description" content="Front-end web framework." />
+        <meta name="author" content="Unicon, inc.">
+        <title>Web Framework</title>
 
-        ${#dev}
         <base href="development/">
-        ${/dev}
-        ${^dev}
-        <base href="production/">
-        ${/dev}
 
         <!--Favicon-->
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -23,7 +17,7 @@
         <!--CSS Dependencies-->
         <link href="css/app.css" rel="stylesheet" type="text/css" media="screen">
     </head>
-    <body class="${id} invisible" ng-cloak stack-reveal="invisible" ng-controller="AuthenticationController as authCtrl">
+    <body class="app invisible" ng-cloak stack-reveal="invisible" ng-controller="AuthenticationController as authCtrl">
         <div ng-controller="AppController as appCtrl">
             <!--Page Header-->
             <uhg-header
@@ -61,7 +55,6 @@
         </div>
 
         <!--JS Dependencies-->
-        ${#dev}
         <script type="text/javascript" src="js/lib/jquery/jquery.js"></script>
         <script type="text/javascript" src="js/lib/angular/angular.js"></script>
         <script type="text/javascript" src="js/lib/angular/angular-sanitize.js"></script>
@@ -137,7 +130,7 @@
         <script type="text/javascript" src="js/src/stack/develop/DevelopConfigProvider.js"></script>
         <script type="text/javascript">
             angular.module("app.develop", []).config(['DevelopConfigProvider', function (DevelopConfigProvider) {
-                DevelopConfigProvider.setDevelop(${dev});
+                DevelopConfigProvider.setDevelop(true);
             }]);
         </script>
 
@@ -170,16 +163,5 @@
         <script type="text/javascript" src="js/src/stack/authentication/AuthenticationController.js"></script>
         <script type="text/javascript" src="js/src/stack/authentication/ProtectResolver.js"></script>
         <script type="text/javascript" src="js/src/stack/authentication/PublicResolver.js"></script>
-        ${/dev}
-        ${^dev}
-        <script type="text/javascript" src="js/lib.min.js"></script>
-        <script type="text/javascript" src="js/app.min.js"></script>
-        <script type="text/javascript" src="js/stack.min.js"></script>
-        <script type="text/javascript">
-            angular.module("app.develop", []).config(['DevelopConfigProvider', function (DevelopConfigProvider) {
-                DevelopConfigProvider.setDevelop(${dev});
-            }]);
-        </script>
-        ${/dev}
     </body>
 </html>

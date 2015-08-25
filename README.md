@@ -35,3 +35,11 @@ Note: If the above fails due to permissions, run the mv line again with sudo
 
 ### Production
 - run `grunt prod` to run the minification scripts and to set the code up for production use.
+
+
+
+## Troubleshooting
+#### I see a blank page
+Check that server error logs
+
+#### 
