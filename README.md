@@ -6,25 +6,32 @@ To setup UHGroupings, you need to clone the Git repo with the following command:
 `git clone git@github.com:Unicon/uhgroupings.git`
 
 ### Install Composer (system wide)
-<!--
+
+#### Quick instructions
 Laravel utilizes Composer to manage its dependencies. Without composer installed locally and on the server environments Laravel will not be able to work. Run the following commands:
 `$ curl -sS https://getcomposer.org/installer | php`
 `$ mv composer.phar /usr/local/bin/composer`
 
 You will now be able to run the composer command from anywhere on the server.
 Note: If the above fails due to permissions, run the mv line again with sudo
--->
+
+Refer to the [Composer Documentation](https://getcomposer.org/doc/00-intro.md) for more detailed instructions.
 
 
 ## Backend
-- copy .env.example to .env
+- run `composer install` to install all of the Laravel dependicies
 
+<!--- copy .env.example to .env --->
+
+- run `php artisan grouper:setup` and follow the prompts.
+
+<!--
 ### Development
 - edit .env and set the APP_ENV to 'development'
 
 ### Production
 - edit .env and set the APP_ENV to 'development'
-
+-->
 
 ## Frontend
 - change into the 'public' directory
