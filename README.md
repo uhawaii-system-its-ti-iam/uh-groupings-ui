@@ -50,7 +50,8 @@ In the application root directory,
 ### Production
 - run `grunt prod` to run the minification scripts and to set the code up for production use.
 
-
+### Local Server
+If you do not have a local web server installed, you can run `php artisan serve` from the application root to start a simple test server.  To stop the server, type `ctrl-c`.
 
 ## Troubleshooting
 #### I see a blank page
