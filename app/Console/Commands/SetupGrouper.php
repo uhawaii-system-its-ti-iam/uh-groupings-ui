@@ -34,6 +34,9 @@ class SetupGrouper extends Command
     protected $databaseUsername = "homestead";
     protected $databasePassword = "secret";
 
+    /**
+     * Default values
+     */
     protected $appKey = null;
     protected $debug = true;
     protected $continue = false;
@@ -63,7 +66,6 @@ class SetupGrouper extends Command
         }
 
         if ($this->continue) {
-            echo 'go on and continue';
             $this->environmentPrompt();
             $this->databasePrompt();
             $this->writeFile();
@@ -71,12 +73,18 @@ class SetupGrouper extends Command
 
     }
 
-
+    /**
+     * Display a welcome message
+     */
     private function welcomeMessage() {
         $this->info('Welcome to the UH Grouper Setup Wizard');
         $this->info('--------------------------------------');
     }
 
+    /**
+     * Prompts for environment choice and set the appropriate variable for
+     * use later
+     */
     private function environmentPrompt() {
         $this->environment = strtolower($this->choice('Which environment are you using?', ['Development', 'Production'], false));
 
@@ -84,11 +92,11 @@ class SetupGrouper extends Command
 
     }
 
+    /**
+     * Prompt the user if they want to setup a database.
+     * If no, then continue, otherwise prompt for database information
+     */
     private function databasePrompt() {
-        /**
-         * Prompt the user if they want to setup a database.
-         * If no, then continue, otherwise prompt for database information
-         */
         if ($this->confirm('Do you wish to use a Database? [y|N]')) {
             //
             $this->databaseName = $this->ask('What is the Database name?');
@@ -99,18 +107,24 @@ class SetupGrouper extends Command
     }
 
 
+    /**
+     * Check to see if the .env file is already present
+     */
     private function fileCheck() {
-        /**
-         * Check to see if the .env file is already present
-         */
-
         return file_exists( '.env' );
     }
 
+    /**
+     * Display a prompt about overwriting existing file
+     * @return bool
+     */
     private function overwritePrompt() {
         return $this->confirm('We have detected that there is already a .env file, and will be overwritten. Do you wish to proceed? [y|N]');
     }
 
+    /**
+     * Create the .env file based on default and user supplied values
+     */
     private function writeFile() {
         $myfile = fopen(".env", "w") or die("Unable to open file!");
 
