@@ -32,12 +32,15 @@ Route::group(['prefix' => 'api'], function () {
 
 Route::get('/', ['as' => 'root', function()
 {
-    $myEnv = env( 'APP_ENV' );
-
-    View::addNamespace( $myEnv, $myEnv);
-    View::addExtension('html', 'php');
-        return View::make($myEnv.'::index');
-
+    /**
+     * Check to see if there is an index.html file, meaning they have setup
+     * the Angular app, and return it.  Otherwise display a welcome page.
+     */
+    if ( File::exists( \public_path().'/index.html') ) {
+        return \File::get(public_path().'/index.html');
+    } else {
+        return View::make('welcome');
+    }
 }]);
 
 Route::any( '{catchall}', function () {

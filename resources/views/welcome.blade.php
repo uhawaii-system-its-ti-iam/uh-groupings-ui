@@ -8,6 +8,7 @@
         <style>
             html, body {
                 height: 100%;
+                font-size: 16px
             }
 
             body {
@@ -28,17 +29,21 @@
             .content {
                 text-align: center;
                 display: inline-block;
+                font-size: 2rem;
             }
 
             .title {
-                font-size: 96px;
+                font-size: 6rem; /* 16 * 2.5 = 40px */
+                margin-bottom: 2rem;
+                /*font-size: 96px;*/
             }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Laravel 5</div>
+                <div class="title">Welcome to<br /> UH Groupings</div>
+                <div class="content">If you are seeing this, then you have not setup the UI yet.<br />Please refer to the README.md file for instructions.</div>
             </div>
         </div>
     </body>
