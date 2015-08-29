@@ -27,6 +27,13 @@ class SetupGrouper extends Command
     protected $environment = 'development';
 
     /**
+     * Required version of PHP
+     * This should match the minimum version required for this particular
+     * version of Laravel.
+     */
+    protected $requiredPhpVersion = '5.5.9';
+
+    /**
      * Database information
      */
     protected $databaseHost = "localhost";
@@ -59,6 +66,8 @@ class SetupGrouper extends Command
     {
         $this->welcomeMessage();
 
+        $this->phpVersionCheck();
+
         if ( $this->fileCheck() ) {
             $this->continue = $this->overwritePrompt();
         } else {
@@ -69,6 +78,8 @@ class SetupGrouper extends Command
             $this->environmentPrompt();
             $this->databasePrompt();
             $this->writeFile();
+        } else {
+            $this->info('Finished! Please continue on with setting up the UI.');
         }
 
     }
@@ -77,8 +88,27 @@ class SetupGrouper extends Command
      * Display a welcome message
      */
     private function welcomeMessage() {
+        $this->info('');
         $this->info('Welcome to the UH Grouper Setup Wizard');
         $this->info('--------------------------------------');
+        $this->info('');
+    }
+
+    private function phpVersionCheck() {
+
+        if (version_compare(PHP_VERSION, $this->requiredPhpVersion) < 0) {
+            $this->error('                                                                ');
+            $this->error(' Opps, Something went wrong!                                    ');
+            $this->error('=+==============================================================');
+            $this->error(' It appears that you have an older version of PHP than what is  ');
+            $this->error(' required to run this application.                              ');
+            $this->error('                                                                ');
+            $this->error(' You currently have v' . PHP_VERSION . ' installed. We require v' . $this->requiredPhpVersion . ' or     ');
+            $this->error(' greater. Please upgrade and re-run this setup.                 ');
+            $this->error('                                                                ');
+            $this->info('');
+            die();
+        }
     }
 
     /**
