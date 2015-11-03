@@ -116,7 +116,7 @@ TBA
 ## Licensing
 ***
 ### Licensed Software
-#### Angular
+#### Angular 1.4
 * Site: [angular](http://angularjs.org/)
 * License: [License](https://github.com/angular/angular.js/blob/master/LICENSE)
 
