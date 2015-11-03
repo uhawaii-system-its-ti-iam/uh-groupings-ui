@@ -101,6 +101,17 @@ Run the below command.
 
     php artisan serve
 
+## Understanding the Project Architecture
+***
+TBA
+### Working with Node Development Server
+TBA
+### Generate JavaScript Documentation
+TBA
+### Enable Real-Time JavaScript Linter
+TBA
+### Execute JavaScript Unit Tests
+TBA
 
 ## Licensing
 ***
