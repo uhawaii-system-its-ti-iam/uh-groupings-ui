@@ -42,8 +42,8 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Welcome to<br /> UH Groupings</div>
-                <div class="content">If you are seeing this, then you have not setup the UI yet.<br />Please refer to the README.md file for instructions.</div>
+                <div class="title">Welcome to<br /> the Laravel Framework.</div>
+                <div class="content">If you are seeing this, then you have not setup the UI.<br />Please refer to the README.md file for instructions.</div>
             </div>
         </div>
     </body>

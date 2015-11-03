@@ -6,6 +6,16 @@ npm-debug.log
 development/docs
 production
 
+# Public ignores
+# ---------------
+public/css
+public/fonts
+public/i18n
+public/images
+public/js
+public/index.html
+public/favicon.ico
+
 # Laravel related
 # ---------------
 /vendor
