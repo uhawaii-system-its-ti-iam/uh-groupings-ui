@@ -1,0 +1,36 @@
+{
+    "APPLICATIONS": [
+        {
+            "ID": "app",
+            "TITLE": "UH Groupings",
+            "DESCRIPTION": "Front-end for Grouper.",
+            "AUTHOR": "Matthew Polizzotti, Unicon, inc.",
+            "ENVIRONMENTS": [
+                {
+                    "SERVER_DIR": "/sandbox",
+                    "STATIC_DIR": "/development",
+                    "LESS_DIR": "/less/app.less",
+                    "VIEW_DIR": "/views",
+                    "PORT": 4000,
+                    "PROXY": "",
+                    "PROXY_ROUTE": "",
+                    "DEVELOPMENT": true,
+                    "ENVIRONMENT": false,
+                    "ENVIRONMENT_ID": "development"
+                },
+                {
+                    "SERVER_DIR": "/clientserver",
+                    "STATIC_DIR": "/production",
+                    "LESS_DIR": "/less/app.less",
+                    "VIEW_DIR": "/views",
+                    "PORT": 5000,
+                    "PROXY": "",
+                    "PROXY_ROUTE": "",
+                    "DEVELOPMENT": false,
+                    "ENVIRONMENT": false,
+                    "ENVIRONMENT_ID": "production"
+                }
+            ]
+        }
+    ]
+}

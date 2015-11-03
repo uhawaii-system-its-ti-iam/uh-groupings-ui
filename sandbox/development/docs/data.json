@@ -1,0 +1,2989 @@
+{
+    "project": {
+        "name": "uhgroupings",
+        "description": "Front-end for Grouper.",
+        "version": "1.0.0"
+    },
+    "files": {
+        "development/js/src/app/components/footer/FooterController.js": {
+            "name": "development/js/src/app/components/footer/FooterController.js",
+            "modules": {
+                "components.footer.FooterController": 1
+            },
+            "classes": {
+                "FooterController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/components/footer/FooterDirective.js": {
+            "name": "development/js/src/app/components/footer/FooterDirective.js",
+            "modules": {
+                "components.footer.uhgFooter": 1
+            },
+            "classes": {
+                "Footer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/components/footer/footer.js": {
+            "name": "development/js/src/app/components/footer/footer.js",
+            "modules": {
+                "components.footer": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/components/header/HeaderController.js": {
+            "name": "development/js/src/app/components/header/HeaderController.js",
+            "modules": {
+                "components.header.HeaderController": 1
+            },
+            "classes": {
+                "HeaderController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/components/header/HeaderDirective.js": {
+            "name": "development/js/src/app/components/header/HeaderDirective.js",
+            "modules": {
+                "components.header.uhgHeader": 1
+            },
+            "classes": {
+                "Header": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/components/header/header.js": {
+            "name": "development/js/src/app/components/header/header.js",
+            "modules": {
+                "components.header": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/components/list-navigation/ListNavigationController.js": {
+            "name": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "modules": {
+                "components.list-navigation.ListNavigationController": 1
+            },
+            "classes": {
+                "ListNavigationController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/components/list-navigation/ListNavigationDirective.js": {
+            "name": "development/js/src/app/components/list-navigation/ListNavigationDirective.js",
+            "modules": {
+                "components.list-navigation.uhgListNavigation": 1
+            },
+            "classes": {
+                "ListNavigation": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/components/list-navigation/ListNavigationService.js": {
+            "name": "development/js/src/app/components/list-navigation/ListNavigationService.js",
+            "modules": {
+                "components.list-navigation.ListNavigationService": 1
+            },
+            "classes": {
+                "ListNavigationService": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/components/list-navigation/list-navigation.js": {
+            "name": "development/js/src/app/components/list-navigation/list-navigation.js",
+            "modules": {
+                "components.list-navigation": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/components/components.js": {
+            "name": "development/js/src/app/components/components.js",
+            "modules": {
+                "components": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/about/AboutController.js": {
+            "name": "development/js/src/app/routes/about/AboutController.js",
+            "modules": {
+                "routes.about.AboutController": 1
+            },
+            "classes": {
+                "AboutController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/about/about.js": {
+            "name": "development/js/src/app/routes/about/about.js",
+            "modules": {
+                "routes.about": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/designate/DesignateController.js": {
+            "name": "development/js/src/app/routes/designate/DesignateController.js",
+            "modules": {
+                "routes.designate.DesignateController": 1
+            },
+            "classes": {
+                "DesignateController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/designate/designate.js": {
+            "name": "development/js/src/app/routes/designate/designate.js",
+            "modules": {
+                "routes.designate": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/feedback/FeedbackController.js": {
+            "name": "development/js/src/app/routes/feedback/FeedbackController.js",
+            "modules": {
+                "routes.feedback.FeedbackController": 1
+            },
+            "classes": {
+                "FeedbackController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/feedback/feedback.js": {
+            "name": "development/js/src/app/routes/feedback/feedback.js",
+            "modules": {
+                "routes.feedback": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/grouping/GroupingController.js": {
+            "name": "development/js/src/app/routes/grouping/GroupingController.js",
+            "modules": {
+                "routes.grouping.GroupingController": 1
+            },
+            "classes": {
+                "GroupingController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/grouping/grouping.js": {
+            "name": "development/js/src/app/routes/grouping/grouping.js",
+            "modules": {
+                "routes.grouping": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/membership/MembershipController.js": {
+            "name": "development/js/src/app/routes/membership/MembershipController.js",
+            "modules": {
+                "routes.membership.MembershipController": 1
+            },
+            "classes": {
+                "MembershipController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/membership/membership.js": {
+            "name": "development/js/src/app/routes/membership/membership.js",
+            "modules": {
+                "routes.membership": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/routes/routes.js": {
+            "name": "development/js/src/app/routes/routes.js",
+            "modules": {
+                "routes": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/AppController.js": {
+            "name": "development/js/src/app/AppController.js",
+            "modules": {
+                "app.AppController": 1
+            },
+            "classes": {
+                "AppController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/AppService.js": {
+            "name": "development/js/src/app/AppService.js",
+            "modules": {
+                "app.AppService": 1
+            },
+            "classes": {
+                "AppService": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/app.js": {
+            "name": "development/js/src/app/app.js",
+            "modules": {
+                "app": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/app/plugins.js": {
+            "name": "development/js/src/app/plugins.js",
+            "modules": {
+                "plugins": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/authentication/AuthenticationConfigProvider.js": {
+            "name": "development/js/src/stack/authentication/AuthenticationConfigProvider.js",
+            "modules": {
+                "stack.authentication.AuthenticationConfig": 1
+            },
+            "classes": {
+                "AuthenticationConfig": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/authentication/AuthenticationController.js": {
+            "name": "development/js/src/stack/authentication/AuthenticationController.js",
+            "modules": {
+                "stack.authentication.AuthenticationController": 1
+            },
+            "classes": {
+                "AuthenticationController": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/authentication/AuthenticationModel.js": {
+            "name": "development/js/src/stack/authentication/AuthenticationModel.js",
+            "modules": {
+                "stack.authentication.AuthenticationModel": 1
+            },
+            "classes": {
+                "AuthenticationModel": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/authentication/AuthenticationService.js": {
+            "name": "development/js/src/stack/authentication/AuthenticationService.js",
+            "modules": {
+                "stack.authentication.AuthenticationService": 1
+            },
+            "classes": {
+                "AuthenticationService": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/authentication/ProtectResolver.js": {
+            "name": "development/js/src/stack/authentication/ProtectResolver.js",
+            "modules": {
+                "stack.authentication.ProtectResolver": 1
+            },
+            "classes": {
+                "ProtectResolver": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/authentication/PublicResolver.js": {
+            "name": "development/js/src/stack/authentication/PublicResolver.js",
+            "modules": {
+                "stack.authentication.PublicResolver": 1
+            },
+            "classes": {
+                "PublicResolver": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/authentication/authentication.js": {
+            "name": "development/js/src/stack/authentication/authentication.js",
+            "modules": {
+                "stack.authentication": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/develop/DevelopConfigProvider.js": {
+            "name": "development/js/src/stack/develop/DevelopConfigProvider.js",
+            "modules": {
+                "stack.develop.DevelopConfig": 1
+            },
+            "classes": {
+                "DevelopConfig": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/develop/develop.js": {
+            "name": "development/js/src/stack/develop/develop.js",
+            "modules": {
+                "stack.develop": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/i18n/LocalizeDirective.js": {
+            "name": "development/js/src/stack/i18n/LocalizeDirective.js",
+            "modules": {
+                "stack.i18n.stackLocalize": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/i18n/LocalizeFilter.js": {
+            "name": "development/js/src/stack/i18n/LocalizeFilter.js",
+            "modules": {
+                "stack.i18n.localize": 1
+            },
+            "classes": {
+                "Localize": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/i18n/TranslationConfigProvider.js": {
+            "name": "development/js/src/stack/i18n/TranslationConfigProvider.js",
+            "modules": {
+                "stack.i18n.TranslationConfig": 1
+            },
+            "classes": {
+                "TranslationConfig": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/i18n/TranslationModel.js": {
+            "name": "development/js/src/stack/i18n/TranslationModel.js",
+            "modules": {
+                "stack.i18n.TranslationModel": 1
+            },
+            "classes": {
+                "TranslationModel": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/i18n/TranslationResolver.js": {
+            "name": "development/js/src/stack/i18n/TranslationResolver.js",
+            "modules": {
+                "stack.i18n.TranslationResolver": 1
+            },
+            "classes": {
+                "TranslationResolver": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/i18n/TranslationService.js": {
+            "name": "development/js/src/stack/i18n/TranslationService.js",
+            "modules": {
+                "stack.i18n.TranslationService": 1
+            },
+            "classes": {
+                "TranslationService": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/i18n/i18n.js": {
+            "name": "development/js/src/stack/i18n/i18n.js",
+            "modules": {
+                "stack.i18n": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/location/LocationService.js": {
+            "name": "development/js/src/stack/location/LocationService.js",
+            "modules": {
+                "stack.location.LocationService": 1
+            },
+            "classes": {
+                "LocationService": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/location/location.js": {
+            "name": "development/js/src/stack/location/location.js",
+            "modules": {
+                "stack.location": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/page-loader/PageLoaderDirective.js": {
+            "name": "development/js/src/stack/page-loader/PageLoaderDirective.js",
+            "modules": {
+                "stack.page-loader.stackPageLoader": 1
+            },
+            "classes": {
+                "PageLoader": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/page-loader/page-loader.js": {
+            "name": "development/js/src/stack/page-loader/page-loader.js",
+            "modules": {
+                "stack.page-loader": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/reveal/RevealDirective.js": {
+            "name": "development/js/src/stack/reveal/RevealDirective.js",
+            "modules": {
+                "stack.reveal.stackReveal": 1
+            },
+            "classes": {
+                "Reveal": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/reveal/reveal.js": {
+            "name": "development/js/src/stack/reveal/reveal.js",
+            "modules": {
+                "stack.reveal": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/stack/stack.js": {
+            "name": "development/js/src/stack/stack.js",
+            "modules": {
+                "stack": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "development/js/src/templates.js": {
+            "name": "development/js/src/templates.js",
+            "modules": {
+                "templates": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "components.footer.FooterController": {
+            "name": "components.footer.FooterController",
+            "submodules": {},
+            "classes": {
+                "FooterController": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/footer/FooterController.js",
+            "line": 3,
+            "description": "The FooterController houses state and view logic\nfor the footer directive."
+        },
+        "components.footer.uhgFooter": {
+            "name": "components.footer.uhgFooter",
+            "submodules": {},
+            "classes": {
+                "Footer": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/footer/FooterDirective.js",
+            "line": 7,
+            "description": "The Footer directive houses the application footer implementation."
+        },
+        "components.footer": {
+            "name": "components.footer",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/footer/footer.js",
+            "line": 1,
+            "description": "Module definition houses footer implementation."
+        },
+        "components.header.HeaderController": {
+            "name": "components.header.HeaderController",
+            "submodules": {},
+            "classes": {
+                "HeaderController": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/header/HeaderController.js",
+            "line": 6,
+            "description": "The HeaderController houses state and view logic\nfor the header directive."
+        },
+        "components.header.uhgHeader": {
+            "name": "components.header.uhgHeader",
+            "submodules": {},
+            "classes": {
+                "Header": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/header/HeaderDirective.js",
+            "line": 7,
+            "description": "The Header directive houses the application header implementation."
+        },
+        "components.header": {
+            "name": "components.header",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/header/header.js",
+            "line": 1,
+            "description": "Module definition houses header implementation."
+        },
+        "components.list-navigation.ListNavigationController": {
+            "name": "components.list-navigation.ListNavigationController",
+            "submodules": {},
+            "classes": {
+                "ListNavigationController": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 5,
+            "description": "The ListNavigationController houses state and view logic\nfor the ListNavigation directive."
+        },
+        "components.list-navigation.uhgListNavigation": {
+            "name": "components.list-navigation.uhgListNavigation",
+            "submodules": {},
+            "classes": {
+                "ListNavigation": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/list-navigation/ListNavigationDirective.js",
+            "line": 8,
+            "description": "The ListNavigation directive houses the navigation for the application."
+        },
+        "components.list-navigation.ListNavigationService": {
+            "name": "components.list-navigation.ListNavigationService",
+            "submodules": {},
+            "classes": {
+                "ListNavigationService": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/list-navigation/ListNavigationService.js",
+            "line": 3,
+            "description": "The ListNavigationService provides methods and parsing functionality\nfor the ListNavigation directive."
+        },
+        "components.list-navigation": {
+            "name": "components.list-navigation",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/list-navigation/list-navigation.js",
+            "line": 1,
+            "description": "Module definition houses list navigation implementation."
+        },
+        "components": {
+            "name": "components",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/components/components.js",
+            "line": 1,
+            "description": "Module definition houses all application-specific components.\nApplication components consist of global widgets or implementations\nthat can be applied to multiple locations within the application."
+        },
+        "routes.about.AboutController": {
+            "name": "routes.about.AboutController",
+            "submodules": {},
+            "classes": {
+                "AboutController": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/about/AboutController.js",
+            "line": 6,
+            "description": "The AboutController manages view logic rendered to the\nabout.html template for the /about route."
+        },
+        "routes.about": {
+            "name": "routes.about",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/about/about.js",
+            "line": 1,
+            "description": "Module definition for the about module. The about module manages\nthe application's top-level about view (i.e., /about)."
+        },
+        "routes.designate.DesignateController": {
+            "name": "routes.designate.DesignateController",
+            "submodules": {},
+            "classes": {
+                "DesignateController": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/designate/DesignateController.js",
+            "line": 6,
+            "description": "The DesignateController manages view logic rendered to the\ndesignate.html template for the /designate route."
+        },
+        "routes.designate": {
+            "name": "routes.designate",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/designate/designate.js",
+            "line": 1,
+            "description": "Module definition for the designate module. The designate module manages\nthe application's top-level designate view (i.e., /designate)."
+        },
+        "routes.feedback.FeedbackController": {
+            "name": "routes.feedback.FeedbackController",
+            "submodules": {},
+            "classes": {
+                "FeedbackController": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/feedback/FeedbackController.js",
+            "line": 6,
+            "description": "The FeedbackController manages view logic rendered to the\nfeedback.html template for the /feedback route."
+        },
+        "routes.feedback": {
+            "name": "routes.feedback",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/feedback/feedback.js",
+            "line": 1,
+            "description": "Module definition for the feedback module. The feedback module manages\nthe application's top-level feedback view (i.e., /feedback)."
+        },
+        "routes.grouping.GroupingController": {
+            "name": "routes.grouping.GroupingController",
+            "submodules": {},
+            "classes": {
+                "GroupingController": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/grouping/GroupingController.js",
+            "line": 6,
+            "description": "The GroupingController manages view logic rendered to the\ngrouping.html template for the /grouping route."
+        },
+        "routes.grouping": {
+            "name": "routes.grouping",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/grouping/grouping.js",
+            "line": 1,
+            "description": "Module definition for the grouping module. The grouping module manages\nthe application's top-level grouping view (i.e., /grouping)."
+        },
+        "routes.membership.MembershipController": {
+            "name": "routes.membership.MembershipController",
+            "submodules": {},
+            "classes": {
+                "MembershipController": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/membership/MembershipController.js",
+            "line": 6,
+            "description": "The MembershipController manages view logic rendered to the\nmembership.html template for the /membership route."
+        },
+        "routes.membership": {
+            "name": "routes.membership",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/membership/membership.js",
+            "line": 1,
+            "description": "Module definition for the membership module. The membership module manages\nthe application's top-level membership view (i.e., /membership)."
+        },
+        "routes": {
+            "name": "routes",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/routes/routes.js",
+            "line": 1,
+            "description": "Module definition houses all application routes."
+        },
+        "app.AppController": {
+            "name": "app.AppController",
+            "submodules": {},
+            "classes": {
+                "AppController": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/AppController.js",
+            "line": 6,
+            "description": "The AppController is the top-most controller for the application."
+        },
+        "app.AppService": {
+            "name": "app.AppService",
+            "submodules": {},
+            "classes": {
+                "AppService": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/AppService.js",
+            "line": 3,
+            "description": "The AppService houses application-level properties and methods."
+        },
+        "app": {
+            "name": "app",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/app.js",
+            "line": 1,
+            "description": "The app module is the top-level application module."
+        },
+        "plugins": {
+            "name": "plugins",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/app/plugins.js",
+            "line": 1,
+            "description": "The plugins module houses module references\nto third-party angular-based tools and plugins."
+        },
+        "stack.authentication.AuthenticationConfig": {
+            "name": "stack.authentication.AuthenticationConfig",
+            "submodules": {},
+            "classes": {
+                "AuthenticationConfig": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/authentication/AuthenticationConfigProvider.js",
+            "line": 3,
+            "description": "The AuthenticationConfig is a configuration implementation leveraged\nby the authentication module. The AuthenticationConfig implementation\nprovides configuration settings to the Authentication module."
+        },
+        "stack.authentication.AuthenticationController": {
+            "name": "stack.authentication.AuthenticationController",
+            "submodules": {},
+            "classes": {
+                "AuthenticationController": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/authentication/AuthenticationController.js",
+            "line": 8,
+            "description": "The AuthenticationController aids in the protecting and locking down\nof authenticated routes. Unauthorized requests are redirected to a\nconfigurable unauthenticated route."
+        },
+        "stack.authentication.AuthenticationModel": {
+            "name": "stack.authentication.AuthenticationModel",
+            "submodules": {},
+            "classes": {
+                "AuthenticationModel": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/authentication/AuthenticationModel.js",
+            "line": 6,
+            "description": "The AuthenticationModel houses CRUD-based methods used to\nauthenticate users."
+        },
+        "stack.authentication.AuthenticationService": {
+            "name": "stack.authentication.AuthenticationService",
+            "submodules": {},
+            "classes": {
+                "AuthenticationService": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/authentication/AuthenticationService.js",
+            "line": 6,
+            "description": "The AuthenticationService wraps the AuthenticationModel and houses a\ncollection of methods used to manage the authentication of users."
+        },
+        "stack.authentication.ProtectResolver": {
+            "name": "stack.authentication.ProtectResolver",
+            "submodules": {},
+            "classes": {
+                "ProtectResolver": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/authentication/ProtectResolver.js",
+            "line": 6,
+            "description": "The ProtectResolver service should only be applied to routes that require\nauthentication. This service examines the authentication status of the\ncurrent user. If a user is authenticated they are allowed to view the\nroute. If a user is unauthenticated they are directed back to a configured\nunauthenticated route."
+        },
+        "stack.authentication.PublicResolver": {
+            "name": "stack.authentication.PublicResolver",
+            "submodules": {},
+            "classes": {
+                "PublicResolver": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/authentication/PublicResolver.js",
+            "line": 5,
+            "description": "The PublicResolver service should only be applied to publicly-facing routes.\nThis service examines and returns the authentication status of the current user.\nThe user status is then leveraged to show/hide areas within globally-accessible\ncomponents such as the header or sidebar that require authentication to be seen."
+        },
+        "stack.authentication": {
+            "name": "stack.authentication",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/authentication/authentication.js",
+            "line": 1,
+            "description": "Module definition houses the authentication feature."
+        },
+        "stack.develop.DevelopConfig": {
+            "name": "stack.develop.DevelopConfig",
+            "submodules": {},
+            "classes": {
+                "DevelopConfig": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/develop/DevelopConfigProvider.js",
+            "line": 3,
+            "description": "The DevelopConfig provides adopting implementations with a 'develop'\nconfiguration option. Depending upon the implementation, it is sometimes\nuseful to understand whether or not the application is in a 'develop' or\n'production' mode. DevelopConfig provides the .setDevelop(flag) method and\nshould be configured within the compiled app.html page.\n\nSee /clientserver/views/app.html for example."
+        },
+        "stack.develop": {
+            "name": "stack.develop",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/develop/develop.js",
+            "line": 1,
+            "description": "Module definition houses develop feature."
+        },
+        "stack.i18n.stackLocalize": {
+            "name": "stack.i18n.stackLocalize",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/i18n/LocalizeDirective.js",
+            "line": 5,
+            "description": "The Localize directive takes a token and returns a translated\nstring using the Translation service and injects the translated\nstring into the DOM element."
+        },
+        "stack.i18n.localize": {
+            "name": "stack.i18n.localize",
+            "submodules": {},
+            "classes": {
+                "Localize": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/i18n/LocalizeFilter.js",
+            "line": 5,
+            "description": "The Localize filter takes a token and returns a translated\nstring using the Translation service. This method is more\nprocessor-intensive given the number of times a filter is\ncalled and should be used sparingly. If possible, leverage\nthe stackLocalize directive instead."
+        },
+        "stack.i18n.TranslationConfig": {
+            "name": "stack.i18n.TranslationConfig",
+            "submodules": {},
+            "classes": {
+                "TranslationConfig": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/i18n/TranslationConfigProvider.js",
+            "line": 3,
+            "description": "The TranslationConfig is a configuration implementation leveraged\nby the i18n implementation."
+        },
+        "stack.i18n.TranslationModel": {
+            "name": "stack.i18n.TranslationModel",
+            "submodules": {},
+            "classes": {
+                "TranslationModel": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/i18n/TranslationModel.js",
+            "line": 5,
+            "description": "The TranslationModel houses CRUD-based methods used to\nretrieve and manage localized strings."
+        },
+        "stack.i18n.TranslationResolver": {
+            "name": "stack.i18n.TranslationResolver",
+            "submodules": {},
+            "classes": {
+                "TranslationResolver": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/i18n/TranslationResolver.js",
+            "line": 5,
+            "description": "The TranslationResolver service loads a map of strings based\nupon the locale reported by the browser."
+        },
+        "stack.i18n.TranslationService": {
+            "name": "stack.i18n.TranslationService",
+            "submodules": {},
+            "classes": {
+                "TranslationService": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/i18n/TranslationService.js",
+            "line": 6,
+            "description": "The TranslationService wraps the TranslationModel and provides\nconvenience methods for managing the the translation of strings\nbased upon different locales."
+        },
+        "stack.i18n": {
+            "name": "stack.i18n",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/i18n/i18n.js",
+            "line": 1,
+            "description": "Module definition houses the i18n feature."
+        },
+        "stack.location.LocationService": {
+            "name": "stack.location.LocationService",
+            "submodules": {},
+            "classes": {
+                "LocationService": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/location/LocationService.js",
+            "line": 5,
+            "description": "The LocationService extends the angular $location service\nand the ui router $state service. It provides additional\nurl parsing methods and location functionality."
+        },
+        "stack.location": {
+            "name": "stack.location",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/location/location.js",
+            "line": 1,
+            "description": "Module definition houses the location feature."
+        },
+        "stack.page-loader.stackPageLoader": {
+            "name": "stack.page-loader.stackPageLoader",
+            "submodules": {},
+            "classes": {
+                "PageLoader": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/page-loader/PageLoaderDirective.js",
+            "line": 3,
+            "description": "The PageLoader directive provides a spinning loading icon\nas well as a container overlay that the covers underlying\nDOM elements."
+        },
+        "stack.page-loader": {
+            "name": "stack.page-loader",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/page-loader/page-loader.js",
+            "line": 1,
+            "description": "Module definition houses the PageLoader feature."
+        },
+        "stack.reveal.stackReveal": {
+            "name": "stack.reveal.stackReveal",
+            "submodules": {},
+            "classes": {
+                "Reveal": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/reveal/RevealDirective.js",
+            "line": 3,
+            "description": "The Reveal directive prevents UI flicker from happening\nwhen an application is first loaded. This implementation\nis different then using ng-cloak. The ng-clock directive\nwill prevent the angular brackets from rendering to end\nusers. The Reveal directive prevents a flicker caused\nby css and js resources from loading at different times."
+        },
+        "stack.reveal": {
+            "name": "stack.reveal",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/reveal/reveal.js",
+            "line": 1,
+            "description": "Module definition houses the reveal feature."
+        },
+        "stack": {
+            "name": "stack",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/stack/stack.js",
+            "line": 1,
+            "description": "Module definition houses collection of stack assets.\nStack assets consist of implementations that are\ngeneric in nature and can be used across multiple\napplications."
+        },
+        "templates": {
+            "name": "templates",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "development/js/src/templates.js",
+            "line": 1,
+            "description": "The templates module houses all of the application's templates\nusing the $templateCache service. The $templateCache service is\nleveraged to reduce the number of http requests this application\nmust make when retrieving templates. If a template is stored in\nthe $templateCache the application will not make a request for\nthe template in question."
+        }
+    },
+    "classes": {
+        "FooterController": {
+            "name": "FooterController",
+            "shortname": "FooterController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "components.footer.FooterController",
+            "file": "development/js/src/app/components/footer/FooterController.js",
+            "line": 3,
+            "description": "The FooterController houses state and view logic\nfor the footer directive.",
+            "is_constructor": 1
+        },
+        "Footer": {
+            "name": "Footer",
+            "shortname": "Footer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "components.footer.uhgFooter",
+            "namespace": "",
+            "file": "development/js/src/app/components/footer/FooterDirective.js",
+            "line": 7,
+            "description": "The Footer directive houses the application footer implementation.",
+            "is_constructor": 1,
+            "example": [
+                "\n    <uhg-footer\n        logo-path=\"/path/to/image.png\">           // Path to footer logo.\n    </uhg-footer>"
+            ]
+        },
+        "HeaderController": {
+            "name": "HeaderController",
+            "shortname": "HeaderController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "components.header.HeaderController",
+            "namespace": "",
+            "file": "development/js/src/app/components/header/HeaderController.js",
+            "line": 6,
+            "description": "The HeaderController houses state and view logic\nfor the header directive.",
+            "is_constructor": 1
+        },
+        "Header": {
+            "name": "Header",
+            "shortname": "Header",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "components.header.uhgHeader",
+            "namespace": "",
+            "file": "development/js/src/app/components/header/HeaderDirective.js",
+            "line": 7,
+            "description": "The Header directive houses the application header implementation.",
+            "is_constructor": 1,
+            "example": [
+                "\n    <uhg-header\n        brand-link=\"login\"                       // Route to link.\n        authenticated=\"true\"                     // Boolean flag that controls rendering of login/logout links.\n        authenticated-route=\"about\"              // Route to redirect to on successful login.\n        unauthenticated-route=\"about\"            // Route to redirect to on unsuccessful login.\n        logo-path=\"/path/to/image.png\">          // Path to header logo.\n    </uhg-header>"
+            ]
+        },
+        "ListNavigationController": {
+            "name": "ListNavigationController",
+            "shortname": "ListNavigationController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "components.list-navigation.ListNavigationController",
+            "namespace": "",
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 5,
+            "description": "The ListNavigationController houses state and view logic\nfor the ListNavigation directive.",
+            "is_constructor": 1
+        },
+        "ListNavigation": {
+            "name": "ListNavigation",
+            "shortname": "ListNavigation",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "components.list-navigation.uhgListNavigation",
+            "namespace": "",
+            "file": "development/js/src/app/components/list-navigation/ListNavigationDirective.js",
+            "line": 8,
+            "description": "The ListNavigation directive houses the navigation for the application.",
+            "is_constructor": 1,
+            "example": [
+                "\n    <uhg-list-navigation\n        authenticated=\"true\"     // Boolean flag used to show/hide sidebar routes.\n        items=\"[]\">              // Array of navigation objects.\n    </uhg-list-navigation>"
+            ]
+        },
+        "ListNavigationService": {
+            "name": "ListNavigationService",
+            "shortname": "ListNavigationService",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "components.list-navigation.ListNavigationService",
+            "namespace": "",
+            "file": "development/js/src/app/components/list-navigation/ListNavigationService.js",
+            "line": 3,
+            "description": "The ListNavigationService provides methods and parsing functionality\nfor the ListNavigation directive.",
+            "is_constructor": 1
+        },
+        "AboutController": {
+            "name": "AboutController",
+            "shortname": "AboutController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "routes.about.AboutController",
+            "namespace": "",
+            "file": "development/js/src/app/routes/about/AboutController.js",
+            "line": 6,
+            "description": "The AboutController manages view logic rendered to the\nabout.html template for the /about route.",
+            "is_constructor": 1
+        },
+        "DesignateController": {
+            "name": "DesignateController",
+            "shortname": "DesignateController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "routes.designate.DesignateController",
+            "namespace": "",
+            "file": "development/js/src/app/routes/designate/DesignateController.js",
+            "line": 6,
+            "description": "The DesignateController manages view logic rendered to the\ndesignate.html template for the /designate route.",
+            "is_constructor": 1
+        },
+        "FeedbackController": {
+            "name": "FeedbackController",
+            "shortname": "FeedbackController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "routes.feedback.FeedbackController",
+            "namespace": "",
+            "file": "development/js/src/app/routes/feedback/FeedbackController.js",
+            "line": 6,
+            "description": "The FeedbackController manages view logic rendered to the\nfeedback.html template for the /feedback route.",
+            "is_constructor": 1
+        },
+        "GroupingController": {
+            "name": "GroupingController",
+            "shortname": "GroupingController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "routes.grouping.GroupingController",
+            "namespace": "",
+            "file": "development/js/src/app/routes/grouping/GroupingController.js",
+            "line": 6,
+            "description": "The GroupingController manages view logic rendered to the\ngrouping.html template for the /grouping route.",
+            "is_constructor": 1
+        },
+        "MembershipController": {
+            "name": "MembershipController",
+            "shortname": "MembershipController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "routes.membership.MembershipController",
+            "namespace": "",
+            "file": "development/js/src/app/routes/membership/MembershipController.js",
+            "line": 6,
+            "description": "The MembershipController manages view logic rendered to the\nmembership.html template for the /membership route.",
+            "is_constructor": 1
+        },
+        "AppController": {
+            "name": "AppController",
+            "shortname": "AppController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "app.AppController",
+            "namespace": "",
+            "file": "development/js/src/app/AppController.js",
+            "line": 6,
+            "description": "The AppController is the top-most controller for the application.",
+            "is_constructor": 1
+        },
+        "AppService": {
+            "name": "AppService",
+            "shortname": "AppService",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "app.AppService",
+            "namespace": "",
+            "file": "development/js/src/app/AppService.js",
+            "line": 3,
+            "description": "The AppService houses application-level properties and methods.",
+            "is_constructor": 1
+        },
+        "AuthenticationConfig": {
+            "name": "AuthenticationConfig",
+            "shortname": "AuthenticationConfig",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.authentication.AuthenticationConfig",
+            "namespace": "",
+            "file": "development/js/src/stack/authentication/AuthenticationConfigProvider.js",
+            "line": 3,
+            "description": "The AuthenticationConfig is a configuration implementation leveraged\nby the authentication module. The AuthenticationConfig implementation\nprovides configuration settings to the Authentication module.",
+            "is_constructor": 1
+        },
+        "AuthenticationController": {
+            "name": "AuthenticationController",
+            "shortname": "AuthenticationController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.authentication.AuthenticationController",
+            "namespace": "",
+            "file": "development/js/src/stack/authentication/AuthenticationController.js",
+            "line": 8,
+            "description": "The AuthenticationController aids in the protecting and locking down\nof authenticated routes. Unauthorized requests are redirected to a\nconfigurable unauthenticated route.",
+            "is_constructor": 1
+        },
+        "AuthenticationModel": {
+            "name": "AuthenticationModel",
+            "shortname": "AuthenticationModel",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.authentication.AuthenticationModel",
+            "namespace": "",
+            "file": "development/js/src/stack/authentication/AuthenticationModel.js",
+            "line": 6,
+            "description": "The AuthenticationModel houses CRUD-based methods used to\nauthenticate users.",
+            "is_constructor": 1
+        },
+        "AuthenticationService": {
+            "name": "AuthenticationService",
+            "shortname": "AuthenticationService",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.authentication.AuthenticationService",
+            "namespace": "",
+            "file": "development/js/src/stack/authentication/AuthenticationService.js",
+            "line": 6,
+            "description": "The AuthenticationService wraps the AuthenticationModel and houses a\ncollection of methods used to manage the authentication of users.",
+            "is_constructor": 1
+        },
+        "ProtectResolver": {
+            "name": "ProtectResolver",
+            "shortname": "ProtectResolver",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.authentication.ProtectResolver",
+            "namespace": "",
+            "file": "development/js/src/stack/authentication/ProtectResolver.js",
+            "line": 6,
+            "description": "The ProtectResolver service should only be applied to routes that require\nauthentication. This service examines the authentication status of the\ncurrent user. If a user is authenticated they are allowed to view the\nroute. If a user is unauthenticated they are directed back to a configured\nunauthenticated route.",
+            "is_constructor": 1
+        },
+        "PublicResolver": {
+            "name": "PublicResolver",
+            "shortname": "PublicResolver",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.authentication.PublicResolver",
+            "namespace": "",
+            "file": "development/js/src/stack/authentication/PublicResolver.js",
+            "line": 5,
+            "description": "The PublicResolver service should only be applied to publicly-facing routes.\nThis service examines and returns the authentication status of the current user.\nThe user status is then leveraged to show/hide areas within globally-accessible\ncomponents such as the header or sidebar that require authentication to be seen.",
+            "is_constructor": 1
+        },
+        "DevelopConfig": {
+            "name": "DevelopConfig",
+            "shortname": "DevelopConfig",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.develop.DevelopConfig",
+            "namespace": "",
+            "file": "development/js/src/stack/develop/DevelopConfigProvider.js",
+            "line": 3,
+            "description": "The DevelopConfig provides adopting implementations with a 'develop'\nconfiguration option. Depending upon the implementation, it is sometimes\nuseful to understand whether or not the application is in a 'develop' or\n'production' mode. DevelopConfig provides the .setDevelop(flag) method and\nshould be configured within the compiled app.html page.\n\nSee /clientserver/views/app.html for example.",
+            "is_constructor": 1
+        },
+        "Localize": {
+            "name": "Localize",
+            "shortname": "Localize",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.i18n.localize",
+            "namespace": "",
+            "file": "development/js/src/stack/i18n/LocalizeFilter.js",
+            "line": 5,
+            "description": "The Localize filter takes a token and returns a translated\nstring using the Translation service. This method is more\nprocessor-intensive given the number of times a filter is\ncalled and should be used sparingly. If possible, leverage\nthe stackLocalize directive instead.",
+            "is_constructor": 1,
+            "example": [
+                "\n    <div stack-localize=\"APPLICATION_NAME\"></div>"
+            ]
+        },
+        "TranslationConfig": {
+            "name": "TranslationConfig",
+            "shortname": "TranslationConfig",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.i18n.TranslationConfig",
+            "namespace": "",
+            "file": "development/js/src/stack/i18n/TranslationConfigProvider.js",
+            "line": 3,
+            "description": "The TranslationConfig is a configuration implementation leveraged\nby the i18n implementation.",
+            "is_constructor": 1
+        },
+        "TranslationModel": {
+            "name": "TranslationModel",
+            "shortname": "TranslationModel",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.i18n.TranslationModel",
+            "namespace": "",
+            "file": "development/js/src/stack/i18n/TranslationModel.js",
+            "line": 5,
+            "description": "The TranslationModel houses CRUD-based methods used to\nretrieve and manage localized strings.",
+            "is_constructor": 1
+        },
+        "TranslationResolver": {
+            "name": "TranslationResolver",
+            "shortname": "TranslationResolver",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.i18n.TranslationResolver",
+            "namespace": "",
+            "file": "development/js/src/stack/i18n/TranslationResolver.js",
+            "line": 5,
+            "description": "The TranslationResolver service loads a map of strings based\nupon the locale reported by the browser.",
+            "is_constructor": 1
+        },
+        "TranslationService": {
+            "name": "TranslationService",
+            "shortname": "TranslationService",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.i18n.TranslationService",
+            "namespace": "",
+            "file": "development/js/src/stack/i18n/TranslationService.js",
+            "line": 6,
+            "description": "The TranslationService wraps the TranslationModel and provides\nconvenience methods for managing the the translation of strings\nbased upon different locales.",
+            "is_constructor": 1
+        },
+        "LocationService": {
+            "name": "LocationService",
+            "shortname": "LocationService",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.location.LocationService",
+            "namespace": "",
+            "file": "development/js/src/stack/location/LocationService.js",
+            "line": 5,
+            "description": "The LocationService extends the angular $location service\nand the ui router $state service. It provides additional\nurl parsing methods and location functionality.",
+            "is_constructor": 1
+        },
+        "PageLoader": {
+            "name": "PageLoader",
+            "shortname": "PageLoader",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.page-loader.stackPageLoader",
+            "namespace": "",
+            "file": "development/js/src/stack/page-loader/PageLoaderDirective.js",
+            "line": 3,
+            "description": "The PageLoader directive provides a spinning loading icon\nas well as a container overlay that the covers underlying\nDOM elements.",
+            "is_constructor": 1,
+            "example": [
+                "\n    <stack-page-loader\n        trigger=\"true\"                   // Show/Hide flag.\n        center=\"false\"                   // Vertical center flag.\n        opaque=\"false\"                   // Opacity flag.\n    </stack-page-loader>"
+            ]
+        },
+        "Reveal": {
+            "name": "Reveal",
+            "shortname": "Reveal",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "stack.reveal.stackReveal",
+            "namespace": "",
+            "file": "development/js/src/stack/reveal/RevealDirective.js",
+            "line": 3,
+            "description": "The Reveal directive prevents UI flicker from happening\nwhen an application is first loaded. This implementation\nis different then using ng-cloak. The ng-clock directive\nwill prevent the angular brackets from rendering to end\nusers. The Reveal directive prevents a flicker caused\nby css and js resources from loading at different times.",
+            "is_constructor": 1,
+            "example": [
+                "\n    <body class=\"invisible\" stack-reveal=\"invisible\">"
+            ]
+        }
+    },
+    "classitems": [
+        {
+            "file": "development/js/src/app/components/footer/FooterController.js",
+            "line": 18,
+            "description": "Property houses a reference to the footer controller.",
+            "itemtype": "property",
+            "name": "footer",
+            "type": "{Object}",
+            "class": "FooterController",
+            "module": "components.footer.FooterController"
+        },
+        {
+            "file": "development/js/src/app/components/header/HeaderController.js",
+            "line": 26,
+            "description": "Property houses a reference to the Header Controller.",
+            "itemtype": "property",
+            "name": "headerCtrl",
+            "type": "{Object}",
+            "class": "HeaderController",
+            "module": "components.header.HeaderController"
+        },
+        {
+            "file": "development/js/src/app/components/header/HeaderController.js",
+            "line": 34,
+            "description": "Property houses the collapsed flag, which is used\nto determine when the header's responsive menu\nopens and closes.",
+            "itemtype": "property",
+            "name": "headerCtrl.collapsed",
+            "type": "{Boolean}",
+            "class": "HeaderController",
+            "module": "components.header.HeaderController"
+        },
+        {
+            "file": "development/js/src/app/components/header/HeaderController.js",
+            "line": 44,
+            "description": "Method authenticates a user.",
+            "itemtype": "method",
+            "name": "headerCtrl.login",
+            "access": "private",
+            "tagname": "",
+            "class": "HeaderController",
+            "module": "components.header.HeaderController"
+        },
+        {
+            "file": "development/js/src/app/components/header/HeaderController.js",
+            "line": 60,
+            "description": "Method un-authenticates a user.",
+            "itemtype": "method",
+            "name": "headerCtrl.logout",
+            "class": "HeaderController",
+            "module": "components.header.HeaderController"
+        },
+        {
+            "file": "development/js/src/app/components/header/HeaderController.js",
+            "line": 75,
+            "description": "Method initializes event-based listeners.",
+            "itemtype": "method",
+            "name": "eventListeners",
+            "access": "private",
+            "tagname": "",
+            "class": "HeaderController",
+            "module": "components.header.HeaderController"
+        },
+        {
+            "file": "development/js/src/app/components/header/HeaderController.js",
+            "line": 93,
+            "description": "Method destroys registered events.",
+            "itemtype": "method",
+            "name": "destroyRegisteredEvents",
+            "access": "private",
+            "tagname": "",
+            "class": "HeaderController",
+            "module": "components.header.HeaderController"
+        },
+        {
+            "file": "development/js/src/app/components/header/HeaderController.js",
+            "line": 103,
+            "description": "Method executes initialization process.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "HeaderController",
+            "module": "components.header.HeaderController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 22,
+            "description": "Property houses a reference to the listNavigationController.",
+            "itemtype": "property",
+            "name": "listNavigationCtrl",
+            "type": "{Object}",
+            "class": "ListNavigationController",
+            "module": "components.list-navigation.ListNavigationController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 30,
+            "description": "Property houses the index position of the selected\nor active navigational item.",
+            "itemtype": "property",
+            "name": "listNavigationCtrl.selectedNavigationPosition",
+            "type": "{Number}",
+            "class": "ListNavigationController",
+            "module": "components.list-navigation.ListNavigationController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 39,
+            "description": "Property houses the label of the selected or active\nnavigational item.",
+            "itemtype": "property",
+            "name": "listNavigationCtrl.selectedNavigationLabel",
+            "type": "{String}",
+            "class": "ListNavigationController",
+            "module": "components.list-navigation.ListNavigationController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 48,
+            "description": "Property houses the route of the selected or active\nnavigational item.",
+            "itemtype": "property",
+            "name": "listNavigationCtrl.selectedNavigationLabel",
+            "type": "{String}",
+            "class": "ListNavigationController",
+            "module": "components.list-navigation.ListNavigationController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 57,
+            "description": "Method updates the selected navigation properties when the route changes.\nThis method updates the naviational dropdown that appears at smaller screen sizes.",
+            "itemtype": "method",
+            "name": "updateSelectedNavigation",
+            "params": [
+                {
+                    "name": "route",
+                    "description": "The state being transitioned to.",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "ListNavigationController",
+            "module": "components.list-navigation.ListNavigationController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 74,
+            "description": "Method is triggered when a state transition completes.",
+            "itemtype": "method",
+            "name": "onRouteChangeError",
+            "params": [
+                {
+                    "name": "evt",
+                    "description": "Event object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toState",
+                    "description": "The state being transitioned to.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toParams",
+                    "description": "The params supplied to the toState.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromState",
+                    "description": "The current state, pre-transition.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromParams",
+                    "description": "The params supplied to the fromState.",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "ListNavigationController",
+            "module": "components.list-navigation.ListNavigationController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 89,
+            "description": "Method is triggered when any resolve promises are rejected.",
+            "itemtype": "method",
+            "name": "onRouteChangeError",
+            "params": [
+                {
+                    "name": "evt",
+                    "description": "Event object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toState",
+                    "description": "The state being transitioned to.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toParams",
+                    "description": "The params supplied to the toState.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromState",
+                    "description": "The current state, pre-transition.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromParams",
+                    "description": "The params supplied to the fromState.",
+                    "type": "Object"
+                },
+                {
+                    "name": "rejection",
+                    "description": "The resolve error object.",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "ListNavigationController",
+            "module": "components.list-navigation.ListNavigationController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 105,
+            "description": "Method initializes event-based listeners.",
+            "itemtype": "method",
+            "name": "eventListeners",
+            "access": "private",
+            "tagname": "",
+            "class": "ListNavigationController",
+            "module": "components.list-navigation.ListNavigationController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 120,
+            "description": "Method destroys registered events.",
+            "itemtype": "method",
+            "name": "destroyRegisteredEvents",
+            "access": "private",
+            "tagname": "",
+            "class": "ListNavigationController",
+            "module": "components.list-navigation.ListNavigationController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationController.js",
+            "line": 134,
+            "description": "Method executes initialization process.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "ListNavigationController",
+            "module": "components.list-navigation.ListNavigationController"
+        },
+        {
+            "file": "development/js/src/app/components/list-navigation/ListNavigationService.js",
+            "line": 16,
+            "description": "Method returns the index position of a navigation object\ngiven the passed route name and the collection of navigation\nobjects contained within the items array.",
+            "itemtype": "method",
+            "name": "getNavigationPositionFromRoute",
+            "params": [
+                {
+                    "name": "route",
+                    "description": "Route name",
+                    "type": "String"
+                },
+                {
+                    "name": "items",
+                    "description": "Collection of navigation objects",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "Index position of navigation object",
+                "type": "Number"
+            },
+            "class": "ListNavigationService",
+            "module": "components.list-navigation.ListNavigationService"
+        },
+        {
+            "file": "development/js/src/app/routes/about/AboutController.js",
+            "line": 24,
+            "description": "Property houses a reference to the about controller.",
+            "itemtype": "property",
+            "name": "aboutCtrl",
+            "type": "{Object}",
+            "class": "AboutController",
+            "module": "routes.about.AboutController"
+        },
+        {
+            "file": "development/js/src/app/routes/about/AboutController.js",
+            "line": 32,
+            "description": "Method executes initialization process.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "AboutController",
+            "module": "routes.about.AboutController"
+        },
+        {
+            "file": "development/js/src/app/routes/designate/DesignateController.js",
+            "line": 23,
+            "description": "Property houses a reference to the designate controller.",
+            "itemtype": "property",
+            "name": "designateCtrl",
+            "type": "{Object}",
+            "class": "DesignateController",
+            "module": "routes.designate.DesignateController"
+        },
+        {
+            "file": "development/js/src/app/routes/designate/DesignateController.js",
+            "line": 31,
+            "description": "Method executes initialization process.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "DesignateController",
+            "module": "routes.designate.DesignateController"
+        },
+        {
+            "file": "development/js/src/app/routes/feedback/FeedbackController.js",
+            "line": 23,
+            "description": "Property houses a reference to the feedback controller.",
+            "itemtype": "property",
+            "name": "feedbackCtrl",
+            "type": "{Object}",
+            "class": "FeedbackController",
+            "module": "routes.feedback.FeedbackController"
+        },
+        {
+            "file": "development/js/src/app/routes/feedback/FeedbackController.js",
+            "line": 31,
+            "description": "Method executes initialization process.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "FeedbackController",
+            "module": "routes.feedback.FeedbackController"
+        },
+        {
+            "file": "development/js/src/app/routes/grouping/GroupingController.js",
+            "line": 23,
+            "description": "Property houses a reference to the grouping controller.",
+            "itemtype": "property",
+            "name": "groupingCtrl",
+            "type": "{Object}",
+            "class": "GroupingController",
+            "module": "routes.grouping.GroupingController"
+        },
+        {
+            "file": "development/js/src/app/routes/grouping/GroupingController.js",
+            "line": 31,
+            "description": "Method executes initialization process.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "GroupingController",
+            "module": "routes.grouping.GroupingController"
+        },
+        {
+            "file": "development/js/src/app/routes/membership/MembershipController.js",
+            "line": 23,
+            "description": "Property houses a reference to the membership controller.",
+            "itemtype": "property",
+            "name": "membershipCtrl",
+            "type": "{Object}",
+            "class": "MembershipController",
+            "module": "routes.membership.MembershipController"
+        },
+        {
+            "file": "development/js/src/app/routes/membership/MembershipController.js",
+            "line": 31,
+            "description": "Method executes initialization process.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "MembershipController",
+            "module": "routes.membership.MembershipController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 26,
+            "description": "Property houses a reference to the AppController.",
+            "itemtype": "property",
+            "name": "appCtrl",
+            "type": "{Object}",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 34,
+            "description": "Property houses a reference to application theme.",
+            "itemtype": "property",
+            "name": "appCtrl.theme",
+            "type": "{String}",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 42,
+            "description": "Property houses a loading flag. This flag is used\nto hide and show the application overlay.",
+            "itemtype": "property",
+            "name": "appCtrl.pageLoading",
+            "type": "{Boolean}",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 51,
+            "description": "Property houses a opacity flag. This flag is used\nto control the opacity of the application overlay.",
+            "itemtype": "property",
+            "name": "appCtrl.pageLoadingOpaque",
+            "type": "{Boolean}",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 60,
+            "description": "Property houses a collection of navigation objects.",
+            "itemtype": "property",
+            "name": "appCtrl.navigation",
+            "type": "{Array}",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 68,
+            "description": "Property houses a reference to application-level timeout setting.",
+            "itemtype": "property",
+            "name": "appCtrl.timeout",
+            "type": "{Object}",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 76,
+            "description": "Method is triggered when a state transition begins.",
+            "itemtype": "method",
+            "name": "onRouteChangeStart",
+            "params": [
+                {
+                    "name": "evt",
+                    "description": "Event object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toState",
+                    "description": "The state being transitioned to.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toParams",
+                    "description": "The params supplied to the toState.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromState",
+                    "description": "The current state, pre-transition.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromParams",
+                    "description": "The params supplied to the fromState.",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 91,
+            "description": "Method is triggered when a state transition completes.",
+            "itemtype": "method",
+            "name": "onRouteChangeError",
+            "params": [
+                {
+                    "name": "evt",
+                    "description": "Event object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toState",
+                    "description": "The state being transitioned to.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toParams",
+                    "description": "The params supplied to the toState.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromState",
+                    "description": "The current state, pre-transition.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromParams",
+                    "description": "The params supplied to the fromState.",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 106,
+            "description": "Method is triggered when any resolve promises are rejected.",
+            "itemtype": "method",
+            "name": "onRouteChangeError",
+            "params": [
+                {
+                    "name": "evt",
+                    "description": "Event object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toState",
+                    "description": "The state being transitioned to.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toParams",
+                    "description": "The params supplied to the toState.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromState",
+                    "description": "The current state, pre-transition.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromParams",
+                    "description": "The params supplied to the fromState.",
+                    "type": "Object"
+                },
+                {
+                    "name": "rejection",
+                    "description": "The resolve error object.",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 134,
+            "description": "Method renders the application overlay.",
+            "itemtype": "method",
+            "name": "showRouteMask",
+            "access": "private",
+            "tagname": "",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 144,
+            "description": "Method hides the application overlay.",
+            "itemtype": "method",
+            "name": "hideApplicationOverlay",
+            "access": "private",
+            "tagname": "",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 163,
+            "description": "Method initializes event-based listeners.",
+            "itemtype": "method",
+            "name": "eventListeners",
+            "access": "private",
+            "tagname": "",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 179,
+            "description": "Method destroys registered events.",
+            "itemtype": "method",
+            "name": "destroyRegisteredEvents",
+            "access": "private",
+            "tagname": "",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppController.js",
+            "line": 193,
+            "description": "Method exectues initialization process.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "AppController",
+            "module": "app.AppController"
+        },
+        {
+            "file": "development/js/src/app/AppService.js",
+            "line": 15,
+            "description": "Property houses API namespace.",
+            "itemtype": "property",
+            "name": "api",
+            "type": "{String}",
+            "class": "AppService",
+            "module": "app.AppService"
+        },
+        {
+            "file": "development/js/src/app/app.js",
+            "line": 57,
+            "description": "Method returns true if an enumerable object contains\nno values (no enumerable own-properties). For strings\nand array-like objects the isEmpty() method checks if\nthe length property is 0. This method is available\nglobally and can be leveraged within template files\nusing the $root.$isEmpty() syntax.",
+            "itemtype": "method",
+            "name": "isEmpty",
+            "params": [
+                {
+                    "name": "context",
+                    "description": "value",
+                    "type": "Mixed"
+                }
+            ],
+            "return": {
+                "description": "True or False",
+                "type": "Boolean"
+            },
+            "class": "AuthenticationConfig",
+            "module": "app"
+        },
+        {
+            "file": "development/js/src/app/app.js",
+            "line": 73,
+            "description": "Method returns whether or not the object contains the given key.\nThis method is available globally and can be leveraged within\ntemplate files using the $root.$has() syntax.",
+            "itemtype": "method",
+            "name": "has",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "Object",
+                    "type": "Object"
+                },
+                {
+                    "name": "property",
+                    "description": "Name of property",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "AuthenticationConfig",
+            "module": "app"
+        },
+        {
+            "file": "development/js/src/app/app.js",
+            "line": 87,
+            "description": "Method returns a localized string based upon the key.\nThis method is available globally and can be leveraged\nwithin template files using $root.localize() syntax.",
+            "itemtype": "method",
+            "name": "localize",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "Localization key",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Localized string",
+                "type": "String"
+            },
+            "class": "AuthenticationConfig",
+            "module": "app"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationConfigProvider.js",
+            "line": 16,
+            "description": "Property houses configuration.",
+            "itemtype": "property",
+            "name": "config",
+            "type": "{Object}",
+            "access": "private",
+            "tagname": "",
+            "class": "AuthenticationConfig",
+            "module": "stack.authentication.AuthenticationConfig"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationConfigProvider.js",
+            "line": 30,
+            "description": "Method sets the API base route for a development environment.",
+            "itemtype": "method",
+            "name": "setDevelopmentAPIBase",
+            "params": [
+                {
+                    "name": "base",
+                    "description": "API route",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Chained object",
+                "type": "Object"
+            },
+            "class": "AuthenticationConfig",
+            "module": "stack.authentication.AuthenticationConfig"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationConfigProvider.js",
+            "line": 43,
+            "description": "Method sets the API base route for a production environment.",
+            "itemtype": "method",
+            "name": "setProductionAPIBase",
+            "params": [
+                {
+                    "name": "base",
+                    "description": "API route",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Chained object",
+                "type": "Object"
+            },
+            "class": "AuthenticationConfig",
+            "module": "stack.authentication.AuthenticationConfig"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationConfigProvider.js",
+            "line": 56,
+            "description": "Method sets the unauthenticated route.",
+            "itemtype": "method",
+            "name": "setUnauthenticatedRoute",
+            "params": [
+                {
+                    "name": "route",
+                    "description": "Route name",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Chained object",
+                "type": "Object"
+            },
+            "class": "AuthenticationConfig",
+            "module": "stack.authentication.AuthenticationConfig"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationConfigProvider.js",
+            "line": 69,
+            "description": "Method sets the authenticated route.",
+            "itemtype": "method",
+            "name": "setAuthenticatedRoute",
+            "params": [
+                {
+                    "name": "route",
+                    "description": "Route name",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Chained object",
+                "type": "Object"
+            },
+            "class": "AuthenticationConfig",
+            "module": "stack.authentication.AuthenticationConfig"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationConfigProvider.js",
+            "line": 82,
+            "description": "Method returns an injectable function.",
+            "itemtype": "method",
+            "name": "$get",
+            "return": {
+                "description": "Injectable function",
+                "type": "Function"
+            },
+            "class": "AuthenticationConfig",
+            "module": "stack.authentication.AuthenticationConfig"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationController.js",
+            "line": 29,
+            "description": "Property houses a reference to the Authentication Controller.",
+            "itemtype": "property",
+            "name": "authCtrl",
+            "type": "{Object}",
+            "class": "AuthenticationController",
+            "module": "stack.authentication.AuthenticationController"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationController.js",
+            "line": 37,
+            "description": "Property houses authentication flag.",
+            "itemtype": "property",
+            "name": "authCtrl.authenticated",
+            "type": "{Boolean}",
+            "class": "AuthenticationController",
+            "module": "stack.authentication.AuthenticationController"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationController.js",
+            "line": 45,
+            "description": "Method redirects the user.",
+            "itemtype": "method",
+            "name": "redirect",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "Path to evaluate",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "AuthenticationController",
+            "module": "stack.authentication.AuthenticationController"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationController.js",
+            "line": 59,
+            "description": "Method is triggered when any resolve promises are rejected.",
+            "itemtype": "method",
+            "name": "onRouteChangeError",
+            "params": [
+                {
+                    "name": "evt",
+                    "description": "Event object.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toState",
+                    "description": "The state being transitioned to.",
+                    "type": "Object"
+                },
+                {
+                    "name": "toParams",
+                    "description": "The params supplied to the toState.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromState",
+                    "description": "The current state, pre-transition.",
+                    "type": "Object"
+                },
+                {
+                    "name": "fromParams",
+                    "description": "The params supplied to the fromState.",
+                    "type": "Object"
+                },
+                {
+                    "name": "rejection",
+                    "description": "The resolve error object.",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "AuthenticationController",
+            "module": "stack.authentication.AuthenticationController"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationController.js",
+            "line": 77,
+            "description": "Method initializes event-based listeners.",
+            "itemtype": "method",
+            "name": "eventListeners",
+            "access": "private",
+            "tagname": "",
+            "class": "AuthenticationController",
+            "module": "stack.authentication.AuthenticationController"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationController.js",
+            "line": 100,
+            "description": "Method destroys registered events.",
+            "itemtype": "method",
+            "name": "destroyRegisteredEvents",
+            "access": "private",
+            "tagname": "",
+            "class": "AuthenticationController",
+            "module": "stack.authentication.AuthenticationController"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationController.js",
+            "line": 114,
+            "description": "Method exectues initialization process.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "AuthenticationController",
+            "module": "stack.authentication.AuthenticationController"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationModel.js",
+            "line": 24,
+            "description": "Property houses API base.",
+            "itemtype": "property",
+            "name": "base",
+            "type": "{String}",
+            "class": "AuthenticationModel",
+            "module": "stack.authentication.AuthenticationModel"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationModel.js",
+            "line": 32,
+            "description": "Method returns user information.",
+            "itemtype": "method",
+            "name": "getUser",
+            "params": [
+                {
+                    "name": "resourceParams",
+                    "description": "Query parameters",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Promise",
+                "type": "Object"
+            },
+            "class": "AuthenticationModel",
+            "module": "stack.authentication.AuthenticationModel"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationModel.js",
+            "line": 51,
+            "description": "Method authenticates user.",
+            "itemtype": "method",
+            "name": "login",
+            "params": [
+                {
+                    "name": "resourceParams",
+                    "description": "Post data",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Promise",
+                "type": "Object"
+            },
+            "class": "AuthenticationModel",
+            "module": "stack.authentication.AuthenticationModel"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationModel.js",
+            "line": 74,
+            "description": "Method un-authenticates a user.",
+            "itemtype": "method",
+            "name": "logout",
+            "params": [
+                {
+                    "name": "resourceParams",
+                    "description": "Post data",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Promise",
+                "type": "Object"
+            },
+            "class": "AuthenticationModel",
+            "module": "stack.authentication.AuthenticationModel"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationService.js",
+            "line": 22,
+            "description": "Property houses cached model.",
+            "itemtype": "property",
+            "name": "cache",
+            "type": "{Object}",
+            "class": "AuthenticationService",
+            "module": "stack.authentication.AuthenticationService"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationService.js",
+            "line": 30,
+            "description": "Property houses resource namespace.",
+            "itemtype": "property",
+            "name": "resource",
+            "type": "{String}",
+            "class": "AuthenticationService",
+            "module": "stack.authentication.AuthenticationService"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationService.js",
+            "line": 38,
+            "description": "Property houses authentication flag.",
+            "itemtype": "property",
+            "name": "authenticated",
+            "type": "{Boolean}",
+            "class": "AuthenticationService",
+            "module": "stack.authentication.AuthenticationService"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationService.js",
+            "line": 46,
+            "description": "Method returns the state of the cached user object.",
+            "itemtype": "method",
+            "name": "getUser",
+            "return": {
+                "description": "Cached user object",
+                "type": "Object"
+            },
+            "class": "AuthenticationService",
+            "module": "stack.authentication.AuthenticationService"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationService.js",
+            "line": 72,
+            "description": "Method returns the user's authenticated state.",
+            "itemtype": "method",
+            "name": "isAuthenticated",
+            "return": {
+                "description": "Authenticated state",
+                "type": "Boolean"
+            },
+            "class": "AuthenticationService",
+            "module": "stack.authentication.AuthenticationService"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationService.js",
+            "line": 82,
+            "description": "Method leverages the AuthenticationModel to authenticate a user.",
+            "itemtype": "method",
+            "name": "login",
+            "params": [
+                {
+                    "name": "username",
+                    "description": "Username",
+                    "type": "String"
+                },
+                {
+                    "name": "password",
+                    "description": "Password",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Promise object",
+                "type": "Object"
+            },
+            "class": "AuthenticationService",
+            "module": "stack.authentication.AuthenticationService"
+        },
+        {
+            "file": "development/js/src/stack/authentication/AuthenticationService.js",
+            "line": 109,
+            "description": "Method leverages the AuthenticationModel to un-authenticate a user.",
+            "itemtype": "method",
+            "name": "logout",
+            "return": {
+                "description": "Promise object",
+                "type": "Object"
+            },
+            "class": "AuthenticationService",
+            "module": "stack.authentication.AuthenticationService"
+        },
+        {
+            "file": "development/js/src/stack/develop/DevelopConfigProvider.js",
+            "line": 20,
+            "description": "Property houses configuration.",
+            "itemtype": "property",
+            "name": "config",
+            "type": "{Object}",
+            "access": "private",
+            "tagname": "",
+            "class": "DevelopConfig",
+            "module": "stack.develop.DevelopConfig"
+        },
+        {
+            "file": "development/js/src/stack/develop/DevelopConfigProvider.js",
+            "line": 31,
+            "description": "Method sets the develop flag.",
+            "itemtype": "method",
+            "name": "setDevelop",
+            "params": [
+                {
+                    "name": "flag",
+                    "description": "API route",
+                    "type": "Boolean"
+                }
+            ],
+            "return": {
+                "description": "Chained object",
+                "type": "Object"
+            },
+            "class": "DevelopConfig",
+            "module": "stack.develop.DevelopConfig"
+        },
+        {
+            "file": "development/js/src/stack/develop/DevelopConfigProvider.js",
+            "line": 44,
+            "description": "Method returns an injectable function.",
+            "itemtype": "method",
+            "name": "$get",
+            "return": {
+                "description": "Injectable function",
+                "type": "Function"
+            },
+            "class": "DevelopConfig",
+            "module": "stack.develop.DevelopConfig"
+        },
+        {
+            "file": "development/js/src/stack/i18n/LocalizeDirective.js",
+            "line": 24,
+            "description": "Method injects translated token into the element DOM.",
+            "itemtype": "method",
+            "name": "inject",
+            "params": [
+                {
+                    "name": "translated",
+                    "description": "Localized string to inject",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Localize",
+            "module": "stack.i18n.stackLocalize"
+        },
+        {
+            "file": "development/js/src/stack/i18n/LocalizeDirective.js",
+            "line": 37,
+            "description": "Method checks Translation service for token\nand inserts it into DOM element.",
+            "itemtype": "method",
+            "name": "updateText",
+            "params": [
+                {
+                    "name": "token",
+                    "description": "Text to translate",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Localize",
+            "module": "stack.i18n.stackLocalize"
+        },
+        {
+            "file": "development/js/src/stack/i18n/LocalizeDirective.js",
+            "line": 50,
+            "description": "Method exectues the initialization process.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "Localize",
+            "module": "stack.i18n.stackLocalize"
+        },
+        {
+            "file": "development/js/src/stack/i18n/TranslationConfigProvider.js",
+            "line": 16,
+            "description": "Property houses configuration.",
+            "itemtype": "property",
+            "name": "config",
+            "type": "{Object}",
+            "access": "private",
+            "tagname": "",
+            "class": "TranslationConfig",
+            "module": "stack.i18n.TranslationConfig"
+        },
+        {
+            "file": "development/js/src/stack/i18n/TranslationConfigProvider.js",
+            "line": 25,
+            "description": "Method sets or registers the path needed to obtain a\nlist of translation strings.",
+            "itemtype": "method",
+            "name": "setMapPath",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "Url path",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Chained object",
+                "type": "Object"
+            },
+            "class": "TranslationConfig",
+            "module": "stack.i18n.TranslationConfig"
+        },
+        {
+            "file": "development/js/src/stack/i18n/TranslationConfigProvider.js",
+            "line": 41,
+            "description": "Method sets or registers the namespace needed to obtain a\nlist of translation strings.",
+            "itemtype": "method",
+            "name": "setMapNamespace",
+            "params": [
+                {
+                    "name": "namespace",
+                    "description": "Namespace",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Chained object",
+                "type": "Object"
+            },
+            "class": "TranslationConfig",
+            "module": "stack.i18n.TranslationConfig"
+        },
+        {
+            "file": "development/js/src/stack/i18n/TranslationConfigProvider.js",
+            "line": 57,
+            "description": "Method returns an injectable function.",
+            "itemtype": "method",
+            "name": "$get",
+            "return": {
+                "description": "Injectable function",
+                "type": "Function"
+            },
+            "class": "TranslationConfig",
+            "module": "stack.i18n.TranslationConfig"
+        },
+        {
+            "file": "development/js/src/stack/i18n/TranslationModel.js",
+            "line": 23,
+            "description": "Method requests object containing localized strings.",
+            "itemtype": "method",
+            "name": "read",
+            "return": {
+                "description": "Promise object",
+                "type": "Object"
+            },
+            "class": "TranslationModel",
+            "module": "stack.i18n.TranslationModel"
+        },
+        {
+            "file": "development/js/src/stack/i18n/TranslationService.js",
+            "line": 25,
+            "description": "Property houses cached model.",
+            "itemtype": "property",
+            "name": "cache",
+            "type": "{Object}",
+            "class": "TranslationService",
+            "module": "stack.i18n.TranslationService"
+        },
+        {
+            "file": "development/js/src/stack/i18n/TranslationService.js",
+            "line": 35,
+            "description": "Property houses resource namespace.",
+            "itemtype": "property",
+            "name": "resource",
+            "type": "{String}",
+            "class": "TranslationService",
+            "module": "stack.i18n.TranslationService"
+        },
+        {
+            "file": "development/js/src/stack/i18n/TranslationService.js",
+            "line": 43,
+            "description": "Method requests object containing localized strings from the\ncached model. When the cache is empty, this method requests\nlocalized strings from the server.",
+            "itemtype": "method",
+            "name": "get",
+            "return": {
+                "description": "Promise object",
+                "type": "Object"
+            },
+            "class": "TranslationService",
+            "module": "stack.i18n.TranslationService"
+        },
+        {
+            "file": "development/js/src/stack/i18n/TranslationService.js",
+            "line": 78,
+            "description": "Method returns cached object.",
+            "itemtype": "method",
+            "name": "getCache",
+            "return": {
+                "description": "Cached object",
+                "type": "Object"
+            },
+            "class": "TranslationService",
+            "module": "stack.i18n.TranslationService"
+        },
+        {
+            "file": "development/js/src/stack/i18n/TranslationService.js",
+            "line": 89,
+            "description": "Method returns a translated string based upon the\npassed token.",
+            "itemtype": "method",
+            "name": "translate",
+            "params": [
+                {
+                    "name": "token",
+                    "description": "Translation token",
+                    "type": "String"
+                }
+            ],
+            "class": "TranslationService",
+            "module": "stack.i18n.TranslationService"
+        },
+        {
+            "file": "development/js/src/stack/location/LocationService.js",
+            "line": 22,
+            "description": "Method checks the existence of each parameter against\nknown url parameters.",
+            "itemtype": "method",
+            "name": "hasQueryParameter",
+            "params": [
+                {
+                    "name": "parameter",
+                    "description": "Parameter name",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "True or False",
+                "type": "Boolean"
+            },
+            "class": "LocationService",
+            "module": "stack.location.LocationService"
+        },
+        {
+            "file": "development/js/src/stack/location/LocationService.js",
+            "line": 35,
+            "description": "Method iterates over each parameter and checks the\nexistence of each parameter against known url\nparameters.",
+            "itemtype": "method",
+            "name": "hasQueryParameters",
+            "params": [
+                {
+                    "name": "parameters",
+                    "description": "Parameter names",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "True or False",
+                "type": "Boolean"
+            },
+            "class": "LocationService",
+            "module": "stack.location.LocationService"
+        },
+        {
+            "file": "development/js/src/stack/location/LocationService.js",
+            "line": 54,
+            "description": "Method strips first leading slash from the path.",
+            "itemtype": "method",
+            "name": "stripLeadingSlash",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "Route path",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Path",
+                "type": "String"
+            },
+            "class": "LocationService",
+            "module": "stack.location.LocationService"
+        },
+        {
+            "file": "development/js/src/stack/location/LocationService.js",
+            "line": 78,
+            "description": "Method returns the first route found from the path.",
+            "itemtype": "method",
+            "name": "getRootPath",
+            "params": [
+                {
+                    "name": "path",
+                    "description": "Route path",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "First route",
+                "type": "String"
+            },
+            "class": "LocationService",
+            "module": "stack.location.LocationService"
+        },
+        {
+            "file": "development/js/src/stack/location/LocationService.js",
+            "line": 96,
+            "description": "Method forces a reload of the application.",
+            "itemtype": "method",
+            "name": "redirect",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "Options object",
+                    "type": "Object"
+                }
+            ],
+            "class": "LocationService",
+            "module": "stack.location.LocationService"
+        }
+    ],
+    "warnings": []
+}
