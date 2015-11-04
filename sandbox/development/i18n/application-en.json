@@ -10,6 +10,7 @@
     "NAVIGATION_ABOUT": "About",
     "NAVIGATION_DESIGNATE": "Designate Admins",
     "NAVIGATION_GROUPINGS": "Groupings",
+    "NAVIGATION_GROUPINGS_SEARCH": "Groupings Search",
     "NAVIGATION_MEMBERSHIPS": "My Memberships",
     "NAVIGATION_FEEDBACK": "Feedback",
 
@@ -20,6 +21,10 @@
     "DESIGNATE_HEADER": "Designate Admins",
 
     "GROUPING_HEADER": "Groupings",
+
+    "GROUPING_SEARCH_LABEL": "Enter a search phrase for searching groupings.",
+    "GROUPING_SEARCH_PLACEHOLDER": "Enter a few characters from the grouping name...",
+    "GROUPING_SEARCH_BUTTON": "Search",
 
     "MEMBERSHIP_HEADER": "My Memberships",
 
