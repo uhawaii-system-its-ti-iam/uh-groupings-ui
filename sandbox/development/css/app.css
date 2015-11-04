@@ -8648,6 +8648,7 @@ body {
   width: calc(100% - 100px);
   padding: 6px 2px;
   line-height: 18px;
+  margin-right: 5px;
 }
 @media (max-width: 480px) {
   .app .uhg-grouping-search {
@@ -8661,6 +8662,7 @@ body {
   }
   .app .uhg-grouping-search input[name="groupingSearchPhrase"] {
     width: 100%;
+    margin-right: 0;
   }
 }
 .app .stack-page-loader {

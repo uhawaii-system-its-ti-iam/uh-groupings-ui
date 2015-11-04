@@ -12,13 +12,12 @@ angular.module('components.groupingSearch.uhgGroupingSearch', [
      * @module components.groupingSearch.uhgGroupingSearch
      * @example
      *     <uhg-grouping-search
-     *         search-phrase="optional initial search phrase"
-     *         on-search="someCtrl.someFunction">           // way to specify search handler
+     *         search-phrase="optional initial search phrase"       // specify initial search phrase to use
+     *         on-search="someCtrl.someFunction(searchPhrase)">     // specify search handler - searchPhrase is param
      *     </uhg-grouping-search>
      */
     .directive('uhgGroupingSearch', [
-        '$state',
-        function ($state) {
+        function () {
             'use strict';
 
             return {

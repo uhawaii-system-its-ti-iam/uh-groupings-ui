@@ -8,7 +8,7 @@
 angular.module('routes.groupingSearch', [
         'stack.i18n.TranslationResolver',
         'stack.authentication.ProtectResolver',
-        'routes.groupingSearch.GroupingSearchController'
+        'routes.groupingSearch.GroupingSearchViewController'
     ])
     .config(
         [
@@ -21,8 +21,8 @@ angular.module('routes.groupingSearch', [
                             url: '/grouping-search',
                             params: {searchPhrase: null},
                             templateUrl: 'js/src/app/routes/grouping-search/groupingSearch.html',
-                            controller: 'GroupingSearchController',
-                            controllerAs: 'groupingSearchCtrl',
+                            controller: 'GroupingSearchViewController',
+                            controllerAs: 'groupingSearchViewCtrl',
                             resolve: {
                                 translate: ['TranslationResolver', function (TranslationResolver) {
                                     return new TranslationResolver();

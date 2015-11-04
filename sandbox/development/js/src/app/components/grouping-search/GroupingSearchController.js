@@ -32,7 +32,7 @@ angular.module('components.groupingSearch.GroupingSearchController', [])
                 //if it is defined and is a function, use it.
                 if (this.onSearch && angular.isFunction(this.onSearch)) {
                     //pass in the search phrase
-                    this.onSearch(this.groupingSearchPhrase);
+                    this.onSearch({searchPhrase: this.groupingSearchPhrase});
                 } else {
                     $state.go('groupingSearch', {searchPhrase: this.groupingSearchPhrase});
                 }

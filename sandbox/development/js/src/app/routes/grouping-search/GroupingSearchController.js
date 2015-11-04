@@ -1,17 +1,17 @@
-angular.module('routes.groupingSearch.GroupingSearchController', [
+angular.module('routes.groupingSearch.GroupingSearchViewController', [
         'stack.page-loader',
         'stack.i18n'
     ])
 
     /**
-     * The GroupingSearchController manages view logic rendered to the
+     * The GroupingSearchViewController manages view logic rendered to the
      * groupingSearch.html template for the /grouping-search route.
      *
-     * @class GroupingSearchController
+     * @class GroupingSearchViewController
      * @constructor
-     * @module routes.groupingSearch.GroupingSearchController
+     * @module routes.groupingSearch.GroupingSearchViewController
      **/
-    .controller('GroupingSearchController', [
+    .controller('GroupingSearchViewController', [
         '$timeout',
         '$stateParams',
         function ($timeout, $stateParams) {
@@ -31,9 +31,10 @@ angular.module('routes.groupingSearch.GroupingSearchController', [
             /**
              * Method calls out to a service that queries back end for matching groupings
              *
+             * @method onSearch
              * @param searchPhrase {String}
              */
-            ctrl.search = function (searchPhrase) {
+            ctrl.onSearch = function (searchPhrase) {
                 //TODO: build/utilize service to query groupings
                 console.log('groupingSearch:search:' + searchPhrase);
             };
