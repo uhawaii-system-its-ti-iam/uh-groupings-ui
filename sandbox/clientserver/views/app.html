@@ -21,7 +21,12 @@
         <link rel="icon" href="favicon.ico" type="image/x-icon">
 
         <!--CSS Dependencies-->
+        ${#dev}
         <link href="css/app.css" rel="stylesheet" type="text/css" media="screen">
+        ${/dev}
+        ${^dev}
+        <link href="css/app.min.css" rel="stylesheet" type="text/css" media="screen">
+        ${/dev}
     </head>
     <body class="${id} invisible" ng-cloak stack-reveal="invisible" ng-controller="AuthenticationController as authCtrl">
         <div ng-controller="AppController as appCtrl">

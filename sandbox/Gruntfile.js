@@ -19,15 +19,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-jscs');
+    grunt.loadNpmTasks('grunt-postcss');
     grunt.task.loadTasks('tasks');
 
     // grunt dev
     // Execute tasks that prepare code base for use in the sandbox development environment.
-    grunt.registerTask('dev', ['clean:development', 'less:development', 'jshint', 'jscs', 'compilehtml:development']);
+    grunt.registerTask('dev', ['clean:development', 'less:development', 'postcss:development', 'jshint', 'jscs', 'compilehtml:development']);
 
     // grunt prod
     // Execute tasks that prepare code base for use in the sandbox production environment.
-    grunt.registerTask('prod', ['clean:production', 'copy:production', 'less:production', 'prod-templates', 'prod-js', 'concat:production', 'compilehtml:production', 'clean:temp']);
+    grunt.registerTask('prod', ['clean:production', 'copy:production', 'less:production', 'postcss:production', 'prod-templates', 'prod-js', 'concat:production', 'compilehtml:production', 'clean:temp']);
 
     // grunt laravel
     // Execute tasks that prepare code base for use in the laravel production environment.

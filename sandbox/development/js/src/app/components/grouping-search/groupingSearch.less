@@ -4,16 +4,13 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 5px 2px;
+    justify-content: center;
+    padding: 6px 4px;
     input[name="groupingSearchPhrase"] {
         width: ~"calc(100% - 100px)";
         padding: 6px 2px;
         line-height: 18px;
         margin-right: 5px;
-        order: 1;
-    }
-    button {
-        order: 2;
     }
 }
 
@@ -21,15 +18,14 @@
 --------------------------------------*/
 @media (max-width: @screen-xs-min) {
     .uhg-grouping-search {
+        flex-direction: column-reverse;
         button {
-            order: 1;
             width: 100%;
             margin-bottom: 2px;
         }
         input[name="groupingSearchPhrase"] {
-            order: 2;
-            margin: 0;
             width: 100%;
+            margin-right: 0;
         }
     }
 }
