@@ -23,6 +23,20 @@ angular.module('components.groupingSearch.GroupingSearchController', [])
             this.groupingSearchPhrase = this.groupingSearchPhrase || '';
 
             /**
+             * Method to allow executing the search when pressing enter key from within search box
+             *
+             * @method onKeyUp
+             * @param event {Object}
+             */
+            this.onKeyUp = function (event) {
+                var keycode = event.keyCode || event.which;
+
+                if (keycode === 13) {
+                    this.search();
+                }
+            };
+
+            /**
              * Method performs the search with the provided search phrase.
              * If an 'onSearch' handler has been provided, it is used,
              * otherwise it defaults to navigating to the groupSearch state.
