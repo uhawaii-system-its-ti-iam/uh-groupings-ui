@@ -1,4 +1,7 @@
-angular.module('components.groupingsService.GroupingsProxy', [])
+angular.module('components.groupingsService.GroupingsProxy', [
+    'stack.authentication.AuthenticationConfig',
+    'stack.develop.DevelopConfig'
+])
 
 /**
  * The GroupingsProxy houses CRUD-based methods for group interactions.
@@ -9,18 +12,30 @@ angular.module('components.groupingsService.GroupingsProxy', [])
  */
 .factory('GroupingsProxy', [
     '$http',
-    function ($http) {
+    'DevelopConfig',
+    'AuthenticationConfig',
+    function ($http, DevelopConfig, AuthenticationConfig) {
 
         //define
-        var svc, baseEndpoint, userEndpoint;
+        var svc, baseEndpoint, groupingsEndpoint, userEndpoint;
 
         /**
-         * Property houses the base endpoint for all REST calls used in groups interactions
+         * Property houses the base endpoint for all REST calls
          *
          * @property baseEndpoint
          * @type {string}
          */
-        baseEndpoint = '/api/groupings';
+        baseEndpoint = DevelopConfig().develop ?
+            AuthenticationConfig().developmentAPIBase :
+            AuthenticationConfig.productionAPIBase;
+
+        /**
+         * Property houses the endpoint for REST calls used in groupings interactions
+         *
+         * @property groupingsEndpoint
+         * @type {string}
+         */
+        groupingsEndpoint = [baseEndpoint, 'groupings'].join('/');
 
         /**
          * Property houses the endpoint for REST calls used in user groupings
@@ -28,7 +43,7 @@ angular.module('components.groupingsService.GroupingsProxy', [])
          * @property userEndpoint
          * @type {string}
          */
-        userEndpoint = '/api/user';
+        userEndpoint = [baseEndpoint, 'user'].join('/');
 
         /**
          * Property houses the service proxy for communicating with the backend
@@ -44,7 +59,7 @@ angular.module('components.groupingsService.GroupingsProxy', [])
              * @return {Object} Promise
              */
             query: function (searchPhrase) {
-                return $http.get([baseEndpoint, '?query=', searchPhrase].join(''));
+                return $http.get([groupingsEndpoint, '?query=', searchPhrase].join(''));
             },
 
             /**

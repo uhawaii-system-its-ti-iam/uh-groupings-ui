@@ -21,7 +21,11 @@ module.exports = function (environment) {
      */
     environment.express.route('/api/user/:userId/groupings')
         .get(function (req, res, next) {
-            res.status(200).send(fakeGroupingsData);
+            if (req.session && req.session.user) {
+                res.status(200).send(fakeGroupingsData);
+            } else {
+                res.status(401);
+            }
         });
 
     /**
@@ -29,7 +33,11 @@ module.exports = function (environment) {
      */
     environment.express.route('/api/user/:userId/groupings/owned')
         .get(function (req, res, next) {
-            res.status(200).send(fakeGroupingsData);
+            if (req.session && req.session.user) {
+                res.status(200).send(fakeGroupingsData);
+            } else {
+                res.status(401);
+            }
         });
 
     return environment;

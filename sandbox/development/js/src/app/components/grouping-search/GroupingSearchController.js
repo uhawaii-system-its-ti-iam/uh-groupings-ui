@@ -1,4 +1,6 @@
-angular.module('components.groupingSearch.GroupingSearchController', [])
+angular.module('components.groupingSearch.GroupingSearchController', [
+        'stack.location.LocationService'
+    ])
 
     /**
      * The GroupingSearchController houses state and view logic
@@ -11,8 +13,20 @@ angular.module('components.groupingSearch.GroupingSearchController', [])
     .controller('GroupingSearchController', [
         '$attrs',
         '$state',
-        function ($attrs, $state) {
+        'LocationService',
+        function ($attrs, $state, LocationService) {
             'use strict';
+
+            //define
+            var groupingSearchCtrl;
+
+            /**
+             * Property to reference this controller instance
+             *
+             * @property groupingSearchCtrl
+             * @type {Object}
+             */
+            groupingSearchCtrl = this;
 
             /**
              * Property to contain the search phrase used in the query.
@@ -20,7 +34,7 @@ angular.module('components.groupingSearch.GroupingSearchController', [])
              * @property groupingSearchPhrase
              * @type {String}
              */
-            this.groupingSearchPhrase = this.groupingSearchPhrase || '';
+            groupingSearchCtrl.groupingSearchPhrase = groupingSearchCtrl.groupingSearchPhrase || '';
 
             /**
              * Method to allow executing the search when pressing enter key from within search box
@@ -28,11 +42,11 @@ angular.module('components.groupingSearch.GroupingSearchController', [])
              * @method onKeyUp
              * @param event {Object}
              */
-            this.onKeyUp = function (event) {
+            groupingSearchCtrl.onKeyUp = function (event) {
                 var keycode = event.keyCode || event.which;
 
                 if (keycode === 13) {
-                    this.search();
+                    groupingSearchCtrl.search();
                 }
             };
 
@@ -42,15 +56,20 @@ angular.module('components.groupingSearch.GroupingSearchController', [])
              * otherwise it defaults to navigating to the groupSearch state.
              * @method search
              */
-            this.search = function () {
+            groupingSearchCtrl.search = function () {
                 //directive can get reference to a function passed in as evt handler
                 //if it is defined, use it.
                 if ($attrs.onSearch) {
                     //pass in the search phrase via named parameter argument
                     //this.onSearch is always defined - it's a proxy to the scope of the passed in function reference
-                    this.onSearch({searchPhrase: this.groupingSearchPhrase});
+                    groupingSearchCtrl.onSearch({searchPhrase: groupingSearchCtrl.groupingSearchPhrase});
                 } else {
-                    $state.go('groupingSearch', {searchPhrase: this.groupingSearchPhrase});
+                    LocationService.redirect({
+                        route: 'groupingSearch',
+                        params: {
+                            searchPhrase: groupingSearchCtrl.groupingSearchPhrase
+                        }
+                    });
                 }
             };
         }

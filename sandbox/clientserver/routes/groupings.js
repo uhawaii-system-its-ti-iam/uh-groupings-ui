@@ -12,11 +12,15 @@ module.exports = function (environment) {
      */
     environment.express.route('/api/groupings?:query')
         .get(function (req, res, next) {
-            //inspect 'query' param, and if not forcing zero-state return mock data
-            if (req.query.query !== '!zero') {
-                res.status(200).send(fakeGroupingsData);
+            if (req.session && req.session.user) {
+                //inspect 'query' param, and if not forcing zero-state return mock data
+                if (req.query.query !== '!zero') {
+                    res.status(200).send(fakeGroupingsData);
+                } else {
+                    res.status(200).send([]);
+                }
             } else {
-                res.status(200).send([]);
+                res.status(401);
             }
         });
 
