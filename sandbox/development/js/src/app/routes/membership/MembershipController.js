@@ -60,7 +60,7 @@ angular.module('routes.membership.MembershipController', [
          */
         function loadGroupingMemberships() {
             AuthenticationService.getUser().then(function (user) {
-                GroupingsService.getOwnedGroups(user.username).then(function (groups) {
+                GroupingsService.getGroupMemberships(user.username).then(function (groups) {
                     membershipCtrl.groupingMemberships = groups;
                     membershipCtrl.uiState.isLoadingGroupings = false;
                 });
