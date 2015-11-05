@@ -7,7 +7,7 @@
             "AUTHOR": "Matthew Polizzotti, Unicon, inc.",
             "ENVIRONMENTS": [
                 {
-                    "SERVER_DIR": "/sandbox",
+                    "SERVER_DIR": "/clientserver",
                     "STATIC_DIR": "/development",
                     "LESS_DIR": "/less/app.less",
                     "VIEW_DIR": "/views",
