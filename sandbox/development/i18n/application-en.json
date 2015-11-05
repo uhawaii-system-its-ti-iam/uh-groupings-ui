@@ -9,7 +9,7 @@
     "NAVIGATION_LOGIN": "Login",
     "NAVIGATION_ABOUT": "About",
     "NAVIGATION_DESIGNATE": "Designate Admins",
-    "NAVIGATION_GROUPINGS": "Groupings",
+    "NAVIGATION_GROUPINGS": "Groupings I Own",
     "NAVIGATION_GROUPINGS_SEARCH": "Groupings Search",
     "NAVIGATION_MEMBERSHIPS": "My Memberships",
     "NAVIGATION_FEEDBACK": "Feedback",
@@ -31,6 +31,21 @@
     "GROUPING_SEARCH_TABLE_ZERO_STATE": "No matches found.  Please adjust the search phrase and try again.",
     "GROUPING_SEARCH_EDIT_A11Y": "Edit Grouping",
     "GROUPING_SEARCH_SEARCHING_A11Y": "Searching for matching results.",
+
+    "GROUPING_OWNED_HEADER": "Groupings I Own",
+    "GROUPING_OWNED_TABLE_GROUPING_NAME": "Grouping Name",
+    "GROUPING_OWNED_TABLE_FOLDER": "Folder",
+    "GROUPING_OWNED_TABLE_STATUS": "Status",
+    "GROUPING_OWNED_TABLE_ZERO_STATE": "You do not own any groupings.",
+    "GROUPING_OWNED_EDIT_A11Y": "Edit Grouping",
+    "GROUPING_OWNED_LOADING_A11Y": "Loading your groupings.",
+
+    "GROUPING_MEMBERSHIP_HEADER": "Groupings I Belong",
+    "GROUPING_MEMBERSHIP_TABLE_GROUPING_NAME": "Grouping Name",
+    "GROUPING_MEMBERSHIP_TABLE_FOLDER": "Folder",
+    "GROUPING_MEMBERSHIP_TABLE_ZERO_STATE": "You do not belong to any groupings.",
+    "GROUPING_MEMBERSHIP_EDIT_A11Y": "Edit Grouping",
+    "GROUPING_MEMBERSHIP_LOADING_A11Y": "Loading your groupings.",
 
     "MEMBERSHIP_HEADER": "My Memberships",
 
