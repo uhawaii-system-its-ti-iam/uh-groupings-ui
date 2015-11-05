@@ -9,5 +9,6 @@ angular.module('components', [
     'components.header',
     'components.list-navigation',
     'components.footer',
-    'components.groupingSearch'
+    'components.groupingSearch',
+    'components.groupingsService.GroupingsService'
 ]);

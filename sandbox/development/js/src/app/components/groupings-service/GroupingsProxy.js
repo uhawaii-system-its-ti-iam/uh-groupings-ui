@@ -1,35 +1,32 @@
-angular.module('components.groupingService.GroupingsProxy', [])
-    /**
-     * The GroupingsProxy houses CRUD-based methods for group interactions.
-     *
-     * @class GroupingsProxy
-     * @constructor
-     * @module components.groupingsService.GroupingsProxy
-     */
-    .factory('GroupingsProxy', [
-        '$http',
-        function ($http) {
+angular.module('components.groupingsService.GroupingsProxy', [])
 
-            //define
-            var svc, baseEndpoint;
+/**
+ * The GroupingsProxy houses CRUD-based methods for group interactions.
+ *
+ * @class GroupingsProxy
+ * @constructor
+ * @module components.groupingsService.GroupingsProxy
+ */
+.factory('GroupingsProxy', [
+    '$http',
+    function ($http) {
 
-            /**
-             * Property houses the base endpoint for all REST calls used in groups interactions
-             *
-             * @property baseEndpoint
-             * @type {String}
-             */
-            baseEndpoint = '/api/groups';
+        //define
+        var svc, baseEndpoint;
 
-            /**
-             * Property houses the service proxy for communicating with the backend
-             * @type {{query: query, getOwnedGroups: getOwnedGroups, getGroupMemberships: getGroupMemberships}}
-             */
-            svc = {
-                query: query,
-                getOwnedGroups: getOwnedGroups,
-                getGroupMemberships: getGroupMemberships
-            };
+        /**
+         * Property houses the base endpoint for all REST calls used in groups interactions
+         *
+         * @property baseEndpoint
+         * @type {String}
+         */
+        baseEndpoint = '/api/groupings';
+
+        /**
+         * Property houses the service proxy for communicating with the backend
+         * @type {{query: query, getOwnedGroups: getOwnedGroups, getGroupMemberships: getGroupMemberships}}
+         */
+        svc = {
 
             /**
              * Method returns groups matching a searchPhrase.
@@ -38,9 +35,9 @@ angular.module('components.groupingService.GroupingsProxy', [])
              * @param {String} searchPhrase Phrase to search groups by
              * @return {Object} Promise
              */
-            function query(searchPhrase) {
+            query: function (searchPhrase) {
                 return $http.get([baseEndpoint, '?query=', searchPhrase].join(''));
-            }
+            },
 
             /**
              * Method returns groups owned by a specific user.
@@ -49,9 +46,9 @@ angular.module('components.groupingService.GroupingsProxy', [])
              * @param {String|Number} userId Id of the user who is owner of groups
              * @return {Object} Promise
              */
-            function getOwnedGroups(userId) {
+            getOwnedGroups: function (userId) {
                 return $http.get([baseEndpoint, userId, 'owned'].join('/'));
-            }
+            },
 
             /**
              * Method returns groups with a specific user as a member
@@ -60,10 +57,10 @@ angular.module('components.groupingService.GroupingsProxy', [])
              * @param {String|Number} userId Id of the user who is member of groups
              * @return {Object} Promise
              */
-            function getGroupMemberships(userId) {
+            getGroupMemberships: function (userId) {
                 return $http.get([baseEndpoint, userId].join('/'));
             }
+        };
 
-            return svc;
-        }
-    ]);
+        return svc;
+    }]);

@@ -9,8 +9,9 @@ angular.module('components.groupingSearch.GroupingSearchController', [])
      * @module components.groupingSearch.GroupingSearchController
      **/
     .controller('GroupingSearchController', [
+        '$attrs',
         '$state',
-        function ($state) {
+        function ($attrs, $state) {
             'use strict';
 
             /**
@@ -29,9 +30,10 @@ angular.module('components.groupingSearch.GroupingSearchController', [])
              */
             this.search = function () {
                 //directive can get reference to a function passed in as evt handler
-                //if it is defined and is a function, use it.
-                if (this.onSearch && angular.isFunction(this.onSearch)) {
-                    //pass in the search phrase
+                //if it is defined, use it.
+                if ($attrs.onSearch) {
+                    //pass in the search phrase via named parameter argument
+                    //this.onSearch is always defined - it's a proxy to the scope of the passed in function reference
                     this.onSearch({searchPhrase: this.groupingSearchPhrase});
                 } else {
                     $state.go('groupingSearch', {searchPhrase: this.groupingSearchPhrase});
