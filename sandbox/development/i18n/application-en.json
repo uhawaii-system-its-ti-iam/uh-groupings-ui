@@ -25,6 +25,12 @@
     "GROUPING_SEARCH_LABEL": "Enter a search phrase for searching groupings.",
     "GROUPING_SEARCH_PLACEHOLDER": "Enter a few characters from the grouping name...",
     "GROUPING_SEARCH_BUTTON": "Search",
+    "GROUPING_SEARCH_TABLE_GROUPING_NAME": "Grouping Name",
+    "GROUPING_SEARCH_TABLE_FOLDER": "Folder",
+    "GROUPING_SEARCH_TABLE_STATUS": "Status",
+    "GROUPING_SEARCH_TABLE_ZERO_STATE": "No matches found.  Please adjust the search phrase and try again.",
+    "GROUPING_SEARCH_EDIT_A11Y": "Edit Grouping",
+    "GROUPING_SEARCH_SEARCHING_A11Y": "Searching for matching results.",
 
     "MEMBERSHIP_HEADER": "My Memberships",
 
