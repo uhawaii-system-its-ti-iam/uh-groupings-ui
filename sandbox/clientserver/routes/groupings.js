@@ -4,37 +4,8 @@
 // Export.
 module.exports = function (environment) {
     'use strict';
-    
-    var fakeGroupingsData = [
-        {
-            "id": "groupings:faculty:facultyEditors",
-            "displayId": "Groupings:Faculty:FacultyEditors",
-            "displayGroup": "Faculty Editors",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo eu est porta tempor. Vestibulum ante ipsum primis in faucibus orci luctus.",
-            "status": "active"
-        },
-        {
-            "id": "groupings:faculty:superUsers:facultyAdmin",
-            "displayId": "Groupings:Faculty:SuperUsers:FacultyAdmin",
-            "displayGroup": "Faculty Admin",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo eu est porta tempor. Vestibulum ante ipsum primis in faucibus orci luctus.",
-            "status": "active"
-        },
-        {
-            "id": "groupings:faculty:general:facultyViewers",
-            "displayId": "Groupings:Faculty:General:FacultyViewers",
-            "displayGroup": "Faculty Viewers",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo eu est porta tempor. Vestibulum ante ipsum primis in faucibus orci luctus.",
-            "status": "active"
-        },
-        {
-            "id": "groupings:faculty:facultyApprovers",
-            "displayId": "Groupings:Faculty:FacultyApprovers",
-            "displayGroup": "Faculty Approvers",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo eu est porta tempor. Vestibulum ante ipsum primis in faucibus orci luctus.",
-            "status": "inactive"
-        }
-    ];
+
+    var fakeGroupingsData = require('./groupings.json');
 
     /**
      * Method for querying the groupings list
@@ -47,22 +18,6 @@ module.exports = function (environment) {
             } else {
                 res.status(200).send([]);
             }
-        });
-
-    /**
-     * Method for getting all groupings owned by a certain user
-     */
-    environment.express.route('/api/groupings/:userId/owned')
-        .get(function (req, res, next) {
-            res.status(200).send(fakeGroupingsData);
-        });
-
-    /**
-     * Method for getting all groupings a certain user is a member of
-     */
-    environment.express.route('/api/groupings/:userId')
-        .get(function (req, res, next) {
-            res.status(200).send(fakeGroupingsData);
         });
 
     return environment;

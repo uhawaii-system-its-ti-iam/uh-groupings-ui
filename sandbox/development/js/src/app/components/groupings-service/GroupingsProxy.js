@@ -12,15 +12,23 @@ angular.module('components.groupingsService.GroupingsProxy', [])
     function ($http) {
 
         //define
-        var svc, baseEndpoint;
+        var svc, baseEndpoint, userEndpoint;
 
         /**
          * Property houses the base endpoint for all REST calls used in groups interactions
          *
          * @property baseEndpoint
-         * @type {String}
+         * @type {string}
          */
         baseEndpoint = '/api/groupings';
+
+        /**
+         * Property houses the endpoint for REST calls used in user groupings
+         *
+         * @property userEndpoint
+         * @type {string}
+         */
+        userEndpoint = '/api/user';
 
         /**
          * Property houses the service proxy for communicating with the backend
@@ -47,7 +55,7 @@ angular.module('components.groupingsService.GroupingsProxy', [])
              * @return {Object} Promise
              */
             getOwnedGroups: function (userId) {
-                return $http.get([baseEndpoint, userId, 'owned'].join('/'));
+                return $http.get([userEndpoint, userId, 'groupings', 'owned'].join('/'));
             },
 
             /**
@@ -58,7 +66,7 @@ angular.module('components.groupingsService.GroupingsProxy', [])
              * @return {Object} Promise
              */
             getGroupMemberships: function (userId) {
-                return $http.get([baseEndpoint, userId].join('/'));
+                return $http.get([userEndpoint, userId, 'groupings'].join('/'));
             }
         };
 
