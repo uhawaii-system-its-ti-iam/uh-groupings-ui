@@ -5,7 +5,8 @@
 module.exports = function (environment) {
     'use strict';
 
-    var fakeGroupingsData = require('./groupings.json');
+    var fakeGroupingsData = require('./groupings.json'),
+        fakeOrgUsersData = require('./orgUsers.json');
 
     /**
      * Method for querying the groupings list
@@ -21,6 +22,23 @@ module.exports = function (environment) {
                 }
             } else {
                 res.status(401);
+            }
+        });
+
+    environment.express.route('/api/grouping/:groupingId')
+        .get(function (req, res, next) {
+            var fakeGrouping = fakeGroupingsData.filter(function (g) {
+                return g.id === req.params.groupingId;
+            }).slice()[0];
+
+            if (!fakeGrouping) {
+                res.status(200);
+            } else {
+                fakeGrouping.basisMemberIds = fakeOrgUsersData.slice(0, 10);
+                fakeGrouping.includedMemberIds = fakeOrgUsersData.slice(10, 4);
+                fakeGrouping.excludedmemberIds = fakeOrgUsersData.slice(14, 2);
+
+                res.status(200).send(fakeGrouping);
             }
         });
 
