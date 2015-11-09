@@ -35,6 +35,11 @@ angular.module('app.AppService', [])
                     route: 'grouping'
                 },
                 {
+                    label: 'Groupings Search',
+                    key: 'NAVIGATION_GROUPINGS_SEARCH',
+                    route: 'groupingSearch'
+                },
+                {
                     label: 'My Memberships',
                     key: 'NAVIGATION_MEMBERSHIPS',
                     route: 'membership'

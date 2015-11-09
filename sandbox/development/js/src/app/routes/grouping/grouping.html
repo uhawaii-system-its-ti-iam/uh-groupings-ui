@@ -5,6 +5,8 @@
     | it has been defined. Depending upon the implementation, this section
     | can also be componentized using angular directives.
     -->
+    <uhg-grouping-search></uhg-grouping-search>
+
     <div class="panel panel-default uhg-page">
         <div class="panel-heading uhg-page-header">
             <h1 class="uhg-page-title" stack-localize="GROUPING_HEADER">Groupings</h1>
@@ -17,53 +19,41 @@
             </p>
         </div>
         <div class="panel-body uhg-page-body">
-            <h3 class="uhg-page-body-title">Recent Activity</h3>
-
+            <h3 class="uhg-page-body-title">{{ 'GROUPING_OWNED_HEADER' | localize }}</h3>
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col">
                     <div class="panel panel-default uhg-panel">
-                        <div class="panel-heading uhg-panel-heading">
-                            <h4 class="uhg-panel-title">Nam Lectus Lectus</h4>
-                        </div>
-                        <div class="panel-body uhg-panel-body">
-                            Cras nec varius leo. Nam lectus lectus, vulputate eget nisi quis,
-                            feugiat luctus nunc. Morbi tristique lobortis porta. Fusce mollis
-                            tortor auctor, porttitor massa ut, consequat urna.
+                        <div class="table-responsive">
+                            <table ng-if="!groupingCtrl.uiState.isLoadingGroupings" class="table table-bordered table-hover striped-rows">
+                                <thead>
+                                <tr>
+                                    <th>{{ 'GROUPING_OWNED_TABLE_GROUPING_NAME' | localize }}</th>
+                                    <th>{{ 'GROUPING_OWNED_TABLE_FOLDER' | localize }}</th>
+                                    <th>{{ 'GROUPING_OWNED_TABLE_STATUS' | localize }}</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-if="groupingCtrl.ownedGroups.length > 0" ng-repeat="grouping in groupingCtrl.ownedGroups">
+                                    <td>{{ grouping.displayGroup }}</td>
+                                    <td>{{ grouping.folder }}</td>
+                                    <td>{{ grouping.status }}</td>
+                                    <td>
+                                        <a href="javascript://" ng-click="groupingCtrl.editGrouping(grouping)">
+                                            <span class="sr-only">{{ 'GROUPING_OWNED_EDIT_A11Y' | localize }}</span>
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr ng-if="groupingCtrl.ownedGroups.length == 0" class="zero-state">
+                                    <td colspan="4">{{ 'GROUPING_OWNED_TABLE_ZERO_STATE' | localize }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                            <div class="uhg-panel-links">
-                                <a href="#">View All</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="panel panel-default uhg-panel">
-                        <div class="panel-heading uhg-panel-heading">
-                            <h4 class="uhg-panel-title">Morbi Tristique</h4>
-                        </div>
-                        <div class="panel-body uhg-panel-body">
-                            Cras nec varius leo. Nam lectus lectus, vulputate eget nisi quis,
-                            feugiat luctus nunc. Morbi tristique lobortis porta. Fusce mollis
-                            tortor auctor, porttitor massa ut, consequat urna.
-
-                            <div class="uhg-panel-links">
-                                <a href="#">View All</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="panel panel-default uhg-panel">
-                        <div class="panel-heading uhg-panel-heading">
-                            <h4 class="uhg-panel-title">Vulputate Eget</h4>
-                        </div>
-                        <div class="panel-body uhg-panel-body">
-                            Cras nec varius leo. Nam lectus lectus, vulputate eget nisi quis,
-                            feugiat luctus nunc. Morbi tristique lobortis porta. Fusce mollis
-                            tortor auctor, porttitor massa ut, consequat urna.
-
-                            <div class="uhg-panel-links">
-                                <a href="#">View All</a>
+                            <div class="text-center" ng-if="groupingCtrl.uiState.isLoadingGroupings">
+                                <span class="sr-only">{{ 'GROUPING_OWNED_LOADING_A11Y' | localize }}</span>
+                                <i class="fa fa-spinner fa-spin fa-3x"></i>
                             </div>
                         </div>
                     </div>

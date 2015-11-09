@@ -11,9 +11,6 @@ module.exports = function (grunt) {
             production: {
                 files: {
                     'production/css/app.css': 'development/less/app.less'
-                },
-                options: {
-                    compress: true
                 }
             }
         }

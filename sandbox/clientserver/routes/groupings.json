@@ -1,0 +1,30 @@
+[
+  {
+    "id": "groupings:faculty:facultyEditors",
+    "displayId": "Groupings:Faculty:FacultyEditors",
+    "displayGroup": "Faculty Editors",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo eu est porta tempor. Vestibulum ante ipsum primis in faucibus orci luctus.",
+    "status": "active"
+  },
+  {
+    "id": "groupings:faculty:superUsers:facultyAdmin",
+    "displayId": "Groupings:Faculty:SuperUsers:FacultyAdmin",
+    "displayGroup": "Faculty Admin",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo eu est porta tempor. Vestibulum ante ipsum primis in faucibus orci luctus.",
+    "status": "active"
+  },
+  {
+    "id": "groupings:faculty:general:facultyViewers",
+    "displayId": "Groupings:Faculty:General:FacultyViewers",
+    "displayGroup": "Faculty Viewers",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo eu est porta tempor. Vestibulum ante ipsum primis in faucibus orci luctus.",
+    "status": "active"
+  },
+  {
+    "id": "groupings:faculty:facultyApprovers",
+    "displayId": "Groupings:Faculty:FacultyApprovers",
+    "displayGroup": "Faculty Approvers",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo eu est porta tempor. Vestibulum ante ipsum primis in faucibus orci luctus.",
+    "status": "inactive"
+  }
+]

@@ -16,6 +16,7 @@ module.exports = function (environment) {
     if (_.isEmpty(environment.PROXY)) {
         require('./authentication')(environment);
         require('./user')(environment);
+        require('./groupings')(environment);
     }
 
     return environment;

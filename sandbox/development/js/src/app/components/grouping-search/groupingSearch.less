@@ -1,0 +1,32 @@
+/* Component
+--------------------------------------*/
+.uhg-grouping-search {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 4px;
+    input[name="groupingSearchPhrase"] {
+        width: ~"calc(100% - 100px)";
+        padding: 6px 2px;
+        line-height: 18px;
+        margin-right: 5px;
+    }
+}
+
+/* Responsive
+--------------------------------------*/
+@media (max-width: @screen-xs-min) {
+    .uhg-grouping-search {
+        flex-direction: column-reverse;
+        button {
+            width: 100%;
+            margin-bottom: 2px;
+        }
+        input[name="groupingSearchPhrase"] {
+            width: 100%;
+            margin-right: 0;
+        }
+    }
+}
+

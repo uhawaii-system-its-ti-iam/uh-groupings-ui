@@ -26,7 +26,8 @@ module.exports = function (grunt) {
                     'development/less/**/*.less'
                 ],
                 tasks: [
-                    'less:development'
+                    'less:development',
+                    'postcss:development'
                 ]
             },
 

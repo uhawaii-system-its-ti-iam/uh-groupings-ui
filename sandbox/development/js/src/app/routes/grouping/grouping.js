@@ -7,6 +7,7 @@
 angular.module('routes.grouping', [
     'stack.i18n.TranslationResolver',
     'stack.authentication.ProtectResolver',
+    'components.groupingSearch',
     'routes.grouping.GroupingController'
 ])
 .config(

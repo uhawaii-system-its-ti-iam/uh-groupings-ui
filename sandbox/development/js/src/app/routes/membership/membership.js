@@ -7,6 +7,7 @@
 angular.module('routes.membership', [
     'stack.i18n.TranslationResolver',
     'stack.authentication.ProtectResolver',
+    'components.groupingSearch',
     'routes.membership.MembershipController'
 ])
 .config(
