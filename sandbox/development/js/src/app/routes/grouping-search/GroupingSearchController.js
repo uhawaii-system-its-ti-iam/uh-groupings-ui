@@ -16,7 +16,8 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
         '$timeout',
         '$stateParams',
         'GroupingsService',
-        function ($timeout, $stateParams, GroupingsService) {
+        'orgUsers',
+        function ($timeout, $stateParams, GroupingsService, orgUsers) {
             'use strict';
 
             // Define.
@@ -42,7 +43,9 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
              */
             ctrl.uiState = {
                 isSearching: false,
-                hasSearched: false
+                hasSearched: false,
+                isLoadingDrilldown: false,
+                showDrilldown: false
             };
 
             /**
@@ -70,8 +73,40 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
              * @param grouping {Object}
              */
             ctrl.editGrouping = function (grouping) {
-                console.log('GroupingSearchCtrl:editGrouping', grouping);
+                ctrl.uiState.isLoadingDrilldown = ctrl.uiState.showDrilldown = true;
+                GroupingsService.getGroup(grouping.id).then(function (grouping) {
+                    grouping.basisMembers = grouping.basisMemberIds.map(getUserById);
+                    grouping.includedMembers = grouping.includedMemberIds.map(getUserById);
+                    grouping.excludedMembers = grouping.excludedMemberIds.map(getUserById);
+
+                    //default members = (basisMembers + includedMembers) - excludedMembers
+                    grouping.defaultMembers = grouping.basisMembers
+                        .concat(grouping.includedMembers)
+                        .filter(function (m) {
+                            return grouping.excludedMemberIds.indexOf(m.userId) !== -1;
+                        });
+
+                    ctrl.selectedGrouping = grouping;
+                    ctrl.uiState.isLoadingDrilldown = false;
+                });
             };
+
+            /**
+             * Method to get users based on id
+             *
+             * @method getUserById
+             * @param id {Object|String} Pass in either User object or the User's Id
+             * @returns {Object}
+             * @private
+             */
+            function getUserById(id) {
+                if ('userId' in id) {
+                    id = id.userId;
+                }
+                return orgUsers.filter(function (u) {
+                    return u.userId === id;
+                }).slice()[0];
+            }
 
             /**
              * Method executes initialization process.

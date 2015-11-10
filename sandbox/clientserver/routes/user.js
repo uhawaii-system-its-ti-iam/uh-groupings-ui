@@ -23,7 +23,7 @@ module.exports = function (environment) {
     environment.express.route('/api/users')
         .get(function (req, res, next) {
             if (req.session && req.session.user) {
-                res.status(200).send(fakeOrganizationUsers)
+                res.status(200).send(fakeOrganizationUsers);
             } else {
                 res.status(401);
             }

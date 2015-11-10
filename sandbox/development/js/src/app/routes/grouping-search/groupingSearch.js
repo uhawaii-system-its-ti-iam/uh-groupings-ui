@@ -6,8 +6,10 @@
  * @module routes.groupingSearch
  */
 angular.module('routes.groupingSearch', [
+        'ui.bootstrap.tabs',
         'stack.i18n.TranslationResolver',
         'stack.authentication.ProtectResolver',
+        'components.orgUsersService.OrgUsersService',
         'routes.groupingSearch.GroupingSearchViewController'
     ])
     .config(
@@ -24,6 +26,9 @@ angular.module('routes.groupingSearch', [
                             controller: 'GroupingSearchViewController',
                             controllerAs: 'groupingSearchViewCtrl',
                             resolve: {
+                                orgUsers: ['OrgUsersService', function (OrgUsersSvc) {
+                                    return OrgUsersSvc.list();
+                                }],
                                 translate: ['TranslationResolver', function (TranslationResolver) {
                                     return new TranslationResolver();
                                 }],

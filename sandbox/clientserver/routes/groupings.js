@@ -25,7 +25,10 @@ module.exports = function (environment) {
             }
         });
 
-    environment.express.route('/api/grouping/:groupingId')
+    /**
+     * Method for getting detailed grouping info on a single grouping whose id matches the parameter
+     */
+    environment.express.route('/api/groupings/:groupingId')
         .get(function (req, res, next) {
             var fakeGrouping = fakeGroupingsData.filter(function (g) {
                 return g.id === req.params.groupingId;
@@ -34,9 +37,9 @@ module.exports = function (environment) {
             if (!fakeGrouping) {
                 res.status(200);
             } else {
-                fakeGrouping.basisMemberIds = fakeOrgUsersData.slice(0, 10);
-                fakeGrouping.includedMemberIds = fakeOrgUsersData.slice(10, 4);
-                fakeGrouping.excludedmemberIds = fakeOrgUsersData.slice(14, 2);
+                fakeGrouping.basisMemberIds = fakeOrgUsersData.slice(0, 16);
+                fakeGrouping.includedMemberIds = fakeOrgUsersData.slice(16, 22);
+                fakeGrouping.excludedMemberIds = fakeOrgUsersData.slice(22, 30);
 
                 res.status(200).send(fakeGrouping);
             }
