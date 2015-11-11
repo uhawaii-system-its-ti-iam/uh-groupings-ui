@@ -31,6 +31,18 @@
     "GROUPING_SEARCH_TABLE_ZERO_STATE": "No matches found.  Please adjust the search phrase and try again.",
     "GROUPING_SEARCH_EDIT_A11Y": "Edit Grouping",
     "GROUPING_SEARCH_SEARCHING_A11Y": "Searching for matching results.",
+    "GROUPING_SEARCH_DRILLDOWN_LOADING_A11Y": "Loading the selected grouping's information.",
+    "GROUPING_SEARCH_MEMBERSHIP_TAB_HEADING": "Membership",
+    "GROUPING_SEARCH_OWNERSHIP_TAB_HEADING": "Ownership",
+    "GROUPING_SEARCH_PREFERENCES_TAB_HEADING": "Preferences",
+
+    "PREFERENCES_TAB_HEADER": "Options",
+    "PREFERENCES_TAB_ADD_REMOVE_HEADER": "Add/Remove",
+    "PREFERENCES_TAB_ADD_SELF_LABEL": "Allow people to add themselves to this group.",
+    "PREFERENCES_TAB_REMOVE_SELF_LABEL": "Allow people to remove themselves from this group.",
+    "PREFERENCES_TAB_PUBLICATIONS_HEADER": "Publications/Destinations",
+    "PREFERENCES_TAB_LISTSERV_LABEL": "LISTSERV list ",
+    "PREFERENCES_TAB_SAVE_BUTTON": "Save Options",
 
     "GROUPING_OWNED_HEADER": "Groupings I Own",
     "GROUPING_OWNED_TABLE_GROUPING_NAME": "Grouping Name",

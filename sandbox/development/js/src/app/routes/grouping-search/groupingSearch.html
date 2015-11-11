@@ -43,11 +43,6 @@
 
         <div class="breadcrumb"></div>
 
-        <div class="text-center" ng-if="groupingSearchViewCtrl.uiState.isLoadingDrilldown">
-            <span class="sr-only">{{ 'GROUPING_SEARCH_DRILLDOWN_LOADING_A11Y' | localize }}</span>
-            <i class="fa fa-spinner fa-spin fa-3x"></i>
-        </div>
-
         <div class="panel panel-default uhg-page" ng-if="!groupingSearchViewCtrl.uiState.isLoadingDrilldown">
             <section class="panel-heading uhg-page-header">
                 <h1 class="uhg-page-title">{{ groupingSearchViewCtrl.selectedGrouping.displayGroup }}</h1>
@@ -60,20 +55,7 @@
             </section>
 
             <section class="panel-body uhg-page-body">
-                <tabset>
-                    <!--Membership Tab-->
-                    <tab heading="{{ 'GROUPING_SEARCH_MEMBERSHIP_TAB_HEADING' | localize }}" active="true">
-                        MEMBERSHIP TAB
-                    </tab>
-                    <!--Owners Tab-->
-                    <tab heading="{{ 'GROUPING_SEARCH_OWNERS_TAB_HEADING' | localize }}">
-                        OWNERS TAB
-                    </tab>
-                    <!--Preferences Tab-->
-                    <tab heading="{{ 'GROUPING_SEARCH_PREFERENCES_TAB_HEADING' | localize }}">
-                        PREFERENCES TAB
-                    </tab>
-                </tabset>
+                <uhg-grouping-editor grouping-id="groupingSearchViewCtrl.selectedGrouping.id"></uhg-grouping-editor>
             </section>
         </div>
     </div>

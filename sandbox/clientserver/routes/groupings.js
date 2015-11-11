@@ -35,11 +35,18 @@ module.exports = function (environment) {
             }).slice()[0];
 
             if (!fakeGrouping) {
-                res.status(200);
+                res.status(404);
             } else {
                 fakeGrouping.basisMemberIds = fakeOrgUsersData.slice(0, 16);
+                fakeGrouping.ownerMemberIds = fakeOrgUsersData.slice(5, 5);
                 fakeGrouping.includedMemberIds = fakeOrgUsersData.slice(16, 22);
                 fakeGrouping.excludedMemberIds = fakeOrgUsersData.slice(22, 30);
+
+                fakeGrouping.options = {
+                    canAddSelf: false,
+                    canRemoveSelf: true,
+                    includeInListServe: true
+                };
 
                 res.status(200).send(fakeGrouping);
             }
