@@ -41,6 +41,18 @@
     "GROUPING_SEARCH_OWNERSHIP_TAB_HEADING": "Ownership",
     "GROUPING_SEARCH_PREFERENCES_TAB_HEADING": "Preferences",
 
+    "MEMBERSHIP_TAB_DEFAULT_GROUP_TAB_HEADER": "Default Group",
+    "MEMBERSHIP_TAB_BASIS_GROUP_TAB_HEADER": "Basis Group",
+    "MEMBERSHIP_TAB_INCLUDE_GROUP_TAB_HEADER": "Include Group",
+    "MEMBERSHIP_TAB_EXCLUDE_GROUP_TAB_HEADER": "Exclude Group",
+    "MEMBERSHIP_TAB_EXPORT_AS_CSV": "Export to CSV",
+
+    "DEFAULT_GROUP_TAB_DESCRIPTION": "This is the default members table, which contains all the basis group plus the include group minus the exclude group.",
+    "DEFAULT_GROUP_TAB_TABLE_FIRST_NAME": "First Name",
+    "DEFAULT_GROUP_TAB_TABLE_LAST_NAME": "Last Name",
+    "DEFAULT_GROUP_TAB_TABLE_EMAIL": "Email",
+    "DEFAULT_GROUP_TAB_TABLE_ZERO_STATE": "This grouping has no default members.",
+
     "OWNERSHIP_TAB_TABLE_FIRST_NAME": "First Name",
     "OWNERSHIP_TAB_TABLE_LAST_NAME": "Last Name",
     "OWNERSHIP_TAB_TABLE_EMAIL": "Email",

@@ -46,7 +46,7 @@ angular.module('routes.groupingSearch.GroupingEditorController', [
             groupingEditorCtrl.tabs = [
                 {
                     name: 'membership-tab',
-                    viewUrl: 'js/src/app/routes/grouping-search/grouping-editor/membershipTab.html',
+                    viewUrl: 'js/src/app/routes/grouping-search/grouping-editor/membership-tab/membershipTab.html',
                     tabLabel: localize('GROUPING_SEARCH_MEMBERSHIP_TAB_HEADING'),
                     active: true
                 },
@@ -82,11 +82,15 @@ angular.module('routes.groupingSearch.GroupingEditorController', [
                     grouping.defaultMembers = grouping.basisMembers
                         .concat(grouping.includedMembers)
                         .filter(function (m) {
-                            return grouping.excludedMemberIds.indexOf(m.userId) !== -1;
+                            return grouping.excludedMemberIds.indexOf(m.userId) === -1;
                         });
 
                     groupingEditorCtrl.grouping = grouping;
-                    groupingEditorCtrl.uiState.isLoadingGrouping = false;
+
+                    //put in timeout to make sure loading spinner is more than a quick flash
+                    $timeout(function () {
+                        groupingEditorCtrl.uiState.isLoadingGrouping = false;
+                    }, 200);
                 });
             }
 

@@ -1,0 +1,20 @@
+<div ng-controller="MembershipTabController as membershipTabCtrl" class="membership-tab">
+    <div class="tab-container">
+        <tabset vertical="true">
+            <tab ng-repeat="tab in membershipTabCtrl.tabs" active="tab.active" class="{{tab.name}}">
+                <tab-heading>
+                    <span class="sr-only">{{ tab.tabLabel }}</span>
+                    <i class="{{ tab.tabIconClass }}"></i>
+                </tab-heading>
+                <div ng-if="tab.active" ng-include src="tab.viewUrl"></div>
+            </tab>
+        </tabset>
+    </div>
+
+    <footer>
+        <button class="btn btn-primary" ng-click="membershipTabCtrl.exportAsCsv()">
+            <i class="fa fa-print"></i>
+            {{ 'MEMBERSHIP_TAB_EXPORT_AS_CSV' | localize }}
+        </button>
+    </footer>
+</div>
