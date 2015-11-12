@@ -4,56 +4,64 @@
     "email": "stokesmontgomery@amril.com",
     "isActive": true,
     "firstName": "Winifred",
-    "lastName": "Skinner"
+    "lastName": "Skinner",
+    "permissionType": "Admin"
   },
   {
     "userId": "564110ea9b7687ef3e1a43cc",
     "email": "winifredskinner@amril.com",
     "isActive": false,
     "firstName": "Geneva",
-    "lastName": "Wiley"
+    "lastName": "Wiley",
+    "permissionType": "Admin"
   },
   {
     "userId": "564110ea48b77bae5377bb0d",
     "email": "genevawiley@amril.com",
     "isActive": false,
     "firstName": "Bethany",
-    "lastName": "Bryan"
+    "lastName": "Bryan",
+    "permissionType": "Admin"
   },
   {
     "userId": "564110eac4f7cc47f06daee3",
     "email": "bethanybryan@amril.com",
     "isActive": true,
     "firstName": "Webster",
-    "lastName": "Gallagher"
+    "lastName": "Gallagher",
+    "permissionType": "Approver"
   },
   {
     "userId": "564110ea11503278c3ecbac6",
     "email": "webstergallagher@amril.com",
     "isActive": false,
     "firstName": "Jimenez",
-    "lastName": "Barry"
+    "lastName": "Barry",
+    "permissionType": "Admin"
   },
   {
     "userId": "564110eadcb39832268ea873",
     "email": "jimenezbarry@amril.com",
     "isActive": true,
     "firstName": "Lydia",
-    "lastName": "Boyle"
+    "lastName": "Boyle",
+    "permissionType": "Admin"
   },
   {
     "userId": "564110ea2169bc358a3b65c2",
     "email": "lydiaboyle@amril.com",
     "isActive": false,
     "firstName": "Latasha",
-    "lastName": "Brooks"
+    "lastName": "Brooks",
+    "permissionType": "Admin"
   },
   {
     "userId": "564110eaee662f30c4bd6772",
     "email": "latashabrooks@amril.com",
     "isActive": true,
     "firstName": "Bonner",
-    "lastName": "Hayden"
+    "lastName": "Hayden",
+    "permissionType": "Approver"
   },
   {
     "userId": "564110ea8f5d2a9043a3b768",

@@ -38,7 +38,7 @@ module.exports = function (environment) {
                 res.status(404);
             } else {
                 fakeGrouping.basisMemberIds = fakeOrgUsersData.slice(0, 16);
-                fakeGrouping.ownerMemberIds = fakeOrgUsersData.slice(5, 5);
+                fakeGrouping.ownerMemberIds = fakeOrgUsersData.slice(5, 10);
                 fakeGrouping.includedMemberIds = fakeOrgUsersData.slice(16, 22);
                 fakeGrouping.excludedMemberIds = fakeOrgUsersData.slice(22, 30);
 

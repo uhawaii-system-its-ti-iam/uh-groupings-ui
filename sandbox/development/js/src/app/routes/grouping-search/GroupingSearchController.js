@@ -63,6 +63,7 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
              */
             ctrl.onSearch = function (searchPhrase) {
                 ctrl.uiState.isSearching = true;
+                ctrl.searchPhrase = searchPhrase;
                 GroupingsService.query(searchPhrase).then(function (groups) {
                     //using timeout to make sure the loading spinner displays long enough to not just be a flicker
                     $timeout(function () {

@@ -41,7 +41,20 @@
 
     <div ng-if="groupingSearchViewCtrl.uiState.showDrilldown">
 
-        <div class="breadcrumb"></div>
+        <div class="breadcrumb">
+            <a href="javascript://" ng-click="groupingSearchViewCtrl.clearSearchResults()">
+                <span class="sr-only">{{ 'GROUPING_SEARCH_BREADCRUMB_GROUPING_SEARCH_A11Y' | localize }}</span>
+                {{ 'GROUPING_SEARCH_BREADCRUMB_GROUPING_SEARCH' | localize }}
+
+            </a>
+            <i class="fa fa-chevron-right"></i>
+            <a href="javascript://" ng-click="groupingSearchViewCtrl.backToResults()">
+                <span class="sr-only">{{ 'GROUPING_SEARCH_BREADCRUMB_TO_RESULTS_A11Y' | localize }}</span>
+                {{ groupingSearchViewCtrl.searchPhrase }}
+            </a>
+            <i class="fa fa-chevron-right"></i>
+            <span>{{ groupingSearchViewCtrl.selectedGrouping.displayGroup }}</span>
+        </div>
 
         <div class="panel panel-default uhg-page" ng-if="!groupingSearchViewCtrl.uiState.isLoadingDrilldown">
             <section class="panel-heading uhg-page-header">

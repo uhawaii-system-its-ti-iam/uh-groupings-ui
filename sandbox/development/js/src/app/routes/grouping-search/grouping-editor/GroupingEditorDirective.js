@@ -1,5 +1,6 @@
 angular.module('routes.groupingSearch.uhgGroupingEditor', [
         'routes.groupingSearch.GroupingEditorController',
+        'routes.groupingSearch.OwnershipTabController',
         'routes.groupingSearch.PreferencesTabController',
         'components.orgUsersService.OrgUsersService',
         'stack.i18n.stackLocalize',

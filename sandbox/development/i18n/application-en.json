@@ -1,4 +1,6 @@
 {
+    "GLOBAL_SORT_BY": "Sort By",
+
     "BUTTON_LOGIN": "Login",
     "BUTTON_LOGOUT": "Logout",
 
@@ -32,9 +34,19 @@
     "GROUPING_SEARCH_EDIT_A11Y": "Edit Grouping",
     "GROUPING_SEARCH_SEARCHING_A11Y": "Searching for matching results.",
     "GROUPING_SEARCH_DRILLDOWN_LOADING_A11Y": "Loading the selected grouping's information.",
+    "GROUPING_SEARCH_BREADCRUMB_GROUPING_SEARCH": "Search Groupings",
+    "GROUPING_SEARCH_BREADCRUMB_GROUPING_SEARCH_A11Y": "Back to search",
+    "GROUPING_SEARCH_BREADCRUMB_TO_RESULTS_A11Y": "Back to results of prior search",
     "GROUPING_SEARCH_MEMBERSHIP_TAB_HEADING": "Membership",
     "GROUPING_SEARCH_OWNERSHIP_TAB_HEADING": "Ownership",
     "GROUPING_SEARCH_PREFERENCES_TAB_HEADING": "Preferences",
+
+    "OWNERSHIP_TAB_TABLE_FIRST_NAME": "First Name",
+    "OWNERSHIP_TAB_TABLE_LAST_NAME": "Last Name",
+    "OWNERSHIP_TAB_TABLE_EMAIL": "Email",
+    "OWNERSHIP_TAB_TABLE_PERMISSION_TYPE": "Permission Type",
+    "OWNERSHIP_TAB_TABLE_ZERO_STATE": "This grouping has no owners.",
+    "OWNERSHIP_TAB_ADD_USER_BUTTON": "Add User",
 
     "PREFERENCES_TAB_HEADER": "Options",
     "PREFERENCES_TAB_ADD_REMOVE_HEADER": "Add/Remove",
