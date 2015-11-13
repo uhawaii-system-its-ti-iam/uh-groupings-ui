@@ -1,8 +1,8 @@
 
-angular.module('routes.groupingSearch.DefaultGroupTabController', [
+angular.module('routes.groupingSearch.BasisGroupTabController', [
         'stack.i18n'
     ])
-    .controller('DefaultGroupTabController', [
+    .controller('BasisGroupTabController', [
         '$scope',
         function ($scope) {
             // define
@@ -39,28 +39,6 @@ angular.module('routes.groupingSearch.DefaultGroupTabController', [
             // but it's used to access groupingEditorCtrl instead of $parent.$parent..
             ctrl.grouping = $scope.groupingEditorCtrl.grouping;
 
-            function init() {
-                //default members = (basisMembers + includedMembers) - excludedMembers
-                // NOTE: Assumes no overlap between basis and included
-                //      if this is incorrect assumption, can use lodash, etc... to get unique values
-                // NOTE 2: Specify the sourceGroup so the you know where each group came from
-                ctrl.grouping.defaultMembers = ctrl.grouping.basisMembers.map(function (m) {
-                        m.sourceGroup = 'Basis';
-                        return m;
-                    })
-                    .concat(ctrl.grouping.includedMembers.map(function (m) {
-                        m.sourceGroup = 'Include';
-                        return m;
-                    }))
-                    //honestly not sure if this filter is needed -
-                    // could a member ever be in both an include and exclude state?
-                    // Seems extremely unlikely, but figured I'd put it here to show how to filter out if needed...
-                    .filter(function (m) {
-                        return ctrl.grouping.excludedMemberIds.indexOf(m.userId) === -1;
-                    });
-            }
-            init();
-
             // add event listener to $scope service so that this view controller can respond to export CSV event
             // NOTE: Using ng-if inside each tab so that views are instantiated each time a tab is changed
             //      If we weren't doing that, then we'd want to pass in the active tab from the MembershipTabController
@@ -70,4 +48,3 @@ angular.module('routes.groupingSearch.DefaultGroupTabController', [
             });
         }
     ]);
-

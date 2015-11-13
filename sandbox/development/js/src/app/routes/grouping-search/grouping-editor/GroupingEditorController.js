@@ -76,15 +76,6 @@ angular.module('routes.groupingSearch.GroupingEditorController', [
                     grouping.includedMembers = grouping.includedMemberIds.map(getUserById);
                     grouping.excludedMembers = grouping.excludedMemberIds.map(getUserById);
 
-                    //default members = (basisMembers + includedMembers) - excludedMembers
-                    // NOTE: Assumes no overlap between basis and included
-                    //      if this is incorrect assumption, can use lodash, etc... to get unique values
-                    grouping.defaultMembers = grouping.basisMembers
-                        .concat(grouping.includedMembers)
-                        .filter(function (m) {
-                            return grouping.excludedMemberIds.indexOf(m.userId) === -1;
-                        });
-
                     groupingEditorCtrl.grouping = grouping;
 
                     //put in timeout to make sure loading spinner is more than a quick flash

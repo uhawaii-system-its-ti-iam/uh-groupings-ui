@@ -1,6 +1,9 @@
 
 angular.module('routes.groupingSearch.MembershipTabController', [
         'routes.groupingSearch.DefaultGroupTabController',
+        'routes.groupingSearch.BasisGroupTabController',
+        'routes.groupingSearch.IncludeGroupTabController',
+        'routes.groupingSearch.ExcludeGroupTabController',
         'stack.i18n'
     ])
     .controller('MembershipTabController', [
@@ -32,7 +35,7 @@ angular.module('routes.groupingSearch.MembershipTabController', [
                     name: 'default-group-tab',
                     viewUrl: 'js/src/app/routes/grouping-search/grouping-editor/membership-tab/defaultGroupTab.html',
                     tabLabel: localize('MEMBERSHIP_TAB_DEFAULT_GROUP_TAB_HEADING'),
-                    tabIconClass: 'fa fa-users',
+                    tabIconClass: 'fa fa-users text-info',
                     active: true
                 },
                 {
@@ -45,13 +48,13 @@ angular.module('routes.groupingSearch.MembershipTabController', [
                     name: 'include-group-tab',
                     viewUrl: 'js/src/app/routes/grouping-search/grouping-editor/membership-tab/includeGroupTab.html',
                     tabLabel: localize('MEMBERSHIP_TAB_INCLUDE_GROUP_TAB_HEADING'),
-                    tabIconClass: 'fa fa-plus-circle'
+                    tabIconClass: 'fa fa-plus-circle text-success'
                 },
                 {
                     name: 'exclude-group-tab',
                     viewUrl: 'js/src/app/routes/grouping-search/grouping-editor/membership-tab/excludeGroupTab.html',
                     tabLabel: localize('MEMBERSHIP_TAB_EXCLUDE_GROUP_TAB_HEADING'),
-                    tabIconClass: 'fa fa-minus-circle'
+                    tabIconClass: 'fa fa-minus-circle text-danger'
                 }
             ];
 

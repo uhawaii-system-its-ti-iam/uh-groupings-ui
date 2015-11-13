@@ -1,5 +1,5 @@
 <div class="default-group-tab" ng-controller="DefaultGroupTabController as ctrl">
-    <label class="text-primary">{{ 'DEFAULT_GROUP_TAB_DESCRIPTION' | localize }}</label>
+    <label class="text-info">{{ 'DEFAULT_GROUP_TAB_DESCRIPTION' | localize }}</label>
     <div class="table-responsive">
         <table class="table table-bordered table-hover striped-rows">
             <thead>
@@ -25,6 +25,13 @@
                         </a>
                         <i class="fa" ng-class="{'fa-caret-up': ctrl.sortField === '+email', 'fa-caret-down': ctrl.sortField === '-email'}"></i>
                     </th>
+                    <th>
+                        <a href="javascript://" ng-click="ctrl.changeSort('sourceGroup')">
+                            <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'DEFAULT_GROUP_TAB_TABLE_SOURCE_GROUP' | localize }}</span>
+                            {{ 'DEFAULT_GROUP_TAB_TABLE_SOURCE_GROUP' | localize }}
+                        </a>
+                        <i class="fa" ng-class="{'fa-caret-up': ctrl.sortField === '+sourceGroup', 'fa-caret-down': ctrl.sortField === '-sourceGroup'}"></i>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +39,7 @@
                     <td>{{ user.firstName }}</td>
                     <td>{{ user.lastName }}</td>
                     <td>{{ user.email }}</td>
+                    <td>{{ user.sourceGroup }}</td>
                 </tr>
                 <tr ng-if="ctrl.grouping.defaultMembers.length == 0" class="zero-state">
                     <td colspan="4">{{ 'DEFAULT_GROUP_TAB_TABLE_ZERO_STATE' | localize }}</td>

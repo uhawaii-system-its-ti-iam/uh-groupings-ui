@@ -8679,7 +8679,7 @@ body {
 .app .uhg-route-grouping-search .breadcrumb i.fa {
   margin: 0 10px;
 }
-.app .uhg-route-grouping-search .tab-content:first-of-type {
+.app .uhg-route-grouping-search .tab-content {
   padding: 10px 0;
 }
 .app .uhg-route-grouping-search .membership-tab .tab-container > div:first-child {
