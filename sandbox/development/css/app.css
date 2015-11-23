@@ -8665,6 +8665,53 @@ body {
     margin-right: 0;
   }
 }
+.app .uhg-route-grouping-search .breadcrumb {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: flex-start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.app .uhg-route-grouping-search .breadcrumb i.fa {
+  margin: 0 10px;
+}
+.app .uhg-route-grouping-search .tab-content {
+  padding: 10px 0;
+}
+.app .uhg-route-grouping-search .membership-tab .tab-container > div:first-child {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.app .uhg-route-grouping-search .membership-tab .tab-container ul.nav-tabs.nav-stacked {
+  border: none;
+  padding-top: 20px;
+}
+.app .uhg-route-grouping-search .membership-tab .tab-container ul.nav-tabs.nav-stacked li {
+  border: 1px solid #555555;
+  margin-left: 0px;
+  margin-bottom: 5px;
+}
+.app .uhg-route-grouping-search .membership-tab .tab-container ul.nav-tabs.nav-stacked li.active {
+  border-right-color: #ffffff;
+}
+.app .uhg-route-grouping-search .membership-tab .tab-container ul.nav-tabs.nav-stacked li.active a {
+  border-right: none;
+  background-color: #ffffff;
+  margin: 0;
+}
+.app .uhg-route-grouping-search .membership-tab .tab-container .tab-content {
+  margin-left: -1px;
+  border: 1px solid #555555;
+  padding: 10px;
+}
+.app .uhg-route-grouping-search .membership-tab footer {
+  padding: 20px 0;
+}
 .app .stack-page-loader {
   font-size: 1em;
 }

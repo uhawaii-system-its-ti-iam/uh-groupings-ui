@@ -51,7 +51,7 @@
                         </aside>
                     </div>
                     <div class="col-sm-9 col-md-9 col-lg-10">
-                        <main ui-view class="uhg-main" role="main">
+                        <main ui-view class="uhg-main" role="main"></main>
                     </div>
                 </div>
             </div>
@@ -111,6 +111,17 @@
         <script type="text/javascript" src="js/src/app/routes/grouping-search/groupingSearch.js"></script>
         <script type="text/javascript" src="js/src/app/routes/grouping-search/GroupingSearchController.js"></script>
 
+        <!--Grouping Search -> Grouping Editor-->
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/GroupingEditorDirective.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/GroupingEditorController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership-tab/MembershipTabController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership-tab/DefaultGroupTabController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership-tab/BasisGroupTabController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership-tab/IncludeGroupTabController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership-tab/ExcludeGroupTabController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/OwnershipTabController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/PreferencesTabController.js"></script>
+
         <!--Membership-->
         <script type="text/javascript" src="js/src/app/routes/membership/membership.js"></script>
         <script type="text/javascript" src="js/src/app/routes/membership/MembershipController.js"></script>
@@ -146,6 +157,10 @@
         <!--Grouping Service-->
         <script type="text/javascript" src="js/src/app/components/groupings-service/GroupingsProxyService.js"></script>
         <script type="text/javascript" src="js/src/app/components/groupings-service/GroupingsService.js"></script>
+
+        <!--Org Users Service-->
+        <script type="text/javascript" src="js/src/app/components/org-users-service/OrgUsersProxyService.js"></script>
+        <script type="text/javascript" src="js/src/app/components/org-users-service/OrgUsersService.js"></script>
 
         <!--Stack-->
         <script type="text/javascript" src="js/src/stack/stack.js"></script>

@@ -20,13 +20,19 @@ angular.module('components.groupingsService.GroupingsService', [
             function transformGroupResponse(response) {
                 var groupings = response.data;
 
-                groupings.forEach(function (g) {
+                function transformGrouping(g) {
                     var groupSegments = g.id.split(':');
 
                     g.rootFolder = groupSegments.shift();
                     g.group = groupSegments.pop();
                     g.folder = groupSegments.join('/');
-                });
+                }
+
+                if (Array.isArray(groupings)) {
+                    groupings.forEach(transformGrouping);
+                } else {
+                    transformGrouping(groupings);
+                }
 
                 return groupings;
             }
@@ -42,6 +48,17 @@ angular.module('components.groupingsService.GroupingsService', [
                  */
                 query: function (searchPhrase) {
                     return Proxy.query(searchPhrase).then(transformGroupResponse);
+                },
+
+                /**
+                 * Method returns complete data set for a single grouping whose id matches that passed in
+                 *
+                 * @method getGroup
+                 * @param groupingId {String}
+                 * @return {Object} Grouping
+                 */
+                getGroup: function (groupingId) {
+                    return Proxy.getGroup(groupingId).then(transformGroupResponse);
                 },
 
                 /**

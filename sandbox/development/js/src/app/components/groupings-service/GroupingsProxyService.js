@@ -63,6 +63,17 @@ angular.module('components.groupingsService.GroupingsProxy', [
             },
 
             /**
+             * Method returns complete data set for a single grouping whose id matches that passed in
+             *
+             * @method getGroup
+             * @param groupingId {String}
+             * @return {Object} Grouping
+             */
+            getGroup: function (groupingId) {
+                return $http.get([groupingsEndpoint, groupingId].join('/'));
+            },
+
+            /**
              * Method returns groups owned by a specific user.
              *
              * @method getOwnedGroups

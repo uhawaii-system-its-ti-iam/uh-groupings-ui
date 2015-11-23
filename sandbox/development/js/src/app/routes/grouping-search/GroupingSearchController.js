@@ -42,7 +42,17 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
              */
             ctrl.uiState = {
                 isSearching: false,
-                hasSearched: false
+                hasSearched: false,
+                showDrilldown: false
+            };
+
+            /**
+             * Method to close editor view and go back to result-set from last search
+             *
+             * @method backToResults
+             */
+            ctrl.backToResults = function () {
+                ctrl.uiState.showDrilldown = false;
             };
 
             /**
@@ -53,6 +63,7 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
              */
             ctrl.onSearch = function (searchPhrase) {
                 ctrl.uiState.isSearching = true;
+                ctrl.searchPhrase = searchPhrase;
                 GroupingsService.query(searchPhrase).then(function (groups) {
                     //using timeout to make sure the loading spinner displays long enough to not just be a flicker
                     $timeout(function () {
@@ -64,13 +75,25 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
             };
 
             /**
+             * Method to reset the search
+             *
+             * @method clearSearchResults
+             */
+            ctrl.clearSearchResults = function () {
+                ctrl.searchResults = [];
+                ctrl.searchPhrase = '';
+                ctrl.uiState.showDrilldown = ctrl.uiState.hasSearched = false;
+            };
+
+            /**
              * Method to handle initiating the edit state of one grouping
              *
              * @method editGrouping
              * @param grouping {Object}
              */
             ctrl.editGrouping = function (grouping) {
-                console.log('GroupingSearchCtrl:editGrouping', grouping);
+                ctrl.selectedGrouping = grouping;
+                ctrl.uiState.showDrilldown = true;
             };
 
             /**

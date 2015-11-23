@@ -1,39 +1,75 @@
 <div class="uhg-route-grouping-search">
-    <uhg-grouping-search on-search="groupingSearchViewCtrl.onSearch(searchPhrase)" search-phrase="{{ groupingSearchViewCtrl.searchPhrase }}"></uhg-grouping-search>
+    <div ng-if="!groupingSearchViewCtrl.uiState.showDrilldown">
+        <uhg-grouping-search on-search="groupingSearchViewCtrl.onSearch(searchPhrase)" search-phrase="{{ groupingSearchViewCtrl.searchPhrase }}"></uhg-grouping-search>
 
-    <section class="panel panel-default uhg-page">
-        <div class="table-responsive">
-            <table ng-if="!groupingSearchViewCtrl.uiState.isSearching && groupingSearchViewCtrl.uiState.hasSearched" class="table table-bordered table-hover striped-rows">
-                <thead>
-                    <tr>
-                        <th>{{ 'GROUPING_SEARCH_TABLE_GROUPING_NAME' | localize }}</th>
-                        <th>{{ 'GROUPING_SEARCH_TABLE_FOLDER' | localize }}</th>
-                        <th>{{ 'GROUPING_SEARCH_TABLE_STATUS' | localize }}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-if="groupingSearchViewCtrl.searchResults.length > 0" ng-repeat="grouping in groupingSearchViewCtrl.searchResults">
-                        <td>{{ grouping.displayGroup }}</td>
-                        <td>{{ grouping.folder }}</td>
-                        <td>{{ grouping.status }}</td>
-                        <td>
-                            <a href="javascript://" ng-click="groupingSearchViewCtrl.editGrouping(grouping)">
-                                <span class="sr-only">{{ 'GROUPING_SEARCH_EDIT_A11Y' | localize }}</span>
-                                <i class="fa fa-pencil-square-o"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr ng-if="groupingSearchViewCtrl.searchResults.length == 0" class="zero-state">
-                        <td colspan="4">{{ 'GROUPING_SEARCH_TABLE_ZERO_STATE' | localize }}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <section class="panel panel-default uhg-page">
+            <div class="table-responsive">
+                <table ng-if="!groupingSearchViewCtrl.uiState.isSearching && groupingSearchViewCtrl.uiState.hasSearched" class="table table-bordered table-hover striped-rows">
+                    <thead>
+                        <tr>
+                            <th>{{ 'GROUPING_SEARCH_TABLE_GROUPING_NAME' | localize }}</th>
+                            <th>{{ 'GROUPING_SEARCH_TABLE_FOLDER' | localize }}</th>
+                            <th>{{ 'GROUPING_SEARCH_TABLE_STATUS' | localize }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="groupingSearchViewCtrl.searchResults.length > 0" ng-repeat="grouping in groupingSearchViewCtrl.searchResults">
+                            <td>{{ grouping.displayGroup }}</td>
+                            <td>{{ grouping.folder }}</td>
+                            <td>{{ grouping.status }}</td>
+                            <td>
+                                <a href="javascript://" ng-click="groupingSearchViewCtrl.editGrouping(grouping)">
+                                    <span class="sr-only">{{ 'GROUPING_SEARCH_EDIT_A11Y' | localize }}</span>
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr ng-if="groupingSearchViewCtrl.searchResults.length == 0" class="zero-state">
+                            <td colspan="4">{{ 'GROUPING_SEARCH_TABLE_ZERO_STATE' | localize }}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            <div class="text-center" ng-if="groupingSearchViewCtrl.uiState.isSearching">
-                <span class="sr-only">{{ 'GROUPING_SEARCH_SEARCHING_A11Y' | localize }}</span>
-                <i class="fa fa-spinner fa-spin fa-3x"></i>
+                <div class="text-center" ng-if="groupingSearchViewCtrl.uiState.isSearching">
+                    <span class="sr-only">{{ 'GROUPING_SEARCH_SEARCHING_A11Y' | localize }}</span>
+                    <i class="fa fa-spinner fa-spin fa-3x"></i>
+                </div>
             </div>
+        </section>
+    </div>
+
+    <div ng-if="groupingSearchViewCtrl.uiState.showDrilldown">
+
+        <div class="breadcrumb">
+            <a href="javascript://" ng-click="groupingSearchViewCtrl.clearSearchResults()">
+                <span class="sr-only">{{ 'GROUPING_SEARCH_BREADCRUMB_GROUPING_SEARCH_A11Y' | localize }}</span>
+                {{ 'GROUPING_SEARCH_BREADCRUMB_GROUPING_SEARCH' | localize }}
+
+            </a>
+            <i class="fa fa-chevron-right"></i>
+            <a href="javascript://" ng-click="groupingSearchViewCtrl.backToResults()">
+                <span class="sr-only">{{ 'GROUPING_SEARCH_BREADCRUMB_TO_RESULTS_A11Y' | localize }}</span>
+                {{ groupingSearchViewCtrl.searchPhrase }}
+            </a>
+            <i class="fa fa-chevron-right"></i>
+            <span>{{ groupingSearchViewCtrl.selectedGrouping.displayGroup }}</span>
         </div>
-    </section>
+
+        <div class="panel panel-default uhg-page" ng-if="!groupingSearchViewCtrl.uiState.isLoadingDrilldown">
+            <section class="panel-heading uhg-page-header">
+                <h1 class="uhg-page-title">{{ groupingSearchViewCtrl.selectedGrouping.displayGroup }}</h1>
+                <p class="uhg-page-description">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Curabitur leo ipsum, ultrices vel eros quis, cursus euismod turpis.
+                    Cum sociis natoque penatibus et magnis dis parturient montes, nascetur
+                    ridiculus mus.
+                </p>
+            </section>
+
+            <section class="panel-body uhg-page-body">
+                <uhg-grouping-editor grouping-id="groupingSearchViewCtrl.selectedGrouping.id"></uhg-grouping-editor>
+            </section>
+        </div>
+    </div>
 </div>

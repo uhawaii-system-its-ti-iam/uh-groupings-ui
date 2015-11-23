@@ -6,9 +6,11 @@
  * @module routes.groupingSearch
  */
 angular.module('routes.groupingSearch', [
+        'ui.bootstrap.tabs',
         'stack.i18n.TranslationResolver',
         'stack.authentication.ProtectResolver',
-        'routes.groupingSearch.GroupingSearchViewController'
+        'routes.groupingSearch.GroupingSearchViewController',
+        'routes.groupingSearch.uhgGroupingEditor'
     ])
     .config(
         [

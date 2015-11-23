@@ -5,7 +5,8 @@
 module.exports = function (environment) {
     'use strict';
 
-    var fakeGroupingsData = require('./groupings.json');
+    var fakeGroupingsData = require('./groupings.json'),
+        fakeOrgUsersData = require('./orgUsers.json');
 
     /**
      * Method for querying the groupings list
@@ -21,6 +22,33 @@ module.exports = function (environment) {
                 }
             } else {
                 res.status(401);
+            }
+        });
+
+    /**
+     * Method for getting detailed grouping info on a single grouping whose id matches the parameter
+     */
+    environment.express.route('/api/groupings/:groupingId')
+        .get(function (req, res, next) {
+            var fakeGrouping = fakeGroupingsData.filter(function (g) {
+                return g.id === req.params.groupingId;
+            }).slice()[0];
+
+            if (!fakeGrouping) {
+                res.status(404);
+            } else {
+                fakeGrouping.basisMemberIds = fakeOrgUsersData.slice(0, 16);
+                fakeGrouping.ownerMemberIds = fakeOrgUsersData.slice(5, 10);
+                fakeGrouping.includedMemberIds = fakeOrgUsersData.slice(16, 22);
+                fakeGrouping.excludedMemberIds = fakeOrgUsersData.slice(22, 30);
+
+                fakeGrouping.options = {
+                    canAddSelf: false,
+                    canRemoveSelf: true,
+                    includeInListServe: true
+                };
+
+                res.status(200).send(fakeGrouping);
             }
         });
 
