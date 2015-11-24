@@ -32,7 +32,7 @@
                         <tr ng-if="groupingCtrl.ownedGroups.length > 0" ng-repeat="grouping in groupingCtrl.ownedGroups">
                             <td>
                                 <span class="uhg-group-name">{{ grouping.displayGroup }}</span>
-                                <a ng-href="" class="uhg-edit-groups" ng-click="groupingCtrl.editGrouping(grouping)" ng-keydown="groupingCtrl.editGroupingOnKeyDown($event, grouping)">
+                                <a ng-href="#" class="uhg-edit-groups" ng-click="groupingCtrl.editGrouping(grouping)" ng-keydown="groupingCtrl.editGroupingOnKeyDown($event, grouping)">
                                     <i class="fa fa-pencil" role="presentation">
                                         <span class="sr-only">{{ 'GROUPING_OWNED_EDIT_A11Y' | localize }}</span>
                                     </i>

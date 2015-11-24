@@ -20,6 +20,7 @@ module.exports = function (environment) {
     environment.express.route('/designate').get(initialize);
     environment.express.route('/grouping').get(initialize);
     environment.express.route('/membership').get(initialize);
+    environment.express.route('/grouping-search').get(initialize);
     environment.express.route('/feedback').get(initialize);
 
     return environment;

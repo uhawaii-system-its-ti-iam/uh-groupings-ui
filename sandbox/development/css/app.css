@@ -8541,6 +8541,8 @@ body {
 --------------------------------------*/
   /* Page
 --------------------------------------*/
+  /* Breadcrumb
+--------------------------------------*/
   /* Panel
 --------------------------------------*/
   /* Table
@@ -8597,6 +8599,9 @@ body {
   border: #d0d0d0;
   background: #ffffff;
 }
+.app .uhg-page {
+  border-color: transparent;
+}
 .app .uhg-page .uhg-page-header {
   padding: 2.857em 1.429em 1.071em 1.429em;
   background-color: #e6f1d6;
@@ -8623,6 +8628,17 @@ body {
   font-size: 1.429em;
   margin-top: 0.714em;
   margin-bottom: 1.429em;
+}
+.app .uhg-breadcrumb {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.app .uhg-breadcrumb a {
+  cursor: pointer;
+}
+.app .uhg-breadcrumb i.fa {
+  margin: 0 10px;
 }
 .app .uhg-panel {
   background-color: #ffffff;
@@ -8792,14 +8808,6 @@ body {
     width: 100%;
     margin-right: 0;
   }
-}
-.app .uhg-route-grouping-search .breadcrumb {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.app .uhg-route-grouping-search .breadcrumb i.fa {
-  margin: 0 10px;
 }
 .app .uhg-route-grouping-search .tab-content {
   padding: 10px 0;
