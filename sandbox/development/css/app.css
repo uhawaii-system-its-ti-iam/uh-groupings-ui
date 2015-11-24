@@ -8645,6 +8645,12 @@ body {
 .app .uhg-table-groups .uhg-edit-groups {
   cursor: pointer;
 }
+.app .uhg-table-loader {
+  background-color: #ffffff;
+  border: 1px solid #d0d0d0;
+  padding: 2em;
+  text-align: center;
+}
 .app .uhg-header .navbar-header:before,
 .app .uhg-header .navbar-header:after {
   content: " ";
