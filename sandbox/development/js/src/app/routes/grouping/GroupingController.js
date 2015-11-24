@@ -33,36 +33,52 @@ angular.module('routes.grouping.GroupingController', [
         groupingCtrl = this;
 
         /**
-         * Property houses flags indicating current state of the UI
+         * Property houses flags indicating current state of the UI.
          *
          * @property uiState
-         * @type {{isLoadingGroupings: boolean}}
+         * @type {Object}
          */
         groupingCtrl.uiState = {
             isLoadingGroupings: true
         };
 
         /**
-         * Method to handle managing edit-state of groupings
+         * Method to handle managing edit-state of groupings.
          *
          * @method editGrouping
-         * @param grouping {Object}
+         * @param {Object} grouping Grouping object
          */
         groupingCtrl.editGrouping = function (grouping) {
             console.log('GroupingsOwned:editGrouping', grouping);
         };
 
         /**
-         * Method executes loading of owned groups
+         * Method to handle managing edit-state of groupings. This handler
+         * is executed when the enter key is detected.
+         *
+         * @method editGrouping
+         * @param {Object} Event Event object
+         * @param {Object} grouping Grouping object
+         */
+        groupingCtrl.editGroupingOnKeyDown = function (e, grouping) {
+            if (e.keyCode === 13) {
+                groupingCtrl.editGrouping(grouping);
+            }
+        };
+
+        /**
+         * Method executes loading of owned groups.
          *
          * @method loadOwnedGroups
          * @private
          */
         function loadOwnedGroups() {
+            // Implementation only depicts the happy path. Error handling was not implemented
+            // due to time constraints.
             AuthenticationService.getUser().then(function (user) {
                 GroupingsService.getOwnedGroups(user.username).then(function (groups) {
                     groupingCtrl.ownedGroups = groups;
-                    groupingCtrl.uiState.isLoadingGroupings = false;
+                    groupingCtrl.uiState.isLoadingGroupings = true;
                 });
             });
         }

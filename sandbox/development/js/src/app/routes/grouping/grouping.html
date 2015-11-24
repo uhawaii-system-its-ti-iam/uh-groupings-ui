@@ -1,13 +1,10 @@
 <div class="uhg-route-grouping">
-    <!--
-    | All content except for the title is dummy content. Only the top-level
-    | title has been localized. Actual content should also be localized once
-    | it has been defined. Depending upon the implementation, this section
-    | can also be componentized using angular directives.
-    -->
+    <!--SEARCH-->
     <uhg-grouping-search></uhg-grouping-search>
 
+    <!--PANEL-->
     <div class="panel panel-default uhg-page">
+        <!--HEADING-->
         <div class="panel-heading uhg-page-header">
             <h1 class="uhg-page-title" stack-localize="GROUPING_HEADER">Groupings</h1>
             <h2 class="uhg-page-subtitle">Lorem Ipsum</h2>
@@ -18,45 +15,43 @@
                 ridiculus mus. 
             </p>
         </div>
+
+        <!--BODY-->
         <div class="panel-body uhg-page-body">
             <h3 class="uhg-page-body-title">{{ 'GROUPING_OWNED_HEADER' | localize }}</h3>
-            <div class="row">
-                <div class="col">
-                    <div class="panel panel-default uhg-panel">
-                        <div class="table-responsive">
-                            <table ng-if="!groupingCtrl.uiState.isLoadingGroupings" class="table table-bordered table-hover striped-rows">
-                                <thead>
-                                <tr>
-                                    <th>{{ 'GROUPING_OWNED_TABLE_GROUPING_NAME' | localize }}</th>
-                                    <th>{{ 'GROUPING_OWNED_TABLE_FOLDER' | localize }}</th>
-                                    <th>{{ 'GROUPING_OWNED_TABLE_STATUS' | localize }}</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-if="groupingCtrl.ownedGroups.length > 0" ng-repeat="grouping in groupingCtrl.ownedGroups">
-                                    <td>{{ grouping.displayGroup }}</td>
-                                    <td>{{ grouping.folder }}</td>
-                                    <td>{{ grouping.status }}</td>
-                                    <td>
-                                        <a href="javascript://" ng-click="groupingCtrl.editGrouping(grouping)">
-                                            <span class="sr-only">{{ 'GROUPING_OWNED_EDIT_A11Y' | localize }}</span>
-                                            <i class="fa fa-pencil-square-o"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr ng-if="groupingCtrl.ownedGroups.length == 0" class="zero-state">
-                                    <td colspan="4">{{ 'GROUPING_OWNED_TABLE_ZERO_STATE' | localize }}</td>
-                                </tr>
-                                </tbody>
-                            </table>
+            <div class="table-responsive">
+                <table ng-if="!groupingCtrl.uiState.isLoadingGroupings" class="table table-bordered table-hover striped-rows uhg-table-groups">
+                    <thead>
+                        <tr>
+                            <th>{{ 'GROUPING_OWNED_TABLE_GROUPING_NAME' | localize }}</th>
+                            <th>{{ 'GROUPING_OWNED_TABLE_FOLDER' | localize }}</th>
+                            <th>{{ 'GROUPING_OWNED_TABLE_STATUS' | localize }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="groupingCtrl.ownedGroups.length > 0" ng-repeat="grouping in groupingCtrl.ownedGroups">
+                            <td>
+                                <span class="uhg-group-name">{{ grouping.displayGroup }}</span>
+                                <a ng-href="" class="uhg-edit-groups" ng-click="groupingCtrl.editGrouping(grouping)" ng-keydown="groupingCtrl.editGroupingOnKeyDown($event, grouping)">
+                                    <i class="fa fa-pencil" role="presentation">
+                                        <span class="sr-only">{{ 'GROUPING_OWNED_EDIT_A11Y' | localize }}</span>
+                                    </i>
+                                </a>
+                            </td>
+                            <td><span>{{ grouping.folder }}</span></td>
+                            <td><span>{{ grouping.status }}</span></td>
+                        </tr>
+                        <tr ng-if="groupingCtrl.ownedGroups.length == 0" class="zero-state">
+                            <td colspan="4">{{ 'GROUPING_OWNED_TABLE_ZERO_STATE' | localize }}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                            <div class="text-center" ng-if="groupingCtrl.uiState.isLoadingGroupings">
-                                <span class="sr-only">{{ 'GROUPING_OWNED_LOADING_A11Y' | localize }}</span>
-                                <i class="fa fa-spinner fa-spin fa-3x"></i>
-                            </div>
-                        </div>
-                    </div>
+                <!--TABLE LOADER-->
+                <div class="text-center" ng-if="groupingCtrl.uiState.isLoadingGroupings">
+                    <i class="fa fa-spinner fa-spin fa-3x" role="presentation">
+                        <span class="sr-only">{{ 'GROUPING_OWNED_LOADING_A11Y' | localize }}</span>
+                    </i>
                 </div>
             </div>
         </div>
