@@ -1,15 +1,12 @@
 <div class="uhg-route-membership">
-
+    <!--SEARCH-->
     <uhg-grouping-search></uhg-grouping-search>
-    <!--
-    | All content except for the title is dummy content. Only the top-level
-    | title has been localized. Actual content should also be localized once
-    | it has been defined. Depending upon the implementation, this section
-    | can also be componentized using angular directives.
-    -->
+
+    <!--PANEL-->
     <div class="panel panel-default uhg-page">
+        <!--HEADING-->
         <div class="panel-heading uhg-page-header">
-            <h1 class="uhg-page-title" stack-localize="MEMBERSHIP_HEADER">My Memberships</h1>
+            <h1 class="uhg-page-title" stack-localize="MEMBERSHIP_HEADER">Groupings</h1>
             <h2 class="uhg-page-subtitle">Lorem Ipsum</h2>
             <p class="uhg-page-description">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -18,44 +15,41 @@
                 ridiculus mus. 
             </p>
         </div>
+
+        <!--BODY-->
         <div class="panel-body uhg-page-body">
             <h3 class="uhg-page-body-title">{{ 'GROUPING_MEMBERSHIP_HEADER' | localize }}</h3>
+            <div class="table-responsive">
+                <table ng-if="!membershipCtrl.uiState.isLoadingGroupings" class="table table-bordered table-hover striped-rows uhg-table-groups">
+                    <thead>
+                        <tr>
+                            <th>{{ 'GROUPING_MEMBERSHIP_TABLE_GROUPING_NAME' | localize }}</th>
+                            <th>{{ 'GROUPING_MEMBERSHIP_TABLE_FOLDER' | localize }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="membershipCtrl.groupingMemberships.length > 0" ng-repeat="grouping in membershipCtrl.groupingMemberships">
+                            <td>
+                                <span class="uhg-group-name">{{ grouping.displayGroup }}</span>
+                                <a ng-href="" class="uhg-edit-groups" ng-click="membershipCtrl.editGrouping(grouping)" ng-keydown="membershipCtrl.editGroupingOnKeyDown($event, grouping)">
+                                    <i class="fa fa-pencil" role="presentation">
+                                        <span class="sr-only">{{ 'GROUPING_MEMBERSHIP_EDIT_A11Y' | localize }}</span>
+                                    </i>
+                                </a>
+                            </td>
+                            <td><span>{{ grouping.folder }}</span></td>
+                        </tr>
+                        <tr ng-if="membershipCtrl.groupingMemberships.length == 0" class="zero-state">
+                            <td colspan="2">{{ 'GROUPING_MEMBERSHIP_TABLE_ZERO_STATE' | localize }}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            <div class="row">
-                <div class="col">
-                    <div class="panel panel-default uhg-panel">
-                        <div class="table-responsive">
-                            <table ng-if="!membershipCtrl.uiState.isLoadingGroupings" class="table table-bordered table-hover striped-rows">
-                                <thead>
-                                <tr>
-                                    <th>{{ 'GROUPING_MEMBERSHIP_TABLE_GROUPING_NAME' | localize }}</th>
-                                    <th>{{ 'GROUPING_MEMBERSHIP_TABLE_FOLDER' | localize }}</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-if="membershipCtrl.groupingMemberships.length > 0" ng-repeat="grouping in membershipCtrl.groupingMemberships">
-                                    <td>{{ grouping.displayGroup }}</td>
-                                    <td>{{ grouping.folder }}</td>
-                                    <td>
-                                        <a href="javascript://" ng-click="membershipCtrl.editGrouping(grouping)">
-                                            <span class="sr-only">{{ 'GROUPING_MEMBERSHIP_EDIT_A11Y' | localize }}</span>
-                                            <i class="fa fa-pencil-square-o"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr ng-if="membershipCtrl.groupingMemberships.length == 0" class="zero-state">
-                                    <td colspan="3">{{ 'GROUPING_MEMBERSHIP_TABLE_ZERO_STATE' | localize }}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                            <div class="text-center" ng-if="membershipCtrl.uiState.isLoadingGroupings">
-                                <span class="sr-only">{{ 'GROUPING_MEMBERSHIP_LOADING_A11Y' | localize }}</span>
-                                <i class="fa fa-spinner fa-spin fa-3x"></i>
-                            </div>
-                        </div>
-                    </div>
+                <!--TABLE LOADER-->
+                <div class="uhg-table-loader" ng-if="membershipCtrl.uiState.isLoadingGroupings">
+                    <i class="fa fa-spinner fa-spin fa-3x" role="presentation">
+                        <span class="sr-only">{{ 'GROUPING_MEMBERSHIP_LOADING_A11Y' | localize }}</span>
+                    </i>
                 </div>
             </div>
         </div>

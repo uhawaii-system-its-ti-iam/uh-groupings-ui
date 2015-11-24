@@ -33,32 +33,48 @@ angular.module('routes.membership.MembershipController', [
         membershipCtrl = this;
 
         /**
-         * Property houses flags indicating current state of the UI
+         * Property houses flags indicating current state of the UI.
          *
          * @property uiState
-         * @type {{isLoadingGroupings: boolean}}
+         * @type {Object}
          */
         membershipCtrl.uiState = {
             isLoadingGroupings: true
         };
 
         /**
-         * Method to handle managing edit-state of groupings
+         * Method to handle managing edit-state of groupings.
          *
          * @method editGrouping
-         * @param grouping {Object}
+         * @param {Object} grouping Grouping object
          */
         membershipCtrl.editGrouping = function (grouping) {
             console.log('GroupingsMembership:editGrouping', grouping);
         };
 
         /**
-         * Method executes loading of owned groups
+         * Method to handle managing edit-state of groupings. This handler
+         * is executed when the enter key is detected.
+         *
+         * @method editGroupingOnKeyDown
+         * @param {Object} Event Event object
+         * @param {Object} grouping Grouping object
+         */
+        membershipCtrl.editGroupingOnKeyDown = function (e, grouping) {
+            if (e.keyCode === 13) {
+                membershipCtrl.editGrouping(grouping);
+            }
+        };
+
+        /**
+         * Method executes loading of owned groups.
          *
          * @method loadGroupingMemberships
          * @private
          */
         function loadGroupingMemberships() {
+            // Implementation only depicts the happy path. Error handling was not implemented
+            // due to time constraints.
             AuthenticationService.getUser().then(function (user) {
                 GroupingsService.getGroupMemberships(user.username).then(function (groups) {
                     membershipCtrl.groupingMemberships = groups;
