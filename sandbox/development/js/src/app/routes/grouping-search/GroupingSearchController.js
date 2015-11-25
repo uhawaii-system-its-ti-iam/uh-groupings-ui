@@ -64,7 +64,7 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
         ctrl.onSearch = function (searchPhrase) {
             ctrl.uiState.isSearching = true;
             ctrl.searchPhrase = searchPhrase;
-            
+
             // Implementation only depicts the happy path.
             // Error handling was not implemented due to time constraints.
             GroupingsService.query(searchPhrase).then(function (groups) {

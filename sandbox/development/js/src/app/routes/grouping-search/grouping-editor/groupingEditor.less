@@ -1,0 +1,96 @@
+/* Grouping Editor
+ * Styles for the grouping editor.
+--------------------------------------*/
+.uhg-grouping-editor {
+    .tab-content {padding-top: 1.429em}
+
+    .membership-tab {
+        .tab-container {
+            .tabset-tabs-alternate {
+                display: none;
+                padding: 0 0 1em 0;
+            }
+            .tabset-container {display: flex;}
+            ul.nav-tabs.nav-stacked {
+                display: block;
+                border: none;
+                padding-top: 1.429em;
+
+                li {
+                    border: 1px solid @gray-lighter;
+                    border-right: none;
+                    margin-left: 0;
+                    margin-bottom: 5px;
+
+                    a {
+                        .border-radius (@radius: 0);
+                        margin-right: 0;
+                        text-align: center;
+                        background-clip: border-box;
+
+                        &:hover, &:focus {
+                            background-clip: border-box;
+                            background-color: @gray-lightest;
+                            border-color: @gray-lightest;
+                        }
+                    }
+
+                    &.active {
+                        a {
+                            background-clip: border-box;
+                            background-color: @gray-lightest;
+                            border-color: @gray-lightest;
+                        }
+                    }
+                }
+            }
+            .tab-content {
+                margin-left: 0;
+                border: 1px solid @gray-lighter;
+                padding: 1.071em;
+            }
+        }
+
+        footer {
+            padding: 1.429em 0;
+        }
+    }
+}
+
+/* Responsive
+--------------------------------------*/
+@media (max-width: @screen-xs-min) {
+    .uhg-grouping-editor {
+        .membership-tab {
+            .tab-container {
+                .tabset-tabs-alternate {display: inline-block;}
+                .tabset-container {display: block;}
+                ul.nav-tabs.nav-stacked {display: none;}
+            }
+        }
+    }
+}
+
+@media (min-width: @screen-xs-min) and (max-width: @screen-xs-max) {
+    .uhg-grouping-editor {
+        .membership-tab {
+            .tab-container {
+                .tabset-tabs-alternate {display: inline-block;}
+                .tabset-container {display: block;}
+                ul.nav-tabs.nav-stacked {display: none;}
+            }
+        }
+    }
+}
+
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+    .uhg-grouping-editor {
+        .membership-tab {
+            .tab-container {
+                .tabset-tabs-alternate {display: inline-block;}
+                .tabset-container {display: block;}
+                ul.nav-tabs.nav-stacked {display: none;}
+            }
+        }
+    }
+}

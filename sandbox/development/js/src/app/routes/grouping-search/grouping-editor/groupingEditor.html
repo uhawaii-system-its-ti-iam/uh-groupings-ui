@@ -1,10 +1,15 @@
-<div class="text-center" ng-if="groupingEditorCtrl.uiState.isLoadingGrouping">
-    <span class="sr-only">{{ 'GROUPING_SEARCH_DRILLDOWN_LOADING_A11Y' | localize }}</span>
-    <i class="fa fa-spinner fa-spin fa-3x"></i>
-</div>
+<div class="uhg-grouping-editor">
+    <!--TABSET-->
+    <tabset ng-if="!groupingEditorCtrl.uiState.isLoadingGrouping">
+        <tab ng-repeat="tab in groupingEditorCtrl.tabs" heading="{{ tab.tabLabel }}" active="tab.active" class="{{tab.name}}">
+            <div ng-if="tab.active" ng-include src="tab.viewUrl"></div>
+        </tab>
+    </tabset>
 
-<tabset ng-if="!groupingEditorCtrl.uiState.isLoadingGrouping">
-    <tab ng-repeat="tab in groupingEditorCtrl.tabs" heading="{{ tab.tabLabel }}" active="tab.active" class="{{tab.name}}">
-        <div ng-if="tab.active" ng-include src="tab.viewUrl"></div>
-    </tab>
-</tabset>
+    <!--TABSET LOADER-->
+    <div class="uhg-loader" ng-if="groupingEditorCtrl.uiState.isLoadingGrouping">
+        <i class="fa fa-spinner fa-spin fa-3x" role="presentation">
+            <span class="sr-only">{{ 'GROUPING_SEARCH_DRILLDOWN_LOADING_A11Y' | localize }}</span>
+        </i>
+    </div>
+</div>
