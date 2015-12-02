@@ -24,10 +24,34 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::get('session', 'MockAuthController@getSession');
 
+
+    /**
+     * Groupings Routes
+     */
+//    Route::get('user/ckent/groupings/owned', 'UserController@getUser');
+    Route::get('groupings/{id}', 'GroupingsController@getGroup');
+//    Route::get('groupings?{query}', 'GroupingsController@search');
+    Route::get('groupings', 'GroupingsController@search');
+
+    Route::get('user/{user}/groupings', 'GroupingsController@getOwned');
+    Route::get('user/{user}/groupings/owned', 'GroupingsController@getOwned');
+
+//    Route::get('user/{user}/groupings/owned', function($user) {
+//        $user = array(
+//            "firstName" => "Blah",
+//            "lastName" => "t",
+//            "username" => "$user",
+//            "email" => "ckent@email.com",
+//            "role" => "admin"
+//        );
+//        return response()->json($user);
+//    });
+
     /**
      * User API Routes
      */
     Route::get('user', 'UserController@getUser');
+    Route::get('users', 'UserController@getUsers');
 });
 
 Route::get('/', ['as' => 'root', function()
