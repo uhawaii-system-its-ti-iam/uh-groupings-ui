@@ -8465,7 +8465,12 @@ body {
  * Styles for the grouping editor.
 --------------------------------------*/
   /* Responsive
+-------------------------------------- */
+  /* Membership Content
+ * Styles for membership content.
 --------------------------------------*/
+  /* Responsive
+-------------------------------------- */
   /* Membership
  * Styles for the membership route.
 --------------------------------------*/
@@ -8714,82 +8719,87 @@ body {
 .app .uhg-grouping-editor .tab-content {
   padding-top: 1.429em;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container .tabset-tabs-alternate {
+@media (max-width: 480px) {
+  .app .uhg-grouping-editor .nav:first-child > li > a {
+    padding: 0.714em 0.500em;
+  }
+}
+.app .uhg-membership-content .tabset-tabs-container-alternate {
   display: none;
   padding: 0 0 1em 0;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container .tabset-container {
+.app .uhg-membership-content .tabset-tabs-container {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked {
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked {
   display: block;
   border: none;
   padding-top: 1.429em;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked li {
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li {
   border: 1px solid #d0d0d0;
   border-right: none;
   margin-left: 0;
-  margin-bottom: 5px;
+  margin-bottom: 0.357em;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked li a {
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li a {
   border-radius: 0;
   background-clip: padding-box;
   margin-right: 0;
   text-align: center;
   background-clip: border-box;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked li a:hover,
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked li a:focus {
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li a:hover,
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li a:focus {
   background-clip: border-box;
   background-color: #eeeeee;
   border-color: #eeeeee;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked li.active a {
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li.active a {
   background-clip: border-box;
   background-color: #eeeeee;
   border-color: #eeeeee;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container .tab-content {
+.app .uhg-membership-content .tabset-tabs-container .tab-content {
   margin-left: 0;
   border: 1px solid #d0d0d0;
   padding: 1.071em;
 }
-.app .uhg-grouping-editor .membership-tab footer {
+.app .uhg-membership-content footer {
   padding: 1.429em 0;
 }
 @media (max-width: 480px) {
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-tabs-alternate {
+  .app .uhg-membership-content .tabset-tabs-container-alternate {
     display: inline-block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-container {
+  .app .uhg-membership-content .tabset-tabs-container {
     display: block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked {
+  .app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked {
     display: none;
   }
 }
 @media (min-width: 480px) and (max-width: 767px) {
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-tabs-alternate {
+  .app .uhg-membership-content .tabset-tabs-container-alternate {
     display: inline-block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-container {
+  .app .uhg-membership-content .tabset-tabs-container {
     display: block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked {
+  .app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked {
     display: none;
   }
 }
 @media (min-width: 768px) and (max-width: 991px) {
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-tabs-alternate {
+  .app .uhg-membership-content .tabset-tabs-container-alternate {
     display: inline-block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-container {
+  .app .uhg-membership-content .tabset-tabs-container {
     display: block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked {
+  .app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked {
     display: none;
   }
 }

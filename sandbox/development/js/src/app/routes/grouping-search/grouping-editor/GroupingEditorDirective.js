@@ -1,8 +1,8 @@
 angular.module('routes.groupingSearch.uhgGroupingEditor', [
     'routes.groupingSearch.GroupingEditorController',
-    'routes.groupingSearch.MembershipTabController',
-    'routes.groupingSearch.OwnershipTabController',
-    'routes.groupingSearch.PreferencesTabController',
+    'routes.groupingSearch.MembershipContentController',
+    'routes.groupingSearch.OwnershipContentController',
+    'routes.groupingSearch.PreferencesContentController',
     'components.orgUsersService.OrgUsersService',
     'stack.i18n.stackLocalize',
     'stack.i18n.localize'

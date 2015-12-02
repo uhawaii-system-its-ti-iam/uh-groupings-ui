@@ -2,7 +2,7 @@
     <!--TABSET-->
     <tabset ng-if="!groupingEditorCtrl.uiState.isLoadingGrouping">
         <tab ng-repeat="tab in groupingEditorCtrl.tabs" heading="{{ tab.tabLabel }}" active="tab.active" class="{{tab.name}}">
-            <div ng-if="tab.active" ng-include src="tab.viewUrl"></div>
+            <div ng-if="tab.active" ng-include src="tab.content"></div>
         </tab>
     </tabset>
 
