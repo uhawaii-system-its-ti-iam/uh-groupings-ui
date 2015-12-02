@@ -1,7 +1,7 @@
 angular.module('routes.groupingSearch.GroupingEditorController', [
     'stack.i18n',
     'components.orgUsersService.OrgUsersService',
-    'components.groupingsService.GroupingsService'
+    'components.groupingsServices.GroupingsService'
 ])
 
 /**

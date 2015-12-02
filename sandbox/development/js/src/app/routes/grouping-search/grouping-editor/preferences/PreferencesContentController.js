@@ -1,6 +1,6 @@
 angular.module('routes.groupingSearch.PreferencesContentController', [
     'stack.i18n',
-    'components.groupingsService.GroupingsService'
+    'components.groupingsServices.GroupingsService'
 ])
 
 /**

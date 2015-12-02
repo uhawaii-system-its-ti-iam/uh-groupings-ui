@@ -1,4 +1,4 @@
-angular.module('components.groupingsService.GroupingsProxy', [
+angular.module('components.groupingsServices.GroupingsProxy', [
     'stack.authentication.AuthenticationConfig',
     'stack.develop.DevelopConfig'
 ])
@@ -8,7 +8,7 @@ angular.module('components.groupingsService.GroupingsProxy', [
  *
  * @class GroupingsProxy
  * @constructor
- * @module components.groupingsService.GroupingsProxy
+ * @module components.groupingsServices.GroupingsProxy
  */
 .factory('GroupingsProxy', [
     '$http',
@@ -16,45 +16,50 @@ angular.module('components.groupingsService.GroupingsProxy', [
     'AuthenticationConfig',
     function ($http, DevelopConfig, AuthenticationConfig) {
 
-        //define
-        var svc, baseEndpoint, groupingsEndpoint, userEndpoint;
+        // Define.
+        var proxy, baseEndpoint, groupingsEndpoint, userEndpoint;
 
         /**
-         * Property houses the base endpoint for all REST calls
+         * Property houses the base endpoint for all REST calls.
          *
          * @property baseEndpoint
-         * @type {string}
+         * @type {String}
+         * @private
          */
-        baseEndpoint = DevelopConfig().develop ?
-            AuthenticationConfig().developmentAPIBase :
-            AuthenticationConfig.productionAPIBase;
+        baseEndpoint = DevelopConfig().develop ? AuthenticationConfig().developmentAPIBase : AuthenticationConfig.productionAPIBase;
 
         /**
-         * Property houses the endpoint for REST calls used in groupings interactions
+         * Property houses the endpoint for REST calls used in groupings interactions.
          *
          * @property groupingsEndpoint
-         * @type {string}
+         * @type {String}
+         * @private
          */
         groupingsEndpoint = [baseEndpoint, 'groupings'].join('/');
 
         /**
-         * Property houses the endpoint for REST calls used in user groupings
+         * Property houses the endpoint for REST calls used in user groupings.
          *
          * @property userEndpoint
-         * @type {string}
+         * @type {String}
+         * @private
          */
         userEndpoint = [baseEndpoint, 'user'].join('/');
 
         /**
-         * Property houses the service proxy for communicating with the backend
-         * @type {{query: query, getOwnedGroups: getOwnedGroups, getGroupMemberships: getGroupMemberships}}
+         * Property houses the service proxy for communicating with the backend.
+         *
+         * @property proxy
+         * @type {Object}
+         * @private
          */
-        svc = {
-
+        proxy = {
             /**
-             * Method returns groups matching a searchPhrase.
+             * Method returns groups matching the given searchPhrase.
              *
-             * @method query
+             * Note: Method does not handle error condition.
+             *
+             * @method proxy.query
              * @param {String} searchPhrase Phrase to search groups by
              * @return {Object} Promise
              */
@@ -63,11 +68,14 @@ angular.module('components.groupingsService.GroupingsProxy', [
             },
 
             /**
-             * Method returns complete data set for a single grouping whose id matches that passed in
+             * Method returns complete data set for a single grouping
+             * given the passed grouping identifier.
+             *
+             * Note: Method does not handle error condition.
              *
              * @method getGroup
-             * @param groupingId {String}
-             * @return {Object} Grouping
+             * @param {String} groupingId Group identifier
+             * @return {Object} Promise
              */
             getGroup: function (groupingId) {
                 return $http.get([groupingsEndpoint, groupingId].join('/'));
@@ -76,8 +84,10 @@ angular.module('components.groupingsService.GroupingsProxy', [
             /**
              * Method returns groups owned by a specific user.
              *
+             * Note: Method does not handle error condition.
+             *
              * @method getOwnedGroups
-             * @param {String|Number} userId Id of the user who is owner of groups
+             * @param {String|Number} userId User identifier who is the owner of groups
              * @return {Object} Promise
              */
             getOwnedGroups: function (userId) {
@@ -85,7 +95,9 @@ angular.module('components.groupingsService.GroupingsProxy', [
             },
 
             /**
-             * Method returns groups with a specific user as a member
+             * Method returns groups with a specific user as a member.
+             *
+             * Note: Method does not handle error condition.
              *
              * @method getGroupMemberships
              * @param {String|Number} userId Id of the user who is member of groups
@@ -96,5 +108,5 @@ angular.module('components.groupingsService.GroupingsProxy', [
             }
         };
 
-        return svc;
+        return proxy;
     }]);

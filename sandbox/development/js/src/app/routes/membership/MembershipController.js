@@ -2,7 +2,7 @@ angular.module('routes.membership.MembershipController', [
     'stack.page-loader',
     'stack.i18n',
     'stack.authentication.AuthenticationService',
-    'components.groupingsService.GroupingsService'
+    'components.groupingsServices.GroupingsService'
 ])
 
 /**

@@ -1,7 +1,7 @@
 angular.module('routes.groupingSearch.GroupingSearchViewController', [
     'stack.page-loader',
     'stack.i18n',
-    'components.groupingsService.GroupingsService'
+    'components.groupingsServices.GroupingsService'
 ])
 
 /**

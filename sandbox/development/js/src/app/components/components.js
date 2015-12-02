@@ -10,5 +10,5 @@ angular.module('components', [
     'components.listNavigation',
     'components.footer',
     'components.groupingSearch',
-    'components.groupingsService.GroupingsService'
+    'components.groupingsServices.GroupingsService'
 ]);
