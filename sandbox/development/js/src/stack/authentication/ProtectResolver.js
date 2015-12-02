@@ -20,10 +20,14 @@ angular.module('stack.authentication.ProtectResolver', [
     'AuthenticationService',
     function ($q, AuthenticationConfig, AuthenticationService) {
         'use strict';
-        return function () {
+        return function (options) {
             var d = $q.defer(),
                 user = AuthenticationService.getUser(),
-                route = AuthenticationConfig().unauthenticatedRoute;
+                unauthenticatedRoute = AuthenticationConfig().unauthenticatedRoute,
+                authenticatedRoute = AuthenticationConfig().authenticatedRoute;
+
+            options = (!options) ? {} : options;
+            options.permissions = (_.has(options, 'permissions')) ? options.permissions : false;
 
             user.then(
                 function (response) {
@@ -32,9 +36,16 @@ angular.module('stack.authentication.ProtectResolver', [
                     // session. Errors for this call will only ever result in 500
                     // level errors.
                     if (!_.isEmpty(response)) {
-                        d.resolve(response);
+                        // If a user is authenticated but attempts to hit a route
+                        // they don't have access to we redirect them to main
+                        // authenticated route.
+                        if ($.inArray(response.role, options.permissions) !== -1) {
+                            d.resolve(response);
+                        } else {
+                            d.reject({path: authenticatedRoute});
+                        }
                     } else {
-                        d.reject({path: route});
+                        d.reject({path: unauthenticatedRoute});
                     }
                 },
                 function (response) {

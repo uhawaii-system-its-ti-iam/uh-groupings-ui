@@ -3,7 +3,7 @@
         <!--Minified View-->
         <div class="btn-group navigation-minified visible-xs-inline-block" dropdown>
             <a href="#" class="btn btn-primary dropdown-toggle" dropdown-toggle role="button" aria-expanded="false">
-                <span>{{listNavigationCtrl.selectedNavigationLabel}}</span>
+                <span>{{ listNavigationCtrl.selectedNavigationLabel }}</span>
                 <span class="caret" role="presentation"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
@@ -18,8 +18,14 @@
 
         <!--Expanded View-->
         <div class="list-group navigation-expanded hidden-xs" role="list">
+            <!--Not Authenticated-->
             <a role="listitem" ng-repeat="item in listNavigationCtrl.items" ng-if="(!listNavigationCtrl.authenticated && $index === 0)" ui-sref="{{item.route}}" class="list-group-item" ng-class="{active: (listNavigationCtrl.selectedNavigationRoute === item.route)}" stack-localize="{{item.key}}">{{item.label}}</a>
-            <a role="listitem" ng-repeat="item in listNavigationCtrl.items" ng-if="(listNavigationCtrl.authenticated)" ui-sref="{{item.route}}" class="list-group-item" ng-class="{active: (listNavigationCtrl.selectedNavigationRoute === item.route)}" stack-localize="{{item.key}}">{{item.label}}</a>
+
+            <!--Authenticated && 'All or Owner' Permissions-->
+            <a role="listitem" ng-repeat="item in listNavigationCtrl.items" ng-if="(listNavigationCtrl.authenticated && listNavigationCtrl.user.role === 'owner' && ($root.inArray(listNavigationCtrl.user.role, item.permissions)))" ui-sref="{{item.route}}" class="list-group-item" ng-class="{active: (listNavigationCtrl.selectedNavigationRoute === item.route)}" stack-localize="{{item.key}}">{{item.label}}</a>
+
+            <!--Authenticated && 'All or Member' Permissions-->
+            <a role="listitem" ng-repeat="item in listNavigationCtrl.items" ng-if="(listNavigationCtrl.authenticated && listNavigationCtrl.user.role === 'member' && ($root.inArray(listNavigationCtrl.user.role, item.permissions)))" ui-sref="{{item.route}}" class="list-group-item" ng-class="{active: (listNavigationCtrl.selectedNavigationRoute === item.route)}" stack-localize="{{item.key}}">{{item.label}}</a>
         </div>
     </nav>
 </div>

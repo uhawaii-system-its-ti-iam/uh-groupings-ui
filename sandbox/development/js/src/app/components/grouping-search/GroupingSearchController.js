@@ -65,7 +65,7 @@ angular.module('components.groupingSearch.GroupingSearchController', [
                     groupingSearchCtrl.onSearch({searchPhrase: groupingSearchCtrl.groupingSearchPhrase});
                 } else {
                     LocationService.redirect({
-                        route: 'groupingSearch',
+                        route: 'grouping-search',
                         params: {
                             searchPhrase: groupingSearchCtrl.groupingSearchPhrase
                         }

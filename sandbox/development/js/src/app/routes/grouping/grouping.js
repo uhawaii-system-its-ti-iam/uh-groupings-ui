@@ -27,7 +27,7 @@ angular.module('routes.grouping', [
                             return new TranslationResolver();
                         }],
                         protect: ['ProtectResolver', function (ProtectResolver) {
-                            return new ProtectResolver();
+                            return new ProtectResolver({permissions: ['owner']});
                         }]
                     }
                 }

@@ -14,6 +14,7 @@ angular.module('components.list-navigation.uhgListNavigation', [
  * @example
  *     <uhg-list-navigation
  *         authenticated="true"     // Boolean flag used to show/hide sidebar routes.
+ *         user="{}"                // Object of user attributes.
  *         items="[]">              // Array of navigation objects.
  *     </uhg-list-navigation>
  */
@@ -25,6 +26,7 @@ angular.module('components.list-navigation.uhgListNavigation', [
             restrict: 'E',
             scope: {
                 items: '=',
+                user: '=',
                 authenticated: '='
             },
             controller: 'ListNavigationController',

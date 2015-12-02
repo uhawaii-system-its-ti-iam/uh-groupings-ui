@@ -43,6 +43,14 @@ angular.module('stack.authentication.AuthenticationController', [
         authCtrl.authenticated = AuthenticationService.isAuthenticated();
 
         /**
+         * Property houses authenticated user object.
+         *
+         * @property authCtrl.user
+         * @type {Object}
+         */
+        authCtrl.user = {};
+
+        /**
          * Method redirects the user.
          *
          * @method redirect
@@ -90,6 +98,7 @@ angular.module('stack.authentication.AuthenticationController', [
                 },
                 function (value) {
                     authCtrl.authenticated = value;
+                    authCtrl.user = AuthenticationService.getUserFromCache();
                 }
             );
 

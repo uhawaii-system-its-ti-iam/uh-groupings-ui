@@ -8,7 +8,7 @@ var userData = {
     username: 'ckent',
     password: 'root',
     email: 'ckent@email.com',
-    role: 'admin'
+    role: 'owner'
 };
 
 // Export.

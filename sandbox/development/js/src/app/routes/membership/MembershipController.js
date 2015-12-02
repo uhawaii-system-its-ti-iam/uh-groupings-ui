@@ -16,9 +16,10 @@ angular.module('routes.membership.MembershipController', [
 .controller('MembershipController', [
     '$timeout',
     'translate',
+    'protect',
     'AuthenticationService',
     'GroupingsService',
-    function ($timeout, translate, AuthenticationService, GroupingsService) {
+    function ($timeout, translate, protect, AuthenticationService, GroupingsService) {
         'use strict';
 
         // Define.
@@ -41,6 +42,14 @@ angular.module('routes.membership.MembershipController', [
         membershipCtrl.uiState = {
             isLoadingGroupings: true
         };
+
+        /**
+         * Property houses a reference to authenticated user object.
+         *
+         * @property membershipCtrl.user
+         * @type {Object}
+         */
+        membershipCtrl.user = protect;
 
         /**
          * Method to handle managing edit-state of groupings.
@@ -91,7 +100,12 @@ angular.module('routes.membership.MembershipController', [
          */
         function initialize() {
             var t = $timeout(function () {
-                loadGroupingMemberships();
+                // We may want to load different data depending on
+                // the role.
+                if (membershipCtrl.user.role === 'owner') {
+                    loadGroupingMemberships();
+                }
+
                 // Call implementations here. Timeout is needed in order
                 // for all potentially nested directives to execute.
                 $timeout.cancel(t);

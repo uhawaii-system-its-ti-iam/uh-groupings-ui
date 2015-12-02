@@ -17,6 +17,7 @@
     "NAVIGATION_MEMBERSHIPS": "Groupings I Belong",
     "NAVIGATION_GROUPINGS_SEARCH": "Groupings Search",
     "NAVIGATION_DESIGNATE": "Designate Admins",
+    "NAVIGATION_OPT_IN": "Groupings to Opt-In",
 
     "LOGIN_HEADER": "Login",
 
@@ -26,6 +27,7 @@
 
     "GROUPING_HEADER": "Groupings I Own",
 
+    "GROUPING_SEARCH_HEADER": "Groupings Search",
     "GROUPING_SEARCH_LABEL": "Enter a search phrase for searching groupings.",
     "GROUPING_SEARCH_PLACEHOLDER": "Enter a few characters from the grouping name...",
     "GROUPING_SEARCH_BUTTON": "Search",
@@ -106,6 +108,7 @@
     "GROUPING_MEMBERSHIP_EDIT_A11Y": "Edit Grouping",
     "GROUPING_MEMBERSHIP_LOADING_A11Y": "Loading your groupings.",
 
+    "GROUPING_OPT_IN_HEADER": "Groupings To Opt-In",
     "MEMBERSHIP_HEADER": "Groupings I Belong",
 
     "FOOTER_LOGO_ALT": "University of Hawaii Logo",

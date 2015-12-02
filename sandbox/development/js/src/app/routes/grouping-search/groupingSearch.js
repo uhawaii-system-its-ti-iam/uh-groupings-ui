@@ -30,7 +30,7 @@ angular.module('routes.groupingSearch', [
                                     return new TranslationResolver();
                                 }],
                                 protect: ['ProtectResolver', function (ProtectResolver) {
-                                    return new ProtectResolver();
+                                    return new ProtectResolver({permissions: ['owner', 'member']});
                                 }]
                             }
                         }

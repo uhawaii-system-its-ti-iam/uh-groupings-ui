@@ -70,6 +70,18 @@ angular.module('stack.authentication.AuthenticationService', [
             },
 
             /**
+             * Method returns the user object from the cache.
+             * The user object may or may not be populated
+             * depending upon when this method is called.
+             *
+             * @method getUserFromCache
+             * @return {Object} Cached user object
+             */
+            getUserFromCache: function () {
+                return service.cache.get(service.resource);
+            },
+
+            /**
              * Method returns the user's authenticated state.
              *
              * @method isAuthenticated

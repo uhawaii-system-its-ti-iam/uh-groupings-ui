@@ -60,7 +60,7 @@ angular.module('app', [
          * and array-like objects the isEmpty() method checks if
          * the length property is 0. This method is available
          * globally and can be leveraged within template files
-         * using the $root.$isEmpty() syntax.
+         * using the $root.isEmpty() syntax.
          *
          * @method isEmpty
          * @param {Mixed} context value
@@ -71,9 +71,23 @@ angular.module('app', [
         };
 
         /**
+         * Method returns whether or not an array contains the given value.
+         * This method is available globally and can be leveraged within
+         * template files using the $root.inArray() syntax.
+         *
+         * @method inArray
+         * @param {String} value Value
+         * @param {Array} arr Array of values
+         * @return {Boolean}
+         */
+        $rootScope.inArray = function (value, arr) {
+            return ($.inArray(value, arr) === -1) ? false : true;
+        };
+
+        /**
          * Method returns whether or not the object contains the given key.
          * This method is available globally and can be leveraged within
-         * template files using the $root.$has() syntax.
+         * template files using the $root.has() syntax.
          *
          * @method has
          * @param {Object} object Object

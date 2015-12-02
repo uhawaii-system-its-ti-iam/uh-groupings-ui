@@ -8,5 +8,6 @@ angular.module('routes', [
     'routes.grouping',
     'routes.membership',
     'routes.groupingSearch',
+    'routes.groupingOptIn',
     'routes.designate'
 ]);

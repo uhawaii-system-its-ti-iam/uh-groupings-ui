@@ -1,17 +1,17 @@
-angular.module('routes.designate.DesignateController', [
+angular.module('routes.groupingOptIn.GroupingOptInController', [
     'stack.page-loader',
     'stack.i18n'
 ])
 
 /**
- * The DesignateController manages view logic rendered to the
- * designate.html template for the /designate route.
+ * The GroupingOptInController manages view logic rendered to the
+ * groupingOptIn.html template for the /grouping-opt-in route.
  *
- * @class DesignateController
+ * @class GroupingOptInController
  * @constructor
- * @module routes.designate.DesignateController
+ * @module routes.groupingOptIn.GroupingOptInController
  **/
-.controller('DesignateController', [
+.controller('GroupingOptInController', [
     '$timeout',
     'translate',
     'protect',
@@ -19,23 +19,23 @@ angular.module('routes.designate.DesignateController', [
         'use strict';
 
         // Define.
-        var designateCtrl;
+        var groupingOptInCtrl;
 
         /**
-         * Property houses a reference to the designate controller.
+         * Property houses a reference to the controller.
          *
-         * @property designateCtrl
+         * @property groupingOptInCtrl
          * @type {Object}
          */
-        designateCtrl = this;
+        groupingOptInCtrl = this;
 
         /**
          * Property houses a reference to authenticated user object.
          *
-         * @property designateCtrl.user
+         * @property groupingOptInCtrl.user
          * @type {Object}
          */
-        designateCtrl.user = protect;
+        groupingOptInCtrl.user = protect;
 
         /**
          * Method executes initialization process.
