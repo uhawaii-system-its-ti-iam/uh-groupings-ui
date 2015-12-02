@@ -15,62 +15,81 @@ angular.module('routes.groupingSearch.OwnershipContentController', [
     '$scope',
     'OrgUsersService',
     function ($scope, OrgUsersService) {
-        // define
-        var ctrl;
-
-        // alias controller
-        ctrl = this;
+        // Define.
+        var ownershipContentController;
 
         /**
-         * Property to track the sort field for our table of grouping owners
+         * Property houses a reference to the controller.
          *
-         * @property sortField
-         * @type {string}
+         * @property ownershipContentController
+         * @type {Object}
          */
-        ctrl.sortField = '+firstName';
+        ownershipContentController = this;
 
         /**
-         * Method to easily control adjusting the sort of the owners table
+         * Property to track the sort field for our table of grouping owners.
          *
-         * @method changeSort
-         * @param newSort {string} new sort field name
+         * @property ownershipContentController.sortField
+         * @type {String}
          */
-        ctrl.changeSort = function (newSort) {
-            //if current sort minus sign equals new sort, then we're just swapping direction
-            if (ctrl.sortField.substr(1) === newSort) {
-                ctrl.sortField = (ctrl.sortField[0] === '+' ? '-' : '+') + newSort;
+        ownershipContentController.sortField = '+firstName';
+
+        /**
+         * Property to house the users that can be added as owners.
+         *
+         * @property ownershipContentController.nonOwnerUsers
+         * @type {Array}
+         */
+        ownershipContentController.nonOwnerUsers = [];
+
+        /**
+         * Property houses grouping collection.
+         *
+         * @property ownershipContentController.grouping
+         * @type {Object}
+         */
+        ownershipContentController.grouping = angular.copy($scope.groupingEditorCtrl.grouping);
+
+        /**
+         * Method to easily control adjusting the sort of the owners table.
+         *
+         * @method ownershipContentController.changeSort
+         * @param {String} newSort Field name
+         */
+        ownershipContentController.changeSort = function (newSort) {
+            // If current sort minus sign equals new sort, then we're just swapping direction.
+            if (ownershipContentController.sortField.substr(1) === newSort) {
+                ownershipContentController.sortField = (ownershipContentController.sortField[0] === '+' ? '-' : '+') + newSort;
             } else {
-                ctrl.sortField = '+' + newSort;
+                ownershipContentController.sortField = '+' + newSort;
             }
         };
 
         /**
-         * Property to house the users that can be added as owners
+         * Method handler to add a user.
          *
-         * @property nonOwnerUsers
-         * @type {Array}
+         * @method ownershipContentController.addUser
          */
-        ctrl.nonOwnerUsers = [];
-
-        // main thing we'll be working with is the grouping from the parent
-        // copy it so that it makes things like switching tabs without saving easy to revert
-        // note the use of $scope service here - but it's used to access groupingEditorCtrl instead of $parent...
-        ctrl.grouping = angular.copy($scope.groupingEditorCtrl.grouping);
-
-        OrgUsersService.list().then(function (users) {
-            ctrl.nonOwnerUsers = users.filter(function (user) {
-                return ctrl.grouping.ownerMemberIds.indexOf(user.userId) === -1;
-            });
-        });
+        ownershipContentController.addUser = function () {
+            console.log('Add user.');
+        };
 
         /**
-         * Method to persist the changes
+         * Method executes initialization process.
          *
-         * @method save
+         * @method initialize
+         * @private
          */
-        ctrl.addUser = function () {
-            //TODO: Pop up a modal or display a select list populated by the list of non-owners
-            //TODO: Once a user is added, remove them from the list of non-owners
-        };
+        function initialize() {
+            // Populate array of non-owner users.
+            // Only accounts for the happy path and does not address
+            // error conditions.
+            OrgUsersService.list().then(function (users) {
+                ownershipContentController.nonOwnerUsers = users.filter(function (user) {
+                    return ownershipContentController.grouping.ownerMemberIds.indexOf(user.userId) === -1;
+                });
+            });
+        }
+        initialize();
     }
 ]);

@@ -1,56 +1,66 @@
-<div class="ownership-content" ng-controller="OwnershipContentController as ctrl">
+<div class="uhg-ownership-content" ng-controller="OwnershipContentController as ownershipContentController">
     <div class="table-responsive">
-        <table class="table table-bordered table-hover striped-rows">
+        <table class="table table-bordered table-hover striped-rows uhg-table-groups">
             <thead>
                 <tr>
                     <th>
-                        <a href="javascript://" ng-click="ctrl.changeSort('firstName')">
+                        <a ng-href="#" ng-click="ownershipContentController.changeSort('firstName')">
                             <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'OWNERSHIP_TAB_TABLE_FIRST_NAME' | localize }}</span>
-                            {{ 'OWNERSHIP_TAB_TABLE_FIRST_NAME' | localize }}
+                            <span>{{ 'OWNERSHIP_TAB_TABLE_FIRST_NAME' | localize }}</span>
                         </a>
-                        <i class="fa" ng-class="{'fa-caret-up': ctrl.sortField === '+firstName', 'fa-caret-down': ctrl.sortField === '-firstName'}"></i>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': ownershipContentController.sortField === '+firstName', 'fa-caret-down': ownershipContentController.sortField === '-firstName'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
                     </th>
                     <th>
-                        <a href="javascript://" ng-click="ctrl.changeSort('lastName')">
+                        <a ng-href="#" ng-click="ownershipContentController.changeSort('lastName')">
                             <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'OWNERSHIP_TAB_TABLE_LAST_NAME' | localize }}</span>
-                            {{ 'OWNERSHIP_TAB_TABLE_LAST_NAME' | localize }}
+                            <span>{{ 'OWNERSHIP_TAB_TABLE_LAST_NAME' | localize }}</span>
                         </a>
-                        <i class="fa" ng-class="{'fa-caret-up': ctrl.sortField === '+lastName', 'fa-caret-down': ctrl.sortField === '-lastName'}"></i>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': ownershipContentController.sortField === '+lastName', 'fa-caret-down': ownershipContentController.sortField === '-lastName'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
                     </th>
                     <th>
-                        <a href="javascript://" ng-click="ctrl.changeSort('email')">
+                        <a ng-href="#" ng-click="ownershipContentController.changeSort('email')">
                             <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'OWNERSHIP_TAB_TABLE_EMAIL' | localize }}</span>
-                            {{ 'OWNERSHIP_TAB_TABLE_EMAIL' | localize }}
+                            <span>{{ 'OWNERSHIP_TAB_TABLE_EMAIL' | localize }}</span>
                         </a>
-                        <i class="fa" ng-class="{'fa-caret-up': ctrl.sortField === '+email', 'fa-caret-down': ctrl.sortField === '-email'}"></i>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': ownershipContentController.sortField === '+email', 'fa-caret-down': ownershipContentController.sortField === '-email'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
                     </th>
                     <th>
-                        <a href="javascript://" ng-click="ctrl.changeSort('permissionType')">
+                        <a ng-href="#" ng-click="ownershipContentController.changeSort('permissionType')">
                             <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'OWNERSHIP_TAB_TABLE_PERMISSION_TYPE' | localize }}</span>
-                            {{ 'OWNERSHIP_TAB_TABLE_PERMISSION_TYPE' | localize }}
+                            <span>{{ 'OWNERSHIP_TAB_TABLE_PERMISSION_TYPE' | localize }}</span>
                         </a>
-                        <i class="fa" ng-class="{'fa-caret-up': ctrl.sortField === '+permissionType', 'fa-caret-down': ctrl.sortField === '-permissionType'}"></i>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': ownershipContentController.sortField === '+permissionType', 'fa-caret-down': ownershipContentController.sortField === '-permissionType'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-if="ctrl.grouping.owners.length > 0" ng-repeat="user in ctrl.grouping.owners | orderBy:ctrl.sortField">
-                    <td>{{ user.firstName }}</td>
-                    <td>{{ user.lastName }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.permissionType }}</td>
+                <tr ng-if="ownershipContentController.grouping.owners.length > 0" ng-repeat="user in ownershipContentController.grouping.owners | orderBy:ownershipContentController.sortField">
+                    <td><span>{{ user.firstName }}</span></td>
+                    <td><span>{{ user.lastName }}</span></td>
+                    <td><span>{{ user.email }}</span></td>
+                    <td><span>{{ user.permissionType }}</span></td>
                 </tr>
-                <tr ng-if="ctrl.grouping.owners.length == 0" class="zero-state">
-                    <td colspan="4">{{ 'OWNERSHIP_TAB_TABLE_ZERO_STATE' | localize }}</td>
+                <tr ng-if="ownershipContentController.grouping.owners.length == 0" class="zero-state">
+                    <td colspan="4"><span>{{ 'OWNERSHIP_TAB_TABLE_ZERO_STATE' | localize }}</span></td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <footer>
-        <button class="btn btn-primary" ng-click="ctrl.addUser()">
-            <i class="fa fa-plus-circle"></i>
-            {{ 'OWNERSHIP_TAB_ADD_USER_BUTTON' | localize }}
+        <button class="btn btn-primary" ng-click="ownershipContentController.addUser()">
+            <i role="presentation" class="fa fa-plus-circle">
+                <span class="sr-only">{{ 'ICON_ADD_USER_A11Y' | localize }}</span>
+            </i>
+            <span>{{ 'OWNERSHIP_TAB_ADD_USER_BUTTON' | localize }}</span>
         </button>
     </footer>
 </div>
