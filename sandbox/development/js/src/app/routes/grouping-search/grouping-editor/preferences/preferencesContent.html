@@ -1,46 +1,46 @@
-<form class="grouping-preferences" ng-controller="PreferencesContentController as ctrl" name="groupingPreferencesForm">
-    <h3>{{ 'PREFERENCES_TAB_HEADER' | localize }}</h3>
+<div class="uhg-preferences-content" ng-controller="PreferencesContentController as preferencesContentController">
+    <form name="groupingPreferencesForm">
+        <h3 class="preferences-title">{{ 'PREFERENCES_TAB_HEADER' | localize }}</h3>
 
-    <fieldset>
-        <h4>{{ 'PREFERENCES_TAB_ADD_REMOVE_HEADER' | localize }}</h4>
+        <section class="preference-section">
+            <h4 class="preference-title">{{ 'PREFERENCES_TAB_ADD_REMOVE_HEADER' | localize }}</h4>
+            
+            <div class="preference-options">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="preferencesContentController.grouping.options.canAddSelf"> {{ 'PREFERENCES_TAB_ADD_SELF_LABEL' | localize }}
+                        </label>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <div class="col-sm-offset-1 col-sm-11">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="ctrl.grouping.options.canAddSelf"> {{ 'PREFERENCES_TAB_ADD_SELF_LABEL' | localize }}
-                    </label>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="preferencesContentController.grouping.options.canRemoveSelf"> {{ 'PREFERENCES_TAB_REMOVE_SELF_LABEL' | localize }}
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="form-group">
-            <div class="col-sm-offset-1 col-sm-11">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="ctrl.grouping.options.canRemoveSelf"> {{ 'PREFERENCES_TAB_REMOVE_SELF_LABEL' | localize }}
-                    </label>
+        <section class="preference-section">
+            <h4 class="preference-title">{{ 'PREFERENCES_TAB_PUBLICATIONS_HEADER' | localize }}</h4>
+            <div class="preference-options">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="preferencesContentController.grouping.options.includeInListServe"> {{ 'PREFERENCES_TAB_LISTSERV_LABEL' | localize }}  {{ preferencesContentController.grouping.displayGroup }}
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-    </fieldset>
-
-    <fieldset>
-        <h4>{{ 'PREFERENCES_TAB_PUBLICATIONS_HEADER' | localize }}</h4>
-
-        <div class="form-group">
-            <div class="col-sm-offset-1 col-sm-11">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="ctrl.grouping.options.includeInListServe"> {{ 'PREFERENCES_TAB_LISTSERV_LABEL' | localize }}  {{ ctrl.grouping.displayGroup }}
-                    </label>
-                </div>
+        <section class="preference-actions">
+            <div class="form-group">
+                <button type="button" ng-disabled="groupingPreferencesForm.$pristine" class="btn btn-primary" ng-click="preferencesContentController.save()">{{ 'PREFERENCES_TAB_SAVE_BUTTON' | localize }}</button>
             </div>
-        </div>
-    </fieldset>
-
-    <div class="form-group">
-        <button type="button" ng-disabled="groupingPreferencesForm.$pristine" class="btn btn-primary" ng-click="ctrl.save()">{{ 'PREFERENCES_TAB_SAVE_BUTTON' | localize }}</button>
-    </div>
-</form>
+        </section>
+    </form>
+</div>

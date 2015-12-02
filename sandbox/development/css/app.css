@@ -8491,6 +8491,9 @@ a {
   /* Ownership Content
  * Styles for ownership content.
 --------------------------------------*/
+  /* Preferences Content
+ * Styles for preferences content.
+--------------------------------------*/
   /* Membership
  * Styles for the membership route.
 --------------------------------------*/
@@ -8825,6 +8828,27 @@ a {
   .app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked {
     display: none;
   }
+}
+.app .uhg-preferences-content .preferences-title {
+  font-size: large;
+  margin-top: 0;
+  padding: 0 0 0.357em 0;
+  border-bottom: 1px solid #d0d0d0;
+}
+.app .uhg-preferences-content .preference-section {
+  padding: 5px 0 10px 0;
+}
+.app .uhg-preferences-content .preference-section .preference-title {
+  font-size: medium;
+  color: #777777;
+}
+.app .uhg-preferences-content .preference-section .preference-options {
+  padding: 0 0 0 1.429em;
+}
+.app .uhg-preferences-content .preference-actions {
+  border-top: 1px solid #d0d0d0;
+  padding: 1.071em 0 0 0;
+  margin: 0.714em 0 0 0;
 }
 .app .stack-page-loader {
   font-size: 1em;
