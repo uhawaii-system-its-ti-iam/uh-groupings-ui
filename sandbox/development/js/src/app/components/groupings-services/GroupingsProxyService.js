@@ -109,4 +109,5 @@ angular.module('components.groupingsServices.GroupingsProxy', [
         };
 
         return proxy;
-    }]);
+    }
+]);
