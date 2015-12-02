@@ -7,7 +7,9 @@
     <button class="btn btn-primary"
             ng-disabled="groupingSearchDirCtrl.groupingSearchPhrase.length === 0"
             ng-click="groupingSearchDirCtrl.search()">
-        <i class="fa fa-search"></i>
-        {{ 'GROUPING_SEARCH_BUTTON' | localize }}
+        <i class="fa fa-search" role="presentation">
+            <span class="sr-only">{{ 'ICON_SEARCH_A11Y' | localize }}</span>
+        </i>
+        <span>{{ 'GROUPING_SEARCH_BUTTON' | localize }}</span>
     </button>
 </div>

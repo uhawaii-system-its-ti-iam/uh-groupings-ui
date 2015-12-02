@@ -8447,7 +8447,7 @@ a {
 --------------------------------------*/
   /* Responsive
 --------------------------------------*/
-  /* Component
+  /* Grouping Search
 --------------------------------------*/
   /* Responsive
 --------------------------------------*/
@@ -8720,23 +8720,24 @@ a {
 }
 .app .uhg-grouping-search input[name="groupingSearchPhrase"] {
   width: calc(100% - 100px);
-  padding: 6px 2px;
-  line-height: 18px;
-  margin-right: 5px;
+  padding: 0.429em 0.3em;
+  line-height: 1.286em;
+  margin-right: 0.357em;
 }
 @media (max-width: 480px) {
   .app .uhg-grouping-search {
-    -webkit-flex-direction: column-reverse;
-        -ms-flex-direction: column-reverse;
-            flex-direction: column-reverse;
+    -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .app .uhg-grouping-search button {
     width: 100%;
-    margin-bottom: 2px;
+    margin-bottom: 0.143em;
   }
   .app .uhg-grouping-search input[name="groupingSearchPhrase"] {
     width: 100%;
     margin-right: 0;
+    margin-bottom: 0.500em;
   }
 }
 .app .uhg-grouping-editor .tab-content {
