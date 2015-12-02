@@ -17,11 +17,11 @@ module.exports = function (environment) {
 
     environment.express.route('/').get(initialize);
     environment.express.route('/about').get(initialize);
-    environment.express.route('/designate').get(initialize);
     environment.express.route('/grouping').get(initialize);
     environment.express.route('/membership').get(initialize);
     environment.express.route('/grouping-search').get(initialize);
-    environment.express.route('/feedback').get(initialize);
+    environment.express.route('/grouping-opt-in').get(initialize);
+    environment.express.route('/designate').get(initialize);
 
     return environment;
 };

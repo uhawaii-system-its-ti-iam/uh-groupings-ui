@@ -35,6 +35,7 @@
                         <aside>
                             <uhg-list-navigation
                                 authenticated="authCtrl.authenticated"
+                                user="authCtrl.user"
                                 items="appCtrl.navigation">
                             </uhg-list-navigation>
                         </aside>
@@ -102,21 +103,21 @@
         <!--Grouping Search -> Grouping Editor-->
         <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/GroupingEditorDirective.js"></script>
         <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/GroupingEditorController.js"></script>
-        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership/MembershipTabController.js"></script>
-        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership/default/DefaultGroupTabController.js"></script>
-        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership/basis/BasisGroupTabController.js"></script>
-        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership/include/IncludeGroupTabController.js"></script>
-        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership/exclude/ExcludeGroupTabController.js"></script>
-        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/ownership/OwnershipTabController.js"></script>
-        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/preferences/PreferencesTabController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership/MembershipContentController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership/default/DefaultGroupContentController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership/basis/BasisGroupContentController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership/include/IncludeGroupContentController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/membership/exclude/ExcludeGroupContentController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/ownership/OwnershipContentController.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-search/grouping-editor/preferences/PreferencesContentController.js"></script>
 
         <!--Membership-->
         <script type="text/javascript" src="js/src/app/routes/membership/membership.js"></script>
         <script type="text/javascript" src="js/src/app/routes/membership/MembershipController.js"></script>
 
-        <!--Feedback-->
-        <script type="text/javascript" src="js/src/app/routes/feedback/feedback.js"></script>
-        <script type="text/javascript" src="js/src/app/routes/feedback/FeedbackController.js"></script>
+        <!--Grouping Opt-in -->
+        <script type="text/javascript" src="js/src/app/routes/grouping-opt-in/groupingOptIn.js"></script>
+        <script type="text/javascript" src="js/src/app/routes/grouping-opt-in/GroupingOptInController.js"></script>
 
         <!--Components-->
         <script type="text/javascript" src="js/src/app/components/components.js"></script>
@@ -127,7 +128,7 @@
         <script type="text/javascript" src="js/src/app/components/header/HeaderDirective.js"></script>
 
         <!--List Navigation-->
-        <script type="text/javascript" src="js/src/app/components/list-navigation/list-navigation.js"></script>
+        <script type="text/javascript" src="js/src/app/components/list-navigation/listNavigation.js"></script>
         <script type="text/javascript" src="js/src/app/components/list-navigation/ListNavigationController.js"></script>
         <script type="text/javascript" src="js/src/app/components/list-navigation/ListNavigationDirective.js"></script>
         <script type="text/javascript" src="js/src/app/components/list-navigation/ListNavigationService.js"></script>
@@ -143,12 +144,12 @@
         <script type="text/javascript" src="js/src/app/components/grouping-search/GroupingSearchDirective.js"></script>
 
         <!--Grouping Service-->
-        <script type="text/javascript" src="js/src/app/components/groupings-service/GroupingsProxyService.js"></script>
-        <script type="text/javascript" src="js/src/app/components/groupings-service/GroupingsService.js"></script>
+        <script type="text/javascript" src="js/src/app/components/groupings-services/GroupingsProxyService.js"></script>
+        <script type="text/javascript" src="js/src/app/components/groupings-services/GroupingsService.js"></script>
 
         <!--Org Users Service-->
-        <script type="text/javascript" src="js/src/app/components/org-users-service/OrgUsersProxyService.js"></script>
-        <script type="text/javascript" src="js/src/app/components/org-users-service/OrgUsersService.js"></script>
+        <script type="text/javascript" src="js/src/app/components/org-users-services/OrgUsersProxyService.js"></script>
+        <script type="text/javascript" src="js/src/app/components/org-users-services/OrgUsersService.js"></script>
 
         <!--Stack-->
         <script type="text/javascript" src="js/src/stack/stack.js"></script>

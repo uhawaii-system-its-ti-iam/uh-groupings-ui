@@ -1,5 +1,5 @@
-angular.module('components.list-navigation.ListNavigationController', [
-    'components.list-navigation.ListNavigationService'
+angular.module('components.listNavigation.ListNavigationController', [
+    'components.listNavigation.ListNavigationService'
 ])
 
 /**
@@ -8,12 +8,13 @@ angular.module('components.list-navigation.ListNavigationController', [
  *
  * @class ListNavigationController
  * @constructor
- * @module components.list-navigation.ListNavigationController
+ * @module components.listNavigation.ListNavigationController
  **/
 .controller('ListNavigationController', [
     '$scope',
+    '$filter',
     'ListNavigationService',
-    function ($scope, ListNavigationService) {
+    function ($scope, $filter, ListNavigationService) {
         'use strict';
 
         // Define.
@@ -43,7 +44,7 @@ angular.module('components.list-navigation.ListNavigationController', [
          * @property listNavigationCtrl.selectedNavigationLabel
          * @type {String}
          */
-        listNavigationCtrl.selectedNavigationLabel = listNavigationCtrl.items[listNavigationCtrl.selectedNavigationPosition].label;
+        listNavigationCtrl.selectedNavigationLabel = $filter('localize')(listNavigationCtrl.items[listNavigationCtrl.selectedNavigationPosition].key);
 
         /**
          * Property houses the route of the selected or active
@@ -67,7 +68,7 @@ angular.module('components.list-navigation.ListNavigationController', [
                 position = ListNavigationService.getNavigationPositionFromRoute(route, items);
 
             listNavigationCtrl.selectedNavigationPosition = position;
-            listNavigationCtrl.selectedNavigationLabel = listNavigationCtrl.items[listNavigationCtrl.selectedNavigationPosition].label;
+            listNavigationCtrl.selectedNavigationLabel = $filter('localize')(listNavigationCtrl.items[listNavigationCtrl.selectedNavigationPosition].key);
             listNavigationCtrl.selectedNavigationRoute = listNavigationCtrl.items[listNavigationCtrl.selectedNavigationPosition].route;
         }
 

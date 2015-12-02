@@ -8342,6 +8342,8 @@ button.close {
 ------------------------------------*/
 /* List Navigation
 ------------------------------------*/
+/* Membership Sub-tabs
+------------------------------------*/
 /* Footer
 ------------------------------------*/
 /* Page Loader
@@ -8408,6 +8410,9 @@ body {
   background-color: #eeeeee;
   margin-bottom: 50px;
 }
+a {
+  cursor: pointer;
+}
 /* Namespace
  *
  * Everything in this stylesheet is scoped (nested) within ".app".
@@ -8442,7 +8447,7 @@ body {
 --------------------------------------*/
   /* Responsive
 --------------------------------------*/
-  /* Component
+  /* Grouping Search
 --------------------------------------*/
   /* Responsive
 --------------------------------------*/
@@ -8465,12 +8470,35 @@ body {
  * Styles for the grouping editor.
 --------------------------------------*/
   /* Responsive
+-------------------------------------- */
+  /* Membership Content
+ * Styles for membership content.
+--------------------------------------*/
+  /* Responsive
+-------------------------------------- */
+  /* Basis Group Content
+ * Styles for basis group content.
+--------------------------------------*/
+  /* Default Group Content
+ * Styles for default group content.
+--------------------------------------*/
+  /* Exclude Group Content
+ * Styles for exclude group content.
+--------------------------------------*/
+  /* Include Group Content
+ * Styles for include group content.
+--------------------------------------*/
+  /* Ownership Content
+ * Styles for ownership content.
+--------------------------------------*/
+  /* Preferences Content
+ * Styles for preferences content.
+--------------------------------------*/
+  /* Grouping Opt-in
+ * Styles for the grouping opt-in route.
 --------------------------------------*/
   /* Membership
  * Styles for the membership route.
---------------------------------------*/
-  /* Feedback
- * Styles for the feedback route.
 --------------------------------------*/
   /* Routes
  * Import LESS files for stack.
@@ -8692,106 +8720,136 @@ body {
 }
 .app .uhg-grouping-search input[name="groupingSearchPhrase"] {
   width: calc(100% - 100px);
-  padding: 6px 2px;
-  line-height: 18px;
-  margin-right: 5px;
+  padding: 0.429em 0.3em;
+  line-height: 1.286em;
+  margin-right: 0.357em;
 }
 @media (max-width: 480px) {
   .app .uhg-grouping-search {
-    -webkit-flex-direction: column-reverse;
-        -ms-flex-direction: column-reverse;
-            flex-direction: column-reverse;
+    -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .app .uhg-grouping-search button {
     width: 100%;
-    margin-bottom: 2px;
+    margin-bottom: 0.143em;
   }
   .app .uhg-grouping-search input[name="groupingSearchPhrase"] {
     width: 100%;
     margin-right: 0;
+    margin-bottom: 0.500em;
   }
 }
 .app .uhg-grouping-editor .tab-content {
   padding-top: 1.429em;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container .tabset-tabs-alternate {
+@media (max-width: 480px) {
+  .app .uhg-grouping-editor .nav:first-child > li > a {
+    padding: 0.714em 0.500em;
+  }
+}
+.app .uhg-membership-content .tabset-tabs-container-alternate {
   display: none;
   padding: 0 0 1em 0;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container .tabset-container {
+.app .uhg-membership-content .tabset-tabs-container {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked {
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked {
   display: block;
   border: none;
   padding-top: 1.429em;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked li {
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li {
   border: 1px solid #d0d0d0;
   border-right: none;
   margin-left: 0;
-  margin-bottom: 5px;
+  margin-bottom: 0.357em;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked li a {
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li a {
   border-radius: 0;
   background-clip: padding-box;
   margin-right: 0;
   text-align: center;
   background-clip: border-box;
+  background: transparent;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked li a:hover,
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked li a:focus {
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li a:hover,
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li a:focus {
   background-clip: border-box;
   background-color: #eeeeee;
   border-color: #eeeeee;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked li.active a {
+.app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li.active a {
   background-clip: border-box;
   background-color: #eeeeee;
   border-color: #eeeeee;
 }
-.app .uhg-grouping-editor .membership-tab .tab-container .tab-content {
+.app .uhg-membership-content .tabset-tabs-container .tab-content {
   margin-left: 0;
   border: 1px solid #d0d0d0;
   padding: 1.071em;
+  display: block;
+  width: 100%;
 }
-.app .uhg-grouping-editor .membership-tab footer {
+.app .uhg-membership-content footer {
   padding: 1.429em 0;
 }
 @media (max-width: 480px) {
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-tabs-alternate {
+  .app .uhg-membership-content .tabset-tabs-container-alternate {
     display: inline-block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-container {
+  .app .uhg-membership-content .tabset-tabs-container {
     display: block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked {
+  .app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked {
     display: none;
   }
 }
 @media (min-width: 480px) and (max-width: 767px) {
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-tabs-alternate {
+  .app .uhg-membership-content .tabset-tabs-container-alternate {
     display: inline-block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-container {
+  .app .uhg-membership-content .tabset-tabs-container {
     display: block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked {
+  .app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked {
     display: none;
   }
 }
 @media (min-width: 768px) and (max-width: 991px) {
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-tabs-alternate {
+  .app .uhg-membership-content .tabset-tabs-container-alternate {
     display: inline-block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container .tabset-container {
+  .app .uhg-membership-content .tabset-tabs-container {
     display: block;
   }
-  .app .uhg-grouping-editor .membership-tab .tab-container ul.nav-tabs.nav-stacked {
+  .app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked {
     display: none;
   }
+}
+.app .uhg-preferences-content .preferences-title {
+  font-size: large;
+  margin-top: 0;
+  padding: 0 0 0.357em 0;
+  border-bottom: 1px solid #d0d0d0;
+}
+.app .uhg-preferences-content .preference-section {
+  padding: 5px 0 10px 0;
+}
+.app .uhg-preferences-content .preference-section .preference-title {
+  font-size: medium;
+  color: #777777;
+}
+.app .uhg-preferences-content .preference-section .preference-options {
+  padding: 0 0 0 1.429em;
+}
+.app .uhg-preferences-content .preference-actions {
+  border-top: 1px solid #d0d0d0;
+  padding: 1.071em 0 0 0;
+  margin: 0.714em 0 0 0;
 }
 .app .stack-page-loader {
   font-size: 1em;

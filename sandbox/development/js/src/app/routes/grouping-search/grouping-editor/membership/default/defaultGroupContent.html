@@ -1,0 +1,60 @@
+<div class="uhg-default-group-content" ng-controller="DefaultGroupContentController as defaultGroupContentController">
+    <div class="alert alert-info">
+        {{ 'DEFAULT_GROUP_TAB_DESCRIPTION' | localize }}
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover striped-rows uhg-table-groups">
+            <thead>
+                <tr>
+                    <th>
+                        <a ng-href="#" ng-click="defaultGroupContentController.changeSort('firstName')">
+                            <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'DEFAULT_GROUP_TAB_TABLE_FIRST_NAME' | localize }}</span>
+                            <span>{{ 'DEFAULT_GROUP_TAB_TABLE_FIRST_NAME' | localize }}</span>
+                        </a>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': defaultGroupContentController.sortField === '+firstName', 'fa-caret-down': defaultGroupContentController.sortField === '-firstName'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
+                    </th>
+                    <th>
+                        <a ng-href="#" ng-click="defaultGroupContentController.changeSort('lastName')">
+                            <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'DEFAULT_GROUP_TAB_TABLE_LAST_NAME' | localize }}</span>
+                            <span>{{ 'DEFAULT_GROUP_TAB_TABLE_LAST_NAME' | localize }}</span>
+                        </a>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': defaultGroupContentController.sortField === '+lastName', 'fa-caret-down': defaultGroupContentController.sortField === '-lastName'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
+                    </th>
+                    <th>
+                        <a ng-href="#" ng-click="defaultGroupContentController.changeSort('email')">
+                            <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'DEFAULT_GROUP_TAB_TABLE_EMAIL' | localize }}</span>
+                            <span>{{ 'DEFAULT_GROUP_TAB_TABLE_EMAIL' | localize }}</span>
+                        </a>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': defaultGroupContentController.sortField === '+email', 'fa-caret-down': defaultGroupContentController.sortField === '-email'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
+                    </th>
+                    <th>
+                        <a ng-href="#" ng-click="defaultGroupContentController.changeSort('sourceGroup')">
+                            <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'DEFAULT_GROUP_TAB_TABLE_SOURCE_GROUP' | localize }}</span>
+                            <span>{{ 'DEFAULT_GROUP_TAB_TABLE_SOURCE_GROUP' | localize }}</span>
+                        </a>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': defaultGroupContentController.sortField === '+sourceGroup', 'fa-caret-down': defaultGroupContentController.sortField === '-sourceGroup'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="defaultGroupContentController.grouping.defaultMembers.length > 0" ng-repeat="user in defaultGroupContentController.grouping.defaultMembers | orderBy:defaultGroupContentController.sortField">
+                    <td><span>{{ user.firstName }}</span></td>
+                    <td><span>{{ user.lastName }}</span></td>
+                    <td><span>{{ user.email }}</span></td>
+                    <td><span>{{ user.sourceGroup }}</span></td>
+                </tr>
+                <tr ng-if="defaultGroupContentController.grouping.defaultMembers.length == 0" class="zero-state">
+                    <td colspan="4"><span>{{ 'DEFAULT_GROUP_TAB_TABLE_ZERO_STATE' | localize }}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

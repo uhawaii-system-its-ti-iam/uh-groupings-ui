@@ -7,8 +7,9 @@
  */
 angular.module('components', [
     'components.header',
-    'components.list-navigation',
+    'components.listNavigation',
     'components.footer',
     'components.groupingSearch',
-    'components.groupingsService.GroupingsService'
+    'components.groupingsServices.GroupingsService',
+    'components.orgUsersServices.OrgUsersService'
 ]);

@@ -1,11 +1,12 @@
 angular.module('routes.groupingSearch.GroupingEditorController', [
     'stack.i18n',
-    'components.orgUsersService.OrgUsersService',
-    'components.groupingsService.GroupingsService'
+    'components.orgUsersServices.OrgUsersService',
+    'components.groupingsServices.GroupingsService'
 ])
 
 /**
- * The GroupingEditorController houses state and view logic for the uhg-grouping-editor directive.
+ * The GroupingEditorController houses state and view logic
+ * for the uhg-grouping-editor directive.
  *
  * @class GroupingEditorController
  * @constructor
@@ -49,19 +50,19 @@ angular.module('routes.groupingSearch.GroupingEditorController', [
         groupingEditorCtrl.tabs = [
             {
                 name: 'membership-tab',
-                viewUrl: 'js/src/app/routes/grouping-search/grouping-editor/membership/membershipTab.html',
+                content: 'js/src/app/routes/grouping-search/grouping-editor/membership/membershipContent.html',
                 tabLabel: localize('GROUPING_SEARCH_MEMBERSHIP_TAB_HEADING'),
                 active: true
             },
             {
                 name: 'ownership-tab',
-                viewUrl: 'js/src/app/routes/grouping-search/grouping-editor/ownership/ownershipTab.html',
+                content: 'js/src/app/routes/grouping-search/grouping-editor/ownership/ownershipContent.html',
                 tabLabel: localize('GROUPING_SEARCH_OWNERSHIP_TAB_HEADING'),
                 active: false
             },
             {
                 name: 'preferences-tab',
-                viewUrl: 'js/src/app/routes/grouping-search/grouping-editor/preferences/preferencesTab.html',
+                content: 'js/src/app/routes/grouping-search/grouping-editor/preferences/preferencesContent.html',
                 tabLabel: localize('GROUPING_SEARCH_PREFERENCES_TAB_HEADING'),
                 active: false
             }

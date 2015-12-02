@@ -2,7 +2,7 @@ angular.module('routes.grouping.GroupingController', [
     'stack.page-loader',
     'stack.i18n',
     'stack.authentication.AuthenticationService',
-    'components.groupingsService.GroupingsService'
+    'components.groupingsServices.GroupingsService'
 ])
 
 /**
@@ -16,9 +16,10 @@ angular.module('routes.grouping.GroupingController', [
 .controller('GroupingController', [
     '$timeout',
     'translate',
+    'protect',
     'AuthenticationService',
     'GroupingsService',
-    function ($timeout, translate, AuthenticationService, GroupingsService) {
+    function ($timeout, translate, protect, AuthenticationService, GroupingsService) {
         'use strict';
 
         // Define.
@@ -41,6 +42,14 @@ angular.module('routes.grouping.GroupingController', [
         groupingCtrl.uiState = {
             isLoadingGroupings: true
         };
+
+        /**
+         * Property houses a reference to authenticated user object.
+         *
+         * @property groupingCtrl.user
+         * @type {Object}
+         */
+        groupingCtrl.user = protect;
 
         /**
          * Method to handle managing edit-state of groupings.

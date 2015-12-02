@@ -14,7 +14,8 @@ angular.module('routes.designate.DesignateController', [
 .controller('DesignateController', [
     '$timeout',
     'translate',
-    function ($timeout, translate) {
+    'protect',
+    function ($timeout, translate, protect) {
         'use strict';
 
         // Define.
@@ -27,6 +28,14 @@ angular.module('routes.designate.DesignateController', [
          * @type {Object}
          */
         designateCtrl = this;
+
+        /**
+         * Property houses a reference to authenticated user object.
+         *
+         * @property designateCtrl.user
+         * @type {Object}
+         */
+        designateCtrl.user = protect;
 
         /**
          * Method executes initialization process.

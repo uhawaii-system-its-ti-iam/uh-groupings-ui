@@ -1,7 +1,7 @@
 angular.module('routes.groupingSearch.GroupingSearchViewController', [
     'stack.page-loader',
     'stack.i18n',
-    'components.groupingsService.GroupingsService'
+    'components.groupingsServices.GroupingsService'
 ])
 
 /**
@@ -15,55 +15,68 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
 .controller('GroupingSearchViewController', [
     '$timeout',
     '$stateParams',
+    'protect',
     'GroupingsService',
-    function ($timeout, $stateParams, GroupingsService) {
+    function ($timeout, $stateParams, protect, GroupingsService) {
         'use strict';
 
         // Define.
-        var ctrl;
+        var groupingSearchViewCtrl;
 
         /**
          * Property houses a reference to the grouping search controller.
          *
-         * @property ctrl
+         * @property groupingSearchViewCtrl
          * @type {Object}
          */
-        ctrl = this;
+        groupingSearchViewCtrl = this;
 
         /**
          * Property houses search result.
+         *
+         * @property groupingSearchViewCtrl.searchResults
          * @type {Array}
          */
-        ctrl.searchResults = [];
+        groupingSearchViewCtrl.searchResults = [];
 
         /**
          * Property houses flags representing the current UI State.
+         *
+         * @property groupingSearchViewCtrl.uiState
          * @type {Object}
          */
-        ctrl.uiState = {
+        groupingSearchViewCtrl.uiState = {
             isSearching: false,
             hasSearched: false,
             showDrilldown: false
         };
 
         /**
+         * Property houses a reference to authenticated user object.
+         *
+         * @property groupingSearchViewCtrl.user
+         * @type {Object}
+         */
+        groupingSearchViewCtrl.user = protect;
+
+        /**
          * Method to close editor view and go back to result-set from last search.
          *
-         * @method backToResults
+         * @method groupingSearchViewCtrl.backToResults
          */
-        ctrl.backToResults = function () {
-            ctrl.uiState.showDrilldown = false;
+        groupingSearchViewCtrl.backToResults = function () {
+            groupingSearchViewCtrl.uiState.showDrilldown = false;
         };
 
         /**
          * Method calls out to a service that queries back-end for matching groupings.
          *
-         * @method onSearch
+         * @method groupingSearchViewCtrl.onSearch
          * @param {String} searchPhrase Pharse to search
          */
-        ctrl.onSearch = function (searchPhrase) {
-            ctrl.uiState.isSearching = true;
-            ctrl.searchPhrase = searchPhrase;
+        groupingSearchViewCtrl.onSearch = function (searchPhrase) {
+            groupingSearchViewCtrl.uiState.isSearching = true;
+            groupingSearchViewCtrl.searchPhrase = searchPhrase;
 
             // Implementation only depicts the happy path.
             // Error handling was not implemented due to time constraints.
@@ -71,9 +84,9 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
                 // Using a timeout to make sure the loading spinner displays
                 // long enough to not just be a flicker.
                 $timeout(function () {
-                    ctrl.searchResults = groups;
-                    ctrl.uiState.isSearching = false;
-                    ctrl.uiState.hasSearched = true;
+                    groupingSearchViewCtrl.searchResults = groups;
+                    groupingSearchViewCtrl.uiState.isSearching = false;
+                    groupingSearchViewCtrl.uiState.hasSearched = true;
                 }, 1000);
             });
         };
@@ -81,36 +94,36 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
         /**
          * Method to reset the search.
          *
-         * @method clearSearchResults
+         * @method groupingSearchViewCtrl.clearSearchResults
          */
-        ctrl.clearSearchResults = function () {
-            ctrl.searchResults = [];
-            ctrl.searchPhrase = '';
-            ctrl.uiState.showDrilldown = ctrl.uiState.hasSearched = false;
+        groupingSearchViewCtrl.clearSearchResults = function () {
+            groupingSearchViewCtrl.searchResults = [];
+            groupingSearchViewCtrl.searchPhrase = '';
+            groupingSearchViewCtrl.uiState.showDrilldown = groupingSearchViewCtrl.uiState.hasSearched = false;
         };
 
         /**
          * Method to handle initiating the edit state of a single grouping.
          *
-         * @method editGrouping
+         * @method groupingSearchViewCtrl.editGrouping
          * @param {Object} grouping Grouping to edit
          */
-        ctrl.editGrouping = function (grouping) {
-            ctrl.selectedGrouping = grouping;
-            ctrl.uiState.showDrilldown = true;
+        groupingSearchViewCtrl.editGrouping = function (grouping) {
+            groupingSearchViewCtrl.selectedGrouping = grouping;
+            groupingSearchViewCtrl.uiState.showDrilldown = true;
         };
 
         /**
          * Method to handle managing edit-state of groupings. This handler
          * is executed when the enter key is detected.
          *
-         * @method editGroupingOnKeyDown
+         * @method groupingSearchViewCtrl.editGroupingOnKeyDown
          * @param {Object} Event Event object
          * @param {Object} grouping Grouping object
          */
-        ctrl.editGroupingOnKeyDown = function (e, grouping) {
+        groupingSearchViewCtrl.editGroupingOnKeyDown = function (e, grouping) {
             if (e.keyCode === 13) {
-                ctrl.editGrouping(grouping);
+                groupingSearchViewCtrl.editGrouping(grouping);
             }
         };
 
@@ -127,8 +140,8 @@ angular.module('routes.groupingSearch.GroupingSearchViewController', [
                     // phrase has been entered prior to loading the Search view. In other words,
                     // when a user enters a search phrase in a different view other then on the
                     // Search screen and clicks the search button.
-                    ctrl.searchPhrase = $stateParams.searchPhrase;
-                    ctrl.onSearch(ctrl.searchPhrase);
+                    groupingSearchViewCtrl.searchPhrase = $stateParams.searchPhrase;
+                    groupingSearchViewCtrl.onSearch(groupingSearchViewCtrl.searchPhrase);
                 }
 
                 $timeout.cancel(t);

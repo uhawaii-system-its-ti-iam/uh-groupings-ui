@@ -20,34 +20,34 @@ angular.module('app.AppService', [])
              */
             navigation: [
                 {
-                    label: 'About',
                     key: 'NAVIGATION_ABOUT',
-                    route: 'about'
+                    route: 'about',
+                    permissions: ['member', 'owner']
                 },
                 {
-                    label: 'Designate Admins',
-                    key: 'NAVIGATION_DESIGNATE',
-                    route: 'designate'
+                    key: 'NAVIGATION_GROUPING',
+                    route: 'grouping',
+                    permissions: ['owner']
                 },
                 {
-                    label: 'Groupings',
-                    key: 'NAVIGATION_GROUPINGS',
-                    route: 'grouping'
-                },
-                {
-                    label: 'Groupings Search',
-                    key: 'NAVIGATION_GROUPINGS_SEARCH',
-                    route: 'groupingSearch'
-                },
-                {
-                    label: 'My Memberships',
                     key: 'NAVIGATION_MEMBERSHIPS',
-                    route: 'membership'
+                    route: 'membership',
+                    permissions: ['member', 'owner']
                 },
                 {
-                    label: 'Feedback',
-                    key: 'NAVIGATION_FEEDBACK',
-                    route: 'feedback'
+                    key: 'NAVIGATION_GROUPINGS_SEARCH',
+                    route: 'grouping-search',
+                    permissions: ['member', 'owner']
+                },
+                {
+                    key: 'NAVIGATION_DESIGNATE',
+                    route: 'designate',
+                    permissions: ['owner']
+                },
+                {
+                    key: 'NAVIGATION_OPT_IN',
+                    route: 'grouping-opt-in',
+                    permissions: ['member']
                 }
             ]
         };

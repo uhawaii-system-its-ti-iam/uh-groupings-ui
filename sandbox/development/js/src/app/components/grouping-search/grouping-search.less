@@ -1,0 +1,32 @@
+/* Grouping Search
+--------------------------------------*/
+.uhg-grouping-search {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: .9em .9em;
+    input[name="groupingSearchPhrase"] {
+        width: ~"calc(100% - 100px)";
+        padding: 0.429em 0.3em;
+        line-height: 1.286em;
+        margin-right: 0.357em;
+    }
+}
+
+/* Responsive
+--------------------------------------*/
+@media (max-width: @screen-xs-min) {
+    .uhg-grouping-search {
+        flex-direction: column;
+        button {
+            width: 100%;
+            margin-bottom: 0.143em;
+        }
+        input[name="groupingSearchPhrase"] {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 0.500em;
+        }
+    }
+}
