@@ -8342,6 +8342,8 @@ button.close {
 ------------------------------------*/
 /* List Navigation
 ------------------------------------*/
+/* Membership Sub-tabs
+------------------------------------*/
 /* Footer
 ------------------------------------*/
 /* Page Loader
@@ -8408,6 +8410,9 @@ body {
   background-color: #eeeeee;
   margin-bottom: 50px;
 }
+a {
+  cursor: pointer;
+}
 /* Namespace
  *
  * Everything in this stylesheet is scoped (nested) within ".app".
@@ -8471,6 +8476,18 @@ body {
 --------------------------------------*/
   /* Responsive
 -------------------------------------- */
+  /* Basis Group Content
+ * Styles for basis group content.
+--------------------------------------*/
+  /* Default Group Content
+ * Styles for default group content.
+--------------------------------------*/
+  /* Exclude Group Content
+ * Styles for exclude group content.
+--------------------------------------*/
+  /* Include Group Content
+ * Styles for include group content.
+--------------------------------------*/
   /* Membership
  * Styles for the membership route.
 --------------------------------------*/
@@ -8750,6 +8767,7 @@ body {
   margin-right: 0;
   text-align: center;
   background-clip: border-box;
+  background: transparent;
 }
 .app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li a:hover,
 .app .uhg-membership-content .tabset-tabs-container ul.nav-tabs.nav-stacked > li a:focus {
@@ -8766,6 +8784,8 @@ body {
   margin-left: 0;
   border: 1px solid #d0d0d0;
   padding: 1.071em;
+  display: block;
+  width: 100%;
 }
 .app .uhg-membership-content footer {
   padding: 1.429em 0;

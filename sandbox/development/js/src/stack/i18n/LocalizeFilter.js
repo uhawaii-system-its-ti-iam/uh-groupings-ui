@@ -29,7 +29,7 @@ angular.module('stack.i18n.localize', [
                 translated = map[input];
             }
 
-            return translated;
+            return translated.trim();
         };
     }
 ]);

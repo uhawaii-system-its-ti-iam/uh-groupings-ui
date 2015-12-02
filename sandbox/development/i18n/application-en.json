@@ -1,6 +1,8 @@
 {
     "GLOBAL_SORT_BY": "Sort By",
 
+    "ICON_SORT_BY_A11Y": "Sort by icon",
+
     "BUTTON_LOGIN": "Login",
     "BUTTON_LOGOUT": "Logout",
 

@@ -1,47 +1,55 @@
 <div class="ugh-include-group-content" ng-controller="IncludeGroupContentController as includeGroupContentController">
-    <label class="text-success">{{ 'INCLUDE_GROUP_TAB_DESCRIPTION' | localize }}</label>
+    <div class="alert alert-success">
+        {{ 'INCLUDE_GROUP_TAB_DESCRIPTION' | localize }}
+    </div>
     <div class="table-responsive">
-        <table class="table table-bordered table-hover striped-rows">
+        <table class="table table-bordered table-hover striped-rows uhg-table-groups">
             <thead>
                 <tr>
                     <th>
-                        <a href="javascript://" ng-click="includeGroupContentController.changeSort('firstName')">
+                        <a ng-href="#" ng-click="includeGroupContentController.changeSort('firstName')">
                             <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'INCLUDE_GROUP_TAB_TABLE_FIRST_NAME' | localize }}</span>
-                            {{ 'INCLUDE_GROUP_TAB_TABLE_FIRST_NAME' | localize }}
+                            <span>{{ 'INCLUDE_GROUP_TAB_TABLE_FIRST_NAME' | localize }}</span>
                         </a>
-                        <i class="fa" ng-class="{'fa-caret-up': includeGroupContentController.sortField === '+firstName', 'fa-caret-down': includeGroupContentController.sortField === '-firstName'}"></i>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': includeGroupContentController.sortField === '+firstName', 'fa-caret-down': includeGroupContentController.sortField === '-firstName'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
                     </th>
                     <th>
-                        <a href="javascript://" ng-click="includeGroupContentController.changeSort('lastName')">
+                        <a ng-href="#" ng-click="includeGroupContentController.changeSort('lastName')">
                             <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'INCLUDE_GROUP_TAB_TABLE_LAST_NAME' | localize }}</span>
-                            {{ 'INCLUDE_GROUP_TAB_TABLE_LAST_NAME' | localize }}
+                            <span>{{ 'INCLUDE_GROUP_TAB_TABLE_LAST_NAME' | localize }}</span>
                         </a>
-                        <i class="fa" ng-class="{'fa-caret-up': includeGroupContentController.sortField === '+lastName', 'fa-caret-down': includeGroupContentController.sortField === '-lastName'}"></i>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': includeGroupContentController.sortField === '+lastName', 'fa-caret-down': includeGroupContentController.sortField === '-lastName'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
                     </th>
                     <th>
-                        <a href="javascript://" ng-click="includeGroupContentController.changeSort('email')">
+                        <a ng-href="#" ng-click="includeGroupContentController.changeSort('email')">
                             <span class="sr-only">{{ 'GLOBAL_SORT_BY' | localize }} {{ 'INCLUDE_GROUP_TAB_TABLE_EMAIL' | localize }}</span>
-                            {{ 'INCLUDE_GROUP_TAB_TABLE_EMAIL' | localize }}
+                            <span>{{ 'INCLUDE_GROUP_TAB_TABLE_EMAIL' | localize }}</span>
                         </a>
-                        <i class="fa" ng-class="{'fa-caret-up': includeGroupContentController.sortField === '+email', 'fa-caret-down': includeGroupContentController.sortField === '-email'}"></i>
+                        <i class="fa" role="presentation" ng-class="{'fa-caret-up': includeGroupContentController.sortField === '+email', 'fa-caret-down': includeGroupContentController.sortField === '-email'}">
+                            <span class="sr-only">{{ 'ICON_SORT_BY_A11Y' | localize }}</span>
+                        </i>
                     </th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-if="includeGroupContentController.grouping.includedMembers.length > 0" ng-repeat="user in includeGroupContentController.grouping.includedMembers | orderBy:includeGroupContentController.sortField">
-                    <td>{{ user.firstName }}</td>
-                    <td>{{ user.lastName }}</td>
-                    <td>{{ user.email }}</td>
                     <td>
-                        <a href="javascript://" ng-click="includeGroupContentController.excludeUser(user)">
-                            <span class="sr-only">{{ 'INCLUDE_GROUP_TAB_TABLE_EXCLUDE_USER_A11Y' }}</span>
-                            <i class="fa fa-minus-circle text-danger"></i>
+                        <span class="uhg-group-name">{{ user.firstName }}</span>
+                        <a ng-href="#" ng-click="includeGroupContentController.excludeUser(user)">
+                            <i class="fa fa-minus-circle text-danger">
+                                <span class="sr-only">{{ 'INCLUDE_GROUP_TAB_TABLE_EXCLUDE_USER_A11Y' | localize }}</span>
+                            </i>
                         </a>
                     </td>
+                    <td><span>{{ user.lastName }}</span></td>
+                    <td><span>{{ user.email }}</span></td>
                 </tr>
                 <tr ng-if="includeGroupContentController.grouping.includedMembers.length == 0" class="zero-state">
-                    <td colspan="4">{{ 'INCLUDE_GROUP_TAB_TABLE_ZERO_STATE' | localize }}</td>
+                    <td colspan="4"><span>{{ 'INCLUDE_GROUP_TAB_TABLE_ZERO_STATE' | localize }}</span></td>
                 </tr>
             </tbody>
         </table>
