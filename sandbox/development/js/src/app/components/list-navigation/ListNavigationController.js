@@ -1,5 +1,5 @@
-angular.module('components.list-navigation.ListNavigationController', [
-    'components.list-navigation.ListNavigationService'
+angular.module('components.listNavigation.ListNavigationController', [
+    'components.listNavigation.ListNavigationService'
 ])
 
 /**
@@ -8,7 +8,7 @@ angular.module('components.list-navigation.ListNavigationController', [
  *
  * @class ListNavigationController
  * @constructor
- * @module components.list-navigation.ListNavigationController
+ * @module components.listNavigation.ListNavigationController
  **/
 .controller('ListNavigationController', [
     '$scope',

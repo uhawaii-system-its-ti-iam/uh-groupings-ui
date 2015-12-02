@@ -1,4 +1,4 @@
-angular.module('components.list-navigation.ListNavigationService', [])
+angular.module('components.listNavigation.ListNavigationService', [])
 
 /**
  * The ListNavigationService provides methods and parsing functionality
@@ -6,7 +6,7 @@ angular.module('components.list-navigation.ListNavigationService', [])
  *
  * @class ListNavigationService
  * @constructor
- * @module components.list-navigation.ListNavigationService
+ * @module components.listNavigation.ListNavigationService
  */
 .factory('ListNavigationService', [
     function () {
