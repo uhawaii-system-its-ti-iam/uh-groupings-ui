@@ -20,34 +20,24 @@ angular.module('app.AppService', [])
              */
             navigation: [
                 {
-                    label: 'About',
                     key: 'NAVIGATION_ABOUT',
                     route: 'about'
                 },
                 {
-                    label: 'Designate Admins',
-                    key: 'NAVIGATION_DESIGNATE',
-                    route: 'designate'
-                },
-                {
-                    label: 'Groupings',
-                    key: 'NAVIGATION_GROUPINGS',
+                    key: 'NAVIGATION_GROUPING',
                     route: 'grouping'
                 },
                 {
-                    label: 'Groupings Search',
-                    key: 'NAVIGATION_GROUPINGS_SEARCH',
-                    route: 'groupingSearch'
-                },
-                {
-                    label: 'My Memberships',
                     key: 'NAVIGATION_MEMBERSHIPS',
                     route: 'membership'
                 },
                 {
-                    label: 'Feedback',
-                    key: 'NAVIGATION_FEEDBACK',
-                    route: 'feedback'
+                    key: 'NAVIGATION_GROUPINGS_SEARCH',
+                    route: 'grouping-search'
+                },
+                {
+                    key: 'NAVIGATION_DESIGNATE',
+                    route: 'designate'
                 }
             ]
         };

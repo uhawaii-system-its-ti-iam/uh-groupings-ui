@@ -13,11 +13,10 @@
 
     "NAVIGATION_LOGIN": "Login",
     "NAVIGATION_ABOUT": "About",
-    "NAVIGATION_DESIGNATE": "Designate Admins",
-    "NAVIGATION_GROUPINGS": "Groupings I Own",
+    "NAVIGATION_GROUPING": "Groupings I Own",
+    "NAVIGATION_MEMBERSHIPS": "Groupings I Belong",
     "NAVIGATION_GROUPINGS_SEARCH": "Groupings Search",
-    "NAVIGATION_MEMBERSHIPS": "My Memberships",
-    "NAVIGATION_FEEDBACK": "Feedback",
+    "NAVIGATION_DESIGNATE": "Designate Admins",
 
     "LOGIN_HEADER": "Login",
 
@@ -25,7 +24,7 @@
 
     "DESIGNATE_HEADER": "Designate Admins",
 
-    "GROUPING_HEADER": "Groupings",
+    "GROUPING_HEADER": "Groupings I Own",
 
     "GROUPING_SEARCH_LABEL": "Enter a search phrase for searching groupings.",
     "GROUPING_SEARCH_PLACEHOLDER": "Enter a few characters from the grouping name...",
@@ -107,9 +106,7 @@
     "GROUPING_MEMBERSHIP_EDIT_A11Y": "Edit Grouping",
     "GROUPING_MEMBERSHIP_LOADING_A11Y": "Loading your groupings.",
 
-    "MEMBERSHIP_HEADER": "My Memberships",
-
-    "FEEDBACK_HEADER": "Feedback",
+    "MEMBERSHIP_HEADER": "Groupings I Belong",
 
     "FOOTER_LOGO_ALT": "University of Hawaii Logo",
     "FOOTER_COPYRIGHT": "Copyright © 2015 University of Hawaii"

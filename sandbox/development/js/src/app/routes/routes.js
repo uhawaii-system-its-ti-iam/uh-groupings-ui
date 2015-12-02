@@ -5,9 +5,8 @@
  */
 angular.module('routes', [
     'routes.about',
-    'routes.designate',
     'routes.grouping',
-    'routes.groupingSearch',
     'routes.membership',
-    'routes.feedback'
+    'routes.groupingSearch',
+    'routes.designate'
 ]);

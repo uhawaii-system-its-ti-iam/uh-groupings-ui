@@ -19,7 +19,7 @@ angular.module('routes.groupingSearch', [
                 'use strict';
 
                 $stateProvider
-                    .state('groupingSearch', {
+                    .state('grouping-search', {
                             url: '/grouping-search',
                             params: {searchPhrase: null},
                             templateUrl: 'js/src/app/routes/grouping-search/groupingSearch.html',
