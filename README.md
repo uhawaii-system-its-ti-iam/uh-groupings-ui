@@ -4,7 +4,7 @@ The UH Groupings repository houses a mobile-friendly front-end for the Universit
 
 ## Prerequisites
 * * *
-The UH Groupings application leverages the [laravel](http://laravel.com/) framework as well as the [node.js](http://nodejs.org/) library for its implementation. The UH Groupings application requires PHP v5.5.9+, node v0.12.7+ and npm v2.11.3+.
+The UH Groupings application leverages the [laravel](http://laravel.com/) framework as well as the [node.js](http://nodejs.org/) library for its implementation. The UH Groupings application requires PHP v5.5.9+, node v5.1.0 and npm v3.3.12.
 
 ## Project Setup
 * * *
@@ -52,11 +52,11 @@ The uhgroupings application leverages [node.js](http://nodejs.org/) for its deve
 
 The uhgroupings application also makes use of npm, a package manager for installing node modules. The latest releases of node ships with npm so only a node installation is required. Node offers platform installers for both Windows and Mac OSX. They also offer binaries for Windows, Mac OSX and Linux systems. Visit the [download](https://nodejs.org/en/download/) page for more information.
 
-To verify your node installation, open a terminal and enter the node -v command.
+To verify your node installation, open a terminal and enter the node -v command. Your version should match v5.1.0
 
     node -v
 
-To verify your npm installation, open a terminal and enter the npm -v command.
+To verify your npm installation, open a terminal and enter the npm -v command. Your version should match v3.3.12.
 
     npm -v
 
@@ -88,9 +88,9 @@ Open a terminal window and navigate to your application's *sandbox* directory.
 
     cd path/to/uhgroupings/sandbox
 
-Run the default grunt command.
+Run the default grunt command. You need to also add the --force flag. This forces grunt to clean the /public directory, which lives outside of the grunt implementation. Setting the --force flag tells grunt that it has permission to traverse your project directory outside of the directory in which it was defined.
 
-    grunt
+    grunt --force
 
 #### Launch Application
 To preview the application using the Larvel framework, open a terminal window and navigate to the root of your project.
