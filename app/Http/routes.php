@@ -18,31 +18,46 @@
  */
 
 Route::group(['prefix' => 'api'], function () {
-    Route::post('login', 'MockAuthController@login');
+  Route::post('login', 'MockAuthController@login');
 
-    Route::match(['get', 'post'], 'logout' ,'MockAuthController@logout');
+  Route::match(['get', 'post'], 'logout', 'MockAuthController@logout');
 
-    Route::get('session', 'MockAuthController@getSession');
+  Route::get('session', 'MockAuthController@getSession');
 
-    /**
-     * User API Routes
-     */
-    Route::get('user', 'UserController@getUser');
+
+  /**
+   * Groupings Routes
+   */
+  Route::get('groupings/{id}', 'GroupingsController@getGroup');
+  Route::get('groupings', 'GroupingsController@search');
+
+  Route::get('user/{user}/groupings', 'GroupingsController@getGroupingsOwned');
+  Route::get('user/{user}/groupings/owned', 'GroupingsController@getGroupingsOwned');
+
+  /**
+   * User API Routes
+   */
+  Route::get('user', 'UserController@getUser');
+
+  Route::get('users', 'UserController@getUsers');
 });
 
-Route::get('/', ['as' => 'root', function()
-{
+Route::get('/', [
+  'as' => 'root',
+  function () {
     /**
      * Check to see if there is an index.html file, meaning they have setup
      * the Angular app, and return it.  Otherwise display a welcome page.
      */
-    if ( File::exists( \public_path().'/index.html') ) {
-        return \File::get(public_path().'/index.html');
-    } else {
-        return View::make('welcome');
+    if (File::exists(\public_path() . '/index.html')) {
+      return \File::get(public_path() . '/index.html');
     }
-}]);
+    else {
+      return View::make('welcome');
+    }
+  }
+]);
 
-Route::any( '{catchall}', function () {
-    return redirect()->route('root');
-} )->where('catchall', '(.*)');
+Route::any('{catchall}', function () {
+  return redirect()->route('root');
+})->where('catchall', '(.*)');

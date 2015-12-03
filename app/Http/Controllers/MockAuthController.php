@@ -15,7 +15,7 @@ class MockAuthController extends Controller
         "lastName" => "Kent",
         "username" => "ckent",
         "email" => "ckent@email.com",
-        "role" => "admin"
+        "role" => "owner"
     );
 
     private function createSession(Request $request, $key) {
