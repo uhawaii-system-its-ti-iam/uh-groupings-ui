@@ -23,6 +23,19 @@ class GroupingsController extends Controller {
   public function __construct() {
     $this->faker = Faker\Factory::create();
 
+    $this->getGroupings();
+
+    $this->getOrgUsers();
+  }
+
+
+  /**
+   * getGroupings
+   * Check to see if the groupings.json file exists, if it does then load it,
+   * otherwise create fake data using the Faker library.
+   */
+  private function getGroupings() {
+
     if (File::exists(\base_path() . '/sandbox/clientserver/routes/groupings.json')) {
       $this->groupings = json_decode(\File::get(\base_path() . '/sandbox/clientserver/routes/groupings.json'), TRUE);
     }
@@ -58,14 +71,50 @@ class GroupingsController extends Controller {
         )
       );
     }
+  }
 
-
+  /**
+   * getOrgUsers()
+   * Check to see if the orgUsers.json file exists, if it does then load it,
+   * otherwise create the fake data using the Faker library.
+   */
+  private function getOrgUsers() {
+    /**
+     * Check if file exists
+     */
     if (File::exists(\base_path() . '/sandbox/clientserver/routes/orgUsers.json')) {
       $this->orgUsers = json_decode(\File::get(\base_path() . '/sandbox/clientserver/routes/orgUsers.json'), TRUE);
     }
+    else {
+      /**
+       * Populate using Faker data
+       */
+      $this->faker = Faker\Factory::create();
 
+      foreach (range(1, 30) as $index) {
+        $user = array(
+          "userId" => substr(str_replace("-", "", $this->faker->uuid), 0, 24),
+          "email" => $this->faker->email,
+          "isActive" => $this->faker->boolean(50),
+          "firstName" => $this->faker->firstName,
+          "lastName" => $this->faker->lastName,
+          "permissionType" => "Admin"
+        );
+
+        array_push($this->orgUsers, $user);
+      }
+    }
   }
 
+  /**
+   * search
+   * Checked the request object for a query parameter called "query" and then
+   * performs a pseudo-search and returns the object.  If the "query" value is
+   * !zero, then an empty array is returned.
+   *
+   * @param Request $request
+   * @return JSON $grouping || empty array
+   */
   public function search(Request $request) {
     if ($request->input('query')) {
       if ($request->input('query') == '!zero') {
@@ -80,11 +129,19 @@ class GroupingsController extends Controller {
     }
   }
 
+  /**
+   * getGroup
+   * Takes a passed in group id and returns that group from the collection. It
+   * also appends some additional data such as users and options prior to
+   * returning the data.
+   *
+   * @param $groupId
+   * @return JSON $fakeGrouping
+   */
   public function getGroup($groupId) {
     $fakeGrouping = NULL;
 
     if (!$groupId) {
-      // Todo: clean this up to return error
       $error = array('message' => 'Unauthorized');
       return response()->json($error, 401);
     }
@@ -111,6 +168,12 @@ class GroupingsController extends Controller {
     }
   }
 
+  /**
+   * getGroupingsOwned
+   * This just returns the whole groupings object since we are not doing real
+   * filtering in this mock-up
+   * @return JSON $groupings
+   */
   public function getGroupingsOwned() {
     return response()->json($this->groupings);
   }

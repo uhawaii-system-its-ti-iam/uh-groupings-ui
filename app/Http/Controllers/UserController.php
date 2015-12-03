@@ -13,7 +13,16 @@ class UserController extends Controller {
   protected $orgUsers = array();
 
   public function __construct() {
+    $this->getOrgUsers();
+  }
 
+  /**
+   *
+   * Setup the UserController by loading in the JSON data, if it exists or
+   * creating it using the Faker library.
+   *
+   */
+  private function getOrgUsers() {
     if (File::exists(\base_path() . '/sandbox/clientserver/routes/orgUsers.json')) {
       $this->orgUsers = json_decode(\File::get(\base_path() . '/sandbox/clientserver/routes/orgUsers.json'), TRUE);
     }
@@ -23,7 +32,6 @@ class UserController extends Controller {
       foreach (range(1, 30) as $index) {
         $user = array(
           "userId" => substr(str_replace("-", "", $this->faker->uuid), 0, 24),
-          //"564110ea9d0dc7f212813a8c",
           "email" => $this->faker->email,
           "isActive" => $this->faker->boolean(50),
           "firstName" => $this->faker->firstName,
