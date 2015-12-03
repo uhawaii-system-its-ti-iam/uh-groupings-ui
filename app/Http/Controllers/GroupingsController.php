@@ -10,101 +10,109 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Faker;
-//use App\Http\Controllers\Controller;
+use File;
 
 class GroupingsController extends Controller {
   protected $faker;
   protected $username = 'ckent';
   protected $password = 'root';
-  protected $user = array(
-    "firstName" => "Clark",
-    "lastName" => "Kent",
-    "username" => "ckent",
-    "email" => "ckent@email.com",
-    "role" => "admin"
-  );
+  protected $groupings;
+  protected $orgUsers;
+  protected $statusArray = array('active', 'inactive');
 
   public function __construct() {
     $this->faker = Faker\Factory::create();
-  }
 
-  public function search(Request $request) {
-    if ($request->input('query')) {
-      return 'got it!';
-    } else {
-      return 'do not got it';
+    if (File::exists(\base_path() . '/sandbox/clientserver/routes/groupings.json')) {
+      $this->groupings = json_decode(\File::get(\base_path() . '/sandbox/clientserver/routes/groupings.json'), TRUE);
     }
-//    $query = $request->input('query');
-//    return response()->json('search for: ' . $query);
-  }
-
-  public function getGroup($groupId) {
-    return response()->json('get group id: ' .  $groupId);
-  }
-
-  public function getOwned($username) {
-    //$user = $request->session()->get('user') ?: NULL;
-    $status = array('active','inactive');
-
-    $groupings = array(
+    else {
+      $this->groupings = array(
         array(
           "id" => "groupings:faculty:facultyEditors",
           "displayId" => "Groupings:Faculty:FacultyEditors",
           "displayGroup" => "Faculty Editors",
           "description" => $this->faker->paragraph(3),
-          "status" => $this->faker->randomElement( $status )
+          "status" => $this->faker->randomElement($this->statusArray)
         ),
         array(
           "id" => "groupings:faculty:superUsers:facultyAdmin",
           "displayId" => "Groupings:Faculty:SuperUsers:FacultyAdmin",
           "displayGroup" => "Faculty Admin",
           "description" => $this->faker->paragraph(3),
-          "status" => $this->faker->randomElement( $status )
+          "status" => $this->faker->randomElement($this->statusArray)
         ),
         array(
           "id" => "groupings:faculty:general:facultyViewers",
           "displayId" => "Groupings:Faculty:General:FacultyViewers",
           "displayGroup" => "Faculty Viewers",
           "description" => $this->faker->paragraph(3),
-          "status" => $this->faker->randomElement( $status )
+          "status" => $this->faker->randomElement($this->statusArray)
         ),
         array(
           "id" => "groupings:faculty:facultyApprovers",
           "displayId" => "Groupings:Faculty:FacultyApprovers",
           "displayGroup" => "Faculty Approvers",
           "description" => $this->faker->paragraph(3),
-          "status" => $this->faker->randomElement( $status )
+          "status" => $this->faker->randomElement($this->statusArray)
         )
-    );
-    //randomElement($array = array ('groupings:faculty:facultyEditors','groupings:faculty:superUsers:facultyAdmin','c'))
+      );
+    }
 
-//    foreach(range(1,4) as $index)
-//        {
-//            $group = array(
-//                "id" => substr( str_replace("-", "", $this->faker->uuid), 0, 24), //"564110ea9d0dc7f212813a8c",
-//                "email" => $this->faker->email,
-//                "isActive" => $this->faker->boolean(50),
-//                "firstName" => $this->faker->firstName,
-//                "lastName" => $this->faker->lastName,
-//                "permissionType" => "Admin"
-//            );
-//
-//            array_push($orgUsers, $user);
-//        }
 
-        return response()->json($groupings);
+    if (File::exists(\base_path() . '/sandbox/clientserver/routes/orgUsers.json')) {
+      $this->orgUsers = json_decode(\File::get(\base_path() . '/sandbox/clientserver/routes/orgUsers.json'), TRUE);
+    }
 
-//  {
-//    "id": "groupings:faculty:facultyApprovers",
-//    "displayId": "Groupings:Faculty:FacultyApprovers",
-//    "displayGroup": "Faculty Approvers",
-//    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo eu est porta tempor. Vestibulum ante ipsum primis in faucibus orci luctus.",
-//    "status": "inactive"
-//  }
+  }
 
-//    return response()->json($user);
-    //$faker = Faker\Factory::create();
-    //return 'booya - ' . $faker->name;
+  public function search(Request $request) {
+    if ($request->input('query')) {
+      if ($request->input('query') == '!zero') {
+        return response()->json([]);
+      }
+      else {
+        return $this->groupings;
+      }
+    }
+    else {
+      return response()->json([]);
+    }
+  }
+
+  public function getGroup($groupId) {
+    $fakeGrouping = NULL;
+
+    if (!$groupId) {
+      // Todo: clean this up to return error
+      $error = array('message' => 'Unauthorized');
+      return response()->json($error, 401);
+    }
+    else {
+      foreach ($this->groupings as $group) {
+        if ($group['id'] == $groupId) {
+          $fakeGrouping = $group;
+        }
+      }
+
+      $fakeGrouping['basisMemberIds'] = array_slice($this->orgUsers, 0, 16);
+      $fakeGrouping['ownerMemberIds'] = array_slice($this->orgUsers, 5, 5);
+      $fakeGrouping['includedMemberIds'] = array_slice($this->orgUsers, 16, 6);
+      $fakeGrouping['excludedMemberIds'] = array_slice($this->orgUsers, 22, 8);
+
+      $fakeGrouping['options'] = array(
+        "canAddSelf" => FALSE,
+        "canRemoveSelf" => TRUE,
+        "includeInListServe" => TRUE
+      );
+
+      return response()->json($fakeGrouping);
+
+    }
+  }
+
+  public function getGroupingsOwned() {
+    return response()->json($this->groupings);
   }
 
 }

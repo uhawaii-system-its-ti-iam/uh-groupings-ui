@@ -18,55 +18,46 @@
  */
 
 Route::group(['prefix' => 'api'], function () {
-    Route::post('login', 'MockAuthController@login');
+  Route::post('login', 'MockAuthController@login');
 
-    Route::match(['get', 'post'], 'logout' ,'MockAuthController@logout');
+  Route::match(['get', 'post'], 'logout', 'MockAuthController@logout');
 
-    Route::get('session', 'MockAuthController@getSession');
+  Route::get('session', 'MockAuthController@getSession');
 
 
-    /**
-     * Groupings Routes
-     */
-//    Route::get('user/ckent/groupings/owned', 'UserController@getUser');
-    Route::get('groupings/{id}', 'GroupingsController@getGroup');
-//    Route::get('groupings?{query}', 'GroupingsController@search');
-    Route::get('groupings', 'GroupingsController@search');
+  /**
+   * Groupings Routes
+   */
+  Route::get('groupings/{id}', 'GroupingsController@getGroup');
+  Route::get('groupings', 'GroupingsController@search');
 
-    Route::get('user/{user}/groupings', 'GroupingsController@getOwned');
-    Route::get('user/{user}/groupings/owned', 'GroupingsController@getOwned');
+  Route::get('user/{user}/groupings', 'GroupingsController@getGroupingsOwned');
+  Route::get('user/{user}/groupings/owned', 'GroupingsController@getGroupingsOwned');
 
-//    Route::get('user/{user}/groupings/owned', function($user) {
-//        $user = array(
-//            "firstName" => "Blah",
-//            "lastName" => "t",
-//            "username" => "$user",
-//            "email" => "ckent@email.com",
-//            "role" => "admin"
-//        );
-//        return response()->json($user);
-//    });
+  /**
+   * User API Routes
+   */
+  Route::get('user', 'UserController@getUser');
 
-    /**
-     * User API Routes
-     */
-    Route::get('user', 'UserController@getUser');
-    Route::get('users', 'UserController@getUsers');
+  Route::get('users', 'UserController@getUsers');
 });
 
-Route::get('/', ['as' => 'root', function()
-{
+Route::get('/', [
+  'as' => 'root',
+  function () {
     /**
      * Check to see if there is an index.html file, meaning they have setup
      * the Angular app, and return it.  Otherwise display a welcome page.
      */
-    if ( File::exists( \public_path().'/index.html') ) {
-        return \File::get(public_path().'/index.html');
-    } else {
-        return View::make('welcome');
+    if (File::exists(\public_path() . '/index.html')) {
+      return \File::get(public_path() . '/index.html');
     }
-}]);
+    else {
+      return View::make('welcome');
+    }
+  }
+]);
 
-Route::any( '{catchall}', function () {
-    return redirect()->route('root');
-} )->where('catchall', '(.*)');
+Route::any('{catchall}', function () {
+  return redirect()->route('root');
+})->where('catchall', '(.*)');
