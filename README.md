@@ -100,6 +100,8 @@ To preview the application using the Larvel framework, open a terminal window an
 Run the below command.
 
     php artisan serve
+    
+Open a browser window and navigate to *http://localhost:8000*. This will have the affect of launching the application with the **PHP-based Larvel framework**. The framework will serve up files under the */public* directory. The front-end assets that live within the */public* directory are copied from the */sandbox/production* directory, which are compiled and copied from the */sandbox/development* directory when the **grunt --force** command is issued.
 
 ## Understanding the Project Architecture
 ***
@@ -107,11 +109,63 @@ TBA
 ### Working with Node Development Server
 TBA
 ### Generate JavaScript Documentation
-TBA
-### Enable Real-Time JavaScript Linter
-TBA
+The UH Groupings JavaScript implementation has been documented using the [yuiDoc](http://yui.github.io/yuidoc/) tool. This allows us to render out a project API website that describes all JavaScript functionality. To generate JavaScript documentation, please follow the below steps:
+
+Open a terminal window and navigate to your application's *sandbox* directory.
+
+    cd path/to/uhgroupings/sandbox
+    
+Run the *grunt docs* command to generate documentation.
+
+    grunt docs
+    
+All documentation assets are ouput to the */docs* directory. When running the UH Groupings *Node Development Server* you can preview the documentation by opening a browser and navigating to *http://localhost:4000/docs* route. As of this writing the documentation is only rendered to *port 4000*, which represents the code base in *development* mode. In addition, the */docs* directory is not being tracked by git and has been added to the .gitignore file since it is a compiled asset.
+
+### Enable Real-Time Markup, CSS & JavaScript Watches & Linters
+The UH Groupings application ships with a **code watchers** for the application's HTML, CSS and JavaScript development. The watchers are executed via a terminal window and alert the developer when specific implementations do not adhere to predefined coding standards and practices. The watchers can be thought of as a pseudo compilers for front-end developers.
+
+To enable the main **HTML watcher** on the application's **index file**, open a separate terminal window and navigate to your application's *sandbox* directory.
+
+    cd path/to/uhgroupings/sandbox
+    
+Run the **grunt index.watcher** command.
+
+    grunt index.watcher
+    
+To enable the **CSS watcher** on the application's **.less files**, open a separate terminal window and navigate to your application's *sandbox* directory.
+
+    cd path/to/uhgroupings/sandbox
+    
+Run the **grunt less.watcher** command.
+
+    grunt less.watcher
+    
+To enable the **JavaScript watcher** on the application's **.js files**, open a separate terminal window and navigate to your application's *sandbox* directory.
+
+    cd path/to/uhgroupings/sandbox
+    
+Run the **grunt js.watcher** command.
+
+    grunt js.watcher
+
+Note: To stop any of the above **watch** operations you can type **Crtl + C** in the terminal window.
+
 ### Execute JavaScript Unit Tests
-TBA
+The UH Groupings code base ships with the ability to execute JavaScript Unit Tests. To execute JavaScript Unit Tests, please follow the below steps:
+
+Open a terminal window and navigate to your application's *sandbox* directory.
+
+    cd path/to/uhgroupings/sandbox
+    
+Run the *grunt test* command to start the JavaScript Unit Tests.
+    
+    grunt test
+
+All tests are executed within the context of the terminal window. The UH Groupings project leverages [Karma](http://karma-runner.github.io/0.12/index.html), [Jasmine](http://jasmine.github.io/) and [PhantomJS](http://phantomjs.org/) for its Unit Testing Framework. As a point of clarification, the code base ships with the ability to run JavaScript Unit Tests, but, due to time constraints, only provides a single implementation example.
+
+The *TranslationService.spec.js* is used to unit-test the *TranslationService.js* implementation. For detailed instructions, as a starting point, on JavaScript Unit Testing, please checkout out [Angular's Developer Guide on Unit Testing](https://docs.angularjs.org/guide/unit-testing).
+
+    path/to/uhgroupings/sandbox/development/js/src/stack/i18n
 
 ## Licensing
 ***
