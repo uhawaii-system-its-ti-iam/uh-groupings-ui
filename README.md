@@ -105,9 +105,91 @@ Open a browser window and navigate to *http://localhost:8000*. This will have th
 
 ## Understanding the Project Architecture
 ***
-TBA
+The UH Groupings application was built based upon the notion that the **front-end** and **back-end** should be **separate** and should only **communicate through RESTful APIs**. In addition, back-end development should never block or prevent work from continuing on the front-end and vice versa. With this in mind, let's take a look at the application's directory structure:
+
+        uhgroupings
+            - app
+            - bootstrap
+            - config
+            - database
+            - public
+            - resources
+            - sandbox       // Anuglar front-end lives here.
+            - storage
+            - tests
+            - vendor
+            - artisan
+            - composer.json
+            - composer.lock
+            - gulpfile.js
+            - package.json
+            - phpspec.yml
+            - phpunit.xml
+            - server.php
+    
+The entire **root** directory structure of the UH Groupings application comes from the [laravel](http://laravel.com/) framework. The */sandbox* directory is the only custom directory added to the root directory structure, which houses all the code for the Angular-based front-end. The laravel framework doesn't know about nor does it care about the */sandbox* directory. Laravel only cares to serve up the content that lives within the */public* directory. It is important to understand that, when we run the **grunt --force** command, from within the */sandbox* directory, at a high-level, the Angular-based front-end is compiled and copied into laravel's */public* directory. Next, let's take a look a the */sandbox* directory.
+
+    - sandbox
+        - clientserver          // Node develoment server.
+        - development           // Development environment. Houses un-minified, un-compressed assets.
+        - production            // Pseudo production environment. Houses minified, compressed assets.
+        - tasks                 // Grunt plugin configurations.
+        - clientserver.js       // Node server initialization script.
+        - Gruntfile.js          // Grunt (task runner) configuration.
+        - karma.conf.js         // Unit test configuration.
+        - package.json          // Dependency configuration for node & npm.
+
+The */sandbox* directory is where all front-end development takes place. This directory provides developers with a multitude of development tools including a JavaScript unit-testing framework (i.e, [Karma](http://karma-runner.github.io/0.13/index.html), [Jasmine](http://jasmine.github.io/)), a JavaScript documentation tool (i.e, [yuiDoc](http://yui.github.io/yuidoc/)), linters (i.e, [jshint](http://jshint.com/)) and terminal watch operations (i.e, [grunt watch](https://github.com/gruntjs/grunt-contrib-watch)) for working with and compiling HTML, LESS and JavaScript code. In addition, the */sandbox* directory provides a framework to develop and mock RESTful APIs (i.e., [Express](http://expressjs.com/en/index.html)) as well as providing isolated development and production environments for fast and easy testing. These features have been provided so that front-end developers have the ability, by mocking API calls, to work in tandem with back-end developers while RESTful APIs are being developed. Both sides simply need to agree upon the format and structure of data (i.e., typically JSON).
+
+All of the above mentioned tools are described in more detail in the below sections.
+
 ### Working with Node Development Server
-TBA
+The Node Development Server allows developers the ability to preview the front-end code (using a mocked API) in both a development and production environment.
+
+Open a terminal window and navigate to your application's *sandbox* directory.
+
+    cd path/to/uhgroupings/sandbox
+    
+Run the *npm start* command.
+
+    npm start
+    
+    // The npm start command outputs the below information in the terminal.
+    16 Dec 14:53:39 - [nodemon] v1.3.8
+    16 Dec 14:53:39 - [nodemon] to restart at any time, enter `rs`
+    16 Dec 14:53:39 - [nodemon] watching: *.*
+    16 Dec 14:53:39 - [nodemon] starting `node clientserver`
+    Listening on port:  4000
+    Listening on port:  5000
+    
+Preview the UH Groupings application in the mocked development (i.e., un-minified, un-compressed) environment.
+
+    http://localhost:4000
+    
+Preview the UH Groupings application in the mocked production (i.e., minified, compressed) environment.
+
+    http://localhost:5000
+
+#### Node Development Server Implementation Locations
+
+##### Mocked API Implementation
+The UH Groupings application currently provides examples of mocked API services. The implementation can be found at the below file location:
+
+    path/to/uhgroupings/sandbox/clientserver/routes
+
+##### Main Application Index (template) Implementation
+The **index.html** file that exists within the */sandbox/development*, */sandbox/production* and */public* is a compiled asset. The true location of index.html implementation lives within the node server under the */sandbox/clientserver/views* directory and is housed under the **app.html** file. If changes need to be made to the index.html file, they should be made to the app.html file directly. Once changes have been made they need to be propagated to the */sandbox/development*, */sandbox/production* and */public* directories. You can choose any of the options below to accomplish this task:
+
+**Option 1**. Use **index.watcher** described in the **Enable Real-Time Markup, CSS & JavaScript Watches & Linters** section.
+
+**Option 2**. Run the *grunt dev* command to build to the */sandbox/development* directory.
+
+**Option 3**. Run the *grunt prod* command to build to the */sandbox/production* directory.
+
+**Option 4**. Run the *grunt laravel --force* command to build to the */public* directory.
+
+**Option 5**. Run the *grunt --force* command to build to all three directories.
+
 ### Generate JavaScript Documentation
 The UH Groupings JavaScript implementation has been documented using the [yuiDoc](http://yui.github.io/yuidoc/) tool. This allows us to render out a project API website that describes all JavaScript functionality. To generate JavaScript documentation, please follow the below steps:
 
@@ -122,7 +204,7 @@ Run the *grunt docs* command to generate documentation.
 All documentation assets are ouput to the */docs* directory. When running the UH Groupings *Node Development Server* you can preview the documentation by opening a browser and navigating to *http://localhost:4000/docs* route. As of this writing the documentation is only rendered to *port 4000*, which represents the code base in *development* mode. In addition, the */docs* directory is not being tracked by git and has been added to the .gitignore file since it is a compiled asset.
 
 ### Enable Real-Time Markup, CSS & JavaScript Watches & Linters
-The UH Groupings application ships with **code watchers** for the application's HTML, CSS and JavaScript development. The watchers are executed via a terminal window and alert the developer when specific implementations do not adhere to predefined coding standards and practices. The watchers can be thought of as pseudo compilers for front-end developers.
+The UH Groupings application ships with a **code watchers** for the application's HTML, CSS and JavaScript development. The watchers are executed via a terminal window and alert the developer when specific implementations do not adhere to predefined coding standards and practices. The watchers can be thought of as a pseudo compilers for front-end developers.
 
 To enable the main **HTML watcher** on the application's **index file**, open a separate terminal window and navigate to your application's *sandbox* directory.
 
@@ -163,7 +245,7 @@ Run the *grunt test* command to start the JavaScript Unit Tests.
 
 All tests are executed within the context of the terminal window. The UH Groupings project leverages [Karma](http://karma-runner.github.io/0.12/index.html), [Jasmine](http://jasmine.github.io/) and [PhantomJS](http://phantomjs.org/) for its Unit Testing Framework. As a point of clarification, the code base ships with the ability to run JavaScript Unit Tests, but, due to time constraints, only provides a single implementation example.
 
-As an example, the *TranslationService.spec.js* is used to unit-test the *TranslationService.js* implementation. For detailed instructions, as a starting point, on JavaScript Unit Testing, please checkout out [Angular's Developer Guide on Unit Testing](https://docs.angularjs.org/guide/unit-testing).
+The *TranslationService.spec.js* is used to unit-test the *TranslationService.js* implementation. For detailed instructions, as a starting point, on JavaScript Unit Testing, please checkout out [Angular's Developer Guide on Unit Testing](https://docs.angularjs.org/guide/unit-testing).
 
     path/to/uhgroupings/sandbox/development/js/src/stack/i18n
 
