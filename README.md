@@ -127,7 +127,7 @@ The UH Groupings application was built based upon the notion that the **front-en
             - phpunit.xml
             - server.php
     
-The entire **root** directory structure of the UH Groupings application comes from the [laravel](http://laravel.com/) framework. The */sandbox* directory is the only custom directory added to the root directory structure, which houses all the code for the Angular-based front-end. The laravel framework doesn't know about nor does it care about the */sandbox* directory. Laravel only cares to serve up the content that lives within the */public* directory. It is important to understand that, when we run the **grunt --force** command, from within the */sandbox* directory, at a high-level, the Angular-based front-end is compiled and copied into laravel's */public* directory. Next, let's take a look a the */sandbox* directory.
+The entire **root** directory structure of the UH Groupings application comes from the [laravel](http://laravel.com/) framework. The */sandbox* directory is the only custom directory added to the root directory structure, which houses all the code for the Angular-based front-end. The laravel framework doesn't know about nor does it care about the */sandbox* directory. Laravel only cares to serve up the content that lives within the */public* directory. It is important to understand that, when we run the **grunt --force** command, from within the */sandbox* directory, the Angular-based front-end is compiled and copied into laravel's */public* directory. Next, let's take a look at the */sandbox* directory.
 
     - sandbox
         - clientserver          // Node develoment server.
@@ -178,9 +178,9 @@ The UH Groupings application currently provides examples of mocked API services.
     path/to/uhgroupings/sandbox/clientserver/routes
 
 ##### Main Application Index (template) Implementation
-The **index.html** file that exists within the */sandbox/development*, */sandbox/production* and */public* is a compiled asset. The true location of index.html implementation lives within the node server under the */sandbox/clientserver/views* directory and is housed under the **app.html** file. If changes need to be made to the index.html file, they should be made to the app.html file directly. Once changes have been made they need to be propagated to the */sandbox/development*, */sandbox/production* and */public* directories. You can choose any of the options below to accomplish this task:
+The **index.html** file that exists within the */sandbox/development*, */sandbox/production* and */public* is a compiled asset. The true location of the index.html implementation lives within the node server under the */sandbox/clientserver/views* directory and is housed under the **app.html** file. If changes need to be made to the index.html file, they should be made to the app.html file directly. Once changes have been made they need to be propagated to the */sandbox/development*, */sandbox/production* and */public* directories. You can choose any of the options below to accomplish this task:
 
-**Option 1**. Use **index.watcher** described in the **Enable Real-Time Markup, CSS & JavaScript Watches & Linters** section.
+**Option 1**. Use **index.watcher** described in the **Enable Real-Time Markup, CSS & JavaScript Watches & Linters** section. This grunt task will watch the app.html file and re-compile the app.html into the index.html file for the */sandbox/development* only. This is the typical work-flow since feature development is meant to take place using the */sandbox/development* directory while the */sandbox/production* and */public* directories are used to test solidified, production-ready code before being committed.
 
 **Option 2**. Run the *grunt dev* command to build to the */sandbox/development* directory.
 
@@ -201,7 +201,7 @@ Run the *grunt docs* command to generate documentation.
 
     grunt docs
     
-All documentation assets are ouput to the */docs* directory. When running the UH Groupings *Node Development Server* you can preview the documentation by opening a browser and navigating to *http://localhost:4000/docs* route. As of this writing the documentation is only rendered to *port 4000*, which represents the code base in *development* mode. In addition, the */docs* directory is not being tracked by git and has been added to the .gitignore file since it is a compiled asset.
+All documentation assets are ouput to the */sandbox/development/docs* directory. When running the UH Groupings *Node Development Server* you can preview the documentation by opening a browser and navigating to *http://localhost:4000/docs* route. As of this writing the documentation is only rendered to *port 4000*, which represents the code base in *development* mode. In addition, the */sandbox/development/docs* directory is not being tracked by git and has been added to the .gitignore file since it is a compiled asset.
 
 ### Enable Real-Time Markup, CSS & JavaScript Watches & Linters
 The UH Groupings application ships with a **code watchers** for the application's HTML, CSS and JavaScript development. The watchers are executed via a terminal window and alert the developer when specific implementations do not adhere to predefined coding standards and practices. The watchers can be thought of as a pseudo compilers for front-end developers.
