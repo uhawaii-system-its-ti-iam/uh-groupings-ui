@@ -25,7 +25,7 @@ Laravel utilizes Composer to manage its dependencies. Open a terminal window and
         cd path/to/uhgroupings
 
 Run the below commands.
-    
+
     curl -sS https://getcomposer.org/installer | php
     mv composer.phar /usr/local/bin/composer
 
@@ -100,7 +100,7 @@ To preview the application using the Larvel framework, open a terminal window an
 Run the below command.
 
     php artisan serve
-    
+
 Open a browser window and navigate to *http://localhost:8000*. This will have the affect of launching the application with the **PHP-based Larvel framework**. The framework will serve up files under the */public* directory. The front-end assets that live within the */public* directory are copied from the */sandbox/production* directory, which are compiled and copied from the */sandbox/development* directory when the **grunt --force** command is issued.
 
 ## Understanding the Project Architecture
@@ -126,7 +126,7 @@ The UH Groupings application was built based upon the notion that the **front-en
             - phpspec.yml
             - phpunit.xml
             - server.php
-    
+
 The entire **root** directory structure of the UH Groupings application comes from the [laravel](http://laravel.com/) framework. The */sandbox* directory is the only custom directory added to the root directory structure, which houses all the code for the Angular-based front-end. The laravel framework doesn't know about nor does it care about the */sandbox* directory. Laravel only cares to serve up the content that lives within the */public* directory. It is important to understand that, when we run the **grunt --force** command, from within the */sandbox* directory, the Angular-based front-end is compiled and copied into laravel's */public* directory. Next, let's take a look at the */sandbox* directory.
 
     - sandbox
@@ -149,11 +149,11 @@ The Node Development Server allows developers the ability to preview the front-e
 Open a terminal window and navigate to your application's *sandbox* directory.
 
     cd path/to/uhgroupings/sandbox
-    
+
 Run the *npm start* command.
 
     npm start
-    
+
     // The npm start command outputs the below information in the terminal.
     16 Dec 14:53:39 - [nodemon] v1.3.8
     16 Dec 14:53:39 - [nodemon] to restart at any time, enter `rs`
@@ -161,11 +161,11 @@ Run the *npm start* command.
     16 Dec 14:53:39 - [nodemon] starting `node clientserver`
     Listening on port:  4000
     Listening on port:  5000
-    
+
 Preview the UH Groupings application in the mocked development (i.e., un-minified, un-compressed) environment.
 
     http://localhost:4000
-    
+
 Preview the UH Groupings application in the mocked production (i.e., minified, compressed) environment.
 
     http://localhost:5000
@@ -196,11 +196,11 @@ The UH Groupings JavaScript implementation has been documented using the [yuiDoc
 Open a terminal window and navigate to your application's *sandbox* directory.
 
     cd path/to/uhgroupings/sandbox
-    
+
 Run the *grunt docs* command to generate documentation.
 
     grunt docs
-    
+
 All documentation assets are ouput to the */sandbox/development/docs* directory. When running the UH Groupings *Node Development Server* you can preview the documentation by opening a browser and navigating to *http://localhost:4000/docs* route. As of this writing the documentation is only rendered to *port 4000*, which represents the code base in *development* mode. In addition, the */sandbox/development/docs* directory is not being tracked by git and has been added to the .gitignore file since it is a compiled asset.
 
 ### Enable Real-Time Markup, CSS & JavaScript Watches & Linters
@@ -209,23 +209,23 @@ The UH Groupings application ships with a **code watchers** for the application'
 To enable the main **HTML watcher** on the application's **index file**, open a separate terminal window and navigate to your application's *sandbox* directory.
 
     cd path/to/uhgroupings/sandbox
-    
+
 Run the **grunt index.watcher** command.
 
     grunt index.watcher
-    
+
 To enable the **CSS watcher** on the application's **.less files**, open a separate terminal window and navigate to your application's *sandbox* directory.
 
     cd path/to/uhgroupings/sandbox
-    
+
 Run the **grunt less.watcher** command.
 
     grunt less.watcher
-    
+
 To enable the **JavaScript watcher** on the application's **.js files**, open a separate terminal window and navigate to your application's *sandbox* directory.
 
     cd path/to/uhgroupings/sandbox
-    
+
 Run the **grunt js.watcher** command.
 
     grunt js.watcher
@@ -238,9 +238,9 @@ The UH Groupings code base ships with the ability to execute JavaScript Unit Tes
 Open a terminal window and navigate to your application's *sandbox* directory.
 
     cd path/to/uhgroupings/sandbox
-    
+
 Run the *grunt test* command to start the JavaScript Unit Tests.
-    
+
     grunt test
 
 All tests are executed within the context of the terminal window. The UH Groupings project leverages [Karma](http://karma-runner.github.io/0.12/index.html), [Jasmine](http://jasmine.github.io/) and [PhantomJS](http://phantomjs.org/) for its Unit Testing Framework. As a point of clarification, the code base ships with the ability to run JavaScript Unit Tests, but, due to time constraints, only provides a single implementation example.
