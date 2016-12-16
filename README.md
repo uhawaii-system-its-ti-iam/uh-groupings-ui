@@ -1,3 +1,5 @@
+The below information is for the UH Grouping in Laravel done by Unicon.
+
 # UH Groupings
 * * *
 The UH Groupings repository houses a mobile-friendly front-end for the University of Hawaii's Grouper implementation. The UH Groupings application is meant to consume backend API calls provided by the laravel back-end, that ships with this code base. This document outlines how to setup the UH Groupings application (i.e., both the front-end and back-end). Please note, that as of this writing, the laravel back-end is a stubbed implementation used to stand-up the front-end. Additional work and updates to the UH Groupings application will be handled by the University of Hawaii.
