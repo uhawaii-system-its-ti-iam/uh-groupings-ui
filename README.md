@@ -1,4 +1,6 @@
-The below information is for the UH Grouping in Laravel done by Unicon.
+The below information is for the UH Grouping in Laravel done by Unicon. The code for the Unicon code can be found in the release version v0.3.
+
+Everything after Version v1.0 will be the UHGrouping apps made by the IAM Web App Development Team
 
 # UH Groupings
 * * *
