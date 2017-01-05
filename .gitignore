@@ -1,24 +1,7 @@
-# Angular ignores
-# ---------------
-.DS_Store
-node_modules
-npm-debug.log
-sandbox/development/docs
-production
-
-# Public ignores
-# ---------------
-public/css
-public/fonts
-public/i18n
-public/images
-public/js
-public/index.html
-public/favicon.ico
-
-# Laravel related
-# ---------------
-/vendor
-/node_modules
-Homestead.yaml
-.env
+.classpath
+.project
+/.settings
+/bin
+/target
+*-overrides.properties
+src/main/resources/static/javascript/tsconfig.json

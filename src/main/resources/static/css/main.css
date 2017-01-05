@@ -1,0 +1,147 @@
+@font-face {
+    font-family: cinzel-regular;
+    src: url(/myiam/fonts/Cinzel-Regular.ttf);
+}
+
+@font-face {
+    font-family: cormorant-upright-regular;
+    src: url(/myiam/fonts/CormorantUpright-Regular.ttf);
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    padding-top: 60px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    padding-bottom: 50px;
+    background-color: white;
+}
+
+h3 {
+   color: #BD9319;
+}
+
+a {
+    color: #0275d8;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0275d8;
+    text-decoration: underline;
+}
+
+td.uh-pre {
+    white-space: pre;           /* CSS 2.0 */
+    white-space: pre-wrap;      /* CSS 2.1 */
+    white-space: pre-line;      /* CSS 3.0 */
+    white-space: -pre-wrap;     /* Opera 4-6 */
+    white-space: -o-pre-wrap;   /* Opera 7 */
+    white-space: -moz-pre-wrap; /* Mozilla */
+    white-space: -hp-pre-wrap;  /* HP Printers */
+    display: inline-block;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.uh-branding-one {
+    font-family: cinzel-regular, serif;
+    font-size: 1.6em;
+    font-style: normal;
+    letter-spacing: 2.2px;
+    color: #777;
+}
+.uh-branding-two {
+    font-family: cormorant-upright-regular, cursive;
+    font-size: 0.8em;
+    font-style: normal;
+    color: #777;
+}
+
+.navbar {
+    background-color: white;
+}
+.navbar-fixed-top .nav {
+    padding-top: 40px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    background-color: white;
+}
+.navbar-fixed-top .navbar-brand {
+    padding-left: 20px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    min-height: 50px;
+    min-width: 50px;
+}
+.navbar-fixed-top .navbar-brand > img {
+    height: 50px;
+    width: 50px;
+    background-color: transparent;
+}
+.navbar-brand.uh-nav-app-name {
+    height: 50px;
+    width: auto;
+    padding-top: 20px;
+    background-color: transparent;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:focus,
+.navbar-default .navbar-nav > .open > a:hover {
+    color: #555;
+    background-color: white;
+}
+
+.footer {
+    position: absolute;
+    padding-top: 5px;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 50px;
+    font-size: 100%;
+    text-align: center;
+}
+
+@media(min-width:768px) {
+    body {
+        padding-top: 100px; /* Required padding for .navbar-fixed-top. Change if height of navigation changes. */
+        padding-bottom: 50px;
+    }
+    .navbar {
+        min-height: 90px;
+    }
+    .navbar-fixed-top .navbar-brand > img {
+        position: fixed;
+        top: 0px;
+        left: 25px;
+        height: 90px;
+        width: 90px;
+        background-color: transparent;
+    }
+    .navbar-brand.uh-nav-app-name {
+        position: fixed;
+        top: 0px;
+        left: 115px;
+        height: 90px;
+        width: auto;
+        padding-top: 51px;
+        font-size: 22px;
+        white-space: nowrap;
+        text-align: left;
+        background-color: transparent;
+    }
+    .uh-branding-one {
+        font-size: 1.8em;
+    }
+    .uh-branding-two {
+        font-size: 1.0em;
+    }
+
+}
+
