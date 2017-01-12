@@ -1,5 +1,7 @@
 A web application to display holidays used by UH.
 
+[![Build Status](https://travis-ci.org/uhawaii-system-its-ti-iam/uhgroupings.png?branch=master)](https://travis-ci.org/uhawaii-system-its-ti-iam/uhgroupings)
+[![Coverage Status](https://coveralls.io/repos/github/uhawaii-system-its-ti-iam/uhgroupings/badge.svg?branch=master)](https://coveralls.io/github/uhawaii-system-its-ti-iam/uhgroupings?branch=master)
 ##### Build Tool
 First, you need to download and install maven (version 3.2.1+).
 
@@ -11,7 +13,7 @@ You'll need a Java JDK to build and run the project (version 1.8).
 The files for the project are kept in a code repository,
 available from here:
 
-https://github.com/fduckart/uh-holiday-webapp-boot
+https://github.com/uhawaii-system-its-ti-iam/uhgroupings
 
 ##### Building
 Install the necessary project dependencies:
