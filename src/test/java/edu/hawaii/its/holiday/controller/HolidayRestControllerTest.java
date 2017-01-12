@@ -24,7 +24,7 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-public class HolidayRestControllerSystemTest {
+public class HolidayRestControllerTest {
 
     final MediaType APPLICATION_JSON_UTF8 =
             new MediaType(MediaType.APPLICATION_JSON.getType(),

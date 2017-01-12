@@ -14,7 +14,7 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-public class EmployeeServiceSystemTest {
+public class EmployeeServiceTest {
 
     @Autowired
     private EmployeeService employeeService;

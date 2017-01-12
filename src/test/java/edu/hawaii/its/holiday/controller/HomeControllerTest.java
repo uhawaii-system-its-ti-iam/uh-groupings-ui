@@ -19,7 +19,7 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-public class HomeControllerSystemTest {
+public class HomeControllerTest {
 
     @Autowired
     private HomeController homeController;

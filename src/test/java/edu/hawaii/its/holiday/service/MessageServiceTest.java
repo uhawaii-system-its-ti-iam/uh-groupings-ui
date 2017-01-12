@@ -24,7 +24,7 @@ import edu.hawaii.its.holiday.type.Message;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class MessageServiceSystemTest {
+public class MessageServiceTest {
 
     @Autowired
     private MessageService messageService;
