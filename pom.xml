@@ -180,7 +180,8 @@
                                 <echo>$ mvn clean test</echo>
                                 <echo>$ mvn clean test -Dtest=*SystemTest </echo>
                                 <echo>$ mvn clean package</echo>
-                                <echo>$ mvn -Dmaven.test.skip=true clean package</echo>                                
+                                <echo>$ mvn -Dmaven.test.skip=true clean package</echo>
+                                <echo>$ mvn clean spring-boot:run</echo>
                                 <echo>$ mvn clean test cobertura:cobertura</echo>
                             </tasks>
                         </configuration>
