@@ -29,22 +29,22 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/myiam/">
+                <a class="navbar-brand" href="/myiam/" th:href="@{/}">
                     <img src="images/seal.jpg" alt=""></img>
                 </a>
-                <a class="navbar-brand uh-nav-app-name" href="/myiam/">
+                <a class="navbar-brand uh-nav-app-name" href="/myiam/" th:href="@{/}">
                     Holidays
                 </a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/myiam/">Home</a></li>
-                    <li><a href="/myiam/contact">Contact</a></li>
-                    <li><a href="/myiam/faq">About</a></li>
+                    <li><a href="/myiam/" th:href="@{/}">Home</a></li>
+                    <li><a href="/myiam/contact" th:href="@{/contact}">Contact</a></li>
+                    <li><a href="/myiam/faq" th:href="@{/faq}">FAQ</a></li>
                     <li  class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Campuses <span class="caret"></span></a>
-
+                        
                         <ul class="dropdown-menu" role="menu">
                           <li><a href="https://hilo.hawaii.edu/"     target="_uhhi">Hilo</a></li>
                           <li><a href="https://manoa.hawaii.edu/"    target="_uhma">Manoa</a></li>
@@ -103,14 +103,13 @@
     </div>
     <!-- / Content container. -->
 
-
-   <footer class="footer">
-       <div class="container">
-           <span class='uh-branding-one'>University</span>
-           <span class='uh-branding-two'>of&nbsp;</span>
-           <span class='uh-branding-one'>Hawai&#8216;i</span>
-       </div>
-   </footer>
+    <footer class="footer">
+        <div class="container">
+            <span class='uh-branding-one'>University</span>
+            <span class='uh-branding-two'>of&nbsp;</span>
+            <span class='uh-branding-one'>Hawai&#8216;i</span>
+        </div>
+    </footer>
 
     <script type="text/javascript" src="webjars/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
