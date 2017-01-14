@@ -39,7 +39,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/dates", method = RequestMethod.GET)
-    public String faq(Locale locale, Model model) {
+    public String dates(Locale locale, Model model) {
         logger.info("User at dates.");
         return "dates";
     }
