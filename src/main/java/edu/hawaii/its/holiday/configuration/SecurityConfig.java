@@ -150,6 +150,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/javascript/**").permitAll()
                 .antMatchers("/home").permitAll()
+                .antMatchers("/dates").permitAll()
                 .antMatchers("/faq").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/logout").permitAll()
