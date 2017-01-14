@@ -29,7 +29,7 @@ public class HomeController {
 
     @RequestMapping(value = "/faq", method = RequestMethod.GET)
     public String faq(Locale locale, Model model) {
-        logger.info("User at contact.");
+        logger.info("User at faq.");
         return "faq";
     }
 

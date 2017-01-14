@@ -188,7 +188,7 @@
                     <instrumentation>
                         <excludes>
                             <exclude>edu/hawaii/its/holiday/configuration/SpringBootWebApplication.class</exclude>                            
-                            <exclude>edu/hawaii/its/holiday/access/UserDetailsServiceImpl</exclude>
+                            <exclude>edu/hawaii/its/holiday/access/UserDetailsServiceImpl.class</exclude>
                         </excludes>
                     </instrumentation>
                     <!-- aggregated reports for multi-module projects -->

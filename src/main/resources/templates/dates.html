@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" ng-app="holidayApp">
+<head>
+    <title>UH Holidays</title>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="css/main.css" />
+
+    <script type="text/javascript" src="webjars/angularjs/1.5.8/angular.min.js"></script>
+    <script type="text/javascript" src="javascript/holiday.app.js"></script>
+    <script type="text/javascript" src="javascript/holiday.service.js"></script>
+    <script type="text/javascript" src="javascript/holiday.controller.js"></script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/myiam/" th:href="@{/}">
+                    <img src="images/seal.jpg" alt=""></img>
+                </a>
+                <a class="navbar-brand uh-nav-app-name" href="/myiam/" th:href="@{/}">
+                    Holidays
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/myiam/" th:href="@{/}">Home</a></li>
+                    <li><a href="/myiam/contact" th:href="@{/contact}">Contact</a></li>
+                    <li><a href="/myiam/faq" th:href="@{/faq}">FAQ</a></li>
+                    <li  class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Campuses <span class="caret"></span></a>
+                        
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="https://hilo.hawaii.edu/"     target="_uhhi">Hilo</a></li>
+                          <li><a href="https://manoa.hawaii.edu/"    target="_uhma">Manoa</a></li>
+                          <li><a href="http://westoahu.hawaii.edu/" target="_uhwo">West Oahu</a></li>
+                          <li class="divider"></li>
+                          <li><a href="https://hawaii.hawaii.edu/" target="_uhcchi">Hawaii</a></li>
+                          <li><a href="http://honolulu.hawaii.edu/" target="_uhccho">Honolulu</a></li>
+                          <li><a href="http://kapiolani.hawaii.edu/" target="_uhccka">Kapiolani</a></li>
+                          <li><a href="http://kauai.hawaii.edu/" target="_uhccku">Kauai</a></li>
+                          <li><a href="http://www.leeward.hawaii.edu/" target="_uhccle">Leeward</a></li>
+                          <li><a href="http://maui.hawaii.edu/" target="_uhccmu">Maui</a></li>
+                          <li><a href="https://windward.hawaii.edu/" target="_uhccwi">Windward</a></li>
+                        </ul>
+
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!--  Content container -->
+    <div class="container-fluid">
+        <div ng-controller="HolidayJsController" data-ng-init="init()">
+            <div class="row" style="padding-bottom: 6px;">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b>&nbsp;Year&nbsp;&nbsp;</b>
+                            <select id="yearCode" name="yearCode" ng-model="yearCode" ng-change="yearChange()">
+                                <option ng-repeat="y in years">{{y}}</option>
+                                <option value=''>(all years) </option>
+                            </select>
+                        </div>
+                        <table class="table table-bordered table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Holiday</th>
+                                    <th>Observed</th>
+                                    <th>Official</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="h in holidays | filter:yearCode">
+                                    <td>{{h.description}}</td>
+                                    <td>{{h.observedDate}}</td>
+                                    <td>{{h.officialDate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Content container. -->
+
+    <footer class="footer">
+        <div class="container">
+            <span class='uh-branding-one'>University</span>
+            <span class='uh-branding-two'>of&nbsp;</span>
+            <span class='uh-branding-one'>Hawai&#8216;i</span>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="webjars/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="javascript/holiday-util.js"></script>
+
+</body>
+</html>
