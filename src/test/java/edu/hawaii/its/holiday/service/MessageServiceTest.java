@@ -12,16 +12,19 @@ import javax.persistence.EntityManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.hawaii.its.holiday.type.Message;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class MessageServiceTest {
@@ -35,6 +38,12 @@ public class MessageServiceTest {
         assertEquals("Y", message.getEnabled());
         assertEquals(Integer.valueOf(Message.GATE_MESSAGE), message.getTypeId());
         assertTrue(message.getText().startsWith("University of Hawaii Information"));
+
+        // Turn down logging just for a second, just 
+        // to reduce the Exception noise a little bit.
+        Logger logger = (Logger) LoggerFactory.getLogger(MessageServiceImpl.class);
+        Level level = logger.getLevel();
+        logger.setLevel(Level.OFF);
 
         // No matching ID, so null returned.
         message = messageService.findMessage(-1);
@@ -52,6 +61,9 @@ public class MessageServiceTest {
         message = messageService.findMessage(Message.ACCESS_DENIED_MESSAGE);
         assertThat(message.getId(), equalTo(Message.ACCESS_DENIED_MESSAGE));
         assertThat(message.getText(), containsString("system is restricted"));
+
+        // Put original logging level back.
+        logger.setLevel(level);
     }
 
     @Test

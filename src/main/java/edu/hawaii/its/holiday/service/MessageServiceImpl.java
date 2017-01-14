@@ -3,8 +3,8 @@ package edu.hawaii.its.holiday.service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,7 +16,7 @@ import edu.hawaii.its.holiday.type.Message;
 @Service("messageService")
 public class MessageServiceImpl implements MessageService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
+    private static final Log logger = LogFactory.getLog(MessageServiceImpl.class);
     private EntityManager em;
 
     @PersistenceContext

@@ -1,0 +1,29 @@
+package edu.hawaii.its.holiday.access;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
+
+public class RoleTest {
+
+    @Test
+    public void longName() {
+        for (Role role : Role.values()) {
+            assertEquals("ROLE_" + role.name(), role.longName());
+        }
+    }
+
+    @Test
+    public void find() {
+        Role role = Role.find(Role.ADMIN.name());
+        assertNotNull(role);
+        assertThat(role.name(), equalTo(Role.ADMIN.name()));
+        assertThat(role.longName(), equalTo(Role.ADMIN.longName()));
+        role = Role.find("non-existent-role");
+        assertNull(role);
+    }
+}
