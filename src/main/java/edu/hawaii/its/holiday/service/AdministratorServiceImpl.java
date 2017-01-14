@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("administratorService")
 public class AdministratorServiceImpl implements AdministratorService {
 
-    @Value("#{'${admin.list}'.split(',')}")
+    @Value("#{'${app.admin.list}'.split(',')}")
     private List<String> admins;
 
     @Override
