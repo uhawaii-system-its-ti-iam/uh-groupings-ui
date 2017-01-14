@@ -38,10 +38,4 @@ public class HomeController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/dates", method = RequestMethod.GET)
-    public String dates(Locale locale, Model model) {
-        logger.info("User at dates.");
-        return "dates";
-    }
-
 }

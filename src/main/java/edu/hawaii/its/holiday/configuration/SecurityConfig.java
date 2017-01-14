@@ -146,17 +146,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/**").permitAll()
-                .antMatchers("/resources/**").permitAll()
-                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/fonts/**").permitAll()
+                .antMatchers("/images/**").permitAll()
                 .antMatchers("/javascript/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/contact").permitAll()
                 .antMatchers("/home").permitAll()
-                .antMatchers("/dates").permitAll()
                 .antMatchers("/faq").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/logout").permitAll()
                 .antMatchers("/denied").permitAll()
                 .antMatchers("/404").permitAll()
-                .antMatchers("/contact").authenticated()
                 .anyRequest().authenticated();
     }
 
