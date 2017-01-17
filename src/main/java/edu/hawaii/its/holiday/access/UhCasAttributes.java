@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class UhCasAttributes implements UhAttributes {
 
-    private Map<String, List<String>> attributes = new HashMap<String, List<String>>();
+    private Map<String, List<String>> uhAttributeMap = new HashMap<String, List<String>>();
     private final String username; // CAS login username.
     private final Map<?, ?> map; // Original CAS results.
 
@@ -34,7 +34,7 @@ public class UhCasAttributes implements UhAttributes {
                     Object v = map.get(key);
                     if (v != null) {
                         if (v instanceof String) {
-                            attributes.put(k, Arrays.asList((String) v));
+                            uhAttributeMap.put(k, Arrays.asList((String) v));
                         } else if (v instanceof List) {
                             List<String> lst = new ArrayList<String>();
                             for (Object o : (List<?>) v) {
@@ -42,7 +42,7 @@ public class UhCasAttributes implements UhAttributes {
                                     lst.add((String) o);
                                 }
                             }
-                            attributes.put(k, lst);
+                            uhAttributeMap.put(k, lst);
                         }
                     }
                 }
@@ -61,8 +61,9 @@ public class UhCasAttributes implements UhAttributes {
 
     @Override
     public String getUid() {
-        List<String> values = attributes.get("uid");
+        List<String> values = uhAttributeMap.get("uid");
         if (values != null) {
+            // Check expected case first.
             if (values.size() == 1) {
                 return values.get(0); // We are done.
             }
@@ -76,8 +77,8 @@ public class UhCasAttributes implements UhAttributes {
                     }
                 }
 
-                // Couldn't match up username, 
-                // just return first value.
+                // Couldn't match up username with uid, 
+                // so just return first value.
                 return values.get(0); // We are done.
             }
         }
@@ -102,8 +103,11 @@ public class UhCasAttributes implements UhAttributes {
 
     @Override
     public List<String> getValues(String name) {
-        List<String> results = attributes.get(toLowerCase(name));
-        return results != null ? results : new ArrayList<String>();
+        List<String> results = uhAttributeMap.get(toLowerCase(name));
+        if (results != null) {
+            return Collections.unmodifiableList(results);
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -123,7 +127,9 @@ public class UhCasAttributes implements UhAttributes {
 
     @Override
     public String toString() {
-        return "UhCasAttributes [username=" + username + ", attributes=" + attributes + ", map=" + map + "]";
+        return "UhCasAttributes [username=" + username
+                + ", uhAttributeMap=" + uhAttributeMap
+                + ", map=" + map + "]";
     }
 
 }

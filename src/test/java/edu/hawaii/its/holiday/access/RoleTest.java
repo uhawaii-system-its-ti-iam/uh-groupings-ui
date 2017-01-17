@@ -23,6 +23,7 @@ public class RoleTest {
         assertNotNull(role);
         assertThat(role.name(), equalTo(Role.ADMIN.name()));
         assertThat(role.longName(), equalTo(Role.ADMIN.longName()));
+        assertThat(role.toString(), equalTo("ROLE_ADMIN"));
         role = Role.find("non-existent-role");
         assertNull(role);
     }

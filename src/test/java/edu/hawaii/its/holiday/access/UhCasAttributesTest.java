@@ -29,9 +29,7 @@ public class UhCasAttributesTest {
         Map<Object, Object> map = new HashMap<Object, Object>();
         map.put("uhuuid", "666666");
         map.put("uid", "duckart");
-
         UhCasAttributes attributes = new UhCasAttributes(map);
-
         assertEquals("", attributes.getUsername());
         assertEquals("666666", attributes.getUhUuid());
         assertEquals("duckart", attributes.getUid());
@@ -189,6 +187,18 @@ public class UhCasAttributesTest {
         assertEquals("", attributes.getUsername());
         assertEquals("666666", attributes.getUhUuid());
         assertEquals("", attributes.getUid()); // Note result.
+    }
+
+    @Test
+    public void loadMapWithNullUsername() {
+        String username = null;
+        Map<Object, Object> map = new HashMap<Object, Object>();
+        map.put("uid", "duckart");
+        map.put("uhuuid", "6666666");
+        UhCasAttributes attributes = new UhCasAttributes(username, map);
+        assertEquals("duckart", attributes.getUid());
+        assertEquals("6666666", attributes.getUhUuid());
+        assertEquals("", attributes.getUsername());
     }
 
     @Test

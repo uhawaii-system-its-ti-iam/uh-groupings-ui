@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PS_MESSAGE")
+@Table(name = "message")
 public class Message implements Serializable {
 
     public static final long serialVersionUID = 2L;

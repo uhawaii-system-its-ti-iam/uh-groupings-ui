@@ -1,0 +1,39 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+
+<head th:substituteby="header :: copy"></head>
+
+<body>
+
+    <!--   Content container -->
+    <div class='container-fluid'>
+        <div class='row'>
+            <div class='col-xs-offset-1 col-xs-10'>
+                <h3>Error</h3>
+                    
+                <!--  As we are using Thymeleaf, you might consider using
+                      ${#httpServletRequest.requestURL}. But that returns the path
+                      to this error page.  Hence we explicitly add the url to the
+                      Model in some of the example code. -->
+                <p th:if="${url}">
+                    <b>Page:</b> <span th:text="${url}">Page URL</span>
+                </p>
+            
+                <p th:if="${timestamp}" id='created'>
+                    <b>Occurred:</b> <span th:text="${timestamp}">Timestamp</span>
+                </p>
+            
+                <p th:if="${status}">
+                    <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
+                        th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- / Contact container -->
+    
+    <div th:substituteby="footer :: copy"></div>
+
+</body>
+</html>

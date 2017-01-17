@@ -14,11 +14,9 @@ import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.authentication.AttributePrincipalImpl;
 import org.jasig.cas.client.validation.Assertion;
 import org.jasig.cas.client.validation.AssertionImpl;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -30,8 +28,7 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 public class UserDetailsServiceTest {
 
     @Autowired
-    @Qualifier("myiamUserDetailsService")
-    private UserDetailsServiceImpl userDetailsService;
+    private UserBuilder userBuilder;
 
     @Test
     public void testAdminUsers() {
@@ -40,6 +37,7 @@ public class UserDetailsServiceTest {
         map.put("uhuuid", "89999999");
         AttributePrincipal principal = new AttributePrincipalImpl("duckart", map);
         Assertion assertion = new AssertionImpl(principal);
+        UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl(userBuilder);
         User user = (User) userDetailsService.loadUserDetails(assertion);
 
         // Basics.
@@ -82,6 +80,7 @@ public class UserDetailsServiceTest {
 
         AttributePrincipal principal = new AttributePrincipalImpl("jjcale", map);
         Assertion assertion = new AssertionImpl(principal);
+        UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl(userBuilder);
         User user = (User) userDetailsService.loadUserDetails(assertion);
 
         // Basics.
@@ -98,32 +97,16 @@ public class UserDetailsServiceTest {
         assertFalse(user.hasRole(Role.ADMIN));
     }
 
-    @Ignore
     @Test
     public void loadUserDetailsExceptionOne() {
-        Assertion assertion = new AssertionImpl((AttributePrincipal) null);
-
+        Assertion assertion = new AssertionDummy();
+        UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl(userBuilder);
         try {
             userDetailsService.loadUserDetails(assertion);
             fail("Should not have reached here.");
         } catch (Exception e) {
             assertEquals(e.getClass(), UsernameNotFoundException.class);
-            assertThat(e.getMessage(), containsString("principal cannot be null"));
+            assertThat(e.getMessage(), containsString("principal is null"));
         }
     }
-
-    @Test
-    public void loadUserDetailsExceptionTwo() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        AttributePrincipal principal = new AttributePrincipalImpl("", map);
-        Assertion assertion = new AssertionImpl(principal);
-        try {
-            userDetailsService.loadUserDetails(assertion);
-            fail("Should not have reached here.");
-        } catch (Exception e) {
-            assertEquals(e.getClass(), UsernameNotFoundException.class);
-            assertThat(e.getMessage(), containsString("username is null or empty"));
-        }
-    }
-
 }

@@ -1,6 +1,8 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" ng-app="holidayApp">
-<head>
+<html xmlns:th="http://www.thymeleaf.org"
+      ng-app="holidayApp">
+      
+<head th:fragment="copy">
     <title>UH Holidays</title>
 
     <meta charset="utf-8"/>
@@ -16,7 +18,7 @@
     <script type="text/javascript" src="javascript/holiday.service.js"></script>
     <script type="text/javascript" src="javascript/holiday.controller.js"></script>
 </head>
-<body>
+<body th:fragment="copy" >
 
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -42,9 +44,10 @@
                     <li><a href="/myiam/" th:href="@{/}">Home</a></li>
                     <li><a href="/myiam/contact" th:href="@{/contact}">Contact</a></li>
                     <li><a href="/myiam/faq" th:href="@{/faq}">FAQ</a></li>
+                    <li><a href="/myiam/admin" th:href="@{/admin}">Admin</a></li>
                     <li  class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Campuses <span class="caret"></span></a>
-                        
+
                         <ul class="dropdown-menu" role="menu">
                           <li><a href="https://hilo.hawaii.edu/"     target="_uhhi">Hilo</a></li>
                           <li><a href="https://manoa.hawaii.edu/"    target="_uhma">Manoa</a></li>
@@ -66,54 +69,6 @@
         </div>
         <!-- /.container -->
     </nav>
-
-    <!--  Content container -->
-    <div class="container-fluid">
-        <div ng-controller="HolidayJsController" data-ng-init="init()">
-            <div class="row" style="padding-bottom: 6px;">
-                <div class="col-xs-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <b>&nbsp;Year&nbsp;&nbsp;</b>
-                            <select id="yearCode" name="yearCode" ng-model="yearCode" ng-change="yearChange()">
-                                <option ng-repeat="y in years">{{y}}</option>
-                                <option value=''>(all years) </option>
-                            </select>
-                        </div>
-                        <table class="table table-bordered table-hover table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>Holiday</th>
-                                    <th>Observed</th>
-                                    <th>Official</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr data-ng-repeat="h in holidays | filter:yearCode">
-                                    <td>{{h.description}}</td>
-                                    <td>{{h.observedDate}}</td>
-                                    <td>{{h.officialDate}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- / Content container. -->
-
-    <footer class="footer">
-        <div class="container">
-            <span class='uh-branding-one'>University</span>
-            <span class='uh-branding-two'>of&nbsp;</span>
-            <span class='uh-branding-one'>Hawai&#8216;i</span>
-        </div>
-    </footer>
-
-    <script type="text/javascript" src="webjars/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="javascript/holiday-util.js"></script>
 
 </body>
 </html>

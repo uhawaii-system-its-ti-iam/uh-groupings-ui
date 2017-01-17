@@ -17,4 +17,13 @@ public class RoleHolder {
     public Set<GrantedAuthority> getAuthorites() {
         return authorities;
     }
+
+    public int size() {
+        return authorities.size();
+    }
+
+    @Override
+    public String toString() {
+        return "RoleHolder [authorities=" + authorities + "]";
+    }
 }

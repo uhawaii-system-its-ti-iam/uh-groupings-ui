@@ -46,7 +46,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
+        
         <!-- hot swapping, disable cache for template, enable live reload -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -67,14 +67,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
-        </dependency>
-        -->
-        
+                
         <!-- Database -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -107,8 +100,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-cas</artifactId>
-        </dependency>
-
+        </dependency>                
         <dependency>
            <groupId>org.jasig.cas.client</groupId>
            <artifactId>cas-client-core</artifactId>
@@ -164,16 +156,15 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
-                    <warName>${project.name}</warName>
+                    <warName>${project.name}</warName>                                        
+                    <source>${java-version}</source>
+                    <target>${java-version}</target>                                            
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.3.0</version>
-                <configuration>
-                    <repoToken>${UH_HOLIDAY_WEBAPP_BOOT_ID}</repoToken>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -187,8 +178,7 @@
                     <maxmem>256m</maxmem>
                     <instrumentation>
                         <excludes>
-                            <exclude>edu/hawaii/its/holiday/configuration/SpringBootWebApplication.class</exclude>                            
-                            <exclude>edu/hawaii/its/holiday/access/UserDetailsServiceImpl.class</exclude>
+                            <exclude>edu/hawaii/its/holiday/configuration/SpringBootWebApplication.class</exclude>
                         </excludes>
                     </instrumentation>
                     <!-- aggregated reports for multi-module projects -->

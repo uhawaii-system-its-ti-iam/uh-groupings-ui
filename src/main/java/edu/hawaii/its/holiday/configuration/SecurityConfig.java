@@ -7,13 +7,13 @@ import org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Saml11TicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.cas.ServiceProperties;
+import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
@@ -21,12 +21,14 @@ import org.springframework.security.cas.web.authentication.ServiceAuthentication
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.util.Assert;
 
+import edu.hawaii.its.holiday.access.UserBuilder;
 import edu.hawaii.its.holiday.access.UserDetailsServiceImpl;
 
 @ComponentScan(basePackages = "edu.hawaii.its.holiday")
@@ -52,8 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private boolean casSendRenew;
 
     @Autowired
-    @Qualifier("myiamUserDetailsService")
-    private UserDetailsServiceImpl userDetailsService;
+    private UserBuilder userBuilder;
 
     @PostConstruct
     public void init() {
@@ -95,11 +96,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new LogoutFilter(casLogoutUrl, new SecurityContextLogoutHandler());
     }
 
-    @Bean(name = "authenticationManager")
+    @Bean
     public CasAuthenticationProvider casAuthenticationProvider() {
         CasAuthenticationProvider provider = new CasAuthenticationProvider();
         provider.setKey("an_id_for_this_auth_provider_only");
-        provider.setAuthenticationUserDetailsService(userDetailsService);
+        provider.setAuthenticationUserDetailsService(authenticationUserDetailsService());
         provider.setServiceProperties(serviceProperties());
 
         Saml11TicketValidator ticketValidator = new Saml11TicketValidator(casMainUrl);
@@ -110,13 +111,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public AuthenticationUserDetailsService<CasAssertionAuthenticationToken> authenticationUserDetailsService() {
+        return new UserDetailsServiceImpl(userBuilder);
+    }
+
+    @Bean
     public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
         CasAuthenticationFilter filter = new CasAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManager());
 
         SimpleUrlAuthenticationFailureHandler authenticationFailureHandler =
                 new SimpleUrlAuthenticationFailureHandler();
-        authenticationFailureHandler.setDefaultFailureUrl("/gate");
+        authenticationFailureHandler.setDefaultFailureUrl("/home");
         filter.setAuthenticationFailureHandler(authenticationFailureHandler);
 
         SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler =
@@ -158,6 +164,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/logout").permitAll()
                 .antMatchers("/denied").permitAll()
                 .antMatchers("/404").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
     }
 

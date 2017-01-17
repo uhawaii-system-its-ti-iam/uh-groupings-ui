@@ -42,4 +42,11 @@ public class AdministratorServiceTest {
         assertFalse(administratorService.exists("  "));
         assertFalse(administratorService.exists("no-way-none"));
     }
+
+    @Test
+    public void misc() {
+        administratorService = new AdministratorServiceImpl();
+        assertFalse(administratorService.exists("12345678"));
+    }
+
 }

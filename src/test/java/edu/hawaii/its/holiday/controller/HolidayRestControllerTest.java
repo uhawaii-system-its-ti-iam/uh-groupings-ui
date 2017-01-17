@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import java.nio.charset.Charset;
@@ -69,6 +70,13 @@ public class HolidayRestControllerTest {
                 .andExpect(jsonPath("data.holidayTypes[0].description").value("Bank"))
                 .andExpect(jsonPath("data.holidayTypes[1].description").value("Federal"))
                 .andExpect(jsonPath("data.holidayTypes[2].description").value("State"));
+    }
+
+    @Test
+    public void httpGetHolidaysWithWrongIdType() throws Exception {
+        mockMvc.perform(get("/api/holidays/xxx"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
     }
 
     @Test

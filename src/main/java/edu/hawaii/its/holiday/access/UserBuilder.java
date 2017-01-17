@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import edu.hawaii.its.holiday.service.AdministratorService;
 import edu.hawaii.its.holiday.service.EmployeeService;
+import edu.hawaii.its.holiday.util.Strings;
 
 @Service
 public final class UserBuilder {
@@ -29,27 +30,28 @@ public final class UserBuilder {
     public final User make(UhAttributes attributes) {
 
         String uid = attributes.getUid();
-        if (isEmpty(uid)) {
+        if (Strings.isEmpty(uid)) {
+            // Should not happen, but just in case.
             throw new UsernameNotFoundException("uid is empty");
         }
 
-        logger.info("Adding roles; uid: " + uid);
+        logger.debug("Adding roles start.");
         RoleHolder roleHolder = new RoleHolder();
         roleHolder.add(Role.ANONYMOUS);
         roleHolder.add(Role.UH);
 
         String uhuuid = attributes.getUhUuid();
         if (employeeService.exists(uhuuid)) {
-            logger.info("Adding " + Role.EMPLOYEE + "; uid: " + uid);
             roleHolder.add(Role.EMPLOYEE);
         }
 
         if (administratorService.exists(uhuuid)) {
-            logger.info("Adding " + Role.ADMIN + "; uid: " + uid);
             roleHolder.add(Role.ADMIN);
         }
 
+        logger.info("Adding roles. uid: " + uid + "; roles: " + roleHolder.getAuthorites());
         User user = new User(uid, roleHolder.getAuthorites());
+        logger.debug("Done adding roles; uid: " + uid);
 
         // Convert the uhuuid to a Long and record it.
         // Don't move this statement above the exists call
@@ -57,18 +59,12 @@ public final class UserBuilder {
         // Long data type conversion will work okay.
         user.setUhuuid(Long.valueOf(uhuuid));
 
-        logger.info("Done adding roles; uhuuid: " + uhuuid);
-
         // Put all the attributes into the user
         // object just for the demonstration.
         // Above is what might commonly occur.
         user.setAttributes(attributes);
 
         return user;
-    }
-
-    private boolean isEmpty(String s) {
-        return s == null || s.trim().length() == 0;
     }
 
 }
