@@ -14,6 +14,6 @@ import org.springframework.context.annotation.PropertySources;
         @PropertySource(value = "file:${user.home}/.${user.name}-conf/myiam-overrides.properties",
                         ignoreResourceNotFound = true)
 })
-public class AppConfigPrimary {
+public class AppConfigRun {
     // Empty.
 }
