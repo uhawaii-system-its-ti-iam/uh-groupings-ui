@@ -25,7 +25,7 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class HomeControllerTest {
 
-    @Value("${app.cas.login.url}")
+    @Value("${cas.login.url}")
     private String casLoginUrl;
 
     @Autowired

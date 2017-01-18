@@ -19,31 +19,31 @@ import org.springframework.util.Assert;
 @EnableTransactionManagement
 public class DatabaseConfig {
 
-    @Value("${spring.datasource.url}")
+    @Value("${app.datasource.url}")
     private String url;
 
-    @Value("${spring.datasource.username}")
+    @Value("${app.datasource.username}")
     private String username;
 
-    @Value("${spring.datasource.password}")
+    @Value("${app.datasource.password}")
     private String password;
 
-    @Value("${spring.datasource.driver-class-name}")
+    @Value("${app.datasource.driver-class-name}")
     private String driverClassName;
 
-    @Value("${spring.jpa.show-sql}")
+    @Value("${app.jpa.show-sql}")
     private String hibernateShowSql;
 
-    @Value("${spring.jpa.hibernate.ddl-auto}")
+    @Value("${app.jpa.hibernate.ddl-auto}")
     private String hibernateHbm2ddlAuto;
 
-    @Value("${spring.jpa.properties.hibernate.dialect}")
+    @Value("${app.jpa.properties.hibernate.dialect}")
     private String hibernateDialect;
 
-    @Value("${spring.jpa.properties.hibernate.cache.provider_class}")
+    @Value("${app.jpa.properties.hibernate.cache.provider_class}")
     private String hibernateCacheProviderClass;
 
-    @Value("${spring.jpa.properties.hibernate.connection.shutdown}")
+    @Value("${app.jpa.properties.hibernate.connection.shutdown}")
     private String hibernateConnectionShutdown;
 
     @PostConstruct

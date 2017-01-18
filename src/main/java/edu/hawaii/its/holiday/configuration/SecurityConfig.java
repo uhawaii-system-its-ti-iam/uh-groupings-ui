@@ -35,22 +35,22 @@ import edu.hawaii.its.holiday.access.UserDetailsServiceImpl;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${app.url.base}")
+    @Value("${url.base}")
     private String urlBase;
 
-    @Value("${app.cas.login.url}")
+    @Value("${cas.login.url}")
     private String casLoginUrl;
 
-    @Value("${app.cas.logout.url}")
+    @Value("${cas.logout.url}")
     private String casLogoutUrl;
 
-    @Value("${app.cas.main.url}")
+    @Value("${cas.main.url}")
     private String casMainUrl;
 
-    @Value("${app.cas.saml.tolerance}")
+    @Value("${cas.saml.tolerance}")
     private long casSamlTolerance;
 
-    @Value("${app.cas.send.renew}")
+    @Value("${cas.send.renew}")
     private boolean casSendRenew;
 
     @Autowired
@@ -144,7 +144,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.addFilter(casAuthenticationFilter());
         http.exceptionHandling()
                 .authenticationEntryPoint(casProcessingFilterEntryPoint());

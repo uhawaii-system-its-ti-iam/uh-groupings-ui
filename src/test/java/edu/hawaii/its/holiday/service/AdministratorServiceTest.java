@@ -20,7 +20,7 @@ public class AdministratorServiceTest {
 
     @Test
     public void exists() {
-        assertTrue(administratorService.exists("89999999"));
+        assertTrue(administratorService.exists("99999999"));
         assertTrue(administratorService.exists("10000001"));
 
         assertFalse(administratorService.exists("10000008"));
