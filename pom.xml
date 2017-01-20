@@ -143,9 +143,7 @@
             <groupId>org.webjars</groupId>
             <artifactId>angularjs</artifactId>
             <version>1.5.8</version>
-        </dependency>
-
-	<!-- https://mvnrepository.com/artifact/edu.internet2.middleware.grouper/grouperClient -->
+        </dependency>            
         <dependency>
             <groupId>edu.internet2.middleware.grouper</groupId>
             <artifactId>grouperClient</artifactId>
@@ -154,10 +152,6 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -200,7 +194,19 @@
                     </instrumentation>
                     <!-- aggregated reports for multi-module projects -->
                     <aggregate>true</aggregate>
-                </configuration>
+                </configuration>                
+                <dependencies>
+                    <dependency>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                        <version>1.1.8</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                        <version>1.1.8</version>
+                    </dependency>
+                </dependencies>                   
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
