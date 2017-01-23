@@ -2,8 +2,10 @@
 .project
 /.settings
 /bin
+grouperClientFailoverState.bin
 /target
 *-overrides.properties
 src/main/resources/static/javascript/tsconfig.json
+src/main/resources/grouper.client.properties
 .idea
 
