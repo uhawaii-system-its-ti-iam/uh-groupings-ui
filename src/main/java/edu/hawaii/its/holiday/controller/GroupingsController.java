@@ -2,12 +2,16 @@ package edu.hawaii.its.holiday.controller;
 
 import edu.internet2.middleware.grouperClient.api.*;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
+import javafx.scene.control.Hyperlink;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
+
+import java.net.URL;
 
 /**
- * Created by zac on 12/12/16.
+ * Created by zknoebel on 12/12/16.
  */
 
 @RestController
@@ -18,21 +22,23 @@ public class GroupingsController {
 
     /**
      * eventually this is intended to give the user the ability to add a Grouping in one of the Groupings that they own,
-     * for now it will send a request to the UH Grouper staff with the users ID, parent Grouping for the new Grouping
-     * and the name of the Grouping to be created
+     * for now it will bring the user to the web page where they can submit a request to the UHGrouper staff
      *
      * @param grouping:    String containing the path of the parent Grouping
      * @param newGrouping: String containing the name of the Grouping to be created
      * @return information about the new Grouping and its success
      */
     @RequestMapping("/addGrouping")
-    public WsGroupSaveResults addGrouping(@RequestParam String grouping, @RequestParam String newGrouping) {
+//    public WsGroupSaveResults addGrouping(@RequestParam String grouping, @RequestParam String newGrouping) {
+    public RedirectView addGrouping(){
         //return new GcGroupSave().addGroupToSave(grouping + ":" + newGrouping).execute();
         //TODO
         //currently this method is not to be implemented because responsibility to create a new
         //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
         //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
-        return null;
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form");
+        return redirectView;
     }
 
     /**
@@ -89,13 +95,16 @@ public class GroupingsController {
      * @return information about the deleted Grouping and its success
      */
     @RequestMapping("/deleteGrouping")
-    public WsGroupDeleteResults deleteGrouping(@RequestParam String grouping) {
+//    public WsGroupDeleteResults deleteGrouping(@RequestParam String grouping) {
+    public RedirectView deleteGrouping(){
 //        WsGroupLookup wsGroupLookup = new WsGroupLookup();
 //        wsGroupLookup.setGroupName(grouping);
 //        new GcGroupDelete().addGroupLookup(wsGroupLookup).execute();
         //not currently implemented
         //instead email its-iam-help@hawaii.edu for help
-        return null;
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form");
+        return redirectView;
     }
 
     /**
