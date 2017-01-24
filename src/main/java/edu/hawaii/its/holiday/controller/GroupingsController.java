@@ -24,13 +24,13 @@ public class GroupingsController {
      * eventually this is intended to give the user the ability to add a Grouping in one of the Groupings that they own,
      * for now it will bring the user to the web page where they can submit a request to the UHGrouper staff
      *
-     * @param grouping:    String containing the path of the parent Grouping
-     * @param newGrouping: String containing the name of the Grouping to be created
+     * //@param grouping:    String containing the path of the parent Grouping
+     * //@param newGrouping: String containing the name of the Grouping to be created
      * @return information about the new Grouping and its success
      */
     @RequestMapping("/addGrouping")
 //    public WsGroupSaveResults addGrouping(@RequestParam String grouping, @RequestParam String newGrouping) {
-    public RedirectView addGrouping(){
+    public RedirectView addGrouping() {
         //return new GcGroupSave().addGroupToSave(grouping + ":" + newGrouping).execute();
         //TODO
         //currently this method is not to be implemented because responsibility to create a new
@@ -96,7 +96,7 @@ public class GroupingsController {
      */
     @RequestMapping("/deleteGrouping")
 //    public WsGroupDeleteResults deleteGrouping(@RequestParam String grouping) {
-    public RedirectView deleteGrouping(){
+    public RedirectView deleteGrouping() {
 //        WsGroupLookup wsGroupLookup = new WsGroupLookup();
 //        wsGroupLookup.setGroupName(grouping);
 //        new GcGroupDelete().addGroupLookup(wsGroupLookup).execute();
@@ -127,7 +127,7 @@ public class GroupingsController {
      * removes ownership privileges from the user specified
      *
      * @param ownerToRemove: String containing the name of the user who's privileges will be removed
-     * @param grouping: String containing the path of the Grouping
+     * @param grouping:      String containing the path of the Grouping
      * @return information about the member who's ownership privileges have been removed and its success
      */
     @RequestMapping("/removeOwnership")
@@ -202,5 +202,53 @@ public class GroupingsController {
         return new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("update").execute();
 //        Todo
     }
+
+    @RequestMapping("/optIn")
+    public WsAddMemberResults optIn(@RequestParam String username, @RequestParam String grouping) {
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult;
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+
+        wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
+        WsGrouperPrivilegeResult[] wsGrouperPrivilegeResults = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
+
+        if(wsGrouperPrivilegeResults[0].getAllowed().equals("true")) { // TODO have to check if "true" is actually what it returns
+            new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
+            return new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+        }
+        else {
+            return null;
+            //TODO return some sort of error
+        }
+    }
+
+    @RequestMapping("/optOut")
+    public WsDeleteMemberResults optOut(@RequestParam String username, @RequestParam String grouping) {
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult;
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+
+        wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
+
+        WsGrouperPrivilegeResult[] wsGrouperPrivilegeResults = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
+
+        if(wsGrouperPrivilegeResults[0].getAllowed().equals("true")) { // TODO have to check if "true" is actually what it returns
+            new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
+            return new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+        }
+        else {
+            return null;
+            //TODO return some sort of error
+        }
+    }
+
+
+//    @RequestMapping("/test")
+//    public WsGetGrouperPrivilegesLiteResult test(@RequestParam String username) {
+//        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+//        wsSubjectLookup.setSubjectIdentifier(username);
+//
+//        return new GcGetGrouperPrivilegesLite().assignGroupName("hawaii.edu:custom:test:zknoebel:zknoebel-test:include").assignPrivilegeName("read").assignSubjectLookup(wsSubjectLookup).execute();
+//    }
 
 }
