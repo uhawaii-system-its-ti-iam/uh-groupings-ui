@@ -5,6 +5,7 @@
 grouperClientFailoverState.bin
 /target
 *-overrides.properties
+*.iml
 src/main/resources/static/javascript/tsconfig.json
 src/main/resources/grouper.client.properties
 .idea
