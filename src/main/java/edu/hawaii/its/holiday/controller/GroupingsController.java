@@ -195,15 +195,12 @@ public class GroupingsController {
      *
      * @return information about all of the Groupings that the user owns
      */
-//    @RequestMapping("/groupingsOwned")
-//    public WsFindGroupsResults groupingsOwned(@RequestParam String username) {
-//
-//       new GcGetGrouperPrivilegesLite().assignPrivilegeName("update").assignStemName("hawaii.edu").assignSubjectLookup()
-//        WsQueryFilter wsQueryFilter = new WsQueryFilter();
-//        wsQueryFilter.setStemName("hawaii.edu");
-//        return new GcFindGroups().assignQueryFilter(wsQueryFilter).execute();
-//
-////        Todo
-//    }
+    @RequestMapping("/groupingsOwned")
+    public WsGetGrouperPrivilegesLiteResult groupingsOwned(@RequestParam String username) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+        return new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("update").execute();
+//        Todo
+    }
 
 }
