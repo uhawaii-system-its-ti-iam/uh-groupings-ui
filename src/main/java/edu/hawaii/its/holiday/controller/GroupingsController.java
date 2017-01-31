@@ -23,9 +23,10 @@ public class GroupingsController {
     /**
      * eventually this is intended to give the user the ability to add a Grouping in one of the Groupings that they own,
      * for now it will bring the user to the web page where they can submit a request to the UHGrouper staff
-     *
+     * <p>
      * //@param grouping:    String containing the path of the parent Grouping
      * //@param newGrouping: String containing the name of the Grouping to be created
+     *
      * @return information about the new Grouping and its success
      */
     @RequestMapping("/addGrouping")
@@ -60,6 +61,7 @@ public class GroupingsController {
     /**
      * gives the user read, update and view privileges for the Grouping
      *
+     * @param grouping: path to the grouping that the newOwner will own
      * @param newOwner: String containing the username of the new owner
      * @return information about the new owner and its success
      */
@@ -126,8 +128,8 @@ public class GroupingsController {
     /**
      * removes ownership privileges from the user specified
      *
-     * @param ownerToRemove: String containing the name of the user who's privileges will be removed
      * @param grouping:      String containing the path of the Grouping
+     * @param ownerToRemove: String containing the name of the user who's privileges will be removed
      * @return information about the member who's ownership privileges have been removed and its success
      */
     @RequestMapping("/removeOwnership")
@@ -193,6 +195,7 @@ public class GroupingsController {
     /**
      * finds the different Groupings that the user has owner privileges for
      *
+     * @param username: the owner of the groups returned
      * @return information about all of the Groupings that the user owns
      */
     @RequestMapping("/groupingsOwned")
@@ -203,6 +206,13 @@ public class GroupingsController {
 //        Todo
     }
 
+    /**
+     * if the user is allowed to opt into the grouping, this will add them to the include group of that grouping
+     *
+     * @param username: the username of user opting in
+     * @param grouping: the path to the grouping where the user will be opting in
+     * @return information about the success of opting in
+     */
     @RequestMapping("/optIn")
     public WsAddMemberResults optIn(@RequestParam String username, @RequestParam String grouping) {
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult;
@@ -212,16 +222,23 @@ public class GroupingsController {
         wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
         WsGrouperPrivilegeResult[] wsGrouperPrivilegeResults = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
 
-        if(wsGrouperPrivilegeResults[0].getAllowed().equals("true")) { // TODO have to check if "true" is actually what it returns
+        if (wsGrouperPrivilegeResults[0].getAllowed().equals("true")) { // TODO have to check if "true" is actually what it returns
             new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
             return new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
-        }
-        else {
+        } else {
             return null;
             //TODO return some sort of error
         }
     }
 
+
+    /**
+     * if the user is allowed to opt out of the grouping, this will add them to the exclude group of that grouping
+     *
+     * @param username: the username of user opting out
+     * @param grouping: the path to the grouping where the user will be opting out
+     * @return information about the success of opting out
+     */
     @RequestMapping("/optOut")
     public WsDeleteMemberResults optOut(@RequestParam String username, @RequestParam String grouping) {
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult;
@@ -232,11 +249,10 @@ public class GroupingsController {
 
         WsGrouperPrivilegeResult[] wsGrouperPrivilegeResults = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
 
-        if(wsGrouperPrivilegeResults[0].getAllowed().equals("true")) { // TODO have to check if "true" is actually what it returns
+        if (wsGrouperPrivilegeResults[0].getAllowed().equals("true")) { // TODO have to check if "true" is actually what it returns
             new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
             return new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
-        }
-        else {
+        } else {
             return null;
             //TODO return some sort of error
         }
