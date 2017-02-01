@@ -159,12 +159,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/contact").permitAll()
                 .antMatchers("/home").permitAll()
                 .antMatchers("/faq").permitAll()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/login").hasRole("UH")
                 .antMatchers("/logout").permitAll()
                 .antMatchers("/denied").permitAll()
                 .antMatchers("/404").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .logout().logoutSuccessUrl("/home");
     }
 
     @Override

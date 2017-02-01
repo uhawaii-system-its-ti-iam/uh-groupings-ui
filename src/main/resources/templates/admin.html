@@ -55,8 +55,9 @@
                           <li><a href="http://maui.hawaii.edu/" target="_uhccmu">Maui</a></li>
                           <li><a href="https://windward.hawaii.edu/" target="_uhccwi">Windward</a></li>
                         </ul>
-
                     </li>
+                    <li><a th:href="@{/logout}" sec:authorize="isAuthenticated()">Logout</a></li>
+
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
