@@ -22,6 +22,10 @@ public class RoleHolder {
         return authorities.size();
     }
 
+    public boolean contains(Role role) {
+        return authorities.contains(new SimpleGrantedAuthority(role.longName()));
+    }
+
     @Override
     public String toString() {
         return "RoleHolder [authorities=" + authorities + "]";

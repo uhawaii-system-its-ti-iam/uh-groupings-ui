@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import edu.hawaii.its.holiday.service.AdministratorService;
-import edu.hawaii.its.holiday.service.EmployeeService;
 import edu.hawaii.its.holiday.util.Strings;
 
 @Service
@@ -18,10 +16,7 @@ public final class UserBuilder {
     private static final Log logger = LogFactory.getLog(UserBuilder.class);
 
     @Autowired
-    private AdministratorService administratorService;
-
-    @Autowired
-    private EmployeeService employeeService;
+    private AuthorizationService authorizationService;    
 
     public final User make(Map<String, ?> map) {
         return make(new UhCasAttributes(map));
@@ -36,18 +31,8 @@ public final class UserBuilder {
         }
 
         logger.debug("Adding roles start.");
-        RoleHolder roleHolder = new RoleHolder();
-        roleHolder.add(Role.ANONYMOUS);
-        roleHolder.add(Role.UH);
-
         String uhuuid = attributes.getUhUuid();
-        if (employeeService.exists(uhuuid)) {
-            roleHolder.add(Role.EMPLOYEE);
-        }
-
-        if (administratorService.exists(uhuuid)) {
-            roleHolder.add(Role.ADMIN);
-        }
+        RoleHolder roleHolder = authorizationService.fetchRoles(uhuuid);
 
         logger.info("Adding roles. uid: " + uid + "; roles: " + roleHolder.getAuthorites());
         User user = new User(uid, roleHolder.getAuthorites());
