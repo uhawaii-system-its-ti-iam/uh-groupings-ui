@@ -3,6 +3,7 @@ package edu.hawaii.its.holiday.controller;
 import edu.internet2.middleware.grouperClient.api.*;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import javafx.scene.control.Hyperlink;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -222,12 +223,11 @@ public class GroupingsController {
         wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
         WsGrouperPrivilegeResult[] wsGrouperPrivilegeResults = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
 
-        if (wsGrouperPrivilegeResults[0].getAllowed().equals("true")) { // TODO have to check if "true" is actually what it returns
+        if (wsGrouperPrivilegeResults[0].getAllowed().equals("T")) {
             new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
             return new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
         } else {
-            return null;
-            //TODO return some sort of error
+            throw new AccessDeniedException("user is not allowed to opt into this group");
         }
     }
 
@@ -247,24 +247,22 @@ public class GroupingsController {
 
         wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
 
-        WsGrouperPrivilegeResult[] wsGrouperPrivilegeResults = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
+        WsGrouperPrivilegeResult[] wsGrouperPrivilegeResult = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
 
-        if (wsGrouperPrivilegeResults[0].getAllowed().equals("true")) { // TODO have to check if "true" is actually what it returns
+        if (wsGrouperPrivilegeResult[0].getAllowed().equals("T")) {
             new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
             return new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
         } else {
-            return null;
-            //TODO return some sort of error
+            throw new AccessDeniedException("user is not allowed to opt out of this group");
         }
     }
 
 
-//    @RequestMapping("/test")
-//    public WsGetGrouperPrivilegesLiteResult test(@RequestParam String username) {
-//        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-//        wsSubjectLookup.setSubjectIdentifier(username);
-//
-//        return new GcGetGrouperPrivilegesLite().assignGroupName("hawaii.edu:custom:test:zknoebel:zknoebel-test:include").assignPrivilegeName("read").assignSubjectLookup(wsSubjectLookup).execute();
-//    }
+    @RequestMapping("/test")
+    public WsGetGrouperPrivilegesLiteResult test(@RequestParam String username) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
 
+        return new GcGetGrouperPrivilegesLite().assignGroupName("hawaii.edu:custom:test:zknoebel:zknoebel-test:include").assignPrivilegeName("read").assignSubjectLookup(wsSubjectLookup).execute();
+    }
 }
