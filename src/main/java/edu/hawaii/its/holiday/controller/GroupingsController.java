@@ -228,6 +228,8 @@ public class GroupingsController {
             return new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
         } else {
             throw new AccessDeniedException("user is not allowed to opt into this group");
+            // this exception does not go all the way through to the command line
+            // the exception that comes out is a NullPointerException
         }
     }
 
@@ -254,15 +256,8 @@ public class GroupingsController {
             return new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
         } else {
             throw new AccessDeniedException("user is not allowed to opt out of this group");
+            // this exception does not go all the way through to the command line
+            // the exception that comes out is a NullPointerException
         }
-    }
-
-
-    @RequestMapping("/test")
-    public WsGetGrouperPrivilegesLiteResult test(@RequestParam String username) {
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(username);
-
-        return new GcGetGrouperPrivilegesLite().assignGroupName("hawaii.edu:custom:test:zknoebel:zknoebel-test:include").assignPrivilegeName("read").assignSubjectLookup(wsSubjectLookup).execute();
     }
 }
