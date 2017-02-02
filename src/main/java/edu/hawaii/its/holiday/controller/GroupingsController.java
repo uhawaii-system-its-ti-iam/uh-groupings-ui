@@ -2,7 +2,6 @@ package edu.hawaii.its.holiday.controller;
 
 import edu.internet2.middleware.grouperClient.api.*;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
-import javafx.scene.control.Hyperlink;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +23,6 @@ public class GroupingsController {
     /**
      * eventually this is intended to give the user the ability to add a Grouping in one of the Groupings that they own,
      * for now it will bring the user to the web page where they can submit a request to the UHGrouper staff
-     * <p>
      * //@param grouping:    String containing the path of the parent Grouping
      * //@param newGrouping: String containing the name of the Grouping to be created
      *
@@ -34,8 +32,7 @@ public class GroupingsController {
 //    public WsGroupSaveResults addGrouping(@RequestParam String grouping, @RequestParam String newGrouping) {
     public RedirectView addGrouping() {
         //return new GcGroupSave().addGroupToSave(grouping + ":" + newGrouping).execute();
-        //TODO
-        //currently this method is not to be implemented because responsibility to create a new
+        //TODO currently this method is not to be implemented because responsibility to create a new
         //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
         //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
         RedirectView redirectView = new RedirectView();
@@ -67,8 +64,8 @@ public class GroupingsController {
      * @return information about the new owner and its success
      */
     @RequestMapping("/assignOwnership")
-    public WsAssignGrouperPrivilegesResults assignOwnership(@RequestParam String grouping,
-                                                            @RequestParam String newOwner) {
+    public WsAssignGrouperPrivilegesResults[] assignOwnership(@RequestParam String grouping,@RequestParam String newOwner) {
+        WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultses = new WsAssignGrouperPrivilegesResults[3];
         WsGroupLookup wsGroupLookup = new WsGroupLookup();
         wsGroupLookup.setGroupName(grouping + ":include");
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
@@ -80,16 +77,16 @@ public class GroupingsController {
         WsGroupLookup wsGroupLookup2 = new WsGroupLookup();
         wsGroupLookup2.setGroupName(grouping + ":exclude");
 
-        new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup1).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultses[0] = new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup1).addSubjectLookup(wsSubjectLookup)
                 .addPrivilegeName("view").addPrivilegeName("read").assignAllowed(true).execute();
 
-        new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup2).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultses[1] = new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup2).addSubjectLookup(wsSubjectLookup)
                 .addPrivilegeName("view").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(true).execute();
 
-        return new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultses[2] = new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup).addSubjectLookup(wsSubjectLookup)
                 .addPrivilegeName("view").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(true).execute();
 
-        //TODO figure out how to return all three as a batch
+        return wsAssignGrouperPrivilegesResultses;
     }
 
     /**
@@ -163,12 +160,14 @@ public class GroupingsController {
     /**
      * finds all the members of a group
      *
-     * @param grouping: String containing the path of the Grouping to be searched
+     * @param grouping : String containing the path of the Grouping to be searched
      * @return information for all of the members
      */
     @RequestMapping("/getMembers")
-    public WsGetMembersResults getMembers(@RequestParam String grouping) {
-        return new GcGetMembers().addGroupName(grouping + ":basis+include").assignIncludeSubjectDetail(true).execute();
+    public WsSubject[] getMembers(@RequestParam String grouping) {
+        WsGetMembersResults wsGetMembersResults = new GcGetMembers().addGroupName(grouping + ":basis+include").assignIncludeSubjectDetail(true).execute();
+
+        return wsGetMembersResults.getResults()[0].getWsSubjects();
     }
 
     /**
@@ -179,7 +178,7 @@ public class GroupingsController {
     @RequestMapping("/getOwners")
     public WsGetGrouperPrivilegesLiteResult getOwners(@RequestParam String grouping) {
         return new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("update").execute();
-        //TODO
+        //TODO return an array of WsSubjects
     }
 
     /**
@@ -189,8 +188,11 @@ public class GroupingsController {
      * @return information about all of the Groupings the user is in
      */
     @RequestMapping("/groupingsIn")
-    public WsGetGroupsResults groupingsIn(@RequestParam String username) {
-        return new GcGetGroups().addSubjectIdentifier(username).execute();
+    public int groupingsIn(@RequestParam String username) {
+
+        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().addSubjectIdentifier(username).execute();
+        return wsGetGroupsResults.getResults().length;
+        //TODO return an array of WsGroups
     }
 
     /**
@@ -204,7 +206,7 @@ public class GroupingsController {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
         return new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("update").execute();
-//        Todo
+//        TODO return an array of WsGroups
     }
 
     /**
