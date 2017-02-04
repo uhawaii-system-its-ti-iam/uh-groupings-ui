@@ -3,11 +3,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>spring-boot-holidays</artifactId>
-    <packaging>war</packaging>
+    <groupId>edu.hawaii.its.ti.iam</groupId>
+    <artifactId>myiam</artifactId>
     <name>myiam</name>
-    <description>Spring Boot ITS Holiday Application</description>
-    <version>1.0</version>
+    <description>ITS Grouper Application</description>
+    <packaging>war</packaging>
+    <version>0.0.9</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -50,7 +51,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        
+
         <!-- hot swapping, disable cache for template, enable live reload -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -71,7 +72,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
         </dependency>
-                
+
         <!-- Database -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -104,7 +105,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-cas</artifactId>
-        </dependency>                
+        </dependency>
         <dependency>
            <groupId>org.jasig.cas.client</groupId>
            <artifactId>cas-client-core</artifactId>
@@ -147,7 +148,7 @@
             <groupId>org.webjars</groupId>
             <artifactId>angularjs</artifactId>
             <version>1.5.8</version>
-        </dependency>            
+        </dependency>
         <dependency>
             <groupId>edu.internet2.middleware.grouper</groupId>
             <artifactId>grouperClient</artifactId>
@@ -161,9 +162,9 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
-                    <warName>${project.name}</warName>                                        
+                    <warName>${project.name}</warName>
                     <source>${java-version}</source>
-                    <target>${java-version}</target>                                            
+                    <target>${java-version}</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -174,8 +175,8 @@
                     <profiles>
                         <profile>localhost</profile>
                     </profiles>
-                </configuration>      
-            </plugin>            
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
@@ -198,7 +199,7 @@
                     </instrumentation>
                     <!-- aggregated reports for multi-module projects -->
                     <aggregate>true</aggregate>
-                </configuration>                
+                </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>ch.qos.logback</groupId>
@@ -210,7 +211,7 @@
                         <artifactId>logback-core</artifactId>
                         <version>1.1.8</version>
                     </dependency>
-                </dependencies>                   
+                </dependencies>
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
