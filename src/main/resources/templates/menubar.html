@@ -22,7 +22,7 @@
                 <li><a href="/myiam/" th:href="@{/}">Home</a></li>
                 <li><a href="/myiam/contact" th:href="@{/contact}">Contact</a></li>
                 <li><a href="/myiam/faq" th:href="@{/faq}">FAQ</a></li>
-                <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin}">Admin</a></li>                    
+                <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin}">Admin</a></li>
                 <li  class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Campuses <span class="caret"></span></a>
 

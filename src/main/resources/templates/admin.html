@@ -1,22 +1,22 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:substituteby="header :: copy"></head>
 <body>
     <nav th:substituteby="menubar :: copy"></nav>
-    
+
     <!--  Content container -->
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-xs-offset-1 col-xs-10'>
                 <h3>Administration</h3>
-                                
+
                 <div sec:authorize="isAuthenticated()">
                     <h5>Selected Spring Security Information</h5>
-                    <p>Logged in user: <span sec:authentication="name"></span></p>                    
-                    <p>Roles: <span sec:authentication="principal.authorities"></span></p>                    
+                    <p>Logged in user: <span sec:authentication="name"></span></p>
+                    <p>Roles: <span sec:authentication="principal.authorities"></span></p>
                 </div>
-                
+
             </div>
         </div>
     </div>
