@@ -186,9 +186,17 @@ public class GroupingsController {
      * @return information for all of the owners
      */
     @RequestMapping("/getOwners")
-    public WsGetGrouperPrivilegesLiteResult getOwners(@RequestParam String grouping) {
-        return new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("update").execute();
-        //TODO return an array of WsSubjects
+    public ArrayList<String[]> getOwners(@RequestParam String grouping) {
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("update").execute();
+        ArrayList<String[]> namesAndIDs = new ArrayList<>();
+         for(int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i ++){
+            String[] nameAndID = new String[2];
+            nameAndID[0] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getOwnerSubject().getName();
+            nameAndID[1] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getOwnerSubject().getId();
+            namesAndIDs.add(nameAndID);
+        }
+
+        return namesAndIDs;
     }
 
     /**
