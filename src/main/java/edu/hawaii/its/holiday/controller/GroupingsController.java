@@ -202,29 +202,34 @@ public class GroupingsController {
     /**
      * finds the different Groupings that the user is in and allowed to view
      *
-     * @param username: String containing the username to be searched for
+     * @param username : String containing the username to be searched for
      * @return information about all of the Groupings the user is in
      */
     @RequestMapping("/groupingsIn")
-    public int groupingsIn(@RequestParam String username) {
+    public WsGetGroupsResult[] groupingsIn(@RequestParam String username) {
 
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().addSubjectIdentifier(username).execute();
-        return wsGetGroupsResults.getResults().length;
+        return wsGetGroupsResults.getResults();
         //TODO return an array of WsGroups
     }
 
     /**
      * finds the different Groupings that the user has owner privileges for
      *
-     * @param username: the owner of the groups returned
+     * @param username : the owner of the groups returned
      * @return information about all of the Groupings that the user owns
      */
     @RequestMapping("/groupingsOwned")
-    public WsGetGrouperPrivilegesLiteResult groupingsOwned(@RequestParam String username) {
+    public String[] groupingsOwned(@RequestParam String username) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
-        return new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("update").execute();
-//        TODO return an array of WsGroups
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("update").execute();
+        String[] groups = new String[wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length];
+        for(int i = 0; i < groups.length; i ++){
+           groups[i] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+        }
+        return groups;
+        //TODO reduce groups by consolidating the include and exclude groups into one name
     }
 
     /**
@@ -280,4 +285,10 @@ public class GroupingsController {
             // the exception that comes out is a NullPointerException
         }
     }
+
+    //TODO more methods to add
+    //Indicate whether or not the Grouping is to be published to a LISTSERV list
+    //Indicate whether or not members can opt themselves in or out
+    //Indicate whether or not members can opt themselves in or out of the associated Exclusion Group
+    //Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion group
 }
