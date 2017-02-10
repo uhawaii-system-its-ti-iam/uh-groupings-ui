@@ -36,9 +36,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/myiam/" th:href="@{/}">Home</a></li>
-                    <li><a href="/myiam/contact" th:href="@{/contact}">Contact</a></li>
-                    <li><a href="/myiam/faq" th:href="@{/faq}">FAQ</a></li>
-                    <li><a href="/myiam/admin" th:href="@{/admin}">Admin</a></li>
+                    <li><a href="/myiam/admin" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Admin</a></li>
+                    <li><a href="/myiam/memberships" th:href="@{/memberships}" sec:authorize="hasRole('UH')">Memberships</a></li>
+                    <li><a href="/myiam/groupings" th:href="@{/groupings}" sec:authorize="hasRole('UH')">Groupings I Own</a></li>
                     <li  class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Campuses <span class="caret"></span></a>
 
@@ -56,6 +56,8 @@
                           <li><a href="https://windward.hawaii.edu/" target="_uhccwi">Windward</a></li>
                         </ul>
                     </li>
+                    <li><a href="/myiam/contact" th:href="@{/contact}">Contact</a></li>
+                    <li><a href="/myiam/faq" th:href="@{/faq}">FAQ</a></li>
                     <li><a th:href="@{/logout}" sec:authorize="isAuthenticated()">Logout</a></li>
 
                 </ul>
@@ -70,13 +72,13 @@
         <div class='row'>
             <div class='col-xs-offset-1 col-xs-10'>
                 <h3>Administration</h3>
-                                
+
                 <div sec:authorize="isAuthenticated()">
                     <h5>Selected Spring Security Information</h5>
-                    <p>Logged in user: <span sec:authentication="name"></span></p>                    
-                    <p>Roles: <span sec:authentication="principal.authorities"></span></p>                    
+                    <p>Logged in user: <span sec:authentication="name"></span></p>
+                    <p>Roles: <span sec:authentication="principal.authorities"></span></p>
                 </div>
-                
+
             </div>
         </div>
     </div>

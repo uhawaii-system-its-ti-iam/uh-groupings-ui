@@ -164,6 +164,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/denied").permitAll()
                 .antMatchers("/404").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/groupings").hasRole("UH")
+                .antMatchers("/memberships/**").hasRole("UH")
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutSuccessUrl("/home");

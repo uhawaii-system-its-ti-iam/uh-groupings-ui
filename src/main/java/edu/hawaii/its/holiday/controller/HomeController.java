@@ -46,6 +46,20 @@ public class HomeController {
         return "admin";
     }
 
+    @PreAuthorize("hasRole('UH')")
+    @RequestMapping(value = "/memberships", method = RequestMethod.GET)
+    public String memberships(Locale locale, Model model) {
+        logger.info("User at admin.");
+        return "memberships";
+    }
+
+    @PreAuthorize("hasRole('UH')")
+    @RequestMapping(value = "/groupings", method = RequestMethod.GET)
+    public String groupings(Locale locale, Model model) {
+        logger.info("User at groupings.");
+        return "groupings";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Locale locale, Model model) {
         logger.info("User has logged in.");
