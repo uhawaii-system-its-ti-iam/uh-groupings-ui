@@ -147,7 +147,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilter(casAuthenticationFilter());
         http.exceptionHandling()
                 .authenticationEntryPoint(casProcessingFilterEntryPoint());
-        http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/**").permitAll()
@@ -159,14 +158,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/contact").permitAll()
                 .antMatchers("/home").permitAll()
                 .antMatchers("/faq").permitAll()
-                .antMatchers("/login").hasRole("UH")
-                .antMatchers("/logout").permitAll()
                 .antMatchers("/denied").permitAll()
                 .antMatchers("/404").permitAll()
+                .antMatchers("/login").hasRole("UH")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .logout().logoutSuccessUrl("/home");
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/");
     }
 
     @Override

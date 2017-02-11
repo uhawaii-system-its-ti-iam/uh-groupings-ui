@@ -97,6 +97,13 @@ td.uh-pre {
     background-color: white;
 }
 
+.app-logout {
+    height: 50px; 
+    padding-top: 8.5px; 
+    padding-bottom: 15px; 
+    vertical-align: text-middle; 
+}
+
 .footer {
     position: absolute;
     padding-top: 5px;

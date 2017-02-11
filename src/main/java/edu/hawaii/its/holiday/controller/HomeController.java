@@ -51,10 +51,4 @@ public class HomeController {
         logger.info("User has logged in.");
         return "redirect:home";
     }
-
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String logout(Locale locale, Model model) {
-        logger.info("User has logged out.");
-        return "redirect:home";
-    }
 }

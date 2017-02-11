@@ -41,7 +41,11 @@
                     </ul>
                 </li>
                 <li><a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a></li>
-                <li><a th:href="@{/logout}" sec:authorize="isAuthenticated()">Logout</a></li>
+                <li class="app-logout">
+                    <form sec:authorize="isAuthenticated()" action="/logout" th:action="@{/logout}" method="post" id="logout_form">
+                        <button class="btn btn-link" type="submit" style="text-decoration: none;">Logout</button>
+                    </form>
+                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
