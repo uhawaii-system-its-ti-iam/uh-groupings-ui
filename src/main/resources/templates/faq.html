@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:substituteby="header :: copy"></head>
-
 <body>
+    <nav th:substituteby="menubar :: copy"></nav>
 
     <!--  Content container -->
     <div class='container-fluid'>
@@ -40,11 +40,29 @@
                                     <li>Apache Maven</li>
                                     <li>Apache Tomcat</li>
                                     <li>Java</li>
-                                    <li>Spring Framework</li>
+                                    <li>
+                                        Spring Framework
+                                        <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/spring-framework-reference/htmlsingle/" target="_sprgu">(Guide)</a>
+                                        <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/javadoc-api/" target="_sprapi">(API)</a>
+                                    </li>
                                     <li>Spring Security</li>
-                                    <li>Thymeleaf</li>
-                                    <li>Bootstrap</li>
-                                    <li>JQuery</li>
+                                    <li>
+                                        Thymeleaf
+                                        <a href="http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#introducing-thymeleaf" target="_thylgu">(Guide)</a>
+                                    </li>
+                                    <li>
+                                        Bootstrap
+                                        <a href="http://getbootstrap.com/" target="_boogu">(Guide)</a>
+                                    </li>
+                                    <li>
+                                        AngularJS
+                                        <a href="https://code.angularjs.org/1.5.8/docs/guide" target="_anggu">(Guide)</a>
+                                        <a href="https://code.angularjs.org/1.5.8/docs/api" target="_angapi">(API)</a>
+                                    </li>
+                                    <li>
+                                        JQuery
+                                        <a href="http://api.jquery.com/" target="_jquapi">(API)</a>
+                                    </li>
                                 </ul>
                             </td>
                         </tr>
@@ -56,6 +74,5 @@
     <!-- / Content container. -->
 
     <div th:substituteby="footer :: copy"></div>
-
 </body>
 </html>
