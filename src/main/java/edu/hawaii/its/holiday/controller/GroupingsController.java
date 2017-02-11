@@ -1,6 +1,7 @@
 package edu.hawaii.its.holiday.controller;
 
 import edu.internet2.middleware.grouperClient.api.*;
+import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +65,7 @@ public class GroupingsController {
      * @return information about the new owner and its success
      */
     @RequestMapping("/assignOwnership")
-    public WsAssignGrouperPrivilegesResults[] assignOwnership(@RequestParam String grouping,@RequestParam String newOwner) {
+    public WsAssignGrouperPrivilegesResults[] assignOwnership(@RequestParam String grouping, @RequestParam String newOwner) {
 
         WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultses = new WsAssignGrouperPrivilegesResults[3];
 
@@ -135,7 +136,7 @@ public class GroupingsController {
      */
     @RequestMapping("/removeOwnership")
     public WsAssignGrouperPrivilegesResults[] removeOwnership(@RequestParam String grouping,
-                                                            @RequestParam String ownerToRemove) {
+                                                              @RequestParam String ownerToRemove) {
         WsGroupLookup wsGroupLookup = new WsGroupLookup();
         wsGroupLookup.setGroupName(grouping + ":include");
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
@@ -171,7 +172,7 @@ public class GroupingsController {
         WsGetMembersResults wsGetMembersResults = new GcGetMembers().addGroupName(grouping + ":basis+include").assignIncludeSubjectDetail(true).execute();
 
         ArrayList<String[]> namesAndIDs = new ArrayList<>();
-        for(int i = 0; i < wsGetMembersResults.getResults()[0].getWsSubjects().length; i ++){
+        for (int i = 0; i < wsGetMembersResults.getResults()[0].getWsSubjects().length; i++) {
             String[] nameAndID = new String[2];
             nameAndID[0] = wsGetMembersResults.getResults()[0].getWsSubjects()[i].getName();
             nameAndID[1] = wsGetMembersResults.getResults()[0].getWsSubjects()[i].getId();
@@ -189,7 +190,7 @@ public class GroupingsController {
     public ArrayList<String[]> getOwners(@RequestParam String grouping) {
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("update").execute();
         ArrayList<String[]> namesAndIDs = new ArrayList<>();
-         for(int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i ++){
+        for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
             String[] nameAndID = new String[2];
             nameAndID[0] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getOwnerSubject().getName();
             nameAndID[1] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getOwnerSubject().getId();
@@ -206,11 +207,16 @@ public class GroupingsController {
      * @return information about all of the Groupings the user is in
      */
     @RequestMapping("/groupingsIn")
-    public WsGetGroupsResult[] groupingsIn(@RequestParam String username) {
-
-        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().addSubjectIdentifier(username).execute();
-        return wsGetGroupsResults.getResults();
-        //TODO return an array of WsGroups
+    public String[] groupingsIn(@RequestParam String username) {
+        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().addSubjectIdentifier(username).assignScope("hawaii.edu:custom:test").execute();
+        //Todo figure out what the actual scope of groupings is going to be
+        String[] groups = new String[wsGetGroupsResults.getResults()[0].getWsGroups().length];
+        for(int i = 0; i < groups.length; i ++){
+            
+            groups[i] = wsGetGroupsResults.getResults()[0].getWsGroups()[i].getName();
+        }
+        return groups;
+        //TODO consolodate groups so that basis, basis+include, include are in one group and exclude does not show up
     }
 
     /**
@@ -225,8 +231,8 @@ public class GroupingsController {
         wsSubjectLookup.setSubjectIdentifier(username);
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("update").execute();
         String[] groups = new String[wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length];
-        for(int i = 0; i < groups.length; i ++){
-           groups[i] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+        for (int i = 0; i < groups.length; i++) {
+            groups[i] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
         }
         return groups;
         //TODO reduce groups by consolidating the include and exclude groups into one name
@@ -248,7 +254,7 @@ public class GroupingsController {
         wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
         WsGrouperPrivilegeResult[] wsGrouperPrivilegeResults = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
 
-        if (wsGrouperPrivilegeResults[0].getAllowed().equals("T")) {
+        if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
             new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
             return new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
         } else {
@@ -276,7 +282,7 @@ public class GroupingsController {
 
         WsGrouperPrivilegeResult[] wsGrouperPrivilegeResult = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
 
-        if (wsGrouperPrivilegeResult[0].getAllowed().equals("T")) {
+        if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
             new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
             return new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
         } else {
@@ -286,9 +292,39 @@ public class GroupingsController {
         }
     }
 
+    /**
+     * checks if the user is allowed to opt out of the grouping
+     *
+     * @param username: username of the user whos permission is being assessed
+     * @param grouping: grouping that is being checked
+     * @return: True if the user is allowed to opt out, False if the user is not allowed to opt out
+     */
+    @RequestMapping("/optOutPermission")
+    public boolean optOutPermission(@RequestParam String username, String grouping) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
+        WsGrouperPrivilegeResult[] wsGrouperPrivilegeResult = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
+        return wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
+    }
+
+    /**
+     * checks if the user is allowed to opt in of the grouping
+     *
+     * @param username : username of the user whos permission is being assessed
+     * @param grouping : grouping that is being checked
+     * @return: True if the user is allowed to opt out, False if the user is not allowed to in out
+     */
+    @RequestMapping("/optInPermission")
+    public boolean optInPermission(@RequestParam String username, String grouping) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
+        WsGrouperPrivilegeResult[] wsGrouperPrivilegeResult = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults();
+        return wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
+    }
+
     //TODO more methods to add
     //Indicate whether or not the Grouping is to be published to a LISTSERV list
-    //Indicate whether or not members can opt themselves in or out
-    //Indicate whether or not members can opt themselves in or out of the associated Exclusion Group
     //Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion group
 }
