@@ -1,18 +1,22 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-
 <head th:substituteby="header :: copy"></head>
-
-<body ng-app="holidayApp">
+<body>
+<nav th:substituteby="menubar :: copy"></nav>
 
 <!--  Content container -->
 <div class="container-fluid">
-    <h2>Groupings</h2>
-    <h4>Only Admins and Owners can see this page and info</h4>
-    <p>The owner of a group will see a table of the group that has a list of the uh username, the name of the member and whether to exculde a user. Also a search to include a member then add them to the table</p>
+    <div class='row'>
+        <div class='col-xs-offset-1 col-xs-10'>
 
+            <h3>Groupings</h3>
+            <h4>Only Admins and Owners can see this page and info</h4>
+            <p>The owner of a group will see a table of the group that has a list of the uh username, the name of the member and whether to exculde a user. Also a search to include a member then add them to the table</p>
 
+        </div>
+
+    </div>
 
 </div>
 <!-- / Content container. -->
