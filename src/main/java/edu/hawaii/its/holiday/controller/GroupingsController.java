@@ -208,11 +208,10 @@ public class GroupingsController {
      */
     @RequestMapping("/groupingsIn")
     public String[] groupingsIn(@RequestParam String username) {
-        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().addSubjectIdentifier(username).assignScope("hawaii.edu:custom:test").execute();
-        //Todo figure out what the actual scope of groupings is going to be
+        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().addSubjectIdentifier(username).assignScope("hawaii.edu:custom").execute();
         String[] groups = new String[wsGetGroupsResults.getResults()[0].getWsGroups().length];
         for(int i = 0; i < groups.length; i ++){
-            
+
             groups[i] = wsGetGroupsResults.getResults()[0].getWsGroups()[i].getName();
         }
         return groups;
