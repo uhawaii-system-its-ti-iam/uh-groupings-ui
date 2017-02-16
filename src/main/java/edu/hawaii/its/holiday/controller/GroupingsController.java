@@ -168,17 +168,10 @@ public class GroupingsController {
      * @return information for all of the members
      */
     @RequestMapping("/getMembers")
-    public ArrayList<String[]> getMembers(@RequestParam String grouping) {
+    public WsSubject[] getMembers(@RequestParam String grouping) {
         WsGetMembersResults wsGetMembersResults = new GcGetMembers().addGroupName(grouping + ":basis+include").assignIncludeSubjectDetail(true).execute();
 
-        ArrayList<String[]> namesAndIDs = new ArrayList<>();
-        for (int i = 0; i < wsGetMembersResults.getResults()[0].getWsSubjects().length; i++) {
-            String[] nameAndID = new String[2];
-            nameAndID[0] = wsGetMembersResults.getResults()[0].getWsSubjects()[i].getName();
-            nameAndID[1] = wsGetMembersResults.getResults()[0].getWsSubjects()[i].getId();
-            namesAndIDs.add(nameAndID);
-        }
-        return namesAndIDs;
+        return wsGetMembersResults.getResults()[0].getWsSubjects();
     }
 
     /**
@@ -325,5 +318,10 @@ public class GroupingsController {
 
     //TODO more methods to add
     //Indicate whether or not the Grouping is to be published to a LISTSERV list
-    //Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion group
+    //Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion/exclusion group
+    //list all groups the user can opt into
+    //list all groups the user can opt out of
+
+
+
 }
