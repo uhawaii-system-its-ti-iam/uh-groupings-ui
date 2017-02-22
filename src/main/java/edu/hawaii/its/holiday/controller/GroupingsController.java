@@ -44,33 +44,37 @@ public class GroupingsController {
     /**
      * adds a member to a Grouping that the user owns
      *
+     * @param username: username of the subject preforming the action
      * @param grouping:  String containing the path of the Grouping
      * @param userToAdd: username of the member to be added
      * @return information about the new member and its success
      */
     @RequestMapping("/addMember")
-    public WsAddMemberResults addMember(@RequestParam String grouping, @RequestParam String userToAdd) {
-        new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToAdd).execute();
-        return new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(userToAdd).execute();
-        //TODO currently the api account is being used for authentication, eventually this will change so that the
-        //TODO user creating the request will be verified first and only be allowed to change groupings that they have
-        //TODO ownership over
+    public WsAddMemberResults addMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+        new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToAdd).execute();
+        return new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToAdd).execute();
     }
 
     /**
      * gives the user read, update and view privileges for the Grouping
      *
+     * @param username: username of subject preforming action
      * @param grouping: path to the grouping that the newOwner will own
      * @param newOwner: String containing the username of the new owner
      * @return information about the new owner and its success
      */
     @RequestMapping("/assignOwnership")
-    public WsAssignGrouperPrivilegesResults[] assignOwnership(@RequestParam String grouping, @RequestParam String newOwner) {
+    public WsAssignGrouperPrivilegesResults[] assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
 
-        WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultses = new WsAssignGrouperPrivilegesResults[3];
+        WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultsArray = new WsAssignGrouperPrivilegesResults[3];
 
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(newOwner);
+
+        WsSubjectLookup wsSubjectLookup1 = new WsSubjectLookup();
+        wsSubjectLookup1.setSubjectIdentifier(username);
 
         WsGroupLookup wsGroupLookup0 = new WsGroupLookup();
         wsGroupLookup0.setGroupName(grouping + ":include");
@@ -81,16 +85,18 @@ public class GroupingsController {
         WsGroupLookup wsGroupLookup2 = new WsGroupLookup();
         wsGroupLookup2.setGroupName(grouping + ":exclude");
 
-        wsAssignGrouperPrivilegesResultses[0] = new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup1).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[0] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup1).addSubjectLookup(wsSubjectLookup)
                 .addPrivilegeName("view").addPrivilegeName("read").assignAllowed(true).execute();
 
-        wsAssignGrouperPrivilegesResultses[1] = new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup2).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[1] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup2).addSubjectLookup(wsSubjectLookup)
                 .addPrivilegeName("view").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(true).execute();
 
-        wsAssignGrouperPrivilegesResultses[2] = new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup0).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[2] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup0).addSubjectLookup(wsSubjectLookup)
                 .addPrivilegeName("view").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(true).execute();
 
-        return wsAssignGrouperPrivilegesResultses;
+        return wsAssignGrouperPrivilegesResultsArray;
+        //change to api-account for now
+        //switch to actAsSubject after we figure out attribute update privlages
     }
 
     /**
@@ -114,48 +120,52 @@ public class GroupingsController {
     /**
      * removes a member from a Grouping that the user is an owner of
      *
-     * @param grouping:     String containing the path of the Grouping
+     * @param username: username of the subject preforming the action
+     * @param grouping: String containing the path of the Grouping
      * @param userToDelete: String containing the username of the user to be removed from the Grouping
      * @return information about the deleted member and its success
      */
     @RequestMapping("/deleteMember")
-    public WsDeleteMemberResults deleteMember(@RequestParam String grouping, @RequestParam String userToDelete) {
-        new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToDelete).execute();
-        return new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(userToDelete).execute();
-        //TODO currently the api account is being used for authentication, eventually this will change so that the
-        //TODO user creating the request will be verified first and only be allowed to change groupings that they have
-        //TODO ownership over
+    public WsDeleteMemberResults deleteMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+        new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToDelete).execute();
+        return new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToDelete).execute();
     }
 
     /**
      * removes ownership privileges from the user specified
      *
+     * @param username: username of the subject preforming the action
      * @param grouping:      String containing the path of the Grouping
      * @param ownerToRemove: String containing the name of the user who's privileges will be removed
      * @return information about the member who's ownership privileges have been removed and its success
      */
     @RequestMapping("/removeOwnership")
-    public WsAssignGrouperPrivilegesResults[] removeOwnership(@RequestParam String grouping,
+    public WsAssignGrouperPrivilegesResults[] removeOwnership(@RequestParam String grouping, @RequestParam String username,
                                                               @RequestParam String ownerToRemove) {
         WsGroupLookup wsGroupLookup = new WsGroupLookup();
         wsGroupLookup.setGroupName(grouping + ":include");
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(ownerToRemove);
+        WsSubjectLookup wsSubjectLookup1 = new WsSubjectLookup();
+        wsSubjectLookup1.setSubjectIdentifier(username);
 
         WsGroupLookup wsGroupLookup1 = new WsGroupLookup();
+
         wsGroupLookup1.setGroupName(grouping + ":basis+include");
 
         WsGroupLookup wsGroupLookup2 = new WsGroupLookup();
         wsGroupLookup2.setGroupName(grouping + ":exclude");
 
         WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultsArray = new WsAssignGrouperPrivilegesResults[3];
-        wsAssignGrouperPrivilegesResultsArray[0] = new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup1).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[0] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup1).addSubjectLookup(wsSubjectLookup)
                 .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false).execute();
 
-        wsAssignGrouperPrivilegesResultsArray[1] = new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup2).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[1] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup2).addSubjectLookup(wsSubjectLookup)
                 .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false).execute();
 
-        wsAssignGrouperPrivilegesResultsArray[2] = new GcAssignGrouperPrivileges().assignGroupLookup(wsGroupLookup).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[2] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup).addSubjectLookup(wsSubjectLookup)
                 .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false).execute();
 
         return wsAssignGrouperPrivilegesResultsArray;
@@ -164,12 +174,15 @@ public class GroupingsController {
     /**
      * finds all the members of a group
      *
+     * @param username: username of the subject preforming the action
      * @param grouping : String containing the path of the Grouping to be searched
      * @return information for all of the members
      */
     @RequestMapping("/getMembers")
-    public WsSubject[] getMembers(@RequestParam String grouping) {
-        WsGetMembersResults wsGetMembersResults = new GcGetMembers().addGroupName(grouping + ":basis+include").assignIncludeSubjectDetail(true).execute();
+    public WsSubject[] getMembers(@RequestParam String grouping, @RequestParam String username) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+        WsGetMembersResults wsGetMembersResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":basis+include").assignIncludeSubjectDetail(true).execute();
 
         return wsGetMembersResults.getResults()[0].getWsSubjects();
     }
@@ -177,11 +190,14 @@ public class GroupingsController {
     /**
      * finds all of the owners of a group
      *
+     * @param username: username of the subject preforming the action
      * @return information for all of the owners
      */
     @RequestMapping("/getOwners")
-    public ArrayList<WsSubject> getOwners(@RequestParam String grouping) {
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("update").execute();
+    public ArrayList<WsSubject> getOwners(@RequestParam String grouping, @RequestParam String username) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").assignPrivilegeName("update").execute();
         ArrayList<WsSubject> subjects = new ArrayList<>();
         for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
             subjects.add(wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getOwnerSubject());
@@ -198,13 +214,22 @@ public class GroupingsController {
      */
     @RequestMapping("/groupingsIn")
     public String[] groupingsIn(@RequestParam String username) {
-        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().addSubjectIdentifier(username).assignScope("hawaii.edu:custom").execute();
+        //the time it takes to look up a student is about 3 minutes
+        //the time it takes to look up a staff member is less than 3 seconds
+        //so until this gets resolved, it would be easier to query for a staff member while testing
+        WsStemLookup wsStemLookup = new WsStemLookup();
+        wsStemLookup.setStemName("hawaii.edu:custom");
+
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().assignActAsSubject(wsSubjectLookup).addSubjectIdentifier(username).assignWsStemLookup(wsStemLookup).assignStemScope(StemScope.ALL_IN_SUBTREE).execute();
         String[] groups = new String[wsGetGroupsResults.getResults()[0].getWsGroups().length];
         for(int i = 0; i < groups.length; i ++){
 
             groups[i] = wsGetGroupsResults.getResults()[0].getWsGroups()[i].getName();
         }
         return groups;
+        //TODO extract the Groupings and leave out the Groups
         //TODO consolodate groups so that basis, basis+include, include are in one group and exclude does not show up
     }
 
@@ -221,7 +246,10 @@ public class GroupingsController {
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("update").execute();
         String[] groups = new String[wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length];
         for (int i = 0; i < groups.length; i++) {
-            groups[i] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+            String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+            if(temp.endsWith("include")) {
+                groups[i] = temp.split(":include")[0];
+            }
         }
         return groups;
         //TODO reduce groups by consolidating the include and exclude groups into one name
@@ -248,8 +276,6 @@ public class GroupingsController {
             return new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
         } else {
             throw new AccessDeniedException("user is not allowed to opt into this group");
-            // this exception does not go all the way through to the command line
-            // the exception that comes out is a NullPointerException
         }
     }
 
@@ -276,8 +302,6 @@ public class GroupingsController {
             return new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
         } else {
             throw new AccessDeniedException("user is not allowed to opt out of this group");
-            // this exception does not go all the way through to the command line
-            // the exception that comes out is a NullPointerException
         }
     }
 
@@ -313,12 +337,50 @@ public class GroupingsController {
         return wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
     }
 
+    /**
+     * finds the different Groupings that the user has owner privileges for
+     *
+     * @param username : the owner of the groups returned
+     * @return information about all of the Groupings that the user owns
+     */
+    @RequestMapping("/groupingsToOptOutOf")
+    public String[] groupingsToOptOutOf(@RequestParam String username) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("optout").execute();
+        String[] groups = new String[wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length];
+        for (int i = 0; i < groups.length; i++) {
+            groups[i] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+        }
+        return groups;
+        //TODO reduce groups by consolidating the include and exclude groups into one name
+        //TODO extract the Groupings and leave out the Groups
+    }
+
+    /**
+     * finds the different Groupings that the user has owner privileges for
+     *
+     * @param username : the owner of the groups returned
+     * @return information about all of the Groupings that the user owns
+     */
+    @RequestMapping("/groupingsToOptInto")
+    public String[] groupingsToOptInto(@RequestParam String username) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("optin").execute();
+        String[] groups = new String[wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length];
+        for (int i = 0; i < groups.length; i++) {
+            groups[i] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+        }
+        return groups;
+        //TODO reduce groups by consolidating the include and exclude groups into one name
+        //TODO extract the Groupings and leave out the Groups
+    }
+
     //TODO more methods to add
     //Indicate whether or not the Grouping is to be published to a LISTSERV list
     //Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion/exclusion group
     //list all groups the user can opt into
     //list all groups the user can opt out of
-
-
 
 }

@@ -9,4 +9,5 @@ grouperClientFailoverState.bin
 src/main/resources/static/javascript/tsconfig.json
 src/main/resources/grouper.client.properties
 .idea
-
+src/main/resources/grouperClientLogs/*
+grouperClientLogs
