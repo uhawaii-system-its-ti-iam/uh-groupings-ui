@@ -44,17 +44,24 @@ public class GroupingsController {
     /**
      * adds a member to a Grouping that the user owns
      *
-     * @param username: username of the subject preforming the action
-     * @param grouping:  String containing the path of the Grouping
-     * @param userToAdd: username of the member to be added
+     * @param grouping :  String containing the path of the Grouping
+     * @param username :  username of the subject preforming the action
+     * @param userToAdd : username of the member to be added
      * @return information about the new member and its success
      */
     @RequestMapping("/addMember")
-    public WsAddMemberResults addMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd) {
+    public Object[] addMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
-        new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToAdd).execute();
-        return new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToAdd).execute();
+
+        WsDeleteMemberResults wsDeleteMemberResults = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToAdd).execute();
+        WsAddMemberResults wsAddMemberResults = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToAdd).execute();
+
+        Object[] results = new Object[2];
+        results[0] = wsAddMemberResults;
+        results[1] = wsDeleteMemberResults;
+
+        return results;
     }
 
     /**
@@ -120,23 +127,30 @@ public class GroupingsController {
     /**
      * removes a member from a Grouping that the user is an owner of
      *
-     * @param username: username of the subject preforming the action
-     * @param grouping: String containing the path of the Grouping
-     * @param userToDelete: String containing the username of the user to be removed from the Grouping
+     * @param grouping :     String containing the path of the Grouping
+     * @param username :     username of the subject preforming the action
+     * @param userToDelete : String containing the username of the user to be removed from the Grouping
      * @return information about the deleted member and its success
      */
     @RequestMapping("/deleteMember")
-    public WsDeleteMemberResults deleteMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete) {
+    public Object[] deleteMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
-        new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToDelete).execute();
-        return new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToDelete).execute();
+
+        WsAddMemberResults wsAddMemberResults = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToDelete).execute();
+        WsDeleteMemberResults wsDeleteMemberResults = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToDelete).execute();
+
+        Object[] results = new Object[2];
+        results[0] = wsDeleteMemberResults;
+        results[1] = wsAddMemberResults;
+
+        return results;
     }
 
     /**
      * removes ownership privileges from the user specified
      *
-     * @param username: username of the subject preforming the action
+     * @param username:      username of the subject preforming the action
      * @param grouping:      String containing the path of the Grouping
      * @param ownerToRemove: String containing the name of the user who's privileges will be removed
      * @return information about the member who's ownership privileges have been removed and its success
@@ -175,7 +189,7 @@ public class GroupingsController {
      * finds all the members of a group
      *
      * @param username: username of the subject preforming the action
-     * @param grouping : String containing the path of the Grouping to be searched
+     * @param grouping  : String containing the path of the Grouping to be searched
      * @return information for all of the members
      */
     @RequestMapping("/getMembers")
@@ -224,7 +238,7 @@ public class GroupingsController {
         wsSubjectLookup.setSubjectIdentifier(username);
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().assignActAsSubject(wsSubjectLookup).addSubjectIdentifier(username).assignWsStemLookup(wsStemLookup).assignStemScope(StemScope.ALL_IN_SUBTREE).execute();
         String[] groups = new String[wsGetGroupsResults.getResults()[0].getWsGroups().length];
-        for(int i = 0; i < groups.length; i ++){
+        for (int i = 0; i < groups.length; i++) {
 
             groups[i] = wsGetGroupsResults.getResults()[0].getWsGroups()[i].getName();
         }
@@ -247,10 +261,20 @@ public class GroupingsController {
         String[] groups = new String[wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length];
         for (int i = 0; i < groups.length; i++) {
             String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
-            if(temp.endsWith("include")) {
+            if (temp.endsWith(":include")) {
                 groups[i] = temp.split(":include")[0];
+            } else if (temp.endsWith(":exclude")) {
+                groups[i] = temp.split(":exclude")[0];
+            } else if (temp.endsWith(":basis")) {
+                groups[i] = temp.split(":basis")[0];
+            } else if (temp.endsWith(":basis+include")) {
+                groups[i] = temp.split(":basis+include")[0];
+            } else {
+                groups[i] = temp;
             }
         }
+
+
         return groups;
         //TODO reduce groups by consolidating the include and exclude groups into one name
     }
@@ -376,6 +400,7 @@ public class GroupingsController {
         //TODO reduce groups by consolidating the include and exclude groups into one name
         //TODO extract the Groupings and leave out the Groups
     }
+
 
     //TODO more methods to add
     //Indicate whether or not the Grouping is to be published to a LISTSERV list
