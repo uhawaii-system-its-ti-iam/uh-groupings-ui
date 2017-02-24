@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:substituteby="header :: copy"></head>
-<body>
+<body ng-app="adminApp">
     <nav th:substituteby="menubar :: copy"></nav>
     <!--  Content container -->
     <div class='container-fluid'>
@@ -16,7 +16,7 @@
 
                     <h3>Designated Admins</h3>
                     <div ng-controller="AdminJsController" data-ng-init="init()">
-                        <table class="table-bordered">
+                        <table class="table table-bordered table-condensed table-hover">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -30,16 +30,22 @@
                                     <td>{{l.name}}</td>
                                     <td>{{l.id}}</td>
                                     <td>{{l.attributeValues}}</td>
-                                    <td align="center"><button ng-click="remove($index)"> &#10006;</button></td>
+                                    <td><button class="btn btn-default btn-block" ng-click="remove($index)"> &#10006;</button></td>
                                 </tr>
                             </tbody>
                         </table>
+
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addAdmin" aria-expanded="false" aria-controls="addAdmin">
+                            Add Admin
+                        </button>
+                        <div class="collapse" id="addAdmin">
+                            <input type="text" ng-model="username"/>
+                            <button class="btn btn-success" ng-click="add()">Add Admin</button>
+                        </div>
                         <br/>
-                        <input type="text" ng-model="username"/>
-                        <button ng-click="add()">Add Admin</button>
+
                     </div>
                 </div>
-
                 <br/>
                 <div sec:authorize="isAuthenticated()">
                     <h5>Selected Spring Security Information</h5>
