@@ -241,10 +241,10 @@ public class GroupingsController {
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().assignActAsSubject(wsSubjectLookup).addSubjectIdentifier(username).assignWsStemLookup(wsStemLookup).assignStemScope(StemScope.ALL_IN_SUBTREE).execute();
 
         ArrayList<String> groups = new ArrayList<>();
-        WsGroup[] groupResutls = wsGetGroupsResults.getResults()[0].getWsGroups();
+        WsGroup[] groupResults = wsGetGroupsResults.getResults()[0].getWsGroups();
 
         for (int i = 0; i < wsGetGroupsResults.getResults()[0].getWsGroups().length; i ++){
-            String temp = groupResutls[i].getName();
+            String temp = groupResults[i].getName();
 
             if (temp.endsWith(":include")) {
                 temp = temp.split(":include")[0];
@@ -253,7 +253,7 @@ public class GroupingsController {
             } else if (temp.endsWith(":basis")) {
                 temp = temp.split(":basis")[0];
             } else if (temp.endsWith(":basis+include")) {
-                temp = temp.split(":basis+include")[0];
+                temp = temp.split(":basis\\+include")[0];
             }
 
             if(!groups.contains(temp)) {
@@ -288,7 +288,7 @@ public class GroupingsController {
             } else if (temp.endsWith(":basis")) {
                 temp = temp.split(":basis")[0];
             } else if (temp.endsWith(":basis+include")) {
-                temp = temp.split(":basis+include")[0];
+                temp = temp.split(":basis\\+include")[0];
             }
 
             if(!groups.contains(temp)) {
