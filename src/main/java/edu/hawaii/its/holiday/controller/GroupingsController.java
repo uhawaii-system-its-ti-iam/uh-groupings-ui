@@ -183,6 +183,8 @@ public class GroupingsController {
                 .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false).execute();
 
         return wsAssignGrouperPrivilegesResultsArray;
+        //change to api-account for now
+        //switch to actAsSubject after we figure out attribute update privlages
     }
 
     /**
@@ -196,7 +198,7 @@ public class GroupingsController {
     public WsSubject[] getMembers(@RequestParam String grouping, @RequestParam String username) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
-        WsGetMembersResults wsGetMembersResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":basis+include").assignIncludeSubjectDetail(true).execute();
+        WsGetMembersResults wsGetMembersResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping).assignIncludeSubjectDetail(true).execute();
 
         return wsGetMembersResults.getResults()[0].getWsSubjects();
     }
@@ -227,7 +229,7 @@ public class GroupingsController {
      * @return information about all of the Groupings the user is in
      */
     @RequestMapping("/groupingsIn")
-    public String[] groupingsIn(@RequestParam String username) {
+    public ArrayList<String> groupingsIn(@RequestParam String username) {
         //the time it takes to look up a student is about 3 minutes
         //the time it takes to look up a staff member is less than 3 seconds
         //so until this gets resolved, it would be easier to query for a staff member while testing
@@ -237,10 +239,26 @@ public class GroupingsController {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().assignActAsSubject(wsSubjectLookup).addSubjectIdentifier(username).assignWsStemLookup(wsStemLookup).assignStemScope(StemScope.ALL_IN_SUBTREE).execute();
-        String[] groups = new String[wsGetGroupsResults.getResults()[0].getWsGroups().length];
-        for (int i = 0; i < groups.length; i++) {
 
-            groups[i] = wsGetGroupsResults.getResults()[0].getWsGroups()[i].getName();
+        ArrayList<String> groups = new ArrayList<>();
+        WsGroup[] groupResutls = wsGetGroupsResults.getResults()[0].getWsGroups();
+
+        for (int i = 0; i < wsGetGroupsResults.getResults()[0].getWsGroups().length; i ++){
+            String temp = groupResutls[i].getName();
+
+            if (temp.endsWith(":include")) {
+                temp = temp.split(":include")[0];
+            } else if (temp.endsWith(":exclude")) {
+                temp = temp.split(":exclude")[0];
+            } else if (temp.endsWith(":basis")) {
+                temp = temp.split(":basis")[0];
+            } else if (temp.endsWith(":basis+include")) {
+                temp = temp.split(":basis+include")[0];
+            }
+
+            if(!groups.contains(temp)) {
+                groups.add(temp);
+            }
         }
         return groups;
         //TODO extract the Groupings and leave out the Groups
@@ -254,28 +272,32 @@ public class GroupingsController {
      * @return information about all of the Groupings that the user owns
      */
     @RequestMapping("/groupingsOwned")
-    public String[] groupingsOwned(@RequestParam String username) {
+    public ArrayList<String> groupingsOwned(@RequestParam String username) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("update").execute();
-        String[] groups = new String[wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length];
-        for (int i = 0; i < groups.length; i++) {
+        ArrayList<String> groups = new ArrayList<>();
+
+        for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
             String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+
             if (temp.endsWith(":include")) {
-                groups[i] = temp.split(":include")[0];
+                temp = temp.split(":include")[0];
             } else if (temp.endsWith(":exclude")) {
-                groups[i] = temp.split(":exclude")[0];
+                temp = temp.split(":exclude")[0];
             } else if (temp.endsWith(":basis")) {
-                groups[i] = temp.split(":basis")[0];
+                temp = temp.split(":basis")[0];
             } else if (temp.endsWith(":basis+include")) {
-                groups[i] = temp.split(":basis+include")[0];
-            } else {
-                groups[i] = temp;
+                temp = temp.split(":basis+include")[0];
+            }
+
+            if(!groups.contains(temp)) {
+                groups.add(temp);
             }
         }
 
-
         return groups;
+        //TODO extract the Groupings and leave out the Groups
         //TODO reduce groups by consolidating the include and exclude groups into one name
     }
 
