@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:substituteby="header :: copy"></head>
-<body>
+<body ng-app="membershipApp">
 <nav th:substituteby="menubar :: copy"></nav>
 
 <!--  Content container -->
@@ -10,21 +10,47 @@
 
     <div class='row'>
         <div class='col-xs-offset-1 col-xs-10'>
-            <h3>Manage My Memberships</h3>
-            <h4>Everyone can see this information</h4>
-
+            <h2>Manage My Memberships</h2>
             <p>Members can manage their memberships for the groupings that they belong to.</p>
 
             <div class = "search_groups">
-                <p>Search for Group to join</p>
+                <h3>Search for Group to join</h3>
+                <div class="form-group">
+                    <label>Search Groupings</label>
+                    <input type="text" placeholder="Enter grouping name"/>
+                    <input class="btn btn-default btn-primary" type="submit" value="Submit"/>
+                </div>
             </div>
 
-            <div class = "groups_belong">
-                <p>You belong to this/these groups</p>
+            <div class = "groups_belong" ng-controller="MembershipJsController" data-ng-init="init()">
+                <h3>You belong to this/these groups</h3>
+                    <table class="table table-bordered table-condensed table-hover">
+                        <thead>
+                        <tr>
+                            <th>Groupings</th>
+                            <th>Opt out</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="l in list">
+                            <td>{{l}}</td>
+                            <td><button class="btn btn-default btn-block" ng-click="remove($index)"> &#10006;</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
             </div>
 
             <div class = "group_add">
-                <p>You can opt in to this/these groups</p>
+                <h3>You can opt in to this/these groups</h3>
+                <table class="table table-bordered table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th>Groupings</th>
+                        <th>Opt in</th>
+                    </tr>
+                    </thead>
+                </table>
             </div>
 
         </div>
