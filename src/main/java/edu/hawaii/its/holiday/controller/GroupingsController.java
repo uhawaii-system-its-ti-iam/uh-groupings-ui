@@ -242,7 +242,6 @@ public class GroupingsController {
 
         ArrayList<String> groups = new ArrayList<>();
         WsGroup[] groupResults = wsGetGroupsResults.getResults()[0].getWsGroups();
-
         for (int i = 0; i < wsGetGroupsResults.getResults()[0].getWsGroups().length; i ++){
             String temp = groupResults[i].getName();
 
