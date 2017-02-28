@@ -302,12 +302,12 @@ public class GroupingsController {
     /**
      * if the user is allowed to opt into the grouping, this will add them to the include group of that grouping
      *
-     * @param username: the username of user opting in
-     * @param grouping: the path to the grouping where the user will be opting in
+     * @param username : the username of user opting in
+     * @param grouping : the path to the grouping where the user will be opting in
      * @return information about the success of opting in
      */
     @RequestMapping("/optIn")
-    public WsAddMemberResults optIn(@RequestParam String username, @RequestParam String grouping) {
+    public Object[] optIn(@RequestParam String username, @RequestParam String grouping) {
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult;
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
@@ -315,24 +315,25 @@ public class GroupingsController {
         wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
 
         if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
-            new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
-            return new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+            Object[] results = new Object[2];
+            results[0] = new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
+            results[1] = new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+            return results;
         } else {
             throw new AccessDeniedException("user is not allowed to opt into this group");
         }
-        //TODO return array of Objects to return both GcDeleteMember and GcAddMember results
     }
 
 
     /**
      * if the user is allowed to opt out of the grouping, this will add them to the exclude group of that grouping
      *
-     * @param username: the username of user opting out
-     * @param grouping: the path to the grouping where the user will be opting out
+     * @param username : the username of user opting out
+     * @param grouping : the path to the grouping where the user will be opting out
      * @return information about the success of opting out
      */
     @RequestMapping("/optOut")
-    public WsDeleteMemberResults optOut(@RequestParam String username, @RequestParam String grouping) {
+    public Object[] optOut(@RequestParam String username, @RequestParam String grouping) {
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult;
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
@@ -340,12 +341,13 @@ public class GroupingsController {
         wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
 
         if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
-            new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
-            return new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+            Object[] results = new Object[2];
+            results[0] = new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
+            results[1] = new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+            return results;
         } else {
             throw new AccessDeniedException("user is not allowed to opt out of this group");
         }
-        //TODO return array of Objects to return both GcDeleteMember and GcAddMember results
     }
 
     /**
@@ -436,7 +438,5 @@ public class GroupingsController {
     //TODO more methods to add
     //Indicate whether or not the Grouping is to be published to a LISTSERV list
     //Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion/exclusion group
-    //list all groups the user can opt into
-    //list all groups the user can opt out of
 
 }
