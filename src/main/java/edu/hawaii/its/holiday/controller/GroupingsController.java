@@ -385,16 +385,23 @@ public class GroupingsController {
      * @return information about all of the Groupings that the user owns
      */
     @RequestMapping("/groupingsToOptOutOf")
-    public String[] groupingsToOptOutOf(@RequestParam String username) {
+    public ArrayList<String> groupingsToOptOutOf(@RequestParam String username) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("optout").execute();
-        String[] groups = new String[wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length];
-        for (int i = 0; i < groups.length; i++) {
-            groups[i] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("optin").execute();
+        ArrayList<String> groups = new ArrayList<>();
+
+        for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
+            String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+
+            if (temp.endsWith(":exclude")) {
+                temp = temp.split(":exclude")[0];
+                groups.add(temp);
+            }
         }
+
         return groups;
-        //TODO reduce groups by consolidating the include and exclude groups into one name
+
         //TODO extract the Groupings and leave out the Groups
     }
 
@@ -405,16 +412,23 @@ public class GroupingsController {
      * @return information about all of the Groupings that the user owns
      */
     @RequestMapping("/groupingsToOptInto")
-    public String[] groupingsToOptInto(@RequestParam String username) {
+    public ArrayList<String> groupingsToOptInto(@RequestParam String username) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("optin").execute();
-        String[] groups = new String[wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length];
-        for (int i = 0; i < groups.length; i++) {
-            groups[i] = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+        ArrayList<String> groups = new ArrayList<>();
+
+        for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
+            String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+
+            if (temp.endsWith(":include")) {
+                temp = temp.split(":include")[0];
+                groups.add(temp);
+            }
         }
+
         return groups;
-        //TODO reduce groups by consolidating the include and exclude groups into one name
+
         //TODO extract the Groupings and leave out the Groups
     }
 
