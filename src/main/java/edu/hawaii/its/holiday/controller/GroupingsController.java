@@ -310,9 +310,8 @@ public class GroupingsController {
                     groups.add(temp);
                 }
             }
-        }
-        catch(NullPointerException npe){
-        return null;
+        } catch (NullPointerException npe) {
+            return null;
         }
         return groups;
     }
@@ -424,7 +423,7 @@ public class GroupingsController {
 
             if (temp.endsWith(":exclude")) {
                 temp = temp.split(":exclude")[0];
-                if(trios.contains(temp)) {
+                if (trios.contains(temp)) {
                     groups.add(temp);
                 }
             }
@@ -460,7 +459,7 @@ public class GroupingsController {
 
             if (temp.endsWith(":include")) {
                 temp = temp.split(":include")[0];
-                if(trios.contains(temp)) {
+                if (trios.contains(temp)) {
                     groups.add(temp);
                 }
             }
@@ -468,6 +467,17 @@ public class GroupingsController {
 
         return groups;
     }
+
+    @RequestMapping("/hasListServe")
+    public boolean hasListServe(@RequestParam String username, @RequestParam String grouping) throws NullPointerException {
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().assignAttributeAssignType("group").addOwnerGroupName(grouping).addAttributeDefNameName("uh-settings:attributes:for-groups:uh-grouping:destinations:listserv").execute();
+        WsAttributeAssign listServeAttriubte = wsGetAttributeAssignmentsResults.getWsAttributeAssigns()[0];
+        if (listServeAttriubte.getAttributeDefNameName().equals("uh-settings:attributes:for-groups:uh-grouping:destinations:listserv")) {
+            return true;
+        }
+        return false;
+    }
+
 
     //TODO more methods to add
     //Indicate whether or not the Grouping is to be published to a LISTSERV list
