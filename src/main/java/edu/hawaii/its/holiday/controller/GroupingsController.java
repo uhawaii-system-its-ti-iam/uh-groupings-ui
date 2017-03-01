@@ -117,8 +117,10 @@ public class GroupingsController {
 //        WsGroupLookup wsGroupLookup = new WsGroupLookup();
 //        wsGroupLookup.setGroupName(grouping);
 //        new GcGroupDelete().addGroupLookup(wsGroupLookup).execute();
-        //not currently implemented
-        //instead email its-iam-help@hawaii.edu for help
+        //TODO currently this method is not to be implemented because responsibility to create a new
+        //TODO grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
+        //TODO https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
+        // email its-iam-help@hawaii.edu for help in deleting a Grouping
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form");
         return redirectView;
@@ -480,7 +482,6 @@ public class GroupingsController {
 
 
     //TODO more methods to add
-    //Indicate whether or not the Grouping is to be published to a LISTSERV list
     //Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion/exclusion group
 
 }
