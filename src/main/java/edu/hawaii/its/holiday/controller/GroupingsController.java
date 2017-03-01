@@ -44,8 +44,8 @@ public class GroupingsController {
     /**
      * adds a member to a Grouping that the user owns
      *
-     * @param grouping :  String containing the path of the Grouping
-     * @param username :  username of the subject preforming the action
+     * @param grouping  :  String containing the path of the Grouping
+     * @param username  :  username of the subject preforming the action
      * @param userToAdd : username of the member to be added
      * @return information about the new member and its success
      */
@@ -127,8 +127,8 @@ public class GroupingsController {
     /**
      * removes a member from a Grouping that the user is an owner of
      *
-     * @param grouping :     String containing the path of the Grouping
-     * @param username :     username of the subject preforming the action
+     * @param grouping     :     String containing the path of the Grouping
+     * @param username     :     username of the subject preforming the action
      * @param userToDelete : String containing the username of the user to be removed from the Grouping
      * @return information about the deleted member and its success
      */
@@ -242,7 +242,16 @@ public class GroupingsController {
 
         ArrayList<String> groups = new ArrayList<>();
         WsGroup[] groupResults = wsGetGroupsResults.getResults()[0].getWsGroups();
-        for (int i = 0; i < wsGetGroupsResults.getResults()[0].getWsGroups().length; i ++){
+
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().addAttributeDefUuid("1d7365a23c994f5f83f7b541d4a5fa5e").addSubjectAttributeName("uh-settings:attributes:for-groups:uh-grouping:is-trio").assignAttributeAssignType("group").execute();
+        WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
+        ArrayList<String> trios = new ArrayList<>();
+
+        for (int i = 0; i < trioArray.length; i++) {
+            trios.add(trioArray[i].getName());
+        }
+
+        for (int i = 0; i < wsGetGroupsResults.getResults()[0].getWsGroups().length; i++) {
             String temp = groupResults[i].getName();
 
             if (temp.endsWith(":include")) {
@@ -255,12 +264,11 @@ public class GroupingsController {
                 temp = temp.split(":basis\\+include")[0];
             }
 
-            if(!groups.contains(temp)) {
+            if ((!groups.contains(temp)) && (trios.contains(temp))) {
                 groups.add(temp);
             }
         }
         return groups;
-        //TODO extract the Groupings and leave out the Groups
     }
 
     /**
@@ -276,26 +284,37 @@ public class GroupingsController {
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("update").execute();
         ArrayList<String> groups = new ArrayList<>();
 
-        for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
-            String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().addAttributeDefUuid("1d7365a23c994f5f83f7b541d4a5fa5e").addSubjectAttributeName("uh-settings:attributes:for-groups:uh-grouping:is-trio").assignAttributeAssignType("group").execute();
+        WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
+        ArrayList<String> trios = new ArrayList<>();
 
-            if (temp.endsWith(":include")) {
-                temp = temp.split(":include")[0];
-            } else if (temp.endsWith(":exclude")) {
-                temp = temp.split(":exclude")[0];
-            } else if (temp.endsWith(":basis")) {
-                temp = temp.split(":basis")[0];
-            } else if (temp.endsWith(":basis+include")) {
-                temp = temp.split(":basis\\+include")[0];
-            }
-
-            if(!groups.contains(temp)) {
-                groups.add(temp);
-            }
+        for (int i = 0; i < trioArray.length; i++) {
+            trios.add(trioArray[i].getName());
         }
 
+        try {
+            for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
+                String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
+
+                if (temp.endsWith(":include")) {
+                    temp = temp.split(":include")[0];
+                } else if (temp.endsWith(":exclude")) {
+                    temp = temp.split(":exclude")[0];
+                } else if (temp.endsWith(":basis")) {
+                    temp = temp.split(":basis")[0];
+                } else if (temp.endsWith(":basis+include")) {
+                    temp = temp.split(":basis\\+include")[0];
+                }
+
+                if ((!groups.contains(temp)) && (trios.contains(temp))) {
+                    groups.add(temp);
+                }
+            }
+        }
+        catch(NullPointerException npe){
+        return null;
+        }
         return groups;
-        //TODO extract the Groupings and leave out the Groups
     }
 
     /**
@@ -392,18 +411,27 @@ public class GroupingsController {
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("optin").execute();
         ArrayList<String> groups = new ArrayList<>();
 
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().addAttributeDefUuid("1d7365a23c994f5f83f7b541d4a5fa5e").addSubjectAttributeName("uh-settings:attributes:for-groups:uh-grouping:is-trio").assignAttributeAssignType("group").execute();
+        WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
+        ArrayList<String> trios = new ArrayList<>();
+
+        for (int i = 0; i < trioArray.length; i++) {
+            trios.add(trioArray[i].getName());
+        }
+
         for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
             String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
 
             if (temp.endsWith(":exclude")) {
                 temp = temp.split(":exclude")[0];
-                groups.add(temp);
+                if(trios.contains(temp)) {
+                    groups.add(temp);
+                }
             }
         }
 
         return groups;
 
-        //TODO extract the Groupings and leave out the Groups
     }
 
     /**
@@ -419,20 +447,27 @@ public class GroupingsController {
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignSubjectLookup(wsSubjectLookup).assignPrivilegeName("optin").execute();
         ArrayList<String> groups = new ArrayList<>();
 
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().addAttributeDefUuid("1d7365a23c994f5f83f7b541d4a5fa5e").addSubjectAttributeName("uh-settings:attributes:for-groups:uh-grouping:is-trio").assignAttributeAssignType("group").execute();
+        WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
+        ArrayList<String> trios = new ArrayList<>();
+
+        for (int i = 0; i < trioArray.length; i++) {
+            trios.add(trioArray[i].getName());
+        }
+
         for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
             String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
 
             if (temp.endsWith(":include")) {
                 temp = temp.split(":include")[0];
-                groups.add(temp);
+                if(trios.contains(temp)) {
+                    groups.add(temp);
+                }
             }
         }
 
         return groups;
-
-        //TODO extract the Groupings and leave out the Groups
     }
-
 
     //TODO more methods to add
     //Indicate whether or not the Grouping is to be published to a LISTSERV list
