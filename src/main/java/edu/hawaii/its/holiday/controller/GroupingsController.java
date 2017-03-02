@@ -482,6 +482,8 @@ public class GroupingsController {
 
 
     //TODO more methods to add
+    // give the Grouping owner the ability to change the optin/optout attribute for their Grouping
+    // add cancel optin and cancel opt out
     //Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion/exclusion group
 
 }
