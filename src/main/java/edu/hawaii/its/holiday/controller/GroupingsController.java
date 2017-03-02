@@ -333,14 +333,20 @@ public class GroupingsController {
 
         wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
 
+        WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":include").execute();
+        String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
+
+
         if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
-            Object[] results = new Object[2];
+            Object[] results = new Object[3];
             results[0] = new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
             results[1] = new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+            results[2] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("assign_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
             return results;
         } else {
             throw new AccessDeniedException("user is not allowed to opt into this group");
         }
+        //TODO check for self-opted in the exclude Group
     }
 
 
@@ -367,6 +373,33 @@ public class GroupingsController {
         } else {
             throw new AccessDeniedException("user is not allowed to opt out of this group");
         }
+        //TODO add "uh-settings:attributes:for-memberships:uh-grouping:self-opted"
+        //TODO check for self-opted in the include Group
+    }
+
+    @RequestMapping("/cancelOptIn")
+    public Object[] cancelOptIn(@RequestParam String username, @RequestParam String grouping) {
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult;
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+
+        wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optout").assignSubjectLookup(wsSubjectLookup).execute();
+
+        if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
+            Object[] results = new Object[2];
+            results[0] = new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
+            results[1] = new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+            return results;
+        } else {
+            throw new AccessDeniedException("user is not allowed to opt out of this group");
+        }
+//TODO check for "uh-settings:attributes:for-memberships:uh-grouping:self-opted"
+    }
+
+    @RequestMapping("/cancelOptOut")
+    public Object[] cancelOptOut() {
+        return null;
+        //TODO everyting...
     }
 
     /**
