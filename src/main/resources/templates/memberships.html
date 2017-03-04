@@ -8,22 +8,38 @@
 <!--  Content container -->
 <div class="container-fluid">
 
+
+  <nav class="navbar " role = "search">
+  <form class="navbar-form navbar-right" >
+    <div class="form-group">
+      <input type="text" placeholder="Search for groups"></input>
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</nav>
+
     <div class='row'>
         <div class='col-xs-offset-1 col-xs-10'>
             <h2>Manage My Memberships</h2>
             <p>Members can manage their memberships for the groupings that they belong to.</p>
 
-            <div class = "search_groups">
-                <h3>Search for Group to join</h3>
+            <!-- <div class = "search_groups"> -->
+                <!-- <h3>Search for Group to join</h3>
                 <div class="form-group">
                     <label>Search Groupings</label>
                     <input type="text" placeholder="Enter grouping name"/>
                     <input class="btn btn-default btn-primary" type="submit" value="Submit"/>
-                </div>
-            </div>
+                </div> -->
+            <!-- </div> -->
+
 
             <div class = "groups_belong" ng-controller="MembershipJsController" data-ng-init="init()">
                 <h3>You belong to this/these groups</h3>
+                <!-- <div class="form-group" id = "searching" >
+                  <label> Search for a Group</label>
+                  <input type = "text" placeholder="Search" ></input>
+                  <button type = "submit" class="btn btn-defalut"><span class ="glyphicon glyphicon-search"></span></button>
+                </div> -->
                     <table class="table table-bordered table-condensed table-hover">
                         <thead>
                         <tr>
