@@ -98,10 +98,10 @@ td.uh-pre {
 }
 
 .app-logout {
-    height: 50px; 
-    padding-top: 8.5px; 
-    padding-bottom: 15px; 
-    vertical-align: text-middle; 
+    height: 50px;
+    padding-top: 8.5px;
+    padding-bottom: 15px;
+    vertical-align: text-middle;
 }
 
 .footer {
@@ -150,5 +150,7 @@ td.uh-pre {
         font-size: 1.0em;
     }
 
-}
+/*li + */
 
+
+}

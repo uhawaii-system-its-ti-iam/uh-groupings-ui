@@ -11,7 +11,10 @@
 
 
                 $scope.list = d;
-                console.log($scope.list);
+                var obj = JSON.stringify(d);
+                var par = JSON.parse(obj);
+                console.log(obj);
+                console.log(par);
             }, url)
         };
     }

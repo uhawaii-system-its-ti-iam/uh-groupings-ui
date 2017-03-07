@@ -2,7 +2,7 @@
 
     function AdminJsController($scope, dataProvider) {
         var currentUser = document.getElementById("name").innerText;
-        var url = "getMembers?grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=" + currentUser;
+        var url = "getMembers?grouping=hawaii.edu:custom:test:ksanidad:ksanidad-test&username=" + currentUser;
         $scope.list = [];
 
         $scope.init = function() {
@@ -30,7 +30,7 @@
             var addUrl;
             //$scope.list.push({name:$scope.username, id: 25691470});
             console.log($scope.username);
-            addUrl = "addMember?userToAdd=" + $scope.username + "&grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=" + currentUser;
+            addUrl = "addMember?userToAdd=" + $scope.username + "&grouping=hawaii.edu:custom:test:ksanidad:ksanidad-test&username=" + currentUser;
 
             $.ajax({
                 url: addUrl,
@@ -52,7 +52,7 @@
             var deleteUser = $scope.list[row].attributeValues;
             console.log(deleteUser);
             if($scope.list.length > 1) {
-                deleteUrl = "deleteMember?username=" + currentUser + "&userToDelete=" + deleteUser + "&grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test";
+                deleteUrl = "deleteMember?username=" + currentUser + "&userToDelete=" + deleteUser + "&grouping=hawaii.edu:custom:test:ksanidad:ksanidad-test";
                 $.ajax({
                     url: deleteUrl,
                     method: 'GET',
