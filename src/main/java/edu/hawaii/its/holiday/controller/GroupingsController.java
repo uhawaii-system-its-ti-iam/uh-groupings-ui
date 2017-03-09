@@ -149,6 +149,7 @@ public class GroupingsController {
         results[1] = wsAddMemberResults;
 
         return results;
+        //TODO check for self-opted
     }
 
     /**
@@ -217,7 +218,7 @@ public class GroupingsController {
     public ArrayList<WsSubject> getOwners(@RequestParam String grouping, @RequestParam String username) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").assignPrivilegeName("update").execute();
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").assignPrivilegeName("update").addSubjectAttributeName("uid").execute();
         ArrayList<WsSubject> subjects = new ArrayList<>();
         for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
             subjects.add(wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getOwnerSubject());
@@ -337,7 +338,6 @@ public class GroupingsController {
 
         WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":include").execute();
         String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
-
 
         if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
             Object[] results = new Object[3];
