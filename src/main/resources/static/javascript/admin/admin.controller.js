@@ -1,16 +1,16 @@
-(function() {
+(function () {
 
     function AdminJsController($scope, dataProvider) {
         var currentUser = document.getElementById("name").innerText;
-        var url = "getMembers?grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=" + currentUser;
+        var url = "getMembers?grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=ksanidad"; //+ currentUser;
         $scope.list = [];
 
-        $scope.init = function() {
+        $scope.init = function () {
 
-            dataProvider.loadData(function(d) {
+            dataProvider.loadData(function (d) {
                 //sorts the data by name
-                d.sort(function(a,b){
-                    var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase()
+                d.sort(function (a, b) {
+                    var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
                     if (nameA < nameB) //sort string ascending
                         return -1
                     if (nameA > nameB)
@@ -18,50 +18,69 @@
                     return 0
                 })
 
-                for(var i = 0; i < d.length; i++){
-                    d[i].attributeValues = _.pluck(_.pluck(d,"attributeValues"), 0)[i];
+                for (var i = 0; i < d.length; i++) {
+                    d[i].attributeValues = _.pluck(_.pluck(d, "attributeValues"), 0)[i];
                 }
 
                 $scope.list = d;
             }, url)
         };
 
-        $scope.add = function(){
+        $scope.add = function () {
             var addUrl;
-            //$scope.list.push({name:$scope.username, id: 25691470});
+            $scope.testdata = [];
             console.log($scope.username);
             addUrl = "addMember?userToAdd=" + $scope.username + "&grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=" + currentUser;
 
-            $.ajax({
-                url: addUrl,
-                method: 'GET',
-                success:function(){
-                    console.log("Success In Adding");
-                    //reload data table
-                    $scope.init();
-                },
-                error: function(){
-                    console.log("Failed To add")
+
+            dataProvider.loadData(function (d) {
+                console.log(d);
+                const pluck = _.pluck(d, "results");
+
+                console.log(pluck);
+                console.log(pluck[0]);
+                if (typeof pluck[0] === 'undefined') {
+                    console.log($scope.username + " this user does not exist.");
+                    alert($scope.username + " this user does not exist.");
                 }
-            });
+                else
+                {
+                    const meta = pluck[0][0].resultMetadata;
+
+                    console.log(meta.resultCode);
+
+                    if (meta.resultCode === 'SUCCESS') {
+                        console.log("Successfully added " + $scope.username);
+                        alert("Successfully added " + $scope.username);
+                        $scope.init();
+                    }
+                    else if (meta.resultCode === 'SUCCESS_ALREADY_EXISTED') {
+                        console.log($scope.username + " already exists in this groupings.");
+                        alert($scope.username + " already exists in this groupings.");
+                    }
+                }
+
+                $scope.testdata = d;
+            }, addUrl)
+
             $scope.username = '';
         };
 
-        $scope.remove = function(row) {
+        $scope.remove = function (row) {
             var deleteUrl;
             var deleteUser = $scope.list[row].attributeValues;
             console.log(deleteUser);
-            if($scope.list.length > 1) {
+            if ($scope.list.length > 1) {
                 deleteUrl = "deleteMember?username=" + currentUser + "&userToDelete=" + deleteUser + "&grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test";
                 $.ajax({
                     url: deleteUrl,
                     method: 'GET',
-                    success:function(){
+                    success: function () {
                         console.log("Success In Deletion")
                         //reload data table
                         $scope.init();
                     },
-                    error: function(){
+                    error: function () {
                         console.log("Failed To Delete")
                     }
                 });
@@ -70,8 +89,8 @@
         }
 
 
-
     }
+
     adminApp.controller("AdminJsController", AdminJsController);
 
 })();

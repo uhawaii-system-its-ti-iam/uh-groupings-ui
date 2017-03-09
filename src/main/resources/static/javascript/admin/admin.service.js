@@ -7,6 +7,7 @@
                     .success(callback)
                     .error(function(data, status) {
                         console.log('Error in dataProvider; status: ', status);
+                        callback = "Error";
                     });
             }
         }
