@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 /**
  * Created by zknoebel on 12/12/16.
+ *
+ * file containing the mappings for all groupings methods
  */
 
 @RestController
@@ -147,6 +149,7 @@ public class GroupingsController {
         results[1] = wsAddMemberResults;
 
         return results;
+        //TODO check for self-opted
     }
 
     /**
@@ -215,7 +218,7 @@ public class GroupingsController {
     public ArrayList<WsSubject> getOwners(@RequestParam String grouping, @RequestParam String username) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").assignPrivilegeName("update").execute();
+        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").assignPrivilegeName("update").addSubjectAttributeName("uid").execute();
         ArrayList<WsSubject> subjects = new ArrayList<>();
         for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
             subjects.add(wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getOwnerSubject());
@@ -249,8 +252,8 @@ public class GroupingsController {
         WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
         ArrayList<String> trios = new ArrayList<>();
 
-        for (int i = 0; i < trioArray.length; i++) {
-            trios.add(trioArray[i].getName());
+        for (WsGroup aTrioArray : trioArray) {
+            trios.add(aTrioArray.getName());
         }
 
         for (int i = 0; i < wsGetGroupsResults.getResults()[0].getWsGroups().length; i++) {
@@ -290,8 +293,8 @@ public class GroupingsController {
         WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
         ArrayList<String> trios = new ArrayList<>();
 
-        for (int i = 0; i < trioArray.length; i++) {
-            trios.add(trioArray[i].getName());
+        for (WsGroup aTrioArray : trioArray) {
+            trios.add(aTrioArray.getName());
         }
 
         try {
@@ -335,7 +338,6 @@ public class GroupingsController {
 
         WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":include").execute();
         String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
-
 
         if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
             Object[] results = new Object[3];
@@ -460,8 +462,8 @@ public class GroupingsController {
         WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
         ArrayList<String> trios = new ArrayList<>();
 
-        for (int i = 0; i < trioArray.length; i++) {
-            trios.add(trioArray[i].getName());
+        for (WsGroup aTrioArray : trioArray) {
+            trios.add(aTrioArray.getName());
         }
 
         for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
@@ -496,8 +498,8 @@ public class GroupingsController {
         WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
         ArrayList<String> trios = new ArrayList<>();
 
-        for (int i = 0; i < trioArray.length; i++) {
-            trios.add(trioArray[i].getName());
+        for (WsGroup aTrioArray : trioArray) {
+            trios.add(aTrioArray.getName());
         }
 
         for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
@@ -518,10 +520,7 @@ public class GroupingsController {
     public boolean hasListServe(@RequestParam String username, @RequestParam String grouping) throws NullPointerException {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().assignAttributeAssignType("group").addOwnerGroupName(grouping).addAttributeDefNameName("uh-settings:attributes:for-groups:uh-grouping:destinations:listserv").execute();
         WsAttributeAssign listServeAttriubte = wsGetAttributeAssignmentsResults.getWsAttributeAssigns()[0];
-        if (listServeAttriubte.getAttributeDefNameName().equals("uh-settings:attributes:for-groups:uh-grouping:destinations:listserv")) {
-            return true;
-        }
-        return false;
+        return listServeAttriubte.getAttributeDefNameName().equals("uh-settings:attributes:for-groups:uh-grouping:destinations:listserv");
     }
 
 
