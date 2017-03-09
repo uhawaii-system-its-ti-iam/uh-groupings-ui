@@ -16,18 +16,19 @@ public class HomeController {
 
     private static final Log logger = LogFactory.getLog(HomeController.class);
 
+    //Mapping to home
     @RequestMapping(value = { "/", "/home" }, method = { RequestMethod.GET })
     public String home(Map<String, Object> model, Locale locale) {
         logger.info("User at home. The client locale is " + locale);
         return "home";
     }
-
+    // Mapping to contact
     @RequestMapping(value = "/contact", method = RequestMethod.GET)
     public String contact(Locale locale, Model model) {
         logger.info("User at contact.");
         return "contact";
     }
-
+    //Mapping to faq
     @RequestMapping(value = "/faq", method = RequestMethod.GET)
     public String faq(Locale locale, Model model) {
         logger.info("User at faq.");
@@ -49,7 +50,7 @@ public class HomeController {
     @PreAuthorize("hasRole('UH')")
     @RequestMapping(value = "/memberships", method = RequestMethod.GET)
     public String memberships(Locale locale, Model model) {
-        logger.info("User at admin.");
+        logger.info("User at memberships.");
         return "memberships";
     }
 
