@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 /**
  * Created by zknoebel on 12/12/16.
+ *
+ * file containing the mappings for all groupings methods
  */
 
 @RestController
@@ -249,8 +251,8 @@ public class GroupingsController {
         WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
         ArrayList<String> trios = new ArrayList<>();
 
-        for (int i = 0; i < trioArray.length; i++) {
-            trios.add(trioArray[i].getName());
+        for (WsGroup aTrioArray : trioArray) {
+            trios.add(aTrioArray.getName());
         }
 
         for (int i = 0; i < wsGetGroupsResults.getResults()[0].getWsGroups().length; i++) {
@@ -290,8 +292,8 @@ public class GroupingsController {
         WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
         ArrayList<String> trios = new ArrayList<>();
 
-        for (int i = 0; i < trioArray.length; i++) {
-            trios.add(trioArray[i].getName());
+        for (WsGroup aTrioArray : trioArray) {
+            trios.add(aTrioArray.getName());
         }
 
         try {
@@ -460,8 +462,8 @@ public class GroupingsController {
         WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
         ArrayList<String> trios = new ArrayList<>();
 
-        for (int i = 0; i < trioArray.length; i++) {
-            trios.add(trioArray[i].getName());
+        for (WsGroup aTrioArray : trioArray) {
+            trios.add(aTrioArray.getName());
         }
 
         for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
@@ -496,8 +498,8 @@ public class GroupingsController {
         WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
         ArrayList<String> trios = new ArrayList<>();
 
-        for (int i = 0; i < trioArray.length; i++) {
-            trios.add(trioArray[i].getName());
+        for (WsGroup aTrioArray : trioArray) {
+            trios.add(aTrioArray.getName());
         }
 
         for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
@@ -518,10 +520,7 @@ public class GroupingsController {
     public boolean hasListServe(@RequestParam String username, @RequestParam String grouping) throws NullPointerException {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().assignAttributeAssignType("group").addOwnerGroupName(grouping).addAttributeDefNameName("uh-settings:attributes:for-groups:uh-grouping:destinations:listserv").execute();
         WsAttributeAssign listServeAttriubte = wsGetAttributeAssignmentsResults.getWsAttributeAssigns()[0];
-        if (listServeAttriubte.getAttributeDefNameName().equals("uh-settings:attributes:for-groups:uh-grouping:destinations:listserv")) {
-            return true;
-        }
-        return false;
+        return listServeAttriubte.getAttributeDefNameName().equals("uh-settings:attributes:for-groups:uh-grouping:destinations:listserv");
     }
 
 
