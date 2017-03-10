@@ -64,6 +64,8 @@ public class GroupingsController {
         results[1] = wsDeleteMemberResults;
 
         return results;
+        //TODO consider "self-opted" attribute
+        //TODO change last modified attribute
     }
 
     /**
@@ -106,6 +108,7 @@ public class GroupingsController {
         return wsAssignGrouperPrivilegesResultsArray;
         //change to api-account for now
         //switch to actAsSubject after we figure out attribute update privlages
+        //TODO change last modified attribute
     }
 
     /**
@@ -149,7 +152,8 @@ public class GroupingsController {
         results[1] = wsAddMemberResults;
 
         return results;
-        //TODO check for self-opted
+        //TODO consider "self-opted" attribute
+        //TODO change last modified attribute
     }
 
     /**
@@ -190,6 +194,7 @@ public class GroupingsController {
         return wsAssignGrouperPrivilegesResultsArray;
         //change to api-account for now
         //switch to actAsSubject after we figure out attribute update privlages
+        //TODO change last modified attribute
     }
 
     /**
@@ -375,6 +380,7 @@ public class GroupingsController {
         } else {
             throw new AccessDeniedException("user is not allowed to opt into this group");
         }
+        //TODO change last modified attribute
     }
 
 
@@ -431,6 +437,7 @@ public class GroupingsController {
         } else {
             throw new AccessDeniedException("user is not allowed to opt into this group");
         }
+        //TODO change last modified attribute
     }
 
     @RequestMapping("/cancelOptIn")
@@ -461,6 +468,7 @@ public class GroupingsController {
             results[0] = "user is not opted in, because user is not in 'include' group";
         }
         return results;
+        //TODO change last modified attribute
     }
 
     @RequestMapping("/cancelOptOut")
@@ -491,6 +499,7 @@ public class GroupingsController {
             results[0] = "user is not opted in, because user is not in 'exclude' group";
         }
         return results;
+        //TODO change last modified attribute
     }
 
     /**
