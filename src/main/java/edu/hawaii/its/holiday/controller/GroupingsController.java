@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 /**
  * Created by zknoebel on 12/12/16.
- *
+ * <p>
  * file containing the mappings for all groupings methods
  */
 
@@ -330,20 +330,45 @@ public class GroupingsController {
      */
     @RequestMapping("/optIn")
     public Object[] optIn(@RequestParam String username, @RequestParam String grouping) {
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult;
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(username);
+        WsGetGrouperPrivilegesLiteResult optInInclude;
+        WsGetGrouperPrivilegesLiteResult optOutExclude;
 
-        wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
+        WsSubjectLookup user = new WsSubjectLookup();
+        user.setSubjectIdentifier(username);
 
-        WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":include").execute();
+        optInInclude = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(user).execute();
+        optOutExclude = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optout").assignSubjectLookup(user).execute();
+
+        WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(user).addGroupName(grouping + ":include").execute();
         String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-        if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
-            Object[] results = new Object[3];
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().addOwnerMembershipId(membershipID).assignAttributeAssignType("imm_mem").execute();
+        WsAttributeAssign[] wsAttributeAssigns = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
+
+        boolean OptInPrivilege = optInInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
+        boolean OptOutPrivilege = optOutExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
+
+        WsHasMemberResults wsHasMemberResults = new GcHasMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
+        WsHasMemberResult[] memberResultArray = wsHasMemberResults.getResults();
+
+        boolean inExclude = false;
+        for (WsHasMemberResult hasMember : memberResultArray) {
+            if (hasMember.getResultMetadata().getResultCode().equals("IS_MEMBER")) {
+                inExclude = true;
+            }
+        }
+
+
+        if (OptInPrivilege && (!inExclude || OptOutPrivilege)) {
+            Object[] results = new Object[4];
             results[0] = new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
             results[1] = new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
             results[2] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("assign_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
+            if(inExclude){
+                WsGetMembershipsResults wsGetMembershipsResults1 = new GcGetMemberships().addWsSubjectLookup(user).addGroupName(grouping + ":exclude").execute();
+                String membershipID1 = wsGetMembershipsResults1.getWsMemberships()[0].getMembershipId();
+                results[3] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("remove_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID1).execute();
+            }
             return results;
         } else {
             throw new AccessDeniedException("user is not allowed to opt into this group");
@@ -388,12 +413,11 @@ public class GroupingsController {
         WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":include").execute();
         String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-        if(checkSelfOpted(grouping, wsSubjectLookup)){
+        if (checkSelfOpted(grouping + ":include", wsSubjectLookup)) {
 
             wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optout").assignSubjectLookup(wsSubjectLookup).execute();
 
             if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
-
 
 
                 Object[] results = new Object[2];
@@ -528,15 +552,16 @@ public class GroupingsController {
     // give the Grouping owner the ability to change the optin/optout attribute for their Grouping
     // add cancel optin and cancel opt out
     //Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion/exclusion group
+    // give methods return empty return elements rather than 404 errors
 
-    private boolean checkSelfOpted(String grouping, WsSubjectLookup wsSubjectLookup){
-        WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":include").execute();
+    private boolean checkSelfOpted(String group, WsSubjectLookup wsSubjectLookup) {
+        WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(group).execute();
         String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().assignAttributeAssignType("imm_mem").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
         WsAttributeAssign[] wsAttributes = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
-        for(WsAttributeAssign att : wsAttributes){
-            if(att.getAttributeDefNameName().equals("uh-settings:attributes:for-memberships:uh-grouping:self-opted")){
+        for (WsAttributeAssign att : wsAttributes) {
+            if (att.getAttributeDefNameName().equals("uh-settings:attributes:for-memberships:uh-grouping:self-opted")) {
                 return true;
             }
         }
