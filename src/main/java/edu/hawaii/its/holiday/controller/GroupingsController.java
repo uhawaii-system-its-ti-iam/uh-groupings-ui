@@ -330,6 +330,8 @@ public class GroupingsController {
      */
     @RequestMapping("/optIn")
     public Object[] optIn(@RequestParam String username, @RequestParam String grouping) {
+        Object[] results = new Object[4];
+
         WsGetGrouperPrivilegesLiteResult optInInclude;
         WsGetGrouperPrivilegesLiteResult optOutExclude;
 
@@ -338,12 +340,6 @@ public class GroupingsController {
 
         optInInclude = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(user).execute();
         optOutExclude = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optout").assignSubjectLookup(user).execute();
-
-        WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(user).addGroupName(grouping + ":include").execute();
-        String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
-
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().addOwnerMembershipId(membershipID).assignAttributeAssignType("imm_mem").execute();
-        WsAttributeAssign[] wsAttributeAssigns = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
 
         boolean OptInPrivilege = optInInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
         boolean OptOutPrivilege = optOutExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
@@ -360,20 +356,25 @@ public class GroupingsController {
 
 
         if (OptInPrivilege && (!inExclude || OptOutPrivilege)) {
-            Object[] results = new Object[4];
-            results[0] = new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
-            results[1] = new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
-            results[2] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("assign_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
             if(inExclude){
                 WsGetMembershipsResults wsGetMembershipsResults1 = new GcGetMemberships().addWsSubjectLookup(user).addGroupName(grouping + ":exclude").execute();
                 String membershipID1 = wsGetMembershipsResults1.getWsMemberships()[0].getMembershipId();
                 results[3] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("remove_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID1).execute();
             }
+            results[0] = new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
+            results[1] = new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+
+            WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(user).addGroupName(grouping + ":include").execute();
+            String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
+
+            WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().addOwnerMembershipId(membershipID).assignAttributeAssignType("imm_mem").execute();
+            WsAttributeAssign[] wsAttributeAssigns = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
+
+            results[2] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("assign_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
             return results;
         } else {
             throw new AccessDeniedException("user is not allowed to opt into this group");
         }
-        //TODO check for self-opted in the exclude Group
     }
 
 
@@ -386,22 +387,50 @@ public class GroupingsController {
      */
     @RequestMapping("/optOut")
     public Object[] optOut(@RequestParam String username, @RequestParam String grouping) {
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult;
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(username);
+        Object[] returnResults = new Object[4];
+        WsGetGrouperPrivilegesLiteResult optInExclude;
+        WsGetGrouperPrivilegesLiteResult optOutInclude;
 
-        wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
+        WsSubjectLookup user = new WsSubjectLookup();
+        user.setSubjectIdentifier(username);
 
-        if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
-            Object[] results = new Object[2];
-            results[0] = new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
-            results[1] = new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
-            return results;
-        } else {
-            throw new AccessDeniedException("user is not allowed to opt out of this group");
+        optInExclude = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optin").assignSubjectLookup(user).execute();
+        optOutInclude = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optout").assignSubjectLookup(user).execute();
+
+        boolean OptInExcludePrivilege = optInExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
+        boolean OptOutIncludePrivilege = optOutInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
+
+        WsHasMemberResults wsHasMemberResults = new GcHasMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+        WsHasMemberResult[] memberResultArray = wsHasMemberResults.getResults();
+
+        boolean inInclude = false;
+        for (WsHasMemberResult hasMember : memberResultArray) {
+            if (hasMember.getResultMetadata().getResultCode().equals("IS_MEMBER")) {
+                inInclude = true;
+            }
         }
-        //TODO add "uh-settings:attributes:for-memberships:uh-grouping:self-opted"
-        //TODO check for self-opted in the include Group
+
+
+        if (OptInExcludePrivilege && (!inInclude || OptOutIncludePrivilege)) {
+            if(inInclude){
+                WsGetMembershipsResults GetIncludeMembershipsResults = new GcGetMemberships().addWsSubjectLookup(user).addGroupName(grouping + ":include").execute();
+                String membershipID1 = GetIncludeMembershipsResults.getWsMemberships()[0].getMembershipId();
+                returnResults[3] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("remove_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID1).execute();
+            }
+            returnResults[0] = new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+            returnResults[1] = new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
+
+            WsGetMembershipsResults GetExcludeMembershipsResults = new GcGetMemberships().addWsSubjectLookup(user).addGroupName(grouping + ":exclude").execute();
+            String excludeMembershipID = GetExcludeMembershipsResults.getWsMemberships()[0].getMembershipId();
+
+            WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().addOwnerMembershipId(excludeMembershipID).assignAttributeAssignType("imm_mem").execute();
+            WsAttributeAssign[] wsAttributeAssigns = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
+
+            returnResults[2] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("assign_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(excludeMembershipID).execute();
+            return returnResults;
+        } else {
+            throw new AccessDeniedException("user is not allowed to opt into this group");
+        }
     }
 
     @RequestMapping("/cancelOptIn")
