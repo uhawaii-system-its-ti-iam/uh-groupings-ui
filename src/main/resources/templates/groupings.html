@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:substituteby="header :: copy"></head>
-<body>
+<body ng-app="ownerApp">
 <nav th:substituteby="menubar :: copy"></nav>
 
 <!--  Content container -->
@@ -10,15 +10,103 @@
     <div class='row'>
         <div class='col-xs-offset-1 col-xs-10'>
 
-            <h3>Groupings</h3>
-            <h4>Only Admins and Owners can see this page and info</h4>
-            <p>The owner of a group will see a table of the group that has a list of the uh username, the name of the member and whether to exculde a user. Also a search to include a member then add them to the table</p>
+            <h2>Groupings</h2>
+
+            <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
+                <div ng-show="!showList">
+                    <!-- This will allow you to search for specific groups -->
+                    <div class="search_groups">
+                        <h3>Search for Group to join</h3>
+
+                        <div class="form-group">
+                            <label>Search Groupings</label>
+                            <input type="text" placeholder="Enter grouping name"/>
+                            <input class="btn btn-default btn-primary" type="submit" value="Submit"/>
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-condensed table-hover">
+                        <thead>
+                        <tr>
+                            <th>Groupings</th>
+                            <th>Folder</th>
+                            <!-- <th>Edit</th> -->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="l in ownedList">
+                            <th>{{l}}  <span ng-click="showData($index)" class="glyphicon glyphicon-edit" aria-hidden="true"></span></th>
+                            <th>3</th>
+                            <!--
+                            <th>
+                                <button ng-click="showData($index)" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </button>
+                            </th>
+                            -->
+                        </tr>
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+                <div ng-show="showList">
+                    <h1>This is where the groupings data will be</h1>
+
+                    <h2>Members</h2>
+                    <table class="table table-bordered table-condensed table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>UH ID</th>
+                            <th>Username</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="g in groupingsList">
+                            <td>{{g.name}}</td>
+                            <td>{{g.id}}</td>
+                            <td>{{g.attributeValues}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>Owners</h2>
+                    <table class="table table-bordered table-condensed table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="owner in ownerList">
+                            <td>{{owner.name}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <h2>Preferences</h2>
+                    <h3>Add/Remove</h3>
+                    <input type="checkbox"/> Allow people to add themselves to this group <br/>
+                    <input type="checkbox"/> Allow people to remove themselves to this group <br/>
+
+                    <h3>Publication Destinations</h3>
+                    <input type="checkbox"/> LISTSERV list {{groupingName}} <br/>
+
+                    <button ng-click="showGroups()">Go Back</button>
+                </div>
+            </div>
+
+
 
         </div>
-
     </div>
 
 </div>
+<script type="javascript">
+
+</script>
 <!-- / Content container. -->
 
 <div th:substituteby="footer :: copy"></div>
