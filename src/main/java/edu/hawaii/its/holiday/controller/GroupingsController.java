@@ -460,14 +460,37 @@ public class GroupingsController {
         } else {
             results[0] = "user is not opted in, because user is not in 'include' group";
         }
-//TODO check for "uh-settings:attributes:for-memberships:uh-grouping:self-opted"
         return results;
     }
 
     @RequestMapping("/cancelOptOut")
-    public Object[] cancelOptOut() {
-        return null;
-        //TODO everyting...
+    public Object[] cancelOptOut(@RequestParam String grouping, @RequestParam String username) {
+        Object[] results = new Object[2];
+        if (inGroup(grouping + ":exclude", username)) {
+
+            WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+            wsSubjectLookup.setSubjectIdentifier(username);
+
+            WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":exclude").execute();
+            String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
+
+            if (checkSelfOpted(grouping + ":exclude", wsSubjectLookup)) {
+
+                WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optout").assignSubjectLookup(wsSubjectLookup).execute();
+
+                if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
+                    results[1] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("remove_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
+                    results[0] = new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
+                    return results;
+                } else {
+                    throw new AccessDeniedException("user is not allowed to opt out of 'exclude' group");
+                }
+
+            }
+        } else {
+            results[0] = "user is not opted in, because user is not in 'exclude' group";
+        }
+        return results;
     }
 
     /**
