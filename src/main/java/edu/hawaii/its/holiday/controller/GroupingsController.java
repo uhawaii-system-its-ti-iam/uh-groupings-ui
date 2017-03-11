@@ -67,7 +67,6 @@ public class GroupingsController {
         results[1] = wsDeleteMemberResults;
 
         return results;
-        //TODO consider "self-opted" attribute
         //TODO change last modified attribute
     }
 
@@ -158,7 +157,6 @@ public class GroupingsController {
         results[1] = wsAddMemberResults;
 
         return results;
-        //TODO consider "self-opted" attribute
         //TODO change last modified attribute
     }
 
@@ -611,7 +609,7 @@ public class GroupingsController {
     }
 
     @RequestMapping("/hasListServe")
-    public boolean hasListServe(@RequestParam String username, @RequestParam String grouping) throws NullPointerException {
+    public boolean hasListServe(@RequestParam String grouping) throws NullPointerException {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().assignAttributeAssignType("group").addOwnerGroupName(grouping).addAttributeDefNameName("uh-settings:attributes:for-groups:uh-grouping:destinations:listserv").execute();
         WsAttributeAssign listServeAttriubte = wsGetAttributeAssignmentsResults.getWsAttributeAssigns()[0];
         return listServeAttriubte.getAttributeDefNameName().equals("uh-settings:attributes:for-groups:uh-grouping:destinations:listserv");
@@ -627,7 +625,7 @@ public class GroupingsController {
     /**
      * @param group:           group to search through (include extension of Grouping ie. ":include" or ":exclude")
      * @param wsSubjectLookup: WsSubjectLookup of user
-     * @return: true if the membership between the user and the group has the "self-opted" attribute
+     * @return true if the membership between the user and the group has the "self-opted" attribute
      */
     private boolean checkSelfOpted(String group, WsSubjectLookup wsSubjectLookup) {
         WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(group).execute();
@@ -649,7 +647,7 @@ public class GroupingsController {
     /**
      * @param group:    group to search through (include extension of Grouping ie. ":include" or ":exclude")
      * @param username: subjectIdentifier of user to be searched for
-     * @return: true if username is a member of group
+     * @return true if username is a member of group
      */
     private boolean inGroup(String group, String username) {
 
