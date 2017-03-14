@@ -1,6 +1,7 @@
 package edu.hawaii.its.holiday.controller;
 
 import edu.internet2.middleware.grouperClient.api.*;
+import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.springframework.security.access.AccessDeniedException;
@@ -55,21 +56,27 @@ public class GroupingsController {
      */
     @RequestMapping("/addMember")
     public Object[] addMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd) {
-        Object[] results = new Object[5];
+        Object[] results = new Object[6];
+        results[5] = "no Grouper Client Web Service Errors";
 
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(username);
+        try {
+            WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+            wsSubjectLookup.setSubjectIdentifier(username);
 
-        results[2] = removeSelfOpted(grouping + ":exclude", userToAdd);
+            results[2] = removeSelfOpted(grouping + ":exclude", userToAdd);
 
-        WsDeleteMemberResults wsDeleteMemberResults = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToAdd).execute();
-        WsAddMemberResults wsAddMemberResults = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToAdd).execute();
+            WsDeleteMemberResults wsDeleteMemberResults = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToAdd).execute();
+            WsAddMemberResults wsAddMemberResults = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToAdd).execute();
 
-        results[3] = updateLastModified(grouping + ":exclude");
-        results[4] = updateLastModified(grouping + ":include");
+            results[3] = updateLastModified(grouping + ":exclude");
+            results[4] = updateLastModified(grouping + ":include");
 
-        results[0] = wsAddMemberResults;
-        results[1] = wsDeleteMemberResults;
+            results[0] = wsAddMemberResults;
+            results[1] = wsDeleteMemberResults;
+        }
+        catch (GcWebServiceError gcwse){
+            results[5] = gcwse.getContainerResponseObject();
+        }
 
         return results;
     }
@@ -114,7 +121,6 @@ public class GroupingsController {
         return wsAssignGrouperPrivilegesResultsArray;
         //change to api-account for now
         //switch to actAsSubject after we figure out attribute update privlages
-        //TODO change last modified attribute?
     }
 
     /**
@@ -204,7 +210,6 @@ public class GroupingsController {
         return wsAssignGrouperPrivilegesResultsArray;
         //change to api-account for now
         //switch to actAsSubject after we figure out attribute update privlages
-        //TODO change last modified attribute?
     }
 
     /**
@@ -571,11 +576,10 @@ public class GroupingsController {
     }
 
 
-    //TODO more methods to add
+    //TODO
     // give the Grouping owner the ability to change the optin/optout attribute for their Grouping
-    // add cancel optin and cancel opt out
-    //Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion/exclusion group
-    // give methods return empty return elements rather than 404 errors
+    // Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion/exclusion group
+    // decide on exception handling policy
 
     /**
      * @param group:           group to search through (include extension of Grouping ie. ":include" or ":exclude")
@@ -618,7 +622,7 @@ public class GroupingsController {
         return userIsInGroup;
     }
 
-    WsAssignAttributesResults addSelfOpted(String group, String username) {
+    private WsAssignAttributesResults addSelfOpted(String group, String username) {
         WsSubjectLookup user = new WsSubjectLookup();
         user.setSubjectIdentifier(username);
 
@@ -635,7 +639,7 @@ public class GroupingsController {
         }
     }
 
-    WsAssignAttributesResults removeSelfOpted(String group, String username) {
+    private WsAssignAttributesResults removeSelfOpted(String group, String username) {
         WsSubjectLookup user = new WsSubjectLookup();
         user.setSubjectIdentifier(username);
 
@@ -652,7 +656,7 @@ public class GroupingsController {
         }
     }
 
-    String getDateTime() {
+    private String getDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat timeFormat = new SimpleDateFormat("hhmm");
         Date date = new Date();
@@ -674,7 +678,7 @@ public class GroupingsController {
         return wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
     }
 
-    WsAssignAttributesResults updateLastModified(String group) {
+    private WsAssignAttributesResults updateLastModified(String group) {
 
         WsAttributeAssignValue dateTimeValue = new WsAttributeAssignValue();
         dateTimeValue.setValueSystem(getDateTime());
