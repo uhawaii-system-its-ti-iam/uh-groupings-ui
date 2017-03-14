@@ -10,6 +10,11 @@ import java.util.Date;
  * Created by zknoebel on 3/14/2017.
  */
 public class GrouperMethods {
+
+   public GrouperMethods(){
+
+    }
+
     /**
      * adds the self-opted attribute to a membership (combination of a group and a subject)
      *
