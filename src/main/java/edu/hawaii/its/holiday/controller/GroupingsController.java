@@ -582,6 +582,29 @@ public class GroupingsController {
     // decide on exception handling policy
 
     /**
+     * adds the self-opted attribute to a membership (combination of a group and a subject)
+     * @param group: the group in the membership
+     * @param username: the subject in the membership
+     * @return the response from grouper web service or empty WsAssignAttributesResults object
+     */
+    private WsAssignAttributesResults addSelfOpted(String group, String username) {
+        WsSubjectLookup user = new WsSubjectLookup();
+        user.setSubjectIdentifier(username);
+
+        if (inGroup(group, username)) {
+            if (!checkSelfOpted(group, user)) {
+                WsGetMembershipsResults getIncludeMembershipsResults = new GcGetMemberships().addWsSubjectLookup(user).addGroupName(group).execute();
+                String membershipID = getIncludeMembershipsResults.getWsMemberships()[0].getMembershipId();
+                return new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("assign_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
+            } else {
+                return new WsAssignAttributesResults();
+            }
+        } else {
+            return new WsAssignAttributesResults();
+        }
+    }
+
+    /**
      * @param group:           group to search through (include extension of Grouping ie. ":include" or ":exclude")
      * @param wsSubjectLookup: WsSubjectLookup of user
      * @return true if the membership between the user and the group has the "self-opted" attribute
@@ -622,23 +645,12 @@ public class GroupingsController {
         return userIsInGroup;
     }
 
-    private WsAssignAttributesResults addSelfOpted(String group, String username) {
-        WsSubjectLookup user = new WsSubjectLookup();
-        user.setSubjectIdentifier(username);
-
-        if (inGroup(group, username)) {
-            if (!checkSelfOpted(group, user)) {
-                WsGetMembershipsResults getIncludeMembershipsResults = new GcGetMemberships().addWsSubjectLookup(user).addGroupName(group).execute();
-                String membershipID = getIncludeMembershipsResults.getWsMemberships()[0].getMembershipId();
-                return new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("assign_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
+    /**
+     * removes the self-opted attribute from a membership (combination of a group and a subject)
+     * @param group: the group in the membership
+     * @param username: the subject in the membership
+     * @return the response from grouper web service or empty WsAssignAttributesResults object
+     */
     private WsAssignAttributesResults removeSelfOpted(String group, String username) {
         WsSubjectLookup user = new WsSubjectLookup();
         user.setSubjectIdentifier(username);
@@ -649,13 +661,18 @@ public class GroupingsController {
                 String membershipID = getIncludeMembershipsResults.getWsMemberships()[0].getMembershipId();
                 return new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("remove_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
             } else {
-                return null;
+                return new WsAssignAttributesResults();
             }
         } else {
-            return null;
+            return new WsAssignAttributesResults();
         }
     }
 
+    /**
+     *
+     * @return date and time in yyyymmddThhmm format
+     * ex. 20170314T0923
+     */
     private String getDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat timeFormat = new SimpleDateFormat("hhmm");
@@ -664,6 +681,12 @@ public class GroupingsController {
         return dateFormat.format(date) + "T" + timeFormat.format(time);
     }
 
+    /**
+     * checks for permission to opt out of a group
+     * @param username: user who's permission is being checked
+     * @param group: group the user permission is being checked for
+     * @return true if the user has the permission to opt out, false if not
+     */
     private boolean groupOptOutPermission(String username, String group) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
@@ -671,6 +694,12 @@ public class GroupingsController {
         return wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
     }
 
+    /**
+     * checks for permission to opt into a group
+     * @param username: user who's permission is being checked
+     * @param group: group the user permission is being checked for
+     * @return true if the user has the permission to opt in, false if not
+     */
     private boolean groupOptInPermission(String username, String group) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
@@ -678,6 +707,15 @@ public class GroupingsController {
         return wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
     }
 
+    /**
+     * updates the last modified time of a group
+     * this should be done whenever a group is modified
+     *
+     * ie. a member was added or deleted
+     *
+     * @param group: group whos last modified attribute will be updated
+     * @return results from Grouper Web Service
+     */
     private WsAssignAttributesResults updateLastModified(String group) {
 
         WsAttributeAssignValue dateTimeValue = new WsAttributeAssignValue();
