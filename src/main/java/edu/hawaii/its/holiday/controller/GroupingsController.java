@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import edu.hawaii.its.holiday.api.GrouperMethods;
+import edu.hawaii.its.holiday.api.Grouping;
 
 /**
  * Created by zknoebel on 12/12/16.
@@ -219,18 +220,26 @@ public class GroupingsController {
     /**
      * finds all the members of a group
      *
-     * @param username: username of the subject preforming the action
      * @param grouping  : String containing the path of the Grouping to be searched
+     * @param username : username of the subject preforming the action
      * @return information for all of the members
      */
     @RequestMapping("/getMembers")
-    public WsSubject[] getMembers(@RequestParam String grouping, @RequestParam String username) {
+    public Grouping getMembers(@RequestParam String grouping, @RequestParam String username) {
+        Grouping groups = new Grouping();
+
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
-        WsGetMembersResults wsGetMembersResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping).assignIncludeSubjectDetail(true).execute();
 
-        return wsGetMembersResults.getResults()[0].getWsSubjects();
-        //TODO change to return members of each group in the grouping
+        WsGetMembersResults basisResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":basis").assignIncludeSubjectDetail(true).execute();
+        WsGetMembersResults excludeResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":exclude").assignIncludeSubjectDetail(true).execute();
+        WsGetMembersResults includeResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":include").assignIncludeSubjectDetail(true).execute();
+
+        groups.setBasis(basisResults.getResults()[0].getWsSubjects());
+        groups.setExclude(excludeResults.getResults()[0].getWsSubjects());
+        groups.setInclude(includeResults.getResults()[0].getWsSubjects());
+
+        return groups;
     }
 
     /**
