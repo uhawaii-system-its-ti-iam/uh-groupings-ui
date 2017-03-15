@@ -1,7 +1,6 @@
 package edu.hawaii.its.holiday.controller;
 
 import edu.internet2.middleware.grouperClient.api.*;
-import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import edu.hawaii.its.holiday.api.GrouperMethods;
 import edu.hawaii.its.holiday.api.Grouping;
@@ -61,27 +58,18 @@ public class GroupingsController {
      */
     @RequestMapping("/addMember")
     public Object[] addMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd) {
-        Object[] results = new Object[6];
-        results[5] = "no Grouper Client Web Service Errors";
+        Object[] results = new Object[5];
 
-        try {
-            WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-            wsSubjectLookup.setSubjectIdentifier(username);
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
 
-            results[2] = gc.removeSelfOpted(grouping + ":exclude", userToAdd);
+        results[2] = gc.removeSelfOpted(grouping + ":exclude", userToAdd);
 
-            WsDeleteMemberResults wsDeleteMemberResults = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToAdd).execute();
-            WsAddMemberResults wsAddMemberResults = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToAdd).execute();
+        results[0] = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToAdd).execute();
+        results[1] = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToAdd).execute();
 
-            results[3] = gc.updateLastModified(grouping + ":exclude");
-            results[4] = gc.updateLastModified(grouping + ":include");
-
-            results[0] = wsAddMemberResults;
-            results[1] = wsDeleteMemberResults;
-        }
-        catch (GcWebServiceError gcwse){
-            results[5] = gcwse.getContainerResponseObject();
-        }
+        results[3] = gc.updateLastModified(grouping + ":exclude");
+        results[4] = gc.updateLastModified(grouping + ":include");
 
         return results;
     }
@@ -165,14 +153,11 @@ public class GroupingsController {
 
         results[2] = gc.removeSelfOpted(grouping + ":include", userToDelete);
 
-        WsAddMemberResults wsAddMemberResults = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToDelete).execute();
-        WsDeleteMemberResults wsDeleteMemberResults = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToDelete).execute();
+        results[0] = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToDelete).execute();
+        results[1] = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToDelete).execute();
 
         results[3] = gc.updateLastModified(grouping + ":exclude");
         results[4] = gc.updateLastModified(grouping + ":include");
-
-        results[0] = wsDeleteMemberResults;
-        results[1] = wsAddMemberResults;
 
         return results;
     }
@@ -220,7 +205,7 @@ public class GroupingsController {
     /**
      * finds all the members of a group
      *
-     * @param grouping  : String containing the path of the Grouping to be searched
+     * @param grouping : String containing the path of the Grouping to be searched
      * @param username : username of the subject preforming the action
      * @return information for all of the members
      */
@@ -489,10 +474,14 @@ public class GroupingsController {
      */
     @RequestMapping("/optOutPermission")
     public boolean optOutPermission(@RequestParam String username, @RequestParam String grouping) {
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(username);
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
-        return wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
+        //a user can opt out of a Grouping if:
+        //      they have permission to opt into the exclude group,
+        //      and
+        //          they are not in the include group
+        //          or
+        //          they have permission to opt out of the include group
+
+        return (gc.groupOptInPermission(username, grouping + ":exclude") && (!gc.inGroup(grouping + ":include", username) || gc.groupOptOutPermission(username, grouping + ":include")));
     }
 
     /**
@@ -504,10 +493,14 @@ public class GroupingsController {
      */
     @RequestMapping("/optInPermission")
     public boolean optInPermission(@RequestParam String username, @RequestParam String grouping) {
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(username);
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optin").assignSubjectLookup(wsSubjectLookup).execute();
-        return wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
+        //a user can opt into a Grouping if:
+        //      they have permission to opt into the include group,
+        //      and
+        //          they are not in the exclude group
+        //          or
+        //          they have permission to opt out of the exclude group
+
+        return (gc.groupOptInPermission(username, grouping + ":include") && (!gc.inGroup(grouping + ":exclude", username) || gc.groupOptOutPermission(username, grouping + ":exclude")));
     }
 
     /**

@@ -3,6 +3,7 @@ package edu.hawaii.its.holiday.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
@@ -48,12 +49,9 @@ public class GroupingsControllerTest {
     }
 
     @Test
-    public void DeleteMemberTest(){
-        Object[] addMemberResults = groupingsController.deleteMember("hawaii.edu:custom:test:zknoebel:zknoebel-test", "zknoebel", "aaronvil");
-        WsAddMemberResults wsAddMemberResults = (WsAddMemberResults) addMemberResults[1];
-        WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[0];
-        assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
-        assertEquals("SUCCESS", wsDeleteMemberResults.getResultMetadata().getResultCode());
+    public void addGroupingTest(){
+        //add actual test when addGrouping method gets implemented
+        assertTrue(true);
     }
 
     @Test
@@ -63,5 +61,110 @@ public class GroupingsControllerTest {
         WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[1];
         assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
         assertEquals("SUCCESS", wsDeleteMemberResults.getResultMetadata().getResultCode());
+    }
+
+    @Test
+    public void assignOwnershipTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void deleteGroupingTest(){
+        //add actual test when deleteGrouping method gets implemented
+        assertTrue(true);
+    }
+
+    @Test
+    public void deleteMemberTest(){
+        Object[] addMemberResults = groupingsController.deleteMember("hawaii.edu:custom:test:zknoebel:zknoebel-test", "zknoebel", "aaronvil");
+        WsAddMemberResults wsAddMemberResults = (WsAddMemberResults) addMemberResults[1];
+        WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[0];
+        assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
+        assertEquals("SUCCESS", wsDeleteMemberResults.getResultMetadata().getResultCode());
+    }
+
+    @Test
+    public void removeOwnershipTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void getMembersTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void getOwnersTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void groupingsInTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void groupingsOwnedTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void optInTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void optOutTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void cancelOptOutTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void cancelOptInTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void optOutPermissionTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void optInPerissionTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void groupingsToOptOutOfTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void groupingsToOptIntoTest(){
+        assertTrue(true);
+        //todo
+    }
+
+    @Test
+    public void hasListServeTest(){
+        assertTrue(true);
+        //todo
     }
 }
