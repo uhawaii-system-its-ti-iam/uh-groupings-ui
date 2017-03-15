@@ -10,7 +10,7 @@
     <div class='row'>
         <div class='col-xs-offset-1 col-xs-10'>
 
-            <h2>Groupings</h2>
+            <h1>Groupings</h1>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
                 <div ng-show="!showList">
@@ -30,74 +30,106 @@
                         <tr>
                             <th>Groupings</th>
                             <th>Folder</th>
-                            <!-- <th>Edit</th> -->
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="l in ownedList">
-                            <th>{{l}}  <span ng-click="showData($index)" class="glyphicon glyphicon-edit" aria-hidden="true"></span></th>
-                            <th>3</th>
-                            <!--
                             <th>
-                                <button ng-click="showData($index)" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                </button>
+                                {{l}} <span ng-click="showData($index)" class="glyphicon glyphicon-edit"></span>
                             </th>
-                            -->
+                            <th>folder</th>
                         </tr>
                         </tbody>
                     </table>
-
-
                 </div>
 
                 <div ng-show="showList">
-                    <h1>This is where the groupings data will be</h1>
+                    <h2>{{groupingName}}</h2>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#members">Members</a></li>
+                        <li><a data-toggle="tab" href="#owners">Owners</a></li>
+                        <li><a data-toggle="tab" href="#preference">Preferences</a></li>
+                        <li class="pull-right"><button ng-click="showGroups()" class="btn btn-default">Go Back</button></li>
+                    </ul>
 
-                    <h2>Members</h2>
-                    <table class="table table-bordered table-condensed table-hover">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>UH ID</th>
-                            <th>Username</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="g in groupingsList">
-                            <td>{{g.name}}</td>
-                            <td>{{g.id}}</td>
-                            <td>{{g.attributeValues}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="tab-content">
+                        <!-- List of the members in the grouping -->
+                        <div id="members" class="tab-pane fade in active">
+                            <h2>Members</h2>
+                            <table class="table table-bordered table-condensed table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>UH ID</th>
+                                    <th>Username</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="g in groupingsList">
+                                    <td>{{g.name}}</td>
+                                    <td>{{g.id}}</td>
+                                    <td>{{g.attributeValues}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                    <h2>Owners</h2>
-                    <table class="table table-bordered table-condensed table-hover">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="owner in ownerList">
-                            <td>{{owner.name}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                            <div>
+                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#addAdmin" aria-expanded="false" aria-controls="addAdmin">
+                                    Add Admin
+                                </button>
+                                <div class="collapse" id="addAdmin">
+                                    <input type="text" ng-model="username"/>
+                                    <button class="btn btn-success" ng-click="addMember()">Add Admin</button>
+                                </div>
+                            </div>
+                        </div>
 
-                    <h2>Preferences</h2>
-                    <h3>Add/Remove</h3>
-                    <input type="checkbox"/> Allow people to add themselves to this group <br/>
-                    <input type="checkbox"/> Allow people to remove themselves to this group <br/>
+                        <!-- List of the owners in the grouping -->
+                        <div id="owners" class="tab-pane fade">
+                            <h2>Owners</h2>
+                            <table class="table table-bordered table-condensed table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="owner in ownerList">
+                                    <td>{{owner.name}}</td>
+                                    <td>{{owner.attributeValues}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
 
-                    <h3>Publication Destinations</h3>
-                    <input type="checkbox"/> LISTSERV list {{groupingName}} <br/>
+                            <div>
+                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#addOwner" aria-expanded="false" aria-controls="addOwner">
+                                    Add Owner
+                                </button>
+                                <div class="collapse" id="addOwner">
+                                    <input type="text" ng-model="username"/>
+                                    <!-- <button class="btn btn-success" ng-click="add()">Add Admin</button> -->
+                                </div>
+                            </div>
 
-                    <button ng-click="showGroups()">Go Back</button>
+                        </div>
+
+                        <!-- Preference page -->
+                        <div id="preference" class="tab-pane fade">
+                            <h2>Preferences</h2>
+
+                            <h3>Add/Remove</h3>
+                            <input type="checkbox"/> Allow people to add themselves to this group <br/>
+                            <input type="checkbox"/> Allow people to remove themselves to this group <br/>
+
+                            <h3>Publication Destinations</h3>
+                            <input type="checkbox"/> LISTSERV list {{groupingName}} <br/>
+                        </div>
+                    </div>
                 </div>
             </div>
-
 
 
         </div>
