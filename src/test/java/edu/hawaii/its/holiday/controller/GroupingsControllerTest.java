@@ -1,6 +1,5 @@
 package edu.hawaii.its.holiday.controller;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -29,6 +28,7 @@ import java.util.Objects;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class GroupingsControllerTest {
+    String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
 
     @Autowired
     private GroupingsController groupingsController;
@@ -56,7 +56,7 @@ public class GroupingsControllerTest {
 
     @Test
     public void addMemberTest(){
-        Object[] addMemberResults = groupingsController.addMember("hawaii.edu:custom:test:zknoebel:zknoebel-test", "zknoebel", "aaronvil");
+        Object[] addMemberResults = groupingsController.addMember(grouping, "zknoebel", "aaronvil");
         WsAddMemberResults wsAddMemberResults = (WsAddMemberResults) addMemberResults[0];
         WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[1];
         assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
@@ -77,11 +77,14 @@ public class GroupingsControllerTest {
 
     @Test
     public void deleteMemberTest(){
-        Object[] addMemberResults = groupingsController.deleteMember("hawaii.edu:custom:test:zknoebel:zknoebel-test", "zknoebel", "aaronvil");
+        Object[] addMemberResults = groupingsController.deleteMember(grouping, "zknoebel", "aaronvil");
         WsAddMemberResults wsAddMemberResults = (WsAddMemberResults) addMemberResults[1];
         WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[0];
         assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
         assertEquals("SUCCESS", wsDeleteMemberResults.getResultMetadata().getResultCode());
+
+        //reset Grouping
+        groupingsController.addMember(grouping, "zknoebel", "aaronvil");
     }
 
     @Test
@@ -164,7 +167,6 @@ public class GroupingsControllerTest {
 
     @Test
     public void hasListServeTest(){
-        assertTrue(true);
-        //todo
+        assertTrue(groupingsController.hasListServe(grouping));
     }
 }
