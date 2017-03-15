@@ -10,6 +10,7 @@
     <div class='row'>
         <div class='col-xs-offset-1 col-xs-10'>
 
+
             <h1>Groupings</h1>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
@@ -30,10 +31,12 @@
                         <tr>
                             <th>Groupings</th>
                             <th>Folder</th>
+
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="l in ownedList">
+
                             <th>
                                 {{l}} <span ng-click="showData($index)" class="glyphicon glyphicon-edit"></span>
                             </th>
@@ -130,7 +133,6 @@
                     </div>
                 </div>
             </div>
-
 
         </div>
     </div>

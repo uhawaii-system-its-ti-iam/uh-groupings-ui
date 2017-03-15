@@ -3,6 +3,7 @@
     function OwnerJsController($scope, dataProvider) {
         var currentUser = document.getElementById("name").innerText;
         var groupingsOwned = "groupingsOwned?username=_api_groupings";//+ currentUser;
+
         var getUrl
 
         $scope.ownedList = [];
@@ -14,7 +15,9 @@
         $scope.init = function() {
             dataProvider.loadData(function(d) {
                 $scope.ownedList = d;
+
                 console.log($scope.ownedList);
+
             }, groupingsOwned)
 
         };
@@ -22,13 +25,16 @@
 
         $scope.showData = function(row) {
             $scope.groupingName = $scope.ownedList[row];
+
             getUrl = "getMembers?grouping=" + $scope.groupingName + "&username=_api_groupings" //+ currentUser;
             var ownerUrl = "getOwners?grouping=" + $scope.groupingName + "&username=_api_groupings";
+
 
 
             if($scope.showList == false){
                 $scope.showList = true;
                 //Gets list of Members
+
                 $scope.getMembers(getUrl);
 
                 //Gets List of Owners
@@ -39,6 +45,7 @@
                     }
                     $scope.ownerList = d;
                 }, ownerUrl)
+
             }
             else {
                 $scope.showList = false;
