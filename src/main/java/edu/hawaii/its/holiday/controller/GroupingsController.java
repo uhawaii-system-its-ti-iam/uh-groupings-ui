@@ -217,10 +217,12 @@ public class GroupingsController {
         wsSubjectLookup.setSubjectIdentifier(username);
 
         WsGetMembersResults basisResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":basis").assignIncludeSubjectDetail(true).execute();
+        WsGetMembersResults basisPlusIncludeResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":basis+include").assignIncludeSubjectDetail(true).execute();
         WsGetMembersResults excludeResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":exclude").assignIncludeSubjectDetail(true).execute();
         WsGetMembersResults includeResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":include").assignIncludeSubjectDetail(true).execute();
 
         groups.setBasis(basisResults.getResults()[0].getWsSubjects());
+        groups.setBasisPlusInclude(basisPlusIncludeResults.getResults()[0].getWsSubjects());
         groups.setExclude(excludeResults.getResults()[0].getWsSubjects());
         groups.setInclude(includeResults.getResults()[0].getWsSubjects());
 

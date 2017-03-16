@@ -7,11 +7,13 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
  */
 public class Grouping {
     WsSubject[] basis;
+    WsSubject[] basisPlusInclude;
     WsSubject[] exclude;
     WsSubject[] include;
 
-    public Grouping(WsSubject[] basis, WsSubject[] exclude, WsSubject[] include){
+    public Grouping(WsSubject[] basis, WsSubject[] basisPlusInclude, WsSubject[] exclude, WsSubject[] include){
         this.basis = basis;
+        this.basisPlusInclude = basisPlusInclude;
         this.exclude = exclude;
         this.include = include;
     }
@@ -26,6 +28,14 @@ public class Grouping {
 
     public void setBasis(WsSubject[] basis) {
         this.basis = basis;
+    }
+
+    public WsSubject[] getBasisPlusInclude() {
+        return basisPlusInclude;
+    }
+
+    public void setBasisPlusInclude(WsSubject[] basisPlusInclude) {
+        this.basisPlusInclude = basisPlusInclude;
     }
 
     public WsSubject[] getExclude() {
