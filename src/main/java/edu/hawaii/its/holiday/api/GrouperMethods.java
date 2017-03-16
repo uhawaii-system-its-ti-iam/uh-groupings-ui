@@ -108,7 +108,7 @@ public class GrouperMethods {
      * @return date and time in yyyymmddThhmm format
      * ex. 20170314T0923
      */
-    public String getDateTime() {
+    private String getDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat timeFormat = new SimpleDateFormat("hhmm");
         Date date = new Date();
