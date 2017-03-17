@@ -84,33 +84,30 @@ public class GroupingsController {
      */
     @RequestMapping("/assignOwnership")
     public WsAssignGrouperPrivilegesResults[] assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
+        WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultsArray = new WsAssignGrouperPrivilegesResults[4];
 
-        WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultsArray = new WsAssignGrouperPrivilegesResults[3];
+        WsSubjectLookup newOwnerLookup = new WsSubjectLookup();
+        newOwnerLookup.setSubjectIdentifier(newOwner);
+        WsSubjectLookup currentUserLookup = new WsSubjectLookup();
+        currentUserLookup.setSubjectIdentifier(username);
 
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(newOwner);
+        WsGroupLookup includeGroupLookup = new WsGroupLookup();
+        includeGroupLookup.setGroupName(grouping + ":include");
+        WsGroupLookup basisGroupLookup = new WsGroupLookup();
+        basisGroupLookup.setGroupName(grouping + ":basis");
+        WsGroupLookup basisPlusIncludeGroupLookup = new WsGroupLookup();
+        basisPlusIncludeGroupLookup.setGroupName(grouping + ":basis+include");
+        WsGroupLookup excludeGroupLookup = new WsGroupLookup();
+        excludeGroupLookup.setGroupName(grouping + ":exclude");
 
-        WsSubjectLookup wsSubjectLookup1 = new WsSubjectLookup();
-        wsSubjectLookup1.setSubjectIdentifier(username);
-
-        WsGroupLookup wsGroupLookup0 = new WsGroupLookup();
-        wsGroupLookup0.setGroupName(grouping + ":include");
-
-        WsGroupLookup wsGroupLookup1 = new WsGroupLookup();
-        wsGroupLookup1.setGroupName(grouping + ":basis+include");
-
-        WsGroupLookup wsGroupLookup2 = new WsGroupLookup();
-        wsGroupLookup2.setGroupName(grouping + ":exclude");
-
-        wsAssignGrouperPrivilegesResultsArray[0] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup1).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[0] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup).assignGroupLookup(basisPlusIncludeGroupLookup).addSubjectLookup(newOwnerLookup)
                 .addPrivilegeName("view").addPrivilegeName("read").assignAllowed(true).execute();
-
-        wsAssignGrouperPrivilegesResultsArray[1] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup2).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[1] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup).assignGroupLookup(basisGroupLookup).addSubjectLookup(newOwnerLookup)
+                .addPrivilegeName("view").addPrivilegeName("read").assignAllowed(true).execute();
+        wsAssignGrouperPrivilegesResultsArray[2] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup).assignGroupLookup(excludeGroupLookup).addSubjectLookup(newOwnerLookup)
                 .addPrivilegeName("view").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(true).execute();
-
-        wsAssignGrouperPrivilegesResultsArray[2] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup0).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[3] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup).assignGroupLookup(includeGroupLookup).addSubjectLookup(newOwnerLookup)
                 .addPrivilegeName("view").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(true).execute();
-
         return wsAssignGrouperPrivilegesResultsArray;
         //change to api-account for now
         //switch to actAsSubject after we figure out attribute update privlages
@@ -173,28 +170,29 @@ public class GroupingsController {
     @RequestMapping("/removeOwnership")
     public WsAssignGrouperPrivilegesResults[] removeOwnership(@RequestParam String grouping, @RequestParam String username,
                                                               @RequestParam String ownerToRemove) {
-        WsGroupLookup wsGroupLookup = new WsGroupLookup();
-        wsGroupLookup.setGroupName(grouping + ":include");
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(ownerToRemove);
-        WsSubjectLookup wsSubjectLookup1 = new WsSubjectLookup();
-        wsSubjectLookup1.setSubjectIdentifier(username);
+        WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultsArray = new WsAssignGrouperPrivilegesResults[4];
 
-        WsGroupLookup wsGroupLookup1 = new WsGroupLookup();
+        WsSubjectLookup ownerToRemoveLookup = new WsSubjectLookup();
+        ownerToRemoveLookup.setSubjectIdentifier(ownerToRemove);
+        WsSubjectLookup currentUserLookup = new WsSubjectLookup();
+        currentUserLookup.setSubjectIdentifier(username);
 
-        wsGroupLookup1.setGroupName(grouping + ":basis+include");
+        WsGroupLookup includeGroupLookup = new WsGroupLookup();
+        includeGroupLookup.setGroupName(grouping + ":include");
+        WsGroupLookup basisGroupLookup = new WsGroupLookup();
+        basisGroupLookup.setGroupName(grouping + ":basis");
+        WsGroupLookup basisPlusIncludeGroupLookup = new WsGroupLookup();
+        basisPlusIncludeGroupLookup.setGroupName(grouping + ":basis+include");
+        WsGroupLookup excludeGroupLookup = new WsGroupLookup();
+        excludeGroupLookup.setGroupName(grouping + ":exclude");
 
-        WsGroupLookup wsGroupLookup2 = new WsGroupLookup();
-        wsGroupLookup2.setGroupName(grouping + ":exclude");
-
-        WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultsArray = new WsAssignGrouperPrivilegesResults[3];
-        wsAssignGrouperPrivilegesResultsArray[0] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup1).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[0] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup).assignGroupLookup(basisGroupLookup).addSubjectLookup(ownerToRemoveLookup)
                 .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false).execute();
-
-        wsAssignGrouperPrivilegesResultsArray[1] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup2).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[1] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup).assignGroupLookup(basisPlusIncludeGroupLookup).addSubjectLookup(ownerToRemoveLookup)
                 .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false).execute();
-
-        wsAssignGrouperPrivilegesResultsArray[2] = new GcAssignGrouperPrivileges().assignActAsSubject(wsSubjectLookup1).assignGroupLookup(wsGroupLookup).addSubjectLookup(wsSubjectLookup)
+        wsAssignGrouperPrivilegesResultsArray[2] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup).assignGroupLookup(excludeGroupLookup).addSubjectLookup(ownerToRemoveLookup)
+                .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false).execute();
+        wsAssignGrouperPrivilegesResultsArray[3] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup).assignGroupLookup(includeGroupLookup).addSubjectLookup(ownerToRemoveLookup)
                 .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false).execute();
 
         return wsAssignGrouperPrivilegesResultsArray;
