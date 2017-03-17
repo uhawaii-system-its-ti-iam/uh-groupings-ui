@@ -79,6 +79,11 @@ public class GrouperMethodsTest {
     }
 
     @Test
+    public void isOwnerTest(){
+        assertTrue(gm.isOwner(grouping, "zknoebel"));
+    }
+
+    @Test
     public void inGroupTest(){
         assertTrue(gm.inGroup(grouping + ":include", "aaronvil"));
         assertFalse(gm.inGroup(grouping + ":exclude", "aaronvil"));

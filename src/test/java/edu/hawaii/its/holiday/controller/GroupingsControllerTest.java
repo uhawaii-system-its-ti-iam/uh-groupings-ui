@@ -1,10 +1,9 @@
 package edu.hawaii.its.holiday.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import edu.hawaii.its.holiday.api.GrouperMethods;
 import edu.hawaii.its.holiday.api.Grouping;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.hawaii.its.holiday.controller.GroupingsController;
@@ -33,7 +32,15 @@ import java.util.Objects;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class GroupingsControllerTest {
-    String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
+    private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
+    private String include = grouping + ":include";
+    private String exclude = grouping + ":exclude";
+    private String aaron = "aaronvil";
+    private String zac = "zknoebel";
+
+    WsSubjectLookup lookupAaron = new WsSubjectLookup();
+
+    private GrouperMethods gm = new GrouperMethods();
 
     @Autowired
     private GroupingsController groupingsController;
@@ -46,6 +53,7 @@ public class GroupingsControllerTest {
     @Before
     public void setUp() {
         mockMvc = webAppContextSetup(context).build();
+        lookupAaron.setSubjectIdentifier(aaron);
     }
 
     @Test
@@ -61,7 +69,7 @@ public class GroupingsControllerTest {
 
     @Test
     public void addMemberTest(){
-        Object[] addMemberResults = groupingsController.addMember(grouping, "zknoebel", "aaronvil");
+        Object[] addMemberResults = groupingsController.addMember(grouping, zac, aaron);
         WsAddMemberResults wsAddMemberResults = (WsAddMemberResults) addMemberResults[0];
         WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[1];
         assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
@@ -82,14 +90,14 @@ public class GroupingsControllerTest {
 
     @Test
     public void deleteMemberTest(){
-        Object[] addMemberResults = groupingsController.deleteMember(grouping, "zknoebel", "aaronvil");
+        Object[] addMemberResults = groupingsController.deleteMember(grouping, zac, aaron);
         WsAddMemberResults wsAddMemberResults = (WsAddMemberResults) addMemberResults[1];
         WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[0];
         assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
         assertEquals("SUCCESS", wsDeleteMemberResults.getResultMetadata().getResultCode());
 
         //reset Grouping
-        groupingsController.addMember(grouping, "zknoebel", "aaronvil");
+        groupingsController.addMember(grouping, zac, aaron);
     }
 
     @Test
@@ -100,7 +108,7 @@ public class GroupingsControllerTest {
 
     @Test
     public void getMembersTest(){
-        Grouping groupMembers = groupingsController.getMembers(grouping, "zknoebel");
+        Grouping groupMembers = groupingsController.getMembers(grouping, zac);
 
         ArrayList<String> basisMembers = new ArrayList<>();
         ArrayList<String> excludeMembers = new ArrayList<>();
@@ -144,7 +152,9 @@ public class GroupingsControllerTest {
 
     @Test
     public void optInTest(){
-        assertTrue(true);
+        groupingsController.optIn(aaron, grouping);
+        assertTrue(gm.checkSelfOpted(include, lookupAaron));
+        assertFalse(gm.checkSelfOpted(exclude, lookupAaron));
         //todo
     }
 
@@ -168,14 +178,12 @@ public class GroupingsControllerTest {
 
     @Test
     public void optOutPermissionTest(){
-        assertTrue(true);
-        //todo
+        assertTrue(groupingsController.optOutPermission(aaron, grouping));
     }
 
     @Test
     public void optInPerissionTest(){
-        assertTrue(true);
-        //todo
+        assertTrue(groupingsController.optInPermission(aaron, grouping));
     }
 
     @Test
