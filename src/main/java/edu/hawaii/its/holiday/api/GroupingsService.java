@@ -2,6 +2,7 @@ package edu.hawaii.its.holiday.api;
 
 import edu.internet2.middleware.grouperClient.api.*;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,11 +11,9 @@ import java.util.Date;
 /**
  * Created by zknoebel on 3/14/2017.
  */
-public class GrouperMethods {
+@Service
+public class GroupingsService {
 
-   public GrouperMethods(){
-
-    }
 
     /**
      * adds the self-opted attribute to a membership (combination of a group and a subject)
@@ -126,11 +125,9 @@ public class GrouperMethods {
      * ex. 20170314T0923
      */
     private String getDateTime() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hhmm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmm");
         Date date = new Date();
-        Date time = new Date();
-        return dateFormat.format(date) + "T" + timeFormat.format(time);
+        return dateFormat.format(date);
     }
 
     /**

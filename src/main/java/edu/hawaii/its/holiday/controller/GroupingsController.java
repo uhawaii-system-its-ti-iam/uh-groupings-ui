@@ -3,6 +3,7 @@ package edu.hawaii.its.holiday.controller;
 import edu.internet2.middleware.grouperClient.api.*;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,7 +12,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
 
-import edu.hawaii.its.holiday.api.GrouperMethods;
+import edu.hawaii.its.holiday.api.GroupingsService;
 import edu.hawaii.its.holiday.api.Grouping;
 
 /**
@@ -22,11 +23,9 @@ import edu.hawaii.its.holiday.api.Grouping;
 
 @RestController
 public class GroupingsController {
-    GrouperMethods gc;
 
-    public GroupingsController() {
-        gc = new GrouperMethods();
-    }
+    @Autowired
+    private GroupingsService gc;
 
     /**
      * eventually this is intended to give the user the ability to add a Grouping in one of the Groupings that they own,
@@ -400,7 +399,7 @@ public class GroupingsController {
     }
 
     @RequestMapping("/cancelOptIn")
-    public Object[] cancelOptIn(@RequestParam String username, @RequestParam String grouping) {
+    public Object[] cancelOptIn(@RequestParam String grouping, @RequestParam String username) {
         Object[] results = new Object[3];
         if (gc.inGroup(grouping + ":include", username)) {
 
