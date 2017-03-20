@@ -100,10 +100,6 @@ public final class Dates {
     }
 
     public static String formatDate(LocalDateTime datetime, String formatStr) {
-        //        return formatDateEx(datetime, formatStr);
-        //    }
-        //
-        //    private static String formatDateEx(LocalDateTime datetime, String formatStr) {
         if (datetime == null) {
             return "";
         }
