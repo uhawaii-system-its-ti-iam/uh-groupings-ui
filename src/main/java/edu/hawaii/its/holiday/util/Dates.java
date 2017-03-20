@@ -3,6 +3,8 @@ package edu.hawaii.its.holiday.util;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -13,6 +15,7 @@ import java.util.Date;
 public final class Dates {
 
     public static final String DATE_FORMAT = "MMMM dd, yyyy";
+    public static final String DATE_SORT_FORMAT = "yyyy-MM-dd";
 
     // Private constructor; prevent instantiation.
     private Dates() {
@@ -21,6 +24,12 @@ public final class Dates {
 
     public static LocalDate newLocalDate(int year, Month month, int day) {
         return LocalDate.of(year, month, day);
+    }
+
+    public static LocalDateTime newLocalDateTime(int year, Month month, int day) {
+        LocalTime time = LocalTime.now();
+        LocalDate date = LocalDate.of(year, month, day);
+        return LocalDateTime.of(date, time);
     }
 
     public static Month month(LocalDate date) {
@@ -87,19 +96,40 @@ public final class Dates {
     }
 
     public static String formatDate(LocalDate date, String formatStr) {
-        if (date == null) {
+        return formatDate(toLocalDateTime(date), formatStr);
+    }
+
+    public static String formatDate(LocalDateTime datetime, String formatStr) {
+        //        return formatDateEx(datetime, formatStr);
+        //    }
+        //
+        //    private static String formatDateEx(LocalDateTime datetime, String formatStr) {
+        if (datetime == null) {
             return "";
         }
+        if (formatStr == null) {
+            formatStr = DATE_SORT_FORMAT;
+        }
 
-        String result = date.toString();
+        String result = datetime.toString();
 
         try {
-            result = date.format(DateTimeFormatter.ofPattern(formatStr));
+            result = datetime.format(DateTimeFormatter.ofPattern(formatStr));
         } catch (Exception e) {
-            // Ignored.
+            try {
+                // Try again with a basic pattern.
+                formatStr = DATE_SORT_FORMAT;
+                result = datetime.format(DateTimeFormatter.ofPattern(formatStr));
+            } catch (Exception ex) {
+                // Ignored.
+            }
         }
 
         return result;
+    }
+
+    private static LocalDateTime toLocalDateTime(LocalDate date) {
+        return date != null ? date.atStartOfDay() : null;
     }
 
     // Not sure we really need this method.
