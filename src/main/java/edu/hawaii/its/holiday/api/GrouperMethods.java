@@ -4,6 +4,7 @@ import edu.internet2.middleware.grouperClient.api.*;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -45,18 +46,21 @@ public class GrouperMethods {
      * @return true if the membership between the user and the group has the "self-opted" attribute
      */
     public boolean checkSelfOpted(String group, WsSubjectLookup wsSubjectLookup) {
-        WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(group).execute();
-        String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
+        if(inGroup(group, wsSubjectLookup.getSubjectIdentifier())){
+            WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(group).execute();
+            String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().assignAttributeAssignType("imm_mem").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
-        WsAttributeAssign[] wsAttributes = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
+            WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().assignAttributeAssignType("imm_mem").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
+            WsAttributeAssign[] wsAttributes = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
 
-        if (wsAttributes != null) {
-            for (WsAttributeAssign att : wsAttributes) {
-                if (att.getAttributeDefNameName().equals("uh-settings:attributes:for-memberships:uh-grouping:self-opted")) {
-                    return true;
+            if (wsAttributes != null) {
+                for (WsAttributeAssign att : wsAttributes) {
+                    if (att.getAttributeDefNameName().equals("uh-settings:attributes:for-memberships:uh-grouping:self-opted")) {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
         return false;
     }
@@ -78,6 +82,19 @@ public class GrouperMethods {
             }
         }
         return userIsInGroup;
+    }
+
+    public boolean isOwner(String grouping, String username){
+        WsSubjectLookup user = new WsSubjectLookup();
+        user.setSubjectIdentifier(username);
+
+        WsGetGrouperPrivilegesLiteResult privilegeResults = new GcGetGrouperPrivilegesLite().assignSubjectLookup(user).assignPrivilegeName("update").assignPrivilegeName("read").assignGroupName(grouping + ":include").assignGroupName(grouping + ":include").addSubjectAttributeName("uid").execute();
+        WsGrouperPrivilegeResult[] privileges = privilegeResults.getPrivilegeResults();
+        ArrayList<String> owners = new ArrayList<>();
+        for(WsGrouperPrivilegeResult owner: privileges){
+            owners.add(owner.getOwnerSubject().getAttributeValue(0));
+        }
+        return owners.contains(username);
     }
 
     /**
