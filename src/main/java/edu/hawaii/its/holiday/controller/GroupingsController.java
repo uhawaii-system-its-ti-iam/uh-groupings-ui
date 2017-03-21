@@ -25,7 +25,7 @@ import edu.hawaii.its.holiday.api.Grouping;
 public class GroupingsController {
 
     @Autowired
-    private GroupingsService gc;
+    private GroupingsService gs;
 
     /**
      * eventually this is intended to give the user the ability to add a Grouping in one of the Groupings that they own,
@@ -59,16 +59,16 @@ public class GroupingsController {
     public Object[] addMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd) {
         Object[] results = new Object[5];
 
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(username);
+        WsSubjectLookup user = new WsSubjectLookup();
+        user.setSubjectIdentifier(username);
 
-        results[2] = gc.removeSelfOpted(grouping + ":exclude", userToAdd);
+        results[2] = gs.removeSelfOpted(grouping + ":exclude", userToAdd);
 
-        results[0] = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToAdd).execute();
-        results[1] = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToAdd).execute();
+        results[0] = new GcAddMember().assignActAsSubject(user).assignGroupName(grouping + ":include").addSubjectIdentifier(userToAdd).execute();
+        results[1] = new GcDeleteMember().assignActAsSubject(user).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToAdd).execute();
 
-        results[3] = gc.updateLastModified(grouping + ":exclude");
-        results[4] = gc.updateLastModified(grouping + ":include");
+        results[3] = gs.updateLastModified(grouping + ":exclude");
+        results[4] = gs.updateLastModified(grouping + ":include");
 
         return results;
     }
@@ -147,13 +147,13 @@ public class GroupingsController {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
 
-        results[2] = gc.removeSelfOpted(grouping + ":include", userToDelete);
+        results[2] = gs.removeSelfOpted(grouping + ":include", userToDelete);
 
         results[0] = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").addSubjectIdentifier(userToDelete).execute();
         results[1] = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude").addSubjectIdentifier(userToDelete).execute();
 
-        results[3] = gc.updateLastModified(grouping + ":exclude");
-        results[4] = gc.updateLastModified(grouping + ":include");
+        results[3] = gs.updateLastModified(grouping + ":exclude");
+        results[4] = gs.updateLastModified(grouping + ":include");
 
         return results;
     }
@@ -217,11 +217,13 @@ public class GroupingsController {
         WsGetMembersResults basisPlusIncludeResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":basis+include").assignIncludeSubjectDetail(true).execute();
         WsGetMembersResults excludeResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":exclude").assignIncludeSubjectDetail(true).execute();
         WsGetMembersResults includeResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping + ":include").assignIncludeSubjectDetail(true).execute();
+        WsGetMembersResults basisPlusIncludeMinusExcludeResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid").addGroupName(grouping).assignIncludeSubjectDetail(true).execute();
 
         groups.setBasis(basisResults.getResults()[0].getWsSubjects());
         groups.setBasisPlusInclude(basisPlusIncludeResults.getResults()[0].getWsSubjects());
         groups.setExclude(excludeResults.getResults()[0].getWsSubjects());
         groups.setInclude(includeResults.getResults()[0].getWsSubjects());
+        groups.setBasisPlusIncludeMinusExclude(basisPlusIncludeMinusExcludeResults.getResults()[0].getWsSubjects());
 
         return groups;
     }
@@ -234,12 +236,13 @@ public class GroupingsController {
      */
     @RequestMapping("/getOwners")
     public ArrayList<WsSubject> getOwners(@RequestParam String grouping, @RequestParam String username) {
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(username);
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include").assignPrivilegeName("update").addSubjectAttributeName("uid").execute();
+        WsSubjectLookup user = new WsSubjectLookup();
+        user.setSubjectIdentifier(username);
+        WsGetGrouperPrivilegesLiteResult privileges = new GcGetGrouperPrivilegesLite().assignActAsSubject(user).assignGroupName(grouping + ":include").assignPrivilegeName("update").addSubjectAttributeName("uid").execute();
         ArrayList<WsSubject> subjects = new ArrayList<>();
-        for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
-            subjects.add(wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getOwnerSubject());
+
+        for(WsGrouperPrivilegeResult result: privileges.getPrivilegeResults()){
+            subjects.add(result.getOwnerSubject());
         }
 
         return subjects;
@@ -256,12 +259,12 @@ public class GroupingsController {
         //the time it takes to look up a student is about 3 minutes
         //the time it takes to look up a staff member is less than 3 seconds
         //so until this gets resolved, it would be easier to query for a staff member while testing
-        WsStemLookup wsStemLookup = new WsStemLookup();
-        wsStemLookup.setStemName("hawaii.edu:custom");
+        WsStemLookup stem = new WsStemLookup();
+        stem.setStemName("hawaii.edu:custom");
 
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(username);
-        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().assignActAsSubject(wsSubjectLookup).addSubjectIdentifier(username).assignWsStemLookup(wsStemLookup).assignStemScope(StemScope.ALL_IN_SUBTREE).execute();
+        WsSubjectLookup user = new WsSubjectLookup();
+        user.setSubjectIdentifier(username);
+        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups().addSubjectIdentifier(username).assignWsStemLookup(stem).assignStemScope(StemScope.ALL_IN_SUBTREE).execute();
 
         ArrayList<String> groups = new ArrayList<>();
         WsGroup[] groupResults = wsGetGroupsResults.getResults()[0].getWsGroups();
@@ -270,25 +273,14 @@ public class GroupingsController {
         WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
         ArrayList<String> trios = new ArrayList<>();
 
-        for (WsGroup aTrioArray : trioArray) {
-            trios.add(aTrioArray.getName());
+        for (WsGroup aTrio : trioArray) {
+            trios.add(aTrio.getName());
         }
 
         for (int i = 0; i < wsGetGroupsResults.getResults()[0].getWsGroups().length; i++) {
-            String temp = groupResults[i].getName();
 
-            if (temp.endsWith(":include")) {
-                temp = temp.split(":include")[0];
-            } else if (temp.endsWith(":exclude")) {
-                temp = temp.split(":exclude")[0];
-            } else if (temp.endsWith(":basis")) {
-                temp = temp.split(":basis")[0];
-            } else if (temp.endsWith(":basis+include")) {
-                temp = temp.split(":basis\\+include")[0];
-            }
-
-            if ((!groups.contains(temp)) && (trios.contains(temp))) {
-                groups.add(temp);
+            if (trios.contains(groupResults[i].getName())) {
+                groups.add(groupResults[i].getName());
             }
         }
         return groups;
@@ -353,14 +345,14 @@ public class GroupingsController {
         WsSubjectLookup user = new WsSubjectLookup();
         user.setSubjectIdentifier(username);
 
-        if (gc.groupOptInPermission(username, grouping + ":include") && (!gc.inGroup(grouping + ":exclude", username) || gc.groupOptOutPermission(username, grouping + ":exclude"))) {
+        if (gs.groupOptInPermission(username, grouping + ":include") && (!gs.inGroup(grouping + ":exclude", username) || gs.groupOptOutPermission(username, grouping + ":exclude"))) {
 
-            results[3] = gc.removeSelfOpted(grouping + ":exclude", username);
+            results[3] = gs.removeSelfOpted(grouping + ":exclude", username);
             results[0] = new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
             results[1] = new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
-            results[4] = gc.updateLastModified(grouping + ":exclude");
-            results[5] = gc.updateLastModified(grouping + ":include");
-            results[2] = gc.addSelfOpted(grouping + ":include", username);
+            results[4] = gs.updateLastModified(grouping + ":exclude");
+            results[5] = gs.updateLastModified(grouping + ":include");
+            results[2] = gs.addSelfOpted(grouping + ":include", username);
 
             return results;
         } else {
@@ -383,14 +375,14 @@ public class GroupingsController {
         WsSubjectLookup user = new WsSubjectLookup();
         user.setSubjectIdentifier(username);
 
-        if (gc.groupOptInPermission(username, grouping + ":exclude") && (!gc.inGroup(grouping + ":include", username) || gc.groupOptOutPermission(username, grouping + ":include"))) {
+        if (gs.groupOptInPermission(username, grouping + ":exclude") && (!gs.inGroup(grouping + ":include", username) || gs.groupOptOutPermission(username, grouping + ":include"))) {
 
-            results[3] = gc.removeSelfOpted(grouping + ":include", username);
+            results[3] = gs.removeSelfOpted(grouping + ":include", username);
             results[0] = new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
             results[1] = new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
-            results[4] = gc.updateLastModified(grouping + ":exclude");
-            results[5] = gc.updateLastModified(grouping + ":include");
-            results[2] = gc.addSelfOpted(grouping + ":exclude", username);
+            results[4] = gs.updateLastModified(grouping + ":exclude");
+            results[5] = gs.updateLastModified(grouping + ":include");
+            results[2] = gs.addSelfOpted(grouping + ":exclude", username);
 
             return results;
         } else {
@@ -401,7 +393,7 @@ public class GroupingsController {
     @RequestMapping("/cancelOptIn")
     public Object[] cancelOptIn(@RequestParam String grouping, @RequestParam String username) {
         Object[] results = new Object[3];
-        if (gc.inGroup(grouping + ":include", username)) {
+        if (gs.inGroup(grouping + ":include", username)) {
 
             WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
             wsSubjectLookup.setSubjectIdentifier(username);
@@ -409,7 +401,7 @@ public class GroupingsController {
             WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":include").execute();
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            if (gc.checkSelfOpted(grouping + ":include", wsSubjectLookup)) {
+            if (gs.checkSelfOpted(grouping + ":include", wsSubjectLookup)) {
 
                 WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("optout").assignSubjectLookup(wsSubjectLookup).execute();
 
@@ -417,7 +409,7 @@ public class GroupingsController {
                     results[1] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("remove_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
                     results[0] = new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
 
-                    results[2] = gc.updateLastModified(grouping + ":include");
+                    results[2] = gs.updateLastModified(grouping + ":include");
 
                     return results;
                 } else {
@@ -434,7 +426,7 @@ public class GroupingsController {
     @RequestMapping("/cancelOptOut")
     public Object[] cancelOptOut(@RequestParam String grouping, @RequestParam String username) {
         Object[] results = new Object[3];
-        if (gc.inGroup(grouping + ":exclude", username)) {
+        if (gs.inGroup(grouping + ":exclude", username)) {
 
             WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
             wsSubjectLookup.setSubjectIdentifier(username);
@@ -442,7 +434,7 @@ public class GroupingsController {
             WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":exclude").execute();
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            if (gc.checkSelfOpted(grouping + ":exclude", wsSubjectLookup)) {
+            if (gs.checkSelfOpted(grouping + ":exclude", wsSubjectLookup)) {
 
                 WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("optout").assignSubjectLookup(wsSubjectLookup).execute();
 
@@ -450,7 +442,7 @@ public class GroupingsController {
                     results[1] = new GcAssignAttributes().assignAttributeAssignType("imm_mem").assignAttributeAssignOperation("remove_attr").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
                     results[0] = new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
 
-                    results[2] = gc.updateLastModified(grouping + ":exclude");
+                    results[2] = gs.updateLastModified(grouping + ":exclude");
 
                     return results;
                 } else {
@@ -480,7 +472,7 @@ public class GroupingsController {
         //          or
         //          they have permission to opt out of the include group
 
-        return (gc.groupOptInPermission(username, grouping + ":exclude") && (!gc.inGroup(grouping + ":include", username) || gc.groupOptOutPermission(username, grouping + ":include")));
+        return (gs.groupOptInPermission(username, grouping + ":exclude") && (!gs.inGroup(grouping + ":include", username) || gs.groupOptOutPermission(username, grouping + ":include")));
     }
 
     /**
@@ -499,7 +491,7 @@ public class GroupingsController {
         //          or
         //          they have permission to opt out of the exclude group
 
-        return (gc.groupOptInPermission(username, grouping + ":include") && (!gc.inGroup(grouping + ":exclude", username) || gc.groupOptOutPermission(username, grouping + ":exclude")));
+        return (gs.groupOptInPermission(username, grouping + ":include") && (!gs.inGroup(grouping + ":exclude", username) || gs.groupOptOutPermission(username, grouping + ":exclude")));
     }
 
     /**

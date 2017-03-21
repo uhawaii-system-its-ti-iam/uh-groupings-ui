@@ -10,12 +10,14 @@ public class Grouping {
     WsSubject[] basisPlusInclude;
     WsSubject[] exclude;
     WsSubject[] include;
+    WsSubject[] basisPlusIncludeMinusExclude;
 
-    public Grouping(WsSubject[] basis, WsSubject[] basisPlusInclude, WsSubject[] exclude, WsSubject[] include){
+    public Grouping(WsSubject[] basis, WsSubject[] basisPlusInclude, WsSubject[] exclude, WsSubject[] include, WsSubject[] basisPlusIncludeMinusExclude){
         this.basis = basis;
         this.basisPlusInclude = basisPlusInclude;
         this.exclude = exclude;
         this.include = include;
+        this.basisPlusIncludeMinusExclude = basisPlusIncludeMinusExclude;
     }
 
     public Grouping(){
@@ -52,5 +54,13 @@ public class Grouping {
 
     public void setInclude(WsSubject[] include) {
         this.include = include;
+    }
+
+    public WsSubject[] getBasisPlusIncludeMinusExclude() {
+        return basisPlusIncludeMinusExclude;
+    }
+
+    public void setBasisPlusIncludeMinusExclude(WsSubject[] basisPlusIncludeMinusExclude) {
+        this.basisPlusIncludeMinusExclude = basisPlusIncludeMinusExclude;
     }
 }
