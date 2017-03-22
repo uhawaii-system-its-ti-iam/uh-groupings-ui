@@ -1,112 +1,140 @@
 package edu.hawaii.its.holiday.api;
 
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
-import edu.internet2.middleware.grouperClient.api.GcGetMemberships;
-import edu.internet2.middleware.grouperClient.ws.beans.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.annotation.PostConstruct;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.Assert;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-
-import static org.junit.Assert.*;
-
-/**
- * Created by zac on 1/31/17.
- */
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestGroupingsService {
+
+    private final static String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
+
     @Autowired
     GroupingsService gs;
 
-    String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
+    @Autowired
+    public Environment env; // Just for the settings check.
 
-    @Test
-    public void test001_addSelfOptedTest(){
-        gs.addSelfOpted(grouping + ":include", "aaronvil");
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier("aaronvil");
-        WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":include").execute();
-        String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().assignAttributeAssignType("imm_mem").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
-        WsAttributeAssign[] selfOpted = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
-        ArrayList<String> attributeList = new ArrayList<String>();
-        for(WsAttributeAssign att: Arrays.asList(selfOpted)){
-            attributeList.add(att.getAttributeDefNameName());
-        }
-        assertTrue(attributeList.contains("uh-settings:attributes:for-memberships:uh-grouping:self-opted"));
+    @PostConstruct
+    public void init() {
+        Assert.hasLength(env.getProperty("grouperClient.webService.url"),
+                "property 'grouperClient.webService.url' is required");
+        Assert.hasLength(env.getProperty("grouperClient.webService.login"),
+                "property 'grouperClient.webService.login' is required");
+        Assert.hasLength(env.getProperty("grouperClient.webService.password"),
+                "property 'grouperClient.webService.password' is required");
     }
 
     @Test
-    public void test002_checkSelfOptedTest(){
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier("aaronvil");
+    public void test001_addSelfOptedTest() {
+        gs.addSelfOpted(grouping + ":include", "aaronvil");
+        WsSubjectLookup lookup = gs.makeWsSubjectLookup("aaronvil");
+        String group = grouping + ":include";
+        WsGetMembershipsResults wsGetMembershipsResults = gs.membershipsResults(lookup, group);
+        String assignType = "imm_mem";
+        String uuid = GroupingsService.UUID;
+        String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
+
+        WsAttributeAssign[] wsAttributes = gs.attributeAssign(assignType, uuid, membershipID);
+
+        ArrayList<String> attributeList = new ArrayList<String>();
+        for (WsAttributeAssign att : Arrays.asList(wsAttributes)) {
+            attributeList.add(att.getAttributeDefNameName());
+        }
+        assertTrue(attributeList.contains(GroupingsService.SELF_OPTED));
+    }
+
+    @Test
+    public void test002_checkSelfOptedTest() {
+        WsSubjectLookup wsSubjectLookup = gs.makeWsSubjectLookup("aaronvil");
         assertTrue(gs.checkSelfOpted(grouping + ":include", wsSubjectLookup));
     }
 
     @Test
-    public void test003_removeSelfOptedTest(){
+    public void test003_removeSelfOptedTest() {
         gs.removeSelfOpted(grouping + ":include", "aaronvil");
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier("aaronvil");
-        WsGetMembershipsResults wsGetMembershipsResults = new GcGetMemberships().addWsSubjectLookup(wsSubjectLookup).addGroupName(grouping + ":include").execute();
+        WsSubjectLookup lookup = gs.makeWsSubjectLookup("aaronvil");
+        String group = grouping + ":include";
+        WsGetMembershipsResults wsGetMembershipsResults = gs.membershipsResults(lookup, group);
+        String assignType = "imm_mem";
+        String uuid = GroupingsService.UUID;
         String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments().assignAttributeAssignType("imm_mem").addAttributeDefNameUuid("ef62bf0473614b379695ecec6cb8b3b5").addOwnerMembershipId(membershipID).execute();
-        WsAttributeAssign[] selfOpted = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
-        assertTrue(selfOpted == null || !Arrays.asList(selfOpted).contains("uh-settings:attributes:for-memberships:uh-grouping:self-opted"));
+
+        WsAttributeAssign[] wsAttributes = gs.attributeAssign(assignType, uuid, membershipID);
+
+        assertTrue(wsAttributes.length == 0
+                || !Arrays.asList(wsAttributes).contains(GroupingsService.SELF_OPTED));
     }
 
     @Test
-    public void test004_checkSelfOptedTest2(){
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier("aaronvil");
+    public void test004_checkSelfOptedTest2() {
+        WsSubjectLookup wsSubjectLookup = gs.makeWsSubjectLookup("aaronvil");
         assertFalse(gs.checkSelfOpted(grouping + ":include", wsSubjectLookup));
     }
 
     @Test
-    public void isOwnerTest(){
+    public void isOwnerTest() {
         assertTrue(gs.isOwner(grouping, "zknoebel"));
     }
 
     @Test
-    public void inGroupTest(){
+    public void inGroupTest() {
         assertTrue(gs.inGroup(grouping + ":include", "aaronvil"));
         assertFalse(gs.inGroup(grouping + ":exclude", "aaronvil"));
     }
 
     @Test
-    public void groupOptInPermissionTest(){
+    public void groupOptInPermissionTest() {
         assertTrue(gs.groupOptInPermission("aaronvil", grouping + ":include"));
         assertTrue(gs.groupOptInPermission("aaronvil", grouping + ":exclude"));
     }
 
     @Test
-    public void groupOptOutPermissionTest(){
+    public void groupOptOutPermissionTest() {
         assertTrue(gs.groupOptOutPermission("aaronvil", grouping + ":include"));
         assertTrue(gs.groupOptOutPermission("aaronvil", grouping + ":exclude"));
     }
 
     @Test
-    public void updateLastModifiedTest(){
-        //test is accurate to the minute, and if checks to see if the current time gets added to the lastModified attribute of a group
-        //if the minute happens to change in between getting the time and setting the time, the test will fail..
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmm");
-        Date date = new Date();
-        String currentDateTime = dateFormat.format(date);
+    public void updateLastModifiedTest() {
+        // Test is accurate to the minute, and if checks to see if the current
+        // time gets added to the lastModified attribute of a group if the
+        // minute happens to change in between getting the time and setting
+        // the time, the test will fail.
 
-        gs.updateLastModified(grouping + ":include");
-        WsGetAttributeAssignmentsResults assignments = new GcGetAttributeAssignments().assignAttributeAssignType("group").addOwnerGroupName(grouping + ":include").addAttributeDefNameName("uh-settings:attributes:for-groups:last-modified:yyyymmddThhmm").execute();
+        String currentDateTime = gs.wsDateTime();
+        String group = grouping + ":include";
+
+        gs.updateLastModified(group);
+
+        String assignType = "group";
+        String nameName = "uh-settings:attributes:for-groups:last-modified:yyyymmddThhmm";
+
+        WsGetAttributeAssignmentsResults assignments =
+                gs.attributeAssignmentsResults(assignType, group, nameName);
         String assignedValue = assignments.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
         assertEquals(currentDateTime, assignedValue);
     }

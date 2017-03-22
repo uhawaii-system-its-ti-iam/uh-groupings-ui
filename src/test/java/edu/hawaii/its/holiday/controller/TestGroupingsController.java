@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,14 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.Assert;
-import org.springframework.web.context.WebApplicationContext;
 
 import edu.hawaii.its.holiday.api.Grouping;
 import edu.hawaii.its.holiday.api.GroupingsService;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import edu.internet2.middleware.grouperClient.api.GcGetGrouperPrivilegesLite;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
@@ -40,13 +36,14 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class TestGroupingsController {
+
     private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
     private String include = grouping + ":include";
     private String exclude = grouping + ":exclude";
     private String aaron = "aaronvil";
     private String zac = "zknoebel";
 
-    private WsSubjectLookup lookupAaron = new WsSubjectLookup();
+    private WsSubjectLookup lookupAaron;
 
     @Autowired
     private GroupingsService gs;
@@ -55,12 +52,7 @@ public class TestGroupingsController {
     private GroupingsController gc;
 
     @Autowired
-    private WebApplicationContext context;
-
-    private MockMvc mockMvc;
-
-    @Autowired
-    public Environment env;
+    public Environment env; // Just for the settings check.
 
     @PostConstruct
     public void init() {
@@ -74,12 +66,12 @@ public class TestGroupingsController {
 
     @Before
     public void setUp() {
-        mockMvc = webAppContextSetup(context).build();
-        lookupAaron.setSubjectIdentifier(aaron);
+        lookupAaron = gs.makeWsSubjectLookup(aaron);
     }
 
     @Test
     public void testConstruction() {
+        assertNotNull(gs);
         assertNotNull(gc);
     }
 
@@ -101,12 +93,16 @@ public class TestGroupingsController {
     @Test
     public void assignOwnershipTest() {
         gc.assignOwnership(grouping, zac, aaron);
+
+        String group = grouping + ":include";
+        String privilegeName = "update";
+
         WsGetGrouperPrivilegesLiteResult updateInclude =
-                new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("update")
-                        .assignSubjectLookup(lookupAaron).execute();
+                gs.grouperPrivilegesLite(aaron, group, privilegeName);
+
+        group = grouping + ":exclude";
         WsGetGrouperPrivilegesLiteResult updateExclude =
-                new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("update")
-                        .assignSubjectLookup(lookupAaron).execute();
+                gs.grouperPrivilegesLite(aaron, group, privilegeName);
 
         assertTrue(updateInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
         assertTrue(updateExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
@@ -136,21 +132,28 @@ public class TestGroupingsController {
     @Test
     public void removeOwnershipTest() {
         gc.assignOwnership(grouping, zac, aaron);
+
+        String group = grouping + ":include";
+        String privilegeName = "update";
+
         WsGetGrouperPrivilegesLiteResult updateInclude =
-                new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("update")
-                        .assignSubjectLookup(lookupAaron).execute();
+                gs.grouperPrivilegesLite(aaron, group, privilegeName);
+
+        group = grouping + ":exclude";
         WsGetGrouperPrivilegesLiteResult updateExclude =
-                new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("update")
-                        .assignSubjectLookup(lookupAaron).execute();
+                gs.grouperPrivilegesLite(aaron, group, privilegeName);
 
         assertTrue(updateInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
         assertTrue(updateExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
 
         gc.removeOwnership(grouping, zac, aaron);
-        updateInclude = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":include").assignPrivilegeName("update")
-                .assignSubjectLookup(lookupAaron).execute();
-        updateExclude = new GcGetGrouperPrivilegesLite().assignGroupName(grouping + ":exclude").assignPrivilegeName("update")
-                .assignSubjectLookup(lookupAaron).execute();
+
+        group = grouping + ":include";
+
+        updateInclude = gs.grouperPrivilegesLite(aaron, group, privilegeName);
+
+        group = grouping + ":exclude";
+        updateExclude = gs.grouperPrivilegesLite(aaron, group, privilegeName);
 
         assertFalse(updateInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
         assertFalse(updateExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
