@@ -3,63 +3,73 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:substituteby="header :: copy"></head>
 <body ng-app="adminApp">
-    <nav th:substituteby="menubar :: copy"></nav>
-    <!--  Content container -->
-    <div class='container-fluid'>
-        <div class='row'>
-            <div class='col-xs-offset-1 col-xs-10'>
-                <h3>Administration</h3>
-                <div ng-app="adminApp">
-                    <h2>Designate Admins</h2>
+<nav th:substituteby="menubar :: copy"></nav>
+<!--  Content container -->
+<div class='container-fluid'>
+    <div class='row'>
+        <div class='col-xs-offset-1 col-xs-10'>
+            <div ng-app="adminApp">
+                <h1><b>Designate Admins</b></h1>
+                <h4>Manage the list of Admins</h4>
 
-                    <p>Manage the list of Admins</p>
+                <h2>Designated Admins</h2>
 
-                    <h3>Designated Admins</h3>
-                    <div ng-controller="AdminJsController" data-ng-init="init()">
-                        <table class="table table-bordered table-condensed table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>UH ID</th>
-                                    <th>Username</th>
-                                    <th>remove</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="l in list">
-                                    <td>{{l.name}}</td>
-                                    <td>{{l.id}}</td>
-                                    <td>{{l.attributeValues}}</td>
-                                    <td><button class="btn btn-default btn-block" ng-click="remove($index)"><span class="glyphicon glyphicon-remove"></span></button></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="panel panel-default" ng-controller="AdminJsController" data-ng-init="init()">
+                    <div class="panel-heading">
+                        <input class="form-control" placeholder="Type to filter text..." type="text"
+                               ng-model="searchFor" style="width: 200px"/>
+                    </div>
 
-                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addAdmin" aria-expanded="false" aria-controls="addAdmin">
+                    <!-- Table -->
+                    <table class="table table-bordered table-condensed table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>UH ID</th>
+                            <th>Username</th>
+                            <th>remove</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="l in list | filter:searchFor">
+                            <td>{{l.name}}</td>
+                            <td>{{l.id}}</td>
+                            <td>{{l.attributeValues}}</td>
+                            <td>
+                                <button class="btn btn-default btn-block" ng-click="remove($index)"><span
+                                        class="glyphicon glyphicon-remove"></span></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="panel-footer">
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addAdmin"
+                                aria-expanded="false" aria-controls="addAdmin">
                             Add Admin
                         </button>
                         <div class="collapse" id="addAdmin">
                             <input type="text" ng-model="username"/>
                             <button class="btn btn-success" ng-click="add()">Add Admin</button>
                         </div>
-                        <br/>
-
                     </div>
                 </div>
-                <br/>
-                <!--
-                <div sec:authorize="isAuthenticated()">
-                    <h5>Selected Spring Security Information</h5>
-                    <p>Logged in user: <span id="name" sec:authentication="name"></span></p>
-                    <p>Roles: <span sec:authentication="principal.authorities"></span></p>
-                </div>-->
 
             </div>
+            <br/>
+            <!--
+            <div sec:authorize="isAuthenticated()">
+                <h5>Selected Spring Security Information</h5>
+                <p>Logged in user: <span id="name" sec:authentication="name"></span></p>
+                <p>Roles: <span sec:authentication="principal.authorities"></span></p>
+            </div>-->
+
         </div>
     </div>
-    <!-- / Content container. -->
+</div>
+<!-- / Content container. -->
 
-    <div th:substituteby="footer :: copy"></div>
+<div th:substituteby="footer :: copy"></div>
 </body>
 </html>
 
