@@ -18,14 +18,18 @@ public class GrouperPropertyConfigurer {
     public void init() {
         GrouperClientConfig config = GrouperClientConfig.retrieveConfig();
 
-        String key = "grouperClient.webService.url";
-        config.propertiesOverrideMap().put(key, env.getProperty(key));
-
-        key = "grouperClient.webService.login";
-        config.propertiesOverrideMap().put(key, env.getProperty(key));
-
-        key = "grouperClient.webService.password";
-        config.propertiesOverrideMap().put(key, env.getProperty(key));
+        setOverride(config, "grouperClient.webService.url");
+        setOverride(config, "grouperClient.webService.login");
+        setOverride(config, "grouperClient.webService.password");
     }
 
+    private void setOverride(GrouperClientConfig config, String key) {
+        if (overrideExists(key)) {
+            config.propertiesOverrideMap().put(key, env.getProperty(key));
+        }
+    }
+
+    private boolean overrideExists(String key) {
+        return env.containsProperty(key);
+    }
 }
