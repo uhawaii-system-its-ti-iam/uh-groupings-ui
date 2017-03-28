@@ -1,8 +1,12 @@
 package edu.hawaii.its.holiday.api;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import edu.internet2.middleware.grouperClient.api.*;
+import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +21,7 @@ public class GroupingsService {
 
     public static final String UUID = "ef62bf0473614b379695ecec6cb8b3b5";
     public static final String SELF_OPTED = "uh-settings:attributes:for-memberships:uh-grouping:self-opted";
+    public static WsStemLookup stem = new WsStemLookup();
 
     /**
      * adds the self-opted attribute to a membership (combination of a group and a subject)
@@ -319,5 +324,67 @@ public class GroupingsService {
                 .assignGroupName(group)
                 .addSubjectIdentifier(user)
                 .execute();
+    }
+
+    // Helper method
+    public WsGetMembersResults getMembersAs(WsSubjectLookup user, String group){
+        return new GcGetMembers()
+                .assignActAsSubject(user)
+                .addSubjectAttributeName("uid")
+                .addGroupName(group)
+                .assignIncludeSubjectDetail(true)
+                .execute();
+    }
+
+
+    // Helper method
+    private ArrayList<String> allGroupings(){
+        String uuid = UUID;
+        String assignType = "group";
+        String subjectAttributeName = "uh-settings:attributes:for-groups:uh-grouping:is-trio";
+        ArrayList<String> trios = new ArrayList<>();
+
+        WsGetAttributeAssignmentsResults groupings = attributeAssignments(assignType, subjectAttributeName, uuid);
+
+        for (WsGroup aTrio : groupings.getWsGroups()) {
+            trios.add(aTrio.getName());
+        }
+
+        return trios;
+    }
+
+    // Helper method
+    public ArrayList<String> extractGroupings(String[] groups){
+        ArrayList<String> allGroupings = allGroupings();
+        ArrayList<String> groupings = new ArrayList<>();
+
+        for (String name: groups){
+            if(allGroupings.contains(name)){
+                groupings.add(name);
+            }
+        }
+
+        return groupings;
+    }
+
+    // Helper method
+    public ArrayList<String> getGroupNames(String username){
+        stem.setStemName("hawaii.edu:custom");
+        ArrayList<String> names = new ArrayList<>();
+
+        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
+                .addSubjectIdentifier(username)
+                .assignWsStemLookup(stem)
+                .assignStemScope(StemScope.ALL_IN_SUBTREE)
+                .execute();
+
+        WsGetGroupsResult groupResults = wsGetGroupsResults.getResults()[0];
+        WsGroup[] groups = groupResults.getWsGroups();
+
+        for(WsGroup group: groups){
+            names.add(group.getName());
+        }
+
+        return names;
     }
 }

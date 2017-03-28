@@ -81,10 +81,8 @@ public class GroupingsController {
         WsSubjectLookup user = gs.makeWsSubjectLookup(username);
 
         results[2] = gs.removeSelfOpted(grouping + ":exclude", userToAdd);
-
         results[0] = gs.addMemberAs(user, grouping + ":include", userToAdd);
         results[1] = gs.deleteMemberAs(user, grouping + ":exclude", userToAdd);
-
         results[3] = gs.updateLastModified(grouping + ":exclude");
         results[4] = gs.updateLastModified(grouping + ":include");
 
@@ -169,10 +167,8 @@ public class GroupingsController {
         WsSubjectLookup user = gs.makeWsSubjectLookup(username);
 
         results[2] = gs.removeSelfOpted(grouping + ":include", userToDelete);
-
         results[0] = gs.deleteMemberAs(user, grouping + ":include", userToDelete);
         results[1] = gs.addMemberAs(user, grouping + ":exclude", userToDelete);
-
         results[3] = gs.updateLastModified(grouping + ":exclude");
         results[4] = gs.updateLastModified(grouping + ":include");
 
@@ -237,21 +233,13 @@ public class GroupingsController {
     public Grouping getMembers(@RequestParam String grouping, @RequestParam String username) {
         Grouping groups = new Grouping();
 
-        WsSubjectLookup wsSubjectLookup = gs.makeWsSubjectLookup(username);
+        WsSubjectLookup user = gs.makeWsSubjectLookup(username);
 
-        WsGetMembersResults basisResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup)
-                .addSubjectAttributeName("uid").addGroupName(grouping + ":basis").assignIncludeSubjectDetail(true).execute();
-        WsGetMembersResults basisPlusIncludeResults =
-                new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid")
-                        .addGroupName(grouping + ":basis+include").assignIncludeSubjectDetail(true).execute();
-        WsGetMembersResults excludeResults =
-                new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid")
-                        .addGroupName(grouping + ":exclude").assignIncludeSubjectDetail(true).execute();
-        WsGetMembersResults includeResults =
-                new GcGetMembers().assignActAsSubject(wsSubjectLookup).addSubjectAttributeName("uid")
-                        .addGroupName(grouping + ":include").assignIncludeSubjectDetail(true).execute();
-        WsGetMembersResults basisPlusIncludeMinusExcludeResults = new GcGetMembers().assignActAsSubject(wsSubjectLookup)
-                .addSubjectAttributeName("uid").addGroupName(grouping).assignIncludeSubjectDetail(true).execute();
+        WsGetMembersResults basisResults = gs.getMembersAs(user, grouping + ":basis");
+        WsGetMembersResults basisPlusIncludeResults = gs.getMembersAs(user, grouping + ":basis+include");
+        WsGetMembersResults excludeResults = gs.getMembersAs(user, grouping + ":exclude");
+        WsGetMembersResults includeResults = gs.getMembersAs(user, grouping + ":include");
+        WsGetMembersResults basisPlusIncludeMinusExcludeResults = gs.getMembersAs(user, grouping);
 
         groups.setBasis(basisResults.getResults()[0].getWsSubjects());
         groups.setBasisPlusInclude(basisPlusIncludeResults.getResults()[0].getWsSubjects());
@@ -459,8 +447,7 @@ public class GroupingsController {
                     String operation = "remove_attr";
                     String uuid = GroupingsService.UUID;
                     results[1] = gs.assignAttributesResults(operation, uuid, membershipID);
-                    results[0] = new GcDeleteMember().assignGroupName(group).addSubjectIdentifier(username)
-                            .execute();
+                    results[0] = gs.deleteMember(group, username);
 
                     results[2] = gs.updateLastModified(group);
 
@@ -497,8 +484,7 @@ public class GroupingsController {
                     String operation = "remove_attr";
                     String uuid = GroupingsService.UUID;
                     results[1] = gs.assignAttributesResults(operation, uuid, membershipID);
-                    results[0] = new GcDeleteMember().assignGroupName(group).addSubjectIdentifier(username)
-                            .execute();
+                    results[0] = gs.deleteMember(group, username);
 
                     results[2] = gs.updateLastModified(group);
 
