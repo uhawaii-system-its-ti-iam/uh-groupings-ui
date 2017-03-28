@@ -2,26 +2,13 @@ package edu.hawaii.its.holiday.api;
 
 import java.time.LocalDateTime;
 
+import edu.internet2.middleware.grouperClient.api.*;
+import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import edu.hawaii.its.holiday.util.Dates;
-import edu.internet2.middleware.grouperClient.api.GcAssignAttributes;
-import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
-import edu.internet2.middleware.grouperClient.api.GcGetGrouperPrivilegesLite;
-import edu.internet2.middleware.grouperClient.api.GcGetMemberships;
-import edu.internet2.middleware.grouperClient.api.GcHasMember;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssignValue;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGrouperPrivilegeResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @Service
 public class GroupingsService {
@@ -55,7 +42,7 @@ public class GroupingsService {
 
     /**
      * @param group:           group to search through (include extension of Grouping ie. ":include" or ":exclude")
-     * @param wsSubjectLookup: WsSubjectLookup of user
+     * @param lookup: WsSubjectLookup of user
      * @return true if the membership between the user and the group has the "self-opted" attribute
      */
     public boolean checkSelfOpted(String group, WsSubjectLookup lookup) {
@@ -174,7 +161,11 @@ public class GroupingsService {
         logger.info("groupOptOutPermission; group: " + group + "; username: " + username);
         String privilegeName = "optout";
         WsGetGrouperPrivilegesLiteResult result = grouperPrivilegesLite(username, group, privilegeName);
-        return result.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
+
+        return result
+                .getResultMetadata()
+                .getResultCode()
+                .equals("SUCCESS_ALLOWED");
     }
 
     /**
@@ -188,7 +179,11 @@ public class GroupingsService {
         logger.info("groupOptInPermission; group: " + group + "; username: " + username);
         String privilegeName = "optin";
         WsGetGrouperPrivilegesLiteResult result = grouperPrivilegesLite(username, group, privilegeName);
-        return result.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED");
+
+        return result
+                .getResultMetadata()
+                .getResultCode()
+                .equals("SUCCESS_ALLOWED");
     }
 
     /**
@@ -291,4 +286,38 @@ public class GroupingsService {
                 .execute();
     }
 
+
+    // Helper method.
+    public WsAddMemberResults addMemberAs(WsSubjectLookup user, String group, String userToAdd){
+        return new GcAddMember()
+                .assignActAsSubject(user)
+                .assignGroupName(group)
+                .addSubjectIdentifier(userToAdd)
+                .execute();
+    }
+
+    // Helper method.
+    public WsDeleteMemberResults deleteMemberAs(WsSubjectLookup user, String group, String userToDelete){
+        return new GcDeleteMember()
+                .assignActAsSubject(user)
+                .assignGroupName(group)
+                .addSubjectIdentifier(userToDelete)
+                .execute();
+    }
+
+    // Helper method.
+    public WsDeleteMemberResults deleteMember(String group, String user){
+        return new GcDeleteMember()
+                .assignGroupName(group)
+                .addSubjectIdentifier(user)
+                .execute();
+    }
+
+    // Helper method.
+    public WsAddMemberResults addMember(String group, String user){
+        return new GcAddMember()
+                .assignGroupName(group)
+                .addSubjectIdentifier(user)
+                .execute();
+    }
 }

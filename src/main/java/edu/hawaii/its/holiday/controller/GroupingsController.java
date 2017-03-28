@@ -82,10 +82,8 @@ public class GroupingsController {
 
         results[2] = gs.removeSelfOpted(grouping + ":exclude", userToAdd);
 
-        results[0] = new GcAddMember().assignActAsSubject(user).assignGroupName(grouping + ":include")
-                .addSubjectIdentifier(userToAdd).execute();
-        results[1] = new GcDeleteMember().assignActAsSubject(user).assignGroupName(grouping + ":exclude")
-                .addSubjectIdentifier(userToAdd).execute();
+        results[0] = gs.addMemberAs(user, grouping + ":include", userToAdd);
+        results[1] = gs.deleteMemberAs(user, grouping + ":exclude", userToAdd);
 
         results[3] = gs.updateLastModified(grouping + ":exclude");
         results[4] = gs.updateLastModified(grouping + ":include");
@@ -168,14 +166,12 @@ public class GroupingsController {
             @RequestParam String userToDelete) {
         Object[] results = new Object[5];
 
-        WsSubjectLookup wsSubjectLookup = gs.makeWsSubjectLookup(username);
+        WsSubjectLookup user = gs.makeWsSubjectLookup(username);
 
         results[2] = gs.removeSelfOpted(grouping + ":include", userToDelete);
 
-        results[0] = new GcDeleteMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":include")
-                .addSubjectIdentifier(userToDelete).execute();
-        results[1] = new GcAddMember().assignActAsSubject(wsSubjectLookup).assignGroupName(grouping + ":exclude")
-                .addSubjectIdentifier(userToDelete).execute();
+        results[0] = gs.deleteMemberAs(user, grouping + ":include", userToDelete);
+        results[1] = gs.addMemberAs(user, grouping + ":exclude", userToDelete);
 
         results[3] = gs.updateLastModified(grouping + ":exclude");
         results[4] = gs.updateLastModified(grouping + ":include");
@@ -403,9 +399,8 @@ public class GroupingsController {
                         || gs.groupOptOutPermission(username, grouping + ":exclude"))) {
 
             results[3] = gs.removeSelfOpted(grouping + ":exclude", username);
-            results[0] =
-                    new GcDeleteMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
-            results[1] = new GcAddMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
+            results[0] = gs.deleteMember(grouping + ":exclude", username);
+            results[1] = gs.addMember(grouping + ":include", username);
             results[4] = gs.updateLastModified(grouping + ":exclude");
             results[5] = gs.updateLastModified(grouping + ":include");
             results[2] = gs.addSelfOpted(grouping + ":include", username);
@@ -431,9 +426,8 @@ public class GroupingsController {
                 || gs.groupOptOutPermission(username, grouping + ":include"))) {
 
             results[3] = gs.removeSelfOpted(grouping + ":include", username);
-            results[0] =
-                    new GcDeleteMember().assignGroupName(grouping + ":include").addSubjectIdentifier(username).execute();
-            results[1] = new GcAddMember().assignGroupName(grouping + ":exclude").addSubjectIdentifier(username).execute();
+            results[0] = gs.deleteMember(grouping + ":include", username);
+            results[1] = gs.addMember(grouping + ":exclude", username);
             results[4] = gs.updateLastModified(grouping + ":exclude");
             results[5] = gs.updateLastModified(grouping + ":include");
             results[2] = gs.addSelfOpted(grouping + ":exclude", username);
