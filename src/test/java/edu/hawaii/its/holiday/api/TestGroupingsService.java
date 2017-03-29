@@ -55,7 +55,7 @@ public class TestGroupingsService {
         String group = grouping + ":include";
         WsGetMembershipsResults wsGetMembershipsResults = gs.membershipsResults(lookup, group);
         String assignType = "imm_mem";
-        String uuid = GroupingsService.UUID;
+        String uuid = GroupingsService.UUID_USERNAME;
         String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
         WsAttributeAssign[] wsAttributes = gs.attributeAssign(assignType, uuid, membershipID);
@@ -80,7 +80,7 @@ public class TestGroupingsService {
         String group = grouping + ":include";
         WsGetMembershipsResults wsGetMembershipsResults = gs.membershipsResults(lookup, group);
         String assignType = "imm_mem";
-        String uuid = GroupingsService.UUID;
+        String uuid = GroupingsService.UUID_USERNAME;
         String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
         WsAttributeAssign[] wsAttributes = gs.attributeAssign(assignType, uuid, membershipID);

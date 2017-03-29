@@ -2,6 +2,7 @@ package edu.hawaii.its.holiday.controller;
 
 import java.util.ArrayList;
 
+import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,24 +12,17 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.hawaii.its.holiday.api.Grouping;
 import edu.hawaii.its.holiday.api.GroupingsService;
-import edu.internet2.middleware.grouperClient.api.GcAddMember;
 import edu.internet2.middleware.grouperClient.api.GcAssignGrouperPrivileges;
-import edu.internet2.middleware.grouperClient.api.GcDeleteMember;
 import edu.internet2.middleware.grouperClient.api.GcGetGrouperPrivilegesLite;
-import edu.internet2.middleware.grouperClient.api.GcGetGroups;
-import edu.internet2.middleware.grouperClient.api.GcGetMembers;
-import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGrouperPrivilegeResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsStemLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
@@ -281,45 +275,15 @@ public class GroupingsController {
      * finds the different Groupings that the user is in and allowed to view
      *
      * @param username : String containing the username to be searched for
-     * @return information about all of the Groupings the user is in
+     * @return ArrayList of the names of the Groupings the user is in
      */
     @RequestMapping("/groupingsIn")
     public ArrayList<String> groupingsIn(@RequestParam String username) {
         //the time it takes to look up a student is about 3 minutes
         //the time it takes to look up a staff member is less than 3 seconds
         //so until this gets resolved, it would be easier to query for a staff member while testing
-        WsStemLookup stem = new WsStemLookup();
-        stem.setStemName("hawaii.edu:custom");
-
-        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
-                .addSubjectIdentifier(username)
-                .assignWsStemLookup(stem)
-                .assignStemScope(StemScope.ALL_IN_SUBTREE)
-                .execute();
-
-        ArrayList<String> groups = new ArrayList<>();
-        WsGroup[] groupResults = wsGetGroupsResults.getResults()[0].getWsGroups();
-        String uuid = UUID;
-        String assignType = "group";
-        String subjectAttributeName = "uh-settings:attributes:for-groups:uh-grouping:is-trio";
-
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
-                gs.attributeAssignments(assignType, subjectAttributeName, uuid);
-
-        WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
-        ArrayList<String> trios = new ArrayList<>();
-
-        for (WsGroup aTrio : trioArray) {
-            trios.add(aTrio.getName());
-        }
-
-        for (int i = 0; i < wsGetGroupsResults.getResults()[0].getWsGroups().length; i++) {
-
-            if (trios.contains(groupResults[i].getName())) {
-                groups.add(groupResults[i].getName());
-            }
-        }
-        return groups;
+        String[] groupsIn = gs.getGroupNames(username);
+        return gs.extractGroupings(groupsIn);
     }
 
     /**
@@ -330,45 +294,24 @@ public class GroupingsController {
      */
     @RequestMapping("/groupingsOwned")
     public ArrayList<String> groupingsOwned(@RequestParam String username) {
-        String privilegeName = "update";
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult =
-                gs.grouperPrivilegesLite(username, privilegeName);
-        ArrayList<String> groups = new ArrayList<>();
-        String uuid = UUID;
-        String assignType = "group";
-        String subjectAttributeName = "uh-settings:attributes:for-groups:uh-grouping:is-trio";
-
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
-                gs.attributeAssignments(assignType, subjectAttributeName, uuid);
-        WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
-        ArrayList<String> trios = new ArrayList<>();
-
-        for (WsGroup aTrioArray : trioArray) {
-            trios.add(aTrioArray.getName());
+        ArrayList<String> groupings = new ArrayList<>();
+        WsSubjectLookup user = gs.makeWsSubjectLookup(username);
+        WsGetGrouperPrivilegesLiteResult getPrivilegeResults = new GcGetGrouperPrivilegesLite().assignPrivilegeName("update").assignSubjectLookup(user).execute();
+        WsGrouperPrivilegeResult[] privilegeResults = getPrivilegeResults.getPrivilegeResults();
+        WsGroup[] groups = new WsGroup[privilegeResults.length];
+        for(int i = 0; i < groups.length; i ++){
+            groups[i] = privilegeResults[i].getWsGroup();
         }
-
-        try {
-            for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
-                String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
-
-                if (temp.endsWith(":include")) {
-                    temp = temp.split(":include")[0];
-                } else if (temp.endsWith(":exclude")) {
-                    temp = temp.split(":exclude")[0];
-                } else if (temp.endsWith(":basis")) {
-                    temp = temp.split(":basis")[0];
-                } else if (temp.endsWith(":basis+include")) {
-                    temp = temp.split(":basis\\+include")[0];
-                }
-
-                if ((!groups.contains(temp)) && (trios.contains(temp))) {
-                    groups.add(temp);
-                }
+        ArrayList<String> names = gs.extractGroupNames(groups);
+        for(int i = 0; i < names.size(); i ++){
+            if(names.get(i).endsWith(":include")){
+                names.set(i,names.get(i).split(":include")[0]);
             }
-        } catch (NullPointerException npe) {
-            return null;
+            else if(names.get(i).endsWith(":exclude")){
+                names.set(i,names.get(i).split(":exclude")[0]);
+            }
         }
-        return groups;
+        return gs.extractGroupings(names.toArray(new String[names.size()]));
     }
 
     /**
@@ -445,10 +388,9 @@ public class GroupingsController {
 
                 if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
                     String operation = "remove_attr";
-                    String uuid = GroupingsService.UUID;
+                    String uuid = GroupingsService.UUID_USERNAME;
                     results[1] = gs.assignAttributesResults(operation, uuid, membershipID);
                     results[0] = gs.deleteMember(group, username);
-
                     results[2] = gs.updateLastModified(group);
 
                     return results;
@@ -456,9 +398,11 @@ public class GroupingsController {
                     throw new AccessDeniedException("user is not allowed to opt out of 'include' group");
                 }
 
+            } else {
+                throw new IllegalStateException("user is in include group, but cannot cancel opt in, because user did not opt in");
             }
         } else {
-            results[0] = "user is not opted in, because user is not in 'include' group";
+            results[0] = "Success, user is not opted in, because user was not in 'include' group";
         }
         return results;
     }
@@ -482,7 +426,7 @@ public class GroupingsController {
 
                 if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
                     String operation = "remove_attr";
-                    String uuid = GroupingsService.UUID;
+                    String uuid = GroupingsService.UUID_USERNAME;
                     results[1] = gs.assignAttributesResults(operation, uuid, membershipID);
                     results[0] = gs.deleteMember(group, username);
 
@@ -492,10 +436,11 @@ public class GroupingsController {
                 } else {
                     throw new AccessDeniedException("user is not allowed to opt out of 'exclude' group");
                 }
-
+            } else {
+                throw new IllegalStateException("user is in exclude group, but cannot cancel opt out, because user did not opt out");
             }
         } else {
-            results[0] = "user is not opted in, because user is not in 'exclude' group";
+            results[0] = "Success, user is not opted out, because user was not in 'exclude' group";
         }
         return results;
     }
@@ -548,36 +493,14 @@ public class GroupingsController {
      */
     @RequestMapping("/groupingsToOptOutOf")
     public ArrayList<String> groupingsToOptOutOf(@RequestParam String username) {
-        String privilegeName = "optin";
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult =
-                gs.grouperPrivilegesLite(username, privilegeName);
-        ArrayList<String> groups = new ArrayList<>();
-        String uuid = UUID;
-        String assignType = "group";
-        String subjectAttributeName = "uh-settings:attributes:for-groups:uh-grouping:is-trio";
-
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
-                gs.attributeAssignments(assignType, subjectAttributeName, uuid);
-        WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
-        ArrayList<String> trios = new ArrayList<>();
-
-        for (WsGroup aTrioArray : trioArray) {
-            trios.add(aTrioArray.getName());
-        }
-
-        for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
-            String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
-
-            if (temp.endsWith(":exclude")) {
-                temp = temp.split(":exclude")[0];
-                if (trios.contains(temp)) {
-                    groups.add(temp);
-                }
+        ArrayList<String> groupings = new ArrayList<>();
+        ArrayList<String> groupingsIn = groupingsIn(username);
+        for(String grouping: groupingsIn){
+            if(optOutPermission(username, grouping)){
+                groupings.add(grouping);
             }
         }
-
-        return groups;
-
+        return groupings;
     }
 
     /**
@@ -588,36 +511,14 @@ public class GroupingsController {
      */
     @RequestMapping("/groupingsToOptInto")
     public ArrayList<String> groupingsToOptInto(@RequestParam String username) {
-        String privilegeName = "optin";
-        WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult =
-                gs.grouperPrivilegesLite(username, privilegeName);
-
-        ArrayList<String> groups = new ArrayList<>();
-        String uuid = UUID;
-        String assignType = "group";
-        String subjectAttributeName = "uh-settings:attributes:for-groups:uh-grouping:is-trio";
-
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
-                gs.attributeAssignments(assignType, subjectAttributeName, uuid);
-        WsGroup[] trioArray = wsGetAttributeAssignmentsResults.getWsGroups();
-        ArrayList<String> trios = new ArrayList<>();
-
-        for (WsGroup aTrioArray : trioArray) {
-            trios.add(aTrioArray.getName());
-        }
-
-        for (int i = 0; i < wsGetGrouperPrivilegesLiteResult.getPrivilegeResults().length; i++) {
-            String temp = wsGetGrouperPrivilegesLiteResult.getPrivilegeResults()[i].getWsGroup().getName();
-
-            if (temp.endsWith(":include")) {
-                temp = temp.split(":include")[0];
-                if (trios.contains(temp)) {
-                    groups.add(temp);
-                }
+        ArrayList<String> groupings = new ArrayList<>();
+        ArrayList<String> groupingsIn = groupingsIn(username);
+        for(String grouping: groupingsIn){
+            if(optInPermission(username, grouping)){
+                groupings.add(grouping);
             }
         }
-
-        return groups;
+        return groupings;
     }
 
     @RequestMapping("/hasListServe")

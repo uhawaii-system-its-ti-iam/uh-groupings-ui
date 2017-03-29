@@ -2,8 +2,6 @@ package edu.hawaii.its.holiday.api;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import edu.internet2.middleware.grouperClient.api.*;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
@@ -19,7 +17,8 @@ public class GroupingsService {
 
     private static final Log logger = LogFactory.getLog(GroupingsService.class);
 
-    public static final String UUID = "ef62bf0473614b379695ecec6cb8b3b5";
+    public static final String UUID_USERNAME = "ef62bf0473614b379695ecec6cb8b3b5";
+    private final static String UUID_TRIO = "1d7365a23c994f5f83f7b541d4a5fa5e";
     public static final String SELF_OPTED = "uh-settings:attributes:for-memberships:uh-grouping:self-opted";
     public static WsStemLookup stem = new WsStemLookup();
 
@@ -39,7 +38,7 @@ public class GroupingsService {
                 WsGetMembershipsResults includeMembershipsResults = membershipsResults(lookup, group);
                 String membershipID = includeMembershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "assign_attr";
-                return assignAttributesResults(operation, UUID, membershipID);
+                return assignAttributesResults(operation, UUID_USERNAME, membershipID);
             }
         }
         return new WsAssignAttributesResults();
@@ -56,7 +55,7 @@ public class GroupingsService {
         if (inGroup(group, lookup.getSubjectIdentifier())) {
             WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(lookup, group);
             String assignType = "imm_mem";
-            String uuid = UUID;
+            String uuid = UUID_USERNAME;
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
             WsAttributeAssign[] wsAttributes = attributeAssign(assignType, uuid, membershipID);
@@ -141,7 +140,7 @@ public class GroupingsService {
                 WsGetMembershipsResults getIncludeMembershipsResults = membershipsResults(lookup, group);
                 String membershipID = getIncludeMembershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "remove_attr";
-                return assignAttributesResults(operation, UUID, membershipID);
+                return assignAttributesResults(operation, UUID_USERNAME, membershipID);
             }
         }
         return new WsAssignAttributesResults();
@@ -339,7 +338,7 @@ public class GroupingsService {
 
     // Helper method
     private ArrayList<String> allGroupings(){
-        String uuid = UUID;
+        String uuid = UUID_TRIO;
         String assignType = "group";
         String subjectAttributeName = "uh-settings:attributes:for-groups:uh-grouping:is-trio";
         ArrayList<String> trios = new ArrayList<>();
@@ -368,7 +367,7 @@ public class GroupingsService {
     }
 
     // Helper method
-    public ArrayList<String> getGroupNames(String username){
+    public String[] getGroupNames(String username){
         stem.setStemName("hawaii.edu:custom");
         ArrayList<String> names = new ArrayList<>();
 
@@ -381,8 +380,18 @@ public class GroupingsService {
         WsGetGroupsResult groupResults = wsGetGroupsResults.getResults()[0];
         WsGroup[] groups = groupResults.getWsGroups();
 
+        names = extractGroupNames(groups);
+        return names.toArray(new String[names.size()]);
+    }
+
+    // Helper method
+    public ArrayList<String> extractGroupNames(WsGroup[] groups){
+        ArrayList<String> names = new ArrayList<>();
+
         for(WsGroup group: groups){
-            names.add(group.getName());
+            if(!names.contains(group.getName())) {
+                names.add(group.getName());
+            }
         }
 
         return names;
