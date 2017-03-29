@@ -97,6 +97,10 @@ public class JsonDataTest {
         assertFalse(jd2.equals(jd3));
         assertFalse(jd3.equals(jd2));
 
+        jd1 = new JsonData<>("key", null);
+        jd2 = new JsonData<>("key", null);
+        assertThat(jd1, equalTo(jd2));
+
         jd1 = new JsonData<>(null, d1);
         jd2 = new JsonData<>(d1);
         assertFalse(jd1.equals(jd2));
