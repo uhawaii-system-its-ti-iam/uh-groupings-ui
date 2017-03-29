@@ -2,15 +2,44 @@ package edu.hawaii.its.holiday.api;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
-import edu.internet2.middleware.grouperClient.api.*;
-import edu.internet2.middleware.grouperClient.ws.StemScope;
-import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
+import edu.hawaii.its.groupings.type.Owner;
 import edu.hawaii.its.holiday.util.Dates;
+import edu.internet2.middleware.grouperClient.api.GcAddMember;
+import edu.internet2.middleware.grouperClient.api.GcAssignAttributes;
+import edu.internet2.middleware.grouperClient.api.GcAssignGrouperPrivileges;
+import edu.internet2.middleware.grouperClient.api.GcDeleteMember;
+import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
+import edu.internet2.middleware.grouperClient.api.GcGetGrouperPrivilegesLite;
+import edu.internet2.middleware.grouperClient.api.GcGetGroups;
+import edu.internet2.middleware.grouperClient.api.GcGetMembers;
+import edu.internet2.middleware.grouperClient.api.GcGetMemberships;
+import edu.internet2.middleware.grouperClient.api.GcHasMember;
+import edu.internet2.middleware.grouperClient.ws.StemScope;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssignValue;
+import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResult;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGrouperPrivilegeResult;
+import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResult;
+import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsStemLookup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @Service
 public class GroupingsService {
@@ -18,9 +47,10 @@ public class GroupingsService {
     private static final Log logger = LogFactory.getLog(GroupingsService.class);
 
     public static final String UUID_USERNAME = "ef62bf0473614b379695ecec6cb8b3b5";
-    private final static String UUID_TRIO = "1d7365a23c994f5f83f7b541d4a5fa5e";
     public static final String SELF_OPTED = "uh-settings:attributes:for-memberships:uh-grouping:self-opted";
-    public static WsStemLookup stem = new WsStemLookup();
+
+    private static final String UUID_TRIO = "1d7365a23c994f5f83f7b541d4a5fa5e";
+    private static final WsStemLookup STEM = new WsStemLookup("hawaii.edu:custom", null);
 
     /**
      * adds the self-opted attribute to a membership (combination of a group and a subject)
@@ -298,9 +328,8 @@ public class GroupingsService {
                 .execute();
     }
 
-
     // Helper method.
-    public WsAddMemberResults addMemberAs(WsSubjectLookup user, String group, String userToAdd){
+    public WsAddMemberResults addMemberAs(WsSubjectLookup user, String group, String userToAdd) {
         return new GcAddMember()
                 .assignActAsSubject(user)
                 .assignGroupName(group)
@@ -309,7 +338,7 @@ public class GroupingsService {
     }
 
     // Helper method.
-    public WsDeleteMemberResults deleteMemberAs(WsSubjectLookup user, String group, String userToDelete){
+    public WsDeleteMemberResults deleteMemberAs(WsSubjectLookup user, String group, String userToDelete) {
         return new GcDeleteMember()
                 .assignActAsSubject(user)
                 .assignGroupName(group)
@@ -318,7 +347,7 @@ public class GroupingsService {
     }
 
     // Helper method.
-    public WsDeleteMemberResults deleteMember(String group, String user){
+    public WsDeleteMemberResults deleteMember(String group, String user) {
         return new GcDeleteMember()
                 .assignGroupName(group)
                 .addSubjectIdentifier(user)
@@ -326,15 +355,15 @@ public class GroupingsService {
     }
 
     // Helper method.
-    public WsAddMemberResults addMember(String group, String user){
+    public WsAddMemberResults addMember(String group, String user) {
         return new GcAddMember()
                 .assignGroupName(group)
                 .addSubjectIdentifier(user)
                 .execute();
     }
 
-    // Helper method
-    public WsGetMembersResults getMembersAs(WsSubjectLookup user, String group){
+    // Helper method.
+    public WsGetMembersResults getMembersAs(WsSubjectLookup user, String group) {
         return new GcGetMembers()
                 .assignActAsSubject(user)
                 .addSubjectAttributeName("uid")
@@ -343,9 +372,8 @@ public class GroupingsService {
                 .execute();
     }
 
-
-    // Helper method
-    private ArrayList<String> allGroupings(){
+    // Helper method.
+    private ArrayList<String> allGroupings() {
         String uuid = UUID_TRIO;
         String assignType = "group";
         String subjectAttributeName = "uh-settings:attributes:for-groups:uh-grouping:is-trio";
@@ -360,13 +388,13 @@ public class GroupingsService {
         return trios;
     }
 
-    // Helper method
-    public ArrayList<String> extractGroupings(String[] groups){
+    // Helper method.
+    public ArrayList<String> extractGroupings(String[] groups) {
         ArrayList<String> allGroupings = allGroupings();
         ArrayList<String> groupings = new ArrayList<>();
 
-        for (String name: groups){
-            if(allGroupings.contains(name)){
+        for (String name : groups) {
+            if (allGroupings.contains(name)) {
                 groupings.add(name);
             }
         }
@@ -374,14 +402,14 @@ public class GroupingsService {
         return groupings;
     }
 
-    // Helper method
-    public String[] getGroupNames(String username){
-        stem.setStemName("hawaii.edu:custom");
+    // Helper method.
+    public String[] getGroupNames(String username) {
+
         ArrayList<String> names = new ArrayList<>();
 
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
                 .addSubjectIdentifier(username)
-                .assignWsStemLookup(stem)
+                .assignWsStemLookup(STEM)
                 .assignStemScope(StemScope.ALL_IN_SUBTREE)
                 .execute();
 
@@ -392,12 +420,12 @@ public class GroupingsService {
         return names.toArray(new String[names.size()]);
     }
 
-    // Helper method
-    public ArrayList<String> extractGroupNames(WsGroup[] groups){
+    // Helper method.
+    public ArrayList<String> extractGroupNames(WsGroup[] groups) {
         ArrayList<String> names = new ArrayList<>();
 
-        for(WsGroup group: groups){
-            if(!names.contains(group.getName())) {
+        for (WsGroup group : groups) {
+            if (!names.contains(group.getName())) {
                 names.add(group.getName());
             }
         }
@@ -405,8 +433,8 @@ public class GroupingsService {
         return names;
     }
 
-    //Helper method
-    public WsAssignGrouperPrivilegesResults removeGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToRemove){
+    // Helper method.
+    public WsAssignGrouperPrivilegesResults removeGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToRemove) {
         return new GcAssignGrouperPrivileges()
                 .assignGroupLookup(group)
                 .addSubjectLookup(ownerToRemove)
@@ -417,8 +445,8 @@ public class GroupingsService {
                 .execute();
     }
 
-    //Helper method
-    public WsAssignGrouperPrivilegesResults addGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToAdd){
+    // Helper method.
+    public WsAssignGrouperPrivilegesResults addGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToAdd) {
         return new GcAssignGrouperPrivileges()
                 .assignGroupLookup(group)
                 .addSubjectLookup(ownerToAdd)
@@ -427,4 +455,37 @@ public class GroupingsService {
                 .assignAllowed(true)
                 .execute();
     }
+
+    // ////////////////////////////////////////////////////////////////////////
+    // Start of reworking.
+
+    public List<Owner> findOwners(String username, String groupingName) {
+        List<Owner> owners = new ArrayList<>();
+
+        try {
+            WsGetGrouperPrivilegesLiteResult results =
+                    new GcGetGrouperPrivilegesLite()
+                            .assignActAsSubject(makeWsSubjectLookup(username))
+                            .assignGroupName(groupingName + ":include")
+                            .assignPrivilegeName("update")
+                            .addSubjectAttributeName("uid")
+                            .execute();
+
+            WsGrouperPrivilegeResult[] privilegeResults = results.getPrivilegeResults();
+            if (privilegeResults != null && privilegeResults.length > 0) {
+                for (WsGrouperPrivilegeResult o : privilegeResults) {
+                    Owner owner = new Owner(o.getPrivilegeName());
+                    owner.setName(o.getOwnerSubject().getName());
+                    owner.setUhuuid(o.getOwnerSubject().getId());
+                    owner.setUid(o.getWsSubject().getAttributeValues()[0]);
+                    owners.add(owner);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return owners;
+    }
+
 }
