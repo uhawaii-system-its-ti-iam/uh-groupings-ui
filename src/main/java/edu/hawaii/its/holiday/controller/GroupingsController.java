@@ -2,7 +2,8 @@ package edu.hawaii.its.holiday.controller;
 
 import java.util.ArrayList;
 
-import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.hawaii.its.holiday.api.Grouping;
 import edu.hawaii.its.holiday.api.GroupingsService;
-import edu.internet2.middleware.grouperClient.api.GcAssignGrouperPrivileges;
 import edu.internet2.middleware.grouperClient.api.GcGetGrouperPrivilegesLite;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
@@ -35,7 +35,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 @RestController
 public class GroupingsController {
 
-    private final static String UUID = "1d7365a23c994f5f83f7b541d4a5fa5e";
+    private static final Logger logger = LoggerFactory.getLogger(GroupingsController.class);
 
     @Autowired
     private GroupingsService gs;
@@ -95,7 +95,7 @@ public class GroupingsController {
     public WsAssignGrouperPrivilegesResults[] assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
         WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
 
-        if(gs.isOwner(grouping, username)) {
+        if (gs.isOwner(grouping, username)) {
             WsSubjectLookup ownerToAdd = gs.makeWsSubjectLookup(newOwner);
 
             WsGroupLookup includeGroupLookup = gs.makeWsGroupLookup(grouping + ":include");
@@ -109,8 +109,7 @@ public class GroupingsController {
             privilegeResults[3] = gs.addGroupOwnership(includeGroupLookup, ownerToAdd);
 
             return privilegeResults;
-        }
-        else {
+        } else {
             throw new AccessDeniedException("user does not have permission to update Grouping");
         }
         //change to api-account for now
@@ -173,7 +172,7 @@ public class GroupingsController {
     public WsAssignGrouperPrivilegesResults[] removeOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String ownerToRemove) {
         WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
 
-        if(gs.isOwner(grouping, username)) {
+        if (gs.isOwner(grouping, username)) {
             WsSubjectLookup ownerToRemoveLookup = gs.makeWsSubjectLookup(ownerToRemove);
 
             WsGroupLookup includeGroupLookup = gs.makeWsGroupLookup(grouping + ":include");
@@ -187,8 +186,7 @@ public class GroupingsController {
             privilegeResults[3] = gs.removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup);
 
             return privilegeResults;
-        }
-        else {
+        } else {
             throw new AccessDeniedException("user does not have permission to update Grouping");
         }
         //change to api-account for now
@@ -231,6 +229,8 @@ public class GroupingsController {
      */
     @RequestMapping("/getOwners")
     public ArrayList<WsSubject> getOwners(@RequestParam String grouping, @RequestParam String username) {
+        logger.info("getOwners; grouping: " + grouping + "; username: " + username);
+
         WsSubjectLookup lookup = gs.makeWsSubjectLookup(username);
         String group = grouping + ":include";
         String privilegeName = "update";
@@ -273,21 +273,19 @@ public class GroupingsController {
      */
     @RequestMapping("/groupingsOwned")
     public ArrayList<String> groupingsOwned(@RequestParam String username) {
-        ArrayList<String> groupings = new ArrayList<>();
         WsSubjectLookup user = gs.makeWsSubjectLookup(username);
         WsGetGrouperPrivilegesLiteResult getPrivilegeResults = new GcGetGrouperPrivilegesLite().assignPrivilegeName("update").assignSubjectLookup(user).execute();
         WsGrouperPrivilegeResult[] privilegeResults = getPrivilegeResults.getPrivilegeResults();
         WsGroup[] groups = new WsGroup[privilegeResults.length];
-        for(int i = 0; i < groups.length; i ++){
+        for (int i = 0; i < groups.length; i++) {
             groups[i] = privilegeResults[i].getWsGroup();
         }
         ArrayList<String> names = gs.extractGroupNames(groups);
-        for(int i = 0; i < names.size(); i ++){
-            if(names.get(i).endsWith(":include")){
-                names.set(i,names.get(i).split(":include")[0]);
-            }
-            else if(names.get(i).endsWith(":exclude")){
-                names.set(i,names.get(i).split(":exclude")[0]);
+        for (int i = 0; i < names.size(); i++) {
+            if (names.get(i).endsWith(":include")) {
+                names.set(i, names.get(i).split(":include")[0]);
+            } else if (names.get(i).endsWith(":exclude")) {
+                names.set(i, names.get(i).split(":exclude")[0]);
             }
         }
         return gs.extractGroupings(names.toArray(new String[names.size()]));
@@ -474,8 +472,8 @@ public class GroupingsController {
     public ArrayList<String> groupingsToOptOutOf(@RequestParam String username) {
         ArrayList<String> groupings = new ArrayList<>();
         ArrayList<String> groupingsIn = groupingsIn(username);
-        for(String grouping: groupingsIn){
-            if(optOutPermission(username, grouping)){
+        for (String grouping : groupingsIn) {
+            if (optOutPermission(username, grouping)) {
                 groupings.add(grouping);
             }
         }
@@ -492,8 +490,8 @@ public class GroupingsController {
     public ArrayList<String> groupingsToOptInto(@RequestParam String username) {
         ArrayList<String> groupings = new ArrayList<>();
         ArrayList<String> groupingsIn = groupingsIn(username);
-        for(String grouping: groupingsIn){
-            if(optInPermission(username, grouping)){
+        for (String grouping : groupingsIn) {
+            if (optInPermission(username, grouping)) {
                 groupings.add(grouping);
             }
         }
