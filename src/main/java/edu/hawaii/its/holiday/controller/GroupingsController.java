@@ -92,35 +92,27 @@ public class GroupingsController {
      * @return information about the new owner and its success
      */
     @RequestMapping("/assignOwnership")
-    public WsAssignGrouperPrivilegesResults[] assignOwnership(@RequestParam String grouping, @RequestParam String username,
-            @RequestParam String newOwner) {
-        WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultsArray = new WsAssignGrouperPrivilegesResults[4];
+    public WsAssignGrouperPrivilegesResults[] assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
+        WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
 
-        WsSubjectLookup newOwnerLookup = gs.makeWsSubjectLookup(newOwner);
-        WsSubjectLookup currentUserLookup = gs.makeWsSubjectLookup(username);
+        if(gs.isOwner(grouping, username)) {
+            WsSubjectLookup ownerToAdd = gs.makeWsSubjectLookup(newOwner);
 
-        WsGroupLookup includeGroupLookup = new WsGroupLookup();
-        includeGroupLookup.setGroupName(grouping + ":include");
-        WsGroupLookup basisGroupLookup = new WsGroupLookup();
-        basisGroupLookup.setGroupName(grouping + ":basis");
-        WsGroupLookup basisPlusIncludeGroupLookup = new WsGroupLookup();
-        basisPlusIncludeGroupLookup.setGroupName(grouping + ":basis+include");
-        WsGroupLookup excludeGroupLookup = new WsGroupLookup();
-        excludeGroupLookup.setGroupName(grouping + ":exclude");
+            WsGroupLookup includeGroupLookup = gs.makeWsGroupLookup(grouping + ":include");
+            WsGroupLookup basisGroupLookup = gs.makeWsGroupLookup(grouping + ":basis");
+            WsGroupLookup basisPlusIncludeGroupLookup = gs.makeWsGroupLookup(grouping + ":basis+include");
+            WsGroupLookup excludeGroupLookup = gs.makeWsGroupLookup(grouping + ":exclude");
 
-        wsAssignGrouperPrivilegesResultsArray[0] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup)
-                .assignGroupLookup(basisPlusIncludeGroupLookup).addSubjectLookup(newOwnerLookup)
-                .addPrivilegeName("view").addPrivilegeName("read").assignAllowed(true).execute();
-        wsAssignGrouperPrivilegesResultsArray[1] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup)
-                .assignGroupLookup(basisGroupLookup).addSubjectLookup(newOwnerLookup)
-                .addPrivilegeName("view").addPrivilegeName("read").assignAllowed(true).execute();
-        wsAssignGrouperPrivilegesResultsArray[2] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup)
-                .assignGroupLookup(excludeGroupLookup).addSubjectLookup(newOwnerLookup)
-                .addPrivilegeName("view").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(true).execute();
-        wsAssignGrouperPrivilegesResultsArray[3] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup)
-                .assignGroupLookup(includeGroupLookup).addSubjectLookup(newOwnerLookup)
-                .addPrivilegeName("view").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(true).execute();
-        return wsAssignGrouperPrivilegesResultsArray;
+            privilegeResults[0] = gs.addGroupOwnership(basisGroupLookup, ownerToAdd);
+            privilegeResults[1] = gs.addGroupOwnership(basisPlusIncludeGroupLookup, ownerToAdd);
+            privilegeResults[2] = gs.addGroupOwnership(excludeGroupLookup, ownerToAdd);
+            privilegeResults[3] = gs.addGroupOwnership(includeGroupLookup, ownerToAdd);
+
+            return privilegeResults;
+        }
+        else {
+            throw new AccessDeniedException("user does not have permission to update Grouping");
+        }
         //change to api-account for now
         //switch to actAsSubject after we figure out attribute update privlages
     }
@@ -178,40 +170,27 @@ public class GroupingsController {
      * @return information about the member who's ownership privileges have been removed and its success
      */
     @RequestMapping("/removeOwnership")
-    public WsAssignGrouperPrivilegesResults[] removeOwnership(@RequestParam String grouping, @RequestParam String username,
-            @RequestParam String ownerToRemove) {
-        WsAssignGrouperPrivilegesResults[] wsAssignGrouperPrivilegesResultsArray = new WsAssignGrouperPrivilegesResults[4];
+    public WsAssignGrouperPrivilegesResults[] removeOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String ownerToRemove) {
+        WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
 
-        WsSubjectLookup ownerToRemoveLookup = gs.makeWsSubjectLookup(ownerToRemove);
-        WsSubjectLookup currentUserLookup = gs.makeWsSubjectLookup(username);
+        if(gs.isOwner(grouping, username)) {
+            WsSubjectLookup ownerToRemoveLookup = gs.makeWsSubjectLookup(ownerToRemove);
 
-        WsGroupLookup includeGroupLookup = new WsGroupLookup();
-        includeGroupLookup.setGroupName(grouping + ":include");
-        WsGroupLookup basisGroupLookup = new WsGroupLookup();
-        basisGroupLookup.setGroupName(grouping + ":basis");
-        WsGroupLookup basisPlusIncludeGroupLookup = new WsGroupLookup();
-        basisPlusIncludeGroupLookup.setGroupName(grouping + ":basis+include");
-        WsGroupLookup excludeGroupLookup = new WsGroupLookup();
-        excludeGroupLookup.setGroupName(grouping + ":exclude");
+            WsGroupLookup includeGroupLookup = gs.makeWsGroupLookup(grouping + ":include");
+            WsGroupLookup basisGroupLookup = gs.makeWsGroupLookup(grouping + ":basis");
+            WsGroupLookup basisPlusIncludeGroupLookup = gs.makeWsGroupLookup(grouping + ":basis+include");
+            WsGroupLookup excludeGroupLookup = gs.makeWsGroupLookup(grouping + ":exclude");
 
-        wsAssignGrouperPrivilegesResultsArray[0] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup)
-                .assignGroupLookup(basisGroupLookup).addSubjectLookup(ownerToRemoveLookup)
-                .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false)
-                .execute();
-        wsAssignGrouperPrivilegesResultsArray[1] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup)
-                .assignGroupLookup(basisPlusIncludeGroupLookup).addSubjectLookup(ownerToRemoveLookup)
-                .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false)
-                .execute();
-        wsAssignGrouperPrivilegesResultsArray[2] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup)
-                .assignGroupLookup(excludeGroupLookup).addSubjectLookup(ownerToRemoveLookup)
-                .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false)
-                .execute();
-        wsAssignGrouperPrivilegesResultsArray[3] = new GcAssignGrouperPrivileges().assignActAsSubject(currentUserLookup)
-                .assignGroupLookup(includeGroupLookup).addSubjectLookup(ownerToRemoveLookup)
-                .addPrivilegeName("admin").addPrivilegeName("update").addPrivilegeName("read").assignAllowed(false)
-                .execute();
+            privilegeResults[0] = gs.removeGroupOwnership(basisGroupLookup, ownerToRemoveLookup);
+            privilegeResults[1] = gs.removeGroupOwnership(basisPlusIncludeGroupLookup, ownerToRemoveLookup);
+            privilegeResults[2] = gs.removeGroupOwnership(excludeGroupLookup, ownerToRemoveLookup);
+            privilegeResults[3] = gs.removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup);
 
-        return wsAssignGrouperPrivilegesResultsArray;
+            return privilegeResults;
+        }
+        else {
+            throw new AccessDeniedException("user does not have permission to update Grouping");
+        }
         //change to api-account for now
         //switch to actAsSubject after we figure out attribute update privlages
     }

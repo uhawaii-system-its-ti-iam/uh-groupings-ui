@@ -224,6 +224,14 @@ public class GroupingsService {
     }
 
     // Helper method.
+    public WsGroupLookup makeWsGroupLookup(String group) {
+        WsGroupLookup groupLookup = new WsGroupLookup();
+        groupLookup.setGroupName(group);
+
+        return groupLookup;
+    }
+
+    // Helper method.
     public WsAssignAttributesResults assignAttributesResults(String operation, String uuid, String membershipID) {
         String assignType = "imm_mem";
         return new GcAssignAttributes()
@@ -395,5 +403,28 @@ public class GroupingsService {
         }
 
         return names;
+    }
+
+    //Helper method
+    public WsAssignGrouperPrivilegesResults removeGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToRemove){
+        return new GcAssignGrouperPrivileges()
+                .assignGroupLookup(group)
+                .addSubjectLookup(ownerToRemove)
+                .addPrivilegeName("admin")
+                .addPrivilegeName("update")
+                .addPrivilegeName("read")
+                .assignAllowed(false)
+                .execute();
+    }
+
+    //Helper method
+    public WsAssignGrouperPrivilegesResults addGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToAdd){
+        return new GcAssignGrouperPrivileges()
+                .assignGroupLookup(group)
+                .addSubjectLookup(ownerToAdd)
+                .addPrivilegeName("update")
+                .addPrivilegeName("read")
+                .assignAllowed(true)
+                .execute();
     }
 }
