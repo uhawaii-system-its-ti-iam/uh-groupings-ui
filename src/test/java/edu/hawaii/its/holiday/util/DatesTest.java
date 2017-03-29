@@ -638,7 +638,6 @@ public class DatesTest {
         String dateStr9 = Dates.formatDate(date, "not-a-format");
         assertEquals("2013-12-30", dateStr9);
 
-        System.out.println(Strings.fill('v', 88));
         LocalDateTime n = LocalDateTime.of(2017, Month.APRIL, 1, 12, 34, 56);
         String dateStrA = Dates.formatDate(n, "yyyyMMdd'T'HHmmss");
         assertEquals("20170401T123456", dateStrA);
