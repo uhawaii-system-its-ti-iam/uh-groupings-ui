@@ -112,15 +112,20 @@ public final class Dates {
         try {
             result = datetime.format(DateTimeFormatter.ofPattern(formatStr));
         } catch (Exception e) {
-            try {
-                // Try again with a basic pattern.
-                formatStr = DATE_SORT_FORMAT;
-                result = datetime.format(DateTimeFormatter.ofPattern(formatStr));
-            } catch (Exception ex) {
-                // Ignored.
-            }
+            // Try again with a basic pattern.
+            result = formatDateBasicPattern(datetime);
         }
 
+        return result;
+    }
+
+    private static String formatDateBasicPattern(LocalDateTime datetime) {
+        String result;
+        try {
+            result = datetime.format(DateTimeFormatter.ofPattern(DATE_SORT_FORMAT));
+        } catch (Exception e) {
+            result = "";
+        }
         return result;
     }
 

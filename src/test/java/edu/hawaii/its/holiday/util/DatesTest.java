@@ -17,6 +17,7 @@ import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 public class DatesTest {
 
@@ -631,6 +632,36 @@ public class DatesTest {
 
         String dateStr8 = Dates.formatDate(date, "yyyyMMdd'T'HHmmss");
         assertEquals("20131230T000000", dateStr8);
+
+        // Cause an internal exception to occur;
+        // format defaults to a basic pattern.
+        String dateStr9 = Dates.formatDate(date, "not-a-format");
+        assertEquals("2013-12-30", dateStr9);
+
+        System.out.println(Strings.fill('v', 88));
+        LocalDateTime n = LocalDateTime.of(2017, Month.APRIL, 1, 12, 34, 56);
+        String dateStrA = Dates.formatDate(n, "yyyyMMdd'T'HHmmss");
+        assertEquals("20170401T123456", dateStrA);
+    }
+
+    @Test
+    public void formatDateBasicPattern() throws Exception {
+
+        LocalDateTime n = LocalDateTime.of(2017, Month.APRIL, 1, 12, 34, 56);
+
+        Constructor<Dates> c = Dates.class.getDeclaredConstructor();
+        c.setAccessible(true);
+        Dates dates = c.newInstance();
+
+        String dateStr0 = ReflectionTestUtils.invokeMethod(dates,
+                "formatDateBasicPattern", n);
+        assertEquals("2017-04-01", dateStr0);
+
+        // Method returns empty string when error occurs.
+        n = null;
+        String dateStr1 = ReflectionTestUtils.invokeMethod(dates,
+                "formatDateBasicPattern", n);
+        assertEquals("", dateStr1);
     }
 
     @Test
@@ -639,6 +670,14 @@ public class DatesTest {
         assertEquals(31, d.getDayOfMonth());
         assertEquals(2016, d.getYear());
         assertEquals(Month.OCTOBER, d.getMonth());
+    }
+
+    @Test
+    public void dateToLocalDateTime() {
+        LocalDateTime d = Dates.newLocalDateTime(2017, Month.MARCH, 28);
+        assertEquals(28, d.getDayOfMonth());
+        assertEquals(2017, d.getYear());
+        assertEquals(Month.MARCH, d.getMonth());
     }
 
     @Test
