@@ -9,17 +9,22 @@
 
             dataProvider.loadData(function (d) {
                 var temp;
-                temp = d.basisPlusIncludeMinusExclude
+                temp = d.basisPlusIncludeMinusExclude;
+
+                for(var k = 0; k < temp.length; k++)
+                {
+                    temp[k].basis = "";
+                }
 
                 //sorts the data by name
                 temp.sort(function (a, b) {
-                    var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
+                    var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
                     if (nameA < nameB) //sort string ascending
-                        return -1
+                        return -1;
                     if (nameA > nameB)
-                        return 1
+                        return 1;
                     return 0
-                })
+                });
 
                 //Filters out names with hawaii.edu
                 for (var i = 0; i < temp.length; i++) {
@@ -30,8 +35,21 @@
                 }
 
                 //gets the username from the attributeValues array
-                for (var i = 0; i < temp.length; i++) {
-                    temp[i].attributeValues = _.pluck(_.pluck(temp, "attributeValues"), 0)[i];
+                for (var j = 0; i < temp.length; i++) {
+                    temp[j].attributeValues = _.pluck(_.pluck(temp, "attributeValues"), 0)[j];
+                }
+
+                var basis = d.basis;
+
+                for(var l = 0; l < basis.length; l++)
+                {
+                    for(var m = 0; m < temp.length; m++)
+                    {
+                        if(basis[l].name === temp[m].name)
+                        {
+                            temp[m].basis = "b";
+                        }
+                    }
                 }
 
                 $scope.list = temp;

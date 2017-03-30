@@ -24,6 +24,7 @@
                     <table class="table table-bordered table-condensed table-hover">
                         <thead>
                         <tr>
+                            <th style="width: 20px">Basis</th>
                             <th>Name</th>
                             <th>UH ID</th>
                             <th>Username</th>
@@ -32,6 +33,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="l in list | filter:searchFor">
+                            <td>{{l.basis}}</td>
                             <td>{{l.name}}</td>
                             <td>{{l.id}}</td>
                             <td>{{l.attributeValues}}</td>
