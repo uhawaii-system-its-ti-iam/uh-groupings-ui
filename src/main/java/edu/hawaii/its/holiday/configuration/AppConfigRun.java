@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySources;
 
 @Profile(value = { "localhost", "test" })
 @Configuration
-@ComponentScan(basePackages = "edu.hawaii.its.holiday")
+@ComponentScan(basePackages = "edu.hawaii.its")
 @PropertySources({
         @PropertySource("classpath:custom.properties"),
         @PropertySource(value = "file:${user.home}/.${user.name}-conf/myiam-overrides.properties",

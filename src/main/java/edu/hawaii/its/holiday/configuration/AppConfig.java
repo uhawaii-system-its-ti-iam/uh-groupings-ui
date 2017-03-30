@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Profile(value = { "default", "dev" })
 @Configuration
-@ComponentScan(basePackages = "edu.hawaii.its.holiday")
+@ComponentScan(basePackages = "edu.hawaii.its")
 @PropertySource("classpath:custom.properties")
 public class AppConfig {
     // Empty.
