@@ -2,27 +2,59 @@
 
     function AdminJsController($scope, dataProvider) {
         var currentUser = document.getElementById("name").innerText;
-        var url = "getMembers?grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=ksanidad"; //+ currentUser;
+        var url = "getMembers?grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=" + currentUser;
         $scope.list = [];
 
         $scope.init = function () {
 
             dataProvider.loadData(function (d) {
-                //sorts the data by name
-                d.sort(function (a, b) {
-                    var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
-                    if (nameA < nameB) //sort string ascending
-                        return -1
-                    if (nameA > nameB)
-                        return 1
-                    return 0
-                })
+                var temp;
+                temp = d.basisPlusIncludeMinusExclude;
 
-                for (var i = 0; i < d.length; i++) {
-                    d[i].attributeValues = _.pluck(_.pluck(d, "attributeValues"), 0)[i];
+                for(var k = 0; k < temp.length; k++)
+                {
+                    temp[k].basis = "";
                 }
 
-                $scope.list = d;
+                //sorts the data by name
+                temp.sort(function (a, b) {
+                    var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                    if (nameA < nameB) //sort string ascending
+                        return -1;
+                    if (nameA > nameB)
+                        return 1;
+                    return 0
+                });
+
+                //Filters out names with hawaii.edu
+                for (var i = 0; i < temp.length; i++) {
+                    if (temp[i].name.includes("hawaii.edu")) {
+                        temp.splice(i, 1);
+                        i--;
+                    }
+                }
+
+                //gets the username from the attributeValues array
+                for (var j = 0; i < temp.length; i++) {
+                    temp[j].attributeValues = _.pluck(_.pluck(temp, "attributeValues"), 0)[j];
+                }
+
+                var basis = d.basis;
+
+                for(var l = 0; l < basis.length; l++)
+                {
+                    for(var m = 0; m < temp.length; m++)
+                    {
+                        if(basis[l].name === temp[m].name)
+                        {
+                            temp[m].basis = "b";
+                        }
+                    }
+                }
+
+                $scope.list = temp;
+
+                console.log($scope.list);
             }, url)
         };
 
@@ -43,8 +75,7 @@
                     console.log($scope.username + " this user does not exist.");
                     alert($scope.username + " this user does not exist.");
                 }
-                else
-                {
+                else {
                     const meta = pluck[0][0].resultMetadata;
 
                     console.log(meta.resultCode);
