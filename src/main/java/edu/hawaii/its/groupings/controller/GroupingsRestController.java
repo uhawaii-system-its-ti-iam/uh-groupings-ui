@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.hawaii.its.groupings.type.Owner;
-import edu.hawaii.its.holiday.api.GroupingsService;
+import edu.hawaii.its.groupings.api.GroupingsService;
 
 @RestController
 public class GroupingsRestController {

@@ -1,7 +1,7 @@
 package edu.hawaii.its.holiday.controller;
 
-import edu.hawaii.its.holiday.api.Grouping;
-import edu.hawaii.its.holiday.api.GroupingsService;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.GroupingsService;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
 import org.slf4j.Logger;

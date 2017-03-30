@@ -1,4 +1,4 @@
-package edu.hawaii.its.holiday.api;
+package edu.hawaii.its.groupings.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -9,7 +9,6 @@ import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 
-import edu.hawaii.its.groupings.api.GroupingsService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;

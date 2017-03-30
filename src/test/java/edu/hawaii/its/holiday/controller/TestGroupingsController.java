@@ -20,8 +20,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.holiday.api.Grouping;
-import edu.hawaii.its.holiday.api.GroupingsService;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.GroupingsService;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
@@ -163,23 +163,12 @@ public class TestGroupingsController {
     public void getMembersTest() {
         Grouping groupMembers = gc.getMembers(grouping, zac);
 
-        ArrayList<String> basisMembers = new ArrayList<>();
-        ArrayList<String> excludeMembers = new ArrayList<>();
-        ArrayList<String> includeMembers = new ArrayList<>();
-
-        basisMembers.addAll(
-                Arrays.asList(groupMembers.getBasis()).stream().map(WsSubject::getName).collect(Collectors.toList()));
-        excludeMembers.addAll(
-                Arrays.asList(groupMembers.getExclude()).stream().map(WsSubject::getName).collect(Collectors.toList()));
-        includeMembers.addAll(
-                (Arrays.asList(groupMembers.getInclude()).stream().map(WsSubject::getName).collect(Collectors.toList())));
-
-        assertTrue(basisMembers.contains("Kalani P Sanidad"));
-        assertTrue(excludeMembers.contains("Zachery S Knoebel"));
-        assertTrue(excludeMembers.contains("Frank R Duckart"));
-        assertTrue(includeMembers.contains("Aaron Jhumar B Villanueva"));
-        assertTrue(includeMembers.contains("Julio C Polo"));
-        assertTrue(includeMembers.contains("Michael S Hodges"));
+        assertTrue(groupMembers.getBasis().getMembers().contains("Kalani P Sanidad"));
+        assertTrue(groupMembers.getExclude().getMembers().contains("Zachery S Knoebel"));
+        assertTrue(groupMembers.getExclude().getMembers().contains("Frank R Duckart"));
+        assertTrue(groupMembers.getInclude().getMembers().contains("Aaron Jhumar B Villanueva"));
+        assertTrue(groupMembers.getInclude().getMembers().contains("Julio C Polo"));
+        assertTrue(groupMembers.getInclude().getMembers().contains("Michael S Hodges"));
     }
 
     @Test

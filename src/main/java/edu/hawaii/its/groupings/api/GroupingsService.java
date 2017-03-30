@@ -1,9 +1,13 @@
-package edu.hawaii.its.holiday.api;
+package edu.hawaii.its.groupings.api;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import edu.hawaii.its.groupings.api.type.Group;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.type.Person;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,12 +31,12 @@ import edu.internet2.middleware.grouperClient.ws.StemScope;
 @Service
 public class GroupingsService {
 
-    private static final Log logger = LogFactory.getLog(GroupingsService.class);
+    public static final Log logger = LogFactory.getLog(GroupingsService.class);
 
     public static final String UUID_USERNAME = "ef62bf0473614b379695ecec6cb8b3b5";
     public static final String SELF_OPTED = "uh-settings:attributes:for-memberships:uh-grouping:self-opted";
-    private static final String UUID_TRIO = "1d7365a23c994f5f83f7b541d4a5fa5e";
-    private static final WsStemLookup STEM = new WsStemLookup("hawaii.edu:custom", null);
+    public static final String UUID_TRIO = "1d7365a23c994f5f83f7b541d4a5fa5e";
+    public static final WsStemLookup STEM = new WsStemLookup("hawaii.edu:custom", null);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +74,7 @@ public class GroupingsService {
     }
 
 
-    public WsAssignGrouperPrivilegesResults[] assignOwnership(String grouping, String username,String newOwner) {
+    public WsAssignGrouperPrivilegesResults[] assignOwnership(String grouping, String username, String newOwner) {
         WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
 
         if (isOwner(grouping, username)) {
@@ -121,8 +125,6 @@ public class GroupingsService {
 
 
     public Grouping getMembers(String grouping, String username) {
-        Grouping groups = new Grouping();
-
         WsSubjectLookup user = makeWsSubjectLookup(username);
 
         WsGetMembersResults basisResults = getMembersAs(user, grouping + ":basis");
@@ -131,13 +133,13 @@ public class GroupingsService {
         WsGetMembersResults includeResults = getMembersAs(user, grouping + ":include");
         WsGetMembersResults basisPlusIncludeMinusExcludeResults = getMembersAs(user, grouping);
 
-        groups.setBasis(basisResults.getResults()[0].getWsSubjects());
-        groups.setBasisPlusInclude(basisPlusIncludeResults.getResults()[0].getWsSubjects());
-        groups.setExclude(excludeResults.getResults()[0].getWsSubjects());
-        groups.setInclude(includeResults.getResults()[0].getWsSubjects());
-        groups.setBasisPlusIncludeMinusExclude(basisPlusIncludeMinusExcludeResults.getResults()[0].getWsSubjects());
+        Group includeGroup = makeGroup(includeResults.getResults()[0].getWsSubjects());
+        Group excludeGroup = makeGroup(excludeResults.getResults()[0].getWsSubjects());
+        Group basisGroup = makeGroup(basisResults.getResults()[0].getWsSubjects());
+        Group basisPlusIncludeGroup = makeGroup(basisPlusIncludeResults.getResults()[0].getWsSubjects());
+        Group basisPlusIncludeMinusExcludeGroup = makeGroup(basisPlusIncludeMinusExcludeResults.getResults()[0].getWsSubjects());
 
-        return groups;
+        return new Grouping(basisGroup, basisPlusIncludeGroup, excludeGroup, includeGroup, basisPlusIncludeMinusExcludeGroup);
     }
 
 
@@ -376,8 +378,8 @@ public class GroupingsService {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    //todo make all helper methods private
-    //todo change tests for private methods
+    //todo make all helper methods public
+    //todo change tests for public methods
 
     /**
      * adds the self-opted attribute to a membership (combination of a group and a subject)
@@ -402,7 +404,7 @@ public class GroupingsService {
     }
 
     /**
-     * @param group:           group to search through (include extension of Grouping ie. ":include" or ":exclude")
+     * @param group:  group to search through (include extension of Grouping ie. ":include" or ":exclude")
      * @param lookup: WsSubjectLookup of user
      * @return true if the membership between the user and the group has the "self-opted" attribute
      */
@@ -725,7 +727,7 @@ public class GroupingsService {
     }
 
     // Helper method.
-    private ArrayList<String> allGroupings() {
+    public ArrayList<String> allGroupings() {
         String uuid = UUID_TRIO;
         String assignType = "group";
         String subjectAttributeName = "uh-settings:attributes:for-groups:uh-grouping:is-trio";
@@ -811,6 +813,23 @@ public class GroupingsService {
                 .addPrivilegeName("read")
                 .assignAllowed(true)
                 .execute();
+    }
+
+    //Helper method
+    public Group makeGroup(WsSubject[] subjects){
+        ArrayList<Person> persons = new ArrayList<>();
+        for(WsSubject subject: subjects){
+            persons.add(makePerson(subject));
+        }
+        return new Group(persons);
+    }
+
+    //Helper method
+    public Person makePerson(WsSubject person){
+        String name = person.getName();
+        String uuid = person.getId();
+        String username = person.getAttributeValue(0);
+        return new Person(name, uuid, username);
     }
 
     // ////////////////////////////////////////////////////////////////////////
