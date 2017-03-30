@@ -230,6 +230,7 @@ public class GroupingsService {
      * @return results from Grouper Web Service
      */
     public WsAssignAttributesResults updateLastModified(String group) {
+        logger.info("updateLastModified; group: " + group);
 
         WsAttributeAssignValue dateTimeValue = new WsAttributeAssignValue();
         dateTimeValue.setValueSystem(wsDateTime());
@@ -263,6 +264,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsAssignAttributesResults assignAttributesResults(String operation, String uuid, String membershipID) {
+        logger.info("assignAttributesResults; operation: " + operation + "; uuid: " + uuid + "; membershipID: " + membershipID);
+
         String assignType = "imm_mem";
         return new GcAssignAttributes()
                 .assignAttributeAssignType(assignType)
@@ -274,6 +277,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsAttributeAssign[] attributeAssign(String assignType, String uuid, String membershipID) {
+        logger.info("attribureAssign; assignType: " + assignType + "; uuid: " + uuid + "; membershipID: " + membershipID);
+
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
                 new GcGetAttributeAssignments()
                         .assignAttributeAssignType(assignType)
@@ -287,6 +292,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsGetAttributeAssignmentsResults attributeAssignmentsResults(String assignType, String group, String nameName) {
+        logger.info("attributeAssignmentsResults; assignType: " + assignType + "; group: " + group + "; nameName: " + nameName);
+
         return new GcGetAttributeAssignments().assignAttributeAssignType(assignType)
                 .addOwnerGroupName(group)
                 .addAttributeDefNameName(nameName)
@@ -295,6 +302,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsGetAttributeAssignmentsResults attributeAssignments(String assignType, String subjectAttributeName, String uuid) {
+        logger.info("attributeAssignments; assignType: " + assignType + "; subjectAttribureName: " + subjectAttributeName + "; uuid: " + uuid);
+
         return new GcGetAttributeAssignments()
                 .assignAttributeAssignType(assignType)
                 .addSubjectAttributeName(subjectAttributeName)
@@ -304,6 +313,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String group, String privilegeName) {
+        logger.info("grouperPrivlegesLite; username: " + username + "; group: " + group + "; privilegeName: " + privilegeName);
+
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
         return new GcGetGrouperPrivilegesLite()
                 .assignGroupName(group)
@@ -313,6 +324,8 @@ public class GroupingsService {
     }
 
     public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName) {
+        logger.info("grouperPrivlegesLite; username: " + username + "; privilegeName: " + privilegeName);
+
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
         return new GcGetGrouperPrivilegesLite()
                 .assignSubjectLookup(lookup)
@@ -322,6 +335,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsGetMembershipsResults membershipsResults(WsSubjectLookup lookup, String group) {
+        logger.info("membershipResults; lookup: " + lookup + "; group: " + group);
+
         return new GcGetMemberships()
                 .addWsSubjectLookup(lookup)
                 .addGroupName(group)
@@ -330,6 +345,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsAddMemberResults addMemberAs(WsSubjectLookup user, String group, String userToAdd) {
+        logger.info("addMemberAs; user: " + user + "; group: " + group + "; userToAdd: " + userToAdd);
+
         return new GcAddMember()
                 .assignActAsSubject(user)
                 .assignGroupName(group)
@@ -339,6 +356,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsDeleteMemberResults deleteMemberAs(WsSubjectLookup user, String group, String userToDelete) {
+        logger.info("delteMemberAs; user: " + user + "; group: " + group + "; userToDelete: " + userToDelete);
+
         return new GcDeleteMember()
                 .assignActAsSubject(user)
                 .assignGroupName(group)
@@ -348,6 +367,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsDeleteMemberResults deleteMember(String group, String user) {
+        logger.info("deleteMember; group: " + group + "; user: " + user);
+
         return new GcDeleteMember()
                 .assignGroupName(group)
                 .addSubjectIdentifier(user)
@@ -356,6 +377,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsAddMemberResults addMember(String group, String user) {
+        logger.info("addMember; group: " + group + "; user: " + user);
+
         return new GcAddMember()
                 .assignGroupName(group)
                 .addSubjectIdentifier(user)
@@ -364,6 +387,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsGetMembersResults getMembersAs(WsSubjectLookup user, String group) {
+        logger.info("getMembersAs; user: " + user + "; group: " + group);
+
         return new GcGetMembers()
                 .assignActAsSubject(user)
                 .addSubjectAttributeName("uid")
@@ -394,7 +419,7 @@ public class GroupingsService {
         ArrayList<String> groupings = new ArrayList<>();
 
         for (String name : groups) {
-            if (allGroupings.contains(name)) {
+            if (allGroupings.contains(name) && !groupings.contains(name)) {
                 groupings.add(name);
             }
         }
@@ -404,7 +429,6 @@ public class GroupingsService {
 
     // Helper method.
     public String[] getGroupNames(String username) {
-
         ArrayList<String> names = new ArrayList<>();
 
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
@@ -435,6 +459,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsAssignGrouperPrivilegesResults removeGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToRemove) {
+        logger.info("removeGroupOwnership; group: " + group + "; ownerToRemove: " + ownerToRemove);
+
         return new GcAssignGrouperPrivileges()
                 .assignGroupLookup(group)
                 .addSubjectLookup(ownerToRemove)
@@ -447,6 +473,8 @@ public class GroupingsService {
 
     // Helper method.
     public WsAssignGrouperPrivilegesResults addGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToAdd) {
+        logger.info("addGroupOwnership; group: " + group + "; ownerToAdd: " + ownerToAdd);
+
         return new GcAssignGrouperPrivileges()
                 .assignGroupLookup(group)
                 .addSubjectLookup(ownerToAdd)
@@ -460,6 +488,8 @@ public class GroupingsService {
     // Start of reworking.
 
     public List<Owner> findOwners(String username, String groupingName) {
+        logger.info("findOwners; username: " + username + "; groupingName" + groupingName);
+
         List<Owner> owners = new ArrayList<>();
 
         try {
