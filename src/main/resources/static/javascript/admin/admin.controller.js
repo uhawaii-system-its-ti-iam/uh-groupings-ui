@@ -2,14 +2,17 @@
 
     function AdminJsController($scope, dataProvider) {
         var currentUser = document.getElementById("name").innerText;
-        var url = "getMembers?grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=ksanidad"; //+ currentUser;
+        var url = "getMembers?grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=" + currentUser;
         $scope.list = [];
 
         $scope.init = function () {
 
             dataProvider.loadData(function (d) {
+                var temp;
+                temp = d.basisPlusIncludeMinusExclude
+
                 //sorts the data by name
-                d.sort(function (a, b) {
+                temp.sort(function (a, b) {
                     var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
                     if (nameA < nameB) //sort string ascending
                         return -1
@@ -18,11 +21,22 @@
                     return 0
                 })
 
-                for (var i = 0; i < d.length; i++) {
-                    d[i].attributeValues = _.pluck(_.pluck(d, "attributeValues"), 0)[i];
+                //Filters out names with hawaii.edu
+                for (var i = 0; i < temp.length; i++) {
+                    if (temp[i].name.includes("hawaii.edu")) {
+                        temp.splice(i, 1);
+                        i--;
+                    }
                 }
 
-                $scope.list = d;
+                //gets the username from the attributeValues array
+                for (var i = 0; i < temp.length; i++) {
+                    temp[i].attributeValues = _.pluck(_.pluck(temp, "attributeValues"), 0)[i];
+                }
+
+                $scope.list = temp;
+
+                console.log($scope.list);
             }, url)
         };
 
@@ -43,8 +57,7 @@
                     console.log($scope.username + " this user does not exist.");
                     alert($scope.username + " this user does not exist.");
                 }
-                else
-                {
+                else {
                     const meta = pluck[0][0].resultMetadata;
 
                     console.log(meta.resultCode);
