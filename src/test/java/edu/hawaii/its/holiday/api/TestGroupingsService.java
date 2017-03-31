@@ -31,6 +31,8 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 public class TestGroupingsService {
 
     private final static String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
+    private final static String aaron = "aaronvil";
+    private final static String zac = "zknoebel";
 
     @Autowired
     GroupingsService gs;
@@ -50,8 +52,8 @@ public class TestGroupingsService {
 
     @Test
     public void test001_addSelfOptedTest() {
-        gs.addSelfOpted(grouping + ":include", "aaronvil");
-        WsSubjectLookup lookup = gs.makeWsSubjectLookup("aaronvil");
+        gs.addSelfOpted(grouping + ":include", aaron);
+        WsSubjectLookup lookup = gs.makeWsSubjectLookup(aaron);
         String group = grouping + ":include";
         WsGetMembershipsResults wsGetMembershipsResults = gs.membershipsResults(lookup, group);
         String assignType = "imm_mem";
@@ -69,14 +71,14 @@ public class TestGroupingsService {
 
     @Test
     public void test002_checkSelfOptedTest() {
-        WsSubjectLookup wsSubjectLookup = gs.makeWsSubjectLookup("aaronvil");
+        WsSubjectLookup wsSubjectLookup = gs.makeWsSubjectLookup(aaron);
         assertTrue(gs.checkSelfOpted(grouping + ":include", wsSubjectLookup));
     }
 
     @Test
     public void test003_removeSelfOptedTest() {
-        gs.removeSelfOpted(grouping + ":include", "aaronvil");
-        WsSubjectLookup lookup = gs.makeWsSubjectLookup("aaronvil");
+        gs.removeSelfOpted(grouping + ":include", aaron);
+        WsSubjectLookup lookup = gs.makeWsSubjectLookup(aaron);
         String group = grouping + ":include";
         WsGetMembershipsResults wsGetMembershipsResults = gs.membershipsResults(lookup, group);
         String assignType = "imm_mem";
@@ -91,31 +93,31 @@ public class TestGroupingsService {
 
     @Test
     public void test004_checkSelfOptedTest2() {
-        WsSubjectLookup wsSubjectLookup = gs.makeWsSubjectLookup("aaronvil");
+        WsSubjectLookup wsSubjectLookup = gs.makeWsSubjectLookup(aaron);
         assertFalse(gs.checkSelfOpted(grouping + ":include", wsSubjectLookup));
     }
 
     @Test
     public void isOwnerTest() {
-        assertTrue(gs.isOwner(grouping, "zknoebel"));
+        assertTrue(gs.isOwner(grouping, zac));
     }
 
     @Test
     public void inGroupTest() {
-        assertTrue(gs.inGroup(grouping + ":include", "aaronvil"));
-        assertFalse(gs.inGroup(grouping + ":exclude", "aaronvil"));
+        assertTrue(gs.inGroup(grouping + ":include", aaron));
+        assertFalse(gs.inGroup(grouping + ":exclude", aaron));
     }
 
     @Test
     public void groupOptInPermissionTest() {
-        assertTrue(gs.groupOptInPermission("aaronvil", grouping + ":include"));
-        assertTrue(gs.groupOptInPermission("aaronvil", grouping + ":exclude"));
+        assertTrue(gs.groupOptInPermission(aaron, grouping + ":include"));
+        assertTrue(gs.groupOptInPermission(aaron, grouping + ":exclude"));
     }
 
     @Test
     public void groupOptOutPermissionTest() {
-        assertTrue(gs.groupOptOutPermission("aaronvil", grouping + ":include"));
-        assertTrue(gs.groupOptOutPermission("aaronvil", grouping + ":exclude"));
+        assertTrue(gs.groupOptOutPermission(aaron, grouping + ":include"));
+        assertTrue(gs.groupOptOutPermission(aaron, grouping + ":exclude"));
     }
 
     @Test
