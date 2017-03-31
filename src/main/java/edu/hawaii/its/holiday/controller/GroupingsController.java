@@ -1,9 +1,8 @@
 package edu.hawaii.its.holiday.controller;
 
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.GroupingsService;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
+import edu.hawaii.its.holiday.api.GroupingsService;
+import edu.hawaii.its.holiday.api.type.Group;
+import edu.hawaii.its.holiday.api.type.Grouping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zknoebel on 12/12/16.
@@ -66,7 +65,7 @@ public class GroupingsController {
      * @return information about the new owner and its success
      */
     @RequestMapping("/assignOwnership")
-    public WsAssignGrouperPrivilegesResults[] assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
+    public Object[] assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
         return gs.assignOwnership(grouping, username, newOwner);
     }
 
@@ -80,7 +79,7 @@ public class GroupingsController {
      * @return information about the member who's ownership privileges have been removed and its success
      */
     @RequestMapping("/removeOwnership")
-    public WsAssignGrouperPrivilegesResults[] removeOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String ownerToRemove) {
+    public Object[] removeOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String ownerToRemove) {
         return gs.removeOwnership(grouping, username, ownerToRemove);
     }
 
@@ -105,7 +104,7 @@ public class GroupingsController {
      * @return information for all of the owners
      */
     @RequestMapping("/getOwners")
-    public ArrayList<WsSubject> getOwners(@RequestParam String grouping, @RequestParam String username) {
+    public Group getOwners(@RequestParam String grouping, @RequestParam String username) {
         return gs.getOwners(grouping, username);
     }
 
@@ -117,7 +116,7 @@ public class GroupingsController {
      * @return ArrayList of the names of the Groupings the user is in
      */
     @RequestMapping("/groupingsIn")
-    public ArrayList<String> groupingsIn(@RequestParam String username) {
+    public List<Grouping> groupingsIn(@RequestParam String username) {
         return gs.groupingsIn(username);
     }
 
@@ -129,7 +128,7 @@ public class GroupingsController {
      * @return information about all of the Groupings that the user owns
      */
     @RequestMapping("/groupingsOwned")
-    public ArrayList<String> groupingsOwned(@RequestParam String username) {
+    public List<Grouping> groupingsOwned(@RequestParam String username) {
         return gs.groupingsOwned(username);
     }
 
@@ -141,7 +140,7 @@ public class GroupingsController {
      * @return information about all of the Groupings that the user owns
      */
     @RequestMapping("/groupingsToOptOutOf")
-    public ArrayList<String> groupingsToOptOutOf(@RequestParam String username) {
+    public List<Grouping> groupingsToOptOutOf(@RequestParam String username) {
         return gs.groupingsToOptOutOf(username);
     }
 
@@ -153,7 +152,7 @@ public class GroupingsController {
      * @return information about all of the Groupings that the user owns
      */
     @RequestMapping("/groupingsToOptInto")
-    public ArrayList<String> groupingsToOptInto(@RequestParam String username) {
+    public List<Grouping> groupingsToOptInto(@RequestParam String username) {
         return gs.groupingsToOptInto(username);
     }
 

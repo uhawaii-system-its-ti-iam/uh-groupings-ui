@@ -6,11 +6,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import edu.hawaii.its.holiday.api.type.Group;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +21,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.GroupingsService;
+import edu.hawaii.its.holiday.api.type.Grouping;
+import edu.hawaii.its.holiday.api.GroupingsService;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
@@ -163,35 +164,64 @@ public class TestGroupingsController {
     public void getMembersTest() {
         Grouping groupMembers = gc.getMembers(grouping, zac);
 
-        assertTrue(groupMembers.getBasis().getMembers().contains("Kalani P Sanidad"));
-        assertTrue(groupMembers.getExclude().getMembers().contains("Zachery S Knoebel"));
-        assertTrue(groupMembers.getExclude().getMembers().contains("Frank R Duckart"));
-        assertTrue(groupMembers.getInclude().getMembers().contains("Aaron Jhumar B Villanueva"));
-        assertTrue(groupMembers.getInclude().getMembers().contains("Julio C Polo"));
-        assertTrue(groupMembers.getInclude().getMembers().contains("Michael S Hodges"));
+        assertTrue(groupMembers.getBasis().getNames().contains("Kalani P Sanidad"));
+        assertTrue(groupMembers.getExclude().getNames().contains("Zachery S Knoebel"));
+        assertTrue(groupMembers.getExclude().getNames().contains("Frank R Duckart"));
+        assertTrue(groupMembers.getInclude().getNames().contains("Aaron Jhumar B Villanueva"));
+        assertTrue(groupMembers.getInclude().getNames().contains("Julio C Polo"));
+        assertTrue(groupMembers.getInclude().getNames().contains("Michael S Hodges"));
+
+
+//        assertTrue(groupMembers.getBasis().getUsernames().contains(""));
+//        assertTrue(groupMembers.getExclude().getUsernames().contains(""));
+//        assertTrue(groupMembers.getExclude().getUsernames().contains(""));
+//        assertTrue(groupMembers.getInclude().getUsernames().contains(""));
+//        assertTrue(groupMembers.getInclude().getUsernames().contains(""));
+//        assertTrue(groupMembers.getInclude().getUsernames().contains(""));
+//
+//
+//        assertTrue(groupMembers.getBasis().getUuids().contains(""));
+//        assertTrue(groupMembers.getExclude().getUuids().contains(""));
+//        assertTrue(groupMembers.getExclude().getUuids().contains(""));
+//        assertTrue(groupMembers.getInclude().getUuids().contains(""));
+//        assertTrue(groupMembers.getInclude().getUuids().contains(""));
+//        assertTrue(groupMembers.getInclude().getUuids().contains(""));
+
     }
 
     @Test
     public void getOwnersTest() {
-        ArrayList<WsSubject> owners = gc.getOwners(grouping, zac);
-        ArrayList<String> ownerNames = new ArrayList<>();
-        ownerNames.addAll(owners.stream().map(WsSubject::getName).collect(Collectors.toList()));
+        Group owners = gc.getOwners(grouping, zac);
 
-        assertTrue(ownerNames.contains("Zachery S Knoebel"));
-        assertTrue(ownerNames.contains("UH Groupings API"));
+        assertTrue(owners.getNames().contains("Zachery S Knoebel"));
+        assertTrue(owners.getNames().contains("UH Groupings API"));
+
+//        assertTrue(owners.getUsernames().contains(""));
+//        assertTrue(owners.getUsernames().contains(""));
+//
+//        assertTrue(owners.getUuids().contains(""));
+//        assertTrue(owners.getUuids().contains(""));
 
     }
 
     @Test
     public void groupingsInTest() {
-        ArrayList<String> groupings = gc.groupingsIn(aaron);
-        assertTrue(groupings.contains(grouping));
+        List<Grouping> groupings = gc.groupingsIn(aaron);
+        List<String> paths = new ArrayList<>();
+        for(Grouping grouping: groupings){
+            paths.add(grouping.getPath());
+        }
+        assertTrue(paths.contains(grouping));
     }
 
     @Test
     public void groupingsOwnedTest() {
-        ArrayList<String> groupings = gc.groupingsOwned(zac);
-        assertTrue(groupings.contains(grouping));
+        List<Grouping> groupings = gc.groupingsOwned(zac);
+        List<String> paths = new ArrayList<>();
+        for(Grouping grouping: groupings){
+            paths.add(grouping.getPath());
+        }
+        assertTrue(paths.contains(grouping));
     }
 
     @Test
@@ -247,14 +277,22 @@ public class TestGroupingsController {
 
     @Test
     public void groupingsToOptOutOfTest() {
-        ArrayList<String> groupings = gc.groupingsToOptOutOf(aaron);
-        assertTrue(groupings.contains(grouping));
+        List<Grouping> groupings = gc.groupingsToOptOutOf(aaron);
+        List<String> paths = new ArrayList<>();
+        for(Grouping grouping: groupings){
+            paths.add(grouping.getPath());
+        }
+        assertTrue(paths.contains(grouping));
     }
 
     @Test
     public void groupingsToOptIntoTest() {
-        ArrayList<String> groupings = gc.groupingsToOptInto(aaron);
-        assertTrue(groupings.contains(grouping));
+        List<Grouping> groupings = gc.groupingsToOptInto(aaron);
+        List<String> paths = new ArrayList<>();
+        for(Grouping grouping: groupings){
+            paths.add(grouping.getPath());
+        }
+        assertTrue(paths.contains(grouping));
     }
 
     @Test

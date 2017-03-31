@@ -1,13 +1,13 @@
-package edu.hawaii.its.groupings.api;
+package edu.hawaii.its.holiday.api;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import edu.hawaii.its.groupings.api.type.Group;
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.type.Person;
+import edu.hawaii.its.holiday.api.type.Group;
+import edu.hawaii.its.holiday.api.type.Grouping;
+import edu.hawaii.its.holiday.api.type.Person;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -74,7 +74,7 @@ public class GroupingsService {
     }
 
 
-    public WsAssignGrouperPrivilegesResults[] assignOwnership(String grouping, String username, String newOwner) {
+    public Object[] assignOwnership(String grouping, String username, String newOwner) {
         WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
 
         if (isOwner(grouping, username)) {
@@ -99,7 +99,7 @@ public class GroupingsService {
     }
 
 
-    public WsAssignGrouperPrivilegesResults[] removeOwnership(String grouping, String username, String ownerToRemove) {
+    public Object[] removeOwnership(String grouping, String username, String ownerToRemove) {
         WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
 
         if (isOwner(grouping, username)) {
@@ -139,11 +139,14 @@ public class GroupingsService {
         Group basisPlusIncludeGroup = makeGroup(basisPlusIncludeResults.getResults()[0].getWsSubjects());
         Group basisPlusIncludeMinusExcludeGroup = makeGroup(basisPlusIncludeMinusExcludeResults.getResults()[0].getWsSubjects());
 
-        return new Grouping(basisGroup, basisPlusIncludeGroup, excludeGroup, includeGroup, basisPlusIncludeMinusExcludeGroup);
+        Grouping members = new Grouping(basisGroup, basisPlusIncludeGroup, excludeGroup, includeGroup, basisPlusIncludeMinusExcludeGroup);
+        members.setPath("grouping");
+
+        return members;
     }
 
 
-    public ArrayList<WsSubject> getOwners(String grouping, String username) {
+    public Group getOwners(String grouping, String username) {
         logger.info("getOwners; grouping: " + grouping + "; username: " + username);
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
@@ -162,17 +165,19 @@ public class GroupingsService {
             subjects.add(result.getOwnerSubject());
         }
 
-        return subjects;
+        return makeGroup(subjects.toArray(new WsSubject[subjects.size()]));
     }
 
 
-    public ArrayList<String> groupingsIn(String username) {
+    public List<Grouping> groupingsIn(String username) {
         String[] groupsIn = getGroupNames(username);
-        return extractGroupings(groupsIn);
+        List<String> groupingPaths = extractGroupings(groupsIn);
+
+        return getGroupings(groupingPaths);
     }
 
 
-    public ArrayList<String> groupingsOwned(String username) {
+    public List<Grouping> groupingsOwned(String username) {
         WsSubjectLookup user = makeWsSubjectLookup(username);
         WsGetGrouperPrivilegesLiteResult getPrivilegeResults = new GcGetGrouperPrivilegesLite().assignPrivilegeName("update").assignSubjectLookup(user).execute();
         WsGrouperPrivilegeResult[] privilegeResults = getPrivilegeResults.getPrivilegeResults();
@@ -188,31 +193,32 @@ public class GroupingsService {
                 names.set(i, names.get(i).split(":exclude")[0]);
             }
         }
-        return extractGroupings(names.toArray(new String[names.size()]));
+        List<String> paths = extractGroupings(names.toArray(new String[names.size()]));
+        return getGroupings(paths);
     }
 
 
-    public ArrayList<String> groupingsToOptOutOf(String username) {
-        ArrayList<String> groupings = new ArrayList<>();
-        ArrayList<String> groupingsIn = groupingsIn(username);
-        for (String grouping : groupingsIn) {
-            if (optOutPermission(username, grouping)) {
-                groupings.add(grouping);
+    public List<Grouping> groupingsToOptOutOf(String username) {
+        ArrayList<String> groupingPaths = new ArrayList<>();
+        List<Grouping> groupingsIn = groupingsIn(username);
+        for (Grouping grouping : groupingsIn) {
+            if (optOutPermission(username, grouping.getPath())) {
+                groupingPaths.add(grouping.getPath());
             }
         }
-        return groupings;
+        return getGroupings(groupingPaths);
     }
 
 
-    public ArrayList<String> groupingsToOptInto(String username) {
-        ArrayList<String> groupings = new ArrayList<>();
-        ArrayList<String> groupingsIn = groupingsIn(username);
-        for (String grouping : groupingsIn) {
-            if (optInPermission(username, grouping)) {
-                groupings.add(grouping);
+    public List<Grouping> groupingsToOptInto(String username) {
+        ArrayList<String> groupingsPaths = new ArrayList<>();
+        List<Grouping> groupingsIn = groupingsIn(username);
+        for (Grouping grouping : groupingsIn) {
+            if (optInPermission(username, grouping.getPath())) {
+                groupingsPaths.add(grouping.getPath());
             }
         }
-        return groupings;
+        return getGroupings(groupingsPaths);
     }
 
 
@@ -760,7 +766,7 @@ public class GroupingsService {
 
     // Helper method.
     public String[] getGroupNames(String username) {
-        ArrayList<String> names = new ArrayList<>();
+        ArrayList<String> names;
 
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
                 .addSubjectIdentifier(username)
@@ -773,6 +779,11 @@ public class GroupingsService {
 
         names = extractGroupNames(groups);
         return names.toArray(new String[names.size()]);
+    }
+
+    //Helper method
+    public List<Grouping> getGroupings(List<String> groupingPaths){
+        return groupingPaths.stream().map(Grouping::new).collect(Collectors.toList());
     }
 
     // Helper method.

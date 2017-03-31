@@ -9,7 +9,6 @@ import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 
-import edu.hawaii.its.groupings.api.GroupingsService;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
