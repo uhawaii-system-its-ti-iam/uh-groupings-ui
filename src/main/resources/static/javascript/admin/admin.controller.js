@@ -13,7 +13,7 @@
 
                 for(var k = 0; k < temp.length; k++)
                 {
-                    temp[k].basis = "";
+                    temp[k].basis = "\u2716";
                 }
 
                 //sorts the data by name
@@ -35,7 +35,7 @@
                 }
 
                 //gets the username from the attributeValues array
-                for (var j = 0; i < temp.length; i++) {
+                for (var j = 0; j < temp.length; j++) {
                     temp[j].attributeValues = _.pluck(_.pluck(temp, "attributeValues"), 0)[j];
                 }
 
@@ -47,7 +47,7 @@
                     {
                         if(basis[l].name === temp[m].name)
                         {
-                            temp[m].basis = "b";
+                            temp[m].basis = "\u2714";
                         }
                     }
                 }
@@ -65,36 +65,37 @@
             addUrl = "addMember?userToAdd=" + $scope.username + "&grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=" + currentUser;
 
 
-            dataProvider.loadData(function (d) {
-                console.log(d);
-                const pluck = _.pluck(d, "results");
+            if(confirm("You are adding " + $scope.username + " to the include list of this grouping")){
+                dataProvider.loadData(function (d) {
+                    console.log(d);
+                    const pluck = _.pluck(d, "results");
 
-                console.log(pluck);
-                console.log(pluck[0]);
-                if (typeof pluck[0] === 'undefined') {
-                    console.log($scope.username + " this user does not exist.");
-                    alert($scope.username + " this user does not exist.");
-                }
-                else {
-                    const meta = pluck[0][0].resultMetadata;
-
-                    console.log(meta.resultCode);
-
-                    if (meta.resultCode === 'SUCCESS') {
-                        console.log("Successfully added " + $scope.username);
-                        alert("Successfully added " + $scope.username);
-                        $scope.init();
+                    console.log(pluck);
+                    console.log(pluck[0]);
+                    if (typeof pluck[0] === 'undefined') {
+                        console.log($scope.username + " this user does not exist.");
+                        alert($scope.username + " this user does not exist.");
                     }
-                    else if (meta.resultCode === 'SUCCESS_ALREADY_EXISTED') {
-                        console.log($scope.username + " already exists in this groupings.");
-                        alert($scope.username + " already exists in this groupings.");
+                    else {
+                        const meta = pluck[0][0].resultMetadata;
+
+                        console.log(meta.resultCode);
+
+                        if (meta.resultCode === 'SUCCESS') {
+                            console.log("Successfully added " + $scope.username);
+                            alert("Successfully added " + $scope.username);
+                            $scope.init();
+                        }
+                        else if (meta.resultCode === 'SUCCESS_ALREADY_EXISTED') {
+                            console.log($scope.username + " already exists in this groupings.");
+                            alert($scope.username + " already exists in this groupings.");
+                        }
                     }
-                }
 
-                $scope.testdata = d;
-            }, addUrl)
-
-            $scope.username = '';
+                    $scope.testdata = d;
+                    $scope.username = '';
+                }, addUrl);
+            }
         };
 
         $scope.remove = function (row) {
