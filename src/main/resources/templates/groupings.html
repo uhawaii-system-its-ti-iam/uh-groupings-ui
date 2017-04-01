@@ -16,74 +16,170 @@
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
                 <div ng-show="!showList">
                     <!-- This will allow you to search for specific groups -->
-                    <div class="search_groups">
-                        <h3>Search for Group to join</h3>
-
-                        <div class="form-group">
-                            <label>Search Groupings</label>
-                            <input type="text" placeholder="Enter grouping name"/>
-                            <input class="btn btn-default btn-primary" type="submit" value="Submit"/>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="border: 0;padding: 5px;">
+                            <div class="form-group">
+                                <h3 class="col-md-4" style="margin-top: 5px">Groupings</h3>
+                                <div align="right" style="margin-top: 10px">
+                                    <input type="text" ng-model="searchFor" placeholder="Search Groupings..."/>
+                                    <input class="btn btn-default btn-primary" type="submit" value="Submit"/>
+                                </div>
+                            </div>
                         </div>
+                        <table class="table table-bordered table-condensed table-hover">
+                            <thead>
+                            <tr>
+                                <th>Groupings</th>
+                                <th>Folder</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="l in ownedList | filter:searchFor">
+
+                                <th>
+                                    {{l.name}} <span ng-click="showData($index)" class="glyphicon glyphicon-edit"></span>
+                                </th>
+                                <th>{{l.folder}}</th>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
-
-                    <table class="table table-bordered table-condensed table-hover">
-                        <thead>
-                        <tr>
-                            <th>Groupings</th>
-                            <th>Folder</th>
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="l in ownedList">
-
-                            <th>
-                                {{l}} <span ng-click="showData($index)" class="glyphicon glyphicon-edit"></span>
-                            </th>
-                            <th>folder</th>
-                        </tr>
-                        </tbody>
-                    </table>
                 </div>
 
                 <div ng-show="showList">
-                    <h2>{{groupingName}}</h2>
+                    <h2>{{groupingName.name}}</h2>
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#members">Members</a></li>
                         <li><a data-toggle="tab" href="#owners">Owners</a></li>
                         <li><a data-toggle="tab" href="#preference">Preferences</a></li>
-                        <li class="pull-right"><button ng-click="showGroups()" class="btn btn-default">Go Back</button></li>
+                        <li class="pull-right">
+                            <button ng-click="showGroups()" class="btn btn-default">Go Back</button>
+                        </li>
                     </ul>
 
                     <div class="tab-content">
                         <!-- List of the members in the grouping -->
                         <div id="members" class="tab-pane fade in active">
                             <h2>Members</h2>
-                            <table class="table table-bordered table-condensed table-hover">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>UH ID</th>
-                                    <th>Username</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="g in groupingsList">
-                                    <td>{{g.name}}</td>
-                                    <td>{{g.id}}</td>
-                                    <td>{{g.attributeValues}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
 
-                            <div>
-                                <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                        data-target="#addAdmin" aria-expanded="false" aria-controls="addAdmin">
-                                    Add Admin
-                                </button>
-                                <div class="collapse" id="addAdmin">
-                                    <input type="text" ng-model="username"/>
-                                    <button class="btn btn-success" ng-click="addMember()">Add Admin</button>
+                            <div class="col-md-1">
+                                <ul class="nav nav-tabs nav-stacked">
+                                    <li class="active"><a data-toggle="tab" href="#all"><span
+                                            class="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
+                                    <li><a data-toggle="tab" href="#basis"><span class="glyphicon glyphicon-lock"
+                                                                                 aria-hidden="true"></span></a></li>
+                                    <li><a data-toggle="tab" href="#include"><span class="glyphicon glyphicon-plus"
+                                                                                   aria-hidden="true"></span></a></li>
+                                    <li><a data-toggle="tab" href="#exclude"><span class="glyphicon glyphicon-minus"
+                                                                                   aria-hidden="true"></span></a></li>
+                                </ul>
+                            </div>
+
+                            <div class="tab-content col-md-10">
+                                <div id="all" class="tab-pane fade in active">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>UH ID</th>
+                                            <th>Username</th>
+                                            <th>Basis</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="g in groupingsList">
+                                            <td>{{g.name}}</td>
+                                            <td>{{g.id}}</td>
+                                            <td>{{g.attributeValues}}</td>
+                                            <td>{{g.basis}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div id="basis" class="tab-pane fade">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>UH ID</th>
+                                            <th>Username</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="b in groupingsBasis">
+                                            <td>{{b.name}}</td>
+                                            <td>{{b.id}}</td>
+                                            <td>{{b.attributeValues}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div id="include" class="tab-pane fade">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>UH ID</th>
+                                            <th>Username</th>
+                                            <th>Basis</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="i in groupingInclude">
+                                            <td>
+                                                {{i.name}} <span ng-click="removeInclude($index)" class="glyphicon glyphicon-minus-sign pull-right"></span>
+                                            </td>
+                                            <td>{{i.id}}</td>
+                                            <td>{{i.attributeValues}}</td>
+                                            <td>{{i.basis}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div>
+                                        <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                                data-target="#addInclude" aria-expanded="false" aria-controls="addOwner">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        </button>
+                                        <div class="collapse" id="addInclude">
+                                            <input type="text" placeholder="Add user to include" ng-model="includeUsername"/>
+                                            <button class="btn btn-success" ng-click="addInclude()">Add to Included</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="exclude" class="tab-pane fade">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>UH ID</th>
+                                            <th>Username</th>
+                                            <th>Basis</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="e in groupingExclude">
+                                            <td>
+                                                {{e.name}} <span ng-click="removeExclude($index)" class="glyphicon glyphicon-plus-sign pull-right"></span>
+                                            </td>
+                                            <td>{{e.id}}</td>
+                                            <td>{{e.attributeValues}}</td>
+                                            <td>{{e.basis}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div>
+                                        <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                                data-target="#addExclude" aria-expanded="false" aria-controls="addOwner">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        </button>
+                                        <div class="collapse" id="addExclude">
+                                            <input type="text" placeholder="Add user to exclude" ng-model="excludeUser"/>
+                                            <button class="btn btn-success" ng-click="addExclude()">Add to Excluded</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -96,12 +192,14 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Username</th>
+                                    <th>Remove</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="owner in ownerList">
                                     <td>{{owner.name}}</td>
                                     <td>{{owner.attributeValues}}</td>
+                                    <td><button class="btn btn-default btn-block" ng-click="removeOwner($index)"><span class="glyphicon glyphicon-remove"></span></button></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -112,8 +210,8 @@
                                     Add Owner
                                 </button>
                                 <div class="collapse" id="addOwner">
-                                    <input type="text" ng-model="username"/>
-                                    <!-- <button class="btn btn-success" ng-click="add()">Add Admin</button> -->
+                                    <input type="text" placeholder="Add an user as an owner..." ng-model="ownerUser"/>
+                                    <button class="btn btn-success" ng-click="addOwner()">Add Owner</button>
                                 </div>
                             </div>
 
@@ -121,14 +219,20 @@
 
                         <!-- Preference page -->
                         <div id="preference" class="tab-pane fade">
+                            <h1><b>THIS HAS NOT BEEN IMPLEMENTED YET UNTIL FURTHER NOTICE</b></h1>
+
                             <h2>Preferences</h2>
 
                             <h3>Add/Remove</h3>
-                            <input type="checkbox"/> Allow people to add themselves to this group <br/>
-                            <input type="checkbox"/> Allow people to remove themselves to this group <br/>
+                            <input id="addOption" type="checkbox"/> Allow people to add themselves to this group <br/>
+                            <input id="removeOption" type="checkbox"/> Allow people to remove themselves to this group
+                            <br/>
 
                             <h3>Publication Destinations</h3>
-                            <input type="checkbox"/> LISTSERV list {{groupingName}} <br/>
+                            <input id="listserv" type="checkbox"/> LISTSERV list {{groupingName}} <br/>
+
+                            <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save
+                            </button>
                         </div>
                     </div>
                 </div>
