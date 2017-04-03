@@ -164,28 +164,49 @@ public class TestGroupingsController {
     public void getMembersTest() {
         Grouping groupMembers = gc.getMembers(grouping, zac);
 
-        assertTrue(groupMembers.getBasis().getNames().contains("Kalani P Sanidad"));
-        assertTrue(groupMembers.getExclude().getNames().contains("Zachery S Knoebel"));
-        assertTrue(groupMembers.getExclude().getNames().contains("Frank R Duckart"));
-        assertTrue(groupMembers.getInclude().getNames().contains("Aaron Jhumar B Villanueva"));
-        assertTrue(groupMembers.getInclude().getNames().contains("Julio C Polo"));
-        assertTrue(groupMembers.getInclude().getNames().contains("Michael S Hodges"));
+        assertTrue(groupMembers.getBasis().getNames().contains("tst04name"));
+        assertTrue(groupMembers.getBasis().getNames().contains("tst05name"));
+        assertTrue(groupMembers.getBasis().getNames().contains("tst06name"));
+        assertTrue(groupMembers.getInclude().getNames().contains("tst01fname"));
+        assertTrue(groupMembers.getInclude().getNames().contains("tst02name"));
+        assertTrue(groupMembers.getInclude().getNames().contains("tst03name"));
+        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst01fname"));
+        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst02name"));
+        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst03name"));
+        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst04name"));
+        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst05name"));
+        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst06name"));
+        assertTrue(groupMembers.getExclude().getNames().contains("tst04name"));
+        assertTrue(groupMembers.getExclude().getNames().contains("tst05name"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getNames().contains("tst01fname"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getNames().contains("tst02name"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getNames().contains("tst03name"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getNames().contains("tst06name"));
 
 
-//        assertTrue(groupMembers.getBasis().getUsernames().contains(""));
-//        assertTrue(groupMembers.getExclude().getUsernames().contains(""));
-//        assertTrue(groupMembers.getExclude().getUsernames().contains(""));
-//        assertTrue(groupMembers.getInclude().getUsernames().contains(""));
-//        assertTrue(groupMembers.getInclude().getUsernames().contains(""));
-//        assertTrue(groupMembers.getInclude().getUsernames().contains(""));
-//
-//
-//        assertTrue(groupMembers.getBasis().getUuids().contains(""));
-//        assertTrue(groupMembers.getExclude().getUuids().contains(""));
-//        assertTrue(groupMembers.getExclude().getUuids().contains(""));
-//        assertTrue(groupMembers.getInclude().getUuids().contains(""));
-//        assertTrue(groupMembers.getInclude().getUuids().contains(""));
-//        assertTrue(groupMembers.getInclude().getUuids().contains(""));
+        assertTrue(groupMembers.getBasis().getUsernames().contains("iamtst04"));
+        assertTrue(groupMembers.getBasis().getUsernames().contains("iamtst05"));
+        assertTrue(groupMembers.getBasis().getUsernames().contains("iamtst06"));
+        assertTrue(groupMembers.getInclude().getUsernames().contains("iamtst01"));
+        assertTrue(groupMembers.getInclude().getUsernames().contains("iamtst02"));
+        assertTrue(groupMembers.getInclude().getUsernames().contains("iamtst03"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst01"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst02"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst03"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst04"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst05"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst06"));
+        assertTrue(groupMembers.getExclude().getUsernames().contains("iamtst04"));
+        assertTrue(groupMembers.getExclude().getUsernames().contains("iamtst05"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst01"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst02"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst03"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst06"));
+
+        assertTrue(groupMembers.getBasis().getUuids().contains("iamtst04"));
+        assertTrue(groupMembers.getBasis().getUuids().contains("iamtst05"));
+        assertTrue(groupMembers.getBasis().getUuids().contains("iamtst06"));
+        //TODO add other groups for UUID tests
 
     }
 
