@@ -127,6 +127,7 @@ public class GroupingsService {
     public Grouping getMembers(String grouping, String username) {
         WsSubjectLookup user = makeWsSubjectLookup(username);
 
+
         WsGetMembersResults basisResults = getMembersAs(user, grouping + ":basis");
         WsGetMembersResults basisPlusIncludeResults = getMembersAs(user, grouping + ":basis+include");
         WsGetMembersResults excludeResults = getMembersAs(user, grouping + ":exclude");
@@ -138,9 +139,10 @@ public class GroupingsService {
         Group basisGroup = makeGroup(basisResults.getResults()[0].getWsSubjects());
         Group basisPlusIncludeGroup = makeGroup(basisPlusIncludeResults.getResults()[0].getWsSubjects());
         Group basisPlusIncludeMinusExcludeGroup = makeGroup(basisPlusIncludeMinusExcludeResults.getResults()[0].getWsSubjects());
+        Group owners = getOwners(grouping, username);
 
-        Grouping members = new Grouping(basisGroup, basisPlusIncludeGroup, excludeGroup, includeGroup, basisPlusIncludeMinusExcludeGroup);
-        members.setPath("grouping");
+        Grouping members = new Grouping(basisGroup, basisPlusIncludeGroup, excludeGroup, includeGroup, basisPlusIncludeMinusExcludeGroup, owners);
+        members.setPath(grouping);
 
         return members;
     }
@@ -828,11 +830,17 @@ public class GroupingsService {
 
     //Helper method
     public Group makeGroup(WsSubject[] subjects){
+        Group group = new Group();
         ArrayList<Person> persons = new ArrayList<>();
-        for(WsSubject subject: subjects){
-            persons.add(makePerson(subject));
+        try {
+            for (WsSubject subject : subjects) {
+                persons.add(makePerson(subject));
+            }
+            group.setMembers(persons);
         }
-        return new Group(persons);
+        catch(NullPointerException npe){
+        }
+        return group;
     }
 
     //Helper method

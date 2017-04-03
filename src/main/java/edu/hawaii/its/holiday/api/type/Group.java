@@ -13,6 +13,10 @@ public class Group {
         this.members = members;
     }
 
+    public Group(){
+
+    }
+
     public List<Person> getMembers() {
         return members;
     }
@@ -23,16 +27,20 @@ public class Group {
 
     public List<String> getNames(){
         ArrayList<String> names = new ArrayList<>();
-        for(Person person: members){
-            names.add(person.getName());
+        if(members != null) {
+            for (Person person : members) {
+                names.add(person.getName());
+            }
         }
         return names;
     }
 
     public List<String> getUuids(){
         ArrayList<String> uuids = new ArrayList<>();
-        for(Person person: members){
-            uuids.add(person.getUuid());
+        if(members != null) {
+            for (Person person : members) {
+                uuids.add(person.getUuid());
+            }
         }
         return uuids;
     }
@@ -40,8 +48,10 @@ public class Group {
     public List<String> getUsernames(){
 
         ArrayList<String> usernames = new ArrayList<>();
-        for(Person person: members){
-            usernames.add(person.getUsername());
+        if(members != null) {
+            for (Person person : members) {
+                usernames.add(person.getUsername());
+            }
         }
         return usernames;
     }

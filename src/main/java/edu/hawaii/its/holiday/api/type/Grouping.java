@@ -4,20 +4,22 @@ package edu.hawaii.its.holiday.api.type;
  * Created by zknoebel on 3/15/2017.
  */
 public class Grouping {
-    Group basis;
-    Group basisPlusInclude;
-    Group exclude;
-    Group include;
-    Group basisPlusIncludeMinusExclude;
-    String name;
-    String path;
+    private Group basis;
+    private Group basisPlusInclude;
+    private Group exclude;
+    private Group include;
+    private Group basisPlusIncludeMinusExclude;
+    private Group owners;
+    private String name;
+    private String path;
 
-    public Grouping(Group basis, Group basisPlusInclude, Group exclude, Group include, Group basisPlusIncludeMinusExclude){
+    public Grouping(Group basis, Group basisPlusInclude, Group exclude, Group include, Group basisPlusIncludeMinusExclude, Group owners){
         this.basis = basis;
         this.basisPlusInclude = basisPlusInclude;
         this.exclude = exclude;
         this.include = include;
         this.basisPlusIncludeMinusExclude = basisPlusIncludeMinusExclude;
+        this.owners = owners;
     }
 
     public Grouping(String path){
@@ -81,5 +83,13 @@ public class Grouping {
 
     public void setBasisPlusIncludeMinusExclude(Group basisPlusIncludeMinusExclude) {
         this.basisPlusIncludeMinusExclude = basisPlusIncludeMinusExclude;
+    }
+
+    public Group getOwners() {
+        return owners;
+    }
+
+    public void setOwners(Group owners) {
+        this.owners = owners;
     }
 }
