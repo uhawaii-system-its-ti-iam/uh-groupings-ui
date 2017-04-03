@@ -150,7 +150,8 @@ td.uh-pre {
         font-size: 1.0em;
     }
 
-/*li + */
-
+    i{
+      font-size: 50px;
+    }
 
 }
