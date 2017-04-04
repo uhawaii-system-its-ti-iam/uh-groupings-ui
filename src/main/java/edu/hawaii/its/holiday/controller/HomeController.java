@@ -22,13 +22,7 @@ public class HomeController {
         logger.info("User at home. The client locale is " + locale);
         return "home";
     }
-    // Mapping to contact
-    @RequestMapping(value = "/contact", method = RequestMethod.GET)
-    public String contact(Locale locale, Model model) {
-        logger.info("User at contact.");
-        return "contact";
-    }
-    //Mapping to faq
+
     @RequestMapping(value = "/faq", method = RequestMethod.GET)
     public String faq(Locale locale, Model model) {
         logger.info("User at faq.");
@@ -54,7 +48,7 @@ public class HomeController {
         return "memberships";
     }
 
-    @PreAuthorize("hasRole('UH')")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('OWNER')")
     @RequestMapping(value = "/groupings", method = RequestMethod.GET)
     public String groupings(Locale locale, Model model) {
         logger.info("User at groupings.");

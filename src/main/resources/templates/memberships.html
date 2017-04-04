@@ -12,90 +12,70 @@
               <h2>Manage My Memberships</h2>
               <p>Members can manage their memberships for the groupings that they belong to.</p>
 
+    <div class='row'>
+        <div class='col-xs-offset-1 col-xs-10' ng-controller="MembershipJsController" data-ng-init="init()">
+            <h2 class="text-center">Manage My Memberships</h2>
 
+            <p class="text-center">Members can manage their memberships for the groupings that they belong to.</p>
 
-              <!-- <div id = "membership"> -->
-
-              <!-- I will comment out this part of the code  -->
-
-                <ul class="nav nav-tabs " id= "memTab">
-                  <li role="presentation" class = "active" >
-                    <a href= "#belong" data-toggle = "tab" role = "tab" >
-                      <span class = "step size-64">
-                      <i class = "icon ion-android-people" id = "icons"></i>
-                    </span>
-                    </a>
-                  </li>
-                  <li role="presentation" >
-                    <a href= "#optOut" data-toggle = "tab" role = "tab">
-                      <i class = "icon ion-android-person size-64" id="icons "></i>
-                    </a>
-                  </li>
-                </ul>
-
-
-                <div class = "tab-content">
-
-                  <div class = "groups_belong tab-pane fade in active" ng-controller="MembershipJsController" data-ng-init="init()" id="belong"
-                  role = "tabpannel">
-                    <h3>You belong to this/these groups</h3>
-
-                      <table class="table table-bordered table-condensed table-hover">
-                          <thead>
-                            <tr>
-                              <th><input type="search" ng-model="q" placeholder="filter groups..." aria-label="Filter Groups" /></th>
-                            </tr>
-                            <tr>
-                              <th>Groupings</th>
-                              <th>Opt out</th>
-                            </tr>
-                          </thead>
-
-                          <tbody>
-                            <tr data-ng-repeat="l in list | filter:q as results">
-                              <td id = "List">
-                                {{l}}
-                              </td>
-                              <td><button class="btn btn-default btn-block" ng-click="remove($index)"> &#10006;</button></td>
-                            </tr>
-                          </tbody>
-
-                        </table>
-
-
-
-                      </div>
-
-                      <div class = "group_add tab-pane fade" id="optOut">
-                        <h3>You can opt in to this/these groups</h3>
-                        <table class="table table-bordered table-condensed table-hover">
-                          <thead>
-                            <tr>
-                              <th>Groupings</th>
-                              <th>Opt in</th>
-                            </tr>
-                          </thead>
-                        </table>
-                      </div>
-
+            <div class="panel panel-default">
+                <div class="panel-heading" style="padding: 2px">
+                    <div class="form-group">
+                        <h3 class="col-md-4" style="margin-top: 5px">You belong to this/these groups</h3>
+                        <div align="right" style="margin-top: 10px">
+                            <input placeholder="Type to filter text..." type="text" ng-model="searchFor1"/>
+                        </div>
                     </div>
+                </div>
 
+                <table class="table table-bordered table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th>Groupings</th>
+                        <th>Opt out</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="l in membersList | filter:searchFor1">
+                        <td>{{l}}</td>
+                        <td>
+                            <button id="optOutButton" class="btn btn-default btn-block" ng-click="optOut($index)">OPT OUT</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                    <!-- till this part of the code  -->
+            <div class="panel panel-default" style="margin-top: 50px">
+                <div class="panel-heading" style="padding: 2px">
+                    <div class="form-group">
+                        <h3 class="col-md-4" style="margin-top: 5px">You can opt in to this/these groups</h3>
+                        <div align="right" style="margin-top: 10px">
+                            <input placeholder="Type to filter text..." type="text" ng-model="searchFor2"/>
+                        </div>
+                    </div>
+                </div>
 
-
-                    <!-- <div ng-controller="MembershipJsController">
-                      <h4>Pager</h4>
-                      <pre>You are currently on page {{currentPage}}</pre>
-                      <ul uib-pager total-items="totalItems" ng-model="currentPage"></ul>
-                    </div> -->
-
-
-
-
-              </div>
+                <table class="table table-bordered table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th>Groupings</th>
+                        <th>Opt in</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="o in optInList | filter:searchFor2">
+                        <td>{{o}}</td>
+                        <td>
+                            <button ng-disabled="isDisabled($index)" class="btn btn-default btn-block" ng-click="optIn($index)">OPT IN</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-  </div>
+    </div>
+</div>
 <!-- / Content container. -->
 
 <div th:substituteby="footer :: copy"></div>

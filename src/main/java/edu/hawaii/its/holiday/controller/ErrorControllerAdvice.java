@@ -24,7 +24,7 @@ public class ErrorControllerAdvice {
         if (user != null) {
             username = user.getUsername();
         }
-        logger.error("username: " + username + "; Exception: " + ex);
+        logger.error("username: " + username + "; Exception: ", ex);
 
         return "redirect:/";
     }
