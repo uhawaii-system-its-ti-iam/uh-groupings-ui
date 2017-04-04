@@ -1,0 +1,58 @@
+package edu.hawaii.its.holiday.api.type;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by zknoebel on 3/30/2017.
+ */
+public class Group {
+    private List<Person> members;
+
+    public Group(List<Person> members){
+        this.members = members;
+    }
+
+    public Group(){
+
+    }
+
+    public List<Person> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<Person> members) {
+        this.members = members;
+    }
+
+    public List<String> getNames(){
+        ArrayList<String> names = new ArrayList<>();
+        if(members != null) {
+            for (Person person : members) {
+                names.add(person.getName());
+            }
+        }
+        return names;
+    }
+
+    public List<String> getUuids(){
+        ArrayList<String> uuids = new ArrayList<>();
+        if(members != null) {
+            for (Person person : members) {
+                uuids.add(person.getUuid());
+            }
+        }
+        return uuids;
+    }
+
+    public List<String> getUsernames(){
+
+        ArrayList<String> usernames = new ArrayList<>();
+        if(members != null) {
+            for (Person person : members) {
+                usernames.add(person.getUsername());
+            }
+        }
+        return usernames;
+    }
+}

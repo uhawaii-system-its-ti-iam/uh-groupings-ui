@@ -18,48 +18,69 @@
               <div class = "groups_belong" ng-controller="MembershipJsController" data-ng-init="init()">
                   <h3>You belong to this/these groups</h3>
 
-                      <table class="table table-bordered table-condensed table-hover">
-                          <thead>
-                            <tr>
-                              <th><input type="search" ng-model="q" placeholder="filter groups..." aria-label="Filter Groups" /></th>
-                            </tr>
+    <div class='row'>
+        <div class='col-xs-offset-1 col-xs-10' ng-controller="MembershipJsController" data-ng-init="init()">
+            <h2 class="text-center">Manage My Memberships</h2>
 
+            <p class="text-center">Members can manage their memberships for the groupings that they belong to.</p>
 
-                            <tr>
-                              <th>Groupings</th>
-                              <th>Opt out</th>
-                            </tr>
-                          </thead>
-
-
-                          <tbody>
-                            <tr data-ng-repeat="l in list | filter:q as results">
-                              <td>{{l}}</td>
-                              <td><button class="btn btn-default btn-block" ng-click="remove($index)"> &#10006;</button></td>
-                            </tr>
-                          </tbody>
-
-
-                        </table>
-
-                      </div>
-
-                      <div class = "group_add">
-                        <h3>You can opt in to this/these groups</h3>
-                        <table class="table table-bordered table-condensed table-hover">
-                          <thead>
-                            <tr>
-                              <th>Groupings</th>
-                              <th>Opt in</th>
-                            </tr>
-                          </thead>
-                        </table>
-                      </div>
-
+            <div class="panel panel-default">
+                <div class="panel-heading" style="padding: 2px">
+                    <div class="form-group">
+                        <h3 class="col-md-4" style="margin-top: 5px">You belong to this/these groups</h3>
+                        <div align="right" style="margin-top: 10px">
+                            <input placeholder="Type to filter text..." type="text" ng-model="searchFor1"/>
+                        </div>
                     </div>
-                  </div>
-
                 </div>
+
+                <table class="table table-bordered table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th>Groupings</th>
+                        <th>Opt out</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="l in membersList | filter:searchFor1">
+                        <td>{{l}}</td>
+                        <td>
+                            <button id="optOutButton" class="btn btn-default btn-block" ng-click="optOut($index)">OPT OUT</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="panel panel-default" style="margin-top: 50px">
+                <div class="panel-heading" style="padding: 2px">
+                    <div class="form-group">
+                        <h3 class="col-md-4" style="margin-top: 5px">You can opt in to this/these groups</h3>
+                        <div align="right" style="margin-top: 10px">
+                            <input placeholder="Type to filter text..." type="text" ng-model="searchFor2"/>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table table-bordered table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th>Groupings</th>
+                        <th>Opt in</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="o in optInList | filter:searchFor2">
+                        <td>{{o}}</td>
+                        <td>
+                            <button ng-disabled="isDisabled($index)" class="btn btn-default btn-block" ng-click="optIn($index)">OPT IN</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- / Content container. -->
 
