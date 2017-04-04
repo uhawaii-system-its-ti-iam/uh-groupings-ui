@@ -12,6 +12,7 @@ public class Grouping {
     private Group owners;
     private String name;
     private String path;
+    private boolean hasListServe;
 
     public Grouping(Group basis, Group basisPlusInclude, Group exclude, Group include, Group basisPlusIncludeMinusExclude, Group owners){
         this.basis = basis;
@@ -91,5 +92,13 @@ public class Grouping {
 
     public void setOwners(Group owners) {
         this.owners = owners;
+    }
+
+    public boolean isHasListServe() {
+        return hasListServe;
+    }
+
+    public void setHasListServe(boolean hasListServe) {
+        this.hasListServe = hasListServe;
     }
 }

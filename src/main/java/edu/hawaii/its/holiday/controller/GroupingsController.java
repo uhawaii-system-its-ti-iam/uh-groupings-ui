@@ -3,6 +3,7 @@ package edu.hawaii.its.holiday.controller;
 import edu.hawaii.its.holiday.api.GroupingsService;
 import edu.hawaii.its.holiday.api.type.Group;
 import edu.hawaii.its.holiday.api.type.Grouping;
+import edu.hawaii.its.holiday.api.type.MyGroupings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,71 +92,21 @@ public class GroupingsController {
      * @param username : username of the subject preforming the action
      * @return information for all of the members
      */
-    @RequestMapping("/getMembers")
-    public Grouping getMembers(@RequestParam String grouping, @RequestParam String username) {
+    @RequestMapping("/getGrouping")
+    public Grouping getGrouping(@RequestParam String grouping, @RequestParam String username) {
         return gs.getMembers(grouping, username);
     }
 
-
     /**
-     * finds all of the owners of a group
      *
-     * @param username: username of the subject preforming the action
-     * @return information for all of the owners
+     * @param username: username of user to get lists of Groupings for
+     * @return the Groupings that the user is in, that the user owns, that the user can opt into
+     * and that the user can opt out of
      */
-    @RequestMapping("/getOwners")
-    public Group getOwners(@RequestParam String grouping, @RequestParam String username) {
-        return gs.getOwners(grouping, username);
+    @RequestMapping("/myGroupings")
+    public MyGroupings myGroupings(@RequestParam String username){
+        return gs.getMyGroupings(username);
     }
-
-
-    /**
-     * finds the different Groupings that the user is in and allowed to view
-     *
-     * @param username : String containing the username to be searched for
-     * @return ArrayList of the names of the Groupings the user is in
-     */
-    @RequestMapping("/groupingsIn")
-    public List<Grouping> groupingsIn(@RequestParam String username) {
-        return gs.groupingsIn(username);
-    }
-
-
-    /**
-     * finds the different Groupings that the user has owner privileges for
-     *
-     * @param username : the owner of the groups returned
-     * @return information about all of the Groupings that the user owns
-     */
-    @RequestMapping("/groupingsOwned")
-    public List<Grouping> groupingsOwned(@RequestParam String username) {
-        return gs.groupingsOwned(username);
-    }
-
-
-    /**
-     * finds the different Groupings that the user has owner privileges for
-     *
-     * @param username : the owner of the groups returned
-     * @return information about all of the Groupings that the user owns
-     */
-    @RequestMapping("/groupingsToOptOutOf")
-    public List<Grouping> groupingsToOptOutOf(@RequestParam String username) {
-        return gs.groupingsToOptOutOf(username);
-    }
-
-
-    /**
-     * finds the different Groupings that the user has owner privileges for
-     *
-     * @param username : the owner of the groups returned
-     * @return information about all of the Groupings that the user owns
-     */
-    @RequestMapping("/groupingsToOptInto")
-    public List<Grouping> groupingsToOptInto(@RequestParam String username) {
-        return gs.groupingsToOptInto(username);
-    }
-
 
     /**
      * if the user is allowed to opt into the grouping, this will add them to the include group of that grouping
@@ -206,36 +157,9 @@ public class GroupingsController {
     }
 
 
-    /**
-     * checks if the user is allowed to opt out of the grouping
-     *
-     * @param username: username of the user whos permission is being assessed
-     * @param grouping: grouping that is being checked
-     * @return True if the user is allowed to opt out, False if the user is not allowed to opt out
-     */
-    @RequestMapping("/optOutPermission")
-    public boolean optOutPermission(@RequestParam String username, @RequestParam String grouping) {
-        return gs.optOutPermission(username, grouping);
-    }
 
 
-    /**
-     * checks if the user is allowed to opt in of the grouping
-     *
-     * @param username : username of the user whos permission is being assessed
-     * @param grouping : grouping that is being checked
-     * @return True if the user is allowed to opt out, False if the user is not allowed to in out
-     */
-    @RequestMapping("/optInPermission")
-    public boolean optInPermission(@RequestParam String username, @RequestParam String grouping) {
-        return gs.optInPermission(username, grouping);
-    }
 
-
-    @RequestMapping("/hasListServe")
-    public boolean hasListServe(@RequestParam String grouping) throws NullPointerException {
-        return gs.hasListServe(grouping);
-    }
 
 
     /**

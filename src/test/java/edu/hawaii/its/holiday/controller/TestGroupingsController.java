@@ -161,8 +161,8 @@ public class TestGroupingsController {
     }
 
     @Test
-    public void getMembersTest() {
-        Grouping groupMembers = gc.getMembers(grouping, zac);
+    public void getGroupingTest() {
+        Grouping groupMembers = gc.getGrouping(grouping, zac);
 
         assertTrue(groupMembers.getBasis().getNames().contains("tst04name"));
         assertTrue(groupMembers.getBasis().getNames().contains("tst05name"));
@@ -206,118 +206,124 @@ public class TestGroupingsController {
         assertTrue(groupMembers.getBasis().getUuids().contains("iamtst04"));
         assertTrue(groupMembers.getBasis().getUuids().contains("iamtst05"));
         assertTrue(groupMembers.getBasis().getUuids().contains("iamtst06"));
-        //TODO add other groups for UUID tests
+        assertTrue(groupMembers.getInclude().getUuids().contains("iamtst01"));
+        assertTrue(groupMembers.getInclude().getUuids().contains("iamtst02"));
+        assertTrue(groupMembers.getInclude().getUuids().contains("iamtst03"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst01"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst02"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst03"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst04"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst05"));
+        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst06"));
+        assertTrue(groupMembers.getExclude().getUuids().contains("iamtst04"));
+        assertTrue(groupMembers.getExclude().getUuids().contains("iamtst05"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst01"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst02"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst03"));
+        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst06"));
 
+        assertTrue(groupMembers.getOwners().getNames().contains("Zachery S Knoebel"));
+        assertTrue(groupMembers.getOwners().getNames().contains("UH Groupings API"));
     }
 
-    @Test
-    public void getOwnersTest() {
-        Group owners = gc.getOwners(grouping, zac);
-
-        assertTrue(owners.getNames().contains("Zachery S Knoebel"));
-        assertTrue(owners.getNames().contains("UH Groupings API"));
-
-//        assertTrue(owners.getUsernames().contains(""));
-//        assertTrue(owners.getUsernames().contains(""));
+//    @Test
+//    public void myGroupingsTest(){
 //
-//        assertTrue(owners.getUuids().contains(""));
-//        assertTrue(owners.getUuids().contains(""));
-
-    }
-
-    @Test
-    public void groupingsInTest() {
-        List<Grouping> groupings = gc.groupingsIn(aaron);
-        List<String> paths = new ArrayList<>();
-        for(Grouping grouping: groupings){
-            paths.add(grouping.getPath());
-        }
-        assertTrue(paths.contains(grouping));
-    }
-
-    @Test
-    public void groupingsOwnedTest() {
-        List<Grouping> groupings = gc.groupingsOwned(zac);
-        List<String> paths = new ArrayList<>();
-        for(Grouping grouping: groupings){
-            paths.add(grouping.getPath());
-        }
-        assertTrue(paths.contains(grouping));
-    }
-
-    @Test
-    public void optInTest() {
-        gc.optIn(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(include, lookupAaron));
-        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
-        assertTrue(gs.inGroup(grouping + ":basis+include", aaron));
-    }
-
-    @Test
-    public void optOutTest() {
-        gc.optOut(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
-        assertFalse(gs.checkSelfOpted(include, lookupAaron));
-        assertFalse(gs.inGroup(grouping + ":basis+include", aaron));
-
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
-    }
-
-    @Test
-    public void cancelOptOutTest() {
-        gc.optOut(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
-        gc.cancelOptOut(grouping, aaron);
-        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
-
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
-    }
-
-    @Test
-    public void cancelOptInTest() {
-        gc.optIn(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(include, lookupAaron));
-        gc.cancelOptIn(grouping, aaron);
-        assertFalse(gs.checkSelfOpted(include, lookupAaron));
-
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
-    }
-
-    @Test
-    public void optOutPermissionTest() {
-        assertTrue(gc.optOutPermission(aaron, grouping));
-    }
-
-    @Test
-    public void optInPerissionTest() {
-        assertTrue(gc.optInPermission(aaron, grouping));
-    }
-
-    @Test
-    public void groupingsToOptOutOfTest() {
-        List<Grouping> groupings = gc.groupingsToOptOutOf(aaron);
-        List<String> paths = new ArrayList<>();
-        for(Grouping grouping: groupings){
-            paths.add(grouping.getPath());
-        }
-        assertTrue(paths.contains(grouping));
-    }
-
-    @Test
-    public void groupingsToOptIntoTest() {
-        List<Grouping> groupings = gc.groupingsToOptInto(aaron);
-        List<String> paths = new ArrayList<>();
-        for(Grouping grouping: groupings){
-            paths.add(grouping.getPath());
-        }
-        assertTrue(paths.contains(grouping));
-    }
-
-    @Test
-    public void hasListServeTest() {
-        assertTrue(gc.hasListServe(grouping));
-    }
+//    }
+//
+//    @Test
+//    public void groupingsInTest() {
+//        List<Grouping> groupings = gc.groupingsIn(aaron);
+//        List<String> paths = new ArrayList<>();
+//        for(Grouping grouping: groupings){
+//            paths.add(grouping.getPath());
+//        }
+//        assertTrue(paths.contains(grouping));
+//    }
+//
+//    @Test
+//    public void groupingsOwnedTest() {
+//        List<Grouping> groupings = gc.groupingsOwned(zac);
+//        List<String> paths = new ArrayList<>();
+//        for(Grouping grouping: groupings){
+//            paths.add(grouping.getPath());
+//        }
+//        assertTrue(paths.contains(grouping));
+//    }
+//
+//    @Test
+//    public void optInTest() {
+//        gc.optIn(aaron, grouping);
+//        assertTrue(gs.checkSelfOpted(include, lookupAaron));
+//        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
+//        assertTrue(gs.inGroup(grouping + ":basis+include", aaron));
+//    }
+//
+//    @Test
+//    public void optOutTest() {
+//        gc.optOut(aaron, grouping);
+//        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
+//        assertFalse(gs.checkSelfOpted(include, lookupAaron));
+//        assertFalse(gs.inGroup(grouping + ":basis+include", aaron));
+//
+//        //reset Grouping
+//        gc.addMember(grouping, zac, aaron);
+//    }
+//
+//    @Test
+//    public void cancelOptOutTest() {
+//        gc.optOut(aaron, grouping);
+//        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
+//        gc.cancelOptOut(grouping, aaron);
+//        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
+//
+//        //reset Grouping
+//        gc.addMember(grouping, zac, aaron);
+//    }
+//
+//    @Test
+//    public void cancelOptInTest() {
+//        gc.optIn(aaron, grouping);
+//        assertTrue(gs.checkSelfOpted(include, lookupAaron));
+//        gc.cancelOptIn(grouping, aaron);
+//        assertFalse(gs.checkSelfOpted(include, lookupAaron));
+//
+//        //reset Grouping
+//        gc.addMember(grouping, zac, aaron);
+//    }
+//
+//    @Test
+//    public void optOutPermissionTest() {
+//        assertTrue(gc.optOutPermission(aaron, grouping));
+//    }
+//
+//    @Test
+//    public void optInPerissionTest() {
+//        assertTrue(gc.optInPermission(aaron, grouping));
+//    }
+//
+//    @Test
+//    public void groupingsToOptOutOfTest() {
+//        List<Grouping> groupings = gc.groupingsToOptOutOf(aaron);
+//        List<String> paths = new ArrayList<>();
+//        for(Grouping grouping: groupings){
+//            paths.add(grouping.getPath());
+//        }
+//        assertTrue(paths.contains(grouping));
+//    }
+//
+//    @Test
+//    public void groupingsToOptIntoTest() {
+//        List<Grouping> groupings = gc.groupingsToOptInto(aaron);
+//        List<String> paths = new ArrayList<>();
+//        for(Grouping grouping: groupings){
+//            paths.add(grouping.getPath());
+//        }
+//        assertTrue(paths.contains(grouping));
+//    }
+//
+//    @Test
+//    public void hasListServeTest() {
+//        assertTrue(gc.hasListServe(grouping));
+//    }
 }

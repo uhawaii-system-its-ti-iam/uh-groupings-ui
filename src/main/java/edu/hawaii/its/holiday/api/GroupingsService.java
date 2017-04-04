@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import edu.hawaii.its.holiday.api.type.Group;
 import edu.hawaii.its.holiday.api.type.Grouping;
+import edu.hawaii.its.holiday.api.type.MyGroupings;
 import edu.hawaii.its.holiday.api.type.Person;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.apache.commons.logging.Log;
@@ -143,6 +144,7 @@ public class GroupingsService {
 
         Grouping members = new Grouping(basisGroup, basisPlusIncludeGroup, excludeGroup, includeGroup, basisPlusIncludeMinusExcludeGroup, owners);
         members.setPath(grouping);
+        members.setHasListServe(hasListServe(grouping));
 
         return members;
     }
@@ -170,12 +172,27 @@ public class GroupingsService {
         return makeGroup(subjects.toArray(new WsSubject[subjects.size()]));
     }
 
+    /**
+     *
+     * @param username
+     * @return
+     */
+    public MyGroupings getMyGroupings(String username){
+        MyGroupings myGroupings = new MyGroupings();
+
+        myGroupings.setGroupingsIn(groupingsIn(username));
+        myGroupings.setGroupingsOwned(groupingsOwned(username));
+        myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username));
+        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username));
+
+        return myGroupings;
+    }
 
     public List<Grouping> groupingsIn(String username) {
         String[] groupsIn = getGroupNames(username);
         List<String> groupingPaths = extractGroupings(groupsIn);
 
-        return getGroupings(groupingPaths);
+        return makeGroupings(groupingPaths);
     }
 
 
@@ -187,7 +204,7 @@ public class GroupingsService {
         for (int i = 0; i < groups.length; i++) {
             groups[i] = privilegeResults[i].getWsGroup();
         }
-        ArrayList<String> names = extractGroupNames(groups);
+        List<String> names = extractGroupNames(groups);
         for (int i = 0; i < names.size(); i++) {
             if (names.get(i).endsWith(":include")) {
                 names.set(i, names.get(i).split(":include")[0]);
@@ -196,31 +213,39 @@ public class GroupingsService {
             }
         }
         List<String> paths = extractGroupings(names.toArray(new String[names.size()]));
-        return getGroupings(paths);
+        return makeGroupings(paths);
     }
 
 
     public List<Grouping> groupingsToOptOutOf(String username) {
-        ArrayList<String> groupingPaths = new ArrayList<>();
-        List<Grouping> groupingsIn = groupingsIn(username);
-        for (Grouping grouping : groupingsIn) {
-            if (optOutPermission(username, grouping.getPath())) {
-                groupingPaths.add(grouping.getPath());
+        WsGetGrouperPrivilegesLiteResult optinResults = grouperPrivilegesLite(username, "optout");
+        ArrayList<String> groupings = new ArrayList<>();
+
+        List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
+
+        for(String name : groupingNames){
+            if(optOutPermission(username, name)) {
+                groupings.add(name);
             }
         }
-        return getGroupings(groupingPaths);
+
+        return makeGroupings(groupings);
     }
 
 
     public List<Grouping> groupingsToOptInto(String username) {
-        ArrayList<String> groupingsPaths = new ArrayList<>();
-        List<Grouping> groupingsIn = groupingsIn(username);
-        for (Grouping grouping : groupingsIn) {
-            if (optInPermission(username, grouping.getPath())) {
-                groupingsPaths.add(grouping.getPath());
+        WsGetGrouperPrivilegesLiteResult optinResults = grouperPrivilegesLite(username, "optin");
+        ArrayList<String> groupings = new ArrayList<>();
+
+        List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
+
+        for(String name : groupingNames){
+            if(optInPermission(username, name)) {
+                groupings.add(name);
             }
         }
-        return getGroupings(groupingsPaths);
+
+        return makeGroupings(groupings);
     }
 
 
@@ -768,7 +793,7 @@ public class GroupingsService {
 
     // Helper method.
     public String[] getGroupNames(String username) {
-        ArrayList<String> names;
+        List<String> names;
 
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
                 .addSubjectIdentifier(username)
@@ -784,12 +809,12 @@ public class GroupingsService {
     }
 
     //Helper method
-    public List<Grouping> getGroupings(List<String> groupingPaths){
+    public List<Grouping> makeGroupings(List<String> groupingPaths){
         return groupingPaths.stream().map(Grouping::new).collect(Collectors.toList());
     }
 
     // Helper method.
-    public ArrayList<String> extractGroupNames(WsGroup[] groups) {
+    public List<String> extractGroupNames(WsGroup[] groups) {
         ArrayList<String> names = new ArrayList<>();
 
         for (WsGroup group : groups) {
@@ -799,6 +824,27 @@ public class GroupingsService {
         }
 
         return names;
+    }
+
+    //Helper method
+    public List<String> extractGroupingNames(String[] groupNames){
+        ArrayList<String> groupingNames = new ArrayList<>();
+        for(String name : groupNames){
+            if(name.endsWith(":include")){
+                groupingNames.add(name.split(":include")[0]);
+            }
+            else if(name.endsWith(":exclude")){
+                groupingNames.add(name.split(":exclude")[0]);
+            }
+            else if(name.endsWith(":basis")){
+                groupingNames.add(name.split(":basis")[0]);
+            }
+            else{
+                groupingNames.add(name);
+            }
+        }
+
+        return extractGroupings(groupingNames.toArray(new String[groupingNames.size()]));
     }
 
     // Helper method.
@@ -849,6 +895,20 @@ public class GroupingsService {
         String uuid = person.getId();
         String username = person.getAttributeValue(0);
         return new Person(name, uuid, username);
+    }
+
+    public List<String> groupingNamesFromPrivilegeResults(WsGetGrouperPrivilegesLiteResult privilegesLiteResult){
+
+        ArrayList<WsGroup> groups = new ArrayList<>();
+
+        for(WsGrouperPrivilegeResult result : privilegesLiteResult.getPrivilegeResults()){
+            groups.add(result.getWsGroup());
+        }
+
+        List<String> groupNames = extractGroupNames(groups.toArray(new WsGroup[groups.size()]));
+
+        List<String> groupingNames = extractGroupingNames(groupNames.toArray(new String[groupNames.size()]));
+        return groupingNames;
     }
 
     // ////////////////////////////////////////////////////////////////////////
