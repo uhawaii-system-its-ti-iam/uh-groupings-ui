@@ -31,15 +31,15 @@
             }, URL);
         };
 
-                console.log(obj);
         $scope.optOut = function (grouping) {
-
-            dataProvider.loadData(function (d) {
-                $scope.init();
-                $scope.membersList = d;
-            console.log(optOutURL);
             console.log(grouping);
             var optOutURL = "optOut?username=" + currentUser + "&grouping=" + $scope.membersList[grouping];
+            console.log(optOutURL);
+
+            dataProvider.loadData(function (d) {
+                $scope.membersList = d;
+                $scope.init();
+            }, optOutURL)
         };
 
         $scope.optIn = function (grouping) {
