@@ -6,9 +6,17 @@ jdk:
 branches:
   only:
   - master
-  
-script: 
+
+script:
   - mvn -Denv=dev clean test
-  
-after_success:  
+
+after_success:
   - mvn clean cobertura:cobertura coveralls:report
+
+notifications:
+  email:
+    recipients:
+      - duckart@computer.org
+      - its-iam-web-app-devs@lists.hawaii.edu
+    on_success: never # default: change
+    on_failure: always # default: always

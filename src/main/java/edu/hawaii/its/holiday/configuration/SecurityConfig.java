@@ -31,7 +31,7 @@ import org.springframework.util.Assert;
 import edu.hawaii.its.holiday.access.UserBuilder;
 import edu.hawaii.its.holiday.access.UserDetailsServiceImpl;
 
-@ComponentScan(basePackages = "edu.hawaii.its.holiday")
+@ComponentScan(basePackages = "edu.hawaii.its")
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
