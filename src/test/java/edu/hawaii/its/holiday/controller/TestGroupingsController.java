@@ -45,6 +45,7 @@ public class TestGroupingsController {
     private String zac = "zknoebel";
 
     private WsSubjectLookup lookupAaron;
+    private WsSubjectLookup lookupTst6;
 
     @Autowired
     private GroupingsService gs;
@@ -68,6 +69,7 @@ public class TestGroupingsController {
     @Before
     public void setUp() {
         lookupAaron = gs.makeWsSubjectLookup(aaron);
+        lookupTst6 = gs.makeWsSubjectLookup("iamtst06");
     }
 
     @Test
@@ -250,47 +252,56 @@ public class TestGroupingsController {
 //        }
 //        assertTrue(paths.contains(grouping));
 //    }
-
-    @Test
-    public void optInTest() {
-        gc.optIn(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(include, lookupAaron));
-        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
-        assertTrue(gs.inGroup(grouping + ":basis+include", aaron));
-    }
+//
+//    @Test
+//    public void optInTest() {
+//        gc.optIn(aaron, grouping);
+//        assertTrue(gs.checkSelfOpted(include, lookupAaron));
+//        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
+//        assertTrue(gs.inGroup(grouping + ":basis+include", aaron));
+//    }
 
     @Test
     public void optOutTest() {
-        gc.optOut(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
-        assertFalse(gs.checkSelfOpted(include, lookupAaron));
-        assertFalse(gs.inGroup(grouping + ":basis+include", aaron));
+        gc.optOut("iamtst06", grouping);
+        assertTrue(gs.checkSelfOpted(exclude, lookupTst6));
+        assertFalse(gs.checkSelfOpted(include, lookupTst6));
+        assertFalse(gs.inGroup(grouping, "iamtst06"));
 
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
+        gc.cancelOptOut(grouping, "iamtst06");
+        assertFalse(gs.checkSelfOpted(exclude, lookupTst6));
+        assertFalse(gs.checkSelfOpted(include, lookupTst6));
+        assertTrue(gs.inGroup(grouping + ":basis+include", "iamtst06"));
+
+
     }
+//
+//    @Test(expected=Exception.class)
+//    public void optOutExceptionTest(){
+//        gc.optOut("iamtst01", grouping);
+//    }
 
-    @Test
-    public void cancelOptOutTest() {
-        gc.optOut(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
-        gc.cancelOptOut(grouping, aaron);
-        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
-
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
-    }
-
-    @Test
-    public void cancelOptInTest() {
-        gc.optIn(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(include, lookupAaron));
-        gc.cancelOptIn(grouping, aaron);
-        assertFalse(gs.checkSelfOpted(include, lookupAaron));
-
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
-    }
+//    @Test
+//    public void cancelOptOutTest() {
+//        gc.optOut(aaron, grouping);
+//        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
+//        gc.cancelOptOut(grouping, aaron);
+//        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
+//
+//        //reset Grouping
+//        gc.addMember(grouping, zac, aaron);
+//    }
+//
+//    @Test
+//    public void cancelOptInTest() {
+//        gc.optIn(aaron, grouping);
+//        assertTrue(gs.checkSelfOpted(include, lookupAaron));
+//        gc.cancelOptIn(grouping, aaron);
+//        assertFalse(gs.checkSelfOpted(include, lookupAaron));
+//
+//        //reset Grouping
+//        gc.addMember(grouping, zac, aaron);
+//    }
 
 //    @Test
 //    public void optOutPermissionTest() {

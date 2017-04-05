@@ -37,6 +37,8 @@ public class GroupingsService {
     public static final String UUID_USERNAME = "ef62bf0473614b379695ecec6cb8b3b5";
     public static final String SELF_OPTED = "uh-settings:attributes:for-memberships:uh-grouping:self-opted";
     public static final String UUID_TRIO = "1d7365a23c994f5f83f7b541d4a5fa5e";
+    public static final String EXCLUDE = ":exclude";
+    public static final String INCLUDE = ":include";
     public static final WsStemLookup STEM = new WsStemLookup("hawaii.edu:custom", null);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,11 +52,11 @@ public class GroupingsService {
 
         WsSubjectLookup user = makeWsSubjectLookup(username);
 
-        results[2] = removeSelfOpted(grouping + ":exclude", userToAdd);
-        results[0] = addMemberAs(user, grouping + ":include", userToAdd);
-        results[1] = deleteMemberAs(user, grouping + ":exclude", userToAdd);
-        results[3] = updateLastModified(grouping + ":exclude");
-        results[4] = updateLastModified(grouping + ":include");
+        results[2] = removeSelfOpted(grouping + EXCLUDE, userToAdd);
+        results[0] = addMemberAs(user, grouping + INCLUDE, userToAdd);
+        results[1] = deleteMemberAs(user, grouping + EXCLUDE, userToAdd);
+        results[3] = updateLastModified(grouping + EXCLUDE);
+        results[4] = updateLastModified(grouping + INCLUDE);
 
         return results;
     }
@@ -65,11 +67,11 @@ public class GroupingsService {
 
         WsSubjectLookup user = makeWsSubjectLookup(username);
 
-        results[2] = removeSelfOpted(grouping + ":include", userToDelete);
-        results[0] = deleteMemberAs(user, grouping + ":include", userToDelete);
-        results[1] = addMemberAs(user, grouping + ":exclude", userToDelete);
-        results[3] = updateLastModified(grouping + ":exclude");
-        results[4] = updateLastModified(grouping + ":include");
+        results[2] = removeSelfOpted(grouping + INCLUDE, userToDelete);
+        results[0] = deleteMemberAs(user, grouping + INCLUDE, userToDelete);
+        results[1] = addMemberAs(user, grouping + EXCLUDE, userToDelete);
+        results[3] = updateLastModified(grouping + EXCLUDE);
+        results[4] = updateLastModified(grouping + INCLUDE);
 
         return results;
     }
@@ -81,10 +83,10 @@ public class GroupingsService {
         if (isOwner(grouping, username)) {
             WsSubjectLookup ownerToAdd = makeWsSubjectLookup(newOwner);
 
-            WsGroupLookup includeGroupLookup = makeWsGroupLookup(grouping + ":include");
+            WsGroupLookup includeGroupLookup = makeWsGroupLookup(grouping + INCLUDE);
             WsGroupLookup basisGroupLookup = makeWsGroupLookup(grouping + ":basis");
             WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(grouping + ":basis+include");
-            WsGroupLookup excludeGroupLookup = makeWsGroupLookup(grouping + ":exclude");
+            WsGroupLookup excludeGroupLookup = makeWsGroupLookup(grouping + EXCLUDE);
 
             privilegeResults[0] = addGroupOwnership(basisGroupLookup, ownerToAdd);
             privilegeResults[1] = addGroupOwnership(basisPlusIncludeGroupLookup, ownerToAdd);
@@ -106,10 +108,10 @@ public class GroupingsService {
         if (isOwner(grouping, username)) {
             WsSubjectLookup ownerToRemoveLookup = makeWsSubjectLookup(ownerToRemove);
 
-            WsGroupLookup includeGroupLookup = makeWsGroupLookup(grouping + ":include");
+            WsGroupLookup includeGroupLookup = makeWsGroupLookup(grouping + INCLUDE);
             WsGroupLookup basisGroupLookup = makeWsGroupLookup(grouping + ":basis");
             WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(grouping + ":basis+include");
-            WsGroupLookup excludeGroupLookup = makeWsGroupLookup(grouping + ":exclude");
+            WsGroupLookup excludeGroupLookup = makeWsGroupLookup(grouping + EXCLUDE);
 
             privilegeResults[0] = removeGroupOwnership(basisGroupLookup, ownerToRemoveLookup);
             privilegeResults[1] = removeGroupOwnership(basisPlusIncludeGroupLookup, ownerToRemoveLookup);
@@ -131,8 +133,8 @@ public class GroupingsService {
 
         WsGetMembersResults basisResults = getMembersAs(user, grouping + ":basis");
         WsGetMembersResults basisPlusIncludeResults = getMembersAs(user, grouping + ":basis+include");
-        WsGetMembersResults excludeResults = getMembersAs(user, grouping + ":exclude");
-        WsGetMembersResults includeResults = getMembersAs(user, grouping + ":include");
+        WsGetMembersResults excludeResults = getMembersAs(user, grouping + EXCLUDE);
+        WsGetMembersResults includeResults = getMembersAs(user, grouping + INCLUDE);
         WsGetMembersResults basisPlusIncludeMinusExcludeResults = getMembersAs(user, grouping);
 
         Group includeGroup = makeGroup(includeResults.getResults()[0].getWsSubjects());
@@ -154,7 +156,7 @@ public class GroupingsService {
         logger.info("getOwners; grouping: " + grouping + "; username: " + username);
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
-        String group = grouping + ":include";
+        String group = grouping + INCLUDE;
         String privilegeName = "update";
         WsGetGrouperPrivilegesLiteResult privileges =
                 new GcGetGrouperPrivilegesLite()
@@ -206,10 +208,10 @@ public class GroupingsService {
         }
         List<String> names = extractGroupNames(groups);
         for (int i = 0; i < names.size(); i++) {
-            if (names.get(i).endsWith(":include")) {
-                names.set(i, names.get(i).split(":include")[0]);
-            } else if (names.get(i).endsWith(":exclude")) {
-                names.set(i, names.get(i).split(":exclude")[0]);
+            if (names.get(i).endsWith(INCLUDE)) {
+                names.set(i, names.get(i).split(INCLUDE)[0]);
+            } else if (names.get(i).endsWith(EXCLUDE)) {
+                names.set(i, names.get(i).split(EXCLUDE)[0]);
             }
         }
         List<String> paths = extractGroupings(names.toArray(new String[names.size()]));
@@ -252,16 +254,16 @@ public class GroupingsService {
     public Object[] optIn(String username, String grouping) {
         Object[] results = new Object[6];
 
-        if (groupOptInPermission(username, grouping + ":include")
-                && (!inGroup(grouping + ":exclude", username)
-                || groupOptOutPermission(username, grouping + ":exclude"))) {
+        if (groupOptInPermission(username, grouping + INCLUDE)
+                && (!inGroup(grouping + EXCLUDE, username)
+                || groupOptOutPermission(username, grouping + EXCLUDE))) {
 
-            results[3] = removeSelfOpted(grouping + ":exclude", username);
-            results[0] = deleteMemberFromGroup(grouping + ":exclude", username);
-            results[1] = addMemberToGroup(grouping + ":include", username);
-            results[4] = updateLastModified(grouping + ":exclude");
-            results[5] = updateLastModified(grouping + ":include");
-            results[2] = addSelfOpted(grouping + ":include", username);
+            results[3] = removeSelfOpted(grouping + EXCLUDE, username);
+            results[0] = deleteMemberFromGroup(grouping + EXCLUDE, username);
+            results[1] = addMemberToGroup(grouping + INCLUDE, username);
+            results[4] = updateLastModified(grouping + EXCLUDE);
+            results[5] = updateLastModified(grouping + INCLUDE);
+            results[2] = addSelfOpted(grouping + INCLUDE, username);
 
             return results;
         } else {
@@ -273,15 +275,15 @@ public class GroupingsService {
     public Object[] optOut(String username, String grouping) {
         Object[] results = new Object[6];
 
-        if (groupOptInPermission(username, grouping + ":exclude") && (!inGroup(grouping + ":include", username)
-                || groupOptOutPermission(username, grouping + ":include"))) {
+        if (groupOptInPermission(username, grouping + EXCLUDE) && (!inGroup(grouping + INCLUDE, username)
+                || groupOptOutPermission(username, grouping + INCLUDE))) {
 
-            results[3] = removeSelfOpted(grouping + ":include", username);
-            results[0] = deleteMemberFromGroup(grouping + ":include", username);
-            results[1] = addMemberToGroup(grouping + ":exclude", username);
-            results[4] = updateLastModified(grouping + ":exclude");
-            results[5] = updateLastModified(grouping + ":include");
-            results[2] = addSelfOpted(grouping + ":exclude", username);
+            results[3] = removeSelfOpted(grouping + INCLUDE, username);
+            results[0] = deleteMemberFromGroup(grouping + INCLUDE, username);
+            results[1] = addMemberToGroup(grouping + EXCLUDE, username);
+            results[4] = updateLastModified(grouping + EXCLUDE);
+            results[5] = updateLastModified(grouping + INCLUDE);
+            results[2] = addSelfOpted(grouping + EXCLUDE, username);
 
             return results;
         } else {
@@ -292,7 +294,7 @@ public class GroupingsService {
 
     public Object[] cancelOptIn(String grouping, String username) {
         Object[] results = new Object[3];
-        String group = grouping + ":include";
+        String group = grouping + INCLUDE;
 
         if (inGroup(group, username)) {
 
@@ -330,7 +332,7 @@ public class GroupingsService {
 
     public Object[] cancelOptOut(String grouping, String username) {
         Object[] results = new Object[3];
-        String group = grouping + ":exclude";
+        String group = grouping + EXCLUDE;
 
         if (inGroup(group, username)) {
 
@@ -367,28 +369,32 @@ public class GroupingsService {
 
 
     public boolean optOutPermission(String username, String grouping) {
+        WsSubjectLookup lookup = makeWsSubjectLookup(username);
         //a user can opt out of a Grouping if:
         //      they have permission to opt into the exclude group,
         //      and
         //          they are not in the include group
         //          or
-        //          they have permission to opt out of the include group
+        //              they have permission to opt out of the include group
+        //              and they were the ones to put themselves into the include group
 
-        return (groupOptInPermission(username, grouping + ":exclude") && (!inGroup(grouping + ":include", username)
-                || groupOptOutPermission(username, grouping + ":include")));
+        return (groupOptInPermission(username, grouping + EXCLUDE) && (!inGroup(grouping + INCLUDE, username)
+                || (groupOptOutPermission(username, grouping + INCLUDE) && checkSelfOpted(grouping + INCLUDE, lookup))));
     }
 
 
     public boolean optInPermission(String username, String grouping) {
+        WsSubjectLookup lookup = makeWsSubjectLookup(username);
         //a user can opt into a Grouping if:
         //      they have permission to opt into the include group,
         //      and
         //          they are not in the exclude group
         //          or
-        //          they have permission to opt out of the exclude group
+        //              they have permission to opt out of the exclude group
+        //              and they were the ones to put themselves into the exclude group
 
-        return (groupOptInPermission(username, grouping + ":include") && (!inGroup(grouping + ":exclude", username)
-                || groupOptOutPermission(username, grouping + ":exclude")));
+        return (groupOptInPermission(username, grouping + INCLUDE) && (!inGroup(grouping + EXCLUDE, username)
+                || (groupOptOutPermission(username, grouping + EXCLUDE) && checkSelfOpted(grouping + EXCLUDE, lookup))));
     }
 
 
@@ -499,8 +505,8 @@ public class GroupingsService {
                         .assignSubjectLookup(lookup)
                         .assignPrivilegeName("update")
                         .assignPrivilegeName("read")
-                        .assignGroupName(grouping + ":include")
-                        .assignGroupName(grouping + ":include")
+                        .assignGroupName(grouping + INCLUDE)
+                        .assignGroupName(grouping + INCLUDE)
                         .addSubjectAttributeName("uid")
                         .execute();
 
@@ -830,11 +836,11 @@ public class GroupingsService {
     public List<String> extractGroupingNames(String[] groupNames){
         ArrayList<String> groupingNames = new ArrayList<>();
         for(String name : groupNames){
-            if(name.endsWith(":include")){
-                groupingNames.add(name.split(":include")[0]);
+            if(name.endsWith(INCLUDE)){
+                groupingNames.add(name.split(INCLUDE)[0]);
             }
-            else if(name.endsWith(":exclude")){
-                groupingNames.add(name.split(":exclude")[0]);
+            else if(name.endsWith(EXCLUDE)){
+                groupingNames.add(name.split(EXCLUDE)[0]);
             }
             else if(name.endsWith(":basis")){
                 groupingNames.add(name.split(":basis")[0]);
@@ -923,7 +929,7 @@ public class GroupingsService {
             WsGetGrouperPrivilegesLiteResult results =
                     new GcGetGrouperPrivilegesLite()
                             .assignActAsSubject(makeWsSubjectLookup(username))
-                            .assignGroupName(groupingName + ":include")
+                            .assignGroupName(groupingName + INCLUDE)
                             .assignPrivilegeName("update")
                             .addSubjectAttributeName("uid")
                             .execute();
