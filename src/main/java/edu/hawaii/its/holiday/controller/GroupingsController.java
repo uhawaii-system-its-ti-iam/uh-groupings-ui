@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by zknoebel on 12/12/16.
  * <p>
- * file containing the mappings for all groupings methods
+ * file containing the mappings for all Groupings methods
  */
 
 @RestController
@@ -30,12 +30,15 @@ public class GroupingsController {
 
 
     /**
-     * adds a member to a Grouping that the user owns
+     * adds a Person to a Grouping that the user owns
+     *      this will add the Person to the Grouping's 'include' Group
+     *      if the Person is in the Grouping's 'exclude' Group, it will remove them from the 'exclude' Group
      *
      * @param grouping  :  String containing the path of the Grouping
-     * @param username  :  username of the subject preforming the action
-     * @param userToAdd : username of the member to be added
-     * @return information about the new member and its success
+     * @param username  :  username of the user preforming the action
+     *                  the user must be an owner of the Grouping for this to work
+     * @param userToAdd : username of the Person to be added
+     * @return information about the success of the operation
      */
     @RequestMapping("/addMember")
     public Object[] addMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd) {
@@ -44,12 +47,15 @@ public class GroupingsController {
 
 
     /**
-     * removes a member from a Grouping that the user is an owner of
+     * removes a Person from a Grouping that the user owns
+     *      this will add the Person to the Grouping's 'exclude' Group
+     *      if the Person is in the Grouping's 'include' Group, it will remove them from the 'include' Group
      *
      * @param grouping     :     String containing the path of the Grouping
-     * @param username     :     username of the subject preforming the action
+     * @param username     :     username of the user preforming the action
+     *                  the user must be an owner of the Grouping for this to work
      * @param userToDelete : String containing the username of the user to be removed from the Grouping
-     * @return information about the deleted member and its success
+     * @return information about the deleted Person and its success
      */
     @RequestMapping("/deleteMember")
     public Object[] deleteMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete) {
@@ -59,11 +65,14 @@ public class GroupingsController {
 
     /**
      * gives the user read, update and view privileges for the Grouping
+     *      the user should already have view privilege, but the view privilege is added just in case
+     *      read privilege allows the user to see the members and owners of a Grouping
+     *      update privilege allows the user to add/delete the members and owners of a Grouping
      *
-     * @param username: username of subject preforming action
-     * @param grouping: path to the grouping that the newOwner will own
-     * @param newOwner: String containing the username of the new owner
-     * @return information about the new owner and its success
+     * @param username: username of user preforming action
+     * @param grouping: path to the grouping that the newOwner will get privileges for
+     * @param newOwner: String containing the username of the Person to become the new owner
+     * @return information about the privileges being added to new owner and the success of these privilege assignments
      */
     @RequestMapping("/assignOwnership")
     public Object[] assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
@@ -72,12 +81,15 @@ public class GroupingsController {
 
 
     /**
-     * removes ownership privileges from the user specified
+     * removes read, and update privileges from the user for the designated Grouping
+     *      read privilege allows the user to see the members and owners of a Grouping
+     *      update privilege allows the user to add/delete the members and owners of a Grouping
+     *      the user should keep the view privilege
      *
-     * @param username:      username of the subject preforming the action
-     * @param grouping:      String containing the path of the Grouping
-     * @param ownerToRemove: String containing the name of the user who's privileges will be removed
-     * @return information about the member who's ownership privileges have been removed and its success
+     * @param username: username of user preforming action
+     * @param grouping: path to the grouping that the owner to be removed will get privileges revoked from
+     * @param ownerToRemove: String containing the username of the Person whos owner privileges are to be revoked
+     * @return information about the privileges being removed from the owner and the success of these privilege assignments
      */
     @RequestMapping("/removeOwnership")
     public Object[] removeOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String ownerToRemove) {
@@ -86,22 +98,32 @@ public class GroupingsController {
 
 
     /**
-     * finds all the members of a group
+     * finds and returns the specified Grouping
      *
-     * @param grouping : String containing the path of the Grouping to be searched
-     * @param username : username of the subject preforming the action
-     * @return information for all of the members
+     * @param grouping : String containing the path of the Grouping to be searched for
+     * @param username : username of the user preforming the action
+     * @return the Grouping that was searched for
+     *      the Grouping will contain information about
+     *          members of each Group in the grouping
+     *          owners of the Grouping
+     *          name of the Grouping
+     *          path of the Grouping
+     *          whether or not the Grouping has a list serve associated with it
      */
     @RequestMapping("/getGrouping")
     public Grouping getGrouping(@RequestParam String grouping, @RequestParam String username) {
         return gs.getMembers(grouping, username);
     }
 
+
     /**
      *
      * @param username: username of user to get lists of Groupings for
-     * @return the Groupings that the user is in, that the user owns, that the user can opt into
-     * and that the user can opt out of
+     * @return a MyGrouping Object that contains
+     *      Groupings that the user is in
+     *      Groupings that the user owns
+     *      Groupings that the user can opt into
+     *      Groupings that the user can opt out of
      */
     @RequestMapping("/myGroupings")
     public MyGroupings myGroupings(@RequestParam String username){
@@ -109,7 +131,9 @@ public class GroupingsController {
     }
 
     /**
-     * if the user is allowed to opt into the grouping, this will add them to the include group of that grouping
+     * if the user is allowed to opt into the grouping
+     *      this will add them to the include group of that grouping
+     *      if the user is in the exclude group, they will be removed from it
      *
      * @param username : the username of user opting in
      * @param grouping : the path to the grouping where the user will be opting in
@@ -122,7 +146,9 @@ public class GroupingsController {
 
 
     /**
-     * if the user is allowed to opt out of the grouping, this will add them to the exclude group of that grouping
+     * if the user is allowed to opt out of the grouping
+     *      this will add them to the exclude group of that grouping
+     *      if the user is in the include group of that Grouping, they will be removed from it
      *
      * @param username : the username of user opting out
      * @param grouping : the path to the grouping where the user will be opting out
@@ -133,7 +159,13 @@ public class GroupingsController {
         return gs.optOut(username, grouping);
     }
 
+
     /**
+     * if the user has previously opted in
+     *      this will cancel the effects of opting in
+     *          the user will be removed from the include Group
+     *          the user will not be added to the exclude Group
+     *          if the user is also in the basis Group, this will not effectively change the user's membership to that Grouping
      *
      * @param username : the username of user canceling opting in
      * @param grouping : the path to the grouping where the user will be canceling opting in
@@ -146,6 +178,12 @@ public class GroupingsController {
 
 
     /**
+     *
+     * if the user has previously opted out
+     *      this will cancel the effects of opting out
+     *          the user will be removed from the exclude Group
+     *          the user will not be added to the include Group
+     *          if the user is not in the basis Group, this will not effectively change the user's membership to that Grouping
      *
      * @param username : the username of user canceling opting out
      * @param grouping : the path to the grouping where the user will be canceling opting out
@@ -198,6 +236,6 @@ public class GroupingsController {
     }
 
     //TODO give the Grouping owner the ability to change the optin/optout attribute for their Grouping
-    //TODO Edit the text provided to the Grouping's members when they are electing to opt in/out of the Inclusion/exclusion group
-    //TODO decide on exception handling policy
+    //      TODO possibly give the owner the ability to change the optin/optout attribute for individual members of the Grouping
+    //TODO Edit the text provided to the Grouping's Persons when they are electing to opt in/out of the Inclusion/exclusion group
 }

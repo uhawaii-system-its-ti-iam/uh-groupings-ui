@@ -162,68 +162,68 @@ public class TestGroupingsController {
 
     @Test
     public void getGroupingTest() {
-        Grouping groupMembers = gc.getGrouping(grouping, zac);
+        Grouping grouping = gc.getGrouping(this.grouping, zac);
 
-        assertTrue(groupMembers.getBasis().getNames().contains("tst04name"));
-        assertTrue(groupMembers.getBasis().getNames().contains("tst05name"));
-        assertTrue(groupMembers.getBasis().getNames().contains("tst06name"));
-        assertTrue(groupMembers.getInclude().getNames().contains("tst01fname"));
-        assertTrue(groupMembers.getInclude().getNames().contains("tst02name"));
-        assertTrue(groupMembers.getInclude().getNames().contains("tst03name"));
-        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst01fname"));
-        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst02name"));
-        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst03name"));
-        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst04name"));
-        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst05name"));
-        assertTrue(groupMembers.getBasisPlusInclude().getNames().contains("tst06name"));
-        assertTrue(groupMembers.getExclude().getNames().contains("tst04name"));
-        assertTrue(groupMembers.getExclude().getNames().contains("tst05name"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getNames().contains("tst01fname"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getNames().contains("tst02name"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getNames().contains("tst03name"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getNames().contains("tst06name"));
+        assertTrue(grouping.getBasis().getNames().contains("tst04name"));
+        assertTrue(grouping.getBasis().getNames().contains("tst05name"));
+        assertTrue(grouping.getBasis().getNames().contains("tst06name"));
+        assertTrue(grouping.getInclude().getNames().contains("tst01fname"));
+        assertTrue(grouping.getInclude().getNames().contains("tst02name"));
+        assertTrue(grouping.getInclude().getNames().contains("tst03name"));
+        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst01fname"));
+        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst02name"));
+        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst03name"));
+        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst04name"));
+        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst05name"));
+        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst06name"));
+        assertTrue(grouping.getExclude().getNames().contains("tst04name"));
+        assertTrue(grouping.getExclude().getNames().contains("tst05name"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains("tst01fname"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains("tst02name"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains("tst03name"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains("tst06name"));
 
 
-        assertTrue(groupMembers.getBasis().getUsernames().contains("iamtst04"));
-        assertTrue(groupMembers.getBasis().getUsernames().contains("iamtst05"));
-        assertTrue(groupMembers.getBasis().getUsernames().contains("iamtst06"));
-        assertTrue(groupMembers.getInclude().getUsernames().contains("iamtst01"));
-        assertTrue(groupMembers.getInclude().getUsernames().contains("iamtst02"));
-        assertTrue(groupMembers.getInclude().getUsernames().contains("iamtst03"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst01"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst02"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst03"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst04"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst05"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUsernames().contains("iamtst06"));
-        assertTrue(groupMembers.getExclude().getUsernames().contains("iamtst04"));
-        assertTrue(groupMembers.getExclude().getUsernames().contains("iamtst05"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst01"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst02"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst03"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst06"));
+        assertTrue(grouping.getBasis().getUsernames().contains("iamtst04"));
+        assertTrue(grouping.getBasis().getUsernames().contains("iamtst05"));
+        assertTrue(grouping.getBasis().getUsernames().contains("iamtst06"));
+        assertTrue(grouping.getInclude().getUsernames().contains("iamtst01"));
+        assertTrue(grouping.getInclude().getUsernames().contains("iamtst02"));
+        assertTrue(grouping.getInclude().getUsernames().contains("iamtst03"));
+        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst01"));
+        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst02"));
+        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst03"));
+        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst04"));
+        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst05"));
+        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst06"));
+        assertTrue(grouping.getExclude().getUsernames().contains("iamtst04"));
+        assertTrue(grouping.getExclude().getUsernames().contains("iamtst05"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst01"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst02"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst03"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst06"));
 
-        assertTrue(groupMembers.getBasis().getUuids().contains("iamtst04"));
-        assertTrue(groupMembers.getBasis().getUuids().contains("iamtst05"));
-        assertTrue(groupMembers.getBasis().getUuids().contains("iamtst06"));
-        assertTrue(groupMembers.getInclude().getUuids().contains("iamtst01"));
-        assertTrue(groupMembers.getInclude().getUuids().contains("iamtst02"));
-        assertTrue(groupMembers.getInclude().getUuids().contains("iamtst03"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst01"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst02"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst03"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst04"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst05"));
-        assertTrue(groupMembers.getBasisPlusInclude().getUuids().contains("iamtst06"));
-        assertTrue(groupMembers.getExclude().getUuids().contains("iamtst04"));
-        assertTrue(groupMembers.getExclude().getUuids().contains("iamtst05"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst01"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst02"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst03"));
-        assertTrue(groupMembers.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst06"));
+        assertTrue(grouping.getBasis().getUuids().contains("iamtst04"));
+        assertTrue(grouping.getBasis().getUuids().contains("iamtst05"));
+        assertTrue(grouping.getBasis().getUuids().contains("iamtst06"));
+        assertTrue(grouping.getInclude().getUuids().contains("iamtst01"));
+        assertTrue(grouping.getInclude().getUuids().contains("iamtst02"));
+        assertTrue(grouping.getInclude().getUuids().contains("iamtst03"));
+        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst01"));
+        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst02"));
+        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst03"));
+        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst04"));
+        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst05"));
+        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst06"));
+        assertTrue(grouping.getExclude().getUuids().contains("iamtst04"));
+        assertTrue(grouping.getExclude().getUuids().contains("iamtst05"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst01"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst02"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst03"));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst06"));
 
-        assertTrue(groupMembers.getOwners().getNames().contains("Zachery S Knoebel"));
-        assertTrue(groupMembers.getOwners().getNames().contains("UH Groupings API"));
+        assertTrue(grouping.getOwners().getNames().contains("Zachery S Knoebel"));
+        assertTrue(grouping.getOwners().getNames().contains("UH Groupings API"));
     }
 
 //    @Test
@@ -250,48 +250,48 @@ public class TestGroupingsController {
 //        }
 //        assertTrue(paths.contains(grouping));
 //    }
-//
-//    @Test
-//    public void optInTest() {
-//        gc.optIn(aaron, grouping);
-//        assertTrue(gs.checkSelfOpted(include, lookupAaron));
-//        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
-//        assertTrue(gs.inGroup(grouping + ":basis+include", aaron));
-//    }
-//
-//    @Test
-//    public void optOutTest() {
-//        gc.optOut(aaron, grouping);
-//        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
-//        assertFalse(gs.checkSelfOpted(include, lookupAaron));
-//        assertFalse(gs.inGroup(grouping + ":basis+include", aaron));
-//
-//        //reset Grouping
-//        gc.addMember(grouping, zac, aaron);
-//    }
-//
-//    @Test
-//    public void cancelOptOutTest() {
-//        gc.optOut(aaron, grouping);
-//        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
-//        gc.cancelOptOut(grouping, aaron);
-//        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
-//
-//        //reset Grouping
-//        gc.addMember(grouping, zac, aaron);
-//    }
-//
-//    @Test
-//    public void cancelOptInTest() {
-//        gc.optIn(aaron, grouping);
-//        assertTrue(gs.checkSelfOpted(include, lookupAaron));
-//        gc.cancelOptIn(grouping, aaron);
-//        assertFalse(gs.checkSelfOpted(include, lookupAaron));
-//
-//        //reset Grouping
-//        gc.addMember(grouping, zac, aaron);
-//    }
-//
+
+    @Test
+    public void optInTest() {
+        gc.optIn(aaron, grouping);
+        assertTrue(gs.checkSelfOpted(include, lookupAaron));
+        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
+        assertTrue(gs.inGroup(grouping + ":basis+include", aaron));
+    }
+
+    @Test
+    public void optOutTest() {
+        gc.optOut(aaron, grouping);
+        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
+        assertFalse(gs.checkSelfOpted(include, lookupAaron));
+        assertFalse(gs.inGroup(grouping + ":basis+include", aaron));
+
+        //reset Grouping
+        gc.addMember(grouping, zac, aaron);
+    }
+
+    @Test
+    public void cancelOptOutTest() {
+        gc.optOut(aaron, grouping);
+        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
+        gc.cancelOptOut(grouping, aaron);
+        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
+
+        //reset Grouping
+        gc.addMember(grouping, zac, aaron);
+    }
+
+    @Test
+    public void cancelOptInTest() {
+        gc.optIn(aaron, grouping);
+        assertTrue(gs.checkSelfOpted(include, lookupAaron));
+        gc.cancelOptIn(grouping, aaron);
+        assertFalse(gs.checkSelfOpted(include, lookupAaron));
+
+        //reset Grouping
+        gc.addMember(grouping, zac, aaron);
+    }
+
 //    @Test
 //    public void optOutPermissionTest() {
 //        assertTrue(gc.optOutPermission(aaron, grouping));
