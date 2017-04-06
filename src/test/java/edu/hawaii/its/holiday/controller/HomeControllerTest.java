@@ -59,12 +59,12 @@ public class HomeControllerTest {
                 .andExpect(view().name("home"));
     }
 
-    @Test
+    /*@Test
     public void requestContact() throws Exception {
         mockMvc.perform(get("/contact"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("contact"));
-    }
+    }*/
 
     @Test
     public void requestFaq() throws Exception {
