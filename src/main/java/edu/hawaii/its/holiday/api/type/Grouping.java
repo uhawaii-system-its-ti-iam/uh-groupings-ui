@@ -14,9 +14,11 @@ public class Grouping {
     private String path;
     private boolean hasListServe;
 
+
     public Grouping(Group basis, Group basisPlusInclude, Group exclude, Group include, Group basisPlusIncludeMinusExclude, Group owners){
         this.basis = basis;
         this.basisPlusInclude = basisPlusInclude;
+        //TODO get rid of basisplusinclude
         this.exclude = exclude;
         this.include = include;
         this.basisPlusIncludeMinusExclude = basisPlusIncludeMinusExclude;
