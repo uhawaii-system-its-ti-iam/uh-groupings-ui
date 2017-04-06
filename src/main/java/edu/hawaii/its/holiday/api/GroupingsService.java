@@ -47,6 +47,8 @@ public class GroupingsService {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //TODO replace addMember and deleteMember methods with methods that do groups individually
+
     public Object[] addMember(String grouping, String username, String userToAdd) {
         Object[] results = new Object[5];
 
@@ -132,7 +134,6 @@ public class GroupingsService {
 
 
         WsGetMembersResults basisResults = getMembersAs(user, grouping + ":basis");
-        WsGetMembersResults basisPlusIncludeResults = getMembersAs(user, grouping + ":basis+include");
         WsGetMembersResults excludeResults = getMembersAs(user, grouping + EXCLUDE);
         WsGetMembersResults includeResults = getMembersAs(user, grouping + INCLUDE);
         WsGetMembersResults basisPlusIncludeMinusExcludeResults = getMembersAs(user, grouping);
@@ -140,13 +141,12 @@ public class GroupingsService {
         Group includeGroup = makeGroup(includeResults.getResults()[0].getWsSubjects());
         Group excludeGroup = makeGroup(excludeResults.getResults()[0].getWsSubjects());
         Group basisGroup = makeGroup(basisResults.getResults()[0].getWsSubjects());
-        Group basisPlusIncludeGroup = makeGroup(basisPlusIncludeResults.getResults()[0].getWsSubjects());
         Group basisPlusIncludeMinusExcludeGroup = makeGroup(basisPlusIncludeMinusExcludeResults.getResults()[0].getWsSubjects());
         Group owners = getOwners(grouping, username);
 
-        Grouping members = new Grouping(basisGroup, basisPlusIncludeGroup, excludeGroup, includeGroup, basisPlusIncludeMinusExcludeGroup, owners);
+        Grouping members = new Grouping(basisGroup, excludeGroup, includeGroup, basisPlusIncludeMinusExcludeGroup, owners);
         members.setPath(grouping);
-        members.setHasListServe(hasListServe(grouping));
+        members.setListServe(hasListServe(grouping));
 
         return members;
     }
@@ -156,6 +156,7 @@ public class GroupingsService {
         logger.info("getOwners; grouping: " + grouping + "; username: " + username);
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
+        Group owners = new Group();
         String group = grouping + INCLUDE;
         String privilegeName = "update";
         WsGetGrouperPrivilegesLiteResult privileges =
@@ -167,11 +168,14 @@ public class GroupingsService {
                         .execute();
         ArrayList<WsSubject> subjects = new ArrayList<>();
 
-        for (WsGrouperPrivilegeResult result : privileges.getPrivilegeResults()) {
-            subjects.add(result.getOwnerSubject());
-        }
+        if(privileges.getPrivilegeResults() != null) {
+            for (WsGrouperPrivilegeResult result : privileges.getPrivilegeResults()) {
+                subjects.add(result.getOwnerSubject());
+            }
 
-        return makeGroup(subjects.toArray(new WsSubject[subjects.size()]));
+            owners = makeGroup(subjects.toArray(new WsSubject[subjects.size()]));
+        }
+            return owners;
     }
 
     /**
@@ -380,6 +384,8 @@ public class GroupingsService {
 
         return (groupOptInPermission(username, grouping + EXCLUDE) && (!inGroup(grouping + INCLUDE, username)
                 || (groupOptOutPermission(username, grouping + INCLUDE) && checkSelfOpted(grouping + INCLUDE, lookup))));
+
+        //TODO change permission to check for opt out privilege and nothing else
     }
 
 
@@ -395,10 +401,12 @@ public class GroupingsService {
 
         return (groupOptInPermission(username, grouping + INCLUDE) && (!inGroup(grouping + EXCLUDE, username)
                 || (groupOptOutPermission(username, grouping + EXCLUDE) && checkSelfOpted(grouping + EXCLUDE, lookup))));
+
+        //TODO change permission to check for opt in privileges and nothing else
     }
 
 
-    public boolean hasListServe(String grouping) throws NullPointerException {
+    public boolean hasListServe(String grouping) {
 
         String assignType = "group";
         String nameName = "uh-settings:attributes:for-groups:uh-grouping:destinations:listserv";
@@ -406,8 +414,13 @@ public class GroupingsService {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
                 attributeAssignmentsResults(assignType, grouping, nameName);
 
-        WsAttributeAssign listServeAttriubte = wsGetAttributeAssignmentsResults.getWsAttributeAssigns()[0];
-        return listServeAttriubte.getAttributeDefNameName().equals(nameName);
+        if(wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
+            WsAttributeAssign listServeAttriubte = wsGetAttributeAssignmentsResults.getWsAttributeAssigns()[0];
+            return listServeAttriubte.getAttributeDefNameName().equals(nameName);
+        }
+        else {
+            return false;
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

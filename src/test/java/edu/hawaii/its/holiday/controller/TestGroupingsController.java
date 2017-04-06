@@ -84,14 +84,6 @@ public class TestGroupingsController {
         assertTrue(true);
     }
 
-    @Test
-    public void addMemberTest() {
-        Object[] addMemberResults = gc.addMember(grouping, zac, aaron);
-        WsAddMemberResults wsAddMemberResults = (WsAddMemberResults) addMemberResults[0];
-        WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[1];
-        assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
-        assertEquals("SUCCESS", wsDeleteMemberResults.getResultMetadata().getResultCode());
-    }
 
     @Test
     public void assignOwnershipTest() {
@@ -120,17 +112,6 @@ public class TestGroupingsController {
         assertTrue(true);
     }
 
-    @Test
-    public void deleteMemberTest() {
-        Object[] addMemberResults = gc.deleteMember(grouping, zac, aaron);
-        WsAddMemberResults wsAddMemberResults = (WsAddMemberResults) addMemberResults[1];
-        WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[0];
-        assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
-        assertEquals("SUCCESS", wsDeleteMemberResults.getResultMetadata().getResultCode());
-
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
-    }
 
     @Test
     public void removeOwnershipTest() {
@@ -172,12 +153,6 @@ public class TestGroupingsController {
         assertTrue(grouping.getInclude().getNames().contains("tst01fname"));
         assertTrue(grouping.getInclude().getNames().contains("tst02name"));
         assertTrue(grouping.getInclude().getNames().contains("tst03name"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst01fname"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst02name"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst03name"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst04name"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst05name"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst06name"));
         assertTrue(grouping.getExclude().getNames().contains("tst04name"));
         assertTrue(grouping.getExclude().getNames().contains("tst05name"));
         assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains("tst01fname"));
@@ -192,12 +167,6 @@ public class TestGroupingsController {
         assertTrue(grouping.getInclude().getUsernames().contains("iamtst01"));
         assertTrue(grouping.getInclude().getUsernames().contains("iamtst02"));
         assertTrue(grouping.getInclude().getUsernames().contains("iamtst03"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst01"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst02"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst03"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst04"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst05"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst06"));
         assertTrue(grouping.getExclude().getUsernames().contains("iamtst04"));
         assertTrue(grouping.getExclude().getUsernames().contains("iamtst05"));
         assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst01"));
@@ -211,12 +180,6 @@ public class TestGroupingsController {
         assertTrue(grouping.getInclude().getUuids().contains("iamtst01"));
         assertTrue(grouping.getInclude().getUuids().contains("iamtst02"));
         assertTrue(grouping.getInclude().getUuids().contains("iamtst03"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst01"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst02"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst03"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst04"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst05"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst06"));
         assertTrue(grouping.getExclude().getUuids().contains("iamtst04"));
         assertTrue(grouping.getExclude().getUuids().contains("iamtst05"));
         assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst01"));

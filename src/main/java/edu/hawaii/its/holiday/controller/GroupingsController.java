@@ -4,6 +4,7 @@ import edu.hawaii.its.holiday.api.GroupingsService;
 import edu.hawaii.its.holiday.api.type.Group;
 import edu.hawaii.its.holiday.api.type.Grouping;
 import edu.hawaii.its.holiday.api.type.MyGroupings;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,38 +30,33 @@ public class GroupingsController {
     private GroupingsService gs;
 
 
-    /**
-     * adds a Person to a Grouping that the user owns
-     *      this will add the Person to the Grouping's 'include' Group
-     *      if the Person is in the Grouping's 'exclude' Group, it will remove them from the 'exclude' Group
-     *
-     * @param grouping  :  String containing the path of the Grouping
-     * @param username  :  username of the user preforming the action
-     *                  the user must be an owner of the Grouping for this to work
-     * @param userToAdd : username of the Person to be added
-     * @return information about the success of the operation
-     */
-    @RequestMapping("/addMember")
-    public Object[] addMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd) {
-        return gs.addMember(grouping, username, userToAdd);
+    @RequestMapping("/addMemberToIncludeGroup")
+    public Object addMemberToIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
+        WsSubjectLookup lookup = gs.makeWsSubjectLookup(username);
+        return gs.addMemberAs(lookup, grouping + "include", userToAdd);
     }
 
 
-    /**
-     * removes a Person from a Grouping that the user owns
-     *      this will add the Person to the Grouping's 'exclude' Group
-     *      if the Person is in the Grouping's 'include' Group, it will remove them from the 'include' Group
-     *
-     * @param grouping     :     String containing the path of the Grouping
-     * @param username     :     username of the user preforming the action
-     *                  the user must be an owner of the Grouping for this to work
-     * @param userToDelete : String containing the username of the user to be removed from the Grouping
-     * @return information about the deleted Person and its success
-     */
-    @RequestMapping("/deleteMember")
-    public Object[] deleteMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete) {
-        return gs.deleteMember(grouping, username, userToDelete);
+    @RequestMapping("/addMemberToExcludeGroup")
+    public Object addMemberToExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
+        WsSubjectLookup lookup = gs.makeWsSubjectLookup(username);
+        return gs.addMemberAs(lookup, grouping + "exclude", userToAdd);
     }
+
+
+    @RequestMapping("/deleteMemberFromIncludeGroup")
+    public Object deleteMemberFromIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
+        WsSubjectLookup lookup = gs.makeWsSubjectLookup(username);
+        return gs.deleteMemberAs(lookup, grouping + "include", userToDelete);
+    }
+
+
+    @RequestMapping("/deleteMemberFromExcludeGroup")
+    public Object deleteMemberFromExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
+        WsSubjectLookup lookup = gs.makeWsSubjectLookup(username);
+        return gs.deleteMemberAs(lookup, grouping + "exclude", userToDelete);
+    }
+
 
 
     /**
