@@ -35,7 +35,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
  */
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SpringBootWebApplication.class })
+@SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsController {
 
     private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
@@ -44,8 +44,7 @@ public class TestGroupingsController {
     private String aaron = "aaronvil";
     private String zac = "zknoebel";
 
-    private WsSubjectLookup[] lookupTst= new WsSubjectLookup[6];
-    private WsSubjectLookup lookupTst6;
+    private WsSubjectLookup[] lookupTst = new WsSubjectLookup[6];
 
     @Autowired
     private GroupingsService gs;
@@ -68,8 +67,8 @@ public class TestGroupingsController {
 
     @Before
     public void setUp() {
-        for(int i = 0; i < 6; i ++){
-            lookupTst[i] = gs.makeWsSubjectLookup("iamtst0" + i);
+        for (int i = 0; i < 6; i++) {
+            lookupTst[i] = gs.makeWsSubjectLookup("iamtst0" + (i + 1));
         }
     }
 
@@ -211,41 +210,45 @@ public class TestGroupingsController {
 //        }
 //        assertTrue(paths.contains(grouping));
 //    }
-//
-//    @Test
-//    public void groupingsOwnedTest() {
-//        List<Grouping> groupings = gc.groupingsOwned(zac);
-//        List<String> paths = new ArrayList<>();
-//        for(Grouping grouping: groupings){
-//            paths.add(grouping.getPath());
-//        }
-//        assertTrue(paths.contains(grouping));
-//    }
-//
-//    @Test
-//    public void optInTest() {
-//        gc.optIn(aaron, grouping);
-//        assertTrue(gs.checkSelfOpted(include, lookupAaron));
-//        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
-//        assertTrue(gs.inGroup(grouping + ":basis+include", aaron));
-//    }
-//
-//    @Test
-//    public void optOutTest() {
-//        assertTrue(gs.inGroup(grouping, "iamtst06"));
-//
-//        gc.optOut("iamtst06", grouping);
-//        assertTrue(gs.checkSelfOpted(exclude, lookupTst6));
-//        assertFalse(gs.checkSelfOpted(include, lookupTst6));
-//        assertFalse(gs.inGroup(grouping, "iamtst06"));
-//
-//        gc.cancelOptOut(grouping, "iamtst06");
-//        assertFalse(gs.checkSelfOpted(exclude, lookupTst6));
-//        assertFalse(gs.checkSelfOpted(include, lookupTst6));
-//
-//        assertTrue(gs.inGroup(grouping + ":basis+include", "iamtst06"));
-//    }
-//
+
+    @Test
+    public void optInTest() {
+        assertFalse(gs.inGroup(grouping, "iamtst05"));
+        assertTrue(gs.inGroup(grouping + ":basis", "iamtst06"));
+
+        gc.optIn("iamtst05", grouping);
+        assertTrue(gs.checkSelfOpted(include, lookupTst[4]));
+        assertFalse(gs.checkSelfOpted(exclude, lookupTst[4]));
+        assertTrue(gs.inGroup(grouping, "iamtst05"));
+
+        gc.cancelOptIn(grouping, "iamtst05");
+        assertFalse(gs.checkSelfOpted(exclude, lookupTst[4]));
+        assertFalse(gs.checkSelfOpted(include, lookupTst[4]));
+
+        assertTrue(gs.inGroup(grouping, "iamtst06"));
+
+        //reset Grouping
+        gc.addMemberToExcludeGroup(grouping, zac, "iamtst05");
+        assertFalse(gs.inGroup(grouping, "iamtst05"));
+    }
+    
+
+    @Test
+    public void optOutTest() {
+        assertTrue(gs.inGroup(grouping, "iamtst06"));
+
+        gc.optOut("iamtst06", grouping);
+        assertTrue(gs.checkSelfOpted(exclude, lookupTst[5]));
+        assertFalse(gs.checkSelfOpted(include, lookupTst[5]));
+        assertFalse(gs.inGroup(grouping, "iamtst06"));
+
+        gc.cancelOptOut(grouping, "iamtst06");
+        assertFalse(gs.checkSelfOpted(exclude, lookupTst[5]));
+        assertFalse(gs.checkSelfOpted(include, lookupTst[5]));
+
+        assertTrue(gs.inGroup(grouping + ":basis+include", "iamtst06"));
+    }
+
 
 //    @Test(expected=Exception.class)
 //    public void optOutExceptionTest(){
