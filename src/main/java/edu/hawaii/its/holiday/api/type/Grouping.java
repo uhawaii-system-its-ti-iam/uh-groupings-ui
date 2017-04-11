@@ -5,18 +5,16 @@ package edu.hawaii.its.holiday.api.type;
  */
 public class Grouping {
     private Group basis;
-    private Group basisPlusInclude;
     private Group exclude;
     private Group include;
     private Group basisPlusIncludeMinusExclude;
     private Group owners;
     private String name;
     private String path;
-    private boolean hasListServe;
+    private boolean hasListServe = false;
 
-    public Grouping(Group basis, Group basisPlusInclude, Group exclude, Group include, Group basisPlusIncludeMinusExclude, Group owners){
+    public Grouping(Group basis, Group exclude, Group include, Group basisPlusIncludeMinusExclude, Group owners){
         this.basis = basis;
-        this.basisPlusInclude = basisPlusInclude;
         this.exclude = exclude;
         this.include = include;
         this.basisPlusIncludeMinusExclude = basisPlusIncludeMinusExclude;
@@ -54,14 +52,6 @@ public class Grouping {
         this.basis = basis;
     }
 
-    public Group getBasisPlusInclude() {
-        return basisPlusInclude;
-    }
-
-    public void setBasisPlusInclude(Group basisPlusInclude) {
-        this.basisPlusInclude = basisPlusInclude;
-    }
-
     public Group getExclude() {
         return exclude;
     }
@@ -94,11 +84,12 @@ public class Grouping {
         this.owners = owners;
     }
 
-    public boolean isHasListServe() {
+    public boolean getHasListServe() {
         return hasListServe;
     }
 
-    public void setHasListServe(boolean hasListServe) {
-        this.hasListServe = hasListServe;
+    public void setListServe(boolean hasListServe){
+            this.hasListServe = hasListServe;
     }
+
 }

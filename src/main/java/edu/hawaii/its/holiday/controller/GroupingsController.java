@@ -1,9 +1,9 @@
 package edu.hawaii.its.holiday.controller;
 
 import edu.hawaii.its.holiday.api.GroupingsService;
-import edu.hawaii.its.holiday.api.type.Group;
 import edu.hawaii.its.holiday.api.type.Grouping;
 import edu.hawaii.its.holiday.api.type.MyGroupings;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
-
-import java.util.List;
 
 /**
  * Created by zknoebel on 12/12/16.
@@ -29,38 +27,29 @@ public class GroupingsController {
     private GroupingsService gs;
 
 
-    /**
-     * adds a Person to a Grouping that the user owns
-     *      this will add the Person to the Grouping's 'include' Group
-     *      if the Person is in the Grouping's 'exclude' Group, it will remove them from the 'exclude' Group
-     *
-     * @param grouping  :  String containing the path of the Grouping
-     * @param username  :  username of the user preforming the action
-     *                  the user must be an owner of the Grouping for this to work
-     * @param userToAdd : username of the Person to be added
-     * @return information about the success of the operation
-     */
-    @RequestMapping("/addMember")
-    public Object[] addMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd) {
-        return gs.addMember(grouping, username, userToAdd);
+    @RequestMapping("/addMemberToIncludeGroup")
+    public Object addMemberToIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
+        return gs.addMemberAs(username, grouping + ":include", userToAdd);
     }
 
 
-    /**
-     * removes a Person from a Grouping that the user owns
-     *      this will add the Person to the Grouping's 'exclude' Group
-     *      if the Person is in the Grouping's 'include' Group, it will remove them from the 'include' Group
-     *
-     * @param grouping     :     String containing the path of the Grouping
-     * @param username     :     username of the user preforming the action
-     *                  the user must be an owner of the Grouping for this to work
-     * @param userToDelete : String containing the username of the user to be removed from the Grouping
-     * @return information about the deleted Person and its success
-     */
-    @RequestMapping("/deleteMember")
-    public Object[] deleteMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete) {
-        return gs.deleteMember(grouping, username, userToDelete);
+    @RequestMapping("/addMemberToExcludeGroup")
+    public Object addMemberToExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
+        return gs.addMemberAs(username, grouping + ":exclude", userToAdd);
     }
+
+
+    @RequestMapping("/deleteMemberFromIncludeGroup")
+    public Object deleteMemberFromIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
+        return gs.deleteMemberAs(username, grouping + ":include", userToDelete);
+    }
+
+
+    @RequestMapping("/deleteMemberFromExcludeGroup")
+    public Object deleteMemberFromExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
+        return gs.deleteMemberAs(username, grouping + ":exclude", userToDelete);
+    }
+
 
 
     /**
@@ -110,9 +99,9 @@ public class GroupingsController {
      *          path of the Grouping
      *          whether or not the Grouping has a list serve associated with it
      */
-    @RequestMapping("/getGrouping")
+    @RequestMapping("/Grouping")
     public Grouping getGrouping(@RequestParam String grouping, @RequestParam String username) {
-        return gs.getMembers(grouping, username);
+        return gs.getGrouping(grouping, username);
     }
 
 
