@@ -1,7 +1,6 @@
 package edu.hawaii.its.holiday.controller;
 
 import edu.hawaii.its.holiday.api.GroupingsService;
-import edu.hawaii.its.holiday.api.type.Group;
 import edu.hawaii.its.holiday.api.type.Grouping;
 import edu.hawaii.its.holiday.api.type.MyGroupings;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
-
-import java.util.List;
 
 /**
  * Created by zknoebel on 12/12/16.
@@ -32,29 +29,25 @@ public class GroupingsController {
 
     @RequestMapping("/addMemberToIncludeGroup")
     public Object addMemberToIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
-        WsSubjectLookup lookup = gs.makeWsSubjectLookup(username);
-        return gs.addMemberAs(lookup, grouping + "include", userToAdd);
+        return gs.addMemberAs(username, grouping + ":include", userToAdd);
     }
 
 
     @RequestMapping("/addMemberToExcludeGroup")
     public Object addMemberToExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
-        WsSubjectLookup lookup = gs.makeWsSubjectLookup(username);
-        return gs.addMemberAs(lookup, grouping + "exclude", userToAdd);
+        return gs.addMemberAs(username, grouping + ":exclude", userToAdd);
     }
 
 
     @RequestMapping("/deleteMemberFromIncludeGroup")
     public Object deleteMemberFromIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
-        WsSubjectLookup lookup = gs.makeWsSubjectLookup(username);
-        return gs.deleteMemberAs(lookup, grouping + "include", userToDelete);
+        return gs.deleteMemberAs(username, grouping + ":include", userToDelete);
     }
 
 
     @RequestMapping("/deleteMemberFromExcludeGroup")
     public Object deleteMemberFromExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
-        WsSubjectLookup lookup = gs.makeWsSubjectLookup(username);
-        return gs.deleteMemberAs(lookup, grouping + "exclude", userToDelete);
+        return gs.deleteMemberAs(username, grouping + ":exclude", userToDelete);
     }
 
 
@@ -106,9 +99,9 @@ public class GroupingsController {
      *          path of the Grouping
      *          whether or not the Grouping has a list serve associated with it
      */
-    @RequestMapping("/getGrouping")
+    @RequestMapping("/Grouping")
     public Grouping getGrouping(@RequestParam String grouping, @RequestParam String username) {
-        return gs.getMembers(grouping, username);
+        return gs.getGrouping(grouping, username);
     }
 
 

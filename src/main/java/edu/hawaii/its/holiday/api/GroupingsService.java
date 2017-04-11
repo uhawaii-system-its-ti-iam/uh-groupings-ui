@@ -49,35 +49,6 @@ public class GroupingsService {
 
     //TODO replace addMember and deleteMember methods with methods that do groups individually
 
-    public Object[] addMember(String grouping, String username, String userToAdd) {
-        Object[] results = new Object[5];
-
-        WsSubjectLookup user = makeWsSubjectLookup(username);
-
-        results[2] = removeSelfOpted(grouping + EXCLUDE, userToAdd);
-        results[0] = addMemberAs(user, grouping + INCLUDE, userToAdd);
-        results[1] = deleteMemberAs(user, grouping + EXCLUDE, userToAdd);
-        results[3] = updateLastModified(grouping + EXCLUDE);
-        results[4] = updateLastModified(grouping + INCLUDE);
-
-        return results;
-    }
-
-
-    public Object[] deleteMember(String grouping, String username, String userToDelete) {
-        Object[] results = new Object[5];
-
-        WsSubjectLookup user = makeWsSubjectLookup(username);
-
-        results[2] = removeSelfOpted(grouping + INCLUDE, userToDelete);
-        results[0] = deleteMemberAs(user, grouping + INCLUDE, userToDelete);
-        results[1] = addMemberAs(user, grouping + EXCLUDE, userToDelete);
-        results[3] = updateLastModified(grouping + EXCLUDE);
-        results[4] = updateLastModified(grouping + INCLUDE);
-
-        return results;
-    }
-
 
     public Object[] assignOwnership(String grouping, String username, String newOwner) {
         WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
@@ -129,7 +100,7 @@ public class GroupingsService {
     }
 
 
-    public Grouping getMembers(String grouping, String username) {
+    public Grouping getGrouping(String grouping, String username) {
         WsSubjectLookup user = makeWsSubjectLookup(username);
 
 
@@ -168,22 +139,21 @@ public class GroupingsService {
                         .execute();
         ArrayList<WsSubject> subjects = new ArrayList<>();
 
-        if(privileges.getPrivilegeResults() != null) {
+        if (privileges.getPrivilegeResults() != null) {
             for (WsGrouperPrivilegeResult result : privileges.getPrivilegeResults()) {
                 subjects.add(result.getOwnerSubject());
             }
 
             owners = makeGroup(subjects.toArray(new WsSubject[subjects.size()]));
         }
-            return owners;
+        return owners;
     }
 
     /**
-     *
      * @param username
      * @return
      */
-    public MyGroupings getMyGroupings(String username){
+    public MyGroupings getMyGroupings(String username) {
         MyGroupings myGroupings = new MyGroupings();
 
         myGroupings.setGroupingsIn(groupingsIn(username));
@@ -229,8 +199,8 @@ public class GroupingsService {
 
         List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
 
-        for(String name : groupingNames){
-            if(optOutPermission(username, name)) {
+        for (String name : groupingNames) {
+            if (optOutPermission(username, name)) {
                 groupings.add(name);
             }
         }
@@ -245,8 +215,8 @@ public class GroupingsService {
 
         List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
 
-        for(String name : groupingNames){
-            if(optInPermission(username, name)) {
+        for (String name : groupingNames) {
+            if (optInPermission(username, name)) {
                 groupings.add(name);
             }
         }
@@ -258,13 +228,11 @@ public class GroupingsService {
     public Object[] optIn(String username, String grouping) {
         Object[] results = new Object[6];
 
-        if (groupOptInPermission(username, grouping + INCLUDE)
-                && (!inGroup(grouping + EXCLUDE, username)
-                || groupOptOutPermission(username, grouping + EXCLUDE))) {
+        if (groupOptInPermission(username, grouping + INCLUDE)) {
 
             results[3] = removeSelfOpted(grouping + EXCLUDE, username);
-            results[0] = deleteMemberFromGroup(grouping + EXCLUDE, username);
-            results[1] = addMemberToGroup(grouping + INCLUDE, username);
+            results[0] = deleteMemberAs(username, grouping + EXCLUDE, username);
+            results[1] = addMemberAs(username, grouping + INCLUDE, username);
             results[4] = updateLastModified(grouping + EXCLUDE);
             results[5] = updateLastModified(grouping + INCLUDE);
             results[2] = addSelfOpted(grouping + INCLUDE, username);
@@ -279,12 +247,11 @@ public class GroupingsService {
     public Object[] optOut(String username, String grouping) {
         Object[] results = new Object[6];
 
-        if (groupOptInPermission(username, grouping + EXCLUDE) && (!inGroup(grouping + INCLUDE, username)
-                || groupOptOutPermission(username, grouping + INCLUDE))) {
+        if (groupOptInPermission(username, grouping + EXCLUDE)) {
 
             results[3] = removeSelfOpted(grouping + INCLUDE, username);
-            results[0] = deleteMemberFromGroup(grouping + INCLUDE, username);
-            results[1] = addMemberToGroup(grouping + EXCLUDE, username);
+            results[0] = deleteMemberAs(username, grouping + INCLUDE, username);
+            results[1] = addMemberAs(username, grouping + EXCLUDE, username);
             results[4] = updateLastModified(grouping + EXCLUDE);
             results[5] = updateLastModified(grouping + INCLUDE);
             results[2] = addSelfOpted(grouping + EXCLUDE, username);
@@ -306,27 +273,25 @@ public class GroupingsService {
             WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(lookup, group);
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            if (checkSelfOpted(group, lookup)) {
+            String privilegeName = "optout";
+            WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult =
+                    grouperPrivilegesLite(username, group, privilegeName);
 
-                String privilegeName = "optout";
-                WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult =
-                        grouperPrivilegesLite(username, group, privilegeName);
+            if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
 
-                if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
+                if (checkSelfOpted(group, lookup)) {
                     String operation = "remove_attr";
                     String uuid = GroupingsService.UUID_USERNAME;
                     results[1] = assignAttributesResults(operation, uuid, membershipID);
-                    results[0] = deleteMemberFromGroup(group, username);
-                    results[2] = updateLastModified(group);
-
-                    return results;
-                } else {
-                    throw new AccessDeniedException("user is not allowed to opt out of 'include' group");
                 }
+                results[0] = deleteMember(group, username);
+                results[2] = updateLastModified(group);
 
+                return results;
             } else {
-                throw new IllegalStateException("user is in include group, but cannot cancel opt in, because user did not opt in");
+                throw new AccessDeniedException("user is not allowed to opt out of 'include' group");
             }
+
         } else {
             results[0] = "Success, user is not opted in, because user was not in 'include' group";
         }
@@ -344,26 +309,24 @@ public class GroupingsService {
             WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(lookup, group);
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            if (checkSelfOpted(group, lookup)) {
 
-                String privilegeName = "optout";
-                WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult =
-                        grouperPrivilegesLite(lookup.getSubjectIdentifier(), group, privilegeName);
+            String privilegeName = "optout";
+            WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult =
+                    grouperPrivilegesLite(lookup.getSubjectIdentifier(), group, privilegeName);
 
-                if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
+            if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
+                if (checkSelfOpted(group, lookup)) {
                     String operation = "remove_attr";
                     String uuid = GroupingsService.UUID_USERNAME;
                     results[1] = assignAttributesResults(operation, uuid, membershipID);
-                    results[0] = deleteMemberFromGroup(group, username);
-
-                    results[2] = updateLastModified(group);
-
-                    return results;
-                } else {
-                    throw new AccessDeniedException("user is not allowed to opt out of 'exclude' group");
                 }
+                results[0] = deleteMember(group, username);
+
+                results[2] = updateLastModified(group);
+
+                return results;
             } else {
-                throw new IllegalStateException("user is in exclude group, but cannot cancel opt out, because user did not opt out");
+                throw new AccessDeniedException("user is not allowed to opt out of 'exclude' group");
             }
         } else {
             results[0] = "Success, user is not opted out, because user was not in 'exclude' group";
@@ -414,11 +377,10 @@ public class GroupingsService {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
                 attributeAssignmentsResults(assignType, grouping, nameName);
 
-        if(wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
+        if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
             WsAttributeAssign listServeAttriubte = wsGetAttributeAssignmentsResults.getWsAttributeAssigns()[0];
             return listServeAttriubte.getAttributeDefNameName().equals(nameName);
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -725,9 +687,25 @@ public class GroupingsService {
     }
 
     // Helper method.
-    public WsAddMemberResults addMemberAs(WsSubjectLookup user, String group, String userToAdd) {
-        logger.info("addMemberAs; user: " + user + "; group: " + group + "; userToAdd: " + userToAdd);
+    public WsAddMemberResults addMemberAs(String username, String group, String userToAdd) {
+        logger.info("addMemberAs; user: " + username + "; group: " + group + "; userToAdd: " + userToAdd);
 
+        WsSubjectLookup user = makeWsSubjectLookup(username);
+
+        if (group.endsWith(":include")) {
+            new GcDeleteMember()
+                    .assignActAsSubject(user)
+                    .assignGroupName(group.split(":include")[0] + ":exclude")
+                    .addSubjectIdentifier(userToAdd)
+                    .execute();
+        }
+        if (group.endsWith(":exclude")) {
+            new GcDeleteMember()
+                    .assignActAsSubject(user)
+                    .assignGroupName(group.split(":exclude")[0] + ":include")
+                    .addSubjectIdentifier(userToAdd)
+                    .execute();
+        }
         return new GcAddMember()
                 .assignActAsSubject(user)
                 .assignGroupName(group)
@@ -736,29 +714,32 @@ public class GroupingsService {
     }
 
     // Helper method.
-    public WsDeleteMemberResults deleteMemberAs(WsSubjectLookup user, String group, String userToDelete) {
-        logger.info("delteMemberAs; user: " + user + "; group: " + group + "; userToDelete: " + userToDelete);
+    public WsDeleteMemberResults deleteMemberAs(String username, String group, String userToDelete) {
+        logger.info("delteMemberAs; user: " + username + "; group: " + group + "; userToDelete: " + userToDelete);
 
+        WsSubjectLookup user = makeWsSubjectLookup(username);
         return new GcDeleteMember()
                 .assignActAsSubject(user)
                 .assignGroupName(group)
                 .addSubjectIdentifier(userToDelete)
                 .execute();
+        //TODO check if a membership attribute remains after a membership is deleted and then recreated
     }
 
     // Helper method.
-    public WsDeleteMemberResults deleteMemberFromGroup(String group, String user) {
-        logger.info("deleteMemberFromGroup; group: " + group + "; user: " + user);
+    public WsDeleteMemberResults deleteMember(String group, String user) {
+        logger.info("deleteMember; group: " + group + "; user: " + user);
 
         return new GcDeleteMember()
                 .assignGroupName(group)
                 .addSubjectIdentifier(user)
                 .execute();
+        //TODO check if a membership attribute remains after a membership is deleted and then recreated
     }
 
     // Helper method.
-    public WsAddMemberResults addMemberToGroup(String group, String user) {
-        logger.info("addMemberToGroup; group: " + group + "; user: " + user);
+    public WsAddMemberResults addMember(String group, String user) {
+        logger.info("addMember; group: " + group + "; user: " + user);
 
         return new GcAddMember()
                 .assignGroupName(group)
@@ -828,7 +809,7 @@ public class GroupingsService {
     }
 
     //Helper method
-    public List<Grouping> makeGroupings(List<String> groupingPaths){
+    public List<Grouping> makeGroupings(List<String> groupingPaths) {
         return groupingPaths.stream().map(Grouping::new).collect(Collectors.toList());
     }
 
@@ -846,19 +827,16 @@ public class GroupingsService {
     }
 
     //Helper method
-    public List<String> extractGroupingNames(String[] groupNames){
+    public List<String> extractGroupingNames(String[] groupNames) {
         ArrayList<String> groupingNames = new ArrayList<>();
-        for(String name : groupNames){
-            if(name.endsWith(INCLUDE)){
+        for (String name : groupNames) {
+            if (name.endsWith(INCLUDE)) {
                 groupingNames.add(name.split(INCLUDE)[0]);
-            }
-            else if(name.endsWith(EXCLUDE)){
+            } else if (name.endsWith(EXCLUDE)) {
                 groupingNames.add(name.split(EXCLUDE)[0]);
-            }
-            else if(name.endsWith(":basis")){
+            } else if (name.endsWith(":basis")) {
                 groupingNames.add(name.split(":basis")[0]);
-            }
-            else{
+            } else {
                 groupingNames.add(name);
             }
         }
@@ -894,7 +872,7 @@ public class GroupingsService {
     }
 
     //Helper method
-    public Group makeGroup(WsSubject[] subjects){
+    public Group makeGroup(WsSubject[] subjects) {
         Group group = new Group();
         ArrayList<Person> persons = new ArrayList<>();
         try {
@@ -902,25 +880,24 @@ public class GroupingsService {
                 persons.add(makePerson(subject));
             }
             group.setMembers(persons);
-        }
-        catch(NullPointerException npe){
+        } catch (NullPointerException npe) {
         }
         return group;
     }
 
     //Helper method
-    public Person makePerson(WsSubject person){
+    public Person makePerson(WsSubject person) {
         String name = person.getName();
         String uuid = person.getId();
         String username = person.getAttributeValue(0);
         return new Person(name, uuid, username);
     }
 
-    public List<String> groupingNamesFromPrivilegeResults(WsGetGrouperPrivilegesLiteResult privilegesLiteResult){
+    public List<String> groupingNamesFromPrivilegeResults(WsGetGrouperPrivilegesLiteResult privilegesLiteResult) {
 
         ArrayList<WsGroup> groups = new ArrayList<>();
 
-        for(WsGrouperPrivilegeResult result : privilegesLiteResult.getPrivilegeResults()){
+        for (WsGrouperPrivilegeResult result : privilegesLiteResult.getPrivilegeResults()) {
             groups.add(result.getWsGroup());
         }
 
