@@ -337,35 +337,19 @@ public class GroupingsService {
 
     public boolean optOutPermission(String username, String grouping) {
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
-        //a user can opt out of a Grouping if:
-        //      they have permission to opt into the exclude group,
-        //      and
-        //          they are not in the include group
-        //          or
-        //              they have permission to opt out of the include group
-        //              and they were the ones to put themselves into the include group
 
         return (groupOptInPermission(username, grouping + EXCLUDE) && (!inGroup(grouping + INCLUDE, username)
-                || (groupOptOutPermission(username, grouping + INCLUDE) && checkSelfOpted(grouping + INCLUDE, lookup))));
+                || (groupOptOutPermission(username, grouping + INCLUDE))));
 
-        //TODO change permission to check for opt out privilege and nothing else
     }
 
 
     public boolean optInPermission(String username, String grouping) {
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
-        //a user can opt into a Grouping if:
-        //      they have permission to opt into the include group,
-        //      and
-        //          they are not in the exclude group
-        //          or
-        //              they have permission to opt out of the exclude group
-        //              and they were the ones to put themselves into the exclude group
 
         return (groupOptInPermission(username, grouping + INCLUDE) && (!inGroup(grouping + EXCLUDE, username)
-                || (groupOptOutPermission(username, grouping + EXCLUDE) && checkSelfOpted(grouping + EXCLUDE, lookup))));
+                || (groupOptOutPermission(username, grouping + EXCLUDE))));
 
-        //TODO change permission to check for opt in privileges and nothing else
     }
 
 
