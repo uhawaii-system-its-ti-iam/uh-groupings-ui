@@ -144,7 +144,8 @@ public class GroupingsService {
 
         Grouping members = new Grouping(basisGroup, basisPlusIncludeGroup, excludeGroup, includeGroup, basisPlusIncludeMinusExcludeGroup, owners);
         members.setPath(grouping);
-        members.setHasListServe(hasListServe(grouping));
+      //members.setHasListServe(hasListServe(grouping));
+      
 
         return members;
     }
