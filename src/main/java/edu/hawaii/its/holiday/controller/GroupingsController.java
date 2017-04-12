@@ -6,14 +6,17 @@ import edu.hawaii.its.holiday.api.type.MyGroupings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
 /**
+ * GroupingsController.java
+ *
  * Created by zknoebel on 12/12/16.
- * <p>
+ *
  * file containing the mappings for all Groupings methods
  */
 
@@ -35,9 +38,11 @@ public class GroupingsController {
      * @return information about the success of the operation
      */
     @RequestMapping("/addMemberToIncludeGroup")
-    public Object addMemberToIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
+    public ResponseEntity<Object> addMemberToIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
         logger.info("Entered REST addMemberToIncludeGroup...");
-        return gs.addMemberAs(username, grouping + ":include", userToAdd);
+        return ResponseEntity
+                .ok()
+                .body(gs.addMemberAs(username, grouping + ":include", userToAdd));
     }
 
 
@@ -50,9 +55,11 @@ public class GroupingsController {
      * @return information about the success of the operation
      */
     @RequestMapping("/addMemberToExcludeGroup")
-    public Object addMemberToExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
+    public ResponseEntity<Object> addMemberToExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
         logger.info("Entered REST addMemberToExcludeGroup...");
-        return gs.addMemberAs(username, grouping + ":exclude", userToAdd);
+        return ResponseEntity
+                .ok()
+                .body(gs.addMemberAs(username, grouping + ":exclude", userToAdd));
     }
 
 
@@ -64,9 +71,11 @@ public class GroupingsController {
      * @return information about the success of the operation
      */
     @RequestMapping("/deleteMemberFromIncludeGroup")
-    public Object deleteMemberFromIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
+    public ResponseEntity<Object> deleteMemberFromIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
         logger.info("Entered REST deleteMemberFromIncludeGroup...");
-        return gs.deleteMemberAs(username, grouping + ":include", userToDelete);
+        return ResponseEntity
+                .ok()
+                .body(gs.deleteMemberAs(username, grouping + ":include", userToDelete));
     }
 
 
@@ -78,9 +87,11 @@ public class GroupingsController {
      * @return information about the success of the operation
      */
     @RequestMapping("/deleteMemberFromExcludeGroup")
-    public Object deleteMemberFromExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
+    public ResponseEntity<Object> deleteMemberFromExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
         logger.info("Entered REST deleteMemberFromExcludeGroup...");
-        return gs.deleteMemberAs(username, grouping + ":exclude", userToDelete);
+        return ResponseEntity
+                .ok()
+                .body(gs.deleteMemberAs(username, grouping + ":exclude", userToDelete));
     }
 
 
@@ -97,9 +108,11 @@ public class GroupingsController {
      * @return information about the privileges being added to new owner and the success of these privilege assignments
      */
     @RequestMapping("/assignOwnership")
-    public Object[] assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
+    public ResponseEntity<Object[]> assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
         logger.info("Entered REST assignOwnership...");
-        return gs.assignOwnership(grouping, username, newOwner);
+        return ResponseEntity
+                .ok()
+                .body(gs.assignOwnership(grouping, username, newOwner));
     }
 
 
@@ -115,9 +128,11 @@ public class GroupingsController {
      * @return information about the privileges being removed from the owner and the success of these privilege assignments
      */
     @RequestMapping("/removeOwnership")
-    public Object[] removeOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String ownerToRemove) {
+    public ResponseEntity<Object[]> removeOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String ownerToRemove) {
         logger.info("Entered REST removeOwnership...");
-        return gs.removeOwnership(grouping, username, ownerToRemove);
+        return ResponseEntity
+                .ok()
+                .body(gs.removeOwnership(grouping, username, ownerToRemove));
     }
 
 
@@ -135,9 +150,11 @@ public class GroupingsController {
      *          whether or not the Grouping has a list serve associated with it
      */
     @RequestMapping("/grouping")
-    public Grouping getGrouping(@RequestParam String grouping, @RequestParam String username) {
+    public ResponseEntity<Grouping> getGrouping(@RequestParam String grouping, @RequestParam String username) {
         logger.info("Entered REST grouping...");
-        return gs.getGrouping(grouping, username);
+        return ResponseEntity
+                .ok()
+                .body(gs.getGrouping(grouping, username));
     }
 
 
@@ -151,9 +168,11 @@ public class GroupingsController {
      *      Groupings that the user can opt out of
      */
     @RequestMapping("/myGroupings")
-    public MyGroupings myGroupings(@RequestParam String username){
+    public ResponseEntity<MyGroupings> myGroupings(@RequestParam String username){
         logger.info("Entered REST myGroupings...");
-        return gs.getMyGroupings(username);
+        return ResponseEntity
+                .ok()
+                .body(gs.getMyGroupings(username));
     }
 
     /**
@@ -166,9 +185,11 @@ public class GroupingsController {
      * @return information about the success of opting in
      */
     @RequestMapping("/optIn")
-    public Object[] optIn(@RequestParam String username, @RequestParam String grouping) {
+    public ResponseEntity<Object[]> optIn(@RequestParam String username, @RequestParam String grouping) {
         logger.info("Entered REST optIn...");
-        return gs.optIn(username, grouping);
+        return ResponseEntity
+                .ok()
+                .body(gs.optIn(username, grouping));
     }
 
 
@@ -182,9 +203,11 @@ public class GroupingsController {
      * @return information about the success of opting out
      */
     @RequestMapping("/optOut")
-    public Object[] optOut(@RequestParam String username, @RequestParam String grouping) {
+    public ResponseEntity<Object[]> optOut(@RequestParam String username, @RequestParam String grouping) {
         logger.info("Entered REST optOut...");
-        return gs.optOut(username, grouping);
+        return ResponseEntity
+                .ok()
+                .body(gs.optOut(username, grouping));
     }
 
 
@@ -200,9 +223,11 @@ public class GroupingsController {
      * @return information about the success of canceling the opt in
      */
     @RequestMapping("/cancelOptIn")
-    public Object[] cancelOptIn(@RequestParam String grouping, @RequestParam String username) {
+    public ResponseEntity<Object[]> cancelOptIn(@RequestParam String grouping, @RequestParam String username) {
         logger.info("Entered REST cancelOptIn...");
-        return gs.cancelOptIn(grouping, username);
+        return ResponseEntity
+                .ok()
+                .body(gs.cancelOptIn(grouping, username));
     }
 
 
@@ -219,9 +244,11 @@ public class GroupingsController {
      * @return information about the success of canceling the opt out
      */
     @RequestMapping("/cancelOptOut")
-    public Object[] cancelOptOut(@RequestParam String grouping, @RequestParam String username) {
+    public ResponseEntity<Object[]> cancelOptOut(@RequestParam String grouping, @RequestParam String username) {
         logger.info("Entered REST cancelOptOut...");
-        return gs.cancelOptOut(grouping, username);
+        return ResponseEntity
+                .ok()
+                .body(gs.cancelOptOut(grouping, username));
     }
 
 

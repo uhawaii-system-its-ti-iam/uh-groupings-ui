@@ -108,36 +108,31 @@ public class TestGroupingsService {
     //TODO add test for addSelfOpted
     //TODO add test for checkSelfOpted
     //TODO add test for inGroup
-
-
-    //TODO write down the rest of the things to test...
-
-
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
-    //TODO add test for
+    //TODO add test for isOwner
+    //TODO add test for removeSelfOpted
+    //TODO add test for wsDateTime
+    //TODO add test for groupOptOutPermission
+    //TODO add test for groupOptInPermission
+    //TODO add test for updateLastModified
+    //TODO add test for makeWsSubject
+    //TODO add test for makeWsGroupLookup
+    //TODO add test for assignAttributesResults (both)
+    //TODO add test for attributeAssign
+    //TODO add test for attributeAssignments
+    //TODO add test for grouperPrivilegesLite (both)
+    //TODO add test for membershipsResults
+    //TODO add test for addMemberAs
+    //TODO add test for deleteMemberAs
+    //TODO add test for getMemberAs
+    //TODO add test for allGroupings
+    //TODO add test for extractGroupings
+    //TODO add test for getGroupNames
+    //TODO add test for makeGroupings
+    //TODO add test for extractGroupNames
+    //TODO add test for extractGroupingNames
+    //TODO add test for removeGroupOwnership
+    //TODO add test for addGroupOwnership
+    //TODO add test for makeGroup
+    //TODO add test for makePerson
+    //TODO add test for groupingNamesFromPrivilegeResults
 }

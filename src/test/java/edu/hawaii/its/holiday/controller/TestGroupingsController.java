@@ -1,18 +1,11 @@
 package edu.hawaii.its.holiday.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
-import edu.hawaii.its.holiday.api.type.Group;
+import edu.hawaii.its.holiday.api.GroupingsService;
+import edu.hawaii.its.holiday.api.type.Grouping;
 import edu.hawaii.its.holiday.api.type.MyGroupings;
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,17 +15,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.holiday.api.type.Grouping;
-import edu.hawaii.its.holiday.api.GroupingsService;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+import javax.annotation.PostConstruct;
+
+import static org.junit.Assert.*;
 
 /**
- * Created by zac on 1/31/17.
+ * TestGroupingsController.java
+ *
+ * Created by zknoebel on 1/31/17.
  */
 
 @RunWith(SpringRunner.class)
@@ -42,7 +32,7 @@ public class TestGroupingsController {
     private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
     private String include = grouping + ":include";
     private String exclude = grouping + ":exclude";
-    private String aaron = "aaronvil";
+    private String aaron = "iamTst01";
     private String zac = "zknoebel";
 
     private WsSubjectLookup[] lookupTst = new WsSubjectLookup[6];
@@ -166,7 +156,7 @@ public class TestGroupingsController {
 
     @Test
     public void getGroupingTest() {
-        Grouping grouping = gc.getGrouping(this.grouping, zac);
+        Grouping grouping = gc.getGrouping(this.grouping, zac).getBody();
 
         assertTrue(grouping.getBasis().getNames().contains("tst04name"));
         assertTrue(grouping.getBasis().getNames().contains("tst05name"));
@@ -210,16 +200,16 @@ public class TestGroupingsController {
 
         assertFalse(grouping.getOwners().getNames().contains("tst06name"));
         gc.assignOwnership(grouping.getPath(), zac, "iamtst06");
-        grouping = gc.getGrouping(this.grouping, zac);
+        grouping = gc.getGrouping(this.grouping, zac).getBody();
         assertTrue(grouping.getOwners().getNames().contains("tst06name"));
         gc.removeOwnership(grouping.getPath(), zac, "iamtst06");
-        grouping = gc.getGrouping(this.grouping, zac);
+        grouping = gc.getGrouping(this.grouping, zac).getBody();
         assertFalse(grouping.getOwners().getNames().contains("tst06name"));
     }
 
     @Test
     public void myGroupingsTest(){
-        MyGroupings groupings = gc.myGroupings(aaron);
+        MyGroupings groupings = gc.myGroupings(aaron).getBody();
         boolean inGrouping = false;
         boolean canOptin = false;
         boolean canOptOut = false;

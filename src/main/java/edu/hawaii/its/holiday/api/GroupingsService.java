@@ -15,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import edu.hawaii.its.groupings.type.Owner;
 import edu.hawaii.its.holiday.util.Dates;
 import edu.internet2.middleware.grouperClient.api.GcAddMember;
 import edu.internet2.middleware.grouperClient.api.GcAssignAttributes;
@@ -351,22 +350,27 @@ public class GroupingsService {
 
     public List<Grouping> groupingsOwned(String username) {
         WsSubjectLookup user = makeWsSubjectLookup(username);
-        WsGetGrouperPrivilegesLiteResult getPrivilegeResults = new GcGetGrouperPrivilegesLite().assignPrivilegeName("update").assignSubjectLookup(user).execute();
-        WsGrouperPrivilegeResult[] privilegeResults = getPrivilegeResults.getPrivilegeResults();
-        WsGroup[] groups = new WsGroup[privilegeResults.length];
-        for (int i = 0; i < groups.length; i++) {
-            groups[i] = privilegeResults[i].getWsGroup();
-        }
-        List<String> names = extractGroupNames(groups);
-        for (int i = 0; i < names.size(); i++) {
-            if (names.get(i).endsWith(INCLUDE)) {
-                names.set(i, names.get(i).split(INCLUDE)[0]);
-            } else if (names.get(i).endsWith(EXCLUDE)) {
-                names.set(i, names.get(i).split(EXCLUDE)[0]);
+        WsGetGrouperPrivilegesLiteResult getPrivilegesResult = new GcGetGrouperPrivilegesLite().assignPrivilegeName("update").assignSubjectLookup(user).execute();
+        WsGrouperPrivilegeResult[] privilegeResults = getPrivilegesResult.getPrivilegeResults();
+        if(privilegeResults != null) {
+            WsGroup[] groups = new WsGroup[privilegeResults.length];
+            for (int i = 0; i < groups.length; i++) {
+                groups[i] = privilegeResults[i].getWsGroup();
             }
+            List<String> names = extractGroupNames(groups);
+            for (int i = 0; i < names.size(); i++) {
+                if (names.get(i).endsWith(INCLUDE)) {
+                    names.set(i, names.get(i).split(INCLUDE)[0]);
+                } else if (names.get(i).endsWith(EXCLUDE)) {
+                    names.set(i, names.get(i).split(EXCLUDE)[0]);
+                }
+            }
+            List<String> paths = extractGroupings(names.toArray(new String[names.size()]));
+            return makeGroupings(paths);
         }
-        List<String> paths = extractGroupings(names.toArray(new String[names.size()]));
-        return makeGroupings(paths);
+        else {
+            return new ArrayList<Grouping>();
+        }
     }
 
 
@@ -882,39 +886,5 @@ public class GroupingsService {
 
         return extractGroupingNames(groupNames.toArray(new String[groupNames.size()]));
     }
-
-//    // ////////////////////////////////////////////////////////////////////////
-//    // Start of reworking.
-//
-//    public List<Owner> findOwners(String username, String groupingName) {
-//        logger.info("findOwners; username: " + username + "; groupingName" + groupingName);
-//
-//        List<Owner> owners = new ArrayList<>();
-//
-//        try {
-//            WsGetGrouperPrivilegesLiteResult results =
-//                    new GcGetGrouperPrivilegesLite()
-//                            .assignActAsSubject(makeWsSubjectLookup(username))
-//                            .assignGroupName(groupingName + INCLUDE)
-//                            .assignPrivilegeName("update")
-//                            .addSubjectAttributeName("uid")
-//                            .execute();
-//
-//            WsGrouperPrivilegeResult[] privilegeResults = results.getPrivilegeResults();
-//            if (privilegeResults != null && privilegeResults.length > 0) {
-//                for (WsGrouperPrivilegeResult o : privilegeResults) {
-//                    Owner owner = new Owner(o.getPrivilegeName());
-//                    owner.setName(o.getOwnerSubject().getName());
-//                    owner.setUhuuid(o.getOwnerSubject().getId());
-//                    owner.setUid(o.getWsSubject().getAttributeValues()[0]);
-//                    owners.add(owner);
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return owners;
-//    }
 
 }
