@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import edu.hawaii.its.groupings.type.Owner;
 import edu.hawaii.its.holiday.api.GroupingsService;
 
 @RestController
@@ -163,6 +162,15 @@ public class GroupingsRestController {
                 .ok()
                 .body(gs.getGrouping(grouping, username));
     }
+//    @RequestMapping(value = "/api/groupings/{grouping}/{username}/grouping",
+//                    method = RequestMethod.GET,
+//                    produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Grouping> grouping(@PathVariable String grouping, @PathVariable String username) {
+//    logger.info("Entered REST grouping...");
+//    return ResponseEntity
+//            .ok()
+//            .body(gs.getGrouping(grouping, username));
+//    }
 
 
     /**
@@ -181,6 +189,16 @@ public class GroupingsRestController {
                 .ok()
                 .body(gs.getMyGroupings(username));
     }
+//    @RequestMapping(value = "/api/grouping/{username}/myGroupings",
+//                    method = RequestMethod.GET,
+//                    produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username){
+//    logger.info("Entered REST myGroupings...");
+//    return ResponseEntity
+//            .ok()
+//            .body(gs.getMyGroupings(username));
+//    }
+
 
     /**
      * if the user is allowed to opt into the grouping
@@ -259,54 +277,6 @@ public class GroupingsRestController {
     }
 
 
-//    /**
-//     * finds and returns the specified Grouping
-//     *
-//     * @param grouping : String containing the path of the Grouping to be searched for
-//     * @param username : username of the user preforming the action
-//     * @return the Grouping that was searched for
-//     *      the Grouping will contain information about
-//     *          members of each Group in the grouping
-//     *          owners of the Grouping
-//     *          name of the Grouping
-//     *          path of the Grouping
-//     *          whether or not the Grouping has a list serve associated with it
-//     */
-//    @RequestMapping(value = "/api/groupings/{grouping}/{username}/grouping",
-//                    method = RequestMethod.GET,
-//                    produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Grouping> grouping(@PathVariable String grouping, @PathVariable String username) {
-//        logger.info("Entered REST grouping...");
-//
-//        Grouping theGrouping = gs.getGrouping(grouping, username);
-//
-//        return ResponseEntity
-//                .ok()
-//                .body(theGrouping);
-//    }
-
-
-//    /**
-//     *
-//     * @param username: username of user to get lists of Groupings for
-//     * @return a MyGrouping Object that contains
-//     *      Groupings that the user is in
-//     *      Groupings that the user owns
-//     *      Groupings that the user can opt into
-//     *      Groupings that the user can opt out of
-//     */
-//    @RequestMapping(value = "/api/grouping/{username}/myGroupings",
-//                    method = RequestMethod.GET,
-//                    produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username){
-//        logger.info("Entered REST myGroupings...");
-//
-//        MyGroupings theGroupings = gs.getMyGroupings(username);
-//
-//        return ResponseEntity
-//                .ok()
-//                .body(theGroupings);
-//    }
 
 
 }

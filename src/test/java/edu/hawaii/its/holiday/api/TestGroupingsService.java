@@ -1,14 +1,7 @@
 package edu.hawaii.its.holiday.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import javax.annotation.PostConstruct;
-
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,11 +12,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+import javax.annotation.PostConstruct;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })

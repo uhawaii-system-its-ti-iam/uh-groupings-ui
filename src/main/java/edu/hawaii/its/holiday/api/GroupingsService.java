@@ -121,10 +121,10 @@ public class GroupingsService {
     public Grouping getGrouping(String grouping, String username) {
         WsSubjectLookup user = makeWsSubjectLookup(username);
 
-        WsGetMembersResults basisResults = getMembersAs(user, grouping + ":basis");
-        WsGetMembersResults excludeResults = getMembersAs(user, grouping + EXCLUDE);
-        WsGetMembersResults includeResults = getMembersAs(user, grouping + INCLUDE);
-        WsGetMembersResults basisPlusIncludeMinusExcludeResults = getMembersAs(user, grouping);
+        WsGetMembersResults basisResults = getMembers(user, grouping + ":basis");
+        WsGetMembersResults excludeResults = getMembers(user, grouping + EXCLUDE);
+        WsGetMembersResults includeResults = getMembers(user, grouping + INCLUDE);
+        WsGetMembersResults basisPlusIncludeMinusExcludeResults = getMembers(user, grouping);
 
         Group includeGroup = makeGroup(includeResults.getResults()[0].getWsSubjects());
         Group excludeGroup = makeGroup(excludeResults.getResults()[0].getWsSubjects());
@@ -286,25 +286,26 @@ public class GroupingsService {
     public Group getOwners(String grouping, String username) {
         logger.info("getOwners; grouping: " + grouping + "; username: " + username);
 
-        WsSubjectLookup lookup = makeWsSubjectLookup(username);
         Group owners = new Group();
-        String group = grouping + INCLUDE;
-        String privilegeName = "update";
-        WsGetGrouperPrivilegesLiteResult privileges =
-                new GcGetGrouperPrivilegesLite()
-                        .assignActAsSubject(lookup)
-                        .assignGroupName(group)
-                        .assignPrivilegeName(privilegeName)
-                        .addSubjectAttributeName("uid")
-                        .execute();
-        ArrayList<WsSubject> subjects = new ArrayList<>();
 
-        if (privileges.getPrivilegeResults() != null) {
-            for (WsGrouperPrivilegeResult result : privileges.getPrivilegeResults()) {
-                subjects.add(result.getOwnerSubject());
+        if(isOwner(grouping, username)) {
+            String group = grouping + INCLUDE;
+            String privilegeName = "update";
+            WsGetGrouperPrivilegesLiteResult privileges =
+                    new GcGetGrouperPrivilegesLite()
+                            .assignGroupName(group)
+                            .assignPrivilegeName(privilegeName)
+                            .addSubjectAttributeName("uid")
+                            .execute();
+            ArrayList<WsSubject> subjects = new ArrayList<>();
+
+            if (privileges.getPrivilegeResults() != null) {
+                for (WsGrouperPrivilegeResult result : privileges.getPrivilegeResults()) {
+                    subjects.add(result.getOwnerSubject());
+                }
+
+                owners = makeGroup(subjects.toArray(new WsSubject[subjects.size()]));
             }
-
-            owners = makeGroup(subjects.toArray(new WsSubject[subjects.size()]));
         }
         return owners;
     }
@@ -729,15 +730,18 @@ public class GroupingsService {
 
 
     // Helper method.
-    public WsGetMembersResults getMembersAs(WsSubjectLookup user, String group) {
-        logger.info("getMembersAs; user: " + user + "; group: " + group);
+    public WsGetMembersResults getMembers(WsSubjectLookup user, String group) {
+        logger.info("getMembers; user: " + user + "; group: " + group);
 
-        return new GcGetMembers()
-                .assignActAsSubject(user)
-                .addSubjectAttributeName("uid")
-                .addGroupName(group)
-                .assignIncludeSubjectDetail(true)
-                .execute();
+        String grouping = extractGroupingNames(new String[] {group}).get(0);
+        if(isOwner(grouping, user.getSubjectIdentifier())) {
+            return new GcGetMembers()
+                    .addSubjectAttributeName("uid")
+                    .addGroupName(group)
+                    .assignIncludeSubjectDetail(true)
+                    .execute();
+        }
+        return new WsGetMembersResults();
     }
 
     // Helper method.
