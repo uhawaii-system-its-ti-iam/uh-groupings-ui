@@ -265,9 +265,9 @@ public class GroupingsController {
      *
      * @return information about the new Grouping and its success
      */
-    //TODO currently this method is not to be implemented because responsibility to create a new
-    //TODO grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
-    //TODO https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
+    //currently this method is not to be implemented because responsibility to create a new
+    //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
+    //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
     @RequestMapping("/addGrouping")
     public RedirectView addGrouping() {
         RedirectView redirectView = new RedirectView();
@@ -281,9 +281,9 @@ public class GroupingsController {
      *
      * @return information about the deleted Grouping and its success
      */
-    //TODO currently this method is not to be implemented because responsibility to create a new
-    //TODO grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
-    //TODO https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
+    //currently this method is not to be implemented because responsibility to create a new
+    //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
+    //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
     // email its-iam-help@hawaii.edu for help in deleting a Grouping
     @RequestMapping("/deleteGrouping")
     public RedirectView deleteGrouping() {
@@ -293,6 +293,5 @@ public class GroupingsController {
     }
 
     //TODO give the Grouping owner the ability to change the optin/optout attribute for their Grouping
-    //      TODO possibly give the owner the ability to change the optin/optout attribute for individual members of the Grouping
     //TODO Edit the text provided to the Grouping's Persons when they are electing to opt in/out of the Inclusion/exclusion group
 }

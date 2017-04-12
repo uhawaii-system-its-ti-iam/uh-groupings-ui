@@ -1,8 +1,9 @@
 package edu.hawaii.its.holiday.api;
 
+import edu.hawaii.its.holiday.api.type.Group;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
-import org.junit.FixMethodOrder;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -18,12 +19,11 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestGroupingsService {
 
     private final static String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
-    private final static String aaron = "aaronvil";
-    private final static String zac = "zknoebel";
+    private String[] tst = new String[6];
+    private String[] tstName = {"tst01fname", "tst02name", "tst03name", "tst04name", "tst05name", "tst06name"};
 
     @Autowired
     GroupingsService gs;
@@ -41,11 +41,16 @@ public class TestGroupingsService {
                 "property 'grouperClient.webService.password' is required");
     }
 
-
+    @Before
+    public void setUp() {
+        for (int i = 0; i < 6; i++) {
+            tst[i] = "iamtst0" + (i + 1);
+        }
+    }
 
     @Test
     public void isOwnerTest() {
-        assertTrue(gs.isOwner(grouping, zac));
+        assertTrue(gs.isOwner(grouping, tst[0]));
     }
 
     @Test
@@ -56,14 +61,14 @@ public class TestGroupingsService {
 
     @Test
     public void groupOptInPermissionTest() {
-        assertTrue(gs.groupOptInPermission(aaron, grouping + ":include"));
-        assertTrue(gs.groupOptInPermission(aaron, grouping + ":exclude"));
+        assertTrue(gs.groupOptInPermission(tst[1], grouping + ":include"));
+        assertTrue(gs.groupOptInPermission(tst[1], grouping + ":exclude"));
     }
 
     @Test
     public void groupOptOutPermissionTest() {
-        assertTrue(gs.groupOptOutPermission(aaron, grouping + ":include"));
-        assertTrue(gs.groupOptOutPermission(aaron, grouping + ":exclude"));
+        assertTrue(gs.groupOptOutPermission(tst[1], grouping + ":include"));
+        assertTrue(gs.groupOptOutPermission(tst[1], grouping + ":exclude"));
     }
 
     @Test
@@ -87,12 +92,33 @@ public class TestGroupingsService {
         assertEquals(currentDateTime, assignedValue);
     }
 
+    @Test
+    public void getOwnersTest(){
+        Group owners = gs.getOwners(grouping, tst[0]);
 
-    //TODO add test for getOwners
-    //TODO add test for optOutPermission
-    //TODO add test for optInPermission
+        assertTrue(owners.getUsernames().contains(tst[0]));
+        assertFalse(owners.getUsernames().contains(tst[1]));
+    }
+
+
+    @Test
+    public void optOutPermissionTest(){
+        assertTrue(gs.optOutPermission(tst[0], grouping));
+    }
+
+
+    @Test
+    public void optInPermissionTest(){
+        assertTrue(gs.optInPermission(tst[0], grouping));
+    }
+
+    @Test
+    public void hasListServeTest(){
+        assertTrue(gs.hasListServe(grouping));
+    }
+
+    
     //TODO add test for groupingsIn
-    //TODO add test for hasListServe
     //TODO add test for groupingsOwned
     //TODO add test for groupingsToOptOutOf
     //TODO add test for groupingsToOptInto
@@ -114,7 +140,7 @@ public class TestGroupingsService {
     //TODO add test for membershipsResults
     //TODO add test for addMemberAs
     //TODO add test for deleteMemberAs
-    //TODO add test for getMemberAs
+    //TODO add test for getMember
     //TODO add test for allGroupings
     //TODO add test for extractGroupings
     //TODO add test for getGroupNames

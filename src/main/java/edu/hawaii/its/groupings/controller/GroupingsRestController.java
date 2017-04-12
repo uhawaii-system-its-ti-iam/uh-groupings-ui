@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import edu.hawaii.its.holiday.api.GroupingsService;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 public class GroupingsRestController {
@@ -156,7 +157,7 @@ public class GroupingsRestController {
      *          whether or not the Grouping has a list serve associated with it
      */
     @RequestMapping("/api/groupings/grouping")
-    public ResponseEntity<Grouping> getGrouping(@RequestParam String grouping, @RequestParam String username) {
+    public ResponseEntity<Grouping> grouping(@RequestParam String grouping, @RequestParam String username) {
         logger.info("Entered REST grouping...");
         return ResponseEntity
                 .ok()
@@ -169,7 +170,7 @@ public class GroupingsRestController {
 //    logger.info("Entered REST grouping...");
 //    return ResponseEntity
 //            .ok()
-//            .body(gs.getGrouping(grouping, username));
+//            .body(gs.grouping(grouping, username));
 //    }
 
 
@@ -279,4 +280,38 @@ public class GroupingsRestController {
 
 
 
+    /**
+     * eventually this is intended to give the user the ability to add a Grouping in one of the Groupings that they own,
+     * for now it will bring the user to the web page where they can submit a request to the UHGrouper staff
+     * //@param grouping:    String containing the path of the parent Grouping
+     * //@param newGrouping: String containing the name of the Grouping to be created
+     *
+     * @return information about the new Grouping and its success
+     */
+    //currently this method is not to be implemented because responsibility to create a new
+    //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
+    //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
+    @RequestMapping("/api/groupings/addGrouping")
+    public RedirectView addGrouping() {
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form");
+        return redirectView;
+    }
+
+
+    /**
+     * removes a Grouping
+     *
+     * @return information about the deleted Grouping and its success
+     */
+    //currently this method is not to be implemented because responsibility to create a new
+    //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
+    //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
+    // email its-iam-help@hawaii.edu for help in deleting a Grouping
+    @RequestMapping("/api/groupings/deleteGrouping")
+    public RedirectView deleteGrouping() {
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form");
+        return redirectView;
+    }
 }
