@@ -43,13 +43,18 @@ public class GroupingsService {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // public methods to be called from groupingsController
+    ///                                             public methods to be called from groupingsController                                                ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //TODO replace addMember and deleteMember methods with methods that do groups individually
-
-
+    /**
+     * gives a user ownersip permissions for a Grouping
+     *
+     * @param grouping: the Grouping that the user will get ownership permissions for
+     * @param username: the owner of the Grouping who will give ownership permissions to the new owner
+     * @param newOwner: the user that will become an owner of the Grouping
+     * @return information about the success of the operation
+     */
     public Object[] assignOwnership(String grouping, String username, String newOwner) {
         WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
 
@@ -75,6 +80,14 @@ public class GroupingsService {
     }
 
 
+    /**
+     * removes ownership permissions from a user
+     *
+     * @param grouping: the Grouping for which the user's ownership permissions will be removed
+     * @param username: the owner of the Grouping who will be removing ownership permissions from the owner to be removed
+     * @param ownerToRemove: the owner who will have ownership privilages removed
+     * @return information about the success of the operation
+     */
     public Object[] removeOwnership(String grouping, String username, String ownerToRemove) {
         WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
 
@@ -100,9 +113,14 @@ public class GroupingsService {
     }
 
 
+    /**
+     *
+     * @param grouping: the path of the Grouping to be searched for
+     * @param username: the user who is doing the search
+     * @return a Grouping Object containing information about the Grouping
+     */
     public Grouping getGrouping(String grouping, String username) {
         WsSubjectLookup user = makeWsSubjectLookup(username);
-
 
         WsGetMembersResults basisResults = getMembersAs(user, grouping + ":basis");
         WsGetMembersResults excludeResults = getMembersAs(user, grouping + EXCLUDE);
@@ -123,6 +141,149 @@ public class GroupingsService {
     }
 
 
+    /**
+     * @param username: username of the user to display Groupings for
+     * @return the Groupigns that the user
+     * is in
+     * owns
+     * can opt into
+     * can opt out of
+     */
+    public MyGroupings getMyGroupings(String username) {
+        MyGroupings myGroupings = new MyGroupings();
+
+        myGroupings.setGroupingsIn(groupingsIn(username));
+        myGroupings.setGroupingsOwned(groupingsOwned(username));
+        myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username));
+        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username));
+
+        return myGroupings;
+    }
+
+
+    /**
+     * if a user has permission to opt into a Grouping
+     *      this will put them in the include group
+     *      if they are in the exclude group, they will be removed from it
+     * @param username: user to be opting in
+     * @param grouping: Grouping the user will opt into
+     * @return information about the success of the operation
+     */
+    public Object[] optIn(String username, String grouping) {
+        Object[] results = new Object[6];
+
+        if (groupOptInPermission(username, grouping + INCLUDE)) {
+
+            results[3] = removeSelfOpted(grouping + EXCLUDE, username);
+            results[0] = deleteMemberAs(username, grouping + EXCLUDE, username);
+            results[1] = addMemberAs(username, grouping + INCLUDE, username);
+            results[4] = updateLastModified(grouping + EXCLUDE);
+            results[5] = updateLastModified(grouping + INCLUDE);
+            results[2] = addSelfOpted(grouping + INCLUDE, username);
+
+            return results;
+        } else {
+            throw new AccessDeniedException("user is not allowed to opt into this Grouping");
+        }
+    }
+
+
+    /**
+     * if a user has permission to opt out of a Grouping
+     *      this will put them in the exclude group
+     *      if they are in the include group, they will be removed from it
+     * @param username: user to be opting out
+     * @param grouping: Grouping the user will opt out of
+     * @return information about the success of the operation
+     */
+    public Object[] optOut(String username, String grouping) {
+        Object[] results = new Object[6];
+
+        if (groupOptInPermission(username, grouping + EXCLUDE)) {
+
+            results[3] = removeSelfOpted(grouping + INCLUDE, username);
+            results[0] = deleteMemberAs(username, grouping + INCLUDE, username);
+            results[1] = addMemberAs(username, grouping + EXCLUDE, username);
+            results[4] = updateLastModified(grouping + EXCLUDE);
+            results[5] = updateLastModified(grouping + INCLUDE);
+            results[2] = addSelfOpted(grouping + EXCLUDE, username);
+
+            return results;
+        } else {
+            throw new AccessDeniedException("user is not allowed to opt out of this Grouping");
+        }
+    }
+
+
+    /**
+     * if the user has opted into a Grouping, this will remove them from the include group
+     * @param grouping: the path to the Grouping that the user is opted into
+     * @param username: username of the user canceling optIn
+     * @return information about the success of the operation
+     */
+    public Object[] cancelOptIn(String grouping, String username) {
+        Object[] results = new Object[3];
+        String group = grouping + INCLUDE;
+
+        if (inGroup(group, username)) {
+
+            if (groupOptInPermission(username, group)) {
+
+                results[0] = deleteMemberAs(username, group, username);
+                results[2] = updateLastModified(group);
+
+                return results;
+            } else {
+                throw new AccessDeniedException("user is not allowed to opt out of 'include' group");
+            }
+        } else {
+            results[0] = "Success, user is not opted in, because user was not in 'include' group";
+        }
+        return results;
+    }
+
+
+    /**
+     * if the user has opted out of a Grouping, this will remove them from the exclude group
+     * @param grouping: the path to the Grouping that the user is opted out of
+     * @param username: username of the user canceling optOut
+     * @return information about the success of the operation
+     */
+    public Object[] cancelOptOut(String grouping, String username) {
+        Object[] results = new Object[3];
+        String group = grouping + EXCLUDE;
+
+        if (inGroup(group, username)) {
+
+            if (groupOptOutPermission(username, group)) {
+                results[0] = deleteMemberAs(username, group, username);
+
+                results[2] = updateLastModified(group);
+
+                return results;
+            } else {
+                throw new AccessDeniedException("user is not allowed to opt out of 'exclude' group");
+            }
+        } else {
+            results[0] = "Success, user is not opted out, because user was not in 'exclude' group";
+        }
+        return results;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                                              helper methods                                                                     ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     *
+     * @param grouping: the path of the Grouping to be searched for
+     * @param username: the user doing the search
+     * @return a Group of owners for the Grouping
+     */
     public Group getOwners(String grouping, String username) {
         logger.info("getOwners; grouping: " + grouping + "; username: " + username);
 
@@ -149,19 +310,19 @@ public class GroupingsService {
         return owners;
     }
 
-    /**
-     * @param username
-     * @return
-     */
-    public MyGroupings getMyGroupings(String username) {
-        MyGroupings myGroupings = new MyGroupings();
+    public boolean optOutPermission(String username, String grouping) {
 
-        myGroupings.setGroupingsIn(groupingsIn(username));
-        myGroupings.setGroupingsOwned(groupingsOwned(username));
-        myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username));
-        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username));
+        return (groupOptInPermission(username, grouping + EXCLUDE) && (!inGroup(grouping + INCLUDE, username)
+                || (groupOptOutPermission(username, grouping + INCLUDE))));
 
-        return myGroupings;
+    }
+
+
+    public boolean optInPermission(String username, String grouping) {
+
+        return (groupOptInPermission(username, grouping + INCLUDE) && (!inGroup(grouping + EXCLUDE, username)
+                || (groupOptOutPermission(username, grouping + EXCLUDE))));
+
     }
 
     public List<Grouping> groupingsIn(String username) {
@@ -171,6 +332,22 @@ public class GroupingsService {
         return makeGroupings(groupingPaths);
     }
 
+
+    public boolean hasListServe(String grouping) {
+
+        String assignType = "group";
+        String nameName = "uh-settings:attributes:for-groups:uh-grouping:destinations:listserv";
+
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
+                attributeAssignmentsResults(assignType, grouping, nameName);
+
+        if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
+            WsAttributeAssign listServeAttriubte = wsGetAttributeAssignmentsResults.getWsAttributeAssigns()[0];
+            return listServeAttriubte.getAttributeDefNameName().equals(nameName);
+        } else {
+            return false;
+        }
+    }
 
     public List<Grouping> groupingsOwned(String username) {
         WsSubjectLookup user = makeWsSubjectLookup(username);
@@ -199,11 +376,7 @@ public class GroupingsService {
 
         List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
 
-        for (String name : groupingNames) {
-            if (optOutPermission(username, name)) {
-                groupings.add(name);
-            }
-        }
+        groupings.addAll(groupingNames.stream().filter(name -> optOutPermission(username, name)).collect(Collectors.toList()));
 
         return makeGroupings(groupings);
     }
@@ -215,169 +388,10 @@ public class GroupingsService {
 
         List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
 
-        for (String name : groupingNames) {
-            if (optInPermission(username, name)) {
-                groupings.add(name);
-            }
-        }
+        groupings.addAll(groupingNames.stream().filter(name -> optInPermission(username, name)).collect(Collectors.toList()));
 
         return makeGroupings(groupings);
     }
-
-
-    public Object[] optIn(String username, String grouping) {
-        Object[] results = new Object[6];
-
-        if (groupOptInPermission(username, grouping + INCLUDE)) {
-
-            results[3] = removeSelfOpted(grouping + EXCLUDE, username);
-            results[0] = deleteMemberAs(username, grouping + EXCLUDE, username);
-            results[1] = addMemberAs(username, grouping + INCLUDE, username);
-            results[4] = updateLastModified(grouping + EXCLUDE);
-            results[5] = updateLastModified(grouping + INCLUDE);
-            results[2] = addSelfOpted(grouping + INCLUDE, username);
-
-            return results;
-        } else {
-            throw new AccessDeniedException("user is not allowed to opt into this Grouping");
-        }
-    }
-
-
-    public Object[] optOut(String username, String grouping) {
-        Object[] results = new Object[6];
-
-        if (groupOptInPermission(username, grouping + EXCLUDE)) {
-
-            results[3] = removeSelfOpted(grouping + INCLUDE, username);
-            results[0] = deleteMemberAs(username, grouping + INCLUDE, username);
-            results[1] = addMemberAs(username, grouping + EXCLUDE, username);
-            results[4] = updateLastModified(grouping + EXCLUDE);
-            results[5] = updateLastModified(grouping + INCLUDE);
-            results[2] = addSelfOpted(grouping + EXCLUDE, username);
-
-            return results;
-        } else {
-            throw new AccessDeniedException("user is not allowed to opt out of this Grouping");
-        }
-    }
-
-
-    public Object[] cancelOptIn(String grouping, String username) {
-        Object[] results = new Object[3];
-        String group = grouping + INCLUDE;
-
-        if (inGroup(group, username)) {
-
-            WsSubjectLookup lookup = makeWsSubjectLookup(username);
-            WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(lookup, group);
-            String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
-
-            String privilegeName = "optout";
-            WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult =
-                    grouperPrivilegesLite(username, group, privilegeName);
-
-            if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
-
-                if (checkSelfOpted(group, lookup)) {
-                    String operation = "remove_attr";
-                    String uuid = GroupingsService.UUID_USERNAME;
-                    results[1] = assignAttributesResults(operation, uuid, membershipID);
-                }
-                results[0] = deleteMember(group, username);
-                results[2] = updateLastModified(group);
-
-                return results;
-            } else {
-                throw new AccessDeniedException("user is not allowed to opt out of 'include' group");
-            }
-
-        } else {
-            results[0] = "Success, user is not opted in, because user was not in 'include' group";
-        }
-        return results;
-    }
-
-
-    public Object[] cancelOptOut(String grouping, String username) {
-        Object[] results = new Object[3];
-        String group = grouping + EXCLUDE;
-
-        if (inGroup(group, username)) {
-
-            WsSubjectLookup lookup = makeWsSubjectLookup(username);
-            WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(lookup, group);
-            String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
-
-
-            String privilegeName = "optout";
-            WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult =
-                    grouperPrivilegesLite(lookup.getSubjectIdentifier(), group, privilegeName);
-
-            if (wsGetGrouperPrivilegesLiteResult.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED")) {
-                if (checkSelfOpted(group, lookup)) {
-                    String operation = "remove_attr";
-                    String uuid = GroupingsService.UUID_USERNAME;
-                    results[1] = assignAttributesResults(operation, uuid, membershipID);
-                }
-                results[0] = deleteMember(group, username);
-
-                results[2] = updateLastModified(group);
-
-                return results;
-            } else {
-                throw new AccessDeniedException("user is not allowed to opt out of 'exclude' group");
-            }
-        } else {
-            results[0] = "Success, user is not opted out, because user was not in 'exclude' group";
-        }
-        return results;
-    }
-
-
-    public boolean optOutPermission(String username, String grouping) {
-        WsSubjectLookup lookup = makeWsSubjectLookup(username);
-
-        return (groupOptInPermission(username, grouping + EXCLUDE) && (!inGroup(grouping + INCLUDE, username)
-                || (groupOptOutPermission(username, grouping + INCLUDE))));
-
-    }
-
-
-    public boolean optInPermission(String username, String grouping) {
-        WsSubjectLookup lookup = makeWsSubjectLookup(username);
-
-        return (groupOptInPermission(username, grouping + INCLUDE) && (!inGroup(grouping + EXCLUDE, username)
-                || (groupOptOutPermission(username, grouping + EXCLUDE))));
-
-    }
-
-
-    public boolean hasListServe(String grouping) {
-
-        String assignType = "group";
-        String nameName = "uh-settings:attributes:for-groups:uh-grouping:destinations:listserv";
-
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
-                attributeAssignmentsResults(assignType, grouping, nameName);
-
-        if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
-            WsAttributeAssign listServeAttriubte = wsGetAttributeAssignmentsResults.getWsAttributeAssigns()[0];
-            return listServeAttriubte.getAttributeDefNameName().equals(nameName);
-        } else {
-            return false;
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // helper methods
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    //todo make all helper methods public
-    //todo change tests for public methods
 
     /**
      * adds the self-opted attribute to a membership (combination of a group and a subject)
@@ -707,29 +721,8 @@ public class GroupingsService {
                 .assignGroupName(group)
                 .addSubjectIdentifier(userToDelete)
                 .execute();
-        //TODO check if a membership attribute remains after a membership is deleted and then recreated
     }
 
-    // Helper method.
-    public WsDeleteMemberResults deleteMember(String group, String user) {
-        logger.info("deleteMember; group: " + group + "; user: " + user);
-
-        return new GcDeleteMember()
-                .assignGroupName(group)
-                .addSubjectIdentifier(user)
-                .execute();
-        //TODO check if a membership attribute remains after a membership is deleted and then recreated
-    }
-
-    // Helper method.
-    public WsAddMemberResults addMember(String group, String user) {
-        logger.info("addMember; group: " + group + "; user: " + user);
-
-        return new GcAddMember()
-                .assignGroupName(group)
-                .addSubjectIdentifier(user)
-                .execute();
-    }
 
     // Helper method.
     public WsGetMembersResults getMembersAs(WsSubjectLookup user, String group) {
@@ -887,42 +880,41 @@ public class GroupingsService {
 
         List<String> groupNames = extractGroupNames(groups.toArray(new WsGroup[groups.size()]));
 
-        List<String> groupingNames = extractGroupingNames(groupNames.toArray(new String[groupNames.size()]));
-        return groupingNames;
+        return extractGroupingNames(groupNames.toArray(new String[groupNames.size()]));
     }
 
-    // ////////////////////////////////////////////////////////////////////////
-    // Start of reworking.
-
-    public List<Owner> findOwners(String username, String groupingName) {
-        logger.info("findOwners; username: " + username + "; groupingName" + groupingName);
-
-        List<Owner> owners = new ArrayList<>();
-
-        try {
-            WsGetGrouperPrivilegesLiteResult results =
-                    new GcGetGrouperPrivilegesLite()
-                            .assignActAsSubject(makeWsSubjectLookup(username))
-                            .assignGroupName(groupingName + INCLUDE)
-                            .assignPrivilegeName("update")
-                            .addSubjectAttributeName("uid")
-                            .execute();
-
-            WsGrouperPrivilegeResult[] privilegeResults = results.getPrivilegeResults();
-            if (privilegeResults != null && privilegeResults.length > 0) {
-                for (WsGrouperPrivilegeResult o : privilegeResults) {
-                    Owner owner = new Owner(o.getPrivilegeName());
-                    owner.setName(o.getOwnerSubject().getName());
-                    owner.setUhuuid(o.getOwnerSubject().getId());
-                    owner.setUid(o.getWsSubject().getAttributeValues()[0]);
-                    owners.add(owner);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return owners;
-    }
+//    // ////////////////////////////////////////////////////////////////////////
+//    // Start of reworking.
+//
+//    public List<Owner> findOwners(String username, String groupingName) {
+//        logger.info("findOwners; username: " + username + "; groupingName" + groupingName);
+//
+//        List<Owner> owners = new ArrayList<>();
+//
+//        try {
+//            WsGetGrouperPrivilegesLiteResult results =
+//                    new GcGetGrouperPrivilegesLite()
+//                            .assignActAsSubject(makeWsSubjectLookup(username))
+//                            .assignGroupName(groupingName + INCLUDE)
+//                            .assignPrivilegeName("update")
+//                            .addSubjectAttributeName("uid")
+//                            .execute();
+//
+//            WsGrouperPrivilegeResult[] privilegeResults = results.getPrivilegeResults();
+//            if (privilegeResults != null && privilegeResults.length > 0) {
+//                for (WsGrouperPrivilegeResult o : privilegeResults) {
+//                    Owner owner = new Owner(o.getPrivilegeName());
+//                    owner.setName(o.getOwnerSubject().getName());
+//                    owner.setUhuuid(o.getOwnerSubject().getId());
+//                    owner.setUid(o.getWsSubject().getAttributeValues()[0]);
+//                    owners.add(owner);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return owners;
+//    }
 
 }

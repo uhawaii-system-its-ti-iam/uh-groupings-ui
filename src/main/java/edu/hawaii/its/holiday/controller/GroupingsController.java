@@ -26,26 +26,60 @@ public class GroupingsController {
     private GroupingsService gs;
 
 
+    /**
+     * adds a member to the include group of the Grouping who's path is in 'grouping'
+     * if that member is in the exclude group, they will be removed from it
+     * @param grouping: path to the Grouping who's include group the new member will be added to
+     * @param username: username of the Grouping owner preforming the operation
+     * @param userToAdd: username of the new member to be added to the include group
+     * @return information about the success of the operation
+     */
     @RequestMapping("/addMemberToIncludeGroup")
     public Object addMemberToIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
+        logger.info("Entered REST addMemberToIncludeGroup...");
         return gs.addMemberAs(username, grouping + ":include", userToAdd);
     }
 
 
+    /**
+     * adds a member to the exclude group of the Grouping who's path is in 'grouping'
+     * if that member is in the include group, they will be removed from it
+     * @param grouping: path to the Grouping who's exclude group the new member will be added to
+     * @param username: username of the Grouping owner preforming the operation
+     * @param userToAdd: username of the new member to be added to the exclude group
+     * @return information about the success of the operation
+     */
     @RequestMapping("/addMemberToExcludeGroup")
     public Object addMemberToExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
+        logger.info("Entered REST addMemberToExcludeGroup...");
         return gs.addMemberAs(username, grouping + ":exclude", userToAdd);
     }
 
 
+    /**
+     * deletes a member in the include group of the Grouping who's path is in 'grouping'
+     * @param grouping: path to the Grouping who's include group contains the member to be deleted
+     * @param username: username of the Grouping owner preforming the operation
+     * @param userToDelete: username of the user to be deleted from the include group
+     * @return information about the success of the operation
+     */
     @RequestMapping("/deleteMemberFromIncludeGroup")
     public Object deleteMemberFromIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
+        logger.info("Entered REST deleteMemberFromIncludeGroup...");
         return gs.deleteMemberAs(username, grouping + ":include", userToDelete);
     }
 
 
+    /**
+     * deletes a member in the exclude group of the Grouping who's path is in 'grouping'
+     * @param grouping: path to the Grouping who's exclude group contains the member to be deleted
+     * @param username: username of the Grouping owner preforming the operation
+     * @param userToDelete: username of the user to be deleted from the exclude group
+     * @return information about the success of the operation
+     */
     @RequestMapping("/deleteMemberFromExcludeGroup")
     public Object deleteMemberFromExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
+        logger.info("Entered REST deleteMemberFromExcludeGroup...");
         return gs.deleteMemberAs(username, grouping + ":exclude", userToDelete);
     }
 
@@ -64,6 +98,7 @@ public class GroupingsController {
      */
     @RequestMapping("/assignOwnership")
     public Object[] assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
+        logger.info("Entered REST assignOwnership...");
         return gs.assignOwnership(grouping, username, newOwner);
     }
 
@@ -81,6 +116,7 @@ public class GroupingsController {
      */
     @RequestMapping("/removeOwnership")
     public Object[] removeOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String ownerToRemove) {
+        logger.info("Entered REST removeOwnership...");
         return gs.removeOwnership(grouping, username, ownerToRemove);
     }
 
@@ -98,8 +134,9 @@ public class GroupingsController {
      *          path of the Grouping
      *          whether or not the Grouping has a list serve associated with it
      */
-    @RequestMapping("/Grouping")
+    @RequestMapping("/grouping")
     public Grouping getGrouping(@RequestParam String grouping, @RequestParam String username) {
+        logger.info("Entered REST grouping...");
         return gs.getGrouping(grouping, username);
     }
 
@@ -115,6 +152,7 @@ public class GroupingsController {
      */
     @RequestMapping("/myGroupings")
     public MyGroupings myGroupings(@RequestParam String username){
+        logger.info("Entered REST myGroupings...");
         return gs.getMyGroupings(username);
     }
 
@@ -129,6 +167,7 @@ public class GroupingsController {
      */
     @RequestMapping("/optIn")
     public Object[] optIn(@RequestParam String username, @RequestParam String grouping) {
+        logger.info("Entered REST optIn...");
         return gs.optIn(username, grouping);
     }
 
@@ -144,6 +183,7 @@ public class GroupingsController {
      */
     @RequestMapping("/optOut")
     public Object[] optOut(@RequestParam String username, @RequestParam String grouping) {
+        logger.info("Entered REST optOut...");
         return gs.optOut(username, grouping);
     }
 
@@ -161,6 +201,7 @@ public class GroupingsController {
      */
     @RequestMapping("/cancelOptIn")
     public Object[] cancelOptIn(@RequestParam String grouping, @RequestParam String username) {
+        logger.info("Entered REST cancelOptIn...");
         return gs.cancelOptIn(grouping, username);
     }
 
@@ -179,6 +220,7 @@ public class GroupingsController {
      */
     @RequestMapping("/cancelOptOut")
     public Object[] cancelOptOut(@RequestParam String grouping, @RequestParam String username) {
+        logger.info("Entered REST cancelOptOut...");
         return gs.cancelOptOut(grouping, username);
     }
 
