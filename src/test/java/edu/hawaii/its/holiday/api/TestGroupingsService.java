@@ -100,13 +100,13 @@ public class TestGroupingsService {
 
     @Test
     public void optOutPermissionTest(){
-        assertTrue(gs.optOutPermission(tst[0], grouping));
+        assertTrue(gs.optOutPermission(grouping));
     }
 
 
     @Test
     public void optInPermissionTest(){
-        assertTrue(gs.optInPermission(tst[0], grouping));
+        assertTrue(gs.optInPermission(grouping));
     }
 
     @Test

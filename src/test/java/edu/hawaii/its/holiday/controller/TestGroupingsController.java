@@ -273,7 +273,7 @@ public class TestGroupingsController {
         assertFalse(gs.inGroup(grouping, tst[4]));
         assertTrue(gs.inGroup(grouping + ":basis", tst[5]));
 
-        gc.optIn(tst[4], grouping);
+        gc.optIn(grouping, tst[4]);
         assertTrue(gs.checkSelfOpted(include, tstLookup[4]));
         assertFalse(gs.checkSelfOpted(exclude, tstLookup[4]));
         assertTrue(gs.inGroup(grouping, tst[4]));
@@ -294,7 +294,7 @@ public class TestGroupingsController {
     public void optOutTest() {
         assertTrue(gs.inGroup(grouping, tst[5]));
 
-        gc.optOut(tst[5], grouping);
+        gc.optOut(grouping, tst[5]);
         assertTrue(gs.checkSelfOpted(exclude, tstLookup[5]));
         assertFalse(gs.checkSelfOpted(include, tstLookup[5]));
         assertFalse(gs.inGroup(grouping, tst[5]));

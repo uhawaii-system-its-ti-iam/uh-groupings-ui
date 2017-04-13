@@ -185,7 +185,7 @@ public class GroupingsController {
      * @return information about the success of opting in
      */
     @RequestMapping("/optIn")
-    public ResponseEntity<Object[]> optIn(@RequestParam String username, @RequestParam String grouping) {
+    public ResponseEntity<Object[]> optIn(@RequestParam String grouping, @RequestParam String username) {
         logger.info("Entered REST optIn...");
         return ResponseEntity
                 .ok()
@@ -203,7 +203,7 @@ public class GroupingsController {
      * @return information about the success of opting out
      */
     @RequestMapping("/optOut")
-    public ResponseEntity<Object[]> optOut(@RequestParam String username, @RequestParam String grouping) {
+    public ResponseEntity<Object[]> optOut(@RequestParam String grouping, @RequestParam String username) {
         logger.info("Entered REST optOut...");
         return ResponseEntity
                 .ok()
