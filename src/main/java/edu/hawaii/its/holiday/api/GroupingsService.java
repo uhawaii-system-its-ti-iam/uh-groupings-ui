@@ -497,7 +497,7 @@ public class GroupingsService {
                         .assignPrivilegeName("update")
                         .assignPrivilegeName("read")
                         .assignGroupName(grouping + INCLUDE)
-                        .assignGroupName(grouping + INCLUDE)
+                        .assignGroupName(grouping + EXCLUDE)
                         .addSubjectAttributeName("uid")
                         .execute();
 
