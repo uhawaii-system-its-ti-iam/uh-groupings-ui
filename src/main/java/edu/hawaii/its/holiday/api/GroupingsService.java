@@ -121,15 +121,28 @@ public class GroupingsService {
     public Grouping getGrouping(String grouping, String username) {
         WsSubjectLookup user = makeWsSubjectLookup(username);
 
+        Group includeGroup = new Group();
+        Group excludeGroup = new Group();
+        Group basisGroup = new Group();
+        Group basisPlusIncludeMinusExcludeGroup = new Group();
+
         WsGetMembersResults basisResults = getMembers(user, grouping + ":basis");
         WsGetMembersResults excludeResults = getMembers(user, grouping + EXCLUDE);
         WsGetMembersResults includeResults = getMembers(user, grouping + INCLUDE);
         WsGetMembersResults basisPlusIncludeMinusExcludeResults = getMembers(user, grouping);
 
-        Group includeGroup = makeGroup(includeResults.getResults()[0].getWsSubjects());
-        Group excludeGroup = makeGroup(excludeResults.getResults()[0].getWsSubjects());
-        Group basisGroup = makeGroup(basisResults.getResults()[0].getWsSubjects());
-        Group basisPlusIncludeMinusExcludeGroup = makeGroup(basisPlusIncludeMinusExcludeResults.getResults()[0].getWsSubjects());
+        if(includeResults.getResults() != null) {
+            includeGroup = makeGroup(includeResults.getResults()[0].getWsSubjects());
+        }
+        if(excludeResults.getResults() != null) {
+            excludeGroup = makeGroup(excludeResults.getResults()[0].getWsSubjects());
+        }
+        if(basisResults.getResults() != null){
+            basisGroup = makeGroup(basisResults.getResults()[0].getWsSubjects());
+        }
+        if(basisPlusIncludeMinusExcludeResults.getResults() != null) {
+            basisPlusIncludeMinusExcludeGroup = makeGroup(basisPlusIncludeMinusExcludeResults.getResults()[0].getWsSubjects());
+        }
         Group owners = getOwners(grouping, username);
 
         Grouping members = new Grouping(basisGroup, excludeGroup, includeGroup, basisPlusIncludeMinusExcludeGroup, owners);
