@@ -1,17 +1,11 @@
 package edu.hawaii.its.holiday.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
-import edu.hawaii.its.holiday.api.type.Group;
+import edu.hawaii.its.holiday.api.GroupingsService;
+import edu.hawaii.its.holiday.api.type.Grouping;
+import edu.hawaii.its.holiday.api.type.MyGroupings;
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,30 +15,27 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.holiday.api.type.Grouping;
-import edu.hawaii.its.holiday.api.GroupingsService;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+import javax.annotation.PostConstruct;
+
+import static org.junit.Assert.*;
 
 /**
- * Created by zac on 1/31/17.
+ * TestGroupingsController.java
+ *
+ * Created by zknoebel on 1/31/17.
  */
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SpringBootWebApplication.class })
+@SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsController {
 
     private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
     private String include = grouping + ":include";
     private String exclude = grouping + ":exclude";
-    private String aaron = "aaronvil";
-    private String zac = "zknoebel";
+    private String[] tst = new String[6];
+    private String[] tstName = {"tst01fname", "tst02name", "tst03name", "tst04name", "tst05name", "tst06name"};
 
-    private WsSubjectLookup lookupAaron;
+    private WsSubjectLookup[] tstLookup = new WsSubjectLookup[6];
 
     @Autowired
     private GroupingsService gs;
@@ -67,7 +58,10 @@ public class TestGroupingsController {
 
     @Before
     public void setUp() {
-        lookupAaron = gs.makeWsSubjectLookup(aaron);
+        for (int i = 0; i < 6; i++) {
+            tst[i] = "iamtst0" + (i + 1);
+            tstLookup[i] = gs.makeWsSubjectLookup(tst[i]);
+        }
     }
 
     @Test
@@ -76,254 +70,241 @@ public class TestGroupingsController {
         assertNotNull(gc);
     }
 
-    @Test
-    public void addGroupingTest() {
-        //add actual test when addGrouping method gets implemented
-        assertTrue(true);
-    }
-
-    @Test
-    public void addMemberTest() {
-        Object[] addMemberResults = gc.addMember(grouping, zac, aaron);
-        WsAddMemberResults wsAddMemberResults = (WsAddMemberResults) addMemberResults[0];
-        WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[1];
-        assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
-        assertEquals("SUCCESS", wsDeleteMemberResults.getResultMetadata().getResultCode());
-    }
 
     @Test
     public void assignOwnershipTest() {
-        gc.assignOwnership(grouping, zac, aaron);
+        gc.assignOwnership(grouping, tst[0], tst[1]);
 
-        String group = grouping + ":include";
+        String group = include;
         String privilegeName = "update";
 
         WsGetGrouperPrivilegesLiteResult updateInclude =
-                gs.grouperPrivilegesLite(aaron, group, privilegeName);
+                gs.grouperPrivilegesLite(tst[1], group, privilegeName);
 
-        group = grouping + ":exclude";
+        group = exclude;
         WsGetGrouperPrivilegesLiteResult updateExclude =
-                gs.grouperPrivilegesLite(aaron, group, privilegeName);
+                gs.grouperPrivilegesLite(tst[1], group, privilegeName);
 
         assertTrue(updateInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
         assertTrue(updateExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
 
         //reset Grouping
-        gc.removeOwnership(grouping, zac, aaron);
-    }
-
-    @Test
-    public void deleteGroupingTest() {
-        //add actual test when deleteGrouping method gets implemented
-        assertTrue(true);
-    }
-
-    @Test
-    public void deleteMemberTest() {
-        Object[] addMemberResults = gc.deleteMember(grouping, zac, aaron);
-        WsAddMemberResults wsAddMemberResults = (WsAddMemberResults) addMemberResults[1];
-        WsDeleteMemberResults wsDeleteMemberResults = (WsDeleteMemberResults) addMemberResults[0];
-        assertEquals("SUCCESS", wsAddMemberResults.getResultMetadata().getResultCode());
-        assertEquals("SUCCESS", wsDeleteMemberResults.getResultMetadata().getResultCode());
-
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
+        gc.removeOwnership(grouping, tst[0], tst[1]);
     }
 
     @Test
     public void removeOwnershipTest() {
-        gc.assignOwnership(grouping, zac, aaron);
+        gc.assignOwnership(grouping, tst[0], tst[1]);
 
-        String group = grouping + ":include";
+        String group = include;
         String privilegeName = "update";
 
         WsGetGrouperPrivilegesLiteResult updateInclude =
-                gs.grouperPrivilegesLite(aaron, group, privilegeName);
+                gs.grouperPrivilegesLite(tst[1], group, privilegeName);
 
-        group = grouping + ":exclude";
+        group = exclude;
         WsGetGrouperPrivilegesLiteResult updateExclude =
-                gs.grouperPrivilegesLite(aaron, group, privilegeName);
+                gs.grouperPrivilegesLite(tst[1], group, privilegeName);
 
         assertTrue(updateInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
         assertTrue(updateExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
 
-        gc.removeOwnership(grouping, zac, aaron);
+        gc.removeOwnership(grouping, tst[0], tst[1]);
 
-        group = grouping + ":include";
+        group = include;
 
-        updateInclude = gs.grouperPrivilegesLite(aaron, group, privilegeName);
+        updateInclude = gs.grouperPrivilegesLite(tst[1], group, privilegeName);
 
-        group = grouping + ":exclude";
-        updateExclude = gs.grouperPrivilegesLite(aaron, group, privilegeName);
+        group = exclude;
+        updateExclude = gs.grouperPrivilegesLite(tst[1], group, privilegeName);
 
         assertFalse(updateInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
         assertFalse(updateExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
     }
 
     @Test
-    public void getGroupingTest() {
-        Grouping grouping = gc.getGrouping(this.grouping, zac);
+    public void addMemberTest(){
 
-        assertTrue(grouping.getBasis().getNames().contains("tst04name"));
-        assertTrue(grouping.getBasis().getNames().contains("tst05name"));
-        assertTrue(grouping.getBasis().getNames().contains("tst06name"));
-        assertTrue(grouping.getInclude().getNames().contains("tst01fname"));
-        assertTrue(grouping.getInclude().getNames().contains("tst02name"));
-        assertTrue(grouping.getInclude().getNames().contains("tst03name"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst01fname"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst02name"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst03name"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst04name"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst05name"));
-        assertTrue(grouping.getBasisPlusInclude().getNames().contains("tst06name"));
-        assertTrue(grouping.getExclude().getNames().contains("tst04name"));
-        assertTrue(grouping.getExclude().getNames().contains("tst05name"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains("tst01fname"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains("tst02name"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains("tst03name"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains("tst06name"));
+        assertTrue(gs.inGroup(exclude, tst[4]));
 
+        gc.addMemberToIncludeGroup(grouping, tst[0], tst[4]);
+        assertFalse(gs.inGroup(exclude, tst[4]));
+        assertTrue(gs.inGroup(include, tst[4]));
 
-        assertTrue(grouping.getBasis().getUsernames().contains("iamtst04"));
-        assertTrue(grouping.getBasis().getUsernames().contains("iamtst05"));
-        assertTrue(grouping.getBasis().getUsernames().contains("iamtst06"));
-        assertTrue(grouping.getInclude().getUsernames().contains("iamtst01"));
-        assertTrue(grouping.getInclude().getUsernames().contains("iamtst02"));
-        assertTrue(grouping.getInclude().getUsernames().contains("iamtst03"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst01"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst02"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst03"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst04"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst05"));
-        assertTrue(grouping.getBasisPlusInclude().getUsernames().contains("iamtst06"));
-        assertTrue(grouping.getExclude().getUsernames().contains("iamtst04"));
-        assertTrue(grouping.getExclude().getUsernames().contains("iamtst05"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst01"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst02"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst03"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains("iamtst06"));
-
-        assertTrue(grouping.getBasis().getUuids().contains("iamtst04"));
-        assertTrue(grouping.getBasis().getUuids().contains("iamtst05"));
-        assertTrue(grouping.getBasis().getUuids().contains("iamtst06"));
-        assertTrue(grouping.getInclude().getUuids().contains("iamtst01"));
-        assertTrue(grouping.getInclude().getUuids().contains("iamtst02"));
-        assertTrue(grouping.getInclude().getUuids().contains("iamtst03"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst01"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst02"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst03"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst04"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst05"));
-        assertTrue(grouping.getBasisPlusInclude().getUuids().contains("iamtst06"));
-        assertTrue(grouping.getExclude().getUuids().contains("iamtst04"));
-        assertTrue(grouping.getExclude().getUuids().contains("iamtst05"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst01"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst02"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst03"));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains("iamtst06"));
-
-        assertTrue(grouping.getOwners().getNames().contains("Zachery S Knoebel"));
-        assertTrue(grouping.getOwners().getNames().contains("UH Groupings API"));
+        gc.addMemberToExcludeGroup(grouping, tst[0], tst[4]);
+        assertFalse(gs.inGroup(include, tst[4]));
+        assertTrue(gs.inGroup(exclude, tst[4]));
     }
 
-//    @Test
-//    public void myGroupingsTest(){
-//
-//    }
-//
-//    @Test
-//    public void groupingsInTest() {
-//        List<Grouping> groupings = gc.groupingsIn(aaron);
-//        List<String> paths = new ArrayList<>();
-//        for(Grouping grouping: groupings){
-//            paths.add(grouping.getPath());
-//        }
-//        assertTrue(paths.contains(grouping));
-//    }
-//
-//    @Test
-//    public void groupingsOwnedTest() {
-//        List<Grouping> groupings = gc.groupingsOwned(zac);
-//        List<String> paths = new ArrayList<>();
-//        for(Grouping grouping: groupings){
-//            paths.add(grouping.getPath());
-//        }
-//        assertTrue(paths.contains(grouping));
-//    }
+    @Test
+    public void deleteMemberTest(){
+
+        assertTrue(gs.inGroup(exclude, tst[4]));
+        gc.deleteMemberFromExcludeGroup(grouping, tst[0], tst[4]);
+        assertFalse(gs.inGroup(exclude, tst[4]));
+        assertTrue(gs.inGroup(grouping, tst[4]));
+
+
+        assertTrue(gs.inGroup(include, tst[1]));
+        gc.deleteMemberFromIncludeGroup(grouping, tst[0], tst[1]);
+        assertFalse(gs.inGroup(exclude, tst[1]));
+        assertFalse(gs.inGroup(include, tst[1]));
+
+        //reset Grouping
+        gc.addMemberToExcludeGroup(grouping, tst[0], tst[4]);
+        gc.addMemberToIncludeGroup(grouping, tst[0], tst[1]);
+    }
+
+    @Test
+    public void getGroupingTest() {
+        Grouping grouping = gc.getGrouping(this.grouping, tst[0]).getBody();
+
+        assertTrue(grouping.getBasis().getNames().contains(tstName[3]));
+        assertTrue(grouping.getBasis().getNames().contains(tstName[4]));
+        assertTrue(grouping.getBasis().getNames().contains(tstName[5]));
+        assertTrue(grouping.getInclude().getNames().contains(tstName[0]));
+        assertTrue(grouping.getInclude().getNames().contains(tstName[1]));
+        assertTrue(grouping.getInclude().getNames().contains(tstName[2]));
+        assertTrue(grouping.getExclude().getNames().contains(tstName[3]));
+        assertTrue(grouping.getExclude().getNames().contains(tstName[4]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains(tstName[0]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains(tstName[1]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains(tstName[2]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains(tstName[5]));
+
+
+        assertTrue(grouping.getBasis().getUsernames().contains(tst[3]));
+        assertTrue(grouping.getBasis().getUsernames().contains(tst[4]));
+        assertTrue(grouping.getBasis().getUsernames().contains(tst[5]));
+        assertTrue(grouping.getInclude().getUsernames().contains(tst[0]));
+        assertTrue(grouping.getInclude().getUsernames().contains(tst[1]));
+        assertTrue(grouping.getInclude().getUsernames().contains(tst[2]));
+        assertTrue(grouping.getExclude().getUsernames().contains(tst[3]));
+        assertTrue(grouping.getExclude().getUsernames().contains(tst[4]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[0]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[1]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[2]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[5]));
+
+        assertTrue(grouping.getBasis().getUuids().contains(tst[3]));
+        assertTrue(grouping.getBasis().getUuids().contains(tst[4]));
+        assertTrue(grouping.getBasis().getUuids().contains(tst[5]));
+        assertTrue(grouping.getInclude().getUuids().contains(tst[0]));
+        assertTrue(grouping.getInclude().getUuids().contains(tst[1]));
+        assertTrue(grouping.getInclude().getUuids().contains(tst[2]));
+        assertTrue(grouping.getExclude().getUuids().contains(tst[3]));
+        assertTrue(grouping.getExclude().getUuids().contains(tst[4]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains(tst[0]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains(tst[1]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains(tst[2]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains(tst[5]));
+
+        assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
+        gc.assignOwnership(grouping.getPath(), tst[0], tst[5]);
+        grouping = gc.getGrouping(this.grouping, tst[0]).getBody();
+        assertTrue(grouping.getOwners().getNames().contains(tstName[5]));
+        gc.removeOwnership(grouping.getPath(), tst[0], tst[5]);
+        grouping = gc.getGrouping(this.grouping, tst[0]).getBody();
+        assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
+    }
+
+    @Test
+    public void myGroupingsTest(){
+        MyGroupings groupings = gc.myGroupings(tst[0]).getBody();
+        boolean inGrouping = false;
+        boolean canOptin = false;
+        boolean canOptOut = false;
+        boolean ownsGrouping = false;
+
+        for (Grouping grouping : groupings.getGroupingsIn()){
+            if(grouping.getPath().contains(this.grouping)){
+                inGrouping = true;
+            }
+        }
+        for (Grouping grouping : groupings.getGroupingsToOptInTo()) {
+            if (grouping.getPath().contains(this.grouping)) {
+                canOptin = true;
+            }
+        }
+        for (Grouping grouping : groupings.getGroupingsToOptOutOf()) {
+            if (grouping.getPath().contains(this.grouping)) {
+                canOptOut = true;
+            }
+        }
+        for (Grouping grouping : groupings.getGroupingsOwned()) {
+            if (grouping.getPath().contains(this.grouping)) {
+                ownsGrouping = true;
+            }
+        }
+
+        assertTrue(inGrouping);
+        assertTrue(canOptin);
+        assertTrue(canOptOut);
+        assertTrue(ownsGrouping);
+
+    }
+
+
+    @Test
+    public void myGroupingsTest2(){
+        MyGroupings groupings = gc.myGroupings(tst[4]).getBody();
+        boolean inGrouping = false;
+        boolean ownsGrouping = false;
+
+        for (Grouping grouping : groupings.getGroupingsIn()){
+            if(grouping.getPath().contains(this.grouping)){
+                inGrouping = true;
+            }
+        }
+        for (Grouping grouping : groupings.getGroupingsOwned()) {
+            if (grouping.getPath().contains(this.grouping)) {
+                ownsGrouping = true;
+            }
+        }
+
+        assertFalse(inGrouping);
+        assertFalse(ownsGrouping);
+
+    }
+
 
     @Test
     public void optInTest() {
-        gc.optIn(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(include, lookupAaron));
-        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
-        assertTrue(gs.inGroup(grouping + ":basis+include", aaron));
+        assertFalse(gs.inGroup(grouping, tst[4]));
+        assertTrue(gs.inGroup(grouping + ":basis", tst[5]));
+
+        gc.optIn(tst[4], grouping);
+        assertTrue(gs.checkSelfOpted(include, tstLookup[4]));
+        assertFalse(gs.checkSelfOpted(exclude, tstLookup[4]));
+        assertTrue(gs.inGroup(grouping, tst[4]));
+
+        gc.cancelOptIn(grouping, tst[4]);
+        assertFalse(gs.checkSelfOpted(exclude, tstLookup[4]));
+        assertFalse(gs.checkSelfOpted(include, tstLookup[4]));
+
+        assertTrue(gs.inGroup(grouping, tst[5]));
+
+        //reset Grouping
+        gc.addMemberToExcludeGroup(grouping, tst[0], tst[4]);
+        assertFalse(gs.inGroup(grouping, tst[4]));
     }
+    
 
     @Test
     public void optOutTest() {
-        gc.optOut(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
-        assertFalse(gs.checkSelfOpted(include, lookupAaron));
-        assertFalse(gs.inGroup(grouping + ":basis+include", aaron));
+        assertTrue(gs.inGroup(grouping, tst[5]));
 
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
+        gc.optOut(tst[5], grouping);
+        assertTrue(gs.checkSelfOpted(exclude, tstLookup[5]));
+        assertFalse(gs.checkSelfOpted(include, tstLookup[5]));
+        assertFalse(gs.inGroup(grouping, tst[5]));
+
+        gc.cancelOptOut(grouping, tst[5]);
+        assertFalse(gs.checkSelfOpted(exclude, tstLookup[5]));
+        assertFalse(gs.checkSelfOpted(include, tstLookup[5]));
+
+        assertTrue(gs.inGroup(grouping + ":basis+include", tst[5]));
     }
 
-    @Test
-    public void cancelOptOutTest() {
-        gc.optOut(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(exclude, lookupAaron));
-        gc.cancelOptOut(grouping, aaron);
-        assertFalse(gs.checkSelfOpted(exclude, lookupAaron));
 
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
-    }
-
-    @Test
-    public void cancelOptInTest() {
-        gc.optIn(aaron, grouping);
-        assertTrue(gs.checkSelfOpted(include, lookupAaron));
-        gc.cancelOptIn(grouping, aaron);
-        assertFalse(gs.checkSelfOpted(include, lookupAaron));
-
-        //reset Grouping
-        gc.addMember(grouping, zac, aaron);
-    }
-
-//    @Test
-//    public void optOutPermissionTest() {
-//        assertTrue(gc.optOutPermission(aaron, grouping));
-//    }
-//
-//    @Test
-//    public void optInPerissionTest() {
-//        assertTrue(gc.optInPermission(aaron, grouping));
-//    }
-//
-//    @Test
-//    public void groupingsToOptOutOfTest() {
-//        List<Grouping> groupings = gc.groupingsToOptOutOf(aaron);
-//        List<String> paths = new ArrayList<>();
-//        for(Grouping grouping: groupings){
-//            paths.add(grouping.getPath());
-//        }
-//        assertTrue(paths.contains(grouping));
-//    }
-//
-//    @Test
-//    public void groupingsToOptIntoTest() {
-//        List<Grouping> groupings = gc.groupingsToOptInto(aaron);
-//        List<String> paths = new ArrayList<>();
-//        for(Grouping grouping: groupings){
-//            paths.add(grouping.getPath());
-//        }
-//        assertTrue(paths.contains(grouping));
-//    }
-//
-//    @Test
-//    public void hasListServeTest() {
-//        assertTrue(gc.hasListServe(grouping));
-//    }
 }

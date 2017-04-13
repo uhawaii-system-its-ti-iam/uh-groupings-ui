@@ -1,22 +1,22 @@
 package edu.hawaii.its.holiday.controller;
 
 import edu.hawaii.its.holiday.api.GroupingsService;
-import edu.hawaii.its.holiday.api.type.Group;
 import edu.hawaii.its.holiday.api.type.Grouping;
 import edu.hawaii.its.holiday.api.type.MyGroupings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.List;
-
 /**
+ * GroupingsController.java
+ *
  * Created by zknoebel on 12/12/16.
- * <p>
+ *
  * file containing the mappings for all Groupings methods
  */
 
@@ -30,37 +30,70 @@ public class GroupingsController {
 
 
     /**
-     * adds a Person to a Grouping that the user owns
-     *      this will add the Person to the Grouping's 'include' Group
-     *      if the Person is in the Grouping's 'exclude' Group, it will remove them from the 'exclude' Group
-     *
-     * @param grouping  :  String containing the path of the Grouping
-     * @param username  :  username of the user preforming the action
-     *                  the user must be an owner of the Grouping for this to work
-     * @param userToAdd : username of the Person to be added
+     * adds a member to the include group of the Grouping who's path is in 'grouping'
+     * if that member is in the exclude group, they will be removed from it
+     * @param grouping: path to the Grouping who's include group the new member will be added to
+     * @param username: username of the Grouping owner preforming the operation
+     * @param userToAdd: username of the new member to be added to the include group
      * @return information about the success of the operation
      */
-    @RequestMapping("/addMember")
-    public Object[] addMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd) {
-        return gs.addMember(grouping, username, userToAdd);
+    @RequestMapping("/addMemberToIncludeGroup")
+    public ResponseEntity<Object> addMemberToIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
+        logger.info("Entered REST addMemberToIncludeGroup...");
+        return ResponseEntity
+                .ok()
+                .body(gs.addMemberAs(username, grouping + ":include", userToAdd));
     }
 
 
     /**
-     * removes a Person from a Grouping that the user owns
-     *      this will add the Person to the Grouping's 'exclude' Group
-     *      if the Person is in the Grouping's 'include' Group, it will remove them from the 'include' Group
-     *
-     * @param grouping     :     String containing the path of the Grouping
-     * @param username     :     username of the user preforming the action
-     *                  the user must be an owner of the Grouping for this to work
-     * @param userToDelete : String containing the username of the user to be removed from the Grouping
-     * @return information about the deleted Person and its success
+     * adds a member to the exclude group of the Grouping who's path is in 'grouping'
+     * if that member is in the include group, they will be removed from it
+     * @param grouping: path to the Grouping who's exclude group the new member will be added to
+     * @param username: username of the Grouping owner preforming the operation
+     * @param userToAdd: username of the new member to be added to the exclude group
+     * @return information about the success of the operation
      */
-    @RequestMapping("/deleteMember")
-    public Object[] deleteMember(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete) {
-        return gs.deleteMember(grouping, username, userToDelete);
+    @RequestMapping("/addMemberToExcludeGroup")
+    public ResponseEntity<Object> addMemberToExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToAdd){
+        logger.info("Entered REST addMemberToExcludeGroup...");
+        return ResponseEntity
+                .ok()
+                .body(gs.addMemberAs(username, grouping + ":exclude", userToAdd));
     }
+
+
+    /**
+     * deletes a member in the include group of the Grouping who's path is in 'grouping'
+     * @param grouping: path to the Grouping who's include group contains the member to be deleted
+     * @param username: username of the Grouping owner preforming the operation
+     * @param userToDelete: username of the user to be deleted from the include group
+     * @return information about the success of the operation
+     */
+    @RequestMapping("/deleteMemberFromIncludeGroup")
+    public ResponseEntity<Object> deleteMemberFromIncludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
+        logger.info("Entered REST deleteMemberFromIncludeGroup...");
+        return ResponseEntity
+                .ok()
+                .body(gs.deleteMemberAs(username, grouping + ":include", userToDelete));
+    }
+
+
+    /**
+     * deletes a member in the exclude group of the Grouping who's path is in 'grouping'
+     * @param grouping: path to the Grouping who's exclude group contains the member to be deleted
+     * @param username: username of the Grouping owner preforming the operation
+     * @param userToDelete: username of the user to be deleted from the exclude group
+     * @return information about the success of the operation
+     */
+    @RequestMapping("/deleteMemberFromExcludeGroup")
+    public ResponseEntity<Object> deleteMemberFromExcludeGroup(@RequestParam String grouping, @RequestParam String username, @RequestParam String userToDelete){
+        logger.info("Entered REST deleteMemberFromExcludeGroup...");
+        return ResponseEntity
+                .ok()
+                .body(gs.deleteMemberAs(username, grouping + ":exclude", userToDelete));
+    }
+
 
 
     /**
@@ -75,8 +108,11 @@ public class GroupingsController {
      * @return information about the privileges being added to new owner and the success of these privilege assignments
      */
     @RequestMapping("/assignOwnership")
-    public Object[] assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
-        return gs.assignOwnership(grouping, username, newOwner);
+    public ResponseEntity<Object[]> assignOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String newOwner) {
+        logger.info("Entered REST assignOwnership...");
+        return ResponseEntity
+                .ok()
+                .body(gs.assignOwnership(grouping, username, newOwner));
     }
 
 
@@ -92,8 +128,11 @@ public class GroupingsController {
      * @return information about the privileges being removed from the owner and the success of these privilege assignments
      */
     @RequestMapping("/removeOwnership")
-    public Object[] removeOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String ownerToRemove) {
-        return gs.removeOwnership(grouping, username, ownerToRemove);
+    public ResponseEntity<Object[]> removeOwnership(@RequestParam String grouping, @RequestParam String username, @RequestParam String ownerToRemove) {
+        logger.info("Entered REST removeOwnership...");
+        return ResponseEntity
+                .ok()
+                .body(gs.removeOwnership(grouping, username, ownerToRemove));
     }
 
 
@@ -110,9 +149,12 @@ public class GroupingsController {
      *          path of the Grouping
      *          whether or not the Grouping has a list serve associated with it
      */
-    @RequestMapping("/getGrouping")
-    public Grouping getGrouping(@RequestParam String grouping, @RequestParam String username) {
-        return gs.getMembers(grouping, username);
+    @RequestMapping("/grouping")
+    public ResponseEntity<Grouping> getGrouping(@RequestParam String grouping, @RequestParam String username) {
+        logger.info("Entered REST grouping...");
+        return ResponseEntity
+                .ok()
+                .body(gs.getGrouping(grouping, username));
     }
 
 
@@ -126,8 +168,11 @@ public class GroupingsController {
      *      Groupings that the user can opt out of
      */
     @RequestMapping("/myGroupings")
-    public MyGroupings myGroupings(@RequestParam String username){
-        return gs.getMyGroupings(username);
+    public ResponseEntity<MyGroupings> myGroupings(@RequestParam String username){
+        logger.info("Entered REST myGroupings...");
+        return ResponseEntity
+                .ok()
+                .body(gs.getMyGroupings(username));
     }
 
     /**
@@ -140,8 +185,11 @@ public class GroupingsController {
      * @return information about the success of opting in
      */
     @RequestMapping("/optIn")
-    public Object[] optIn(@RequestParam String username, @RequestParam String grouping) {
-        return gs.optIn(username, grouping);
+    public ResponseEntity<Object[]> optIn(@RequestParam String username, @RequestParam String grouping) {
+        logger.info("Entered REST optIn...");
+        return ResponseEntity
+                .ok()
+                .body(gs.optIn(username, grouping));
     }
 
 
@@ -155,8 +203,11 @@ public class GroupingsController {
      * @return information about the success of opting out
      */
     @RequestMapping("/optOut")
-    public Object[] optOut(@RequestParam String username, @RequestParam String grouping) {
-        return gs.optOut(username, grouping);
+    public ResponseEntity<Object[]> optOut(@RequestParam String username, @RequestParam String grouping) {
+        logger.info("Entered REST optOut...");
+        return ResponseEntity
+                .ok()
+                .body(gs.optOut(username, grouping));
     }
 
 
@@ -172,8 +223,11 @@ public class GroupingsController {
      * @return information about the success of canceling the opt in
      */
     @RequestMapping("/cancelOptIn")
-    public Object[] cancelOptIn(@RequestParam String grouping, @RequestParam String username) {
-        return gs.cancelOptIn(grouping, username);
+    public ResponseEntity<Object[]> cancelOptIn(@RequestParam String grouping, @RequestParam String username) {
+        logger.info("Entered REST cancelOptIn...");
+        return ResponseEntity
+                .ok()
+                .body(gs.cancelOptIn(grouping, username));
     }
 
 
@@ -190,8 +244,11 @@ public class GroupingsController {
      * @return information about the success of canceling the opt out
      */
     @RequestMapping("/cancelOptOut")
-    public Object[] cancelOptOut(@RequestParam String grouping, @RequestParam String username) {
-        return gs.cancelOptOut(grouping, username);
+    public ResponseEntity<Object[]> cancelOptOut(@RequestParam String grouping, @RequestParam String username) {
+        logger.info("Entered REST cancelOptOut...");
+        return ResponseEntity
+                .ok()
+                .body(gs.cancelOptOut(grouping, username));
     }
 
 
@@ -208,9 +265,9 @@ public class GroupingsController {
      *
      * @return information about the new Grouping and its success
      */
-    //TODO currently this method is not to be implemented because responsibility to create a new
-    //TODO grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
-    //TODO https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
+    //currently this method is not to be implemented because responsibility to create a new
+    //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
+    //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
     @RequestMapping("/addGrouping")
     public RedirectView addGrouping() {
         RedirectView redirectView = new RedirectView();
@@ -224,9 +281,9 @@ public class GroupingsController {
      *
      * @return information about the deleted Grouping and its success
      */
-    //TODO currently this method is not to be implemented because responsibility to create a new
-    //TODO grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
-    //TODO https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
+    //currently this method is not to be implemented because responsibility to create a new
+    //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
+    //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
     // email its-iam-help@hawaii.edu for help in deleting a Grouping
     @RequestMapping("/deleteGrouping")
     public RedirectView deleteGrouping() {
@@ -236,6 +293,5 @@ public class GroupingsController {
     }
 
     //TODO give the Grouping owner the ability to change the optin/optout attribute for their Grouping
-    //      TODO possibly give the owner the ability to change the optin/optout attribute for individual members of the Grouping
     //TODO Edit the text provided to the Grouping's Persons when they are electing to opt in/out of the Inclusion/exclusion group
 }

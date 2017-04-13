@@ -155,7 +155,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/javascript/**").permitAll()
                 .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/contact").permitAll()
                 .antMatchers("/home").permitAll()
                 .antMatchers("/faq").permitAll()
                 .antMatchers("/denied").permitAll()
