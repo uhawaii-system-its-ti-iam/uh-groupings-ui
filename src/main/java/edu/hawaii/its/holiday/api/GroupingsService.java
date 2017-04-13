@@ -78,6 +78,26 @@ public class GroupingsService {
         //switch to actAsSubject after we figure out attribute update privlages
     }
 
+    public String changeListServeStatus(String grouping, String username, boolean listServeOn) {
+        String attributeName = "uh-settings:attributes:for-groups:uh-grouping:destinations:listserv";
+
+        return changeAttributeStatus(grouping, username, attributeName, listServeOn);
+    }
+
+
+    public String changeOptInStatus(String grouping, String username, boolean optInOn) {
+        String attributeName = "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in";
+
+        return changeAttributeStatus(grouping, username, attributeName, optInOn);
+    }
+
+
+    public String changeOptOutStatus(String grouping, String username, boolean optOutOn) {
+        String attributeName = "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-out";
+
+        return changeAttributeStatus(grouping, username, attributeName, optOutOn);
+    }
+
 
     /**
      * removes ownership permissions from a user
@@ -340,7 +360,7 @@ public class GroupingsService {
         return groupHasAttribute(grouping, assignType, nameName);
     }
 
-    public boolean groupHasAttribute(String grouping, String assignType, String nameName){
+    public boolean groupHasAttribute(String grouping, String assignType, String nameName) {
 
         boolean hasAtt = false;
 
@@ -458,7 +478,7 @@ public class GroupingsService {
             String uuid = UUID_USERNAME;
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            WsAttributeAssign[] wsAttributes = attributeAssign(assignType, uuid, membershipID);
+            WsAttributeAssign[] wsAttributes = membershipAttributeAssign(assignType, uuid, membershipID);
             for (WsAttributeAssign att : wsAttributes) {
                 if (att.getAttributeDefNameName().equals(SELF_OPTED)) {
                     return true; // We are done, get out.
@@ -646,8 +666,8 @@ public class GroupingsService {
     }
 
     // Helper method.
-    public WsAttributeAssign[] attributeAssign(String assignType, String uuid, String membershipID) {
-        logger.info("attribureAssign; assignType: " + assignType + "; uuid: " + uuid + "; membershipID: " + membershipID);
+    public WsAttributeAssign[] membershipAttributeAssign(String assignType, String uuid, String membershipID) {
+        logger.info("membershipAttributeAssign; assignType: " + assignType + "; uuid: " + uuid + "; membershipID: " + membershipID);
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
                 new GcGetAttributeAssignments()
@@ -658,6 +678,18 @@ public class GroupingsService {
         WsAttributeAssign[] wsAttributes = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
 
         return wsAttributes != null ? wsAttributes : new WsAttributeAssign[0];
+    }
+
+    // Helper method
+    public WsAssignAttributesResults groupAttributeAssign(String attributeName, String attributeOperation, String group) {
+        logger.info("groupAttributeAssign; " + "; attributeName: " + attributeName + "; attributeOperation: " + attributeOperation + "; group: " + group);
+
+        return new GcAssignAttributes()
+                .assignAttributeAssignType("group")
+                .assignAttributeAssignOperation(attributeOperation)
+                .addOwnerGroupName(group)
+                .addAttributeDefNameName(attributeName)
+                .execute();
     }
 
     // Helper method.
@@ -913,6 +945,36 @@ public class GroupingsService {
         List<String> groupNames = extractGroupNames(groups.toArray(new WsGroup[groups.size()]));
 
         return extractGroupingNames(groupNames.toArray(new String[groupNames.size()]));
+    }
+
+
+    public String changeAttributeStatus(String grouping, String username, String attributeName, boolean attributeOn) {
+        String returnMessage;
+
+        if (isOwner(grouping, username)) {
+            if (attributeOn) {
+                if (!hasListServe(grouping)) {
+                    groupAttributeAssign(attributeName, "assign_attr", grouping);
+
+                    returnMessage = attributeName + " has been turned on";
+                } else {
+                    returnMessage = attributeName + " is already on";
+                }
+            } else {
+                if (hasListServe(grouping)) {
+                    groupAttributeAssign(attributeName, "remove_attr", grouping);
+
+                    returnMessage = attributeName + " has been turned off";
+                } else {
+                    returnMessage = attributeName + " is already off";
+                }
+            }
+        }
+        else {
+            returnMessage = "User does not own Grouping";
+        }
+
+        return returnMessage;
     }
 
 }

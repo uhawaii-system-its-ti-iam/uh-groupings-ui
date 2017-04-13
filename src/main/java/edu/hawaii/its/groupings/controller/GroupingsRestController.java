@@ -284,6 +284,39 @@ public class GroupingsRestController {
     }
 
 
+    @RequestMapping(value = "/{grouping}/{username}/{listServeOn}/setListserve",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> setListserve(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean listServeOn) {
+        logger.info("Entered REST setListserve...");
+        return ResponseEntity
+                .ok()
+                .body(gs.changeListServeStatus(grouping, username, listServeOn));
+    }
+
+
+    @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptIn",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> setOptIn(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optInOn) {
+        logger.info("Entered REST setOptIn...");
+        return ResponseEntity
+                .ok()
+                .body(gs.changeOptInStatus(grouping, username, optInOn));
+    }
+
+
+    @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptOut",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> setOptOut(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optOutOn) {
+        logger.info("Entered REST setOptIn...");
+        return ResponseEntity
+                .ok()
+                .body(gs.changeOptOutStatus(grouping, username, optOutOn));
+    }
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -326,6 +359,7 @@ public class GroupingsRestController {
         return redirectView;
     }
 }
+
 
 //TODO implement function for owner to turn on/off listserve
 //TODO implement function for owner to turn on/off optIn/optOut attribute

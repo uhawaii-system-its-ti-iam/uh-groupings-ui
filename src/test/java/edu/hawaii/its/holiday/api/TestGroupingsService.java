@@ -207,7 +207,7 @@ public class TestGroupingsService {
     //TODO add test for makeWsSubject
     //TODO add test for makeWsGroupLookup
     //TODO add test for assignAttributesResults (both)
-    //TODO add test for attributeAssign
+    //TODO add test for membershipAttributeAssign
     //TODO add test for attributeAssignments
     //TODO add test for grouperPrivilegesLite (both)
     //TODO add test for membershipsResults
