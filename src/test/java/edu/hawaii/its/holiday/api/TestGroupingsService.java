@@ -1,8 +1,11 @@
 package edu.hawaii.its.holiday.api;
 
 import edu.hawaii.its.holiday.api.type.Group;
+import edu.hawaii.its.holiday.api.type.Grouping;
+import edu.hawaii.its.holiday.api.type.MyGroupings;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,12 +54,6 @@ public class TestGroupingsService {
     @Test
     public void isOwnerTest() {
         assertTrue(gs.isOwner(grouping, tst[0]));
-    }
-
-    @Test
-    public void inGroupTest() {
-        assertTrue(gs.inGroup(grouping + ":include", "iamTst01"));
-        assertFalse(gs.inGroup(grouping + ":exclude", "iamTst01"));
     }
 
     @Test
@@ -117,17 +114,93 @@ public class TestGroupingsService {
         assertTrue(gs.hasListServe(grouping));
     }
 
-    
-    //TODO add test for groupingsIn
-    //TODO add test for groupingsOwned
-    //TODO add test for groupingsToOptOutOf
-    //TODO add test for groupingsToOptInto
-    //TODO add test for addSelfOpted
-    //TODO add test for checkSelfOpted
-    //TODO add test for inGroup
-    //TODO add test for isOwner
-    //TODO add test for removeSelfOpted
-    //TODO add test for wsDateTime
+    @Test
+    public void groupingsInTest(){
+        MyGroupings myGroupings = gs.getMyGroupings(tst[0]);
+        boolean inGrouping = false;
+
+        for (Grouping grouping : myGroupings.getGroupingsIn()){
+            if(grouping.getPath().contains(this.grouping)){
+                inGrouping = true;
+            }
+        }
+        assertTrue(inGrouping);
+        inGrouping = false;
+
+        myGroupings = gs.getMyGroupings(tst[4]);
+        for (Grouping grouping : myGroupings.getGroupingsIn()){
+            if(grouping.getPath().contains(this.grouping)){
+                inGrouping = true;
+            }
+        }
+        assertFalse(inGrouping);
+    }
+
+    @Test
+    public void groupingsOwnedTest(){
+        MyGroupings myGroupings = gs.getMyGroupings(tst[0]);
+        boolean ownsGrouping = false;
+
+        for (Grouping grouping : myGroupings.getGroupingsOwned()){
+            if(grouping.getPath().contains(this.grouping)){
+                ownsGrouping = true;
+            }
+        }
+        assertTrue(ownsGrouping);
+        ownsGrouping = false;
+
+        myGroupings = gs.getMyGroupings(tst[4]);
+        for (Grouping grouping : myGroupings.getGroupingsOwned()){
+            if(grouping.getPath().contains(this.grouping)){
+                ownsGrouping = true;
+            }
+        }
+        assertFalse(ownsGrouping);
+    }
+
+    @Test
+    public void groupingsToOptTest(){
+        MyGroupings myGroupings = gs.getMyGroupings(tst[0]);
+        boolean canOptOut = false;
+        boolean canOptIn = false;
+
+        for (Grouping grouping : myGroupings.getGroupingsToOptInTo()){
+            if(grouping.getPath().contains(this.grouping)){
+                canOptIn = true;
+            }
+        }
+        assertTrue(canOptIn);
+
+        for (Grouping grouping : myGroupings.getGroupingsToOptOutOf()){
+            if(grouping.getPath().contains(this.grouping)){
+                canOptOut = true;
+            }
+        }
+        assertTrue(canOptOut);
+    }
+
+    @Test
+    public void addRemoveSelfOptedTest(){
+        WsSubjectLookup lookup = gs.makeWsSubjectLookup(tst[4]);
+        String excludeGroup = grouping + ":exclude";
+        assertFalse(gs.checkSelfOpted(excludeGroup, lookup));
+
+        gs.addSelfOpted(excludeGroup, tst[4]);
+        assertTrue(gs.checkSelfOpted(excludeGroup, lookup));
+
+        gs.removeSelfOpted(excludeGroup, tst[4]);
+        assertFalse(gs.checkSelfOpted(excludeGroup, lookup));
+    }
+
+    @Test
+    public void inGroupTest(){
+        assertTrue(gs.inGroup(grouping + ":include", tst[1]));
+        assertFalse(gs.inGroup(grouping + ":include", tst[3]));
+
+        assertTrue(gs.inGroup(grouping + ":exclude", tst[3]));
+        assertFalse(gs.inGroup(grouping + ":exclude", tst[1]));
+    }
+
     //TODO add test for groupOptOutPermission
     //TODO add test for groupOptInPermission
     //TODO add test for updateLastModified
