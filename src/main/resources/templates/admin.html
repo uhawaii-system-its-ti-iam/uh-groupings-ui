@@ -8,14 +8,20 @@
 <div class='container-fluid'>
     <div class='row'>
         <div class='col-xs-offset-1 col-xs-10'>
-            <div ng-app="adminApp">
+
+            <div ng-app="adminApp" ng-controller="AdminJsController" data-ng-init="init()">
                 <h1 class="text-center"><b>Designate Admins</b></h1>
                 <h4 class="text-center">Manage the list of Admins</h4>
 
-                <div class="panel panel-default" ng-controller="AdminJsController" data-ng-init="init()">
+                <div id="overlay" ng-show="loading">
+                    <div class="loader" ng-show="loading"></div>
+                </div>
+
+
+                <div class="panel panel-default">
                     <div class="panel-heading" style="padding: 2px">
                         <div class="form-group">
-                            <h3 class="col-md-4" style="margin-top: 5px">Designated Admins</h3>
+                            <h3 class="col-xs-6 col-md-4" style="margin-top: 5px">Designated Admins</h3>
                             <div align="right" style="margin-top: 10px">
                                 <input placeholder="Type to filter text..." type="text" ng-model="searchFor"/>
                             </div>
@@ -37,8 +43,8 @@
                         <tr ng-repeat="l in list | filter:searchFor">
                             <td class="text-center" style="width: 3%">{{l.basis}}</td>
                             <td>{{l.name}}</td>
-                            <td>{{l.id}}</td>
-                            <td>{{l.attributeValues}}</td>
+                            <td>{{l.uuid}}</td>
+                            <td>{{l.username}}</td>
                             <td>
                                 <button class="btn btn-default btn-block" ng-click="remove($index)"><span
                                         class="glyphicon glyphicon-remove"></span></button>

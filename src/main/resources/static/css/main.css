@@ -23,6 +23,32 @@ h1, h2, h3, h4 {
    color: #BD9319;
 }
 
+.loader{
+    border: 16px solid white; /* Black */
+    border-top: 16px solid black; /* Blue */
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    animation: spin 1s linear infinite;
+    position: fixed;
+    left: 45%;
+    top: 45%;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 a {
     color: #0275d8;
     text-decoration: none;
