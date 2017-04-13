@@ -17,6 +17,7 @@ import edu.hawaii.its.holiday.api.GroupingsService;
 import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
+@RequestMapping("/api/groupings")
 public class GroupingsRestController {
 
     private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
@@ -43,7 +44,7 @@ public class GroupingsRestController {
      * @param userToAdd: username of the new member to be added to the include group
      * @return information about the success of the operation
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/{userToAdd}/addMemberToIncludeGroup",
+    @RequestMapping(value = "/{grouping}/{username}/{userToAdd}/addMemberToIncludeGroup",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addMemberToIncludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToAdd) {
@@ -63,7 +64,7 @@ public class GroupingsRestController {
      * @param userToAdd: username of the new member to be added to the exclude group
      * @return information about the success of the operation
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/{userToAdd}/addMemberToExcludeGroup",
+    @RequestMapping(value = "/{grouping}/{username}/{userToAdd}/addMemberToExcludeGroup",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addMemberToExcludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToAdd) {
@@ -82,7 +83,7 @@ public class GroupingsRestController {
      * @param userToDelete: username of the user to be deleted from the include group
      * @return information about the success of the operation
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/{userToDelete}/deleteMemberFromIncludeGroup",
+    @RequestMapping(value = "/{grouping}/{username}/{userToDelete}/deleteMemberFromIncludeGroup",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteMemberFromIncludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToDelete) {
@@ -101,7 +102,7 @@ public class GroupingsRestController {
      * @param userToDelete: username of the user to be deleted from the exclude group
      * @return information about the success of the operation
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/{userToDelete}/deleteMemberFromExcludeGroup",
+    @RequestMapping(value = "/{grouping}/{username}/{userToDelete}/deleteMemberFromExcludeGroup",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteMemberFromExcludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToDelete) {
@@ -123,7 +124,7 @@ public class GroupingsRestController {
      * @param newOwner: String containing the username of the Person to become the new owner
      * @return information about the privileges being added to new owner and the success of these privilege assignments
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/{newOwner}/assignOwnership",
+    @RequestMapping(value = "/{grouping}/{username}/{newOwner}/assignOwnership",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> assignOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String newOwner) {
@@ -145,7 +146,7 @@ public class GroupingsRestController {
      * @param ownerToRemove: String containing the username of the Person whos owner privileges are to be revoked
      * @return information about the privileges being removed from the owner and the success of these privilege assignments
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/{ownerToRemove}/removeOwnership",
+    @RequestMapping(value = "/{grouping}/{username}/{ownerToRemove}/removeOwnership",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> removeOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String ownerToRemove) {
@@ -169,7 +170,7 @@ public class GroupingsRestController {
      * path of the Grouping
      * whether or not the Grouping has a list serve associated with it
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/grouping",
+    @RequestMapping(value = "/{grouping}/{username}/grouping",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Grouping> grouping(@PathVariable String grouping, @PathVariable String username) {
@@ -208,7 +209,7 @@ public class GroupingsRestController {
      * @param grouping : the path to the grouping where the user will be opting in
      * @return information about the success of opting in
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/optIn",
+    @RequestMapping(value = "/{grouping}/{username}/optIn",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> optIn(@PathVariable String grouping, @PathVariable String username) {
@@ -228,7 +229,7 @@ public class GroupingsRestController {
      * @param grouping : the path to the grouping where the user will be opting out
      * @return information about the success of opting out
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/optOut",
+    @RequestMapping(value = "/{grouping}/{username}/optOut",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> optOut(@PathVariable String grouping, @PathVariable String username) {
@@ -250,7 +251,7 @@ public class GroupingsRestController {
      * @param grouping : the path to the grouping where the user will be canceling opting in
      * @return information about the success of canceling the opt in
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/cancelOptIn",
+    @RequestMapping(value = "/{grouping}/{username}/cancelOptIn",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> cancelOptIn(@PathVariable String grouping, @PathVariable String username) {
@@ -272,7 +273,7 @@ public class GroupingsRestController {
      * @param grouping : the path to the grouping where the user will be canceling opting out
      * @return information about the success of canceling the opt out
      */
-    @RequestMapping(value = "/api/groupings/{grouping}/{username}/cancelOptOut",
+    @RequestMapping(value = "/{grouping}/{username}/cancelOptOut",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> cancelOptOut(@PathVariable String grouping, @PathVariable String username) {
@@ -297,7 +298,7 @@ public class GroupingsRestController {
     //currently this method is not to be implemented because responsibility to create a new
     //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
     //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
-    @RequestMapping(value = "/api/groupings/addGrouping",
+    @RequestMapping(value = "/addGrouping",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView addGrouping() {
@@ -316,7 +317,7 @@ public class GroupingsRestController {
     //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
     //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
     // email its-iam-help@hawaii.edu for help in deleting a Grouping
-    @RequestMapping(value = "/api/groupings/deleteGrouping",
+    @RequestMapping(value = "/deleteGrouping",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView deleteGrouping() {
