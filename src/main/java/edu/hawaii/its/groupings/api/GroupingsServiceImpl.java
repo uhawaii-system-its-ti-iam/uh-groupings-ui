@@ -29,7 +29,7 @@ import edu.internet2.middleware.grouperClient.api.GcHasMember;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 
 @Service("groupingsService")
-public class GroupingsServiceImpl implements GroupingsService{
+public class GroupingsServiceImpl implements GroupingsService {
 
     public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
 
@@ -967,8 +967,7 @@ public class GroupingsServiceImpl implements GroupingsService{
                     returnMessage = attributeName + " is already off";
                 }
             }
-        }
-        else {
+        } else {
             returnMessage = "User does not own Grouping";
         }
 
