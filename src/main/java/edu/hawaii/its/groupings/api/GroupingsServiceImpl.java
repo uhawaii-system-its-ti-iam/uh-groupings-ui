@@ -1,14 +1,14 @@
-package edu.hawaii.its.holiday.api;
+package edu.hawaii.its.groupings.api;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import edu.hawaii.its.holiday.api.type.Group;
-import edu.hawaii.its.holiday.api.type.Grouping;
-import edu.hawaii.its.holiday.api.type.MyGroupings;
-import edu.hawaii.its.holiday.api.type.Person;
+import edu.hawaii.its.groupings.api.type.Group;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.type.MyGroupings;
+import edu.hawaii.its.groupings.api.type.Person;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,10 +28,10 @@ import edu.internet2.middleware.grouperClient.api.GcGetMemberships;
 import edu.internet2.middleware.grouperClient.api.GcHasMember;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 
-@Service
-public class GroupingsService {
+@Service("groupingsService")
+public class GroupingsServiceImpl implements GroupingsService{
 
-    public static final Log logger = LogFactory.getLog(GroupingsService.class);
+    public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
 
     public static final String UUID_USERNAME = "ef62bf0473614b379695ecec6cb8b3b5";
     public static final String SELF_OPTED = "uh-settings:attributes:for-memberships:uh-grouping:self-opted";
@@ -78,12 +78,32 @@ public class GroupingsService {
         //switch to actAsSubject after we figure out attribute update privlages
     }
 
+    public String changeListServeStatus(String grouping, String username, boolean listServeOn) {
+        String attributeName = "uh-settings:attributes:for-groups:uh-grouping:destinations:listserv";
+
+        return changeGroupAttributeStatus(grouping, username, attributeName, listServeOn);
+    }
+
+
+    public String changeOptInStatus(String grouping, String username, boolean optInOn) {
+        String attributeName = "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in";
+
+        return changeGroupAttributeStatus(grouping, username, attributeName, optInOn);
+    }
+
+
+    public String changeOptOutStatus(String grouping, String username, boolean optOutOn) {
+        String attributeName = "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-out";
+
+        return changeGroupAttributeStatus(grouping, username, attributeName, optOutOn);
+    }
+
 
     /**
      * removes ownership permissions from a user
      *
-     * @param grouping: the Grouping for which the user's ownership permissions will be removed
-     * @param username: the owner of the Grouping who will be removing ownership permissions from the owner to be removed
+     * @param grouping:      the Grouping for which the user's ownership permissions will be removed
+     * @param username:      the owner of the Grouping who will be removing ownership permissions from the owner to be removed
      * @param ownerToRemove: the owner who will have ownership privilages removed
      * @return information about the success of the operation
      */
@@ -113,7 +133,6 @@ public class GroupingsService {
 
 
     /**
-     *
      * @param grouping: the path of the Grouping to be searched for
      * @param username: the user who is doing the search
      * @return a Grouping Object containing information about the Grouping
@@ -131,16 +150,16 @@ public class GroupingsService {
         WsGetMembersResults includeResults = getMembers(user, grouping + INCLUDE);
         WsGetMembersResults basisPlusIncludeMinusExcludeResults = getMembers(user, grouping);
 
-        if(includeResults.getResults() != null) {
+        if (includeResults.getResults() != null) {
             includeGroup = makeGroup(includeResults.getResults()[0].getWsSubjects());
         }
-        if(excludeResults.getResults() != null) {
+        if (excludeResults.getResults() != null) {
             excludeGroup = makeGroup(excludeResults.getResults()[0].getWsSubjects());
         }
-        if(basisResults.getResults() != null){
+        if (basisResults.getResults() != null) {
             basisGroup = makeGroup(basisResults.getResults()[0].getWsSubjects());
         }
-        if(basisPlusIncludeMinusExcludeResults.getResults() != null) {
+        if (basisPlusIncludeMinusExcludeResults.getResults() != null) {
             basisPlusIncludeMinusExcludeGroup = makeGroup(basisPlusIncludeMinusExcludeResults.getResults()[0].getWsSubjects());
         }
         Group owners = getOwners(grouping, username);
@@ -175,8 +194,9 @@ public class GroupingsService {
 
     /**
      * if a user has permission to opt into a Grouping
-     *      this will put them in the include group
-     *      if they are in the exclude group, they will be removed from it
+     * this will put them in the include group
+     * if they are in the exclude group, they will be removed from it
+     *
      * @param username: user to be opting in
      * @param grouping: Grouping the user will opt into
      * @return information about the success of the operation
@@ -202,8 +222,9 @@ public class GroupingsService {
 
     /**
      * if a user has permission to opt out of a Grouping
-     *      this will put them in the exclude group
-     *      if they are in the include group, they will be removed from it
+     * this will put them in the exclude group
+     * if they are in the include group, they will be removed from it
+     *
      * @param username: user to be opting out
      * @param grouping: Grouping the user will opt out of
      * @return information about the success of the operation
@@ -229,6 +250,7 @@ public class GroupingsService {
 
     /**
      * if the user has opted into a Grouping, this will remove them from the include group
+     *
      * @param grouping: the path to the Grouping that the user is opted into
      * @param username: username of the user canceling optIn
      * @return information about the success of the operation
@@ -257,6 +279,7 @@ public class GroupingsService {
 
     /**
      * if the user has opted out of a Grouping, this will remove them from the exclude group
+     *
      * @param grouping: the path to the Grouping that the user is opted out of
      * @param username: username of the user canceling optOut
      * @return information about the success of the operation
@@ -291,7 +314,6 @@ public class GroupingsService {
 
 
     /**
-     *
      * @param grouping: the path of the Grouping to be searched for
      * @param username: the user doing the search
      * @return a Group of owners for the Grouping
@@ -301,7 +323,7 @@ public class GroupingsService {
 
         Group owners = new Group();
 
-        if(isOwner(grouping, username)) {
+        if (isOwner(grouping, username)) {
             String group = grouping + INCLUDE;
             String privilegeName = "update";
             WsGetGrouperPrivilegesLiteResult privileges =
@@ -323,20 +345,37 @@ public class GroupingsService {
         return owners;
     }
 
-    public boolean optOutPermission(String username, String grouping) {
+    public boolean optOutPermission(String grouping) {
+        String nameName = "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-out";
 
-        return (groupOptInPermission(username, grouping + EXCLUDE) && (!inGroup(grouping + INCLUDE, username)
-                || (groupOptOutPermission(username, grouping + INCLUDE))));
-
+        return groupHasAttribute(grouping, nameName);
     }
 
 
-    public boolean optInPermission(String username, String grouping) {
+    public boolean optInPermission(String grouping) {
+        String nameName = "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in";
 
-        return (groupOptInPermission(username, grouping + INCLUDE) && (!inGroup(grouping + EXCLUDE, username)
-                || (groupOptOutPermission(username, grouping + EXCLUDE))));
-
+        return groupHasAttribute(grouping, nameName);
     }
+
+    public boolean groupHasAttribute(String grouping, String nameName) {
+
+        boolean hasAtt = false;
+        String assignType = "group";
+
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
+                attributeAssignmentsResults(assignType, grouping, nameName);
+
+        if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
+            for (WsAttributeAssign attribute : wsGetAttributeAssignmentsResults.getWsAttributeAssigns()) {
+                if (attribute.getAttributeDefNameName().equals(nameName)) {
+                    hasAtt = true;
+                }
+            }
+        }
+        return hasAtt;
+    }
+
 
     public List<Grouping> groupingsIn(String username) {
         String[] groupsIn = getGroupNames(username);
@@ -348,25 +387,16 @@ public class GroupingsService {
 
     public boolean hasListServe(String grouping) {
 
-        String assignType = "group";
         String nameName = "uh-settings:attributes:for-groups:uh-grouping:destinations:listserv";
 
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
-                attributeAssignmentsResults(assignType, grouping, nameName);
-
-        if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
-            WsAttributeAssign listServeAttriubte = wsGetAttributeAssignmentsResults.getWsAttributeAssigns()[0];
-            return listServeAttriubte.getAttributeDefNameName().equals(nameName);
-        } else {
-            return false;
-        }
+        return groupHasAttribute(grouping, nameName);
     }
 
     public List<Grouping> groupingsOwned(String username) {
         WsSubjectLookup user = makeWsSubjectLookup(username);
         WsGetGrouperPrivilegesLiteResult getPrivilegesResult = new GcGetGrouperPrivilegesLite().assignPrivilegeName("update").assignSubjectLookup(user).execute();
         WsGrouperPrivilegeResult[] privilegeResults = getPrivilegesResult.getPrivilegeResults();
-        if(privilegeResults != null) {
+        if (privilegeResults != null) {
             WsGroup[] groups = new WsGroup[privilegeResults.length];
             for (int i = 0; i < groups.length; i++) {
                 groups[i] = privilegeResults[i].getWsGroup();
@@ -381,8 +411,7 @@ public class GroupingsService {
             }
             List<String> paths = extractGroupings(names.toArray(new String[names.size()]));
             return makeGroupings(paths);
-        }
-        else {
+        } else {
             return new ArrayList<Grouping>();
         }
     }
@@ -394,7 +423,7 @@ public class GroupingsService {
 
         List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
 
-        groupings.addAll(groupingNames.stream().filter(name -> optOutPermission(username, name)).collect(Collectors.toList()));
+        groupings.addAll(groupingNames.stream().filter(name -> optOutPermission(name)).collect(Collectors.toList()));
 
         return makeGroupings(groupings);
     }
@@ -406,7 +435,7 @@ public class GroupingsService {
 
         List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
 
-        groupings.addAll(groupingNames.stream().filter(name -> optInPermission(username, name)).collect(Collectors.toList()));
+        groupings.addAll(groupingNames.stream().filter(name -> optInPermission(name)).collect(Collectors.toList()));
 
         return makeGroupings(groupings);
     }
@@ -447,7 +476,7 @@ public class GroupingsService {
             String uuid = UUID_USERNAME;
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            WsAttributeAssign[] wsAttributes = attributeAssign(assignType, uuid, membershipID);
+            WsAttributeAssign[] wsAttributes = membershipAttributeAssign(assignType, uuid, membershipID);
             for (WsAttributeAssign att : wsAttributes) {
                 if (att.getAttributeDefNameName().equals(SELF_OPTED)) {
                     return true; // We are done, get out.
@@ -635,8 +664,8 @@ public class GroupingsService {
     }
 
     // Helper method.
-    public WsAttributeAssign[] attributeAssign(String assignType, String uuid, String membershipID) {
-        logger.info("attribureAssign; assignType: " + assignType + "; uuid: " + uuid + "; membershipID: " + membershipID);
+    public WsAttributeAssign[] membershipAttributeAssign(String assignType, String uuid, String membershipID) {
+        logger.info("membershipAttributeAssign; assignType: " + assignType + "; uuid: " + uuid + "; membershipID: " + membershipID);
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
                 new GcGetAttributeAssignments()
@@ -647,6 +676,18 @@ public class GroupingsService {
         WsAttributeAssign[] wsAttributes = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
 
         return wsAttributes != null ? wsAttributes : new WsAttributeAssign[0];
+    }
+
+    // Helper method
+    public WsAssignAttributesResults groupAttributeAssign(String attributeName, String attributeOperation, String group) {
+        logger.info("groupAttributeAssign; " + "; attributeName: " + attributeName + "; attributeOperation: " + attributeOperation + "; group: " + group);
+
+        return new GcAssignAttributes()
+                .assignAttributeAssignType("group")
+                .assignAttributeAssignOperation(attributeOperation)
+                .addOwnerGroupName(group)
+                .addAttributeDefNameName(attributeName)
+                .execute();
     }
 
     // Helper method.
@@ -746,8 +787,8 @@ public class GroupingsService {
     public WsGetMembersResults getMembers(WsSubjectLookup user, String group) {
         logger.info("getMembers; user: " + user + "; group: " + group);
 
-        String grouping = extractGroupingNames(new String[] {group}).get(0);
-        if(isOwner(grouping, user.getSubjectIdentifier())) {
+        String grouping = extractGroupingNames(new String[]{group}).get(0);
+        if (isOwner(grouping, user.getSubjectIdentifier())) {
             return new GcGetMembers()
                     .addSubjectAttributeName("uid")
                     .addGroupName(group)
@@ -902,6 +943,36 @@ public class GroupingsService {
         List<String> groupNames = extractGroupNames(groups.toArray(new WsGroup[groups.size()]));
 
         return extractGroupingNames(groupNames.toArray(new String[groupNames.size()]));
+    }
+
+
+    public String changeGroupAttributeStatus(String group, String username, String attributeName, boolean attributeOn) {
+        String returnMessage;
+
+        if (isOwner(group, username)) {
+            if (attributeOn) {
+                if (!groupHasAttribute(group, attributeName)) {
+                    groupAttributeAssign(attributeName, "assign_attr", group);
+
+                    returnMessage = attributeName + " has been turned on";
+                } else {
+                    returnMessage = attributeName + " is already on";
+                }
+            } else {
+                if (groupHasAttribute(group, attributeName)) {
+                    groupAttributeAssign(attributeName, "remove_attr", group);
+
+                    returnMessage = attributeName + " has been turned off";
+                } else {
+                    returnMessage = attributeName + " is already off";
+                }
+            }
+        }
+        else {
+            returnMessage = "User does not own Grouping";
+        }
+
+        return returnMessage;
     }
 
 }

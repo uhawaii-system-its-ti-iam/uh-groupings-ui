@@ -1,4 +1,4 @@
-package edu.hawaii.its.holiday.api.type;
+package edu.hawaii.its.groupings.api.type;
 
 /**
  * Created by zknoebel on 3/15/2017.

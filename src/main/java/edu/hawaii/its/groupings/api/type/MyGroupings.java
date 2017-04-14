@@ -1,4 +1,4 @@
-package edu.hawaii.its.holiday.api.type;
+package edu.hawaii.its.groupings.api.type;
 
 import java.util.List;
 

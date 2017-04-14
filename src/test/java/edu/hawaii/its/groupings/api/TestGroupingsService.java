@@ -1,15 +1,14 @@
-package edu.hawaii.its.holiday.api;
+package edu.hawaii.its.groupings.api;
 
-import edu.hawaii.its.holiday.api.type.Group;
-import edu.hawaii.its.holiday.api.type.Grouping;
-import edu.hawaii.its.holiday.api.type.MyGroupings;
+import edu.hawaii.its.groupings.api.type.Group;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.type.MyGroupings;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
@@ -29,7 +28,7 @@ public class TestGroupingsService {
     private String[] tstName = {"tst01fname", "tst02name", "tst03name", "tst04name", "tst05name", "tst06name"};
 
     @Autowired
-    GroupingsService gs;
+    GroupingsServiceImpl gs;
 
     @Autowired
     public Environment env; // Just for the settings check.
@@ -100,13 +99,13 @@ public class TestGroupingsService {
 
     @Test
     public void optOutPermissionTest(){
-        assertTrue(gs.optOutPermission(tst[0], grouping));
+        assertTrue(gs.optOutPermission(grouping));
     }
 
 
     @Test
     public void optInPermissionTest(){
-        assertTrue(gs.optInPermission(tst[0], grouping));
+        assertTrue(gs.optInPermission(grouping));
     }
 
     @Test
@@ -207,7 +206,7 @@ public class TestGroupingsService {
     //TODO add test for makeWsSubject
     //TODO add test for makeWsGroupLookup
     //TODO add test for assignAttributesResults (both)
-    //TODO add test for attributeAssign
+    //TODO add test for membershipAttributeAssign
     //TODO add test for attributeAssignments
     //TODO add test for grouperPrivilegesLite (both)
     //TODO add test for membershipsResults
