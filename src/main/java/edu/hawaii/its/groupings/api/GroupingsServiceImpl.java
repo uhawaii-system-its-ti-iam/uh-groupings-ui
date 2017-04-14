@@ -1,14 +1,14 @@
-package edu.hawaii.its.holiday.api;
+package edu.hawaii.its.groupings.api;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import edu.hawaii.its.holiday.api.type.Group;
-import edu.hawaii.its.holiday.api.type.Grouping;
-import edu.hawaii.its.holiday.api.type.MyGroupings;
-import edu.hawaii.its.holiday.api.type.Person;
+import edu.hawaii.its.groupings.api.type.Group;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.type.MyGroupings;
+import edu.hawaii.its.groupings.api.type.Person;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,10 +28,10 @@ import edu.internet2.middleware.grouperClient.api.GcGetMemberships;
 import edu.internet2.middleware.grouperClient.api.GcHasMember;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 
-@Service
-public class GroupingsService {
+@Service("groupingsService")
+public class GroupingsServiceImpl implements GroupingsService{
 
-    public static final Log logger = LogFactory.getLog(GroupingsService.class);
+    public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
 
     public static final String UUID_USERNAME = "ef62bf0473614b379695ecec6cb8b3b5";
     public static final String SELF_OPTED = "uh-settings:attributes:for-memberships:uh-grouping:self-opted";

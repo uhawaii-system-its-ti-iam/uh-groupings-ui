@@ -1,8 +1,8 @@
 package edu.hawaii.its.holiday.controller;
 
-import edu.hawaii.its.holiday.api.GroupingsService;
-import edu.hawaii.its.holiday.api.type.Grouping;
-import edu.hawaii.its.holiday.api.type.MyGroupings;
+import edu.hawaii.its.groupings.api.GroupingsServiceImpl;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.type.MyGroupings;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
@@ -37,7 +37,7 @@ public class TestGroupingsController {
     private WsSubjectLookup[] tstLookup = new WsSubjectLookup[6];
 
     @Autowired
-    private GroupingsService gs;
+    private GroupingsServiceImpl gs;
 
     @Autowired
     private GroupingsController gc;

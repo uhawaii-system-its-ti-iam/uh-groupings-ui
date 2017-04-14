@@ -2,8 +2,8 @@ package edu.hawaii.its.groupings.controller;
 
 import javax.annotation.PostConstruct;
 
-import edu.hawaii.its.holiday.api.type.Grouping;
-import edu.hawaii.its.holiday.api.type.MyGroupings;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.type.MyGroupings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import edu.hawaii.its.holiday.api.GroupingsService;
+import edu.hawaii.its.groupings.api.GroupingsServiceImpl;
 import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
@@ -26,7 +26,7 @@ public class GroupingsRestController {
     private String uuid;
 
     @Autowired
-    private GroupingsService gs;
+    private GroupingsServiceImpl gs;
 
     @PostConstruct
     public void init() {

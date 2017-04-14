@@ -1,8 +1,8 @@
 package edu.hawaii.its.holiday.controller;
 
-import edu.hawaii.its.holiday.api.GroupingsService;
-import edu.hawaii.its.holiday.api.type.Grouping;
-import edu.hawaii.its.holiday.api.type.MyGroupings;
+import edu.hawaii.its.groupings.api.GroupingsServiceImpl;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.type.MyGroupings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class GroupingsController {
     private static final Logger logger = LoggerFactory.getLogger(GroupingsController.class);
 
     @Autowired
-    private GroupingsService gs;
+    private GroupingsServiceImpl gs;
 
 
     /**

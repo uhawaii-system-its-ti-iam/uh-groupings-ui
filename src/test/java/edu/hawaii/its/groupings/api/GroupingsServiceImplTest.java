@@ -1,4 +1,4 @@
-package edu.hawaii.its.holiday.api;
+package edu.hawaii.its.groupings.api;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
@@ -18,19 +18,19 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class GroupingsServiceTest {
+public class GroupingsServiceImplTest {
 
     @Autowired
-    private GroupingsService groupingsService;
+    private GroupingsServiceImpl groupingsServiceImpl;
 
     @Test
     public void construction() {
-        assertNotNull(groupingsService);
+        assertNotNull(groupingsServiceImpl);
     }
 
     @Test
     public void makeWsSubjectLookup() {
-        WsSubjectLookup lookup = groupingsService.makeWsSubjectLookup("someuser");
+        WsSubjectLookup lookup = groupingsServiceImpl.makeWsSubjectLookup("someuser");
         assertNotNull(lookup);
         assertThat(lookup.getSubjectIdentifier(), equalTo("someuser"));
         assertThat(lookup.getSubjectId(), equalTo(null));
