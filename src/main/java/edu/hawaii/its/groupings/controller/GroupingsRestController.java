@@ -284,6 +284,14 @@ public class GroupingsRestController {
     }
 
 
+    /**
+     * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserve
+     *
+     * @param grouping: the path to the Grouping
+     * @param username: username of the Grouping's owner
+     * @param listServeOn: true if the listserve should be on, false if it should be off
+     * @return iformation about the success of the operation
+     */
     @RequestMapping(value = "/{grouping}/{username}/{listServeOn}/setListserve",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -295,6 +303,14 @@ public class GroupingsRestController {
     }
 
 
+    /**
+     * This allows an owner of a Grouping to change whether or not a Grouping's members can opt in
+     *
+     * @param grouping: the path to the Grouping
+     * @param username: username of the Grouping's owner
+     * @param optInOn: true if the members should be able to opt in, false if not
+     * @return iformation about the success of the operation
+     */
     @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptIn",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -306,6 +322,14 @@ public class GroupingsRestController {
     }
 
 
+    /**
+     * This allows an owner of a Grouping to change whether or not a Grouping's members can opt out
+     *
+     * @param grouping: the path to the Grouping
+     * @param username: username of the Grouping's owner
+     * @param optOutOn: true if the members should be able to opt out, false if not
+     * @return iformation about the success of the operation
+     */
     @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptOut",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)

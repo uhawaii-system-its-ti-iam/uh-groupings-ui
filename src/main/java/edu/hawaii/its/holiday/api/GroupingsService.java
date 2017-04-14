@@ -81,21 +81,21 @@ public class GroupingsService {
     public String changeListServeStatus(String grouping, String username, boolean listServeOn) {
         String attributeName = "uh-settings:attributes:for-groups:uh-grouping:destinations:listserv";
 
-        return changeAttributeStatus(grouping, username, attributeName, listServeOn);
+        return changeGroupAttributeStatus(grouping, username, attributeName, listServeOn);
     }
 
 
     public String changeOptInStatus(String grouping, String username, boolean optInOn) {
         String attributeName = "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in";
 
-        return changeAttributeStatus(grouping, username, attributeName, optInOn);
+        return changeGroupAttributeStatus(grouping, username, attributeName, optInOn);
     }
 
 
     public String changeOptOutStatus(String grouping, String username, boolean optOutOn) {
         String attributeName = "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-out";
 
-        return changeAttributeStatus(grouping, username, attributeName, optOutOn);
+        return changeGroupAttributeStatus(grouping, username, attributeName, optOutOn);
     }
 
 
@@ -346,23 +346,22 @@ public class GroupingsService {
     }
 
     public boolean optOutPermission(String grouping) {
-        String assignType = "group";
         String nameName = "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-out";
 
-        return groupHasAttribute(grouping, assignType, nameName);
+        return groupHasAttribute(grouping, nameName);
     }
 
 
     public boolean optInPermission(String grouping) {
-        String assignType = "group";
         String nameName = "uh-settings:attributes:for-groups:uh-grouping:anyone-can:opt-in";
 
-        return groupHasAttribute(grouping, assignType, nameName);
+        return groupHasAttribute(grouping, nameName);
     }
 
-    public boolean groupHasAttribute(String grouping, String assignType, String nameName) {
+    public boolean groupHasAttribute(String grouping, String nameName) {
 
         boolean hasAtt = false;
+        String assignType = "group";
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
                 attributeAssignmentsResults(assignType, grouping, nameName);
@@ -388,10 +387,9 @@ public class GroupingsService {
 
     public boolean hasListServe(String grouping) {
 
-        String assignType = "group";
         String nameName = "uh-settings:attributes:for-groups:uh-grouping:destinations:listserv";
 
-        return groupHasAttribute(grouping, assignType, nameName);
+        return groupHasAttribute(grouping, nameName);
     }
 
     public List<Grouping> groupingsOwned(String username) {
@@ -948,21 +946,21 @@ public class GroupingsService {
     }
 
 
-    public String changeAttributeStatus(String grouping, String username, String attributeName, boolean attributeOn) {
+    public String changeGroupAttributeStatus(String group, String username, String attributeName, boolean attributeOn) {
         String returnMessage;
 
-        if (isOwner(grouping, username)) {
+        if (isOwner(group, username)) {
             if (attributeOn) {
-                if (!hasListServe(grouping)) {
-                    groupAttributeAssign(attributeName, "assign_attr", grouping);
+                if (!groupHasAttribute(group, attributeName)) {
+                    groupAttributeAssign(attributeName, "assign_attr", group);
 
                     returnMessage = attributeName + " has been turned on";
                 } else {
                     returnMessage = attributeName + " is already on";
                 }
             } else {
-                if (hasListServe(grouping)) {
-                    groupAttributeAssign(attributeName, "remove_attr", grouping);
+                if (groupHasAttribute(group, attributeName)) {
+                    groupAttributeAssign(attributeName, "remove_attr", group);
 
                     returnMessage = attributeName + " has been turned off";
                 } else {

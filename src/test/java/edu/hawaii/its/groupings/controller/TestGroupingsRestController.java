@@ -1,5 +1,4 @@
-package edu.hawaii.its.holiday.controller;
-
+package edu.hawaii.its.groupings.controller;
 import edu.hawaii.its.holiday.api.GroupingsService;
 import edu.hawaii.its.holiday.api.type.Grouping;
 import edu.hawaii.its.holiday.api.type.MyGroupings;
@@ -19,15 +18,9 @@ import javax.annotation.PostConstruct;
 
 import static org.junit.Assert.*;
 
-/**
- *
- * Created by zknoebel on 1/31/17.
- */
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
-public class TestGroupingsController {
-
+public class TestGroupingsRestController {
     private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
     private String include = grouping + ":include";
     private String exclude = grouping + ":exclude";
@@ -40,7 +33,7 @@ public class TestGroupingsController {
     private GroupingsService gs;
 
     @Autowired
-    private GroupingsController gc;
+    private GroupingsRestController gc;
 
     @Autowired
     public Environment env; // Just for the settings check.
@@ -156,7 +149,7 @@ public class TestGroupingsController {
 
     @Test
     public void getGroupingTest() {
-        Grouping grouping = gc.getGrouping(this.grouping, tst[0]).getBody();
+        Grouping grouping = gc.grouping(this.grouping, tst[0]).getBody();
 
         assertTrue(grouping.getBasis().getNames().contains(tstName[3]));
         assertTrue(grouping.getBasis().getNames().contains(tstName[4]));
@@ -200,10 +193,10 @@ public class TestGroupingsController {
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
         gc.assignOwnership(grouping.getPath(), tst[0], tst[5]);
-        grouping = gc.getGrouping(this.grouping, tst[0]).getBody();
+        grouping = gc.grouping(this.grouping, tst[0]).getBody();
         assertTrue(grouping.getOwners().getNames().contains(tstName[5]));
         gc.removeOwnership(grouping.getPath(), tst[0], tst[5]);
-        grouping = gc.getGrouping(this.grouping, tst[0]).getBody();
+        grouping = gc.grouping(this.grouping, tst[0]).getBody();
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
     }
 
@@ -287,7 +280,7 @@ public class TestGroupingsController {
         gc.addMemberToExcludeGroup(grouping, tst[0], tst[4]);
         assertFalse(gs.inGroup(grouping, tst[4]));
     }
-    
+
 
     @Test
     public void optOutTest() {
@@ -306,4 +299,36 @@ public class TestGroupingsController {
     }
 
 
+    @Test
+    public void changeListserveStatusTest(){
+        assertTrue(gs.hasListServe(grouping));
+
+        gc.setListserve(grouping, tst[0], false);
+        assertFalse(gs.hasListServe(grouping));
+
+        gc.setListserve(grouping, tst[0], true);
+        assertTrue(gs.hasListServe(grouping));
+    }
+
+    @Test
+    public void changeOptInTest(){
+        assertTrue(gs.optInPermission(grouping));
+
+        gc.setOptIn(grouping, tst[0], false);
+        assertFalse(gs.optInPermission(grouping));
+
+        gc.setOptIn(grouping, tst[0], true);
+        assertTrue(gs.optInPermission(grouping));
+    }
+
+    @Test
+    public void changeOptOutTest(){
+        assertTrue(gs.optOutPermission(grouping));
+
+        gc.setOptOut(grouping, tst[0], false);
+        assertFalse(gs.optOutPermission(grouping));
+
+        gc.setOptOut(grouping, tst[0], true);
+        assertTrue(gs.optOutPermission(grouping));
+    }
 }
