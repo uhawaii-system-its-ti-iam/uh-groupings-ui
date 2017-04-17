@@ -1,21 +1,21 @@
 package edu.hawaii.its.holiday.controller;
 
-import edu.hawaii.its.groupings.api.GroupingsServiceImpl;
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.type.MyGroupings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
+import edu.hawaii.its.groupings.api.GroupingsService;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.type.MyGroupings;
+
 /**
- * Created by zknoebel on 12/12/16.
- *
- * file containing the mappings for all Groupings methods
+ * The mappings for all Groupings methods.
  */
 
 @RestController
@@ -23,9 +23,11 @@ public class GroupingsController {
 
     private static final Logger logger = LoggerFactory.getLogger(GroupingsController.class);
 
-    @Autowired
-    private GroupingsServiceImpl gs;
+    @Value("${app.iam.request.form}")
+    private String requestForm;
 
+    @Autowired
+    private GroupingsService gs;
 
     /**
      * adds a member to the include group of the Grouping who's path is in 'grouping'
@@ -44,7 +46,6 @@ public class GroupingsController {
                 .body(gs.addMemberAs(username, grouping + ":include", userToAdd));
     }
 
-
     /**
      * adds a member to the exclude group of the Grouping who's path is in 'grouping'
      * if that member is in the include group, they will be removed from it
@@ -62,7 +63,6 @@ public class GroupingsController {
                 .body(gs.addMemberAs(username, grouping + ":exclude", userToAdd));
     }
 
-
     /**
      * deletes a member in the include group of the Grouping who's path is in 'grouping'
      *
@@ -79,7 +79,6 @@ public class GroupingsController {
                 .body(gs.deleteMemberAs(username, grouping + ":include", userToDelete));
     }
 
-
     /**
      * deletes a member in the exclude group of the Grouping who's path is in 'grouping'
      *
@@ -95,7 +94,6 @@ public class GroupingsController {
                 .ok()
                 .body(gs.deleteMemberAs(username, grouping + ":exclude", userToDelete));
     }
-
 
     /**
      * gives the user read, update and view privileges for the Grouping
@@ -116,7 +114,6 @@ public class GroupingsController {
                 .body(gs.assignOwnership(grouping, username, newOwner));
     }
 
-
     /**
      * removes read, and update privileges from the user for the designated Grouping
      * read privilege allows the user to see the members and owners of a Grouping
@@ -136,7 +133,6 @@ public class GroupingsController {
                 .body(gs.removeOwnership(grouping, username, ownerToRemove));
     }
 
-
     /**
      * finds and returns the specified Grouping
      *
@@ -153,11 +149,11 @@ public class GroupingsController {
     @RequestMapping("/grouping")
     public ResponseEntity<Grouping> getGrouping(@RequestParam String grouping, @RequestParam String username) {
         logger.info("Entered REST grouping...");
+        Grouping groupingObj = gs.getGrouping(grouping, username);
         return ResponseEntity
                 .ok()
-                .body(gs.getGrouping(grouping, username));
+                .body(groupingObj);
     }
-
 
     /**
      * @param username: username of user to get lists of Groupings for
@@ -192,7 +188,6 @@ public class GroupingsController {
                 .body(gs.optIn(username, grouping));
     }
 
-
     /**
      * if the user is allowed to opt out of the grouping
      * this will add them to the exclude group of that grouping
@@ -209,7 +204,6 @@ public class GroupingsController {
                 .ok()
                 .body(gs.optOut(username, grouping));
     }
-
 
     /**
      * if the user has previously opted in
@@ -230,7 +224,6 @@ public class GroupingsController {
                 .body(gs.cancelOptIn(grouping, username));
     }
 
-
     /**
      * if the user has previously opted out
      * this will cancel the effects of opting out
@@ -250,7 +243,6 @@ public class GroupingsController {
                 .body(gs.cancelOptOut(grouping, username));
     }
 
-
     /**
      * eventually this is intended to give the user the ability to add a Grouping in one of the Groupings that they own,
      * for now it will bring the user to the web page where they can submit a request to the UHGrouper staff
@@ -261,14 +253,10 @@ public class GroupingsController {
      */
     //currently this method is not to be implemented because responsibility to create a new
     //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
-    //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
     @RequestMapping("/addGrouping")
     public RedirectView addGrouping() {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form");
-        return redirectView;
+        return new RedirectView(requestForm);
     }
-
 
     /**
      * removes a Grouping
@@ -277,13 +265,11 @@ public class GroupingsController {
      */
     //currently this method is not to be implemented because responsibility to create a new
     //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
-    //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
+    // ${app.iam.request.form}
     // email its-iam-help@hawaii.edu for help in deleting a Grouping
     @RequestMapping("/deleteGrouping")
     public RedirectView deleteGrouping() {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form");
-        return redirectView;
+        return new RedirectView(requestForm);
     }
 
     //TODO give the Grouping owner the ability to change the optin/optout attribute for their Grouping

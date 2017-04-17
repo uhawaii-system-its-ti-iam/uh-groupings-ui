@@ -8,8 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
@@ -17,22 +15,23 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class GroupingsServiceImplTest {
+public class GroupingsServiceTest {
 
     @Autowired
-    private GroupingsServiceImpl groupingsServiceImpl;
+    private GroupingsService groupingsService;
 
     @Test
     public void construction() {
-        assertNotNull(groupingsServiceImpl);
+        assertNotNull(groupingsService);
     }
 
     @Test
     public void makeWsSubjectLookup() {
-        WsSubjectLookup lookup = groupingsServiceImpl.makeWsSubjectLookup("someuser");
+        GroupingsService groupingsService = new GroupingsServiceImpl();
+        final String username = "someuser";
+        WsSubjectLookup lookup = groupingsService.makeWsSubjectLookup(username);
         assertNotNull(lookup);
-        assertThat(lookup.getSubjectIdentifier(), equalTo("someuser"));
+        assertThat(lookup.getSubjectIdentifier(), equalTo(username));
         assertThat(lookup.getSubjectId(), equalTo(null));
         assertThat(lookup.getSubjectSourceId(), equalTo(null));
     }

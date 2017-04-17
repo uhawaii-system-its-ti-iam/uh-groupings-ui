@@ -1,8 +1,5 @@
 package edu.hawaii.its.groupings.api.type;
 
-/**
- * Created by zknoebel on 3/15/2017.
- */
 public class Grouping {
     private Group basis;
     private Group exclude;
@@ -11,25 +8,23 @@ public class Grouping {
     private Group owners;
     private String name;
     private String path;
-    private boolean hasListServe = false;
+    private boolean hasListserv = false;
 
-    public Grouping(Group basis, Group exclude, Group include, Group basisPlusIncludeMinusExclude, Group owners){
-        this.basis = basis;
-        this.exclude = exclude;
-        this.include = include;
-        this.basisPlusIncludeMinusExclude = basisPlusIncludeMinusExclude;
-        this.owners = owners;
+    // Constructor.
+    public Grouping() {
+        this("");
     }
 
-    public Grouping(String path){
-        this.path = path;
-        name = path.split(":")[path.split(":").length -1];
+    // Constructor.
+    public Grouping(String path) {
+        setPath(path);
+
+        setBasis(new EmptyGroup());
+        setExclude(new EmptyGroup());
+        setInclude(new EmptyGroup());
+        setBasisPlusIncludeMinusExclude(new EmptyGroup());
+        setOwners(new EmptyGroup());
     }
-
-    public Grouping(){
-
-    }
-
 
     public String getName() {
         return name;
@@ -40,8 +35,8 @@ public class Grouping {
     }
 
     public void setPath(String path) {
-        this.path = path;
-        name = path.split(":")[path.split(":").length -1];
+        this.path = path != null ? path : "";
+        this.name = path.split(":")[path.split(":").length - 1];
     }
 
     public Group getBasis() {
@@ -49,7 +44,7 @@ public class Grouping {
     }
 
     public void setBasis(Group basis) {
-        this.basis = basis;
+        this.basis = basis != null ? basis : new EmptyGroup();
     }
 
     public Group getExclude() {
@@ -57,7 +52,7 @@ public class Grouping {
     }
 
     public void setExclude(Group exclude) {
-        this.exclude = exclude;
+        this.exclude = exclude != null ? exclude : new EmptyGroup();
     }
 
     public Group getInclude() {
@@ -65,7 +60,7 @@ public class Grouping {
     }
 
     public void setInclude(Group include) {
-        this.include = include;
+        this.include = include != null ? include : new EmptyGroup();
     }
 
     public Group getBasisPlusIncludeMinusExclude() {
@@ -73,7 +68,7 @@ public class Grouping {
     }
 
     public void setBasisPlusIncludeMinusExclude(Group basisPlusIncludeMinusExclude) {
-        this.basisPlusIncludeMinusExclude = basisPlusIncludeMinusExclude;
+        this.basisPlusIncludeMinusExclude = basisPlusIncludeMinusExclude != null ? basisPlusIncludeMinusExclude : new EmptyGroup();
     }
 
     public Group getOwners() {
@@ -81,15 +76,24 @@ public class Grouping {
     }
 
     public void setOwners(Group owners) {
-        this.owners = owners;
+        this.owners = owners != null ? owners : new EmptyGroup();
     }
 
-    public boolean getHasListServe() {
-        return hasListServe;
+    public boolean getHasListserv() {
+        return hasListserv;
     }
 
-    public void setListServe(boolean hasListServe){
-            this.hasListServe = hasListServe;
+    public void setHasListserv(boolean hasListserv) {
+        this.hasListserv = hasListserv;
     }
 
+    @Override
+    public String toString() {
+        return "Grouping [name=" + name
+                + ", path=" + path
+                + ", hasListserv=" + hasListserv
+                + ", basis=" + basis
+                + ", owners=" + owners
+                + "]";
+    }
 }
