@@ -226,7 +226,8 @@
                                 <echo>Now that you have a clean project,</echo>
                                 <echo>here are some common goals for this project:</echo>
                                 <echo>$ mvn clean test</echo>
-                                <echo>$ mvn clean test -Dtest=*SystemTest </echo>
+                                <echo>$ mvn clean test -Dtest=*SystemTest </echo>                                
+                                <echo>$ mvn clean test -Dspring.profiles.active=test -Dtest=Test* </echo>                                
                                 <echo>$ mvn clean package</echo>
                                 <echo>$ mvn -Dmaven.test.skip=true clean package</echo>
                                 <echo>$ mvn clean spring-boot:run</echo>
