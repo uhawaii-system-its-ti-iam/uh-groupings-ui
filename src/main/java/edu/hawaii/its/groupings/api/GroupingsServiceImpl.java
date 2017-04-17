@@ -3,18 +3,16 @@ package edu.hawaii.its.groupings.api;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import edu.hawaii.its.groupings.api.type.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import edu.hawaii.its.groupings.api.type.Group;
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.type.MyGroupings;
-import edu.hawaii.its.groupings.api.type.Person;
 import edu.hawaii.its.holiday.util.Dates;
 import edu.internet2.middleware.grouperClient.api.GcAddMember;
 import edu.internet2.middleware.grouperClient.api.GcAssignAttributes;
@@ -78,23 +76,23 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public Object[] assignOwnership(String grouping, String username, String newOwner) {
+    public GrouperActionResult[] assignOwnership(String grouping, String username, String newOwner) {
 
         if (isOwner(grouping, username)) {
             WsSubjectLookup ownerToAdd = makeWsSubjectLookup(newOwner);
-            WsAssignGrouperPrivilegesResults[] privilegeResults = new WsAssignGrouperPrivilegesResults[4];
+            GrouperActionResult[] privilegeResults = new GrouperActionResult[4];
 
             WsGroupLookup basisGroupLookup = makeWsGroupLookup(grouping + ":basis");
-            privilegeResults[0] = addGroupOwnership(basisGroupLookup, ownerToAdd);
+            privilegeResults[0] = makeGrouperActionResult(addGroupOwnership(basisGroupLookup, ownerToAdd), "add ownership to basis");
 
             WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(grouping + ":basis+include");
-            privilegeResults[1] = addGroupOwnership(basisPlusIncludeGroupLookup, ownerToAdd);
+            privilegeResults[1] = makeGrouperActionResult(addGroupOwnership(basisPlusIncludeGroupLookup, ownerToAdd), "add ownership to basis+include");
 
             WsGroupLookup excludeGroupLookup = makeWsGroupLookup(grouping + EXCLUDE);
-            privilegeResults[2] = addGroupOwnership(excludeGroupLookup, ownerToAdd);
+            privilegeResults[2] = makeGrouperActionResult(addGroupOwnership(excludeGroupLookup, ownerToAdd), "add ownership to exclude");
 
             WsGroupLookup includeGroupLookup = makeWsGroupLookup(grouping + INCLUDE);
-            privilegeResults[3] = addGroupOwnership(includeGroupLookup, ownerToAdd);
+            privilegeResults[3] = makeGrouperActionResult(addGroupOwnership(includeGroupLookup, ownerToAdd), "add ownership to include");
 
             return privilegeResults;
         }
@@ -135,23 +133,23 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public Object[] removeOwnership(String grouping, String username, String ownerToRemove) {
+    public GrouperActionResult[] removeOwnership(String grouping, String username, String ownerToRemove) {
 
         if (isOwner(grouping, username)) {
-            WsAssignGrouperPrivilegesResults[] privileges = new WsAssignGrouperPrivilegesResults[4];
+            GrouperActionResult[] privileges = new GrouperActionResult[4];
 
             WsSubjectLookup ownerToRemoveLookup = makeWsSubjectLookup(ownerToRemove);
             WsGroupLookup basisGroupLookup = makeWsGroupLookup(grouping + ":basis");
-            privileges[0] = removeGroupOwnership(basisGroupLookup, ownerToRemoveLookup);
+            privileges[0] = makeGrouperActionResult(removeGroupOwnership(basisGroupLookup, ownerToRemoveLookup), "remove ownership from basis");
 
             WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(grouping + ":basis+include");
-            privileges[1] = removeGroupOwnership(basisPlusIncludeGroupLookup, ownerToRemoveLookup);
+            privileges[1] = makeGrouperActionResult(removeGroupOwnership(basisPlusIncludeGroupLookup, ownerToRemoveLookup), "remove ownership from basis+include");
 
             WsGroupLookup excludeGroupLookup = makeWsGroupLookup(grouping + EXCLUDE);
-            privileges[2] = removeGroupOwnership(excludeGroupLookup, ownerToRemoveLookup);
+            privileges[2] = makeGrouperActionResult(removeGroupOwnership(excludeGroupLookup, ownerToRemoveLookup), "remove ownership from exclude");
 
             WsGroupLookup includeGroupLookup = makeWsGroupLookup(grouping + INCLUDE);
-            privileges[3] = removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup);
+            privileges[3] = makeGrouperActionResult(removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup), "remove ownership from include");
 
             return privileges;
         }
@@ -431,8 +429,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (privilegeResults != null) {
             if (privilegeResults.length > 0) {
                 List<WsGroup> groups = new ArrayList<>();
-                for (int i = 0; i < privilegeResults.length; i++) {
-                    groups.add(privilegeResults[i].getWsGroup());
+                for (WsGrouperPrivilegeResult privilegeResult : privilegeResults) {
+                    groups.add(privilegeResult.getWsGroup());
 
                 }
                 List<String> names = extractGroupNames(groups);
@@ -448,7 +446,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             }
         }
 
-        return new ArrayList<Grouping>();
+        return new ArrayList<>();
     }
 
     public List<Grouping> groupingsToOptOutOf(String username) {
@@ -457,7 +455,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
         List<String> groupings = groupingNames
                 .stream()
-                .filter(name -> optOutPermission(name))
+                .filter(this::optOutPermission)
                 .collect(Collectors.toList());
 
         return makeGroupings(groupings);
@@ -469,7 +467,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
         List<String> groupings = groupingNames
                 .stream()
-                .filter(name -> optInPermission(name))
+                .filter(this::optInPermission)
                 .collect(Collectors.toList());
 
         return makeGroupings(groupings);
@@ -835,7 +833,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public WsGetMembersResults getMembers(WsSubjectLookup user, String group) {
         logger.info("getMembers; user: " + user + "; group: " + group);
 
-        List<String> groupNames = Arrays.asList(group);
+        List<String> groupNames = Collections.singletonList(group);
         String grouping = extractGroupingNames(groupNames).get(0);
         if (isOwner(grouping, user.getSubjectIdentifier())) {
             return new GcGetMembers()
@@ -1015,4 +1013,13 @@ public class GroupingsServiceImpl implements GroupingsService {
         return message;
     }
 
+    public GrouperActionResult makeGrouperActionResult(WsAssignGrouperPrivilegesResults assignGrouperPrivilegesResults, String action){
+        GrouperActionResult grouperActionResult = new GrouperActionResult();
+
+        grouperActionResult.setAction(action);
+        grouperActionResult.setResultCode(assignGrouperPrivilegesResults.getResultMetadata().getResultCode());
+
+        return grouperActionResult;
+    }
 }
+
