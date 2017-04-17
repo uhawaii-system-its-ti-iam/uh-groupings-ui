@@ -235,6 +235,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public Object[] optIn(String username, String grouping) {
+        //Todo change to GrouperActionResponse
 
         if (groupOptInPermission(username, grouping + INCLUDE)) {
             Object[] results = new Object[6];
@@ -262,6 +263,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public Object[] optOut(String username, String grouping) {
+        //Todo change to GrouperActionResponse
 
         if (groupOptInPermission(username, grouping + EXCLUDE)) {
             Object[] results = new Object[6];
@@ -287,6 +289,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public Object[] cancelOptIn(String grouping, String username) {
+        //Todo change to GrouperActionResponse
         Object[] results = new Object[3];
         String group = grouping + INCLUDE;
 
@@ -315,6 +318,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public Object[] cancelOptOut(String grouping, String username) {
+        //Todo change to GrouperActionResponse
         Object[] results = new Object[3];
         String group = grouping + EXCLUDE;
 
