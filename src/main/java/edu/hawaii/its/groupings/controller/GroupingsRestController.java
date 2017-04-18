@@ -346,7 +346,7 @@ public class GroupingsRestController {
     //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
     //${app.iam.request.form}
     @RequestMapping(value = "/addGrouping",
-                    method = RequestMethod.POST,
+                    method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView addGrouping() {
         return new RedirectView(requestForm);
@@ -362,7 +362,7 @@ public class GroupingsRestController {
     //${app.iam.request.form}
     // email its-iam-help@hawaii.edu for help in deleting a Grouping
     @RequestMapping(value = "/deleteGrouping",
-                    method = RequestMethod.POST,
+                    method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView deleteGrouping() {
         return new RedirectView(requestForm);
