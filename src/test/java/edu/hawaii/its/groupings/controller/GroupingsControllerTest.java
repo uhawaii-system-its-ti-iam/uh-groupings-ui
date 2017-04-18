@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.net.URI;
 
+import edu.hawaii.its.groupings.api.type.GrouperActionResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -129,18 +130,20 @@ public class GroupingsControllerTest {
         final String username = "username";
 
         given(groupingsService.cancelOptOut(grouping, username))
-                .willReturn(new Object[] { "A", "B", "C", grouping, username });
+                .willReturn(new GrouperActionResult[]{
+                        new GrouperActionResult("SUCCESS", "delete memeber from exclude group"),
+                        new GrouperActionResult("SUCCESS", "update last-modified attribute for exclude group")
+                });
 
         mockMvc.perform(get("/cancelOptOut")
                 .param("grouping", grouping)
                 .param("username", username))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(5)))
-                .andExpect(jsonPath("$[0]").value("A"))
-                .andExpect(jsonPath("$[1]").value("B"))
-                .andExpect(jsonPath("$[2]").value("C"))
-                .andExpect(jsonPath("$[3]").value(grouping))
-                .andExpect(jsonPath("$[4]").value(username));
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0][0]").value("SUCCESS"))
+                .andExpect(jsonPath("$[0][1]").value("delete memeber from exclude group"))
+                .andExpect(jsonPath("$[1][0]").value("SUCCESS"))
+                .andExpect(jsonPath("$[1][1]").value("update last-modified attribute for exclude group"));
     }
 
     @Test
