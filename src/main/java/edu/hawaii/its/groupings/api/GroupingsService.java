@@ -3,6 +3,7 @@ package edu.hawaii.its.groupings.api;
 import java.util.List;
 
 import edu.hawaii.its.groupings.api.type.Group;
+import edu.hawaii.its.groupings.api.type.GrouperActionResult;
 import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
@@ -37,27 +38,21 @@ public interface GroupingsService {
     //TODO change to non-Grouper return type
     public WsDeleteMemberResults deleteMemberAs(String username, String group, String userToDelete);
 
-    //TODO change to non-Object return type
-    public Object[] assignOwnership(String grouping, String username, String newOwner);
+    public GrouperActionResult[] assignOwnership(String grouping, String username, String newOwner);
 
-    //TODO change to non-Object return type
-    public Object[] removeOwnership(String grouping, String username, String ownerToRemove);
+    public GrouperActionResult[] removeOwnership(String grouping, String username, String ownerToRemove);
 
     public Grouping getGrouping(String grouping, String username);
 
     public MyGroupings getMyGroupings(String username);
 
-    //TODO change to non-Object return type
-    public Object[] optIn(String username, String grouping);
+    public GrouperActionResult[] optIn(String username, String grouping);
 
-    //TODO change to non-Object return type
-    public Object[] optOut(String username, String grouping);
+    public GrouperActionResult[] optOut(String username, String grouping);
 
-    //TODO change to non-Object return type
-    public Object[] cancelOptIn(String grouping, String username);
+    public GrouperActionResult[] cancelOptIn(String grouping, String username);
 
-    //TODO change to non-Object return type
-    public Object[] cancelOptOut(String grouping, String username);
+    public GrouperActionResult[] cancelOptOut(String grouping, String username);
 
     public String changeListServeStatus(String grouping, String username, boolean listServeOn);
 
