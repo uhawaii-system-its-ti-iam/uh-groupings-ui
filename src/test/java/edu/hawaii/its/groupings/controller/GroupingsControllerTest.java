@@ -140,10 +140,10 @@ public class GroupingsControllerTest {
                 .param("username", username))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0][0]").value("SUCCESS"))
-                .andExpect(jsonPath("$[0][1]").value("delete memeber from exclude group"))
-                .andExpect(jsonPath("$[1][0]").value("SUCCESS"))
-                .andExpect(jsonPath("$[1][1]").value("update last-modified attribute for exclude group"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("delete memeber from exclude group"))
+                .andExpect(jsonPath("$[1].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[1].action").value("update last-modified attribute for exclude group"));
     }
 
     @Test
