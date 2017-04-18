@@ -2,25 +2,11 @@ package edu.hawaii.its.groupings.api.type;
 
 import java.util.List;
 
-/**
- * Created by zknoebel on 4/4/2017.
- */
 public class MyGroupings {
     List<Grouping> groupingsIn;
     List<Grouping> groupingsOwned;
     List<Grouping> groupingsToOptOutOf;
     List<Grouping> groupingsToOptInTo;
-
-    public MyGroupings(List<Grouping> groupingsIn, List<Grouping> groupingsOwned, List<Grouping> groupingsToOptInTo, List<Grouping> groupingsToOptOutOf){
-        this.groupingsIn = groupingsIn;
-        this.groupingsOwned = groupingsOwned;
-        this.groupingsToOptInTo = groupingsToOptInTo;
-        this.groupingsToOptOutOf = groupingsToOptOutOf;
-    }
-
-    public MyGroupings(){
-
-    }
 
     public List<Grouping> getGroupingsIn() {
         return groupingsIn;

@@ -1,13 +1,31 @@
 package edu.hawaii.its.groupings.api.type;
 
-/**
- * Created by zknoebel on 3/30/2017.
- */
 public class GrouperActionResult {
-    private boolean success;
+    private String action;
+    private String resultCode;
 
-    public GrouperActionResult(){
-
+    public GrouperActionResult() {
+        // Empty.
     }
 
+    public GrouperActionResult(String resultCode, String action) {
+        this.resultCode = resultCode;
+        this.action = action;
+    }
+
+    public String getResultCode() {
+        return resultCode;
+    }
+
+    public void setResultCode(String resultCode) {
+        this.resultCode = resultCode;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
 }

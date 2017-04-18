@@ -2,8 +2,6 @@ package edu.hawaii.its.groupings.controller;
 
 import javax.annotation.PostConstruct;
 
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.type.MyGroupings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +9,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
-
-import edu.hawaii.its.groupings.api.GroupingsServiceImpl;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
+
+import edu.hawaii.its.groupings.api.GroupingsService;
+import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.type.MyGroupings;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -25,15 +28,17 @@ public class GroupingsRestController {
     @Value("${app.groupings.controller.uuid}")
     private String uuid;
 
+    @Value("${app.iam.request.form}")
+    private String requestForm;
+
     @Autowired
-    private GroupingsServiceImpl gs;
+    private GroupingsService gs;
 
     @PostConstruct
     public void init() {
         Assert.hasLength(uuid, "Property 'app.groupings.controller.uuid' is required.");
         logger.info("GroupingsRestController started.");
     }
-
 
     /**
      * adds a member to the include group of the Grouping who's path is in 'grouping'
@@ -45,15 +50,14 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{userToAdd}/addMemberToIncludeGroup",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addMemberToIncludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToIncludeGroup...");
         return ResponseEntity
                 .ok()
                 .body(gs.addMemberAs(username, grouping + ":include", userToAdd));
     }
-
 
     /**
      * adds a member to the exclude group of the Grouping who's path is in 'grouping'
@@ -65,15 +69,14 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{userToAdd}/addMemberToExcludeGroup",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addMemberToExcludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToExcludeGroup...");
         return ResponseEntity
                 .ok()
                 .body(gs.addMemberAs(username, grouping + ":exclude", userToAdd));
     }
-
 
     /**
      * deletes a member in the include group of the Grouping who's path is in 'grouping'
@@ -84,15 +87,14 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{userToDelete}/deleteMemberFromIncludeGroup",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteMemberFromIncludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToDelete) {
         logger.info("Entered REST deleteMemberFromIncludeGroup...");
         return ResponseEntity
                 .ok()
                 .body(gs.deleteMemberAs(username, grouping + ":include", userToDelete));
     }
-
 
     /**
      * deletes a member in the exclude group of the Grouping who's path is in 'grouping'
@@ -103,15 +105,14 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{userToDelete}/deleteMemberFromExcludeGroup",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteMemberFromExcludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToDelete) {
         logger.info("Entered REST deleteMemberFromExcludeGroup...");
         return ResponseEntity
                 .ok()
                 .body(gs.deleteMemberAs(username, grouping + ":exclude", userToDelete));
     }
-
 
     /**
      * gives the user read, update and view privileges for the Grouping
@@ -125,15 +126,14 @@ public class GroupingsRestController {
      * @return information about the privileges being added to new owner and the success of these privilege assignments
      */
     @RequestMapping(value = "/{grouping}/{username}/{newOwner}/assignOwnership",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> assignOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String newOwner) {
         logger.info("Entered REST assignOwnership...");
         return ResponseEntity
                 .ok()
                 .body(gs.assignOwnership(grouping, username, newOwner));
     }
-
 
     /**
      * removes read, and update privileges from the user for the designated Grouping
@@ -147,15 +147,14 @@ public class GroupingsRestController {
      * @return information about the privileges being removed from the owner and the success of these privilege assignments
      */
     @RequestMapping(value = "/{grouping}/{username}/{ownerToRemove}/removeOwnership",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> removeOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String ownerToRemove) {
         logger.info("Entered REST removeOwnership...");
         return ResponseEntity
                 .ok()
                 .body(gs.removeOwnership(grouping, username, ownerToRemove));
     }
-
 
     /**
      * finds and returns the specified Grouping
@@ -171,15 +170,14 @@ public class GroupingsRestController {
      * whether or not the Grouping has a list serve associated with it
      */
     @RequestMapping(value = "/{grouping}/{username}/grouping",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Grouping> grouping(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST grouping...");
         return ResponseEntity
                 .ok()
                 .body(gs.getGrouping(grouping, username));
     }
-
 
     /**
      * @param username: username of user to get lists of Groupings for
@@ -190,15 +188,14 @@ public class GroupingsRestController {
      * Groupings that the user can opt out of
      */
     @RequestMapping(value = "/api/grouping/{username}/myGroupings",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username) {
         logger.info("Entered REST myGroupings...");
         return ResponseEntity
                 .ok()
                 .body(gs.getMyGroupings(username));
     }
-
 
     /**
      * if the user is allowed to opt into the grouping
@@ -210,15 +207,14 @@ public class GroupingsRestController {
      * @return information about the success of opting in
      */
     @RequestMapping(value = "/{grouping}/{username}/optIn",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> optIn(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST optIn...");
         return ResponseEntity
                 .ok()
                 .body(gs.optIn(username, grouping));
     }
-
 
     /**
      * if the user is allowed to opt out of the grouping
@@ -230,15 +226,14 @@ public class GroupingsRestController {
      * @return information about the success of opting out
      */
     @RequestMapping(value = "/{grouping}/{username}/optOut",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> optOut(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST optOut...");
         return ResponseEntity
                 .ok()
                 .body(gs.optOut(username, grouping));
     }
-
 
     /**
      * if the user has previously opted in
@@ -252,15 +247,14 @@ public class GroupingsRestController {
      * @return information about the success of canceling the opt in
      */
     @RequestMapping(value = "/{grouping}/{username}/cancelOptIn",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> cancelOptIn(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST cancelOptIn...");
         return ResponseEntity
                 .ok()
                 .body(gs.cancelOptIn(grouping, username));
     }
-
 
     /**
      * if the user has previously opted out
@@ -274,15 +268,14 @@ public class GroupingsRestController {
      * @return information about the success of canceling the opt out
      */
     @RequestMapping(value = "/{grouping}/{username}/cancelOptOut",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> cancelOptOut(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST cancelOptOut...");
         return ResponseEntity
                 .ok()
                 .body(gs.cancelOptOut(grouping, username));
     }
-
 
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserve
@@ -293,15 +286,14 @@ public class GroupingsRestController {
      * @return iformation about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{listServeOn}/setListserve",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> setListserve(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean listServeOn) {
         logger.info("Entered REST setListserve...");
         return ResponseEntity
                 .ok()
                 .body(gs.changeListServeStatus(grouping, username, listServeOn));
     }
-
 
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping's members can opt in
@@ -312,15 +304,14 @@ public class GroupingsRestController {
      * @return iformation about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptIn",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> setOptIn(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optInOn) {
         logger.info("Entered REST setOptIn...");
         return ResponseEntity
                 .ok()
                 .body(gs.changeOptInStatus(grouping, username, optInOn));
     }
-
 
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping's members can opt out
@@ -331,8 +322,8 @@ public class GroupingsRestController {
      * @return iformation about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptOut",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> setOptOut(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optOutOn) {
         logger.info("Entered REST setOptIn...");
         return ResponseEntity
@@ -340,9 +331,8 @@ public class GroupingsRestController {
                 .body(gs.changeOptOutStatus(grouping, username, optOutOn));
     }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * eventually this is intended to give the user the ability to add a Grouping in one of the Groupings that they own,
@@ -354,16 +344,13 @@ public class GroupingsRestController {
      */
     //currently this method is not to be implemented because responsibility to create a new
     //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
-    //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
+    //${app.iam.request.form}
     @RequestMapping(value = "/addGrouping",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView addGrouping() {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form");
-        return redirectView;
+        return new RedirectView(requestForm);
     }
-
 
     /**
      * removes a Grouping
@@ -372,18 +359,15 @@ public class GroupingsRestController {
      */
     //currently this method is not to be implemented because responsibility to create a new
     //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
-    //https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form
+    //${app.iam.request.form}
     // email its-iam-help@hawaii.edu for help in deleting a Grouping
     @RequestMapping(value = "/deleteGrouping",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.POST,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView deleteGrouping() {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form");
-        return redirectView;
+        return new RedirectView(requestForm);
     }
 }
-
 
 //TODO implement function for owner to turn on/off listserve
 //TODO implement function for owner to turn on/off optIn/optOut attribute
