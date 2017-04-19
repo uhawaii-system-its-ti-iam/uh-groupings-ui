@@ -62,9 +62,7 @@ public class GroupingsRestControllerTest {
         given(groupingsService.getGrouping(grouping, username))
                 .willReturn(grouping());
 
-        mockMvc.perform(get("/grouping")
-                .param("grouping", grouping)
-                .param("username", username))
+        mockMvc.perform(get("/api/groupings/grouping/username/grouping"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("bob"))
                 .andExpect(jsonPath("path").value("test:ing:me:bob"))
