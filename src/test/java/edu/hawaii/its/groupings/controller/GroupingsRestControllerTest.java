@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import java.net.URI;
 
-import edu.hawaii.its.groupings.api.type.GrouperActionResult;
+import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -137,9 +137,9 @@ public class GroupingsRestControllerTest {
         final String username = "username";
 
         given(groupingsService.cancelOptOut(grouping, username))
-                .willReturn(new GrouperActionResult[]{
-                        new GrouperActionResult("SUCCESS", "delete memeber from exclude group"),
-                        new GrouperActionResult("SUCCESS", "update last-modified attribute for exclude group")
+                .willReturn(new GroupingsServiceResult[]{
+                        new GroupingsServiceResult("SUCCESS", "delete memeber from exclude group"),
+                        new GroupingsServiceResult("SUCCESS", "update last-modified attribute for exclude group")
                 });
 
         mockMvc.perform(post("/api/groupings/grouping/username/cancelOptOut")

@@ -1,12 +1,10 @@
 package edu.hawaii.its.groupings.api;
 
 import edu.hawaii.its.groupings.api.type.Group;
-import edu.hawaii.its.groupings.api.type.GrouperActionResult;
+import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
 import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
 
-import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
@@ -31,25 +29,25 @@ public interface GroupingsService {
     //TODO change to non-Grouper return type
     public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName, String group);
 
-    public GrouperActionResult addMemberAs(String username, String group, String userToAdd);
+    public GroupingsServiceResult addMemberAs(String username, String group, String userToAdd);
 
-    public GrouperActionResult deleteMemberAs(String username, String group, String userToDelete);
+    public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete);
 
-    public GrouperActionResult[] assignOwnership(String grouping, String username, String newOwner);
+    public GroupingsServiceResult[] assignOwnership(String grouping, String username, String newOwner);
 
-    public GrouperActionResult[] removeOwnership(String grouping, String username, String ownerToRemove);
+    public GroupingsServiceResult[] removeOwnership(String grouping, String username, String ownerToRemove);
 
     public Grouping getGrouping(String grouping, String username);
 
     public MyGroupings getMyGroupings(String username);
 
-    public GrouperActionResult[] optIn(String username, String grouping);
+    public GroupingsServiceResult[] optIn(String username, String grouping);
 
-    public GrouperActionResult[] optOut(String username, String grouping);
+    public GroupingsServiceResult[] optOut(String username, String grouping);
 
-    public GrouperActionResult[] cancelOptIn(String grouping, String username);
+    public GroupingsServiceResult[] cancelOptIn(String grouping, String username);
 
-    public GrouperActionResult[] cancelOptOut(String grouping, String username);
+    public GroupingsServiceResult[] cancelOptOut(String grouping, String username);
 
     public String changeListServeStatus(String grouping, String username, boolean listServeOn);
 
@@ -63,13 +61,13 @@ public interface GroupingsService {
 
     public boolean groupOptInPermission(String username, String group);
 
-    public GrouperActionResult addSelfOpted(String group, String username);
+    public GroupingsServiceResult addSelfOpted(String group, String username);
 
-    public GrouperActionResult removeSelfOpted(String group, String username);
+    public GroupingsServiceResult removeSelfOpted(String group, String username);
 
     public boolean groupOptOutPermission(String username, String group);
 
-    public GrouperActionResult updateLastModified(String group);
+    public GroupingsServiceResult updateLastModified(String group);
 
     public boolean groupHasAttribute(String grouping, String nameName);
 
