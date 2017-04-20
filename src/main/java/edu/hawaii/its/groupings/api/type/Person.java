@@ -1,4 +1,4 @@
-package edu.hawaii.its.holiday.api.type;
+package edu.hawaii.its.groupings.api.type;
 
 /**
  * Created by zknoebel on 3/30/2017.
@@ -8,7 +8,8 @@ public class Person {
     private String uuid;
     private String username;
 
-    public Person(String name, String uuid, String username){
+    // Constructor.
+    public Person(String name, String uuid, String username) {
         this.name = name;
         this.uuid = uuid;
         this.username = username;
@@ -36,5 +37,10 @@ public class Person {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public String toString() {
+        return "Person [name=" + name + ", uuid=" + uuid + ", username=" + username + "]";
     }
 }
