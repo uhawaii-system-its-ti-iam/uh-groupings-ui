@@ -2,6 +2,7 @@ package edu.hawaii.its.groupings.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,7 +33,7 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-public class GroupingsControllerTest {
+public class GroupingsRestControllerTest {
 
     @Value("${app.iam.request.form}")
     private String requestForm;
@@ -61,9 +62,7 @@ public class GroupingsControllerTest {
         given(groupingsService.getGrouping(grouping, username))
                 .willReturn(grouping());
 
-        mockMvc.perform(get("/grouping")
-                .param("grouping", grouping)
-                .param("username", username))
+        mockMvc.perform(get("/api/groupings/grouping/username/grouping"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("bob"))
                 .andExpect(jsonPath("path").value("test:ing:me:bob"))
@@ -124,26 +123,27 @@ public class GroupingsControllerTest {
         return grouping;
     }
 
-//    @Test
-//    @WithMockUhUser
-//    public void getCancelOptOut() throws Exception {
-//        final String grouping = "grouping";
-//        final String username = "username";
-//
-//        given(groupingsService.cancelOptOut(grouping, username))
-//                .willReturn(new GrouperActionResult[]{
-//                        new GrouperActionResult("SUCCESS", "delete memeber from exclude group"),
-//                        new GrouperActionResult("SUCCESS", "update last-modified attribute for exclude group")
-//                });
-//
-//        mockMvc.perform(post("/api/groupings/grouping/username/cancelOptOut"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", hasSize(2)))
-//                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
-//                .andExpect(jsonPath("$[0].action").value("delete memeber from exclude group"))
-//                .andExpect(jsonPath("$[1].resultCode").value("SUCCESS"))
-//                .andExpect(jsonPath("$[1].action").value("update last-modified attribute for exclude group"));
-//    }
+    @Test
+    @WithMockUhUser
+    public void getCancelOptOut() throws Exception {
+        final String grouping = "grouping";
+        final String username = "username";
+
+        given(groupingsService.cancelOptOut(grouping, username))
+                .willReturn(new GrouperActionResult[]{
+                        new GrouperActionResult("SUCCESS", "delete memeber from exclude group"),
+                        new GrouperActionResult("SUCCESS", "update last-modified attribute for exclude group")
+                });
+
+        mockMvc.perform(post("/api/groupings/grouping/username/cancelOptOut")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("delete memeber from exclude group"))
+                .andExpect(jsonPath("$[1].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[1].action").value("update last-modified attribute for exclude group"));
+    }
 
     @Test
     @WithMockUhUser
