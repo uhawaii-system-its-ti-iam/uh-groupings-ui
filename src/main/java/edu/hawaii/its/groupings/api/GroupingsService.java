@@ -1,18 +1,16 @@
 package edu.hawaii.its.groupings.api;
 
-import java.util.List;
-
 import edu.hawaii.its.groupings.api.type.Group;
 import edu.hawaii.its.groupings.api.type.GrouperActionResult;
 import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+
+import java.util.List;
 
 public interface GroupingsService {
 
@@ -33,11 +31,9 @@ public interface GroupingsService {
     //TODO change to non-Grouper return type
     public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName, String group);
 
-    //TODO change to non-Grouper return type
-    public WsAddMemberResults addMemberAs(String username, String group, String userToAdd);
+    public GrouperActionResult addMemberAs(String username, String group, String userToAdd);
 
-    //TODO change to non-Grouper return type
-    public WsDeleteMemberResults deleteMemberAs(String username, String group, String userToDelete);
+    public GrouperActionResult deleteMemberAs(String username, String group, String userToDelete);
 
     public GrouperActionResult[] assignOwnership(String grouping, String username, String newOwner);
 
