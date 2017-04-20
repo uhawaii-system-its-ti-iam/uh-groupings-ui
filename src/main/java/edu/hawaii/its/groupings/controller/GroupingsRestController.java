@@ -188,7 +188,7 @@ public class GroupingsRestController {
      * Groupings that the user can opt into
      * Groupings that the user can opt out of
      */
-    @RequestMapping(value = "/api/grouping/{username}/myGroupings",
+    @RequestMapping(value = "/{username}/myGroupings",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username) {
