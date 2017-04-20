@@ -1,14 +1,14 @@
 package edu.hawaii.its.groupings.api.type;
 
-public class GrouperActionResult {
+public class GroupingsServiceResult {
     private String action;
     private String resultCode;
 
-    public GrouperActionResult() {
+    public GroupingsServiceResult() {
         // Empty.
     }
 
-    public GrouperActionResult(String resultCode, String action) {
+    public GroupingsServiceResult(String resultCode, String action) {
         this.resultCode = resultCode;
         this.action = action;
     }
