@@ -442,27 +442,53 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     public List<Grouping> groupingsToOptOutOf(String username) {
-        WsGetGrouperPrivilegesLiteResult optinResults = grouperPrivilegesLite(username, "optout");
+//        WsGetGrouperPrivilegesLiteResult optinResults = grouperPrivilegesLite(username, "optout");
+//
+//        List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
+//        List<String> groupings = groupingNames
+//                .stream()
+//                .filter(this::optOutPermission)
+//                .collect(Collectors.toList());
+//
+//        return makeGroupings(groupings);
 
-        List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
-        List<String> groupings = groupingNames
+        //TODO when UHGrouper gets its own server change code back to what is above
+        //Code below is a temporary fix for the slow return time of Grouper permission queries
+        //the code below has a higher asymptotic run time but is ok for now because it only
+        //searches through a small amount of Groups
+
+        List<String> allGroupings = allGroupings();
+        List<String> optOutGroupings = allGroupings
                 .stream()
                 .filter(this::optOutPermission)
                 .collect(Collectors.toList());
 
-        return makeGroupings(groupings);
+        return makeGroupings(optOutGroupings);
     }
 
     public List<Grouping> groupingsToOptInto(String username) {
-        WsGetGrouperPrivilegesLiteResult optinResults = grouperPrivilegesLite(username, "optin");
+//        WsGetGrouperPrivilegesLiteResult optinResults = grouperPrivilegesLite(username, "optin");
+//
+//        List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
+//        List<String> groupings = groupingNames
+//                .stream()
+//                .filter(this::optInPermission)
+//                .collect(Collectors.toList());
+//
+//        return makeGroupings(groupings);
 
-        List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
-        List<String> groupings = groupingNames
+        //TODO when UHGrouper gets its own server change code back to what is above
+        //Code below is a temporary fix for the slow return time of Grouper permission queries
+        //the code below has a higher asymptotic run time but is ok for now because it only
+        //searches through a small amount of Groups
+
+        List<String> allGroupings = allGroupings();
+        List<String> optInGropuings = allGroupings
                 .stream()
                 .filter(this::optInPermission)
                 .collect(Collectors.toList());
 
-        return makeGroupings(groupings);
+        return makeGroupings(optInGropuings);
     }
 
     /**
@@ -988,8 +1014,10 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     public List<String> groupingNamesFromPrivilegeResults(WsGetGrouperPrivilegesLiteResult privilegesLiteResult) {
         List<WsGroup> groups = new ArrayList<>();
-        for (WsGrouperPrivilegeResult result : privilegesLiteResult.getPrivilegeResults()) {
-            groups.add(result.getWsGroup());
+        if(privilegesLiteResult.getPrivilegeResults() != null) {
+            for (WsGrouperPrivilegeResult result : privilegesLiteResult.getPrivilegeResults()) {
+                groups.add(result.getWsGroup());
+            }
         }
 
         List<String> groupNames = extractGroupNames(groups);
