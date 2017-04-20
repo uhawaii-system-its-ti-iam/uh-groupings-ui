@@ -17,6 +17,7 @@ import edu.hawaii.its.groupings.api.type.GrouperActionResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +33,7 @@ import edu.hawaii.its.groupings.api.type.Person;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SpringBootWebApplication.class })
+@SpringBootTest(classes = {SpringBootWebApplication.class})
 public class GroupingsRestControllerTest {
 
     @Value("${app.iam.request.form}")
@@ -123,6 +124,12 @@ public class GroupingsRestControllerTest {
         return grouping;
     }
 
+    //TODO create add and delete member tests
+
+    //TODO create optIn test
+
+    //TODO create optOut test
+
     @Test
     @WithMockUhUser
     public void getCancelOptOut() throws Exception {
@@ -144,6 +151,8 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[1].resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$[1].action").value("update last-modified attribute for exclude group"));
     }
+
+    //TODO create getCancelOptIn test
 
     @Test
     @WithMockUhUser

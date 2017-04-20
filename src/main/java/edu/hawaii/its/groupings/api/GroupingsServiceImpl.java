@@ -8,13 +8,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.hawaii.its.groupings.api.type.*;
+
 import edu.internet2.middleware.grouperClient.ws.beans.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import edu.hawaii.its.holiday.util.Dates;
+
 import edu.internet2.middleware.grouperClient.api.GcAddMember;
 import edu.internet2.middleware.grouperClient.api.GcAssignAttributes;
 import edu.internet2.middleware.grouperClient.api.GcAssignGrouperPrivileges;
@@ -213,12 +217,12 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (groupOptInPermission(username, grouping + INCLUDE)) {
             GrouperActionResult[] results = new GrouperActionResult[6];
-            results[3] = makeGrouperActionResult(removeSelfOpted(grouping + EXCLUDE, username), "Remove self-opted attribute from exclude membership");
+            results[3] = removeSelfOpted(grouping + EXCLUDE, username);
             results[0] = makeGrouperActionResult(deleteMemberAs(username, grouping + EXCLUDE, username), "delete member from exclude group");
             results[1] = makeGrouperActionResult(addMemberAs(username, grouping + INCLUDE, username), "add member to include group");
             results[4] = makeGrouperActionResult(updateLastModified(grouping + EXCLUDE), "update last-modified attribute for exclude group");
             results[5] = makeGrouperActionResult(updateLastModified(grouping + INCLUDE), "update last-modified attribute for include group");
-            results[2] = makeGrouperActionResult(addSelfOpted(grouping + INCLUDE, username), "add self-opted attribute to include membership");
+            results[2] = addSelfOpted(grouping + INCLUDE, username);
 
             return results;
         }
@@ -240,12 +244,12 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (groupOptInPermission(username, grouping + EXCLUDE)) {
             GrouperActionResult[] results = new GrouperActionResult[6];
-            results[3] = makeGrouperActionResult(removeSelfOpted(grouping + INCLUDE, username), "Remove self-opted attribute from include membership");
+            results[3] = removeSelfOpted(grouping + INCLUDE, username);
             results[0] = makeGrouperActionResult(deleteMemberAs(username, grouping + INCLUDE, username), "delete member from include group");
             results[1] = makeGrouperActionResult(addMemberAs(username, grouping + EXCLUDE, username), "add member to exclude group");
             results[4] = makeGrouperActionResult(updateLastModified(grouping + EXCLUDE), "update last-modified attribute for exclude group");
             results[5] = makeGrouperActionResult(updateLastModified(grouping + INCLUDE), "update last-modified attribute for include group");
-            results[2] = makeGrouperActionResult(addSelfOpted(grouping + EXCLUDE, username), "add self-opted attribute to exclude membership");
+            results[2] = addSelfOpted(grouping + EXCLUDE, username);
 
             return results;
         }
@@ -456,7 +460,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return the response from grouper web service or empty WsAssignAttributesResults object
      */
     @Override
-    public WsAssignAttributesResults addSelfOpted(String group, String username) {
+    public GrouperActionResult addSelfOpted(String group, String username) {
         logger.info("addSelfOpted; group: " + group + "; username: " + username);
 
         if (inGroup(group, username)) {
@@ -465,10 +469,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                 WsGetMembershipsResults includeMembershipsResults = membershipsResults(lookup, group);
                 String membershipID = includeMembershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "assign_attr";
-                return assignAttributesResults(operation, UUID_USERNAME, membershipID);
+                return makeGrouperActionResult(assignAttributesResults(operation, UUID_USERNAME, membershipID), "add self-opted attribute");
             }
         }
-        return new WsAssignAttributesResults();
+        return new GrouperActionResult("FAILURE", "add self-opted attribute");
     }
 
     /**
@@ -562,7 +566,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return the response from grouper web service or empty WsAssignAttributesResults object
      */
     @Override
-    public WsAssignAttributesResults removeSelfOpted(String group, String username) {
+    public GrouperActionResult removeSelfOpted(String group, String username) {
         logger.info("removeSelfOpted; group: " + group + "; username: " + username);
 
         if (inGroup(group, username)) {
@@ -571,10 +575,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                 WsGetMembershipsResults membershipsResults = membershipsResults(lookup, group);
                 String membershipID = membershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "remove_attr";
-                return assignAttributesResults(operation, UUID_USERNAME, membershipID);
+                return makeGrouperActionResult(assignAttributesResults(operation, UUID_USERNAME, membershipID), "remove self-opted attribute");
             }
         }
-        return new WsAssignAttributesResults();
+        return new GrouperActionResult("FAILURE", "remove self-opted attribute");
     }
 
     /*
@@ -988,7 +992,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return message;
     }
 
-    public GrouperActionResult makeGrouperActionResult(ResultMetadataHolder resultMetadataHolder, String action){
+    public GrouperActionResult makeGrouperActionResult(ResultMetadataHolder resultMetadataHolder, String action) {
         GrouperActionResult grouperActionResult = new GrouperActionResult();
         grouperActionResult.setAction(action);
         grouperActionResult.setResultCode(resultMetadataHolder.getResultMetadata().getResultCode());

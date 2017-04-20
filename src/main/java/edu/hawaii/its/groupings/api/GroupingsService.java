@@ -6,6 +6,7 @@ import edu.hawaii.its.groupings.api.type.Group;
 import edu.hawaii.its.groupings.api.type.GrouperActionResult;
 import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
+
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
@@ -66,11 +67,9 @@ public interface GroupingsService {
 
     public boolean groupOptInPermission(String username, String group);
 
-    //TODO change to non-Grouper return type
-    public WsAssignAttributesResults addSelfOpted(String group, String username);
+    public GrouperActionResult addSelfOpted(String group, String username);
 
-    //TODO change to non-Grouper return type
-    public WsAssignAttributesResults removeSelfOpted(String group, String username);
+    public GrouperActionResult removeSelfOpted(String group, String username);
 
     public boolean groupOptOutPermission(String username, String group);
 
