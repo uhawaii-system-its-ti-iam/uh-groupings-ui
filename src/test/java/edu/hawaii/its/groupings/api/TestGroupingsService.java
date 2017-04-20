@@ -35,7 +35,7 @@ public class TestGroupingsService {
     private String[] username = new String[6];
 
     @Autowired
-    private GroupingsService gs;
+    private GroupingsServiceImpl gs;
 
     @Autowired
     public Environment env; // Just for the settings check.

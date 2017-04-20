@@ -73,11 +73,9 @@ public interface GroupingsService {
 
     public boolean groupOptOutPermission(String username, String group);
 
-    //TODO change to non-Grouper return type
-    public WsAssignAttributesResults updateLastModified(String group);
+    public GrouperActionResult updateLastModified(String group);
 
-    //TODO change to non-Grouper return type
-    public WsGetAttributeAssignmentsResults attributeAssignmentsResults(String assignType, String group, String nameName);
+    public boolean groupHasAttribute(String grouping, String nameName);
 
     public boolean optOutPermission(String grouping);
 

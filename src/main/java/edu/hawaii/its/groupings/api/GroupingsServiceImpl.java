@@ -220,8 +220,8 @@ public class GroupingsServiceImpl implements GroupingsService {
             results[3] = removeSelfOpted(grouping + EXCLUDE, username);
             results[0] = makeGrouperActionResult(deleteMemberAs(username, grouping + EXCLUDE, username), "delete member from exclude group");
             results[1] = makeGrouperActionResult(addMemberAs(username, grouping + INCLUDE, username), "add member to include group");
-            results[4] = makeGrouperActionResult(updateLastModified(grouping + EXCLUDE), "update last-modified attribute for exclude group");
-            results[5] = makeGrouperActionResult(updateLastModified(grouping + INCLUDE), "update last-modified attribute for include group");
+            results[4] = updateLastModified(grouping + EXCLUDE);
+            results[5] = updateLastModified(grouping + INCLUDE);
             results[2] = addSelfOpted(grouping + INCLUDE, username);
 
             return results;
@@ -247,8 +247,8 @@ public class GroupingsServiceImpl implements GroupingsService {
             results[3] = removeSelfOpted(grouping + INCLUDE, username);
             results[0] = makeGrouperActionResult(deleteMemberAs(username, grouping + INCLUDE, username), "delete member from include group");
             results[1] = makeGrouperActionResult(addMemberAs(username, grouping + EXCLUDE, username), "add member to exclude group");
-            results[4] = makeGrouperActionResult(updateLastModified(grouping + EXCLUDE), "update last-modified attribute for exclude group");
-            results[5] = makeGrouperActionResult(updateLastModified(grouping + INCLUDE), "update last-modified attribute for include group");
+            results[4] = updateLastModified(grouping + EXCLUDE);
+            results[5] = updateLastModified(grouping + INCLUDE);
             results[2] = addSelfOpted(grouping + EXCLUDE, username);
 
             return results;
@@ -272,7 +272,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (inGroup(group, username)) {
             if (groupOptInPermission(username, group)) {
                 results[0] = makeGrouperActionResult(deleteMemberAs(username, group, username), "delete member from include group");
-                results[2] = makeGrouperActionResult(updateLastModified(group), "update last-modified attribute for include group");
+                results[2] = updateLastModified(group);
 
                 return results;
             } else {
@@ -303,7 +303,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (inGroup(group, username)) {
             if (groupOptOutPermission(username, group)) {
                 results[0] = makeGrouperActionResult(deleteMemberAs(username, group, username), "delete memeber from exclude group");
-                results[2] = makeGrouperActionResult(updateLastModified(group), "update last-modified attribute for exclude group");
+                results[2] = updateLastModified(group);
 
                 return results;
             } else {
@@ -637,13 +637,13 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return results from Grouper Web Service
      */
     @Override
-    public WsAssignAttributesResults updateLastModified(String group) {
+    public GrouperActionResult updateLastModified(String group) {
         logger.info("updateLastModified; group: " + group);
 
         WsAttributeAssignValue dateTimeValue = new WsAttributeAssignValue();
         dateTimeValue.setValueSystem(wsDateTime());
 
-        return new GcAssignAttributes()
+        WsAssignAttributesResults assignAttributesResults = new GcAssignAttributes()
                 .assignAttributeAssignType("group")
                 .assignAttributeAssignOperation("assign_attr")
                 .addOwnerGroupName(group)
@@ -651,6 +651,8 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .assignAttributeAssignValueOperation("replace_values")
                 .addValue(dateTimeValue)
                 .execute();
+
+        return makeGrouperActionResult(assignAttributesResults, "update last-modified attribute for " + group);
 
     }
 
@@ -711,7 +713,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
-    @Override
     public WsGetAttributeAssignmentsResults attributeAssignmentsResults(String assignType, String group, String nameName) {
         logger.info("attributeAssignmentsResults; assignType: " + assignType + "; group: " + group + "; nameName: " + nameName);
 
@@ -871,7 +872,14 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     // Helper method.
     public List<Grouping> makeGroupings(List<String> groupingPaths) {
-        return groupingPaths.stream().map(Grouping::new).collect(Collectors.toList());
+        List<Grouping> groupings = groupingPaths
+                .stream()
+                .map(Grouping::new)
+                .collect(Collectors.toList());
+        for(Grouping grouping : groupings){
+            grouping.setHasListserv(hasListserv(grouping.getPath()));
+        }
+        return groupings;
     }
 
     public List<String> extractGroupNames(List<WsGroup> groups) {
