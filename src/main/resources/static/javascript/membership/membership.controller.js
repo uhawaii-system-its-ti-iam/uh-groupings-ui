@@ -2,14 +2,13 @@
 
     function MembershipJsController($scope, dataProvider) {
         var currentUser = document.getElementById("name").innerText;
-        var groupings = "myGroupings?username=" + currentUser;
+        var groupings = "api/groupings/" + currentUser + "/myGroupings";
         $scope.membersList = [];
         $scope.optInList = [];
         $scope.loading = true;
 
         $scope.init = function () {
             //Loads Data
-            console.log("Getting data");
             dataProvider.loadData(function (d) {
                 $scope.membersList = d.groupingsIn;
                 $scope.optOutList = d.groupingsToOptOutOf;
@@ -21,7 +20,6 @@
                 $scope.loading = false;
                 console.log($scope.optOutList);
             }, groupings);
-            console.log("Data retrieved");
         };
 
 

@@ -2,7 +2,7 @@
 
     function AdminJsController($scope, dataProvider) {
         var currentUser = document.getElementById("name").innerText;
-        var url = "grouping?grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=" + currentUser;
+        var url = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/grouping";
         $scope.list = [];
         $scope.loading = true;
 
@@ -53,15 +53,14 @@
             var addUrl;
             $scope.testdata = [];
             console.log($scope.username);
-            addUrl = "addMemberToIncludeGroup?userToAdd=" + $scope.username + "&grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test&username=" + currentUser;
 
+            addUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/" + $scope.username + "/includeMemberFromIncludeGroup";
 
             if(confirm("You are adding " + $scope.username + " to the include list of this grouping")){
                 dataProvider.loadData(function (d) {
                     console.log(d);
 
                     var result = d.results;
-
                     if(result[0].wsSubject.resultCode === 'SUCCESS') {
                         console.log("Successfully added " + $scope.username);
                         alert("Successfully added " + $scope.username);
@@ -72,7 +71,6 @@
                         console.log($scope.username + " this user does not exist.");
                         alert($scope.username + " this user does not exist.");
                     }
-
                     $scope.testdata = d;
                     $scope.username = '';
                 }, addUrl);
@@ -84,13 +82,13 @@
             var deleteUser = $scope.list[row].username;
             console.log($scope.list[row]);
             console.log(deleteUser);
-                deleteUrl = "deleteMemberFromIncludeGroup?username=" + currentUser + "&userToDelete=" + deleteUser + "&grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test";
+                deleteUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/" + deleteUser + "/deleteMemberFromIncludeGroup";
             if ($scope.list.length > 1) {
                 $.ajax({
                     url: deleteUrl,
-                    method: 'GET',
+                    method: 'POST',
                     success: function () {
-                        console.log("Success In Deletion")
+                        console.log("Success In Deletion");
                         //reload data table
                         $scope.list.splice(row, 1);
                         $scope.loading = true;
