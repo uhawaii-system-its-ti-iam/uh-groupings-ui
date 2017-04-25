@@ -2,7 +2,7 @@
 
     function MembershipJsController($scope, dataProvider) {
         var currentUser = document.getElementById("name").innerText;
-        var groupings = "myGroupings?username=" + currentUser;
+        var groupings = "/api/groupings/" + currentUser+"/myGroupings";
         $scope.membersList = [];
         $scope.optInList = [];
         $scope.loading = true;
