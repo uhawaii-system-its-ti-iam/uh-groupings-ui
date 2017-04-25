@@ -370,5 +370,3 @@ public class GroupingsRestController {
     }
 }
 
-//TODO implement function for owner to turn on/off listserve
-//TODO implement function for owner to turn on/off optIn/optOut attribute

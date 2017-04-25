@@ -5,6 +5,8 @@ import java.util.List;
 public class MyGroupings {
     List<Grouping> groupingsIn;
     List<Grouping> groupingsOwned;
+    List<Grouping> groupingsOptedOutOf;
+    List<Grouping> groupingsOptedInTo;
     List<Grouping> groupingsToOptOutOf;
     List<Grouping> groupingsToOptInTo;
 
@@ -38,5 +40,21 @@ public class MyGroupings {
 
     public void setGroupingsToOptInTo(List<Grouping> groupingsToOptInTo) {
         this.groupingsToOptInTo = groupingsToOptInTo;
+    }
+
+    public List<Grouping> getGroupingsOptedOutOf() {
+        return groupingsOptedOutOf;
+    }
+
+    public void setGroupingsOptedOutOf(List<Grouping> groupingsOptedOutOf) {
+        this.groupingsOptedOutOf = groupingsOptedOutOf;
+    }
+
+    public List<Grouping> getGroupingsOptedInTo() {
+        return groupingsOptedInTo;
+    }
+
+    public void setGroupingsOptedInTo(List<Grouping> groupingsOptedInTo) {
+        this.groupingsOptedInTo = groupingsOptedInTo;
     }
 }
