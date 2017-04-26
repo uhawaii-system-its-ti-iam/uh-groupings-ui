@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
@@ -19,14 +20,16 @@ import org.springframework.util.Assert;
 
 import edu.hawaii.its.groupings.api.type.Group;
 import edu.hawaii.its.groupings.api.type.Grouping;
+import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.hawaii.its.holiday.util.Dates;
+
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SpringBootWebApplication.class })
+@SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsService {
 
     private final String GROUPING = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
@@ -35,7 +38,7 @@ public class TestGroupingsService {
     private String[] username = new String[6];
 
     @Autowired
-    private GroupingsService gs;
+    private GroupingsServiceImpl gs;
 
     @Autowired
     public Environment env; // Just for the settings check.
@@ -83,7 +86,8 @@ public class TestGroupingsService {
 
         final String group = GROUPING_INCLUDE;
 
-        gs.updateLastModified(group);
+        GroupingsServiceResult gsr = gs.updateLastModified(group);
+        String dateStr = gsr.getAction().split(" to time ")[1];
 
         String assignType = "group";
         String nameName = "uh-settings:attributes:for-groups:last-modified:yyyymmddThhmm";
@@ -92,8 +96,6 @@ public class TestGroupingsService {
                 gs.attributeAssignmentsResults(assignType, group, nameName);
         String assignedValue = assignments.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
 
-        // FIXME: This check looks problematic.
-        String dateStr = Dates.formatDate(LocalDateTime.now(), "yyyyMMdd'T'HHmm");
         assertEquals(dateStr, assignedValue);
     }
 
@@ -212,10 +214,22 @@ public class TestGroupingsService {
         assertFalse(gs.inGroup(GROUPING_EXCLUDE, username[1]));
     }
 
-    //TODO add test for groupOptOutPermission
-    //TODO add test for groupOptInPermission
-    //TODO add test for updateLastModified
-    //TODO add test for makeWsSubject
+    @Test
+    public void groupOptPermission() {
+        assertTrue(gs.groupOptOutPermission(username[0], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptOutPermission(username[0], GROUPING_EXCLUDE));
+
+        assertTrue(gs.groupOptInPermission(username[0], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptInPermission(username[0], GROUPING_EXCLUDE));
+    }
+
+
+    @Test
+    public void makeWsSubject() {
+        WsSubjectLookup subjectLookup = gs.makeWsSubjectLookup(username[1]);
+        assertTrue(subjectLookup.getSubjectIdentifier().equals(username[1]));
+    }
+
     //TODO add test for makeWsGroupLookup
     //TODO add test for assignAttributesResults (both)
     //TODO add test for membershipAttributeAssign

@@ -8,13 +8,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.hawaii.its.groupings.api.type.*;
+
 import edu.internet2.middleware.grouperClient.ws.beans.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import edu.hawaii.its.holiday.util.Dates;
+
 import edu.internet2.middleware.grouperClient.api.GcAddMember;
 import edu.internet2.middleware.grouperClient.api.GcAssignAttributes;
 import edu.internet2.middleware.grouperClient.api.GcAssignGrouperPrivileges;
@@ -38,6 +42,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     private static final String UHGROUPING = "uh-settings:attributes:for-groups:uh-grouping";
     public static final String SELF_OPTED = ATTRIBUTES + ":for-memberships:uh-grouping:self-opted";
     public static final String UUID_TRIO = "1d7365a23c994f5f83f7b541d4a5fa5e";
+    public static final String BASIS = ":basis";
+    public static final String BASISPLUSINCLUDE = ":basis+include";
     public static final String EXCLUDE = ":exclude";
     public static final String INCLUDE = ":include";
     public static final WsStemLookup STEM = new WsStemLookup("hawaii.edu:custom", null);
@@ -51,31 +57,36 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GrouperActionResult[] assignOwnership(String grouping, String username, String newOwner) {
+    public GroupingsServiceResult[] assignOwnership(String grouping, String username, String newOwner) {
+        String basisGroup = grouping + BASIS;
+        String basisPlusIncludeGroup = grouping + BASISPLUSINCLUDE;
+        String excludeGroup = grouping + EXCLUDE;
+        String includeGroup = grouping + INCLUDE;
+        String action = "give " + newOwner + " ownership privileges for ";
 
         if (isOwner(grouping, username)) {
             WsSubjectLookup ownerToAdd = makeWsSubjectLookup(newOwner);
-            GrouperActionResult[] privilegeResults = new GrouperActionResult[4];
+            GroupingsServiceResult[] privilegeResults = new GroupingsServiceResult[4];
 
-            WsGroupLookup basisGroupLookup = makeWsGroupLookup(grouping + ":basis");
-            privilegeResults[0] = makeGrouperActionResult(addGroupOwnership(basisGroupLookup, ownerToAdd), "add ownership to basis");
+            WsGroupLookup basisGroupLookup = makeWsGroupLookup(basisGroup);
+            privilegeResults[0] = makeGrouperActionResult(addGroupOwnership(basisGroupLookup, ownerToAdd), action + basisGroup);
 
-            WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(grouping + ":basis+include");
-            privilegeResults[1] = makeGrouperActionResult(addGroupOwnership(basisPlusIncludeGroupLookup, ownerToAdd), "add ownership to basis+include");
+            WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(basisPlusIncludeGroup);
+            privilegeResults[1] = makeGrouperActionResult(addGroupOwnership(basisPlusIncludeGroupLookup, ownerToAdd), action + basisPlusIncludeGroup);
 
-            WsGroupLookup excludeGroupLookup = makeWsGroupLookup(grouping + EXCLUDE);
-            privilegeResults[2] = makeGrouperActionResult(addGroupOwnership(excludeGroupLookup, ownerToAdd), "add ownership to exclude");
+            WsGroupLookup excludeGroupLookup = makeWsGroupLookup(excludeGroup);
+            privilegeResults[2] = makeGrouperActionResult(addGroupOwnership(excludeGroupLookup, ownerToAdd), action + excludeGroup);
 
-            WsGroupLookup includeGroupLookup = makeWsGroupLookup(grouping + INCLUDE);
-            privilegeResults[3] = makeGrouperActionResult(addGroupOwnership(includeGroupLookup, ownerToAdd), "add ownership to include");
+            WsGroupLookup includeGroupLookup = makeWsGroupLookup(includeGroup);
+            privilegeResults[3] = makeGrouperActionResult(addGroupOwnership(includeGroupLookup, ownerToAdd), action + includeGroup);
 
             return privilegeResults;
         }
 
-        throw new AccessDeniedException("user does not have permission to update Grouping");
+        return new GroupingsServiceResult[] {new GroupingsServiceResult(
+                "FAILURE, " + username + " does not own " + grouping,
+                "give " + newOwner + " ownership of " + grouping)};
 
-        //change to api-account for now
-        //switch to actAsSubject after we figure out attribute update privlages
     }
 
     @Override
@@ -108,28 +119,33 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GrouperActionResult[] removeOwnership(String grouping, String username, String ownerToRemove) {
+    public GroupingsServiceResult[] removeOwnership(String grouping, String username, String ownerToRemove) {
+        String basisGroup = grouping + BASIS;
+        String basisPlusIncludeGroup = grouping + BASISPLUSINCLUDE;
+        String includeGroup = grouping + INCLUDE;
+        String excludeGroup = grouping + EXCLUDE;
+        String action = "reomve ownership privileges for " + ownerToRemove + " from ";
 
         if (isOwner(grouping, username)) {
-            GrouperActionResult[] privileges = new GrouperActionResult[4];
+            GroupingsServiceResult[] privileges = new GroupingsServiceResult[4];
 
             WsSubjectLookup ownerToRemoveLookup = makeWsSubjectLookup(ownerToRemove);
-            WsGroupLookup basisGroupLookup = makeWsGroupLookup(grouping + ":basis");
-            privileges[0] = makeGrouperActionResult(removeGroupOwnership(basisGroupLookup, ownerToRemoveLookup), "remove ownership from basis");
+            WsGroupLookup basisGroupLookup = makeWsGroupLookup(basisGroup);
+            privileges[0] = makeGrouperActionResult(removeGroupOwnership(basisGroupLookup, ownerToRemoveLookup), action + basisGroup);
 
-            WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(grouping + ":basis+include");
-            privileges[1] = makeGrouperActionResult(removeGroupOwnership(basisPlusIncludeGroupLookup, ownerToRemoveLookup), "remove ownership from basis+include");
+            WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(basisPlusIncludeGroup);
+            privileges[1] = makeGrouperActionResult(removeGroupOwnership(basisPlusIncludeGroupLookup, ownerToRemoveLookup), action + basisPlusIncludeGroup);
 
-            WsGroupLookup excludeGroupLookup = makeWsGroupLookup(grouping + EXCLUDE);
-            privileges[2] = makeGrouperActionResult(removeGroupOwnership(excludeGroupLookup, ownerToRemoveLookup), "remove ownership from exclude");
+            WsGroupLookup excludeGroupLookup = makeWsGroupLookup(excludeGroup);
+            privileges[2] = makeGrouperActionResult(removeGroupOwnership(excludeGroupLookup, ownerToRemoveLookup), action + excludeGroup);
 
-            WsGroupLookup includeGroupLookup = makeWsGroupLookup(grouping + INCLUDE);
-            privileges[3] = makeGrouperActionResult(removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup), "remove ownership from include");
+            WsGroupLookup includeGroupLookup = makeWsGroupLookup(includeGroup);
+            privileges[3] = makeGrouperActionResult(removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup), action + includeGroup);
 
             return privileges;
         }
 
-        throw new AccessDeniedException("user does not have permission to update Grouping");
+        return new GroupingsServiceResult[] {new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, "remove ownership of "  + grouping + " from " + ownerToRemove)};
 
         //change to api-account for now
         //switch to actAsSubject after we figure out attribute update privlages
@@ -157,7 +173,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         }
 
         Group basisGroup = new Group();
-        WsGetMembersResults basisResults = getMembers(user, grouping + ":basis");
+        WsGetMembersResults basisResults = getMembers(user, grouping + BASIS);
         if (basisResults.getResults() != null) {
             basisGroup = makeGroup(basisResults.getResults()[0].getWsSubjects());
         }
@@ -209,21 +225,23 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GrouperActionResult[] optIn(String username, String grouping) {
+    public GroupingsServiceResult[] optIn(String username, String grouping) {
 
         if (groupOptInPermission(username, grouping + INCLUDE)) {
-            GrouperActionResult[] results = new GrouperActionResult[6];
-            results[3] = makeGrouperActionResult(removeSelfOpted(grouping + EXCLUDE, username), "Remove self-opted attribute from exclude membership");
-            results[0] = makeGrouperActionResult(deleteMemberAs(username, grouping + EXCLUDE, username), "delete member from exclude group");
-            results[1] = makeGrouperActionResult(addMemberAs(username, grouping + INCLUDE, username), "add member to include group");
-            results[4] = makeGrouperActionResult(updateLastModified(grouping + EXCLUDE), "update last-modified attribute for exclude group");
-            results[5] = makeGrouperActionResult(updateLastModified(grouping + INCLUDE), "update last-modified attribute for include group");
-            results[2] = makeGrouperActionResult(addSelfOpted(grouping + INCLUDE, username), "add self-opted attribute to include membership");
+            GroupingsServiceResult[] results = new GroupingsServiceResult[6];
+            results[3] = removeSelfOpted(grouping + EXCLUDE, username);
+            results[0] = deleteMemberAs(username, grouping + EXCLUDE, username);
+            results[1] = addMemberAs(username, grouping + INCLUDE, username);
+            results[4] = updateLastModified(grouping + EXCLUDE);
+            results[5] = updateLastModified(grouping + INCLUDE);
+            results[2] = addSelfOpted(grouping + INCLUDE, username);
 
             return results;
         }
 
-        throw new AccessDeniedException("user is not allowed to opt into this Grouping");
+        return new GroupingsServiceResult[]{new GroupingsServiceResult(
+                "FAILURE, " + username + " does not have permission to opt in to " + grouping,
+                "opt in " + username + " to " + grouping)};
     }
 
     /**
@@ -236,21 +254,23 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GrouperActionResult[] optOut(String username, String grouping) {
+    public GroupingsServiceResult[] optOut(String username, String grouping) {
 
         if (groupOptInPermission(username, grouping + EXCLUDE)) {
-            GrouperActionResult[] results = new GrouperActionResult[6];
-            results[3] = makeGrouperActionResult(removeSelfOpted(grouping + INCLUDE, username), "Remove self-opted attribute from include membership");
-            results[0] = makeGrouperActionResult(deleteMemberAs(username, grouping + INCLUDE, username), "delete member from include group");
-            results[1] = makeGrouperActionResult(addMemberAs(username, grouping + EXCLUDE, username), "add member to exclude group");
-            results[4] = makeGrouperActionResult(updateLastModified(grouping + EXCLUDE), "update last-modified attribute for exclude group");
-            results[5] = makeGrouperActionResult(updateLastModified(grouping + INCLUDE), "update last-modified attribute for include group");
-            results[2] = makeGrouperActionResult(addSelfOpted(grouping + EXCLUDE, username), "add self-opted attribute to exclude membership");
+            GroupingsServiceResult[] results = new GroupingsServiceResult[6];
+            results[3] = removeSelfOpted(grouping + INCLUDE, username);
+            results[0] = deleteMemberAs(username, grouping + INCLUDE, username);
+            results[1] = addMemberAs(username, grouping + EXCLUDE, username);
+            results[4] = updateLastModified(grouping + EXCLUDE);
+            results[5] = updateLastModified(grouping + INCLUDE);
+            results[2] = addSelfOpted(grouping + EXCLUDE, username);
 
             return results;
         }
 
-        throw new AccessDeniedException("user is not allowed to opt out of this Grouping");
+        return new GroupingsServiceResult[]{new GroupingsServiceResult(
+                "FAILURE, " + username + " does not have permission to opt out of " + grouping,
+                "opt out " + username + " from " + grouping)};
     }
 
     /**
@@ -261,24 +281,26 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GrouperActionResult[] cancelOptIn(String grouping, String username) {
-        GrouperActionResult[] results = new GrouperActionResult[3];
+    public GroupingsServiceResult[] cancelOptIn(String grouping, String username) {
+        GroupingsServiceResult[] results;
         String group = grouping + INCLUDE;
 
         if (inGroup(group, username)) {
             if (groupOptInPermission(username, group)) {
-                results[0] = makeGrouperActionResult(deleteMemberAs(username, group, username), "delete member from include group");
-                results[2] = makeGrouperActionResult(updateLastModified(group), "update last-modified attribute for include group");
+                 results = new GroupingsServiceResult[2];
+                results[0] = deleteMemberAs(username, group, username);
+                results[1] = updateLastModified(group);
 
                 return results;
             } else {
-                throw new AccessDeniedException("user is not allowed to opt out of 'include' group");
+                results = new GroupingsServiceResult[]{new GroupingsServiceResult(
+                        username + " is not allowed to opt out of " + group,
+                        "opt " + username + " out of " + group)};
             }
         } else {
-            GrouperActionResult noOptIn = new GrouperActionResult();
-            noOptIn.setAction("cancel opt in");
-            noOptIn.setResultCode("SUCCESS, user is not opted in, because user was not in 'include' group");
-            results[0] = noOptIn;
+            results = new GroupingsServiceResult[] {new GroupingsServiceResult(
+                    "SUCCESS, " + username + " is not opted in, because " + username + " was not in " + group,
+                    "cancel opt in for " + username + " to " + grouping)};
         }
 
         return results;
@@ -292,24 +314,26 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GrouperActionResult[] cancelOptOut(String grouping, String username) {
-        GrouperActionResult[] results = new GrouperActionResult[3];
+    public GroupingsServiceResult[] cancelOptOut(String grouping, String username) {
         String group = grouping + EXCLUDE;
+        GroupingsServiceResult[] results;
 
         if (inGroup(group, username)) {
             if (groupOptOutPermission(username, group)) {
-                results[0] = makeGrouperActionResult(deleteMemberAs(username, group, username), "delete memeber from exclude group");
-                results[2] = makeGrouperActionResult(updateLastModified(group), "update last-modified attribute for exclude group");
+                results = new GroupingsServiceResult[2];
+                results[0] = deleteMemberAs(username, group, username);
+                results[1] = updateLastModified(group);
 
                 return results;
             } else {
-                throw new AccessDeniedException("user is not allowed to opt out of 'exclude' group");
+                results = new GroupingsServiceResult[]{new GroupingsServiceResult(
+                        username + " is not allowed to opt out of " + group,
+                        "opt " + username + " out of " + group)};
             }
         } else {
-            GrouperActionResult noOptOut = new GrouperActionResult();
-            noOptOut.setAction("cancel opt out");
-            noOptOut.setResultCode("SUCCESS, user is not opted in, because user was not in 'exclude' group");
-            results[0] = noOptOut;
+            results = new GroupingsServiceResult[] {new GroupingsServiceResult(
+                    "SUCCESS, " + username + " is not opted out, because " + username + " was not in " + group,
+                    "cancel opt out for " + username + " to " + grouping)};
         }
         return results;
     }
@@ -424,10 +448,13 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new ArrayList<>();
     }
 
-    public List<Grouping> groupingsToOptOutOf(String username) {
-        WsGetGrouperPrivilegesLiteResult optinResults = grouperPrivilegesLite(username, "optout");
+    //TODO make groupingsOptedInto and groupingsOptedOutOf methods
 
-        List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
+
+
+    public List<Grouping> groupingsToOptOutOf(String username) {
+
+        List<String> groupingNames = allGroupings();
         List<String> groupings = groupingNames
                 .stream()
                 .filter(this::optOutPermission)
@@ -437,9 +464,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     public List<Grouping> groupingsToOptInto(String username) {
-        WsGetGrouperPrivilegesLiteResult optinResults = grouperPrivilegesLite(username, "optin");
 
-        List<String> groupingNames = groupingNamesFromPrivilegeResults(optinResults);
+        List<String> groupingNames = allGroupings();
         List<String> groupings = groupingNames
                 .stream()
                 .filter(this::optInPermission)
@@ -456,7 +482,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return the response from grouper web service or empty WsAssignAttributesResults object
      */
     @Override
-    public WsAssignAttributesResults addSelfOpted(String group, String username) {
+    public GroupingsServiceResult addSelfOpted(String group, String username) {
         logger.info("addSelfOpted; group: " + group + "; username: " + username);
 
         if (inGroup(group, username)) {
@@ -465,10 +491,14 @@ public class GroupingsServiceImpl implements GroupingsService {
                 WsGetMembershipsResults includeMembershipsResults = membershipsResults(lookup, group);
                 String membershipID = includeMembershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "assign_attr";
-                return assignAttributesResults(operation, UUID_USERNAME, membershipID);
+                return makeGrouperActionResult(
+                        assignAttributesResults(operation, UUID_USERNAME, membershipID),
+                        "add self-opted attribute to the membership of " + username + " to " + group);
             }
         }
-        return new WsAssignAttributesResults();
+        return new GroupingsServiceResult(
+                "FAILURE, " + username + " is not a member of " + group,
+                "add self-opted attribute to the membership of " + username + " to " + group);
     }
 
     /**
@@ -562,7 +592,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return the response from grouper web service or empty WsAssignAttributesResults object
      */
     @Override
-    public WsAssignAttributesResults removeSelfOpted(String group, String username) {
+    public GroupingsServiceResult removeSelfOpted(String group, String username) {
         logger.info("removeSelfOpted; group: " + group + "; username: " + username);
 
         if (inGroup(group, username)) {
@@ -571,10 +601,14 @@ public class GroupingsServiceImpl implements GroupingsService {
                 WsGetMembershipsResults membershipsResults = membershipsResults(lookup, group);
                 String membershipID = membershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "remove_attr";
-                return assignAttributesResults(operation, UUID_USERNAME, membershipID);
+                return makeGrouperActionResult(
+                        assignAttributesResults(operation, UUID_USERNAME, membershipID),
+                        "remove self-opted attribute from the membership of " + username + " to " + group);
             }
         }
-        return new WsAssignAttributesResults();
+        return new GroupingsServiceResult(
+                "FAILURE, " + username + " is not a member of " + group,
+                "remove self-opted attribute from the membership of " + username + " to " + group);
     }
 
     /*
@@ -633,13 +667,14 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return results from Grouper Web Service
      */
     @Override
-    public WsAssignAttributesResults updateLastModified(String group) {
+    public GroupingsServiceResult updateLastModified(String group) {
         logger.info("updateLastModified; group: " + group);
+        String time = wsDateTime();
 
         WsAttributeAssignValue dateTimeValue = new WsAttributeAssignValue();
-        dateTimeValue.setValueSystem(wsDateTime());
+        dateTimeValue.setValueSystem(time);
 
-        return new GcAssignAttributes()
+        WsAssignAttributesResults assignAttributesResults = new GcAssignAttributes()
                 .assignAttributeAssignType("group")
                 .assignAttributeAssignOperation("assign_attr")
                 .addOwnerGroupName(group)
@@ -647,6 +682,8 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .assignAttributeAssignValueOperation("replace_values")
                 .addValue(dateTimeValue)
                 .execute();
+
+        return makeGrouperActionResult(assignAttributesResults, "update last-modified attribute for " + group + " to time " + time);
 
     }
 
@@ -707,7 +744,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
-    @Override
     public WsGetAttributeAssignmentsResults attributeAssignmentsResults(String assignType, String group, String nameName) {
         logger.info("attributeAssignmentsResults; assignType: " + assignType + "; group: " + group + "; nameName: " + nameName);
 
@@ -765,7 +801,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     // Helper method.
     @Override
-    public WsAddMemberResults addMemberAs(String username, String group, String userToAdd) {
+    public GroupingsServiceResult addMemberAs(String username, String group, String userToAdd) {
         logger.info("addMemberAs; user: " + username + "; group: " + group + "; userToAdd: " + userToAdd);
 
         WsSubjectLookup user = makeWsSubjectLookup(username);
@@ -784,24 +820,28 @@ public class GroupingsServiceImpl implements GroupingsService {
                     .addSubjectIdentifier(userToAdd)
                     .execute();
         }
-        return new GcAddMember()
+        WsAddMemberResults addMemberResults = new GcAddMember()
                 .assignActAsSubject(user)
                 .assignGroupName(group)
                 .addSubjectIdentifier(userToAdd)
                 .execute();
+
+        return makeGrouperActionResult(addMemberResults, "add " + userToAdd + " to " + group);
     }
 
     // Helper method.
     @Override
-    public WsDeleteMemberResults deleteMemberAs(String username, String group, String userToDelete) {
+    public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete) {
         logger.info("delteMemberAs; user: " + username + "; group: " + group + "; userToDelete: " + userToDelete);
 
         WsSubjectLookup user = makeWsSubjectLookup(username);
-        return new GcDeleteMember()
+        WsDeleteMemberResults deleteMemberResults = new GcDeleteMember()
                 .assignActAsSubject(user)
                 .assignGroupName(group)
                 .addSubjectIdentifier(userToDelete)
                 .execute();
+
+        return makeGrouperActionResult(deleteMemberResults, "delete " + userToDelete + " from " + group);
     }
 
     // Helper method.
@@ -867,7 +907,14 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     // Helper method.
     public List<Grouping> makeGroupings(List<String> groupingPaths) {
-        return groupingPaths.stream().map(Grouping::new).collect(Collectors.toList());
+        List<Grouping> groupings = groupingPaths
+                .stream()
+                .map(Grouping::new)
+                .collect(Collectors.toList());
+        for (Grouping grouping : groupings) {
+            grouping.setHasListserv(hasListserv(grouping.getPath()));
+        }
+        return groupings;
     }
 
     public List<String> extractGroupNames(List<WsGroup> groups) {
@@ -890,8 +937,8 @@ public class GroupingsServiceImpl implements GroupingsService {
                 groupingNames.add(name.split(INCLUDE)[0]);
             } else if (name.endsWith(EXCLUDE)) {
                 groupingNames.add(name.split(EXCLUDE)[0]);
-            } else if (name.endsWith(":basis")) {
-                groupingNames.add(name.split(":basis")[0]);
+            } else if (name.endsWith(BASIS)) {
+                groupingNames.add(name.split(BASIS)[0]);
             } else {
                 groupingNames.add(name);
             }
@@ -951,8 +998,10 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     public List<String> groupingNamesFromPrivilegeResults(WsGetGrouperPrivilegesLiteResult privilegesLiteResult) {
         List<WsGroup> groups = new ArrayList<>();
-        for (WsGrouperPrivilegeResult result : privilegesLiteResult.getPrivilegeResults()) {
-            groups.add(result.getWsGroup());
+        if (privilegesLiteResult.getPrivilegeResults() != null) {
+            for (WsGrouperPrivilegeResult result : privilegesLiteResult.getPrivilegeResults()) {
+                groups.add(result.getWsGroup());
+            }
         }
 
         List<String> groupNames = extractGroupNames(groups);
@@ -988,12 +1037,12 @@ public class GroupingsServiceImpl implements GroupingsService {
         return message;
     }
 
-    public GrouperActionResult makeGrouperActionResult(ResultMetadataHolder resultMetadataHolder, String action){
-        GrouperActionResult grouperActionResult = new GrouperActionResult();
-        grouperActionResult.setAction(action);
-        grouperActionResult.setResultCode(resultMetadataHolder.getResultMetadata().getResultCode());
+    public GroupingsServiceResult makeGrouperActionResult(ResultMetadataHolder resultMetadataHolder, String action) {
+        GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();
+        groupingsServiceResult.setAction(action);
+        groupingsServiceResult.setResultCode(resultMetadataHolder.getResultMetadata().getResultCode());
 
-        return grouperActionResult;
+        return groupingsServiceResult;
     }
 
 }

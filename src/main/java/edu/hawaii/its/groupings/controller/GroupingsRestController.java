@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -50,8 +51,8 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{userToAdd}/addMemberToIncludeGroup",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addMemberToIncludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToIncludeGroup...");
         return ResponseEntity
@@ -69,8 +70,8 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{userToAdd}/addMemberToExcludeGroup",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addMemberToExcludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToExcludeGroup...");
         return ResponseEntity
@@ -87,8 +88,8 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{userToDelete}/deleteMemberFromIncludeGroup",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteMemberFromIncludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToDelete) {
         logger.info("Entered REST deleteMemberFromIncludeGroup...");
         return ResponseEntity
@@ -105,8 +106,8 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{userToDelete}/deleteMemberFromExcludeGroup",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteMemberFromExcludeGroup(@PathVariable String grouping, @PathVariable String username, @PathVariable String userToDelete) {
         logger.info("Entered REST deleteMemberFromExcludeGroup...");
         return ResponseEntity
@@ -126,8 +127,8 @@ public class GroupingsRestController {
      * @return information about the privileges being added to new owner and the success of these privilege assignments
      */
     @RequestMapping(value = "/{grouping}/{username}/{newOwner}/assignOwnership",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> assignOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String newOwner) {
         logger.info("Entered REST assignOwnership...");
         return ResponseEntity
@@ -147,8 +148,8 @@ public class GroupingsRestController {
      * @return information about the privileges being removed from the owner and the success of these privilege assignments
      */
     @RequestMapping(value = "/{grouping}/{username}/{ownerToRemove}/removeOwnership",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> removeOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String ownerToRemove) {
         logger.info("Entered REST removeOwnership...");
         return ResponseEntity
@@ -170,8 +171,8 @@ public class GroupingsRestController {
      * whether or not the Grouping has a list serve associated with it
      */
     @RequestMapping(value = "/{grouping}/{username}/grouping",
-                    method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Grouping> grouping(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST grouping...");
         return ResponseEntity
@@ -187,9 +188,9 @@ public class GroupingsRestController {
      * Groupings that the user can opt into
      * Groupings that the user can opt out of
      */
-    @RequestMapping(value = "/api/grouping/{username}/myGroupings",
-                    method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{username}/myGroupings",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username) {
         logger.info("Entered REST myGroupings...");
         return ResponseEntity
@@ -207,8 +208,8 @@ public class GroupingsRestController {
      * @return information about the success of opting in
      */
     @RequestMapping(value = "/{grouping}/{username}/optIn",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> optIn(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST optIn...");
         return ResponseEntity
@@ -226,8 +227,8 @@ public class GroupingsRestController {
      * @return information about the success of opting out
      */
     @RequestMapping(value = "/{grouping}/{username}/optOut",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> optOut(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST optOut...");
         return ResponseEntity
@@ -247,8 +248,8 @@ public class GroupingsRestController {
      * @return information about the success of canceling the opt in
      */
     @RequestMapping(value = "/{grouping}/{username}/cancelOptIn",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> cancelOptIn(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST cancelOptIn...");
         return ResponseEntity
@@ -268,8 +269,8 @@ public class GroupingsRestController {
      * @return information about the success of canceling the opt out
      */
     @RequestMapping(value = "/{grouping}/{username}/cancelOptOut",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object[]> cancelOptOut(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST cancelOptOut...");
         return ResponseEntity
@@ -280,14 +281,14 @@ public class GroupingsRestController {
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserve
      *
-     * @param grouping: the path to the Grouping
-     * @param username: username of the Grouping's owner
+     * @param grouping:    the path to the Grouping
+     * @param username:    username of the Grouping's owner
      * @param listServeOn: true if the listserve should be on, false if it should be off
      * @return iformation about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{listServeOn}/setListserve",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> setListserve(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean listServeOn) {
         logger.info("Entered REST setListserve...");
         return ResponseEntity
@@ -300,12 +301,12 @@ public class GroupingsRestController {
      *
      * @param grouping: the path to the Grouping
      * @param username: username of the Grouping's owner
-     * @param optInOn: true if the members should be able to opt in, false if not
+     * @param optInOn:  true if the members should be able to opt in, false if not
      * @return iformation about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptIn",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> setOptIn(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optInOn) {
         logger.info("Entered REST setOptIn...");
         return ResponseEntity
@@ -322,8 +323,8 @@ public class GroupingsRestController {
      * @return iformation about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptOut",
-                    method = RequestMethod.POST,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> setOptOut(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optOutOn) {
         logger.info("Entered REST setOptIn...");
         return ResponseEntity
@@ -346,8 +347,8 @@ public class GroupingsRestController {
     //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
     //${app.iam.request.form}
     @RequestMapping(value = "/addGrouping",
-                    method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView addGrouping() {
         return new RedirectView(requestForm);
     }
@@ -362,12 +363,10 @@ public class GroupingsRestController {
     //${app.iam.request.form}
     // email its-iam-help@hawaii.edu for help in deleting a Grouping
     @RequestMapping(value = "/deleteGrouping",
-                    method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView deleteGrouping() {
         return new RedirectView(requestForm);
     }
 }
 
-//TODO implement function for owner to turn on/off listserve
-//TODO implement function for owner to turn on/off optIn/optOut attribute
