@@ -448,6 +448,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new ArrayList<>();
     }
 
+    //TODO make groupingsOptedInto and groupingsOptedOutOf methods
+
+
+
     public List<Grouping> groupingsToOptOutOf(String username) {
 
         List<String> groupingNames = allGroupings();
@@ -665,9 +669,10 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public GroupingsServiceResult updateLastModified(String group) {
         logger.info("updateLastModified; group: " + group);
+        String time = wsDateTime();
 
         WsAttributeAssignValue dateTimeValue = new WsAttributeAssignValue();
-        dateTimeValue.setValueSystem(wsDateTime());
+        dateTimeValue.setValueSystem(time);
 
         WsAssignAttributesResults assignAttributesResults = new GcAssignAttributes()
                 .assignAttributeAssignType("group")
@@ -678,7 +683,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .addValue(dateTimeValue)
                 .execute();
 
-        return makeGrouperActionResult(assignAttributesResults, "update last-modified attribute for " + group);
+        return makeGrouperActionResult(assignAttributesResults, "update last-modified attribute for " + group + " to time " + time);
 
     }
 
