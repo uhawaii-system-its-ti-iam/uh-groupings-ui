@@ -2,96 +2,75 @@
 
     function AdminJsController($scope, dataProvider) {
         var currentUser = document.getElementById("name").innerText;
-        var url = "getMembers?grouping=hawaii.edu:custom:test:ksanidad:ksanidad-test&username=" + currentUser;
+        var url = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/grouping";
         $scope.list = [];
+        $scope.loading = true;
 
         $scope.init = function () {
 
-            dataProvider.loadData(function (d) {
-                var temp;
-                temp = d.basisPlusIncludeMinusExclude;
+            setTimeout(function(){
+                dataProvider.loadData(function (d) {
+                    var temp;
 
-                for(var k = 0; k < temp.length; k++)
-                {
-                    temp[k].basis = "\u2716";
-                }
+                    console.log(d);
+                    temp = d.basisPlusIncludeMinusExclude.members;
 
-                //sorts the data by name
-                temp.sort(function (a, b) {
-                    var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
-                    if (nameA < nameB) //sort string ascending
-                        return -1;
-                    if (nameA > nameB)
-                        return 1;
-                    return 0
-                });
-
-                //Filters out names with hawaii.edu
-                for (var i = 0; i < temp.length; i++) {
-                    if (temp[i].name.includes("hawaii.edu")) {
-                        temp.splice(i, 1);
-                        i--;
-                    }
-                }
-
-                //gets the username from the attributeValues array
-                for (var j = 0; j < temp.length; j++) {
-                    temp[j].attributeValues = _.pluck(_.pluck(temp, "attributeValues"), 0)[j];
-                }
-
-                var basis = d.basis;
-
-                for(var l = 0; l < basis.length; l++)
-                {
-                    for(var m = 0; m < temp.length; m++)
+                    for(var k = 0; k < temp.length; k++)
                     {
-                        if(basis[l].name === temp[m].name)
+                        temp[k].basis = "\u2716";
+                    }
+
+                    //sorts the data by name
+                    temp.sort(function (a, b) {
+                        var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                        if (nameA < nameB) //sort string ascending
+                            return -1;
+                        if (nameA > nameB)
+                            return 1;
+                        return 0
+                    });
+
+                    var basis = d.basis.members;
+
+                    for(var l = 0; l < basis.length; l++)
+                    {
+                        for(var m = 0; m < temp.length; m++)
                         {
-                            temp[m].basis = "\u2714";
+                            if(basis[l].name === temp[m].name)
+                            {
+                                temp[m].basis = "\u2714";
+                            }
                         }
                     }
-                }
-
-                $scope.list = temp;
-
-                console.log($scope.list);
-            }, url)
+                    $scope.list = temp;
+                    $scope.loading=false;
+                    console.log($scope.list);
+                }, url)
+            }, 2000);
         };
 
         $scope.add = function () {
             var addUrl;
             $scope.testdata = [];
             console.log($scope.username);
-            addUrl = "addMember?userToAdd=" + $scope.username + "&grouping=hawaii.edu:custom:test:ksanidad:ksanidad-test&username=" + currentUser;
 
+            addUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/" + $scope.username + "/includeMemberFromIncludeGroup";
 
             if(confirm("You are adding " + $scope.username + " to the include list of this grouping")){
                 dataProvider.loadData(function (d) {
                     console.log(d);
-                    const pluck = _.pluck(d, "results");
 
-                    console.log(pluck);
-                    console.log(pluck[0]);
-                    if (typeof pluck[0] === 'undefined') {
+                    var result = d.results;
+                    if(result[0].wsSubject.resultCode === 'SUCCESS') {
+                        console.log("Successfully added " + $scope.username);
+                        alert("Successfully added " + $scope.username);
+                        $scope.loading = true;
+                        $scope.init();
+                    }
+                    else if(typeof d.results === 'undefined'){
                         console.log($scope.username + " this user does not exist.");
                         alert($scope.username + " this user does not exist.");
                     }
-                    else {
-                        const meta = pluck[0][0].resultMetadata;
-
-                        console.log(meta.resultCode);
-
-                        if (meta.resultCode === 'SUCCESS') {
-                            console.log("Successfully added " + $scope.username);
-                            alert("Successfully added " + $scope.username);
-                            $scope.init();
-                        }
-                        else if (meta.resultCode === 'SUCCESS_ALREADY_EXISTED') {
-                            console.log($scope.username + " already exists in this groupings.");
-                            alert($scope.username + " already exists in this groupings.");
-                        }
-                    }
-
                     $scope.testdata = d;
                     $scope.username = '';
                 }, addUrl);
@@ -100,29 +79,27 @@
 
         $scope.remove = function (row) {
             var deleteUrl;
-            var deleteUser = $scope.list[row].attributeValues;
+            var deleteUser = $scope.list[row].username;
+            console.log($scope.list[row]);
             console.log(deleteUser);
-                deleteUrl = "deleteMember?username=" + currentUser + "&userToDelete=" + deleteUser + "&grouping=hawaii.edu:custom:test:aaronvil:aaronvil-test";
+                deleteUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/" + deleteUser + "/deleteMemberFromIncludeGroup";
             if ($scope.list.length > 1) {
                 $.ajax({
                     url: deleteUrl,
-                    method: 'GET',
+                    method: 'POST',
                     success: function () {
-                        console.log("Success In Deletion")
+                        console.log("Success In Deletion");
                         //reload data table
+                        $scope.list.splice(row, 1);
+                        $scope.loading = true;
                         $scope.init();
                     },
                     error: function () {
                         console.log("Failed To Delete")
                     }
                 });
-                $scope.list.splice(row, 1);
             }
         }
-
-
     }
-
     adminApp.controller("AdminJsController", AdminJsController);
-
 })();

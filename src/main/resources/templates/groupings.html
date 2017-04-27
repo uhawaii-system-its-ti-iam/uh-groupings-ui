@@ -15,11 +15,16 @@
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
                 <div ng-show="!showList">
+                    <div id="overlay" ng-show="loading">
+                        <div class="loader" ng-show="loading"></div>
+                    </div>
+
                     <!-- This will allow you to search for specific groups -->
                     <div class="panel panel-default">
                         <div class="panel-heading" style="border: 0;padding: 5px;">
                             <div class="form-group">
                                 <h3 class="col-md-4" style="margin-top: 5px">Groupings</h3>
+
                                 <div align="right" style="margin-top: 10px">
                                     <input type="text" ng-model="searchFor" placeholder="Search Groupings..."/>
                                 </div>
@@ -37,7 +42,8 @@
                             <tr ng-repeat="l in ownedList | filter:searchFor">
 
                                 <th>
-                                    {{l.name}} <span ng-click="showData($index)" class="glyphicon glyphicon-edit"></span>
+                                    {{l.name}} <span ng-click="showData($index)"
+                                                     class="glyphicon glyphicon-edit"></span>
                                 </th>
                                 <th>{{l.folder}}</th>
                             </tr>
@@ -62,20 +68,23 @@
                         <div id="members" class="tab-pane fade in active">
                             <h2 class="text-center">Members</h2>
 
-                            <div class="col-md-1">
+                            <div class="col-md-2 col-xs-2" style="top: 55px; width: 80px">
                                 <ul class="nav nav-tabs nav-stacked">
                                     <li class="active"><a data-toggle="tab" href="#all"><span
                                             class="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
                                     <li><a data-toggle="tab" href="#basis"><span class="glyphicon glyphicon-lock"
                                                                                  aria-hidden="true"></span></a></li>
                                     <li><a data-toggle="tab" href="#include"><span class="glyphicon glyphicon-plus"
-                                                                                   aria-hidden="true"></span></a></li>
+                                                                                   aria-hidden="true"></span></a>
+                                    </li>
                                     <li><a data-toggle="tab" href="#exclude"><span class="glyphicon glyphicon-minus"
-                                                                                   aria-hidden="true"></span></a></li>
+                                                                                   aria-hidden="true"></span></a>
+                                    </li>
                                 </ul>
+
                             </div>
 
-                            <div class="tab-content col-md-10">
+                            <div class="tab-content col-md-10 col-xs-8">
                                 <div id="all" class="tab-pane fade in active">
                                     <h3 class="text-center">List</h3>
                                     <table class="table table-bordered table-hover">
@@ -90,8 +99,8 @@
                                         <tbody>
                                         <tr ng-repeat="g in groupingsList">
                                             <td>{{g.name}}</td>
-                                            <td>{{g.id}}</td>
-                                            <td>{{g.attributeValues}}</td>
+                                            <td>{{g.uuid}}</td>
+                                            <td>{{g.username}}</td>
                                             <td class="text-center" style="width: 3%">{{g.basis}}</td>
                                         </tr>
                                         </tbody>
@@ -110,8 +119,8 @@
                                         <tbody>
                                         <tr ng-repeat="b in groupingsBasis">
                                             <td>{{b.name}}</td>
-                                            <td>{{b.id}}</td>
-                                            <td>{{b.attributeValues}}</td>
+                                            <td>{{b.uuid}}</td>
+                                            <td>{{b.username}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -130,10 +139,15 @@
                                         <tbody>
                                         <tr ng-repeat="i in groupingInclude">
                                             <td>
-                                                {{i.name}} <span ng-click="removeInclude($index)" class="glyphicon glyphicon-minus-sign pull-right"></span>
+                                                {{i.name}}
+                                                <span class="glyphicon glyphicon-trash pull-right"
+                                                      ng-click="removeInclude($index)" data-toggle="tooltip"
+                                                      data-placement="top" onmouseover="$(this).tooltip('show')"
+                                                      title="Delete member from the include grouping"
+                                                      style="margin-right: 10px"></span>
                                             </td>
-                                            <td>{{i.id}}</td>
-                                            <td>{{i.attributeValues}}</td>
+                                            <td>{{i.uuid}}</td>
+                                            <td>{{i.username}}</td>
                                             <td class="text-center" style="width: 3%">{{i.basis}}</td>
                                         </tr>
                                         </tbody>
@@ -141,12 +155,15 @@
 
                                     <div>
                                         <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                                data-target="#addInclude" aria-expanded="false" aria-controls="addOwner">
+                                                data-target="#addInclude" aria-expanded="false"
+                                                aria-controls="addOwner">
                                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                         </button>
                                         <div class="collapse" id="addInclude">
-                                            <input type="text" placeholder="Add user to include" ng-model="includeUsername"/>
-                                            <button class="btn btn-success" ng-click="addInclude()">Add to Included</button>
+                                            <input type="text" placeholder="Add user to include"
+                                                   ng-model="includeUsername"/>
+                                            <button class="btn btn-success" ng-click="addInclude()">Add to Included
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -164,10 +181,15 @@
                                         <tbody>
                                         <tr ng-repeat="e in groupingExclude">
                                             <td>
-                                                {{e.name}} <span ng-click="removeExclude($index)" class="glyphicon glyphicon-plus-sign pull-right"></span>
+                                                {{e.name}}
+                                                <span class="glyphicon glyphicon-trash pull-right" data-toggle="tooltip"
+                                                      data-placement="top" onmouseover="$(this).tooltip('show')"
+                                                      title="Delete member from the exclude group"
+                                                      ng-click="removeExclude($index)"
+                                                      style="margin-right: 10px"></span>
                                             </td>
-                                            <td>{{e.id}}</td>
-                                            <td>{{e.attributeValues}}</td>
+                                            <td>{{e.uuid}}</td>
+                                            <td>{{e.username}}</td>
                                             <td class="text-center" style="width: 3%">{{e.basis}}</td>
                                         </tr>
                                         </tbody>
@@ -175,12 +197,15 @@
 
                                     <div>
                                         <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                                data-target="#addExclude" aria-expanded="false" aria-controls="addOwner">
+                                                data-target="#addExclude" aria-expanded="false"
+                                                aria-controls="addOwner">
                                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                         </button>
                                         <div class="collapse" id="addExclude">
-                                            <input type="text" placeholder="Add user to exclude" ng-model="excludeUser"/>
-                                            <button class="btn btn-success" ng-click="addExclude()">Add to Excluded</button>
+                                            <input type="text" placeholder="Add user to exclude"
+                                                   ng-model="excludeUser"/>
+                                            <button class="btn btn-success" ng-click="addExclude()">Add to Excluded
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -201,8 +226,12 @@
                                 <tbody>
                                 <tr ng-repeat="owner in ownerList">
                                     <td>{{owner.name}}</td>
-                                    <td>{{owner.attributeValues}}</td>
-                                    <td><button class="btn btn-default btn-block" ng-click="removeOwner($index)"><span class="glyphicon glyphicon-remove"></span></button></td>
+                                    <td>{{owner.username}}</td>
+                                    <td>
+                                        <button class="btn btn-default btn-block" ng-click="removeOwner($index)"><span
+                                                class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
