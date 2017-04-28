@@ -469,7 +469,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             if (group.endsWith(includeOrrExclude)
                     && allGroupings.contains(parentGrouping)
                     && checkSelfOpted(group, lookup)) {
-               groupsOpted.add(parentGrouping);
+                groupsOpted.add(parentGrouping);
             }
         }
 
@@ -942,17 +942,17 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupings;
     }
 
-    public String parentGroupingPath(String group){
-        if(group.endsWith(EXCLUDE)){
+    public String parentGroupingPath(String group) {
+        if (group.endsWith(EXCLUDE)) {
             return group.split(EXCLUDE)[0];
         }
-        if(group.endsWith(INCLUDE)){
+        if (group.endsWith(INCLUDE)) {
             return group.split(INCLUDE)[0];
         }
-        if(group.endsWith(BASIS)){
+        if (group.endsWith(BASIS)) {
             return group.split(BASIS)[0];
         }
-        if(group.endsWith(BASISPLUSINCLUDE)){
+        if (group.endsWith(BASISPLUSINCLUDE)) {
             return group.split(BASISPLUSINCLUDE)[0];
         }
         return group;

@@ -269,14 +269,14 @@ public class TestGroupingsRestController {
     }
 
     @Test
-    public void myGroupingsTest3(){
+    public void myGroupingsTest3() {
         boolean optedIn = false;
         boolean optedOut = false;
 
         gc.optIn(grouping, tst[4]);
         MyGroupings tst4Groupings = gc.myGroupings(tst[4]).getBody();
-        for(Grouping grouping : tst4Groupings.getGroupingsOptedInTo()){
-            if(grouping.getPath().contains(this.grouping)) {
+        for (Grouping grouping : tst4Groupings.getGroupingsOptedInTo()) {
+            if (grouping.getPath().contains(this.grouping)) {
                 optedIn = true;
             }
         }
@@ -284,8 +284,8 @@ public class TestGroupingsRestController {
 
         gc.optOut(grouping, tst[5]);
         MyGroupings tst5Groupings = gc.myGroupings(tst[5]).getBody();
-        for(Grouping grouping : tst5Groupings.getGroupingsOptedOutOf()){
-            if(grouping.getPath().contains(this.grouping)) {
+        for (Grouping grouping : tst5Groupings.getGroupingsOptedOutOf()) {
+            if (grouping.getPath().contains(this.grouping)) {
                 optedOut = true;
             }
         }
