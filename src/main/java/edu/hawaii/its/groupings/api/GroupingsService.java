@@ -16,6 +16,10 @@ public interface GroupingsService {
 
     public List<Grouping> groupingsIn(String username);
 
+    public List<Grouping> groupingsOptedInto(String username);
+
+    public List<Grouping> groupingsOptedOutOf(String username);
+
     public boolean inGroup(String group, String username);
 
     //TODO change to non-Grouper return type
@@ -74,4 +78,5 @@ public interface GroupingsService {
     public boolean optOutPermission(String grouping);
 
     public boolean optInPermission(String grouping);
+
 }
