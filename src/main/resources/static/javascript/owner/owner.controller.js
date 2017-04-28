@@ -45,19 +45,19 @@
         //Shows page containing groupings information
         $scope.showData = function (row) {
             $scope.groupingName = $scope.ownedList[row];
-
+            $scope.loading = true;
             //URLS being used in the api calls.
             getUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/grouping";
             ownerUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/grouping";
 
             if ($scope.showList == false) {
                 $scope.showList = true;
-
                 //Gets list of Members
                 $scope.getMembers(getUrl);
                 $scope.getBasis(getUrl);
                 $scope.getInclude(getUrl);
                 $scope.getExclude(getUrl);
+                $scope.getPref(getUrl);
 
                 //Gets List of Owners
                 $scope.getOwners(getUrl);
@@ -109,8 +109,8 @@
                         }
                     }
                 }
-
                 $scope.groupingsList = temp;
+                $scope.loading = false;
             }, URL);
         };
 
@@ -244,6 +244,7 @@
                     $scope.getMembers(getUrl);
                     $scope.getInclude(getUrl);
                     $scope.getExclude(getUrl);
+                    $scope.getPref(getUrl);
                 }
                 else if(typeof d.results === 'undefined'){
                     console.log($scope.username + " this user does not exist.");
@@ -389,6 +390,12 @@
             $scope.ownerUser = '';
         };
 
+        $scope.getPref = function(URL) {
+            dataProvider.loadData(function (d) {
+                console.log(d);
+            }, URL);
+        };
+
         $scope.savePref = function () {
             if ($('#addOption').is(':checked')) {
                 console.log("You are allowing members to opt in your grouping")
@@ -399,6 +406,41 @@
             if ($('#listserv').is(':checked')) {
                 console.log("LISTSERV is true")
             }
+        };
+
+        $scope.export = function(type, name) {
+            var data, filename, link;
+
+            var csv = $scope.convertArrayOfObjectsToCSV(type);
+            if (csv == null) return;
+
+            filename = name + '_export.csv';
+
+            if (!csv.match(/^data:text\/csv/i)) {
+                csv = 'data:text/csv;charset=utf-8,' + csv;
+            }
+            data = encodeURI(csv);
+
+            link = document.createElement('a');
+            link.setAttribute('href', data);
+            link.setAttribute('download', filename);
+            link.click();
+        };
+
+        $scope.convertArrayOfObjectsToCSV = function(type) {
+            var array = typeof type != 'object' ? JSON.parse(type) : type;
+            var str = '';
+
+            for (var i = 0; i < array.length; i++) {
+                var line = '';
+                for (var index in array[i]) {
+                    if (line != '')
+                        line += ',';
+                    line += array[i][index];
+                }
+                str += line + '\r\n';
+            }
+            return str;
         };
     }
 
