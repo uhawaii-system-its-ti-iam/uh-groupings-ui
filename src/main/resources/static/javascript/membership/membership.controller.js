@@ -7,6 +7,9 @@
         $scope.optInList = [];
         $scope.loading = true;
 
+        $scope.totalItems = 12;
+        $scope.currentPage = 1;
+
         $scope.init = function () {
             //Loads Data
             dataProvider.loadData(function (d) {
