@@ -14,7 +14,6 @@ import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import edu.hawaii.its.holiday.util.Dates;
@@ -83,7 +82,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             return privilegeResults;
         }
 
-        return new GroupingsServiceResult[] {new GroupingsServiceResult(
+        return new GroupingsServiceResult[]{new GroupingsServiceResult(
                 "FAILURE, " + username + " does not own " + grouping,
                 "give " + newOwner + " ownership of " + grouping)};
 
@@ -145,7 +144,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             return privileges;
         }
 
-        return new GroupingsServiceResult[] {new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, "remove ownership of "  + grouping + " from " + ownerToRemove)};
+        return new GroupingsServiceResult[]{new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, "remove ownership of " + grouping + " from " + ownerToRemove)};
 
         //change to api-account for now
         //switch to actAsSubject after we figure out attribute update privlages
@@ -211,6 +210,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         myGroupings.setGroupingsOwned(groupingsOwned(username));
         myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username));
         myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username));
+        myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username));
+        myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username));
 
         return myGroupings;
     }
@@ -287,7 +288,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (inGroup(group, username)) {
             if (groupOptInPermission(username, group)) {
-                 results = new GroupingsServiceResult[2];
+                results = new GroupingsServiceResult[2];
                 results[0] = deleteMemberAs(username, group, username);
                 results[1] = updateLastModified(group);
 
@@ -298,7 +299,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                         "opt " + username + " out of " + group)};
             }
         } else {
-            results = new GroupingsServiceResult[] {new GroupingsServiceResult(
+            results = new GroupingsServiceResult[]{new GroupingsServiceResult(
                     "SUCCESS, " + username + " is not opted in, because " + username + " was not in " + group,
                     "cancel opt in for " + username + " to " + grouping)};
         }
@@ -331,7 +332,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                         "opt " + username + " out of " + group)};
             }
         } else {
-            results = new GroupingsServiceResult[] {new GroupingsServiceResult(
+            results = new GroupingsServiceResult[]{new GroupingsServiceResult(
                     "SUCCESS, " + username + " is not opted out, because " + username + " was not in " + group,
                     "cancel opt out for " + username + " to " + grouping)};
         }
@@ -448,8 +449,32 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new ArrayList<>();
     }
 
-    //TODO make groupingsOptedInto and groupingsOptedOutOf methods
+    public List<Grouping> groupingsOptedInto(String username) {
+        return groupingsOpted(INCLUDE, username);
+    }
 
+    public List<Grouping> groupingsOptedOutOf(String username) {
+        return groupingsOpted(EXCLUDE, username);
+    }
+
+    public List<Grouping> groupingsOpted(String includeOrrExclude, String username) {
+
+        WsSubjectLookup lookup = makeWsSubjectLookup(username);
+        List<String> allGroupings = allGroupings();
+        List<String> groupsIn = getGroupNames(username);
+        List<String> groupsOpted = new ArrayList<>();
+
+        for (String group : groupsIn) {
+            String parentGrouping = parentGroupingPath(group);
+            if (group.endsWith(includeOrrExclude)
+                    && allGroupings.contains(parentGrouping)
+                    && checkSelfOpted(group, lookup)) {
+                groupsOpted.add(parentGrouping);
+            }
+        }
+
+        return makeGroupings(groupsOpted);
+    }
 
 
     public List<Grouping> groupingsToOptOutOf(String username) {
@@ -915,6 +940,22 @@ public class GroupingsServiceImpl implements GroupingsService {
             grouping.setHasListserv(hasListserv(grouping.getPath()));
         }
         return groupings;
+    }
+
+    public String parentGroupingPath(String group) {
+        if (group.endsWith(EXCLUDE)) {
+            return group.split(EXCLUDE)[0];
+        }
+        if (group.endsWith(INCLUDE)) {
+            return group.split(INCLUDE)[0];
+        }
+        if (group.endsWith(BASIS)) {
+            return group.split(BASIS)[0];
+        }
+        if (group.endsWith(BASISPLUSINCLUDE)) {
+            return group.split(BASISPLUSINCLUDE)[0];
+        }
+        return group;
     }
 
     public List<String> extractGroupNames(List<WsGroup> groups) {
