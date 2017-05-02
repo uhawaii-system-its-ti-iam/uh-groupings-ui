@@ -293,6 +293,7 @@ public class TestGroupingsRestController {
 
         //reset Grouping
         gc.cancelOptIn(grouping, tst[4]);
+        gc.addMemberToExcludeGroup(grouping, tst[0], tst[4]);
         gc.cancelOptOut(grouping, tst[5]);
     }
 
