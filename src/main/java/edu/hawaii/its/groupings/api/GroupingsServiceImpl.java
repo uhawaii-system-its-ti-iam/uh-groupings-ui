@@ -32,9 +32,7 @@ import edu.internet2.middleware.grouperClient.ws.StemScope;
 
 @Service("groupingsService")
 public class GroupingsServiceImpl implements GroupingsService {
-
     public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
-
     public static final String UUID_USERNAME = "ef62bf0473614b379695ecec6cb8b3b5";
     private static final String SETTINGS = "uh-settings";
     private static final String ATTRIBUTES = SETTINGS + ":attributes";
@@ -81,29 +79,34 @@ public class GroupingsServiceImpl implements GroupingsService {
 
             return privilegeResults;
         }
-
         return new GroupingsServiceResult[]{new GroupingsServiceResult(
                 "FAILURE, " + username + " does not own " + grouping,
                 "give " + newOwner + " ownership of " + grouping)};
-
     }
 
+    /**
+     *
+     * @param grouping:     the path of the Grouping that will have its listserve status changed
+     * @param username:     username of the Grouping Owner preforming the action
+     * @param listServeOn:  true if the listserve should be turned on, false if it should be turned off
+     * @return
+     */
     @Override
-    public String changeListServeStatus(String grouping, String username, boolean listServeOn) {
+    public GroupingsServiceResult changeListServeStatus(String grouping, String username, boolean listServeOn) {
         String attributeName = UHGROUPING + ":destinations:listserv";
 
         return changeGroupAttributeStatus(grouping, username, attributeName, listServeOn);
     }
 
     @Override
-    public String changeOptInStatus(String grouping, String username, boolean optInOn) {
+    public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn) {
         String attributeName = UHGROUPING + ":anyone-can:opt-in";
 
         return changeGroupAttributeStatus(grouping, username, attributeName, optInOn);
     }
 
     @Override
-    public String changeOptOutStatus(String grouping, String username, boolean optOutOn) {
+    public GroupingsServiceResult changeOptOutStatus(String grouping, String username, boolean optOutOn) {
         String attributeName = UHGROUPING + ":anyone-can:opt-out";
 
         return changeGroupAttributeStatus(grouping, username, attributeName, optOutOn);
@@ -1049,8 +1052,14 @@ public class GroupingsServiceImpl implements GroupingsService {
         return extractGroupingNames(groupNames);
     }
 
-    public String changeGroupAttributeStatus(String group, String username, String attributeName, boolean attributeOn) {
-        final String message;
+    public GroupingsServiceResult changeGroupAttributeStatus(String group, String username, String attributeName, boolean attributeOn) {
+        GroupingsServiceResult gsr = new GroupingsServiceResult();
+
+        String verb = "removed from ";
+        if(attributeOn){
+            verb = "added to ";
+        }
+        gsr.setAction(attributeName + " will be " + verb + group + " by " + username);
 
         if (isOwner(group, username)) {
             boolean hasAttribute = groupHasAttribute(group, attributeName);
@@ -1058,24 +1067,24 @@ public class GroupingsServiceImpl implements GroupingsService {
                 if (!hasAttribute) {
                     groupAttributeAssign(attributeName, "assign_attr", group);
 
-                    message = attributeName + " has been turned on";
+                    gsr.setResultCode("SUCCESS");
                 } else {
-                    message = attributeName + " is already on";
+                    gsr.setResultCode("SUCCESS, " + attributeName + " already existed");
                 }
             } else {
                 if (hasAttribute) {
                     groupAttributeAssign(attributeName, "remove_attr", group);
 
-                    message = attributeName + " has been turned off";
+                    gsr.setResultCode("SUCCESS");
                 } else {
-                    message = attributeName + " is already off";
+                    gsr.setResultCode("SUCCESS, " + attributeName + " did not exist");
                 }
             }
         } else {
-            message = "User does not own Grouping";
+            gsr.setResultCode("FAILURE, " + username + " does not own " + group);
         }
 
-        return message;
+        return gsr;
     }
 
     public GroupingsServiceResult makeGrouperActionResult(ResultMetadataHolder resultMetadataHolder, String action) {
