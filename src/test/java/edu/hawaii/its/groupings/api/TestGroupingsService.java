@@ -26,6 +26,7 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.hawaii.its.holiday.util.Dates;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @RunWith(SpringRunner.class)
@@ -215,7 +216,7 @@ public class TestGroupingsService {
     }
 
     @Test
-    public void groupOptPermission() {
+    public void groupOptPermissionTest() {
         assertTrue(gs.groupOptOutPermission(username[0], GROUPING_INCLUDE));
         assertTrue(gs.groupOptOutPermission(username[0], GROUPING_EXCLUDE));
 
@@ -225,12 +226,17 @@ public class TestGroupingsService {
 
 
     @Test
-    public void makeWsSubject() {
+    public void makeWsSubjectTest() {
         WsSubjectLookup subjectLookup = gs.makeWsSubjectLookup(username[1]);
         assertTrue(subjectLookup.getSubjectIdentifier().equals(username[1]));
     }
 
-    //TODO add test for makeWsGroupLookup
+    @Test
+    public void makeWsGroupLookupTest() {
+        WsGroupLookup lookup = gs.makeWsGroupLookup(GROUPING_EXCLUDE);
+        assertTrue(lookup.getGroupName().equals(GROUPING_EXCLUDE));
+    }
+
     //TODO add test for assignAttributesResults (both)
     //TODO add test for membershipAttributeAssign
     //TODO add test for attributeAssignments
