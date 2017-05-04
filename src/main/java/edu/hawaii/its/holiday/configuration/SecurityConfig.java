@@ -26,6 +26,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.Assert;
 
 import edu.hawaii.its.holiday.access.UserBuilder;
@@ -164,6 +165,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/groupings").hasRole("UH")
                 .antMatchers("/memberships/**").hasRole("UH")
                 .anyRequest().authenticated()
+                .and()
+                .csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                 .logout()
                 .logoutUrl("/logout")

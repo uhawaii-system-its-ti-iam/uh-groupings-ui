@@ -53,11 +53,11 @@ public interface GroupingsService {
 
     public GroupingsServiceResult[] cancelOptOut(String grouping, String username);
 
-    public String changeListServeStatus(String grouping, String username, boolean listServeOn);
+    public GroupingsServiceResult changeListServeStatus(String grouping, String username, boolean listServeOn);
 
-    public String changeOptInStatus(String grouping, String username, boolean optInOn);
+    public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn);
 
-    public String changeOptOutStatus(String grouping, String username, boolean optOutOn);
+    public GroupingsServiceResult changeOptOutStatus(String grouping, String username, boolean optOutOn);
 
     public Group findOwners(String grouping, String username);
 
