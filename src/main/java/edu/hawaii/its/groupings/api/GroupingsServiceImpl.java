@@ -654,11 +654,13 @@ public class GroupingsServiceImpl implements GroupingsService {
                         .addSubjectAttributeName("uid")
                         .execute();
 
-        for (WsGrouperPrivilegeResult owner : privilegeResults.getPrivilegeResults()) {
-            String values[] = owner.getOwnerSubject().getAttributeValues();
-            if (values != null && values.length > 0) {
-                if (username.equals(owner.getOwnerSubject().getAttributeValue(0))) {
-                    return true; // Found it, get out.
+        if(privilegeResults.getPrivilegeResults() != null) {
+            for (WsGrouperPrivilegeResult owner : privilegeResults.getPrivilegeResults()) {
+                String values[] = owner.getOwnerSubject().getAttributeValues();
+                if (values != null && values.length > 0) {
+                    if (username.equals(owner.getOwnerSubject().getAttributeValue(0))) {
+                        return true; // Found it, get out.
+                    }
                 }
             }
         }
