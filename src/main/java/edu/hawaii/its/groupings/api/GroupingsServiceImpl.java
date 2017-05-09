@@ -48,40 +48,42 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * gives a user ownersip permissions for a Grouping
      *
-     * @param grouping: the Grouping that the user will get ownership permissions for
-     * @param username: the owner of the Grouping who will give ownership permissions to the new owner
-     * @param newOwner: the user that will become an owner of the Grouping
+     * @param grouping : the Grouping that the user will get ownership permissions for
+     * @param username : the owner of the Grouping who will give ownership permissions to the new owner
+     * @param newOwner : the user that will become an owner of the Grouping
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] assignOwnership(String grouping, String username, String newOwner) {
+    public List<GroupingsServiceResult> assignOwnership(String grouping, String username, String newOwner) {
         String basisGroup = grouping + BASIS;
         String basisPlusIncludeGroup = grouping + BASISPLUSINCLUDE;
         String excludeGroup = grouping + EXCLUDE;
         String includeGroup = grouping + INCLUDE;
         String action = "give " + newOwner + " ownership privileges for ";
+        List<GroupingsServiceResult> privilegeResults = new ArrayList<>();
 
         if (isOwner(grouping, username)) {
             WsSubjectLookup ownerToAdd = makeWsSubjectLookup(newOwner);
-            GroupingsServiceResult[] privilegeResults = new GroupingsServiceResult[4];
 
             WsGroupLookup basisGroupLookup = makeWsGroupLookup(basisGroup);
-            privilegeResults[0] = makeGroupingsServiceResult(addGroupOwnership(basisGroupLookup, ownerToAdd), action + basisGroup);
+            privilegeResults.add(makeGroupingsServiceResult(addGroupOwnership(basisGroupLookup, ownerToAdd), action + basisGroup));
 
             WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(basisPlusIncludeGroup);
-            privilegeResults[1] = makeGroupingsServiceResult(addGroupOwnership(basisPlusIncludeGroupLookup, ownerToAdd), action + basisPlusIncludeGroup);
+            privilegeResults.add(makeGroupingsServiceResult(addGroupOwnership(basisPlusIncludeGroupLookup, ownerToAdd), action + basisPlusIncludeGroup));
 
             WsGroupLookup excludeGroupLookup = makeWsGroupLookup(excludeGroup);
-            privilegeResults[2] = makeGroupingsServiceResult(addGroupOwnership(excludeGroupLookup, ownerToAdd), action + excludeGroup);
+            privilegeResults.add(makeGroupingsServiceResult(addGroupOwnership(excludeGroupLookup, ownerToAdd), action + excludeGroup));
 
             WsGroupLookup includeGroupLookup = makeWsGroupLookup(includeGroup);
-            privilegeResults[3] = makeGroupingsServiceResult(addGroupOwnership(includeGroupLookup, ownerToAdd), action + includeGroup);
+            privilegeResults.add(makeGroupingsServiceResult(addGroupOwnership(includeGroupLookup, ownerToAdd), action + includeGroup));
 
             return privilegeResults;
         }
-        return new GroupingsServiceResult[]{new GroupingsServiceResult(
+
+        privilegeResults.add(new GroupingsServiceResult(
                 "FAILURE, " + username + " does not own " + grouping,
-                "give " + newOwner + " ownership of " + grouping)};
+                "give " + newOwner + " ownership of " + grouping));
+        return privilegeResults;
     }
 
     /**
@@ -132,33 +134,34 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] removeOwnership(String grouping, String username, String ownerToRemove) {
+    public List<GroupingsServiceResult> removeOwnership(String grouping, String username, String ownerToRemove) {
         String basisGroup = grouping + BASIS;
         String basisPlusIncludeGroup = grouping + BASISPLUSINCLUDE;
         String includeGroup = grouping + INCLUDE;
         String excludeGroup = grouping + EXCLUDE;
-        String action = "reomve ownership privileges for " + ownerToRemove + " from ";
+        String action = "remove ownership privileges for " + ownerToRemove + " from ";
+        List<GroupingsServiceResult> privileges = new ArrayList<>();
 
         if (isOwner(grouping, username)) {
-            GroupingsServiceResult[] privileges = new GroupingsServiceResult[4];
 
             WsSubjectLookup ownerToRemoveLookup = makeWsSubjectLookup(ownerToRemove);
             WsGroupLookup basisGroupLookup = makeWsGroupLookup(basisGroup);
-            privileges[0] = makeGroupingsServiceResult(removeGroupOwnership(basisGroupLookup, ownerToRemoveLookup), action + basisGroup);
+            privileges.add(makeGroupingsServiceResult(removeGroupOwnership(basisGroupLookup, ownerToRemoveLookup), action + basisGroup));
 
             WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(basisPlusIncludeGroup);
-            privileges[1] = makeGroupingsServiceResult(removeGroupOwnership(basisPlusIncludeGroupLookup, ownerToRemoveLookup), action + basisPlusIncludeGroup);
+            privileges.add(makeGroupingsServiceResult(removeGroupOwnership(basisPlusIncludeGroupLookup, ownerToRemoveLookup), action + basisPlusIncludeGroup));
 
             WsGroupLookup excludeGroupLookup = makeWsGroupLookup(excludeGroup);
-            privileges[2] = makeGroupingsServiceResult(removeGroupOwnership(excludeGroupLookup, ownerToRemoveLookup), action + excludeGroup);
+            privileges.add(makeGroupingsServiceResult(removeGroupOwnership(excludeGroupLookup, ownerToRemoveLookup), action + excludeGroup));
 
             WsGroupLookup includeGroupLookup = makeWsGroupLookup(includeGroup);
-            privileges[3] = makeGroupingsServiceResult(removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup), action + includeGroup);
+            privileges.add(makeGroupingsServiceResult(removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup), action + includeGroup));
 
             return privileges;
         }
 
-        return new GroupingsServiceResult[]{new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, "remove ownership of " + grouping + " from " + ownerToRemove)};
+        privileges.add(new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, "remove ownership of " + grouping + " from " + ownerToRemove));
+        return privileges;
     }
 
     /**
@@ -232,28 +235,28 @@ public class GroupingsServiceImpl implements GroupingsService {
      * this will put them in the include group
      * if they are in the exclude group, they will be removed from it
      *
-     * @param username: user to be opting in
-     * @param grouping: Grouping the user will opt into
+     * @param username : user to be opting in
+     * @param grouping : Grouping the user will opt into
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] optIn(String username, String grouping) {
+    public List<GroupingsServiceResult> optIn(String username, String grouping) {
+        List<GroupingsServiceResult> results = new ArrayList<>();
 
         if (groupOptInPermission(username, grouping + INCLUDE)) {
-            GroupingsServiceResult[] results = new GroupingsServiceResult[6];
-            results[3] = removeSelfOpted(grouping + EXCLUDE, username);
-            results[0] = deleteMemberAs(username, grouping + EXCLUDE, username);
-            results[1] = addMemberAs(username, grouping + INCLUDE, username);
-            results[4] = updateLastModified(grouping + EXCLUDE);
-            results[5] = updateLastModified(grouping + INCLUDE);
-            results[2] = addSelfOpted(grouping + INCLUDE, username);
+            results.add(removeSelfOpted(grouping + EXCLUDE, username));
+            results.add(0, deleteMemberAs(username, grouping + EXCLUDE, username));
+            results.add(1, addMemberAs(username, grouping + INCLUDE, username));
+            results.add(updateLastModified(grouping + EXCLUDE));
+            results.add(updateLastModified(grouping + INCLUDE));
+            results.add(2, addSelfOpted(grouping + INCLUDE, username));
 
             return results;
         }
-
-        return new GroupingsServiceResult[]{new GroupingsServiceResult(
+        results.add(new GroupingsServiceResult(
                 "FAILURE, " + username + " does not have permission to opt in to " + grouping,
-                "opt in " + username + " to " + grouping)};
+                "opt in " + username + " to " + grouping));
+        return results;
     }
 
     /**
@@ -266,23 +269,24 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] optOut(String username, String grouping) {
+    public List<GroupingsServiceResult> optOut(String username, String grouping) {
+        List<GroupingsServiceResult> results = new ArrayList<>();
 
         if (groupOptInPermission(username, grouping + EXCLUDE)) {
-            GroupingsServiceResult[] results = new GroupingsServiceResult[6];
-            results[3] = removeSelfOpted(grouping + INCLUDE, username);
-            results[0] = deleteMemberAs(username, grouping + INCLUDE, username);
-            results[1] = addMemberAs(username, grouping + EXCLUDE, username);
-            results[4] = updateLastModified(grouping + EXCLUDE);
-            results[5] = updateLastModified(grouping + INCLUDE);
-            results[2] = addSelfOpted(grouping + EXCLUDE, username);
+            results.add(removeSelfOpted(grouping + INCLUDE, username));
+            results.add(0, deleteMemberAs(username, grouping + INCLUDE, username));
+            results.add(1, addMemberAs(username, grouping + EXCLUDE, username));
+            results.add(updateLastModified(grouping + EXCLUDE));
+            results.add(updateLastModified(grouping + INCLUDE));
+            results.add(2, addSelfOpted(grouping + EXCLUDE, username));
 
             return results;
         }
 
-        return new GroupingsServiceResult[]{new GroupingsServiceResult(
+        results.add(new GroupingsServiceResult(
                 "FAILURE, " + username + " does not have permission to opt out of " + grouping,
-                "opt out " + username + " from " + grouping)};
+                "opt out " + username + " from " + grouping));
+        return results;
     }
 
     /**
@@ -293,26 +297,25 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] cancelOptIn(String grouping, String username) {
-        GroupingsServiceResult[] results;
+    public List<GroupingsServiceResult> cancelOptIn(String grouping, String username) {
+        List<GroupingsServiceResult> results = new ArrayList<>();
         String group = grouping + INCLUDE;
 
         if (inGroup(group, username)) {
             if (groupOptInPermission(username, group)) {
-                results = new GroupingsServiceResult[2];
-                results[0] = deleteMemberAs(username, group, username);
-                results[1] = updateLastModified(group);
+                results.add(deleteMemberAs(username, group, username));
+                results.add(updateLastModified(group));
 
                 return results;
             } else {
-                results = new GroupingsServiceResult[]{new GroupingsServiceResult(
+                results.add(new GroupingsServiceResult(
                         username + " is not allowed to opt out of " + group,
-                        "opt " + username + " out of " + group)};
+                        "opt " + username + " out of " + group));
             }
         } else {
-            results = new GroupingsServiceResult[]{new GroupingsServiceResult(
+            results.add(new GroupingsServiceResult(
                     "SUCCESS, " + username + " is not opted in, because " + username + " was not in " + group,
-                    "cancel opt in for " + username + " to " + grouping)};
+                    "cancel opt in for " + username + " to " + grouping));
         }
 
         return results;
@@ -326,26 +329,25 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] cancelOptOut(String grouping, String username) {
+    public List<GroupingsServiceResult> cancelOptOut(String grouping, String username) {
         String group = grouping + EXCLUDE;
-        GroupingsServiceResult[] results;
+        List<GroupingsServiceResult> results = new ArrayList<>();
 
         if (inGroup(group, username)) {
             if (groupOptOutPermission(username, group)) {
-                results = new GroupingsServiceResult[2];
-                results[0] = deleteMemberAs(username, group, username);
-                results[1] = updateLastModified(group);
+                results.add(deleteMemberAs(username, group, username));
+                results.add(updateLastModified(group));
 
                 return results;
             } else {
-                results = new GroupingsServiceResult[]{new GroupingsServiceResult(
+                results.add(new GroupingsServiceResult(
                         username + " is not allowed to opt out of " + group,
-                        "opt " + username + " out of " + group)};
+                        "opt " + username + " out of " + group));
             }
         } else {
-            results = new GroupingsServiceResult[]{new GroupingsServiceResult(
+            results.add(new GroupingsServiceResult(
                     "SUCCESS, " + username + " is not opted out, because " + username + " was not in " + group,
-                    "cancel opt out for " + username + " to " + grouping)};
+                    "cancel opt out for " + username + " to " + grouping));
         }
         return results;
     }
@@ -1176,9 +1178,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param person:
-     * @return
+     * @return a person made from the WsSubject
      */
     private Person makePerson(WsSubject person) {
         String name = person.getName();

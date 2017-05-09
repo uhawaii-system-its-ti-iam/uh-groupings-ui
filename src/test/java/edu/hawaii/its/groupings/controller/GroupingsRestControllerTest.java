@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
 import org.junit.Before;
@@ -136,12 +138,12 @@ public class GroupingsRestControllerTest {
     public void getCancelOptOut() throws Exception {
         final String grouping = "grouping";
         final String username = "username";
+        List<GroupingsServiceResult> gsr = new ArrayList<>();
+        gsr.add(new GroupingsServiceResult("SUCCESS", "delete memeber from exclude group"));
+        gsr.add(new GroupingsServiceResult("SUCCESS", "update last-modified attribute for exclude group"));
 
         given(groupingsService.cancelOptOut(grouping, username))
-                .willReturn(new GroupingsServiceResult[]{
-                        new GroupingsServiceResult("SUCCESS", "delete memeber from exclude group"),
-                        new GroupingsServiceResult("SUCCESS", "update last-modified attribute for exclude group")
-                });
+                .willReturn(gsr);
 
         mockMvc.perform(post("/api/groupings/grouping/username/cancelOptOut")
                 .with(csrf()))
