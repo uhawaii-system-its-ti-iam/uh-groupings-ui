@@ -82,7 +82,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         privilegeResults.add(new GroupingsServiceResult(
                 "FAILURE, " + username + " does not own " + grouping,
-                "give " + newOwner + " ownership of " + grouping));
+                action + grouping));
         return privilegeResults;
     }
 
@@ -1202,7 +1202,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (attributeOn) {
             verb = "added to ";
         }
-        gsr.setAction(attributeName + " will be " + verb + group + " by " + username);
+        gsr.setAction(attributeName + " has been " + verb + group + " by " + username);
 
         if (isOwner(group, username)) {
             boolean hasAttribute = groupHasAttribute(group, attributeName);

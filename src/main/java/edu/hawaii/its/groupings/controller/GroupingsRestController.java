@@ -325,7 +325,7 @@ public class GroupingsRestController {
      * @param optOutOn: true if the members should be able to opt out, false if not
      * @return iformation about the success of the operation
      */
-    @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptOut",
+    @RequestMapping(value = "/{grouping}/{username}/{optOutOn}/setOptOut",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GroupingsServiceResult> setOptOut(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optOutOn) {
