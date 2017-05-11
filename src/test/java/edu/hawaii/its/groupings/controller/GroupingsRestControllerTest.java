@@ -236,7 +236,16 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[3].resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$[3].action").value("remove ownership privileges for user from grouping:include"));
     }
-    //TODO getMyGroupings test
+
+    @Test
+    @WithMockUhUser
+    public void getMyGroupings() throws Exception {
+        final String grouping = "grouping";
+        final String username = "username";
+
+        //todo write test
+
+    }
 
     @Test
     @WithMockUhUser
