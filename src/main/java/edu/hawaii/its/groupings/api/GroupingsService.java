@@ -37,21 +37,21 @@ public interface GroupingsService {
 
     public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete);
 
-    public GroupingsServiceResult[] assignOwnership(String grouping, String username, String newOwner);
+    public List<GroupingsServiceResult> assignOwnership(String grouping, String username, String newOwner);
 
-    public GroupingsServiceResult[] removeOwnership(String grouping, String username, String ownerToRemove);
+    public List<GroupingsServiceResult> removeOwnership(String grouping, String username, String ownerToRemove);
 
     public Grouping getGrouping(String grouping, String username);
 
     public MyGroupings getMyGroupings(String username);
 
-    public GroupingsServiceResult[] optIn(String username, String grouping);
+    public List<GroupingsServiceResult> optIn(String username, String grouping);
 
-    public GroupingsServiceResult[] optOut(String username, String grouping);
+    public List<GroupingsServiceResult> optOut(String username, String grouping);
 
-    public GroupingsServiceResult[] cancelOptIn(String grouping, String username);
+    public List<GroupingsServiceResult> cancelOptIn(String grouping, String username);
 
-    public GroupingsServiceResult[] cancelOptOut(String grouping, String username);
+    public List<GroupingsServiceResult> cancelOptOut(String grouping, String username);
 
     public GroupingsServiceResult changeListServeStatus(String grouping, String username, boolean listServeOn);
 

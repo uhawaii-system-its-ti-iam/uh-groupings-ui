@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +20,8 @@ import edu.hawaii.its.groupings.api.GroupingsService;
 import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -131,7 +132,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/{newOwner}/assignOwnership",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult[]> assignOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String newOwner) {
+    public ResponseEntity<List<GroupingsServiceResult>> assignOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String newOwner) {
         logger.info("Entered REST assignOwnership...");
         return ResponseEntity
                 .ok()
@@ -152,7 +153,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/{ownerToRemove}/removeOwnership",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult[]> removeOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String ownerToRemove) {
+    public ResponseEntity<List<GroupingsServiceResult>> removeOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String ownerToRemove) {
         logger.info("Entered REST removeOwnership...");
         return ResponseEntity
                 .ok()
@@ -212,7 +213,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/optIn",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult[]> optIn(@PathVariable String grouping, @PathVariable String username) {
+    public ResponseEntity<List<GroupingsServiceResult>> optIn(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST optIn...");
         return ResponseEntity
                 .ok()
@@ -231,7 +232,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/optOut",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult[]> optOut(@PathVariable String grouping, @PathVariable String username) {
+    public ResponseEntity<List<GroupingsServiceResult>> optOut(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST optOut...");
         return ResponseEntity
                 .ok()
@@ -252,7 +253,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/cancelOptIn",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult[]> cancelOptIn(@PathVariable String grouping, @PathVariable String username) {
+    public ResponseEntity<List<GroupingsServiceResult>> cancelOptIn(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST cancelOptIn...");
         return ResponseEntity
                 .ok()
@@ -273,7 +274,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/cancelOptOut",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult[]> cancelOptOut(@PathVariable String grouping, @PathVariable String username) {
+    public ResponseEntity<List<GroupingsServiceResult>> cancelOptOut(@PathVariable String grouping, @PathVariable String username) {
         logger.info("Entered REST cancelOptOut...");
         return ResponseEntity
                 .ok()

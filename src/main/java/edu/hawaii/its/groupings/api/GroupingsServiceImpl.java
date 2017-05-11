@@ -48,47 +48,48 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * gives a user ownersip permissions for a Grouping
      *
-     * @param grouping: the Grouping that the user will get ownership permissions for
-     * @param username: the owner of the Grouping who will give ownership permissions to the new owner
-     * @param newOwner: the user that will become an owner of the Grouping
+     * @param grouping : the Grouping that the user will get ownership permissions for
+     * @param username : the owner of the Grouping who will give ownership permissions to the new owner
+     * @param newOwner : the user that will become an owner of the Grouping
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] assignOwnership(String grouping, String username, String newOwner) {
+    public List<GroupingsServiceResult> assignOwnership(String grouping, String username, String newOwner) {
         String basisGroup = grouping + BASIS;
         String basisPlusIncludeGroup = grouping + BASISPLUSINCLUDE;
         String excludeGroup = grouping + EXCLUDE;
         String includeGroup = grouping + INCLUDE;
         String action = "give " + newOwner + " ownership privileges for ";
+        List<GroupingsServiceResult> privilegeResults = new ArrayList<>();
 
         if (isOwner(grouping, username)) {
             WsSubjectLookup ownerToAdd = makeWsSubjectLookup(newOwner);
-            GroupingsServiceResult[] privilegeResults = new GroupingsServiceResult[4];
 
             WsGroupLookup basisGroupLookup = makeWsGroupLookup(basisGroup);
-            privilegeResults[0] = makeGrouperActionResult(addGroupOwnership(basisGroupLookup, ownerToAdd), action + basisGroup);
+            privilegeResults.add(makeGroupingsServiceResult(addGroupOwnership(basisGroupLookup, ownerToAdd), action + basisGroup));
 
             WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(basisPlusIncludeGroup);
-            privilegeResults[1] = makeGrouperActionResult(addGroupOwnership(basisPlusIncludeGroupLookup, ownerToAdd), action + basisPlusIncludeGroup);
+            privilegeResults.add(makeGroupingsServiceResult(addGroupOwnership(basisPlusIncludeGroupLookup, ownerToAdd), action + basisPlusIncludeGroup));
 
             WsGroupLookup excludeGroupLookup = makeWsGroupLookup(excludeGroup);
-            privilegeResults[2] = makeGrouperActionResult(addGroupOwnership(excludeGroupLookup, ownerToAdd), action + excludeGroup);
+            privilegeResults.add(makeGroupingsServiceResult(addGroupOwnership(excludeGroupLookup, ownerToAdd), action + excludeGroup));
 
             WsGroupLookup includeGroupLookup = makeWsGroupLookup(includeGroup);
-            privilegeResults[3] = makeGrouperActionResult(addGroupOwnership(includeGroupLookup, ownerToAdd), action + includeGroup);
+            privilegeResults.add(makeGroupingsServiceResult(addGroupOwnership(includeGroupLookup, ownerToAdd), action + includeGroup));
 
             return privilegeResults;
         }
-        return new GroupingsServiceResult[]{new GroupingsServiceResult(
+
+        privilegeResults.add(new GroupingsServiceResult(
                 "FAILURE, " + username + " does not own " + grouping,
-                "give " + newOwner + " ownership of " + grouping)};
+                "give " + newOwner + " ownership of " + grouping));
+        return privilegeResults;
     }
 
     /**
-     *
-     * @param grouping:     the path of the Grouping that will have its listserve status changed
-     * @param username:     username of the Grouping Owner preforming the action
-     * @param listServeOn:  true if the listserve should be turned on, false if it should be turned off
+     * @param grouping:    the path of the Grouping that will have its listserve status changed
+     * @param username:    username of the Grouping Owner preforming the action
+     * @param listServeOn: true if the listserve should be turned on, false if it should be turned off
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
     @Override
@@ -99,9 +100,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
-     * @param grouping:     the path of the Grouping that will have its optIn permission changed
-     * @param username:     username of the Grouping Owner preforming the action
+     * @param grouping: the path of the Grouping that will have its optIn permission changed
+     * @param username: username of the Grouping Owner preforming the action
      * @param optInOn:  true if the optIn permission should be turned on, false if it should be turned off
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
@@ -113,10 +113,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
-     * @param grouping:     the path of the Grouping that will have its optOut permission changed
-     * @param username:     username of the Grouping Owner preforming the action
-     * @param optOutOn:  true if the optOut permission should be turned on, false if it should be turned off
+     * @param grouping: the path of the Grouping that will have its optOut permission changed
+     * @param username: username of the Grouping Owner preforming the action
+     * @param optOutOn: true if the optOut permission should be turned on, false if it should be turned off
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
     @Override
@@ -135,33 +134,34 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] removeOwnership(String grouping, String username, String ownerToRemove) {
+    public List<GroupingsServiceResult> removeOwnership(String grouping, String username, String ownerToRemove) {
         String basisGroup = grouping + BASIS;
         String basisPlusIncludeGroup = grouping + BASISPLUSINCLUDE;
         String includeGroup = grouping + INCLUDE;
         String excludeGroup = grouping + EXCLUDE;
-        String action = "reomve ownership privileges for " + ownerToRemove + " from ";
+        String action = "remove ownership privileges for " + ownerToRemove + " from ";
+        List<GroupingsServiceResult> privileges = new ArrayList<>();
 
         if (isOwner(grouping, username)) {
-            GroupingsServiceResult[] privileges = new GroupingsServiceResult[4];
 
             WsSubjectLookup ownerToRemoveLookup = makeWsSubjectLookup(ownerToRemove);
             WsGroupLookup basisGroupLookup = makeWsGroupLookup(basisGroup);
-            privileges[0] = makeGrouperActionResult(removeGroupOwnership(basisGroupLookup, ownerToRemoveLookup), action + basisGroup);
+            privileges.add(makeGroupingsServiceResult(removeGroupOwnership(basisGroupLookup, ownerToRemoveLookup), action + basisGroup));
 
             WsGroupLookup basisPlusIncludeGroupLookup = makeWsGroupLookup(basisPlusIncludeGroup);
-            privileges[1] = makeGrouperActionResult(removeGroupOwnership(basisPlusIncludeGroupLookup, ownerToRemoveLookup), action + basisPlusIncludeGroup);
+            privileges.add(makeGroupingsServiceResult(removeGroupOwnership(basisPlusIncludeGroupLookup, ownerToRemoveLookup), action + basisPlusIncludeGroup));
 
             WsGroupLookup excludeGroupLookup = makeWsGroupLookup(excludeGroup);
-            privileges[2] = makeGrouperActionResult(removeGroupOwnership(excludeGroupLookup, ownerToRemoveLookup), action + excludeGroup);
+            privileges.add(makeGroupingsServiceResult(removeGroupOwnership(excludeGroupLookup, ownerToRemoveLookup), action + excludeGroup));
 
             WsGroupLookup includeGroupLookup = makeWsGroupLookup(includeGroup);
-            privileges[3] = makeGrouperActionResult(removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup), action + includeGroup);
+            privileges.add(makeGroupingsServiceResult(removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup), action + includeGroup));
 
             return privileges;
         }
 
-        return new GroupingsServiceResult[]{new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, "remove ownership of " + grouping + " from " + ownerToRemove)};
+        privileges.add(new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, "remove ownership of " + grouping + " from " + ownerToRemove));
+        return privileges;
     }
 
     /**
@@ -222,8 +222,8 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         myGroupings.setGroupingsIn(groupingsIn(username));
         myGroupings.setGroupingsOwned(groupingsOwned(username));
-        myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username));
-        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username));
+        myGroupings.setGroupingsToOptInTo(groupingsToOptInto());
+        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf());
         myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username));
         myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username));
 
@@ -235,28 +235,28 @@ public class GroupingsServiceImpl implements GroupingsService {
      * this will put them in the include group
      * if they are in the exclude group, they will be removed from it
      *
-     * @param username: user to be opting in
-     * @param grouping: Grouping the user will opt into
+     * @param username : user to be opting in
+     * @param grouping : Grouping the user will opt into
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] optIn(String username, String grouping) {
+    public List<GroupingsServiceResult> optIn(String username, String grouping) {
+        List<GroupingsServiceResult> results = new ArrayList<>();
 
         if (groupOptInPermission(username, grouping + INCLUDE)) {
-            GroupingsServiceResult[] results = new GroupingsServiceResult[6];
-            results[3] = removeSelfOpted(grouping + EXCLUDE, username);
-            results[0] = deleteMemberAs(username, grouping + EXCLUDE, username);
-            results[1] = addMemberAs(username, grouping + INCLUDE, username);
-            results[4] = updateLastModified(grouping + EXCLUDE);
-            results[5] = updateLastModified(grouping + INCLUDE);
-            results[2] = addSelfOpted(grouping + INCLUDE, username);
+            results.add(removeSelfOpted(grouping + EXCLUDE, username));
+            results.add(0, deleteMemberAs(username, grouping + EXCLUDE, username));
+            results.add(1, addMemberAs(username, grouping + INCLUDE, username));
+            results.add(updateLastModified(grouping + EXCLUDE));
+            results.add(updateLastModified(grouping + INCLUDE));
+            results.add(2, addSelfOpted(grouping + INCLUDE, username));
 
             return results;
         }
-
-        return new GroupingsServiceResult[]{new GroupingsServiceResult(
+        results.add(new GroupingsServiceResult(
                 "FAILURE, " + username + " does not have permission to opt in to " + grouping,
-                "opt in " + username + " to " + grouping)};
+                "opt in " + username + " to " + grouping));
+        return results;
     }
 
     /**
@@ -269,23 +269,24 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] optOut(String username, String grouping) {
+    public List<GroupingsServiceResult> optOut(String username, String grouping) {
+        List<GroupingsServiceResult> results = new ArrayList<>();
 
         if (groupOptInPermission(username, grouping + EXCLUDE)) {
-            GroupingsServiceResult[] results = new GroupingsServiceResult[6];
-            results[3] = removeSelfOpted(grouping + INCLUDE, username);
-            results[0] = deleteMemberAs(username, grouping + INCLUDE, username);
-            results[1] = addMemberAs(username, grouping + EXCLUDE, username);
-            results[4] = updateLastModified(grouping + EXCLUDE);
-            results[5] = updateLastModified(grouping + INCLUDE);
-            results[2] = addSelfOpted(grouping + EXCLUDE, username);
+            results.add(removeSelfOpted(grouping + INCLUDE, username));
+            results.add(0, deleteMemberAs(username, grouping + INCLUDE, username));
+            results.add(1, addMemberAs(username, grouping + EXCLUDE, username));
+            results.add(updateLastModified(grouping + EXCLUDE));
+            results.add(updateLastModified(grouping + INCLUDE));
+            results.add(2, addSelfOpted(grouping + EXCLUDE, username));
 
             return results;
         }
 
-        return new GroupingsServiceResult[]{new GroupingsServiceResult(
+        results.add(new GroupingsServiceResult(
                 "FAILURE, " + username + " does not have permission to opt out of " + grouping,
-                "opt out " + username + " from " + grouping)};
+                "opt out " + username + " from " + grouping));
+        return results;
     }
 
     /**
@@ -296,26 +297,25 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] cancelOptIn(String grouping, String username) {
-        GroupingsServiceResult[] results;
+    public List<GroupingsServiceResult> cancelOptIn(String grouping, String username) {
+        List<GroupingsServiceResult> results = new ArrayList<>();
         String group = grouping + INCLUDE;
 
         if (inGroup(group, username)) {
             if (groupOptInPermission(username, group)) {
-                results = new GroupingsServiceResult[2];
-                results[0] = deleteMemberAs(username, group, username);
-                results[1] = updateLastModified(group);
+                results.add(deleteMemberAs(username, group, username));
+                results.add(updateLastModified(group));
 
                 return results;
             } else {
-                results = new GroupingsServiceResult[]{new GroupingsServiceResult(
+                results.add(new GroupingsServiceResult(
                         username + " is not allowed to opt out of " + group,
-                        "opt " + username + " out of " + group)};
+                        "opt " + username + " out of " + group));
             }
         } else {
-            results = new GroupingsServiceResult[]{new GroupingsServiceResult(
+            results.add(new GroupingsServiceResult(
                     "SUCCESS, " + username + " is not opted in, because " + username + " was not in " + group,
-                    "cancel opt in for " + username + " to " + grouping)};
+                    "cancel opt in for " + username + " to " + grouping));
         }
 
         return results;
@@ -329,26 +329,25 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public GroupingsServiceResult[] cancelOptOut(String grouping, String username) {
+    public List<GroupingsServiceResult> cancelOptOut(String grouping, String username) {
         String group = grouping + EXCLUDE;
-        GroupingsServiceResult[] results;
+        List<GroupingsServiceResult> results = new ArrayList<>();
 
         if (inGroup(group, username)) {
             if (groupOptOutPermission(username, group)) {
-                results = new GroupingsServiceResult[2];
-                results[0] = deleteMemberAs(username, group, username);
-                results[1] = updateLastModified(group);
+                results.add(deleteMemberAs(username, group, username));
+                results.add(updateLastModified(group));
 
                 return results;
             } else {
-                results = new GroupingsServiceResult[]{new GroupingsServiceResult(
+                results.add(new GroupingsServiceResult(
                         username + " is not allowed to opt out of " + group,
-                        "opt " + username + " out of " + group)};
+                        "opt " + username + " out of " + group));
             }
         } else {
-            results = new GroupingsServiceResult[]{new GroupingsServiceResult(
+            results.add(new GroupingsServiceResult(
                     "SUCCESS, " + username + " is not opted out, because " + username + " was not in " + group,
-                    "cancel opt out for " + username + " to " + grouping)};
+                    "cancel opt out for " + username + " to " + grouping));
         }
         return results;
     }
@@ -388,7 +387,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param grouping: path to the Grouping that will have its permissions checked
      * @return true if the Grouping is allowed to be opted out of and false if not
      */
@@ -400,7 +398,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param grouping: path to the Grouping that will have its permissions checked
      * @return true if the Grouping is allowed to be opted into and false if not
      */
@@ -412,7 +409,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param grouping: path to Grouping that will have its attributes checked
      * @param nameName: name of attribute to be checked for
      * @return true if that attribute exists in that Grouping
@@ -432,7 +428,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param username: username of the user who's groupings will be looked for
      * @return a list of all of the Groupings that the user is in
      */
@@ -445,7 +440,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param grouping: path to the Grouping that will have its listserve attribute checked
      * @return true if the Grouping has a listserve attribute false if not
      */
@@ -458,7 +452,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param username: username of the user who's groupings will be looked for
      * @return a list of all of the Groupings that the user owns
      */
@@ -490,7 +483,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param username: username of the user who's groupings will be looked for
      * @return a list of all of the Groupings that the user is opted into
      */
@@ -499,7 +491,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param username: username of the user who's groupings will be looked for
      * @return a list of all of the Groupings that the user is opted out of
      */
@@ -508,10 +499,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param includeOrrExclude: ":include" for the include group ":exclude" for
-     *                         the exclude group
-     * @param username: username of the user who's groupings will be looked for
+     *                           the exclude group
+     * @param username:          username of the user who's groupings will be looked for
      * @return a list of all of the groups that the user is opted into that end
      * with the suffix defined in includeOrrExclude
      */
@@ -534,7 +524,10 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
 
-    public List<Grouping> groupingsToOptOutOf(String username) {
+    /**
+     * @return a list of all groupings that the user is able to opt out of
+     */
+    public List<Grouping> groupingsToOptOutOf() {
 
         List<String> groupingNames = allGroupings();
         List<String> groupings = groupingNames
@@ -545,7 +538,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         return makeGroupings(groupings);
     }
 
-    public List<Grouping> groupingsToOptInto(String username) {
+    /**
+     * @return a list of all groupings that the user is able to opt into
+     */
+    public List<Grouping> groupingsToOptInto() {
 
         List<String> groupingNames = allGroupings();
         List<String> groupings = groupingNames
@@ -573,8 +569,8 @@ public class GroupingsServiceImpl implements GroupingsService {
                 WsGetMembershipsResults includeMembershipsResults = membershipsResults(lookup, group);
                 String membershipID = includeMembershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "assign_attr";
-                return makeGrouperActionResult(
-                        assignAttributesResults(operation, UUID_USERNAME, membershipID),
+                return makeGroupingsServiceResult(
+                        assignMembershipAttributes(operation, UUID_USERNAME, membershipID),
                         "add self-opted attribute to the membership of " + username + " to " + group);
             }
         }
@@ -598,7 +594,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             String uuid = UUID_USERNAME;
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            WsAttributeAssign[] wsAttributes = membershipAttributeAssign(assignType, uuid, membershipID);
+            WsAttributeAssign[] wsAttributes = getMembershipAttributes(assignType, uuid, membershipID);
             for (WsAttributeAssign att : wsAttributes) {
                 if (att.getAttributeDefNameName().equals(SELF_OPTED)) {
                     return true; // We are done, get out.
@@ -634,6 +630,11 @@ public class GroupingsServiceImpl implements GroupingsService {
         return userIsInGroup;
     }
 
+    /**
+     * @param grouping: path to Grouping that will be checked
+     * @param username: username of user who's permissions will be checked
+     * @return true if user owns grouping false if not
+     */
     @Override
     public boolean isOwner(String grouping, String username) {
         logger.info("isOwner; grouping: " + grouping + "; username: " + username);
@@ -654,11 +655,13 @@ public class GroupingsServiceImpl implements GroupingsService {
                         .addSubjectAttributeName("uid")
                         .execute();
 
-        for (WsGrouperPrivilegeResult owner : privilegeResults.getPrivilegeResults()) {
-            String values[] = owner.getOwnerSubject().getAttributeValues();
-            if (values != null && values.length > 0) {
-                if (username.equals(owner.getOwnerSubject().getAttributeValue(0))) {
-                    return true; // Found it, get out.
+        if (privilegeResults.getPrivilegeResults() != null) {
+            for (WsGrouperPrivilegeResult owner : privilegeResults.getPrivilegeResults()) {
+                String values[] = owner.getOwnerSubject().getAttributeValues();
+                if (values != null && values.length > 0) {
+                    if (username.equals(owner.getOwnerSubject().getAttributeValue(0))) {
+                        return true; // Found it, get out.
+                    }
                 }
             }
         }
@@ -683,8 +686,8 @@ public class GroupingsServiceImpl implements GroupingsService {
                 WsGetMembershipsResults membershipsResults = membershipsResults(lookup, group);
                 String membershipID = membershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "remove_attr";
-                return makeGrouperActionResult(
-                        assignAttributesResults(operation, UUID_USERNAME, membershipID),
+                return makeGroupingsServiceResult(
+                        assignMembershipAttributes(operation, UUID_USERNAME, membershipID),
                         "remove self-opted attribute from the membership of " + username + " to " + group);
             }
         }
@@ -765,11 +768,14 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .addValue(dateTimeValue)
                 .execute();
 
-        return makeGrouperActionResult(assignAttributesResults, "update last-modified attribute for " + group + " to time " + time);
+        return makeGroupingsServiceResult(assignAttributesResults, "update last-modified attribute for " + group + " to time " + time);
 
     }
 
-    // Helper method.
+    /**
+     * @param username: username of user to be looked up
+     * @return a WsSubjectLookup with username as the subject identifier
+     */
     @Override
     public WsSubjectLookup makeWsSubjectLookup(String username) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
@@ -778,7 +784,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         return wsSubjectLookup;
     }
 
-    // Helper method.
+    /**
+     * @param group: group to be looked up
+     * @return a WsGroupLookup with group as the group name
+     */
     public WsGroupLookup makeWsGroupLookup(String group) {
         WsGroupLookup groupLookup = new WsGroupLookup();
         groupLookup.setGroupName(group);
@@ -786,9 +795,14 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupLookup;
     }
 
-    // Helper method.
-    public WsAssignAttributesResults assignAttributesResults(String operation, String uuid, String membershipID) {
-        logger.info("assignAttributesResults; operation: " + operation + "; uuid: " + uuid + "; membershipID: " + membershipID);
+    /**
+     * @param operation:    name of operation
+     * @param uuid:         uuid of the attribute
+     * @param membershipID: membership id for the membership between the user and Grouping
+     * @return information about the success of the action
+     */
+    public WsAssignAttributesResults assignMembershipAttributes(String operation, String uuid, String membershipID) {
+        logger.info("assignMembershipAttributes; operation: " + operation + "; uuid: " + uuid + "; membershipID: " + membershipID);
 
         String assignType = "imm_mem";
         return new GcAssignAttributes()
@@ -799,9 +813,14 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
-    // Helper method.
-    private WsAttributeAssign[] membershipAttributeAssign(String assignType, String uuid, String membershipID) {
-        logger.info("membershipAttributeAssign; assignType: " + assignType + "; uuid: " + uuid + "; membershipID: " + membershipID);
+    /**
+     * @param assignType:   assign type of the attribute
+     * @param uuid:         uuid of the attribute
+     * @param membershipID: membership id for the membership between the user and Grouping
+     * @return information about the success of the action
+     */
+    private WsAttributeAssign[] getMembershipAttributes(String assignType, String uuid, String membershipID) {
+        logger.info("getMembershipAttributes; assignType: " + assignType + "; uuid: " + uuid + "; membershipID: " + membershipID);
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
                 new GcGetAttributeAssignments()
@@ -814,9 +833,14 @@ public class GroupingsServiceImpl implements GroupingsService {
         return wsAttributes != null ? wsAttributes : new WsAttributeAssign[0];
     }
 
-    // Helper method
-    public WsAssignAttributesResults groupAttributeAssign(String attributeName, String attributeOperation, String group) {
-        logger.info("groupAttributeAssign; " + "; attributeName: " + attributeName + "; attributeOperation: " + attributeOperation + "; group: " + group);
+    /**
+     * @param attributeName:      name of attribute to be assigned
+     * @param attributeOperation: operation to be done with the attribute to the group
+     * @param group:              path to the group to have the attribute acted upon
+     * @return information about the success of the operation
+     */
+    public WsAssignAttributesResults assignGroupAttributes(String attributeName, String attributeOperation, String group) {
+        logger.info("assignGroupAttributes; " + "; attributeName: " + attributeName + "; attributeOperation: " + attributeOperation + "; group: " + group);
 
         return new GcAssignAttributes()
                 .assignAttributeAssignType("group")
@@ -826,6 +850,12 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
+    /**
+     * @param assignType: assign type of the attribute
+     * @param group:      path to the group to have attributes searched
+     * @param nameName:   name of the attribute to be looked up
+     * @return information about the attributes that the group has
+     */
     public WsGetAttributeAssignmentsResults attributeAssignmentsResults(String assignType, String group, String nameName) {
         logger.info("attributeAssignmentsResults; assignType: " + assignType + "; group: " + group + "; nameName: " + nameName);
 
@@ -836,7 +866,12 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
-    // Helper method.
+    /**
+     * @param assignType:           assign type of the attribute
+     * @param subjectAttributeName: name of attribute
+     * @param uuid:                 uuid of attribute
+     * @return information about assigned attributes
+     */
     public WsGetAttributeAssignmentsResults attributeAssignments(String assignType, String subjectAttributeName, String uuid) {
         logger.info("attributeAssignments; assignType: " + assignType + "; subjectAttribureName: " + subjectAttributeName + "; uuid: " + uuid);
 
@@ -847,10 +882,15 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
-    // Helper method.
+    /**
+     * @param username:      username of user who's privileges will be checked
+     * @param privilegeName: name of the privilege to be checked
+     * @param group:         name of group the privilege is for
+     * @return return information about user's privileges in the group
+     */
     @Override
     public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName, String group) {
-        logger.info("grouperPrivlegesLite; username: " + username + "; group: " + group + "; privilegeName: " + privilegeName);
+        logger.info("grouperPrivilegesLite; username: " + username + "; group: " + group + "; privilegeName: " + privilegeName);
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
         return new GcGetGrouperPrivilegesLite()
@@ -860,6 +900,11 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
+    /**
+     * @param username:      username of user who's privileges will be checked
+     * @param privilegeName: name of the privilege to be checked
+     * @return return information about user's privileges in the group
+     */
     @Override
     public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName) {
         logger.info("grouperPrivlegesLite; username: " + username + "; privilegeName: " + privilegeName);
@@ -871,7 +916,11 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
-    // Helper method.
+    /**
+     * @param lookup: WsSubjectLookup of user who's membership will be checked
+     * @param group:  group that membership status will be checked for
+     * @return membership results for user
+     */
     public WsGetMembershipsResults membershipsResults(WsSubjectLookup lookup, String group) {
         logger.info("membershipResults; lookup: " + lookup + "; group: " + group);
 
@@ -881,7 +930,12 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
-    // Helper method.
+    /**
+     * @param username:  username of owner adding member
+     * @param group:     path to group the user to be added will be added to
+     * @param userToAdd: username of user to be added to grup
+     * @return information about success of action
+     */
     @Override
     public GroupingsServiceResult addMemberAs(String username, String group, String userToAdd) {
         logger.info("addMemberAs; user: " + username + "; group: " + group + "; userToAdd: " + userToAdd);
@@ -908,10 +962,15 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .addSubjectIdentifier(userToAdd)
                 .execute();
 
-        return makeGrouperActionResult(addMemberResults, "add " + userToAdd + " to " + group);
+        return makeGroupingsServiceResult(addMemberResults, "add " + userToAdd + " to " + group);
     }
 
-    // Helper method.
+    /**
+     * @param username:     username of owner preforming action
+     * @param group:        path to group that the member will be removed from
+     * @param userToDelete: username of user to be removed from group
+     * @return information about success of action
+     */
     @Override
     public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete) {
         logger.info("delteMemberAs; user: " + username + "; group: " + group + "; userToDelete: " + userToDelete);
@@ -923,16 +982,20 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .addSubjectIdentifier(userToDelete)
                 .execute();
 
-        return makeGrouperActionResult(deleteMemberResults, "delete " + userToDelete + " from " + group);
+        return makeGroupingsServiceResult(deleteMemberResults, "delete " + userToDelete + " from " + group);
     }
 
-    // Helper method.
-    public WsGetMembersResults getMembers(WsSubjectLookup user, String group) {
-        logger.info("getMembers; user: " + user + "; group: " + group);
+    /**
+     * @param lookup: lookup for owner
+     * @param group:  path to group to be searched
+     * @return results for members of the group
+     */
+    public WsGetMembersResults getMembers(WsSubjectLookup lookup, String group) {
+        logger.info("getMembers; lookup: " + lookup + "; group: " + group);
 
         List<String> groupNames = Collections.singletonList(group);
         String grouping = extractGroupingNames(groupNames).get(0);
-        if (isOwner(grouping, user.getSubjectIdentifier())) {
+        if (isOwner(grouping, lookup.getSubjectIdentifier())) {
             return new GcGetMembers()
                     .addSubjectAttributeName("uid")
                     .addGroupName(group)
@@ -942,7 +1005,9 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new WsGetMembersResults();
     }
 
-    // Helper method.
+    /**
+     * @return all groups that are Groupings
+     */
     public List<String> allGroupings() {
         String uuid = UUID_TRIO;
         String assignType = "group";
@@ -958,21 +1023,24 @@ public class GroupingsServiceImpl implements GroupingsService {
         return trios;
     }
 
-    // Helper method.
+    /**
+     * @param groups: list of groups paths
+     * @return a list of Groupings that were is the list groups
+     */
     public List<String> extractGroupings(List<String> groups) {
         List<String> allGroupings = allGroupings();
         List<String> groupings = new ArrayList<>();
 
-        for (String name : groups) {
-            if (allGroupings.contains(name) && !groupings.contains(name)) {
-                groupings.add(name);
-            }
-        }
+        groups.stream().filter(name -> allGroupings.contains(name)
+                && !groupings.contains(name)).forEach(groupings::add);
 
         return groupings;
     }
 
-    // Helper method.
+    /**
+     * @param username: username of user who's groups will be searched for
+     * @return a list of all groups that the user is a member of
+     */
     public List<String> getGroupNames(String username) {
 
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
@@ -987,7 +1055,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         return extractGroupNames(groups);
     }
 
-    // Helper method.
+    /**
+     * @param groupingPaths: list of paths to groups that are Groupings
+     * @return a list of Grouping Objects made from the list of Grouping paths
+     */
     public List<Grouping> makeGroupings(List<String> groupingPaths) {
         List<Grouping> groupings = groupingPaths
                 .stream()
@@ -999,6 +1070,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupings;
     }
 
+    /**
+     * @param group: path of group to be checked
+     * @return the parent Grouping of the group
+     */
     public String parentGroupingPath(String group) {
         if (group.endsWith(EXCLUDE)) {
             return group.split(EXCLUDE)[0];
@@ -1015,19 +1090,24 @@ public class GroupingsServiceImpl implements GroupingsService {
         return group;
     }
 
+    /**
+     * @param groups: list of WsGroups
+     * @return a list of the names of the groups in the WsGroups
+     */
     public List<String> extractGroupNames(List<WsGroup> groups) {
         List<String> names = new ArrayList<>();
 
-        for (WsGroup group : groups) {
-            if (!names.contains(group.getName())) {
-                names.add(group.getName());
-            }
-        }
+        groups.stream()
+                .filter(group -> !names.contains(group.getName()))
+                .forEach(group -> names.add(group.getName()));
 
         return names;
     }
 
-    // Helper method.
+    /**
+     * @param groupNames: list of paths to groups
+     * @return list of paths to the parent Groupings of the groups
+     */
     private List<String> extractGroupingNames(List<String> groupNames) {
         List<String> groupingNames = new ArrayList<>();
         for (String name : groupNames) {
@@ -1045,7 +1125,11 @@ public class GroupingsServiceImpl implements GroupingsService {
         return extractGroupings(groupingNames);
     }
 
-    // Helper method.
+    /**
+     * @param group:         path to group for which the ownership will be removed
+     * @param ownerToRemove: the owner of the group who's ownership privileges will be removed
+     * @return information about the success of the action
+     */
     public WsAssignGrouperPrivilegesResults removeGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToRemove) {
         logger.info("removeGroupOwnership; group: " + group + "; ownerToRemove: " + ownerToRemove);
 
@@ -1059,7 +1143,11 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
-    // Helper method.
+    /**
+     * @param group:      path to group for which the ownership will be added
+     * @param ownerToAdd: member who will become an owner of the group
+     * @return information about the success of the action
+     */
     public WsAssignGrouperPrivilegesResults addGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToAdd) {
         logger.info("addGroupOwnership; group: " + group + "; ownerToAdd: " + ownerToAdd);
 
@@ -1072,7 +1160,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
-    // Helper method.
+    /**
+     * @param subjects: array of WsSubjects to be made into a Group
+     * @return the Group that is made
+     */
     public Group makeGroup(WsSubject[] subjects) {
         Group group = new Group();
         if (subjects != null && subjects.length > 0) {
@@ -1086,7 +1177,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         return group;
     }
 
-    // Helper method.
+    /**
+     * @param person:
+     * @return a person made from the WsSubject
+     */
     private Person makePerson(WsSubject person) {
         String name = person.getName();
         String uuid = person.getId();
@@ -1094,23 +1188,18 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new Person(name, uuid, username);
     }
 
-    public List<String> groupingNamesFromPrivilegeResults(WsGetGrouperPrivilegesLiteResult privilegesLiteResult) {
-        List<WsGroup> groups = new ArrayList<>();
-        if (privilegesLiteResult.getPrivilegeResults() != null) {
-            for (WsGrouperPrivilegeResult result : privilegesLiteResult.getPrivilegeResults()) {
-                groups.add(result.getWsGroup());
-            }
-        }
-
-        List<String> groupNames = extractGroupNames(groups);
-        return extractGroupingNames(groupNames);
-    }
-
+    /**
+     * @param group:         path to group who's attributes will be changed
+     * @param username:      username of user preforming action
+     * @param attributeName; name of attribute to be changed
+     * @param attributeOn:   on if the attribute should exist false otherwise
+     * @return information about success of the action
+     */
     public GroupingsServiceResult changeGroupAttributeStatus(String group, String username, String attributeName, boolean attributeOn) {
         GroupingsServiceResult gsr = new GroupingsServiceResult();
 
         String verb = "removed from ";
-        if(attributeOn){
+        if (attributeOn) {
             verb = "added to ";
         }
         gsr.setAction(attributeName + " will be " + verb + group + " by " + username);
@@ -1119,7 +1208,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             boolean hasAttribute = groupHasAttribute(group, attributeName);
             if (attributeOn) {
                 if (!hasAttribute) {
-                    groupAttributeAssign(attributeName, "assign_attr", group);
+                    assignGroupAttributes(attributeName, "assign_attr", group);
 
                     gsr.setResultCode("SUCCESS");
                 } else {
@@ -1127,7 +1216,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 }
             } else {
                 if (hasAttribute) {
-                    groupAttributeAssign(attributeName, "remove_attr", group);
+                    assignGroupAttributes(attributeName, "remove_attr", group);
 
                     gsr.setResultCode("SUCCESS");
                 } else {
@@ -1141,7 +1230,12 @@ public class GroupingsServiceImpl implements GroupingsService {
         return gsr;
     }
 
-    public GroupingsServiceResult makeGrouperActionResult(ResultMetadataHolder resultMetadataHolder, String action) {
+    /**
+     * @param resultMetadataHolder: ResultMetadataHolder that will be turned into GroupingsServiceResult
+     * @param action:               the action being preformed in the resultMetadataHolder
+     * @return a GroupingsServiceResult made from the ResultMetadataHolder and the action
+     */
+    public GroupingsServiceResult makeGroupingsServiceResult(ResultMetadataHolder resultMetadataHolder, String action) {
         GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();
         groupingsServiceResult.setAction(action);
         groupingsServiceResult.setResultCode(resultMetadataHolder.getResultMetadata().getResultCode());

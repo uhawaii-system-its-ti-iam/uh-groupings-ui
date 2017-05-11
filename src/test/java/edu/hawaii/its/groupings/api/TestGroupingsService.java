@@ -237,7 +237,7 @@ public class TestGroupingsService {
         assertTrue(lookup.getGroupName().equals(GROUPING_EXCLUDE));
     }
 
-    //TODO add test for assignAttributesResults (both)
+    //TODO add test for assignMembershipAttributes (both)
     //TODO add test for membershipAttributeAssign
     //TODO add test for attributeAssignments
     //TODO add test for grouperPrivilegesLite (both)
