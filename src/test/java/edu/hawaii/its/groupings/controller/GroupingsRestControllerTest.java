@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
+import edu.hawaii.its.groupings.api.type.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,9 +29,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import edu.hawaii.its.groupings.api.GroupingsService;
-import edu.hawaii.its.groupings.api.type.Group;
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.type.Person;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 @RunWith(SpringRunner.class)
@@ -124,6 +121,26 @@ public class GroupingsRestControllerTest {
         grouping.setHasListserv(true);
 
         return grouping;
+    }
+
+    //Test data.
+    private MyGroupings myGroupings() {
+        MyGroupings mg = new MyGroupings();
+        List<Grouping> groupings = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            groupings.add(grouping());
+            groupings.get(i).setPath("grouping" + i);
+        }
+
+        mg.setGroupingsIn(groupings);
+        mg.setGroupingsOwned(groupings);
+        mg.setGroupingsOptedOutOf(groupings);
+        mg.setGroupingsOptedInTo(groupings);
+        mg.setGroupingsToOptOutOf(groupings);
+        mg.setGroupingsToOptInTo(groupings);
+
+        return mg;
     }
 
 
@@ -240,10 +257,25 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getMyGroupings() throws Exception {
-        final String grouping = "grouping";
         final String username = "username";
+        List<Grouping> groupings = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            groupings.add(grouping());
+            groupings.get(i).setPath("grouping" + i);
+        }
 
-        //todo write test
+        given(groupingsService.getMyGroupings(username))
+                .willReturn(myGroupings());
+
+        mockMvc.perform(get("/api/groupings/username/myGroupings"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("groupingsIn").value(groupings))
+                .andExpect(jsonPath("groupingsOwned").value(groupings))
+                .andExpect(jsonPath("groupingsOptedOutOf").value(groupings))
+                .andExpect(jsonPath("groupingsOptedInTo").value(groupings))
+                .andExpect(jsonPath("groupingsToOptOutOf").value(groupings))
+                .andExpect(jsonPath("groupingsToOptInTo").value(groupings));
+
 
     }
 
