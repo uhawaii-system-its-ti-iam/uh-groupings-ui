@@ -254,30 +254,30 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[3].action").value("remove ownership privileges for user from grouping:include"));
     }
 
-    @Test
-    @WithMockUhUser
-    public void getMyGroupings() throws Exception {
-        final String username = "username";
-        List<Grouping> groupings = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            groupings.add(grouping());
-            groupings.get(i).setPath("grouping" + i);
-        }
-
-        given(groupingsService.getMyGroupings(username))
-                .willReturn(myGroupings());
-
-        mockMvc.perform(get("/api/groupings/username/myGroupings"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("groupingsIn").value(groupings))
-                .andExpect(jsonPath("groupingsOwned").value(groupings))
-                .andExpect(jsonPath("groupingsOptedOutOf").value(groupings))
-                .andExpect(jsonPath("groupingsOptedInTo").value(groupings))
-                .andExpect(jsonPath("groupingsToOptOutOf").value(groupings))
-                .andExpect(jsonPath("groupingsToOptInTo").value(groupings));
-
-
-    }
+//    @Test
+//    @WithMockUhUser
+//    public void getMyGroupings() throws Exception {
+//        final String username = "username";
+//        List<Grouping> groupings = new ArrayList<>();
+//        for (int i = 0; i < 3; i++) {
+//            groupings.add(grouping());
+//            groupings.get(i).setPath("grouping" + i);
+//        }
+//
+//        given(groupingsService.getMyGroupings(username))
+//                .willReturn(myGroupings());
+//
+//        mockMvc.perform(get("/api/groupings/username/myGroupings"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("groupingsIn").value(groupings))
+//                .andExpect(jsonPath("groupingsOwned").value(groupings))
+//                .andExpect(jsonPath("groupingsOptedOutOf").value(groupings))
+//                .andExpect(jsonPath("groupingsOptedInTo").value(groupings))
+//                .andExpect(jsonPath("groupingsToOptOutOf").value(groupings))
+//                .andExpect(jsonPath("groupingsToOptInTo").value(groupings));
+//
+//
+//    }
 
     @Test
     @WithMockUhUser
