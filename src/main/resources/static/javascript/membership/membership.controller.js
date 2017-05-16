@@ -29,7 +29,7 @@
                 }
                 if($scope.optedOut.length === 0)
                 {
-                    $scope.optedOut.push({'name': "NO GROUPINGS TO OPT IN TO"});
+                    $scope.optedOut.push({'name': "NO GROUPINGS TO CANCEL OPT OUT"});
                 }
                 if($scope.optInList.length === 0)
                 {
@@ -70,8 +70,7 @@
         //Disables opt in button if there are no groupings to opt into.
         $scope.disabledOptIn = function(index) {
             var optIn = $scope.optInList[index];
-            var optedOut = $scope.optedOut[index];
-            return optIn.name === "NO GROUPINGS TO OPT IN TO" || optedOut.name ===  "NO GROUPINGS TO OPT IN TO";
+            return optIn.name === "NO GROUPINGS TO OPT IN TO"
         };
 
         /*$scope.disableOptOut = function(index) {
