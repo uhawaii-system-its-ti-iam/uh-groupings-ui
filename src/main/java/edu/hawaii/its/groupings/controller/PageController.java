@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
 import edu.hawaii.its.groupings.api.GroupingsService;
+import edu.hawaii.its.groupings.api.GroupingsServiceImpl;
 import edu.hawaii.its.groupings.api.PageService;
+import edu.hawaii.its.groupings.api.PageServiceImpl;
 import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
 
@@ -29,16 +31,25 @@ class PageController{
 
      private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
 
+     @Value("${app.groupings.controller.uuid}")
+     private String uuid;
+
+     @Value("${app.iam.request.form}")
+     private String requestForm;
+
+     @Autowired
+     private PageService ps;
+
     @Autowired
     public PageController(PageService pagecontent){
       this.pageservice = pagecontent;
     }
 
-    // @RequestMapping(value = "/page", method=RequestMethod.GET)
-    // public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username) {
-    //     logger.info("Entered REST myGroupings...");
-    //     return ResponseEntity
-    //             .ok()
-    //             .body(gs.getMyGroupings(username));
-    //           }
+    @RequestMapping(value = "/page", method=RequestMethod.GET)
+    public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username) {
+        logger.info("Entered REST myGroupings...");
+        return ResponseEntity
+                .ok()
+                .body(ps.getMyGroupings(username));
+              }
 }
