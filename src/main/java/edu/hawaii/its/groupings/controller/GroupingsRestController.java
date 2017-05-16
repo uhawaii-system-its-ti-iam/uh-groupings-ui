@@ -390,4 +390,3 @@ public class GroupingsRestController {
         return new RedirectView(requestForm);
     }
 }
-
