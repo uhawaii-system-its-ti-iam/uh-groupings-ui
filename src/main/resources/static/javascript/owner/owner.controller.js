@@ -19,12 +19,7 @@
         $scope.init = function () {
             dataProvider.loadData(function (d) {
                 var temp = [];
-                console.log(d);
-                console.log(d.groupingsOwned);
-                //temp = d.groupingsOwned;
-                console.log(temp);
                 //Assigns grouping name, folder directories and url used for api call.
-                console.log(temp.length);
                 for (var i = 0; i < d.groupingsOwned.length; i++) {
                     temp[i] = d.groupingsOwned[i].path.substr(18).split(':');
                     var folder = '';
@@ -38,8 +33,6 @@
                 }
                 $scope.loading = false;
             }, groupingsOwned);
-            //$scope.ownedList.push({'name': 45, 'folder': 'folder', 'url': 'www.rvb.com'});
-            console.log($scope.ownedList);
         };
 
         //Shows page containing groupings information
@@ -428,16 +421,17 @@
         };
 
         $scope.convertArrayOfObjectsToCSV = function(type) {
-            var array = typeof type != 'object' ? JSON.parse(type) : type;
             var str = '';
 
-            for (var i = 0; i < array.length; i++) {
+            console.log(type);
+            str = "Name, Username, Email \r\n";
+            for (var i = 0; i < type.length; i++) {
                 var line = '';
-                for (var index in array[i]) {
+                //for (var index in type[i]) {
                     if (line != '')
                         line += ',';
-                    line += array[i][index];
-                }
+                    line += type[i].name + ', ' + type[i].username + ', ' + type[i].username + "@hawaii.edu," ;
+                //}
                 str += line + '\r\n';
             }
             return str;
