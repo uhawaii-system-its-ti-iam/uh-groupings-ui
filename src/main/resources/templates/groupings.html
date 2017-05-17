@@ -53,6 +53,9 @@
                 </div>
 
                 <div ng-show="showList">
+                    <div id="overlay" ng-show="loading">
+                        <div class="loader" ng-show="loading"></div>
+                    </div>
                     <h2 class="text-center">{{groupingName.name}}</h2>
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#members">Members</a></li>
@@ -105,6 +108,7 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                    <button class="btn btn-default" ng-click="export(groupingsList, 'members')">Export To CSV</button>
                                 </div>
                                 <div id="basis" class="tab-pane fade">
                                     <h3 class="text-center">Basis</h3>
@@ -124,6 +128,7 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                    <button class="btn btn-default" ng-click="export(groupingsBasis, 'basis')">Export To CSV</button>
                                 </div>
                                 <div id="include" class="tab-pane fade">
                                     <h3 class="text-center">Include</h3>
@@ -165,6 +170,7 @@
                                             <button class="btn btn-success" ng-click="addInclude()">Add to Included
                                             </button>
                                         </div>
+                                        <button class="btn btn-default" ng-click="export(groupingInclude, 'include')">Export To CSV</button>
                                     </div>
                                 </div>
                                 <div id="exclude" class="tab-pane fade">
@@ -207,6 +213,7 @@
                                             <button class="btn btn-success" ng-click="addExclude()">Add to Excluded
                                             </button>
                                         </div>
+                                        <button class="btn btn-default" ng-click="export(groupingExclude, 'exclude')">Export To CSV</button>
                                     </div>
                                 </div>
                             </div>
@@ -261,7 +268,7 @@
                             <br/>
 
                             <h3>Publication Destinations</h3>
-                            <input id="listserv" type="checkbox"/> LISTSERV list {{groupingName}} <br/>
+                            <input id="listserv" type="checkbox"/> LISTSERV list: {{groupingName.name}} <br/>
 
                             <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save
                             </button>

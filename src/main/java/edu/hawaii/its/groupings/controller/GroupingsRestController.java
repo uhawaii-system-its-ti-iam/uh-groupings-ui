@@ -325,7 +325,7 @@ public class GroupingsRestController {
      * @param optOutOn: true if the members should be able to opt out, false if not
      * @return iformation about the success of the operation
      */
-    @RequestMapping(value = "/{grouping}/{username}/{optOutOn}/setOptOut",
+    @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptOut",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GroupingsServiceResult> setOptOut(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optOutOn) {
@@ -354,24 +354,6 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView addGrouping() {
         return new RedirectView(requestForm);
-        /**
-         * TODO for Grouper update
-         * create Grouping
-         * create Grouping:basis
-         * create Grouping:include
-         * create Grouping:exclude
-         * create Grouping:basis+include  // this should be the complement of Grouping:exclude
-         * create Grouping:owners
-         *
-         * add all owners to Grouping:owners
-         * add Grouping:owners to uh-settings:groupingOwners
-         *
-         * assign privileges to Grouping:owners
-         *
-         * assign privileges to uh-settings:groupingAdmins
-         *
-         * set last-modified:yyyymmddThhmm on Grouping
-         */
     }
 
     /**
