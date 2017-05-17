@@ -1,6 +1,6 @@
 (function () {
 
-    function MembershipJsController($scope, dataProvider) {
+    function MembershipJsController($scope, dataProvider, dataUpdater) {
         var currentUser = document.getElementById("name").innerText;
         var groupings = "api/groupings/" + currentUser + "/myGroupings";
         $scope.membersList = [];
@@ -29,7 +29,7 @@
                 }
                 if($scope.optedOut.length === 0)
                 {
-                    $scope.optedOut.push({'name': "NO GROUPINGS TO OPT IN TO"});
+                    $scope.optedOut.push({'name': "NO GROUPINGS TO CANCEL OPT OUT"});
                 }
                 if($scope.optInList.length === 0)
                 {
@@ -46,6 +46,15 @@
         $scope.optOut = function (grouping) {
             var optOutURL = "api/groupings/" +  $scope.membersList[grouping].path + "/" + currentUser + "/optOut";
             console.log(optOutURL);
+            dataUpdater.updateData(function (d) {
+                console.log(d);
+                if(d[0].resultCode.includes("FAILURE")){
+                    console.log("Failed to opt out");
+                    alert("Failed to opt out");
+                }
+                $scope.loading = true;
+                $scope.init();
+            }, optOutURL);
             /*dataProvider.loadData(function (d) {
                 console.log(d);
                 $scope.membersList = d;
@@ -58,7 +67,11 @@
         $scope.optIn = function (grouping) {
             var optInURL = "api/groupings/" +  $scope.optInList[grouping].path + "/" + currentUser + "/optIn";
             console.log(optInURL);
-
+            dataUpdater.updateData(function (d) {
+                console.log(d);
+                $scope.loading = true;
+                $scope.init();
+            }, optInURL);
             /*dataProvider.loadData(function (d) {
                 console.log(d);
                 $scope.membersList = d;
@@ -67,27 +80,31 @@
             }, optInURL)*/
         };
 
+        $scope.cancelOptIn = function (grouping) {
+            var cancelInURL = "api/groupings/" + $scope.optedIn[grouping].path + "/" + currentUser + "/cancelOptIn";
+            console.log(cancelInURL);
+            dataUpdater.updateData(function (d) {
+                console.log(d);
+                $scope.loading = true;
+                $scope.init();
+            }, cancelInURL);
+        };
+
+        $scope.cancelOptOut = function (grouping) {
+            var cancelOutURL = "api/groupings/" + $scope.optedOut[grouping].path + "/" + currentUser + "/cancelOptOut";
+            console.log(cancelOutURL);
+            dataUpdater.updateData(function (d) {
+               console.log(d);
+                $scope.loading = true;
+                $scope.init();
+            }, cancelOutURL);
+        };
+
         //Disables opt in button if there are no groupings to opt into.
         $scope.disabledOptIn = function(index) {
             var optIn = $scope.optInList[index];
-            var optedOut = $scope.optedOut[index];
-            return optIn.name === "NO GROUPINGS TO OPT IN TO" || optedOut.name ===  "NO GROUPINGS TO OPT IN TO";
+            return optIn.name === "NO GROUPINGS TO OPT IN TO"
         };
-
-        /*$scope.disableOptOut = function(index) {
-            var i = $scope.membersList;
-            var j =  $scope.optOutList;
-
-            for(var k = 0; k < j.length; k++)
-            {
-                for(var l = 0; l < i.length; l++)
-                {
-                    if (i[l].name === j[k].name){
-                        console.log(i[l]);
-                    }
-                }
-            }
-        };*/
     }
 
     membershipApp.controller("MembershipJsController", MembershipJsController);

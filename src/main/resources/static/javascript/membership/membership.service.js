@@ -14,4 +14,17 @@
         }
     });
 
+    membershipApp.factory('dataUpdater', function($http) {
+        return {
+            updateData: function(callback, url) {
+                $http.post(encodeURI(url))
+                    .success(callback)
+                    .error(function(data, status) {
+                        console.log('Error in dataProvider; status: ', status);
+                        callback = "Error";
+                    });
+            }
+        }
+    });
+
 })();

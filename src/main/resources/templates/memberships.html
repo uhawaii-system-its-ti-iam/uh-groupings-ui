@@ -117,7 +117,8 @@
                             <tr ng-repeat="out in optedOut">
                                 <td>{{out.name}}</td>
                                 <td>
-                                    <button class="btn btn-default btn-block">
+                                    <button lass="btn btn-default btn-block"
+                                            ng-click="cancelOptOut($index)">
                                         CANCEL OPT OUT
                                     </button>
                                 </td>
@@ -147,7 +148,8 @@
                             <tr ng-repeat="in in optedIn">
                                 <td>{{in.name}}</td>
                                 <td>
-                                    <button ng-disabled="disabledOptIn($index)" class="btn btn-default btn-block">
+                                    <button lass="btn btn-default btn-block"
+                                            ng-click="cancelOptIn($index)">
                                         CANCEL OPT IN
                                     </button>
                                 </td>
