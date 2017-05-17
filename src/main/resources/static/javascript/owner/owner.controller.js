@@ -1,6 +1,6 @@
 (function () {
 
-    function OwnerJsController($scope, dataProvider) {
+    function OwnerJsController($scope, dataProvider, dataUpdater, dataDeleter) {
         var currentUser = document.getElementById("name").innerText;
         var groupingsOwned = "api/groupings/" + currentUser + "/myGroupings";
         var getUrl;
@@ -19,12 +19,7 @@
         $scope.init = function () {
             dataProvider.loadData(function (d) {
                 var temp = [];
-                console.log(d);
-                console.log(d.groupingsOwned);
-                //temp = d.groupingsOwned;
-                console.log(temp);
                 //Assigns grouping name, folder directories and url used for api call.
-                console.log(temp.length);
                 for (var i = 0; i < d.groupingsOwned.length; i++) {
                     temp[i] = d.groupingsOwned[i].path.substr(18).split(':');
                     var folder = '';
@@ -38,8 +33,6 @@
                 }
                 $scope.loading = false;
             }, groupingsOwned);
-            //$scope.ownedList.push({'name': 45, 'folder': 'folder', 'url': 'www.rvb.com'});
-            console.log($scope.ownedList);
         };
 
         //Shows page containing groupings information
@@ -110,7 +103,6 @@
                     }
                 }
                 $scope.groupingsList = temp;
-                $scope.loading = false;
             }, URL);
         };
 
@@ -144,6 +136,7 @@
 
         //Gets the list of excluded members
         $scope.getExclude = function (URL) {
+            $scope.groupingExclude = '';
             dataProvider.loadData(function (d) {
                 var temp;
                 temp = d.exclude.members;
@@ -179,13 +172,14 @@
                         i--;
                     }
                 }
-
                 $scope.groupingExclude = temp;
+                $scope.loading = false;
             }, URL);
         };
 
         //Gets the list of included members
         $scope.getInclude = function (URL) {
+            $scope.groupingInclude = '';
             dataProvider.loadData(function (d) {
                 var temp;
                 temp = d.include.members;
@@ -227,116 +221,71 @@
 
         //Adds a member to the included list
         $scope.addInclude = function () {
-            var addUrl;
-            $scope.testdata = [];
-            console.log($scope.includeUsername);
-            addUrl = "addMemberToIncludeGroup?userToAdd=" + $scope.includeUsername + "&grouping=" + $scope.groupingName.url + "&username=" + currentUser;
-
-            console.log(addUrl);
-            dataProvider.loadData(function (d) {
-                console.log(d);
-                var result = d.results;
-
-                if(result[0].wsSubject.resultCode === 'SUCCESS') {
-                    console.log("Successfully added " + $scope.includeUsername);
-                    alert("Successfully added " + $scope.includeUsername);
+            var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.includeUsername + "/addMemberToIncludeGroup";
+            dataUpdater.addData(function (d) {
+                if(d.resultCode === "SUCCESS"){
+                    console.log("success in adding " + $scope.includeUsername);
+                    alert("SUCCESS IN ADDING " + $scope.includeUsername);
                     $scope.loading = true;
                     $scope.getMembers(getUrl);
                     $scope.getInclude(getUrl);
                     $scope.getExclude(getUrl);
-                    $scope.getPref(getUrl);
                 }
-                else if(typeof d.results === 'undefined'){
-                    console.log($scope.username + " this user does not exist.");
-                    alert($scope.username + " this user does not exist.");
+                else if(typeof d.resultsCode === 'undefined'){
+                    console.log($scope.includeUsername + " this user does not exist.");
+                    alert($scope.includeUsername + " this user does not exist.");
                 }
-
-                $scope.testdata = d;
-                $scope.includeUsername = '';
             }, addUrl);
+            $scope.includeUsername = '';
         };
 
         //Move the user to the exclude list
         $scope.removeInclude = function (row) {
-            console.log("Removing member at row: " + row);
             var user = $scope.groupingInclude[row].username;
-            var URL = "deleteMemberFromIncludeGroup?username=" + currentUser + "&userToDelete=" + user + "&grouping=" + $scope.groupingName.url;
-            console.log(user);
-            console.log(URL);
+            var URL = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + user + "/deleteMemberFromIncludeGroup";
 
-            $.ajax({
-                url: URL,
-                method: 'GET',
-                success: function () {
-                    console.log("Success In Deletion");
-                    alert($scope.groupingInclude[row].username + " successfully removed from included");
-                    //reload data table
-                    $scope.getMembers(getUrl);
-                    $scope.getInclude(getUrl);
-                    $scope.getExclude(getUrl);
-                },
-                error: function () {
-                    console.log("Failed To Delete");
-                    alert("Error in removing user from included");
-                }
-            });
+            dataDeleter.deleteData(function (d) {
+                console.log(d);
+                $scope.loading = true;
+                $scope.getMembers(getUrl);
+                $scope.getInclude(getUrl);
+                $scope.getExclude(getUrl);
+            }, URL);
         };
 
         //Adds a member to the excluded list
         $scope.addExclude = function () {
-            var excludeUrl;
-            $scope.testdata = [];
-            console.log($scope.excludeUser);
+            var excludeUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.excludeUser + "/addMemberToExcludeGroup";
 
-            excludeUrl = "addMemberToExcludeGroup?username=" + currentUser + "&userToAdd=" + $scope.excludeUser + "&grouping=" + $scope.groupingName.url;
-
-            dataProvider.loadData(function (d) {
-                console.log(d);
-                var result = d.results;
-
-                if(result[0].wsSubject.resultCode === 'SUCCESS') {
-                    console.log("Successfully added " + $scope.excludeUser);
-                    alert("Successfully added " + $scope.excludeUser);
+            dataUpdater.addData(function (d) {
+                if(d.resultCode === "SUCCESS"){
+                    console.log("success in adding " + $scope.excludeUser);
+                    alert("SUCCESS IN ADDING " + $scope.excludeUser);
                     $scope.loading = true;
                     $scope.getMembers(getUrl);
                     $scope.getInclude(getUrl);
                     $scope.getExclude(getUrl);
                 }
-                else if(typeof d.results === 'undefined'){
-                    console.log($scope.username + " this user does not exist.");
-                    alert($scope.username + " this user does not exist.");
+                else if(typeof d.resultsCode === 'undefined'){
+                    console.log($scope.excludeUser + " this user does not exist.");
+                    alert($scope.excludeUser + " this user does not exist.");
                 }
-
-                $scope.testdata = d;
-                $scope.excludeUser = '';
             }, excludeUrl);
-
+            $scope.excludeUser = '';
         };
 
         //Move the member to the include list
         $scope.removeExclude = function (row) {
-            console.log("Adding member at row: " + row);
             var user = $scope.groupingExclude[row].username;
-            var URL = "deleteMemberFromExcludeGroup?userToDelete=" + user + "&grouping=" + $scope.groupingName.url + "&username=" + currentUser;
-            console.log(user);
-            console.log(URL);
+            var URL = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + user + "/deleteMemberFromExcludeGroup";
 
-            $.ajax({
-                url: URL,
-                method: 'GET',
-                success: function () {
-                    console.log("Success In Deletion");
-                    alert($scope.groupingInclude[row].username + " successfully removed from included");
-                    //reload data table
-                    $scope.getMembers(getUrl);
-                    $scope.getInclude(getUrl);
-                    $scope.getExclude(getUrl);
-                },
-                error: function () {
-                    console.log("Failed To Delete");
-                    alert("Error in removing user from included");
-                }
-            });
+            dataDeleter.deleteData(function (d) {
+                console.log(d);
+                $scope.loading = true;
+                $scope.getMembers(getUrl);
+                $scope.getInclude(getUrl);
+                $scope.getExclude(getUrl);
+            }, URL);
         };
 
 
@@ -345,48 +294,40 @@
             dataProvider.loadData(function (d) {
                 $scope.ownerList = d.owners.members;
                 console.log($scope.ownerList);
+                $scope.loading = false;
             }, URL);
         };
 
         //Removes ownership for member
         $scope.removeOwner = function (index) {
-            console.log("You want to remove owner at index " + index);
-            var removeOwnerUrl;
             var removeOwner = $scope.ownerList[index].username;
-            console.log(removeOwner);
+            var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + removeOwner + "/removeOwnership";
             if ($scope.ownerList.length > 1) {
-                removeOwnerUrl = "removeOwnership?ownerToRemove=" + removeOwner + "&grouping=" + $scope.groupingName.url + "&username=" + currentUser;
-
                 console.log(removeOwnerUrl);
-                $.ajax({
-                    url: removeOwnerUrl,
-                    method: 'GET',
-                    success: function () {
-                        console.log("Success In Deletion");
-                        //reload data table
-                        $scope.getOwners(ownerUrl);
-                    },
-                    error: function () {
-                        console.log("Failed To Delete")
-                    }
-                });
+                dataDeleter.deleteData(function (d) {
+                    console.log(d);
+                    $scope.loading = true;
+                    $scope.getOwners(getUrl);
+                }, removeOwnerUrl);
             }
         };
 
         //Adds an owner to the grouping
         $scope.addOwner = function () {
-            var addOwnerUrl;
-            $scope.testdata = [];
-            addOwnerUrl = "assignOwnership?newOwner=" + $scope.ownerUser + "&grouping=" + $scope.groupingName.url + "&username=" + currentUser;
-
+            var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.ownerUser + "/assignOwnership";
             console.log(addOwnerUrl);
-            dataProvider.loadData(function (d) {
-                console.log(d);
-                $scope.testdata = d;
-                console.log("Success");
-                $scope.getOwners(ownerUrl);
+            dataUpdater.addData(function (d) {
+                if(d[0].resultCode === "SUCCESS"){
+                    console.log("Assigned " + $scope.ownerUser + " as an owner");
+                    alert("Assigned " + $scope.ownerUser + " as an owner");
+                    $scope.loading = true;
+                    $scope.getOwners(getUrl);
+                }
+                else if(typeof d[0].resultsCode === 'undefined'){
+                    console.log($scope.ownerUser + " this user does not exist.");
+                    alert($scope.ownerUser + " this user does not exist.");
+                }
             }, addOwnerUrl);
-
             $scope.ownerUser = '';
         };
 
@@ -428,16 +369,15 @@
         };
 
         $scope.convertArrayOfObjectsToCSV = function(type) {
-            var array = typeof type != 'object' ? JSON.parse(type) : type;
-            var str = '';
-
-            for (var i = 0; i < array.length; i++) {
+            console.log(type);
+            var str = "Name, Username, Email \r\n";
+            for (var i = 0; i < type.length; i++) {
                 var line = '';
-                for (var index in array[i]) {
+                //for (var index in type[i]) {
                     if (line != '')
                         line += ',';
-                    line += array[i][index];
-                }
+                    line += type[i].name + ', ' + type[i].username + ', ' + type[i].username + "@hawaii.edu," ;
+                //}
                 str += line + '\r\n';
             }
             return str;
