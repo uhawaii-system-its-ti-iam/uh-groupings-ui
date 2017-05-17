@@ -371,6 +371,7 @@
         $scope.convertArrayOfObjectsToCSV = function(type) {
             console.log(type);
             var str = "Name, Username, Email \r\n";
+
             for (var i = 0; i < type.length; i++) {
                 var line = '';
                 //for (var index in type[i]) {
