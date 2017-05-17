@@ -82,8 +82,13 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         privilegeResults.add(new GroupingsServiceResult(
                 "FAILURE, " + username + " does not own " + grouping,
-                "give " + newOwner + " ownership of " + grouping));
+                action + grouping));
         return privilegeResults;
+        /**
+         * TODO for Grouper update
+         * actAsSubject to add user to Grouping:owners
+         * set last-modified attribute on Grouping
+         */
     }
 
     /**
@@ -158,6 +163,11 @@ public class GroupingsServiceImpl implements GroupingsService {
             privileges.add(makeGroupingsServiceResult(removeGroupOwnership(includeGroupLookup, ownerToRemoveLookup), action + includeGroup));
 
             return privileges;
+            /**
+             * TODO for Grouper update
+             * actAsSubject to remove user from Grouping:owners
+             * set last-modified attribute on Grouping
+             */
         }
 
         privileges.add(new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, "remove ownership of " + grouping + " from " + ownerToRemove));
@@ -384,6 +394,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         }
 
         return owners;
+        /**
+         * TODO for Grouper update
+         * get members of Grouping:owners
+         */
     }
 
     /**
@@ -480,6 +494,12 @@ public class GroupingsServiceImpl implements GroupingsService {
             }
         }
         return new ArrayList<>();
+        /**
+         * TODO for Grouper update
+         * use getGroups on owner to get the list of Groups to search through  // owners will be in Grouping:owners
+         * remove all Groups that don't end in ":owners"
+         * split the ":owners" off of the Group to get the Grouping
+         */
     }
 
     /**
@@ -963,7 +983,16 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
 
         return makeGroupingsServiceResult(addMemberResults, "add " + userToAdd + " to " + group);
+        /**
+         * TODO for Grouper update
+         * set last modified of Grouping instead of group
+         */
     }
+
+    /**
+     * TODO for Grouper update
+     * create a method that allows Grouping owners to see what attributes are assigned to the groups that they own
+     */
 
     /**
      * @param username:     username of owner preforming action
@@ -983,6 +1012,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
 
         return makeGroupingsServiceResult(deleteMemberResults, "delete " + userToDelete + " from " + group);
+        /**
+         * TODO for Grouper update
+         * set last modified of Grouping instead of group
+         */
     }
 
     /**
@@ -1003,6 +1036,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                     .execute();
         }
         return new WsGetMembersResults();
+        /**
+         * TODO for Grouper update
+         * actAsSubject to get members
+         */
     }
 
     /**
@@ -1202,7 +1239,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (attributeOn) {
             verb = "added to ";
         }
-        gsr.setAction(attributeName + " will be " + verb + group + " by " + username);
+        gsr.setAction(attributeName + " has been " + verb + group + " by " + username);
 
         if (isOwner(group, username)) {
             boolean hasAttribute = groupHasAttribute(group, attributeName);
