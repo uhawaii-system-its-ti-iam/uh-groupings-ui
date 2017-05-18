@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import edu.hawaii.its.groupings.api.GroupingsService;
-import edu.hawaii.its.groupings.api.GroupingsServiceImpl;
-import edu.hawaii.its.groupings.api.PageService;
-import edu.hawaii.its.groupings.api.PageServiceImpl;
+import edu.hawaii.its.groupings.controller.GroupingsService;
+import edu.hawaii.its.groupings.controller.GroupingsServiceImpl;
+import edu.hawaii.its.groupings.controller.PageService;
+import edu.hawaii.its.groupings.controller.PageServiceImpl;
 import edu.hawaii.its.groupings.api.type.Grouping;
+// import edu.hawaii.its.groupings.controller.PersonRepository;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
+import org.springframework.data.domain.Page;
 
 
 @RestController
@@ -30,6 +32,8 @@ class PageController{
      final PageService pageservice;
 
      private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
+
+     private PersonService personService;
 
      @Value("${app.groupings.controller.uuid}")
      private String uuid;
@@ -41,15 +45,23 @@ class PageController{
      private PageService ps;
 
     @Autowired
-    public PageController(PageService pagecontent){
+    public void PageController(PageService pagecontent){
       this.pageservice = pagecontent;
     }
+    //this will be the call so when i get the user name, it gets it in pages from the Page class
+    //and it gets it from 
+    // /{username}/myGroupings/
+    @RequestMapping(value = "{username}/members/pages", method=RequestMethod.GET)
+        public Page<Grouping> listAllByPage(String username){
+            Page<Grouping> groups = personService.listAllByPage(username);
+            return groups;
+        }
 
-    @RequestMapping(value = "/page", method=RequestMethod.GET)
-    public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username) {
-        logger.info("Entered REST myGroupings...");
-        return ResponseEntity
-                .ok()
-                .body(ps.getMyGroupings(username));
-              }
+    // maybe i should stick with the tutorial for now. lets see if i can do that tutorial within here
+    // public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username) {
+    //     logger.info("Entered REST myGroupings...");
+    //     return ResponseEntity
+    //             .ok()
+    //             .body(ps.getMyGroupings(username));
+    //           }
 }
