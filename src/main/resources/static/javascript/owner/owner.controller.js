@@ -12,6 +12,7 @@
         $scope.groupingInclude = [];
         $scope.groupingExclude = [];
         $scope.ownerList = [];
+        $scope.pref = [];
         $scope.showList = false;
         $scope.loading = true;
         $scope.groupingName = '';
@@ -77,7 +78,6 @@
             dataProvider.loadData(function (d) {
                 var temp;
                 temp = d.basisPlusIncludeMinusExclude.members;
-
                 for (var k = 0; k < temp.length; k++) {
                     temp[k].basis = "\u2716";
                 }
@@ -333,7 +333,11 @@
 
         $scope.getPref = function(URL) {
             dataProvider.loadData(function (d) {
-                console.log(d);
+                $scope.pref = d.hasListserv;
+
+                if($scope.pref == true) {
+                    $('#listserv').prop("checked",true);
+                }
             }, URL);
         };
 
@@ -383,6 +387,8 @@
             }
             return str;
         };
+
+
     }
 
     ownerApp.controller("OwnerJsController", OwnerJsController);

@@ -261,14 +261,13 @@
                             <h1><b>THIS HAS NOT BEEN IMPLEMENTED YET UNTIL FURTHER NOTICE</b></h1>
 
                             <h2>Preferences</h2>
-
                             <h3>Add/Remove</h3>
                             <input id="addOption" type="checkbox"/> Allow people to add themselves to this group <br/>
                             <input id="removeOption" type="checkbox"/> Allow people to remove themselves to this group
                             <br/>
 
                             <h3>Publication Destinations</h3>
-                            <input id="listserv" type="checkbox"/> LISTSERV list: {{groupingName.name}} <br/>
+                            <input id="listserv" type="checkbox" ng-init="pref"/> LISTSERV list: {{groupingName.name}} <br/>
 
                             <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save
                             </button>
