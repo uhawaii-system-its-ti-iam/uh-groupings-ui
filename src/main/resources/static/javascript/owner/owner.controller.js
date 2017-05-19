@@ -4,7 +4,6 @@
         var currentUser = document.getElementById("name").innerText;
         var groupingsOwned = "api/groupings/" + currentUser + "/myGroupings";
         var getUrl;
-        var ownerUrl;
 
         $scope.ownedList = [];
         $scope.groupingsList = [];
@@ -42,7 +41,6 @@
             $scope.loading = true;
             //URLS being used in the api calls.
             getUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/grouping";
-            ownerUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/grouping";
 
             if ($scope.showList == false) {
                 $scope.showList = true;
@@ -293,7 +291,6 @@
         $scope.getOwners = function (URL) {
             dataProvider.loadData(function (d) {
                 $scope.ownerList = d.owners.members;
-                console.log($scope.ownerList);
                 $scope.loading = false;
             }, URL);
         };
