@@ -22,7 +22,6 @@
                 $scope.optInList = d.groupingsToOptInTo;
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
-                console.log($scope.optedIn.length);
                 if($scope.optedIn.length === 0)
                 {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO OPT IN TO"});
@@ -36,8 +35,6 @@
                     $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
                 }
                 $scope.loading = false;
-                console.log($scope.optedIn);
-                console.log($scope.optedOut);
             }, groupings);
         };
 
@@ -52,15 +49,11 @@
                     console.log("Failed to opt out");
                     alert("Failed to opt out");
                 }
-                $scope.loading = true;
-                $scope.init();
+                else {
+                    $scope.loading = true;
+                    $scope.init();
+                }
             }, optOutURL);
-            /*dataProvider.loadData(function (d) {
-                console.log(d);
-                $scope.membersList = d;
-                $scope.loading = true;
-                $scope.init();
-            }, optOutURL)*/
         };
 
         // Adds user to the include group
@@ -72,12 +65,6 @@
                 $scope.loading = true;
                 $scope.init();
             }, optInURL);
-            /*dataProvider.loadData(function (d) {
-                console.log(d);
-                $scope.membersList = d;
-                $scope.loading = true;
-                $scope.init();
-            }, optInURL)*/
         };
 
         $scope.cancelOptIn = function (grouping) {
@@ -104,6 +91,21 @@
         $scope.disabledOptIn = function(index) {
             var optIn = $scope.optInList[index];
             return optIn.name === "NO GROUPINGS TO OPT IN TO"
+        };
+
+        $scope.disableOptOut = function(index) {
+            for(var i = 0; i < $scope.optOutList.length; i++) {
+                if($scope.membersList[index].name != $scope.optOutList[i].name)
+                {
+                    $('.disabled').attr('title','You cannot opt out of this grouping');
+
+                    return true;
+                }
+            }
+        };
+
+        $scope.tooltipText = function(index) {
+            return $scope.disableOptOut(index) ? 'You cannot opt out of this grouping' : '';
         };
     }
 
