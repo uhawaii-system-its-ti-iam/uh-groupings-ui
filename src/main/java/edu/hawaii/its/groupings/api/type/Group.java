@@ -5,6 +5,10 @@ import java.util.List;
 
 public class Group {
 
+    public Group(){
+        //empty
+    }
+
     private List<Person> members = new ArrayList<>();
 
     public List<Person> getMembers() {
