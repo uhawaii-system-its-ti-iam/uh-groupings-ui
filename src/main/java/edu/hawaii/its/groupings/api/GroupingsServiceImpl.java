@@ -189,7 +189,9 @@ public class GroupingsServiceImpl implements GroupingsService {
         members.setInclude(includeGroup);
         members.setBasisPlusIncludeMinusExclude(basisPlusIncludeMinusExcludeGroup);
         members.setOwners(findOwners(grouping, username));
-        members.setHasListserv(hasListserv(grouping));
+        members.setListserveOn(hasListserv(grouping));
+        members.setOptInOn(optInPermission(grouping));
+        members.setOptOutOn(optOutPermission(grouping));
 
         return members;
     }
@@ -350,7 +352,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         Group owners = new Group();
 
         if (isOwner(grouping, username)) {
-            WsGetMembersResults membersResults = new GcGetMembers().addGroupName(grouping + ":owners").addSubjectAttributeName().execute();
+            WsGetMembersResults membersResults = new GcGetMembers().addGroupName(grouping + ":owners").addSubjectAttributeName("uid").execute();
             List<WsSubject> subjects = new ArrayList<>();
             if(membersResults.getResults() != null) {
                 for (WsGetMembersResult membersResult : membersResults.getResults()) {
@@ -1042,7 +1044,9 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .map(Grouping::new)
                 .collect(Collectors.toList());
         for (Grouping grouping : groupings) {
-            grouping.setHasListserv(hasListserv(grouping.getPath()));
+            grouping.setListserveOn(hasListserv(grouping.getPath()));
+            grouping.setOptInOn(optInPermission(grouping.getPath()));
+            grouping.setOptOutOn(optOutPermission(grouping.getPath()));
         }
         return groupings;
     }
