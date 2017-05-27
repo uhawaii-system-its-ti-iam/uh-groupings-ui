@@ -43,7 +43,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     public static final String BASISPLUSINCLUDE = ":basis+include";
     public static final String EXCLUDE = ":exclude";
     public static final String INCLUDE = ":include";
-    public static final WsStemLookup STEM = new WsStemLookup("hawaii.edu:custom", null);
+//    public static final WsStemLookup STEM = new WsStemLookup("hawaii.edu:custom", null);
+public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
 
     /**
      * gives a user ownersip permissions for a Grouping
