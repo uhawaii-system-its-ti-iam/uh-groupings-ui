@@ -49,8 +49,27 @@
                             <th>Opt out</th>
                         </tr>
                         </thead>
+                        <tfoot>
+                            <td colspan="6">
+                                    <ul class = "pagination pull-right">
+                                        <li ng-class="{disabled: currentPage=0}">
+                                            <a ng-click="prevPage()">« Prev</a>
+                                        </li>
+                                        <li ng-repeat="n in range(membersList.length, currentPage, currentPage + gap) "
+                                        ng-class="{active: n == currentPage}"
+                                        ng-click="setPage()"><a ng-bind="n + 1">1</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
+                                        <a ng-click="nextPage()">Next »</a>
+                                    </li>
+                                    <!--
+                                -->
+                                </ul>
+                            <!-- </div> -->
+                            </td>
+                        </tfoot>
                         <tbody>
-                        <tr ng-repeat="l in membersList | filter:searchFor1">
+                        <tr ng-repeat="l in pagedItems[currentPage] | filter:searchFor1">
                             <td>{{l.name}}</td>
                             <td>
                                 <button id="optOutButton" class="btn btn-default btn-block" ng-click="optOut($index)">
@@ -91,7 +110,10 @@
                             </td>
                         </tr>
                         </tbody>
+
                     </table>
+
+
                 </div>
             </div>
         </div>
