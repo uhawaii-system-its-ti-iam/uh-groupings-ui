@@ -5,9 +5,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import edu.hawaii.its.groupings.api.type.*;
+import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,16 +22,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.groupings.api.type.Group;
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
-import edu.hawaii.its.groupings.api.type.MyGroupings;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.hawaii.its.holiday.util.Dates;
-
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
@@ -237,6 +233,71 @@ public class TestGroupingsService {
         assertTrue(lookup.getGroupName().equals(GROUPING_EXCLUDE));
     }
 
+    @Test
+    public void allGroupingsTest() {
+        List<String> allGroupings = gs.allGroupings();
+        assertTrue(allGroupings.contains(GROUPING));
+        assertFalse(allGroupings.contains(GROUPING_EXCLUDE));
+        assertFalse(allGroupings.contains(GROUPING_INCLUDE));
+    }
+
+    @Test
+    public void makeGroupTest() {
+        WsSubject[] list = new WsSubject[3];
+        for (int i = 0; i < 3; i++) {
+            list[i] = new WsSubject();
+            list[i].setName("testSubject_" + i);
+            list[i].setId("testSubject_uuid_" + i);
+            list[i].setAttributeValues(new String[]{"testSubject_username_" + i});
+        }
+
+        Group group = gs.makeGroup(list);
+
+        for (int i = 0; i < group.getMembers().size(); i++) {
+            assertTrue(group.getMembers().get(i).getName().equals("testSubject_" + i));
+            assertTrue(group.getNames().contains("testSubject_" + i));
+            assertTrue(group.getMembers().get(i).getUuid().equals("testSubject_uuid_" + i));
+            assertTrue(group.getUuids().contains("testSubject_uuid_" + i));
+            assertTrue(group.getMembers().get(i).getUsername().equals("testSubject_username_" + i));
+            assertTrue(group.getUsernames().contains("testSubject_username_" + i));
+        }
+    }
+
+    @Test
+    public void makePersonTest() {
+        String name = "name";
+        String id = "uuid";
+        String identifier = "username";
+
+        WsSubject subject = new WsSubject();
+        subject.setName(name);
+        subject.setId(id);
+        subject.setAttributeValues(new String[]{identifier});
+
+        Person person = gs.makePerson(subject);
+
+        assertTrue(person.getName().equals(name));
+        assertTrue(person.getUuid().equals(id));
+        assertTrue(person.getUsername().equals(identifier));
+
+    }
+
+    @Test
+    public void extractGroupNamesTest() {
+        List<WsGroup> groups = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            groups.add(new WsGroup());
+            groups.get(i).setName("testName_" + i);
+        }
+        List<String> groupNames = gs.extractGroupNames(groups);
+
+        for(int i = 0; i < 3; i ++){
+            assertTrue(groupNames.contains("testName_" + i));
+        }
+    }
+
+
+
     //TODO add test for assignMembershipAttributes (both)
     //TODO add test for membershipAttributeAssign
     //TODO add test for attributeAssignments
@@ -245,15 +306,11 @@ public class TestGroupingsService {
     //TODO add test for addMemberAs
     //TODO add test for deleteMemberAs
     //TODO add test for getMember
-    //TODO add test for allGroupings
     //TODO add test for extractGroupings
     //TODO add test for getGroupNames
     //TODO add test for makeGroupings
-    //TODO add test for extractGroupNames
     //TODO add test for extractGroupingNames
     //TODO add test for removeGroupOwnership
     //TODO add test for addGroupOwnership
-    //TODO add test for makeGroup
-    //TODO add test for makePerson
     //TODO add test for groupingNamesFromPrivilegeResults
 }

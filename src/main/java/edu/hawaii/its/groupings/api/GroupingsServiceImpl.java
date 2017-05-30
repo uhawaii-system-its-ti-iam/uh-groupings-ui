@@ -1218,7 +1218,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param person:
      * @return a person made from the WsSubject
      */
-    private Person makePerson(WsSubject person) {
+    public Person makePerson(WsSubject person) {
         String name = person.getName();
         String uuid = person.getId();
         String username = person.getAttributeValue(0);

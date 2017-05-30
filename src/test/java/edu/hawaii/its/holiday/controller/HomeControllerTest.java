@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -59,18 +60,26 @@ public class HomeControllerTest {
                 .andExpect(view().name("home"));
     }
 
-    /*@Test
-    public void requestContact() throws Exception {
-        mockMvc.perform(get("/contact"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("contact"));
-    }*/
+    @Test
+    public void requestLogin() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern(casLoginUrl + "**"));
+    }
 
     @Test
     public void requestFaq() throws Exception {
         mockMvc.perform(get("/faq"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("faq"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void memberships() throws Exception {
+        mockMvc.perform(get("/memberships"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("memberships"));
     }
 
     @Test
@@ -94,6 +103,39 @@ public class HomeControllerTest {
     public void adminViaAnonymous() throws Exception {
         // Anonymous users not allowed into admin area.
         mockMvc.perform(get("/admin"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern(casLoginUrl + "**"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "admin", roles = { "ROLE_UH", "ROLE_ADMIN" })
+    public void groupings() throws Exception {
+        mockMvc.perform(get("/groupings"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("groupings"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "owner", roles = {"ROLE_UH", "ROLE_OWNER"})
+    public void groupingsViaOwner() throws Exception {
+        mockMvc.perform(get("/groupings"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("groupings"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void groupingsViaUH() throws Exception {
+        // Not high enough role for access
+        mockMvc.perform(get("/groupings"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void groupingsViaAnonymous() throws Exception {
+        // Anonymous users not allowed into admin area.
+        mockMvc.perform(get("/groupings"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern(casLoginUrl + "**"));
     }
