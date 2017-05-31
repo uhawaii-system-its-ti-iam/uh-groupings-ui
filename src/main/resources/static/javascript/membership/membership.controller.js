@@ -14,6 +14,7 @@
         $scope.gap=5;
         $scope.itemsPerPage = 25;
         $scope.currentPage = 0;
+        $scope.currentPagePt1 = 0;
 
         $scope.init = function () {
             //Loads Data
@@ -25,6 +26,10 @@
                 }
                 $scope.optOutList = d.groupingsToOptOutOf;
                 $scope.optInList = d.groupingsToOptInTo;
+                for(var i = 0 ; i < 508;i++){
+                    $scope.optInList.push({name:"Group "+i});
+                }
+                console.log($scope.optInList);
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
                 $scope.grouptToPages();
@@ -130,6 +135,7 @@
             return ret;
         };
 
+        // Original Code
         $scope.prevPage = function () {
             if ($scope.currentPage > 0) {
                 $scope.currentPage--;
@@ -140,13 +146,34 @@
             if ($scope.currentPage < $scope.pagedItems.length - 1) {
                 $scope.currentPage = $scope.currentPage +1;
             }
-
-
         };
 
         $scope.setPage = function () {
             $scope.currentPage = this.n;
         };
+        //
+
+        // New variable change
+        $scope.prevPageBot = function () {
+            console.log("CLICKITY");
+            if ($scope.currentPagePt1 > 0) {
+                $scope.currentPagePt1--;
+            }
+        };
+
+        $scope.nextPageBot = function () {
+            console.log("CLICK");
+            if ($scope.currentPagePt1 < $scope.pagedItems.length - 1) {
+                $scope.currentPagePt1 = $scope.currentPagePt1 +1;
+            }
+        };
+
+        $scope.setPageBot = function () {
+            console.log("CLICKITY CLICKITY");
+            $scope.currentPagePt1 = this.n;
+        };
+        //
+
         $scope.set5 = function () {
             $scope.itemsPerPage  = 5;
             $scope.grouptToPages();
@@ -169,7 +196,6 @@
                 if($scope.membersList[index].name != $scope.optOutList[i].name)
                 {
                     $('.disabled').attr('title','You cannot opt out of this grouping');
-
                     return true;
                 }
             }

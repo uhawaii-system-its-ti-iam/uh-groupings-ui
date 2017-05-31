@@ -50,7 +50,8 @@
                             </tr>
                             </thead>
                             <tfoot>
-                                <tr>
+                                <!-- <tr> -->
+                                <!-- Different naming convetions? -->
                                 <td colspan="6">
                                         <ul class = "pagination pull-right" >
                                             <li>
@@ -67,7 +68,7 @@
                                             </li>
                                     </ul>
                                 </td>
-                            </tr>
+                            <!-- </tr> -->
                                     <!--
                                     <div class = "btn-group" role="group">
                                         <button type="button" class="btn btn-default" ng-click="set5()">5</button>
@@ -78,9 +79,11 @@
                                 -->
                             </tfoot>
                             <tbody>
+                            <!-- TODO find a way to fix pagination between the two tabs     -->
                             <tr ng-repeat="l in pagedItems[currentPage] | filter:searchFor1">
                                 <td>{{l.name}}</td>
                                 <td>
+                                    <!-- TODO find a way to update index -->
                                     <button id="optOutButton" class="btn btn-default btn-block"
                                             ng-click="optOut($index)" ng-disabled="disableOptOut($index)"
                                             ng-attr-title="{{ tooltipText($index) }}">
@@ -112,7 +115,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="o in optInList | filter:searchFor2">
+                            <tr ng-repeat="o in pagedItems[currentPagePt1] | filter:searchFor2">
                                 <td>{{o.name}}</td>
                                 <td>
                                     <button ng-disabled="disabledOptIn($index)" class="btn btn-default btn-block"
@@ -121,10 +124,47 @@
                                 </td>
                             </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                <td colspan="6">
+                                    <!-- TODO change to fit new variable -->
+                                    <!-- For now, this is workaround till better solution -->
+                                        <ul class = "pagination pull-right" >
+                                            <li>
+                                                <a href="" ng-click="prevPageBot()" >« Prev</a>
+                                            </li>
+                                            <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
+                                            ng-class="{active: n == currentPagePt1}"
+
+                                            ng-click="setPageBot()"
+                                            ><a href="" ng-bind="n + 1" >1</a>
+                                            </li>
+                                            <li >
+                                                <a href="" ng-click="nextPageBot()">Next »</a>
+                                            </li>
+                                    </ul>
+                                </td>
+                            </tr>
+
+
+
+                                    <!--
+                                    <div class = "btn-group" role="group">
+                                        <button type="button" class="btn btn-default" ng-click="set5()">5</button>
+                                        <button type="button" class="btn btn-default" ng-click="set10()">10</button>
+                                        <button type="button" class="btn btn-default" ng-click="set25()">25</button>
+                                        <button type="button" class="btn btn-default" ng-click="set100()">100</button>
+                                    </div>
+                                -->
+                            </tfoot>
                         </table>
                     </div>
                 </div>
 
+
+
+
+                <!-- Divide between the tabs  -->
                 <div class="tab-pane fade" id="optOut">
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding: 2px">
@@ -136,6 +176,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Make an "On load" pagination so it loads for differnt tabs -->
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
