@@ -9,14 +9,14 @@
 
         $scope.pagedItems=[];
         $scope.gap=5;
-        $scope.itemsPerPage = 5;
+        $scope.itemsPerPage = 25;
         $scope.currentPage = 0;
 
         $scope.init = function () {
             //Loads Data
             dataProvider.loadData(function (d) {
                 $scope.membersList = d.groupingsIn;
-                for(var i = 0 ; i < 10;i++){
+                for(var i = 0 ; i < 508;i++){
                     $scope.membersList.push({name:"Group "+i});
                 }
                 $scope.optOutList = d.groupingsToOptOutOf;
@@ -27,20 +27,15 @@
                     $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
                 }
                 $scope.loading = false;
-                // console.log($scope.optOutList);
             }, groupings);
         };
 
 
         // Adds user to the exclude group.
         $scope.optOut = function (grouping) {
-            // console.log(grouping);
             var optOutURL = "optOut?username=" + currentUser + "&grouping=" + $scope.membersList[grouping].path;
             var cancelOptIn = "cancelOptIn?username=" + currentUser + "&grouping=" + $scope.membersList[grouping].path;
-            // console.log(optOutURL);
-
             dataProvider.loadData(function (d) {
-                // console.log(d);
                 $scope.membersList = d;
                 $scope.loading = true;
                 $scope.init();
@@ -49,12 +44,8 @@
 
         // Adds user to the include group
         $scope.optIn = function (grouping) {
-            // console.log(grouping);
             var optInURL = "optIn?username=" + currentUser + "&grouping=" + $scope.optInList[grouping].path;
-            // console.log(optInURL);
-
             dataProvider.loadData(function (d) {
-                // console.log(d);
                 $scope.membersList = d;
                 $scope.loading = true;
                 $scope.init();
@@ -71,9 +62,7 @@
         //handes the groups of stuff on the pages.
         $scope.grouptToPages=function(){
             $scope.pagedItems=[];
-            //console.log($scope.membersList);
             for(var i = 0; i < $scope.membersList.length ; i++){
-                console.log($scope.membersList[i]);
                 if(i % $scope.itemsPerPage === 0){
 
                     $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)] = [ $scope.membersList[i]];
@@ -97,7 +86,6 @@
             for (var i = start; i < end; i++) {
                 ret.push(i);
             }
-            //  console.log(ret);
             return ret;
         };
 
@@ -109,12 +97,30 @@
 
         $scope.nextPage = function () {
             if ($scope.currentPage < $scope.pagedItems.length - 1) {
-                $scope.currentPage++;
+                $scope.currentPage = $scope.currentPage +1;
             }
+
+
         };
 
         $scope.setPage = function () {
             $scope.currentPage = this.n;
+        };
+        $scope.set5 = function () {
+            $scope.itemsPerPage  = 5;
+            $scope.grouptToPages();
+        };
+        $scope.set10 = function () {
+            $scope.itemsPerPage  = 10;
+            $scope.grouptToPages();
+        };
+        $scope.set25 = function () {
+            $scope.itemsPerPage  = 25;
+            $scope.grouptToPages();
+        };
+        $scope.set100 = function () {
+            $scope.itemsPerPage  = 100;
+            $scope.grouptToPages();
         };
     }
 

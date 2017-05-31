@@ -51,21 +51,20 @@
                         </thead>
                         <tfoot>
                             <td colspan="6">
-                                    <ul class = "pagination pull-right">
-                                        <li ng-class="{disabled: currentPage=0}">
-                                            <a ng-click="prevPage()">« Prev</a>
+                                    <ul class = "pagination pull-right" >
+                                        <li>
+                                            <a href="" ng-click="prevPage()" >« Prev</a>
                                         </li>
-                                        <li ng-repeat="n in range(membersList.length, currentPage, currentPage + gap) "
+                                        <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
                                         ng-class="{active: n == currentPage}"
-                                        ng-click="setPage()"><a ng-bind="n + 1">1</a>
-                                    </li>
-                                    <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
-                                        <a ng-click="nextPage()">Next »</a>
-                                    </li>
-                                    <!--
-                                -->
+
+                                        ng-click="setPage()"
+                                        ><a href="" ng-bind="n + 1" >1</a>
+                                        </li>
+                                        <li >
+                                            <a href="" ng-click="nextPage()">Next »</a>
+                                        </li>
                                 </ul>
-                            <!-- </div> -->
                             </td>
                         </tfoot>
                         <tbody>
@@ -79,6 +78,12 @@
                         </tr>
                         </tbody>
                     </table>
+                    <div class = "btn-group pull-right" role="group">
+                        <button type="button" class="btn btn-default" ng-click="set5()">5</button>
+                        <button type="button" class="btn btn-default" ng-click="set10()">10</button>
+                        <button type="button" class="btn btn-default" ng-click="set25()">25</button>
+                        <button type="button" class="btn btn-default" ng-click="set100()">100</button>
+                    </div>
                 </div>
 
 
@@ -112,13 +117,16 @@
                         </tbody>
 
                     </table>
-
-
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>
+
+
+
 
 <!-- / Content container. -->
 
