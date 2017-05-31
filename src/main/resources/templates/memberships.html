@@ -115,7 +115,7 @@
                             <tr ng-repeat="o in optInList | filter:searchFor2">
                                 <td>{{o.name}}</td>
                                 <td>
-                                    <button ng-disabled="disabledOptIn($index)" class="btn btn-default btn-block"
+                                    <button ng-disabled="disableOptIn($index)" class="btn btn-default btn-block"
                                             ng-click="optIn($index)">OPT IN
                                     </button>
                                 </td>
@@ -147,7 +147,7 @@
                             <tr ng-repeat="out in optedOut">
                                 <td>{{out.name}}</td>
                                 <td>
-                                    <button lass="btn btn-default btn-block"
+                                    <button class="btn btn-default btn-block" ng-disabled="disableButton(optedOut, $index)"
                                             ng-click="cancelOptOut($index)">
                                         CANCEL OPT OUT
                                     </button>
@@ -178,7 +178,7 @@
                             <tr ng-repeat="in in optedIn">
                                 <td>{{in.name}}</td>
                                 <td>
-                                    <button lass="btn btn-default btn-block"
+                                    <button class="btn btn-default btn-block" ng-disabled="disableButton(optedIn, $index)"
                                             ng-click="cancelOptIn($index)">
                                         CANCEL OPT IN
                                     </button>

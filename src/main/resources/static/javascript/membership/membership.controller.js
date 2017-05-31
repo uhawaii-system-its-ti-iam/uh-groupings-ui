@@ -30,7 +30,7 @@
                 $scope.grouptToPages();
                 if($scope.optedIn.length === 0)
                 {
-                    $scope.optedIn.push({'name': "NO GROUPINGS TO OPT IN TO"});
+                    $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
                 }
                 if($scope.optedOut.length === 0)
                 {
@@ -40,6 +40,8 @@
                 {
                     $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
                 }
+
+                $scope.optInList.push({"name":"Hello"});
                 $scope.loading = false;
             }, groupings);
         };
@@ -73,6 +75,7 @@
             }, optInURL);
         };
 
+        // Cancel user opt into a grouping
         $scope.cancelOptIn = function (grouping) {
             var cancelInURL = "api/groupings/" + $scope.optedIn[grouping].path + "/" + currentUser + "/cancelOptIn";
             console.log(cancelInURL);
@@ -83,6 +86,7 @@
             }, cancelInURL);
         };
 
+        // Cancel user opt out of a grouping
         $scope.cancelOptOut = function (grouping) {
             var cancelOutURL = "api/groupings/" + $scope.optedOut[grouping].path + "/" + currentUser + "/cancelOptOut";
             console.log(cancelOutURL);
@@ -91,6 +95,34 @@
                 $scope.loading = true;
                 $scope.init();
             }, cancelOutURL);
+        };
+
+        $scope.disableOptOut = function(index) {
+            for(var i = 0; i < $scope.optOutList.length; i++) {
+                if($scope.membersList[index].name != $scope.optOutList[i].name)
+                {
+                    return true;
+                }
+            }
+        };
+        //Disables opt in button if there are no groupings to opt into.
+        $scope.disableOptIn = function(index) {
+            for(var i = 0; i < $scope.membersList.length; i++) {
+                if($scope.membersList[i].name === $scope.optInList[index].name)
+                {
+                    return true;
+                }
+            }
+        };
+
+        //Disable button if list is empty
+        $scope.disableButton = function(type, index) {
+            var list = type[index];
+            return list.name.includes("NO GROUPINGS TO");
+        };
+
+        $scope.tooltipText = function(index) {
+            return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
         };
 
         //Disables opt in button if there are no groupings to opt into.
@@ -164,20 +196,7 @@
             $scope.grouptToPages();
         };
 
-        $scope.disableOptOut = function(index) {
-            for(var i = 0; i < $scope.optOutList.length; i++) {
-                if($scope.membersList[index].name != $scope.optOutList[i].name)
-                {
-                    $('.disabled').attr('title','You cannot opt out of this grouping');
 
-                    return true;
-                }
-            }
-        };
-
-        $scope.tooltipText = function(index) {
-            return $scope.disableOptOut(index) ? 'You cannot opt out of this grouping' : '';
-        };
     }
 
     membershipApp.controller("MembershipJsController", MembershipJsController);
