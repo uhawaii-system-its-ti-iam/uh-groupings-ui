@@ -27,6 +27,7 @@
                 $scope.optInList = d.groupingsToOptInTo;
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
+                $scope.grouptToPages();
                 if($scope.optedIn.length === 0)
                 {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO OPT IN TO"});

@@ -16,9 +16,7 @@
             <ul class="nav nav-tabs " id="memTab">
                 <li role="presentation" class="active">
                     <a href="#belong" data-toggle="tab" role="tab">
-                        <!-- <span class = "step size-64"> -->
                         <i class="icon ion-android-people" id="icons"></i>
-                        <!-- </span> -->
                     </a>
                 </li>
                 <li role="presentation">
@@ -30,6 +28,8 @@
             <div id="overlay" ng-show="loading">
                 <div class="loader" ng-show="loading"></div>
             </div>
+
+            <!-- Content that should be viewed by the nav tabs -->
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="belong">
                     <div class="panel panel-default">
@@ -49,8 +49,36 @@
                                 <th>Opt out</th>
                             </tr>
                             </thead>
+                            <tfoot>
+                                <tr>
+                                <td colspan="6">
+                                        <ul class = "pagination pull-right" >
+                                            <li>
+                                                <a href="" ng-click="prevPage()" >« Prev</a>
+                                            </li>
+                                            <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
+                                            ng-class="{active: n == currentPage}"
+
+                                            ng-click="setPage()"
+                                            ><a href="" ng-bind="n + 1" >1</a>
+                                            </li>
+                                            <li >
+                                                <a href="" ng-click="nextPage()">Next »</a>
+                                            </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                                    <!--
+                                    <div class = "btn-group" role="group">
+                                        <button type="button" class="btn btn-default" ng-click="set5()">5</button>
+                                        <button type="button" class="btn btn-default" ng-click="set10()">10</button>
+                                        <button type="button" class="btn btn-default" ng-click="set25()">25</button>
+                                        <button type="button" class="btn btn-default" ng-click="set100()">100</button>
+                                    </div>
+                                -->
+                            </tfoot>
                             <tbody>
-                            <tr ng-repeat="l in membersList | filter:searchFor1">
+                            <tr ng-repeat="l in pagedItems[currentPage] | filter:searchFor1">
                                 <td>{{l.name}}</td>
                                 <td>
                                     <button id="optOutButton" class="btn btn-default btn-block"
@@ -62,6 +90,7 @@
                             </tr>
                             </tbody>
                         </table>
+
                     </div>
 
                     <div class="panel panel-default">
@@ -159,8 +188,9 @@
                         </table>
                     </div>
                 </div>
-
             </div>
+
+
         </div>
 
 
