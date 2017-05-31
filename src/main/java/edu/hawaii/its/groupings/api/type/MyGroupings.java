@@ -1,8 +1,11 @@
 package edu.hawaii.its.groupings.api.type;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
-public class MyGroupings {
+public class MyGroupings{
     List<Grouping> groupingsIn;
     List<Grouping> groupingsOwned;
     List<Grouping> groupingsOptedOutOf;
@@ -57,4 +60,6 @@ public class MyGroupings {
     public void setGroupingsOptedInTo(List<Grouping> groupingsOptedInTo) {
         this.groupingsOptedInTo = groupingsOptedInTo;
     }
+
+
 }

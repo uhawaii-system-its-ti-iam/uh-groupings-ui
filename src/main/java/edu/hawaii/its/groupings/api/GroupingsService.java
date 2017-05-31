@@ -10,7 +10,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 import java.util.List;
 
-public interface GroupingsService {
+public interface GroupingsService{
 
     public boolean hasListserv(String grouping);
 

@@ -10,14 +10,19 @@
         $scope.optedOut = [];
         $scope.loading = true;
 
-        $scope.totalItems = 12;
-        $scope.currentPage = 1;
+        $scope.pagedItems=[];
+        $scope.gap=5;
+        $scope.itemsPerPage = 25;
+        $scope.currentPage = 0;
 
         $scope.init = function () {
             //Loads Data
             dataProvider.loadData(function (d) {
                 console.log(d);
                 $scope.membersList = d.groupingsIn;
+                for(var i = 0 ; i < 508;i++){
+                    $scope.membersList.push({name:"Group "+i});
+                }
                 $scope.optOutList = d.groupingsToOptOutOf;
                 $scope.optInList = d.groupingsToOptInTo;
                 $scope.optedIn = d.groupingsOptedInTo;
@@ -91,6 +96,71 @@
         $scope.disabledOptIn = function(index) {
             var optIn = $scope.optInList[index];
             return optIn.name === "NO GROUPINGS TO OPT IN TO"
+        };
+
+
+        //handes the groups of stuff on the pages.
+        $scope.grouptToPages=function(){
+            $scope.pagedItems=[];
+            for(var i = 0; i < $scope.membersList.length ; i++){
+                if(i % $scope.itemsPerPage === 0){
+
+                    $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)] = [ $scope.membersList[i]];
+
+                }else{
+                    $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)].push( $scope.membersList[i]);
+                }
+            }
+
+        };
+
+        $scope.range = function (size,start, end) {
+            var ret = [];
+            if (size < end) {
+                end = size;
+                start = size-$scope.gap;
+            }
+            if(start < 0 ){
+                start = 0;
+            }
+            for (var i = start; i < end; i++) {
+                ret.push(i);
+            }
+            return ret;
+        };
+
+        $scope.prevPage = function () {
+            if ($scope.currentPage > 0) {
+                $scope.currentPage--;
+            }
+        };
+
+        $scope.nextPage = function () {
+            if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                $scope.currentPage = $scope.currentPage +1;
+            }
+
+
+        };
+
+        $scope.setPage = function () {
+            $scope.currentPage = this.n;
+        };
+        $scope.set5 = function () {
+            $scope.itemsPerPage  = 5;
+            $scope.grouptToPages();
+        };
+        $scope.set10 = function () {
+            $scope.itemsPerPage  = 10;
+            $scope.grouptToPages();
+        };
+        $scope.set25 = function () {
+            $scope.itemsPerPage  = 25;
+            $scope.grouptToPages();
+        };
+        $scope.set100 = function () {
+            $scope.itemsPerPage  = 100;
+            $scope.grouptToPages();
         };
 
         $scope.disableOptOut = function(index) {
