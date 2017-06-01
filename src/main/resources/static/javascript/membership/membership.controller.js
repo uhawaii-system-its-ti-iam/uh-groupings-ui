@@ -1,5 +1,14 @@
 (function () {
 
+
+    //Membership controller for the whole memberships page
+    //@perams $scope
+    //    defining what is within the controller
+    //@perams dataProvider
+    //     given the "loadData" function, it loads all the data to be viewed
+    //@perams dataUpdater
+    //    Using the CRUD opperators this would be the update of CRUD
+    //
     function MembershipJsController($scope, dataProvider, dataUpdater) {
         var currentUser = document.getElementById("name").innerText;
         var groupings = "api/groupings/" + currentUser + "/myGroupings";
@@ -12,26 +21,42 @@
 
         $scope.pagedItems=[];
         $scope.gap=5;
-        $scope.itemsPerPage = 25;
-        $scope.currentPage = 0;
-        $scope.currentPagePt1 = 0;
+        $scope.itemsPerPage = 5;
+        $scope.currentPageTop = 0;
+        $scope.currentPageBot = 0;
 
+        //init is something that is ussualy called at the start of something
+        //so calling init would be called at the start
         $scope.init = function () {
-            //Loads Data
+            //Loads Data into a membersList
+            //                  optOutList
+            //                  optInList
+            //                  optedIn
+            //                  optedOut
+            //takes all of that data and puts them into pages as called by "grouptToPages"
+            //
             dataProvider.loadData(function (d) {
                 console.log(d);
                 $scope.membersList = d.groupingsIn;
-                for(var i = 0 ; i < 508;i++){
+                for(var i = 0 ; i < 27;i++){
                     $scope.membersList.push({name:"Group "+i});
                 }
                 $scope.optOutList = d.groupingsToOptOutOf;
+                // for(var i = 0 ; i < 10;i++){
+                //     $scope.optOutList.push({name:"Group "+i});
+                // }
                 $scope.optInList = d.groupingsToOptInTo;
-                for(var i = 0 ; i < 508;i++){
-                    $scope.optInList.push({name:"Group "+i});
-                }
-                console.log($scope.optInList);
+                // for(var i = 0 ; i < 508;i++){
+                //     $scope.optInList.push({name:"Group "+i});
+                // }
                 $scope.optedIn = d.groupingsOptedInTo;
+                // for(var i = 0 ; i < 10;i++){
+                //     $scope.optedIn.push({name:"Group "+i});
+                // }
                 $scope.optedOut = d.groupingsOptedOutOf;
+                // for(var i = 0 ; i < 10;i++){
+                //     $scope.optedOut.push({name:"Group "+i});
+                // }
                 $scope.grouptToPages();
                 if($scope.optedIn.length === 0)
                 {
@@ -50,6 +75,7 @@
         };
 
 
+        // TODO create documentation
         // Adds user to the exclude group.
         $scope.optOut = function (grouping) {
             var optOutURL = "api/groupings/" +  $scope.membersList[grouping].path + "/" + currentUser + "/optOut";
@@ -67,6 +93,7 @@
             }, optOutURL);
         };
 
+        //TODO create documention
         // Adds user to the include group
         $scope.optIn = function (grouping) {
             var optInURL = "api/groupings/" +  $scope.optInList[grouping].path + "/" + currentUser + "/optIn";
@@ -78,6 +105,7 @@
             }, optInURL);
         };
 
+        // TODO create documention
         $scope.cancelOptIn = function (grouping) {
             var cancelInURL = "api/groupings/" + $scope.optedIn[grouping].path + "/" + currentUser + "/cancelOptIn";
             console.log(cancelInURL);
@@ -88,6 +116,7 @@
             }, cancelInURL);
         };
 
+        // TODO create documentation
         $scope.cancelOptOut = function (grouping) {
             var cancelOutURL = "api/groupings/" + $scope.optedOut[grouping].path + "/" + currentUser + "/cancelOptOut";
             console.log(cancelOutURL);
@@ -120,6 +149,8 @@
 
         };
 
+        // Perams size
+        // Perams
         $scope.range = function (size,start, end) {
             var ret = [];
             if (size < end) {
@@ -135,42 +166,39 @@
             return ret;
         };
 
-        // Original Code
+        // Original Code make it to Functionality than location
         $scope.prevPage = function () {
-            if ($scope.currentPage > 0) {
-                $scope.currentPage--;
+            if ($scope.currentPageTop > 0) {
+                $scope.currentPageTop--;
             }
         };
 
         $scope.nextPage = function () {
-            if ($scope.currentPage < $scope.pagedItems.length - 1) {
-                $scope.currentPage = $scope.currentPage +1;
+            if ($scope.currentPageTop < $scope.pagedItems.length - 1) {
+                $scope.currentPageTop = $scope.currentPageTop +1;
             }
         };
 
         $scope.setPage = function () {
-            $scope.currentPage = this.n;
+            $scope.currentPageTop = this.n;
         };
         //
 
         // New variable change
         $scope.prevPageBot = function () {
-            console.log("CLICKITY");
-            if ($scope.currentPagePt1 > 0) {
-                $scope.currentPagePt1--;
+            if ($scope.currentPageBot > 0) {
+                $scope.currentPageBot--;
             }
         };
 
         $scope.nextPageBot = function () {
-            console.log("CLICK");
-            if ($scope.currentPagePt1 < $scope.pagedItems.length - 1) {
-                $scope.currentPagePt1 = $scope.currentPagePt1 +1;
+            if ($scope.currentPageBot < $scope.pagedItems.length - 1) {
+                $scope.currentPageBot = $scope.currentPageBot +1;
             }
         };
 
         $scope.setPageBot = function () {
-            console.log("CLICKITY CLICKITY");
-            $scope.currentPagePt1 = this.n;
+            $scope.currentPageBot = this.n;
         };
         //
 

@@ -50,15 +50,14 @@
                             </tr>
                             </thead>
                             <tfoot>
-                                <!-- <tr> -->
-                                <!-- Different naming convetions? -->
+                                <!-- Top part of the two parts  -->
                                 <td colspan="6">
                                         <ul class = "pagination pull-right" >
                                             <li>
                                                 <a href="" ng-click="prevPage()" >« Prev</a>
                                             </li>
-                                            <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
-                                            ng-class="{active: n == currentPage}"
+                                            <li ng-repeat="n in range(pagedItems.length, currentPageTop, currentPageTop + gap) "
+                                            ng-class="{active: n == currentPageTop}"
 
                                             ng-click="setPage()"
                                             ><a href="" ng-bind="n + 1" >1</a>
@@ -68,7 +67,6 @@
                                             </li>
                                     </ul>
                                 </td>
-                            <!-- </tr> -->
                                     <!--
                                     <div class = "btn-group" role="group">
                                         <button type="button" class="btn btn-default" ng-click="set5()">5</button>
@@ -80,7 +78,7 @@
                             </tfoot>
                             <tbody>
                             <!-- TODO find a way to fix pagination between the two tabs     -->
-                            <tr ng-repeat="l in pagedItems[currentPage] | filter:searchFor1">
+                            <tr ng-repeat="l in pagedItems[currentPageTop] | filter:searchFor1">
                                 <td>{{l.name}}</td>
                                 <td>
                                     <!-- TODO find a way to update index -->
@@ -115,7 +113,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="o in pagedItems[currentPagePt1] | filter:searchFor2">
+                            <tr ng-repeat="o in pagedItems[currentPageBot] | filter:searchFor2">
                                 <td>{{o.name}}</td>
                                 <td>
                                     <button ng-disabled="disabledOptIn($index)" class="btn btn-default btn-block"
@@ -125,16 +123,15 @@
                             </tr>
                             </tbody>
                             <tfoot>
-                                <tr>
                                 <td colspan="6">
                                     <!-- TODO change to fit new variable -->
-                                    <!-- For now, this is workaround till better solution -->
+                                    <!-- Botton part of the two  -->
                                         <ul class = "pagination pull-right" >
                                             <li>
                                                 <a href="" ng-click="prevPageBot()" >« Prev</a>
                                             </li>
-                                            <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
-                                            ng-class="{active: n == currentPagePt1}"
+                                            <li ng-repeat="n in range(pagedItems.length, currentPageBot, currentPageBot + gap) "
+                                            ng-class="{active: n == currentPageBot}"
 
                                             ng-click="setPageBot()"
                                             ><a href="" ng-bind="n + 1" >1</a>
@@ -144,10 +141,7 @@
                                             </li>
                                     </ul>
                                 </td>
-                            </tr>
-
-
-
+                                <!-- TODO implement this back in  -->
                                     <!--
                                     <div class = "btn-group" role="group">
                                         <button type="button" class="btn btn-default" ng-click="set5()">5</button>
@@ -231,15 +225,11 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
-
-
     </div>
 </div>
 
-
+<!-- to map out  CurrentWindow * (WindowSize - 1) + 1 -->
 
 
 <!-- / Content container. -->
