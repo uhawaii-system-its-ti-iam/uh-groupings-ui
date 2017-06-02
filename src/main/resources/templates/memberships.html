@@ -82,8 +82,8 @@
                                 <td>{{l.name}}</td>
                                 <td>
                                     <button id="optOutButton" class="btn btn-default btn-block"
-                                            ng-click="optOut($index)" ng-disabled="disableOptOut($index)"
-                                            ng-attr-title="{{ tooltipText($index) }}">
+                                            ng-click="optOut($index + (currentPage * itemsPerPage))" ng-disabled="disableOptOut($index + (currentPage * itemsPerPage))"
+                                            ng-attr-title="{{ tooltipText($index + (currentPage * itemsPerPage)) }}">
                                         OPT OUT
                                     </button>
                                 </td>
