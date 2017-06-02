@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -76,6 +75,18 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
+    public void requestCampus() throws Exception {
+        mockMvc.perform(get("/campus"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("campus"));
+
+        mockMvc.perform(get("/campuses"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("campus"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
     public void memberships() throws Exception {
         mockMvc.perform(get("/memberships"))
                 .andExpect(status().isOk())
@@ -116,7 +127,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUhUser(username = "owner", roles = {"ROLE_UH", "ROLE_OWNER"})
+    @WithMockUhUser(username = "owner", roles = { "ROLE_UH", "ROLE_OWNER" })
     public void groupingsViaOwner() throws Exception {
         mockMvc.perform(get("/groupings"))
                 .andExpect(status().isOk())

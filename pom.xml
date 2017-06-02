@@ -19,15 +19,18 @@
 
     <properties>
         <maven-war-plugin.version>2.4</maven-war-plugin.version>
-
         <java.version>1.8</java.version>
         <junit.version>4.12</junit.version>
-
         <commons-dbcp-version>2.1.1</commons-dbcp-version>
         <hibernate.version>5.2.3.Final</hibernate.version>
         <h2.version>1.4.192</h2.version>
-
         <org.jasig.cas.client-version>3.4.1</org.jasig.cas.client-version>
+
+        <jquery-version>3.2.0</jquery-version>
+        <angular-mocks-version>1.5.8</angular-mocks-version>
+        <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version>
+        <angularjs-version>1.5.8</angularjs-version>
+        <bootstrap-version>3.3.7</bootstrap-version>
     </properties>
 
     <dependencies>
@@ -132,22 +135,28 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jasmine</artifactId>
+            <version>2.2.0</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Webjars -->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>3.3.7</version>
+            <version>${bootstrap-version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
-            <version>3.1.1</version>
+            <version>${jquery-version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angularjs</artifactId>
-            <version>1.5.8</version>
+            <version>${angularjs-version}</version>
         </dependency>
         <!-- <dependency>
             <groupId>org.webjars</groupId>
@@ -162,7 +171,12 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angular-ui-bootstrap</artifactId>
-            <version>1.3.3</version>
+            <version>${angular-ui-bootstrap-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular-mocks</artifactId>
+            <version>${angular-mocks-version}</version>
         </dependency>
         <dependency>
             <groupId>edu.internet2.middleware.grouper</groupId>
@@ -196,6 +210,27 @@
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.3.0</version>
+            </plugin>
+            <plugin>
+                <groupId>com.github.searls</groupId>
+                <artifactId>jasmine-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <preloadSources>
+                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js"></source>
+                        <source>classpath/META-INF/resources/webjars/jquery/${jquery-version}/jquery.min.js</source>
+                        <source>classpath/META-INF/resources/webjars/bootstrap/${bootstrap-version}/js/bootstrap.min.js</source>
+                        <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap.min.js</source>
+                        <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls.min.js</source>
+                        <source>classpath/META-INF/resources/webjars/angular-mocks/${angular-mocks-version}/angular-mocks.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/campus/campus.app.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/campus/campus.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/campus/campus.service.js</source>
+                    </preloadSources>
+                    <specIncludes>
+                        <include>**/**.test.js</include>
+                    </specIncludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -241,11 +276,12 @@
                                 <echo>Now that you have a clean project,</echo>
                                 <echo>here are some common goals for this project:</echo>
                                 <echo>$ mvn clean test</echo>
-                                <echo>$ mvn clean test -Dtest=*SystemTest </echo>                                
-                                <echo>$ mvn clean test -Dspring.profiles.active=test -Dtest=Test* </echo>                                
+                                <echo>$ mvn clean test -Dtest=*SystemTest </echo>
+                                <echo>$ mvn clean test -Dspring.profiles.active=test -Dtest=Test* </echo>
                                 <echo>$ mvn clean package</echo>
                                 <echo>$ mvn -Dmaven.test.skip=true clean package</echo>
                                 <echo>$ mvn clean spring-boot:run</echo>
+                                <echo>$ mvn jasmine:test</echo>
                                 <echo>$ mvn clean test cobertura:cobertura</echo>
                             </tasks>
                         </configuration>
