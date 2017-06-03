@@ -27,7 +27,9 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsRestController {
-    private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
+//    private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
+//    private String grouping = "hawaii.edu:custom:test:zknoebel:zknoebel-v2-empty-basis";
+    private String grouping = "tmp:win-many";
     private String include = grouping + ":include";
     private String exclude = grouping + ":exclude";
     private String[] tst = new String[6];
@@ -69,54 +71,17 @@ public class TestGroupingsRestController {
     }
 
     @Test
-    public void assignOwnershipTest() {
+    public void assignAndRemoveOwnershipTest() {
+        Grouping g = gc.grouping(grouping, tst[0]).getBody();
+        assertFalse(g.getOwners().getUsernames().contains(tst[1]));
+
         gc.assignOwnership(grouping, tst[0], tst[1]);
-
-        String group = include;
-        String privilegeName = "update";
-
-        WsGetGrouperPrivilegesLiteResult updateInclude =
-                gs.grouperPrivilegesLite(tst[1], privilegeName, group);
-
-        group = exclude;
-        WsGetGrouperPrivilegesLiteResult updateExclude =
-                gs.grouperPrivilegesLite(tst[1], privilegeName, group);
-
-        assertTrue(updateInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
-        assertTrue(updateExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
-
-        //reset Grouping
-        gc.removeOwnership(grouping, tst[0], tst[1]);
-    }
-
-    @Test
-    public void removeOwnershipTest() {
-        gc.assignOwnership(grouping, tst[0], tst[1]);
-
-        String group = include;
-        String privilegeName = "update";
-
-        WsGetGrouperPrivilegesLiteResult updateInclude =
-                gs.grouperPrivilegesLite(tst[1], privilegeName, group);
-
-        group = exclude;
-        WsGetGrouperPrivilegesLiteResult updateExclude =
-                gs.grouperPrivilegesLite(tst[1], privilegeName, group);
-
-        assertTrue(updateInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
-        assertTrue(updateExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
+        g = gc.grouping(grouping, tst[0]).getBody();
+        assertTrue(g.getOwners().getUsernames().contains(tst[1]));
 
         gc.removeOwnership(grouping, tst[0], tst[1]);
-
-        group = include;
-
-        updateInclude = gs.grouperPrivilegesLite(tst[1], privilegeName, group);
-
-        group = exclude;
-        updateExclude = gs.grouperPrivilegesLite(tst[1], privilegeName, group);
-
-        assertFalse(updateInclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
-        assertFalse(updateExclude.getResultMetadata().getResultCode().equals("SUCCESS_ALLOWED"));
+        g = gc.grouping(grouping, tst[0]).getBody();
+        assertFalse(g.getOwners().getUsernames().contains(tst[1]));
     }
 
     @Test

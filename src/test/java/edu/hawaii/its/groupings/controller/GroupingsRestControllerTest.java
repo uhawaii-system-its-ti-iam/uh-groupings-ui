@@ -118,7 +118,7 @@ public class GroupingsRestControllerTest {
         owners.addMember(new Person("o3-name", "o3-uuid", "o3-username"));
         grouping.setOwners(owners);
 
-        grouping.setHasListserv(true);
+        grouping.setListserveOn(true);
 
         return grouping;
     }
