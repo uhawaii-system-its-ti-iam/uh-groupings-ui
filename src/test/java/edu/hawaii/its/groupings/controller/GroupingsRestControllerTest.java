@@ -66,7 +66,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("bob"))
                 .andExpect(jsonPath("path").value("test:ing:me:bob"))
-                .andExpect(jsonPath("hasListserv").value("true"))
+                .andExpect(jsonPath("listserveOn").value("true"))
                 .andExpect(jsonPath("basis.members", hasSize(3)))
                 .andExpect(jsonPath("basis.members[0].name").value("b0-name"))
                 .andExpect(jsonPath("basis.members[0].uuid").value("b0-uuid"))
