@@ -33,7 +33,7 @@ import edu.internet2.middleware.grouperClient.ws.StemScope;
 @Service("groupingsService")
 public class GroupingsServiceImpl implements GroupingsService {
     public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
-//    public static final String UUID_SELF_OPTED = "ef62bf0473614b379695ecec6cb8b3b5";
+    //    public static final String UUID_SELF_OPTED = "ef62bf0473614b379695ecec6cb8b3b5";
     private static final String SETTINGS = "uh-settings";
     private static final String ATTRIBUTES = SETTINGS + ":attributes";
     private static final String UHGROUPING = ATTRIBUTES + ":for-groups:uh-grouping";
@@ -423,9 +423,35 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public List<Grouping> groupingsIn(String username) {
         List<String> groupsIn = getGroupNames(username);
-        List<String> groupingPaths = extractGroupings(groupsIn);
+        List<String> groupingsIn = new ArrayList<>();
 
-        return makeGroupings(groupingPaths);
+        for(String grouping : groupsIn){
+            if(isGrouping(grouping)){
+                groupingsIn.add(grouping);
+            }
+        }
+
+        return makeGroupings(groupingsIn);
+    }
+
+    public boolean isGrouping(String group) {
+        boolean returnValue = false;
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
+                .assignAttributeAssignType("group")
+                .addOwnerGroupName(group)
+                .execute();
+
+        WsAttributeDefName[] names = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
+        if(names != null) {
+            for (WsAttributeDefName name : names) {
+                if (name.getName().equals(TRIO)) {
+                    returnValue = true;
+                }
+            }
+        }
+
+        return returnValue;
+
     }
 
     /**
@@ -601,7 +627,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 String membershipID = includeMembershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "assign_attr";
                 return makeGroupingsServiceResult(
-                        assignMembershipAttributes(operation, UUID_SELF_OPTED, membershipID),
+                        assignMembershipAttributes(operation, SELF_OPTED, membershipID),
                         "add self-opted attribute to the membership of " + username + " to " + group);
             }
         }
@@ -622,10 +648,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (inGroup(group, lookup.getSubjectIdentifier())) {
             WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(lookup, group);
             String assignType = "imm_mem";
-            String uuid = UUID_SELF_OPTED;
+            String name = SELF_OPTED;
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            WsAttributeAssign[] wsAttributes = getMembershipAttributes(assignType, uuid, membershipID);
+            WsAttributeAssign[] wsAttributes = getMembershipAttributes(assignType, name, membershipID);
             for (WsAttributeAssign att : wsAttributes) {
                 if (att.getAttributeDefNameName().equals(SELF_OPTED)) {
                     return true; // We are done, get out.
@@ -691,7 +717,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 String membershipID = membershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "remove_attr";
                 return makeGroupingsServiceResult(
-                        assignMembershipAttributes(operation, UUID_SELF_OPTED, membershipID),
+                        assignMembershipAttributes(operation, SELF_OPTED, membershipID),
                         "remove self-opted attribute from the membership of " + username + " to " + group);
             }
         }
@@ -812,24 +838,24 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new GcAssignAttributes()
                 .assignAttributeAssignType(assignType)
                 .assignAttributeAssignOperation(operation)
-                .addAttributeDefNameUuid(uuid)
+                .addAttributeDefNameName(uuid)
                 .addOwnerMembershipId(membershipID)
                 .execute();
     }
 
     /**
      * @param assignType:   assign type of the attribute
-     * @param uuid:         uuid of the attribute
+     * @param name:         uuid of the attribute
      * @param membershipID: membership id for the membership between the user and Grouping
      * @return information about the success of the action
      */
-    private WsAttributeAssign[] getMembershipAttributes(String assignType, String uuid, String membershipID) {
-        logger.info("getMembershipAttributes; assignType: " + assignType + "; uuid: " + uuid + "; membershipID: " + membershipID);
+    private WsAttributeAssign[] getMembershipAttributes(String assignType, String name, String membershipID) {
+        logger.info("getMembershipAttributes; assignType: " + assignType + "; name: " + name + "; membershipID: " + membershipID);
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
                 new GcGetAttributeAssignments()
                         .assignAttributeAssignType(assignType)
-                        .addAttributeDefNameUuid(uuid)
+                        .addAttributeDefNameName(name)
                         .addOwnerMembershipId(membershipID)
                         .execute();
         WsAttributeAssign[] wsAttributes = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
