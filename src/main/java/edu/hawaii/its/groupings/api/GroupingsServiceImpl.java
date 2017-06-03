@@ -33,21 +33,24 @@ import edu.internet2.middleware.grouperClient.ws.StemScope;
 @Service("groupingsService")
 public class GroupingsServiceImpl implements GroupingsService {
     public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
-    public static final String UUID_USERNAME = "ef62bf0473614b379695ecec6cb8b3b5";
+//    public static final String UUID_SELF_OPTED = "ef62bf0473614b379695ecec6cb8b3b5";
     private static final String SETTINGS = "uh-settings";
     private static final String ATTRIBUTES = SETTINGS + ":attributes";
-    private static final String UHGROUPING = "uh-settings:attributes:for-groups:uh-grouping";
+    private static final String UHGROUPING = ATTRIBUTES + ":for-groups:uh-grouping";
+    private static final String TRIO = ATTRIBUTES + ":for-groups:uh-grouping:is-trio";
     public static final String SELF_OPTED = ATTRIBUTES + ":for-memberships:uh-grouping:self-opted";
-    public static final String UUID_TRIO = "1d7365a23c994f5f83f7b541d4a5fa5e";
+    public static final String OPT_IN = ATTRIBUTES + ":for-groups:uh-grouping:anyone-can:opt-in";
+    public static final String OPT_OUT = ATTRIBUTES + ":for-groups:uh-grouping:anyone-can:opt-out";
+    //    public static final String UUID_TRIO = "1d7365a23c994f5f83f7b541d4a5fa5e";
     public static final String BASIS = ":basis";
     public static final String BASISPLUSINCLUDE = ":basis+include";
     public static final String EXCLUDE = ":exclude";
     public static final String INCLUDE = ":include";
-//    public static final WsStemLookup STEM = new WsStemLookup("hawaii.edu:custom", null);
-public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
+    //    public static final WsStemLookup STEM = new WsStemLookup("hawaii.edu:custom", null);
+    public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
 
     /**
-     * gives a user ownersip permissions for a Grouping
+     * gives a user ownership permissions for a Grouping
      *
      * @param grouping : the Grouping that the user will get ownership permissions for
      * @param username : the owner of the Grouping who will give ownership permissions to the new owner
@@ -102,6 +105,7 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
         String attributeName = UHGROUPING + ":anyone-can:opt-in";
 
         return changeGroupAttributeStatus(grouping, username, attributeName, optInOn);
+        //todo change opt in and out privileges for include/exclude group
     }
 
     /**
@@ -115,6 +119,7 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
         String attributeName = UHGROUPING + ":anyone-can:opt-out";
 
         return changeGroupAttributeStatus(grouping, username, attributeName, optOutOn);
+        //todo change opt in and out privileges for include/exclude group
     }
 
     /**
@@ -355,7 +360,7 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
         if (isOwner(grouping, username)) {
             WsGetMembersResults membersResults = new GcGetMembers().addGroupName(grouping + ":owners").addSubjectAttributeName("uid").execute();
             List<WsSubject> subjects = new ArrayList<>();
-            if(membersResults.getResults() != null) {
+            if (membersResults.getResults() != null) {
                 for (WsGetMembersResult membersResult : membersResults.getResults()) {
                     if (membersResult != null) {
                         for (WsSubject subject : membersResult.getWsSubjects()) {
@@ -364,7 +369,7 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
                     }
                 }
             }
-                owners = makeGroup(subjects.toArray(new WsSubject[subjects.size()]));
+            owners = makeGroup(subjects.toArray(new WsSubject[subjects.size()]));
         }
 
         return owners;
@@ -498,19 +503,33 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
     public List<Grouping> groupingsOpted(String includeOrrExclude, String username) {
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
-        List<String> allGroupings = allGroupings();
         List<String> groupsIn = getGroupNames(username);
         List<String> groupsOpted = new ArrayList<>();
+        List<String> groupingsOpted = new ArrayList<>();
 
         for (String group : groupsIn) {
             String parentGrouping = parentGroupingPath(group);
             if (group.endsWith(includeOrrExclude)
-                    && allGroupings.contains(parentGrouping)
                     && checkSelfOpted(group, lookup)) {
                 groupsOpted.add(parentGrouping);
             }
         }
-        return makeGroupings(groupsOpted);
+
+        GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
+                .addAttributeDefNameName(TRIO)
+                .assignAttributeAssignType("group");
+
+        for (String group : groupsOpted) {
+            getAttributeAssignments.addOwnerGroupName(group);
+        }
+
+        WsGetAttributeAssignmentsResults attributeAssignmentsResults = getAttributeAssignments.execute();
+        WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
+
+        for (WsGroup group : trios) {
+            groupingsOpted.add(group.getName());
+        }
+        return makeGroupings(groupingsOpted);
     }
 
 
@@ -519,11 +538,22 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
      */
     public List<Grouping> groupingsToOptOutOf() {
 
-        List<String> groupingNames = allGroupings();
-        List<String> groupings = groupingNames
-                .stream()
-                .filter(this::optOutPermission)
-                .collect(Collectors.toList());
+        WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
+                .assignAttributeAssignType("group")
+                .addAttributeDefNameName(TRIO)
+                .addAttributeDefNameName(OPT_OUT)
+                .execute();
+
+
+        WsGroup[] wsGroups = attributeAssignmentsResults.getWsGroups();
+
+        List<String> groups = new ArrayList<>();
+        for (WsGroup group : wsGroups) {
+            groups.add(group.getName());
+        }
+
+
+        List<String> groupings = extractGroupings(groups);
 
         return makeGroupings(groupings);
     }
@@ -533,11 +563,22 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
      */
     public List<Grouping> groupingsToOptInto() {
 
-        List<String> groupingNames = allGroupings();
-        List<String> groupings = groupingNames
-                .stream()
-                .filter(this::optInPermission)
-                .collect(Collectors.toList());
+        WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
+                .assignAttributeAssignType("group")
+                .addAttributeDefNameName(TRIO)
+                .addAttributeDefNameName(OPT_IN)
+                .execute();
+
+
+        WsGroup[] wsGroups = attributeAssignmentsResults.getWsGroups();
+
+        List<String> groups = new ArrayList<>();
+        for (WsGroup group : wsGroups) {
+            groups.add(group.getName());
+        }
+
+
+        List<String> groupings = extractGroupings(groups);
 
         return makeGroupings(groupings);
     }
@@ -560,7 +601,7 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
                 String membershipID = includeMembershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "assign_attr";
                 return makeGroupingsServiceResult(
-                        assignMembershipAttributes(operation, UUID_USERNAME, membershipID),
+                        assignMembershipAttributes(operation, UUID_SELF_OPTED, membershipID),
                         "add self-opted attribute to the membership of " + username + " to " + group);
             }
         }
@@ -581,7 +622,7 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
         if (inGroup(group, lookup.getSubjectIdentifier())) {
             WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(lookup, group);
             String assignType = "imm_mem";
-            String uuid = UUID_USERNAME;
+            String uuid = UUID_SELF_OPTED;
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
             WsAttributeAssign[] wsAttributes = getMembershipAttributes(assignType, uuid, membershipID);
@@ -650,7 +691,7 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
                 String membershipID = membershipsResults.getWsMemberships()[0].getMembershipId();
                 String operation = "remove_attr";
                 return makeGroupingsServiceResult(
-                        assignMembershipAttributes(operation, UUID_USERNAME, membershipID),
+                        assignMembershipAttributes(operation, UUID_SELF_OPTED, membershipID),
                         "remove self-opted attribute from the membership of " + username + " to " + group);
             }
         }
@@ -988,31 +1029,42 @@ public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
     /**
      * @return all groups that are Groupings
      */
-    public List<String> allGroupings() {
-        String uuid = UUID_TRIO;
-        String assignType = "group";
-        String subjectAttributeName = UHGROUPING + ":is-trio";
-        List<String> trios = new ArrayList<>();
-
-        WsGetAttributeAssignmentsResults groupings = attributeAssignments(assignType, subjectAttributeName, uuid);
-
-        for (WsGroup aTrio : groupings.getWsGroups()) {
-            trios.add(aTrio.getName());
-        }
-
-        return trios;
-    }
+//    public List<String> allGroupings() {
+//        String uuid = TRIO;
+//        String assignType = "group";
+//        String subjectAttributeName = UHGROUPING + ":is-trio";
+//        List<String> trios = new ArrayList<>();
+//
+//        WsGetAttributeAssignmentsResults groupings = attributeAssignments(assignType, subjectAttributeName, uuid);
+//
+//        for (WsGroup aTrio : groupings.getWsGroups()) {
+//            trios.add(aTrio.getName());
+//        }
+//
+//        return trios;
+//    }
 
     /**
      * @param groups: list of groups paths
      * @return a list of Groupings that were is the list groups
      */
     public List<String> extractGroupings(List<String> groups) {
-        List<String> allGroupings = allGroupings();
         List<String> groupings = new ArrayList<>();
 
-        groups.stream().filter(name -> allGroupings.contains(name)
-                && !groupings.contains(name)).forEach(groupings::add);
+        GcGetAttributeAssignments g = new GcGetAttributeAssignments()
+                .addAttributeDefNameName(TRIO)
+                .assignAttributeAssignType("group");
+        for (String group : groups) {
+            g.addOwnerGroupName(group);
+        }
+
+        WsGetAttributeAssignmentsResults attributeAssignmentsResults = g.execute();
+
+        WsGroup[] wsGroups = attributeAssignmentsResults.getWsGroups();
+
+        for (WsGroup grouping : wsGroups) {
+            groupings.add(grouping.getName());
+        }
 
         return groupings;
     }
