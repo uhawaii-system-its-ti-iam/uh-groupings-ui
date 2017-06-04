@@ -15,7 +15,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hawaii.its.groupings.api.type.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
 import edu.hawaii.its.groupings.api.GroupingsService;
@@ -254,30 +257,59 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[3].action").value("remove ownership privileges for user from grouping:include"));
     }
 
-//    @Test
-//    @WithMockUhUser
-//    public void getMyGroupings() throws Exception {
-//        final String username = "username";
-//        List<Grouping> groupings = new ArrayList<>();
-//        for (int i = 0; i < 3; i++) {
-//            groupings.add(grouping());
-//            groupings.get(i).setPath("grouping" + i);
-//        }
-//
-//        given(groupingsService.getMyGroupings(username))
-//                .willReturn(myGroupings());
-//
-//        mockMvc.perform(get("/api/groupings/username/myGroupings"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("groupingsIn").value(groupings))
-//                .andExpect(jsonPath("groupingsOwned").value(groupings))
-//                .andExpect(jsonPath("groupingsOptedOutOf").value(groupings))
-//                .andExpect(jsonPath("groupingsOptedInTo").value(groupings))
-//                .andExpect(jsonPath("groupingsToOptOutOf").value(groupings))
-//                .andExpect(jsonPath("groupingsToOptInTo").value(groupings));
-//
-//
-//    }
+    @Test
+    @WithMockUhUser
+    public void getMyGroupings() throws Exception {
+        ObjectMapper om = new ObjectMapper();
+        final String username = "username";
+        List<Grouping> groupings = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            groupings.add(grouping());
+            groupings.get(i).setPath("grouping" + i);
+        }
+
+        given(groupingsService.getMyGroupings(username))
+                .willReturn(myGroupings());
+
+        String mvcResult = mockMvc.perform(get("/api/groupings/username/myGroupings"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        MyGroupings mg = om.readValue(mvcResult, MyGroupings.class);
+
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+    }
 
     @Test
     @WithMockUhUser
