@@ -132,7 +132,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/{newOwner}/assignOwnership",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GroupingsServiceResult>> assignOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String newOwner) {
+    public ResponseEntity<GroupingsServiceResult> assignOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String newOwner) {
         logger.info("Entered REST assignOwnership...");
         return ResponseEntity
                 .ok()
@@ -153,7 +153,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/{ownerToRemove}/removeOwnership",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GroupingsServiceResult>> removeOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String ownerToRemove) {
+    public ResponseEntity<GroupingsServiceResult> removeOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String ownerToRemove) {
         logger.info("Entered REST removeOwnership...");
         return ResponseEntity
                 .ok()

@@ -120,44 +120,23 @@ public class TestGroupingsRestController {
     public void getGroupingTest() {
         Grouping grouping = gc.grouping(this.grouping, tst[0]).getBody();
 
-        assertTrue(grouping.getBasis().getNames().contains(tstName[3]));
-        assertTrue(grouping.getBasis().getNames().contains(tstName[4]));
-        assertTrue(grouping.getBasis().getNames().contains(tstName[5]));
         assertTrue(grouping.getInclude().getNames().contains(tstName[0]));
         assertTrue(grouping.getInclude().getNames().contains(tstName[1]));
         assertTrue(grouping.getInclude().getNames().contains(tstName[2]));
         assertTrue(grouping.getExclude().getNames().contains(tstName[3]));
         assertTrue(grouping.getExclude().getNames().contains(tstName[4]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains(tstName[0]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains(tstName[1]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains(tstName[2]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getNames().contains(tstName[5]));
 
-        assertTrue(grouping.getBasis().getUsernames().contains(tst[3]));
-        assertTrue(grouping.getBasis().getUsernames().contains(tst[4]));
-        assertTrue(grouping.getBasis().getUsernames().contains(tst[5]));
         assertTrue(grouping.getInclude().getUsernames().contains(tst[0]));
         assertTrue(grouping.getInclude().getUsernames().contains(tst[1]));
         assertTrue(grouping.getInclude().getUsernames().contains(tst[2]));
         assertTrue(grouping.getExclude().getUsernames().contains(tst[3]));
         assertTrue(grouping.getExclude().getUsernames().contains(tst[4]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[0]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[1]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[2]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[5]));
 
-        assertTrue(grouping.getBasis().getUuids().contains(tst[3]));
-        assertTrue(grouping.getBasis().getUuids().contains(tst[4]));
-        assertTrue(grouping.getBasis().getUuids().contains(tst[5]));
         assertTrue(grouping.getInclude().getUuids().contains(tst[0]));
         assertTrue(grouping.getInclude().getUuids().contains(tst[1]));
         assertTrue(grouping.getInclude().getUuids().contains(tst[2]));
         assertTrue(grouping.getExclude().getUuids().contains(tst[3]));
         assertTrue(grouping.getExclude().getUuids().contains(tst[4]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains(tst[0]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains(tst[1]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains(tst[2]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUuids().contains(tst[5]));
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
         gc.assignOwnership(grouping.getPath(), tst[0], tst[5]);

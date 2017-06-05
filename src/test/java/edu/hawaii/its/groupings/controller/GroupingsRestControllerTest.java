@@ -204,12 +204,9 @@ public class GroupingsRestControllerTest {
     public void getAssignOwnership() throws Exception {
         final String grouping = "grouping";
         final String username = "username";
-        List<GroupingsServiceResult> gsr = new ArrayList<>();
+        GroupingsServiceResult gsr;
 
-        gsr.add(new GroupingsServiceResult("SUCCESS", "give user ownership privileges for grouping:basis"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "give user ownership privileges for grouping:basis+include"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "give user ownership privileges for grouping:exclude"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "give user ownership privileges for grouping:include"));
+        gsr = new GroupingsServiceResult("SUCCESS", "give user ownership of grouping");
 
         given(groupingsService.assignOwnership(grouping, username, username))
                 .willReturn(gsr);
@@ -217,15 +214,8 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(post("/api/groupings/grouping/username/username/assignOwnership")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(4)))
-                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[0].action").value("give user ownership privileges for grouping:basis"))
-                .andExpect(jsonPath("$[1].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[1].action").value("give user ownership privileges for grouping:basis+include"))
-                .andExpect(jsonPath("$[2].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[2].action").value("give user ownership privileges for grouping:exclude"))
-                .andExpect(jsonPath("$[3].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[3].action").value("give user ownership privileges for grouping:include"));
+                .andExpect(jsonPath("resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("action").value("give user ownership of grouping"));
     }
 
     @Test
@@ -233,12 +223,9 @@ public class GroupingsRestControllerTest {
     public void getRemoveOwnership() throws Exception {
         final String grouping = "grouping";
         final String username = "username";
-        List<GroupingsServiceResult> gsr = new ArrayList<>();
+        GroupingsServiceResult gsr;
 
-        gsr.add(new GroupingsServiceResult("SUCCESS", "remove ownership privileges for user from grouping:basis"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "remove ownership privileges for user from grouping:basis+include"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "remove ownership privileges for user from grouping:exclude"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "remove ownership privileges for user from grouping:include"));
+        gsr = new GroupingsServiceResult("SUCCESS", "remove user's ownership privilege for grouping");
 
         given(groupingsService.removeOwnership(grouping, username, username))
                 .willReturn(gsr);
@@ -246,15 +233,8 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(post("/api/groupings/grouping/username/username/removeOwnership")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(4)))
-                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[0].action").value("remove ownership privileges for user from grouping:basis"))
-                .andExpect(jsonPath("$[1].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[1].action").value("remove ownership privileges for user from grouping:basis+include"))
-                .andExpect(jsonPath("$[2].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[2].action").value("remove ownership privileges for user from grouping:exclude"))
-                .andExpect(jsonPath("$[3].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[3].action").value("remove ownership privileges for user from grouping:include"));
+                .andExpect(jsonPath("resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("action").value("remove user's ownership privilege for grouping"));
     }
 
     @Test

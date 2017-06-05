@@ -20,7 +20,6 @@ import edu.hawaii.its.holiday.util.Dates;
 
 import edu.internet2.middleware.grouperClient.api.GcAddMember;
 import edu.internet2.middleware.grouperClient.api.GcAssignAttributes;
-import edu.internet2.middleware.grouperClient.api.GcAssignGrouperPrivileges;
 import edu.internet2.middleware.grouperClient.api.GcDeleteMember;
 import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
 import edu.internet2.middleware.grouperClient.api.GcGetGrouperPrivilegesLite;
@@ -33,7 +32,6 @@ import edu.internet2.middleware.grouperClient.ws.StemScope;
 @Service("groupingsService")
 public class GroupingsServiceImpl implements GroupingsService {
     public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
-    //    public static final String UUID_SELF_OPTED = "ef62bf0473614b379695ecec6cb8b3b5";
     private static final String SETTINGS = "uh-settings";
     private static final String ATTRIBUTES = SETTINGS + ":attributes";
     private static final String UHGROUPING = ATTRIBUTES + ":for-groups:uh-grouping";
@@ -41,12 +39,11 @@ public class GroupingsServiceImpl implements GroupingsService {
     public static final String SELF_OPTED = ATTRIBUTES + ":for-memberships:uh-grouping:self-opted";
     public static final String OPT_IN = ATTRIBUTES + ":for-groups:uh-grouping:anyone-can:opt-in";
     public static final String OPT_OUT = ATTRIBUTES + ":for-groups:uh-grouping:anyone-can:opt-out";
-    //    public static final String UUID_TRIO = "1d7365a23c994f5f83f7b541d4a5fa5e";
     public static final String BASIS = ":basis";
     public static final String BASISPLUSINCLUDE = ":basis+include";
     public static final String EXCLUDE = ":exclude";
     public static final String INCLUDE = ":include";
-    //    public static final WsStemLookup STEM = new WsStemLookup("hawaii.edu:custom", null);
+    public static final String OWNERS = ":owners";
     public static final WsStemLookup STEM = new WsStemLookup("tmp", null);
 
     /**
@@ -58,9 +55,9 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public List<GroupingsServiceResult> assignOwnership(String grouping, String username, String newOwner) {
+    public GroupingsServiceResult assignOwnership(String grouping, String username, String newOwner) {
         String action = "give " + newOwner + " ownership privileges for ";
-        List<GroupingsServiceResult> privilegeResults = new ArrayList<>();
+        GroupingsServiceResult privilegeResult;
 
         if (isOwner(grouping, username)) {
             WsSubjectLookup user = makeWsSubjectLookup(username);
@@ -69,16 +66,15 @@ public class GroupingsServiceImpl implements GroupingsService {
                     .addSubjectIdentifier(newOwner)
                     .assignGroupName(grouping + ":owners")
                     .execute();
-            privilegeResults.add(makeGroupingsServiceResult(amr, "assign ownership to " + newOwner + " for " + grouping));
+            privilegeResult = makeGroupingsServiceResult(amr, "assign ownership to " + newOwner + " for " + grouping);
 
-            return privilegeResults;
+            return privilegeResult;
         }
 
-        privilegeResults.add(new GroupingsServiceResult(
+        privilegeResult = new GroupingsServiceResult(
                 "FAILURE, " + username + " does not own " + grouping,
-                action + grouping));
-        return privilegeResults;
-        //todo change to single instead of list
+                action + grouping);
+        return privilegeResult;
     }
 
     /**
@@ -131,8 +127,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    public List<GroupingsServiceResult> removeOwnership(String grouping, String username, String ownerToRemove) {
-        List<GroupingsServiceResult> privileges = new ArrayList<>();
+    public GroupingsServiceResult removeOwnership(String grouping, String username, String ownerToRemove) {
+        GroupingsServiceResult privilege;
 
         if (isOwner(grouping, username)) {
 
@@ -143,17 +139,13 @@ public class GroupingsServiceImpl implements GroupingsService {
                     .assignGroupName(grouping + ":owners")
                     .execute();
 
-            privileges.add(makeGroupingsServiceResult(memberResults, "remove ownership of " + grouping + " from " + ownerToRemove));
+            privilege = makeGroupingsServiceResult(memberResults, "remove ownership of " + grouping + " from " + ownerToRemove);
 
-            return privileges;
-            /**
-             * TODO for Grouper update
-             * change to single instead of list
-             */
+            return privilege;
         }
 
-        privileges.add(new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, "remove ownership of " + grouping + " from " + ownerToRemove));
-        return privileges;
+        privilege = new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, "remove ownership of " + grouping + " from " + ownerToRemove);
+        return privilege;
     }
 
     /**
@@ -363,9 +355,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             if (membersResults.getResults() != null) {
                 for (WsGetMembersResult membersResult : membersResults.getResults()) {
                     if (membersResult != null) {
-                        for (WsSubject subject : membersResult.getWsSubjects()) {
-                            subjects.add(subject);
-                        }
+                        Collections.addAll(subjects, membersResult.getWsSubjects());
                     }
                 }
             }
@@ -423,13 +413,10 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public List<Grouping> groupingsIn(String username) {
         List<String> groupsIn = getGroupNames(username);
-        List<String> groupingsIn = new ArrayList<>();
-
-        for(String grouping : groupsIn){
-            if(isGrouping(grouping)){
-                groupingsIn.add(grouping);
-            }
-        }
+        List<String> groupingsIn = groupsIn
+                .stream()
+                .filter(this::isGrouping)
+                .collect(Collectors.toList());
 
         return makeGroupings(groupingsIn);
     }
@@ -442,7 +429,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
 
         WsAttributeDefName[] names = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
-        if(names != null) {
+        if (names != null) {
             for (WsAttributeDefName name : names) {
                 if (name.getName().equals(TRIO)) {
                     returnValue = true;
@@ -471,36 +458,18 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the Groupings that the user owns
      */
     public List<Grouping> groupingsOwned(String username) {
-        WsGetGrouperPrivilegesLiteResult getPrivilegesResult =
-                new GcGetGrouperPrivilegesLite()
-                        .assignPrivilegeName("update")
-                        .assignSubjectLookup(makeWsSubjectLookup(username))
-                        .execute();
-        WsGrouperPrivilegeResult[] privilegeResults = getPrivilegesResult.getPrivilegeResults();
-        if (privilegeResults != null) {
-            if (privilegeResults.length > 0) {
-                List<WsGroup> groups = new ArrayList<>();
-                for (WsGrouperPrivilegeResult privilegeResult : privilegeResults) {
-                    groups.add(privilegeResult.getWsGroup());
+        List<String> groupingsOwned = new ArrayList<>();
+        List<String> groupsIn = getGroupNames(username);
+
+        for (String group : groupsIn) {
+            if (group.endsWith(OWNERS)) {
+                String grouping = group.split(OWNERS)[0];
+                if (isGrouping(grouping)) {
+                    groupingsOwned.add(grouping);
                 }
-                List<String> names = extractGroupNames(groups);
-                for (int i = 0; i < names.size(); i++) {
-                    if (names.get(i).endsWith(INCLUDE)) {
-                        names.set(i, names.get(i).split(INCLUDE)[0]);
-                    } else if (names.get(i).endsWith(EXCLUDE)) {
-                        names.set(i, names.get(i).split(EXCLUDE)[0]);
-                    }
-                }
-                return makeGroupings(extractGroupings(names));
             }
         }
-        return new ArrayList<>();
-        /**
-         * TODO for Grouper update
-         * use getGroups on owner to get the list of Groups to search through  // owners will be in Grouping:owners
-         * remove all Groups that don't end in ":owners"
-         * split the ":owners" off of the Group to get the Grouping
-         */
+        return makeGroupings(groupingsOwned);
     }
 
     /**
@@ -545,9 +514,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .addAttributeDefNameName(TRIO)
                 .assignAttributeAssignType("group");
 
-        for (String group : groupsOpted) {
-            getAttributeAssignments.addOwnerGroupName(group);
-        }
+        groupsOpted.forEach(getAttributeAssignments::addOwnerGroupName);
 
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = getAttributeAssignments.execute();
         WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
@@ -897,22 +864,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param assignType:           assign type of the attribute
-     * @param subjectAttributeName: name of attribute
-     * @param uuid:                 uuid of attribute
-     * @return information about assigned attributes
-     */
-    public WsGetAttributeAssignmentsResults attributeAssignments(String assignType, String subjectAttributeName, String uuid) {
-        logger.info("attributeAssignments; assignType: " + assignType + "; subjectAttribureName: " + subjectAttributeName + "; uuid: " + uuid);
-
-        return new GcGetAttributeAssignments()
-                .assignAttributeAssignType(assignType)
-                .addSubjectAttributeName(subjectAttributeName)
-                .addAttributeDefUuid(uuid)
-                .execute();
-    }
-
-    /**
      * @param username:      username of user who's privileges will be checked
      * @param privilegeName: name of the privilege to be checked
      * @param group:         name of group the privilege is for
@@ -972,17 +923,17 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         WsSubjectLookup user = makeWsSubjectLookup(username);
 
-        if (group.endsWith(":include")) {
+        if (group.endsWith(INCLUDE)) {
             new GcDeleteMember()
                     .assignActAsSubject(user)
-                    .assignGroupName(group.split(":include")[0] + ":exclude")
+                    .assignGroupName(group.split(":include")[0] + EXCLUDE)
                     .addSubjectIdentifier(userToAdd)
                     .execute();
         }
-        if (group.endsWith(":exclude")) {
+        if (group.endsWith(EXCLUDE)) {
             new GcDeleteMember()
                     .assignActAsSubject(user)
-                    .assignGroupName(group.split(":exclude")[0] + ":include")
+                    .assignGroupName(group.split(":exclude")[0] + INCLUDE)
                     .addSubjectIdentifier(userToAdd)
                     .execute();
         }
@@ -1035,21 +986,19 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     public WsGetMembersResults getMembers(WsSubjectLookup lookup, String group) {
         logger.info("getMembers; lookup: " + lookup + "; group: " + group);
+        String username = lookup.getSubjectIdentifier();
 
         List<String> groupNames = Collections.singletonList(group);
         String grouping = extractGroupingNames(groupNames).get(0);
-        if (isOwner(grouping, lookup.getSubjectIdentifier())) {
+        if (isOwner(grouping, username)) {
             return new GcGetMembers()
                     .addSubjectAttributeName("uid")
+                    .assignActAsSubject(lookup)
                     .addGroupName(group)
                     .assignIncludeSubjectDetail(true)
                     .execute();
         }
         return new WsGetMembersResults();
-        /**
-         * TODO for Grouper update
-         * actAsSubject to get members
-         */
     }
 
     /**
@@ -1080,9 +1029,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         GcGetAttributeAssignments g = new GcGetAttributeAssignments()
                 .addAttributeDefNameName(TRIO)
                 .assignAttributeAssignType("group");
-        for (String group : groups) {
-            g.addOwnerGroupName(group);
-        }
+        groups.forEach(g::addOwnerGroupName);
 
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = g.execute();
 
@@ -1137,14 +1084,13 @@ public class GroupingsServiceImpl implements GroupingsService {
     public String parentGroupingPath(String group) {
         if (group.endsWith(EXCLUDE)) {
             return group.split(EXCLUDE)[0];
-        }
-        if (group.endsWith(INCLUDE)) {
+        } else if (group.endsWith(INCLUDE)) {
             return group.split(INCLUDE)[0];
-        }
-        if (group.endsWith(BASIS)) {
+        } else if (group.endsWith(OWNERS)) {
+            return group.split(OWNERS)[0];
+        } else if (group.endsWith(BASIS)) {
             return group.split(BASIS)[0];
-        }
-        if (group.endsWith(BASISPLUSINCLUDE)) {
+        } else if (group.endsWith(BASISPLUSINCLUDE)) {
             return group.split(BASISPLUSINCLUDE)[0];
         }
         return group;
@@ -1177,47 +1123,16 @@ public class GroupingsServiceImpl implements GroupingsService {
                 groupingNames.add(name.split(EXCLUDE)[0]);
             } else if (name.endsWith(BASIS)) {
                 groupingNames.add(name.split(BASIS)[0]);
+            } else if (name.endsWith(BASISPLUSINCLUDE)) {
+                groupingNames.add(name.split(BASISPLUSINCLUDE)[0]);
+            } else if (name.endsWith(OWNERS)) {
+                groupingNames.add(name.split(OWNERS)[0]);
             } else {
                 groupingNames.add(name);
             }
         }
 
         return extractGroupings(groupingNames);
-    }
-
-    /**
-     * @param group:         path to group for which the ownership will be removed
-     * @param ownerToRemove: the owner of the group who's ownership privileges will be removed
-     * @return information about the success of the action
-     */
-    public WsAssignGrouperPrivilegesResults removeGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToRemove) {
-        logger.info("removeGroupOwnership; group: " + group + "; ownerToRemove: " + ownerToRemove);
-
-        return new GcAssignGrouperPrivileges()
-                .assignGroupLookup(group)
-                .addSubjectLookup(ownerToRemove)
-                .addPrivilegeName("admin")
-                .addPrivilegeName("update")
-                .addPrivilegeName("read")
-                .assignAllowed(false)
-                .execute();
-    }
-
-    /**
-     * @param group:      path to group for which the ownership will be added
-     * @param ownerToAdd: member who will become an owner of the group
-     * @return information about the success of the action
-     */
-    public WsAssignGrouperPrivilegesResults addGroupOwnership(WsGroupLookup group, WsSubjectLookup ownerToAdd) {
-        logger.info("addGroupOwnership; group: " + group + "; ownerToAdd: " + ownerToAdd);
-
-        return new GcAssignGrouperPrivileges()
-                .assignGroupLookup(group)
-                .addSubjectLookup(ownerToAdd)
-                .addPrivilegeName("update")
-                .addPrivilegeName("read")
-                .assignAllowed(true)
-                .execute();
     }
 
     /**
