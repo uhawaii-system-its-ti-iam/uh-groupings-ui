@@ -8,7 +8,7 @@ public class Grouping {
     private Group owners;
     private String name;
     private String path;
-    private boolean hasListserv = false;
+    private boolean listserveOn, optInOn, optOutOn = false;
 
     // Constructor.
     public Grouping() {
@@ -79,19 +79,37 @@ public class Grouping {
         this.owners = owners != null ? owners : new EmptyGroup();
     }
 
-    public boolean getHasListserv() {
-        return hasListserv;
+    public boolean isListserveOn() {
+        return listserveOn;
     }
 
-    public void setHasListserv(boolean hasListserv) {
-        this.hasListserv = hasListserv;
+    public void setListserveOn(boolean listserveOn) {
+        this.listserveOn = listserveOn;
+    }
+
+    public boolean isOptInOn() {
+        return optInOn;
+    }
+
+    public void setOptInOn(boolean optInOn) {
+        this.optInOn = optInOn;
+    }
+
+    public boolean isOptOutOn() {
+        return optOutOn;
+    }
+
+    public void setOptOutOn(boolean optOutOn) {
+        this.optOutOn = optOutOn;
     }
 
     @Override
     public String toString() {
         return "Grouping [name=" + name
                 + ", path=" + path
-                + ", hasListserv=" + hasListserv
+                + ", ListserveOn=" + isListserveOn()
+                + ", OptInOn=" + isOptInOn()
+                + ", OptOutOn=" + isOptOutOn()
                 + ", basis=" + basis
                 + ", owners=" + owners
                 + "]";

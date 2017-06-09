@@ -37,9 +37,9 @@ public interface GroupingsService{
 
     public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete);
 
-    public List<GroupingsServiceResult> assignOwnership(String grouping, String username, String newOwner);
+    public GroupingsServiceResult assignOwnership(String grouping, String username, String newOwner);
 
-    public List<GroupingsServiceResult> removeOwnership(String grouping, String username, String ownerToRemove);
+    public GroupingsServiceResult removeOwnership(String grouping, String username, String ownerToRemove);
 
     public Grouping getGrouping(String grouping, String username);
 

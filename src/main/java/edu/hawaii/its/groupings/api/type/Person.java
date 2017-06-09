@@ -8,6 +8,9 @@ public class Person {
     private String uuid;
     private String username;
 
+    public Person(){
+        //empty
+    }
     // Constructor.
     public Person(String name, String uuid, String username) {
         this.name = name;
