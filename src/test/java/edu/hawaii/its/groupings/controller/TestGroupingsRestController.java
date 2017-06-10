@@ -27,7 +27,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsRestController {
-//    private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
+    //    private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
 //    private String grouping = "hawaii.edu:custom:test:zknoebel:zknoebel-v2-empty-basis";
     private String grouping = "tmp:win-many";
     private String include = grouping + ":include";
@@ -310,5 +310,10 @@ public class TestGroupingsRestController {
 
         gc.setOptOut(grouping, tst[0], true);
         assertTrue(gs.optOutPermission(grouping));
+    }
+
+    @Test
+    public void getGroupingTest2() {
+
     }
 }

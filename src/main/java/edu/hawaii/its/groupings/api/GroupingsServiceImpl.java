@@ -34,11 +34,18 @@ public class GroupingsServiceImpl implements GroupingsService {
     public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
     private static final String SETTINGS = "uh-settings";
     private static final String ATTRIBUTES = SETTINGS + ":attributes";
-    private static final String UHGROUPING = ATTRIBUTES + ":for-groups:uh-grouping";
-    private static final String TRIO = ATTRIBUTES + ":for-groups:uh-grouping:is-trio";
-    private static final String SELF_OPTED = ATTRIBUTES + ":for-memberships:uh-grouping:self-opted";
-    private static final String OPT_IN = ATTRIBUTES + ":for-groups:uh-grouping:anyone-can:opt-in";
-    private static final String OPT_OUT = ATTRIBUTES + ":for-groups:uh-grouping:anyone-can:opt-out";
+    private static final String FOR_GROUPS = ATTRIBUTES + ":for-groups";
+    private static final String FOR_MEMBERSHIPS = ATTRIBUTES + ":for-memberships";
+    private static final String LAST_MODIFIED = FOR_GROUPS + ":last-modified";
+    private static final String YYYYMMDDTHHMM = LAST_MODIFIED + ":yyyymmddThhmm";
+    private static final String UHGROUPING = FOR_GROUPS + ":uh-grouping";
+    private static final String DESTINATIONS = UHGROUPING + ":destinations";
+    private static final String LISTSERV = DESTINATIONS + ":listserv";
+    private static final String TRIO = UHGROUPING + ":is-trio";
+    private static final String SELF_OPTED = FOR_MEMBERSHIPS + ":uh-grouping:self-opted";
+    private static final String ANYONE_CAN = UHGROUPING + ":anyone-can";
+    private static final String OPT_IN = ANYONE_CAN + ":opt-in";
+    private static final String OPT_OUT = ANYONE_CAN + ":opt-out";
     private static final String BASIS = ":basis";
     private static final String BASISPLUSINCLUDE = ":basis+include";
     private static final String EXCLUDE = ":exclude";
@@ -85,7 +92,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult changeListServeStatus(String grouping, String username, boolean listServeOn) {
-        String attributeName = UHGROUPING + ":destinations:listserv";
+        String attributeName = LISTSERV;
 
         return changeGroupAttributeStatus(grouping, username, attributeName, listServeOn);
     }
@@ -98,7 +105,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn) {
-        String attributeName = UHGROUPING + ":anyone-can:opt-in";
+        String attributeName = OPT_IN;
 
 
         return changeGroupAttributeStatus(grouping, username, attributeName, optInOn);
@@ -113,7 +120,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult changeOptOutStatus(String grouping, String username, boolean optOutOn) {
-        String attributeName = UHGROUPING + ":anyone-can:opt-out";
+        String attributeName = OPT_OUT;
 
         return changeGroupAttributeStatus(grouping, username, attributeName, optOutOn);
         //todo change opt in and out privileges for include/exclude group
@@ -379,7 +386,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public boolean optOutPermission(String grouping) {
-        String nameName = UHGROUPING + ":anyone-can:opt-out";
+        String nameName = OPT_OUT;
 
         return groupHasAttribute(grouping, nameName);
     }
@@ -390,7 +397,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public boolean optInPermission(String grouping) {
-        String nameName = UHGROUPING + ":anyone-can:opt-in";
+        String nameName = OPT_IN;
 
         return groupHasAttribute(grouping, nameName);
     }
@@ -455,10 +462,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public boolean hasListserv(String grouping) {
-
-        String nameName = UHGROUPING + ":destinations:listserv";
-
-        return groupHasAttribute(grouping, nameName);
+        return groupHasAttribute(grouping, LISTSERV);
     }
 
     /**
@@ -772,7 +776,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .assignAttributeAssignType("group")
                 .assignAttributeAssignOperation("assign_attr")
                 .addOwnerGroupName(group)
-                .addAttributeDefNameName(ATTRIBUTES + ":for-groups:last-modified:yyyymmddThhmm")
+                .addAttributeDefNameName(YYYYMMDDTHHMM)
                 .assignAttributeAssignValueOperation("replace_values")
                 .addValue(dateTimeValue)
                 .execute();
