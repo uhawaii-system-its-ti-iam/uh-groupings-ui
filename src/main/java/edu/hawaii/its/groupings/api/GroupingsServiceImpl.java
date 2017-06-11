@@ -131,7 +131,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      *
      * @param grouping:      the Grouping for which the user's ownership permissions will be removed
      * @param username:      the owner of the Grouping who will be removing ownership permissions from the owner to be removed
-     * @param ownerToRemove: the owner who will have ownership privilages removed
+     * @param ownerToRemove: the owner who will have ownership privileges removed
      * @return information about the success of the operation
      */
     @Override
@@ -507,7 +507,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     public List<Grouping> groupingsOpted(String includeOrrExclude, String username) {
 
-        WsSubjectLookup lookup = makeWsSubjectLookup(username);
         List<String> groupsIn = getGroupNames(username);
         List<String> groupsOpted = new ArrayList<>();
         List<String> groupingsOpted = new ArrayList<>();
@@ -515,7 +514,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         for (String group : groupsIn) {
             String parentGrouping = parentGroupingPath(group);
             if (group.endsWith(includeOrrExclude)
-                    && checkSelfOpted(group, lookup)) {
+                    && checkSelfOpted(group, username)) {
                 groupsOpted.add(parentGrouping);
             }
         }
@@ -601,7 +600,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (inGroup(group, username)) {
             WsSubjectLookup lookup = makeWsSubjectLookup(username);
-            if (!checkSelfOpted(group, lookup)) {
+            if (!checkSelfOpted(group, username)) {
                 WsGetMembershipsResults includeMembershipsResults = membershipsResults(lookup, group);
 
                 String membershipID = includeMembershipsResults
@@ -621,12 +620,13 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     /**
      * @param group:  group to search through (include extension of Grouping ie. ":include" or ":exclude")
-     * @param lookup: WsSubjectLookup of user
+     * @param username: username
      * @return true if the membership between the user and the group has the "self-opted" attribute
      */
-    @Override
-    public boolean checkSelfOpted(String group, WsSubjectLookup lookup) {
-        logger.info("checkSelfOpted; group: " + group + "; wsSubjectLookup: " + lookup);
+    public boolean checkSelfOpted(String group, String username) {
+        logger.info("checkSelfOpted; group: " + group + "; username: " + username);
+
+        WsSubjectLookup lookup = makeWsSubjectLookup(username);
 
         if (inGroup(group, lookup.getSubjectIdentifier())) {
             WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(lookup, group);
@@ -695,7 +695,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (inGroup(group, username)) {
             WsSubjectLookup lookup = makeWsSubjectLookup(username);
-            if (checkSelfOpted(group, lookup)) {
+            if (checkSelfOpted(group, username)) {
                 WsGetMembershipsResults membershipsResults = membershipsResults(lookup, group);
                 String membershipID = membershipsResults
                         .getWsMemberships()[0]
@@ -791,7 +791,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param username: username of user to be looked up
      * @return a WsSubjectLookup with username as the subject identifier
      */
-    @Override
     public WsSubjectLookup makeWsSubjectLookup(String username) {
         WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
         wsSubjectLookup.setSubjectIdentifier(username);
@@ -803,7 +802,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param group: group to be looked up
      * @return a WsGroupLookup with group as the group name
      */
-    @Override
     public WsGroupLookup makeWsGroupLookup(String group) {
         WsGroupLookup groupLookup = new WsGroupLookup();
         groupLookup.setGroupName(group);
@@ -888,7 +886,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param group:         name of group the privilege is for
      * @return return information about user's privileges in the group
      */
-    @Override
     public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName, String group) {
         logger.info("grouperPrivilegesLite; username: " + username + "; group: " + group + "; privilegeName: " + privilegeName);
 
@@ -897,22 +894,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .assignGroupName(group)
                 .assignPrivilegeName(privilegeName)
                 .assignSubjectLookup(lookup)
-                .execute();
-    }
-
-    /**
-     * @param username:      username of user who's privileges will be checked
-     * @param privilegeName: name of the privilege to be checked
-     * @return return information about user's privileges in the group
-     */
-    @Override
-    public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName) {
-        logger.info("grouperPrivlegesLite; username: " + username + "; privilegeName: " + privilegeName);
-
-        WsSubjectLookup lookup = makeWsSubjectLookup(username);
-        return new GcGetGrouperPrivilegesLite()
-                .assignSubjectLookup(lookup)
-                .assignPrivilegeName(privilegeName)
                 .execute();
     }
 

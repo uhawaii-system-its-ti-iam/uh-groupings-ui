@@ -23,19 +23,7 @@ public interface GroupingsService {
 
     public boolean inGroup(String group, String username);
 
-    //TODO change to non-Grouper return type
-    public WsSubjectLookup makeWsSubjectLookup(String username);
-
-    //TODO change to non-Grouper return type
-    public WsGroupLookup makeWsGroupLookup(String username);
-
-    public boolean checkSelfOpted(String group, WsSubjectLookup lookup);
-
-    //TODO change to non-Grouper return type
-    public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName);
-
-    //TODO change to non-Grouper return type
-    public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName, String group);
+    public boolean checkSelfOpted(String group, String username);
 
     public GroupingsServiceResult addMemberAs(String username, String group, String userToAdd);
 

@@ -60,7 +60,6 @@ public class TestGroupingsRestController {
     public void setUp() {
         for (int i = 0; i < 6; i++) {
             tst[i] = "iamtst0" + (i + 1);
-            tstLookup[i] = gs.makeWsSubjectLookup(tst[i]);
         }
     }
 
@@ -248,13 +247,13 @@ public class TestGroupingsRestController {
         assertTrue(gs.inGroup(grouping + ":basis", tst[5]));
 
         gc.optIn(grouping, tst[4]);
-        assertTrue(gs.checkSelfOpted(include, tstLookup[4]));
-        assertFalse(gs.checkSelfOpted(exclude, tstLookup[4]));
+        assertTrue(gs.checkSelfOpted(include, tst[4]));
+        assertFalse(gs.checkSelfOpted(exclude, tst[4]));
         assertTrue(gs.inGroup(grouping, tst[4]));
 
         gc.cancelOptIn(grouping, tst[4]);
-        assertFalse(gs.checkSelfOpted(exclude, tstLookup[4]));
-        assertFalse(gs.checkSelfOpted(include, tstLookup[4]));
+        assertFalse(gs.checkSelfOpted(exclude, tst[4]));
+        assertFalse(gs.checkSelfOpted(include, tst[4]));
 
         assertTrue(gs.inGroup(grouping, tst[5]));
 
@@ -268,13 +267,13 @@ public class TestGroupingsRestController {
         assertTrue(gs.inGroup(grouping, tst[5]));
 
         gc.optOut(grouping, tst[5]);
-        assertTrue(gs.checkSelfOpted(exclude, tstLookup[5]));
-        assertFalse(gs.checkSelfOpted(include, tstLookup[5]));
+        assertTrue(gs.checkSelfOpted(exclude, tst[5]));
+        assertFalse(gs.checkSelfOpted(include, tst[5]));
         assertFalse(gs.inGroup(grouping, tst[5]));
 
         gc.cancelOptOut(grouping, tst[5]);
-        assertFalse(gs.checkSelfOpted(exclude, tstLookup[5]));
-        assertFalse(gs.checkSelfOpted(include, tstLookup[5]));
+        assertFalse(gs.checkSelfOpted(exclude, tst[5]));
+        assertFalse(gs.checkSelfOpted(include, tst[5]));
 
         assertTrue(gs.inGroup(grouping + ":basis+include", tst[5]));
     }

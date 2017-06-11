@@ -192,13 +192,13 @@ public class TestGroupingsService {
     @Test
     public void addRemoveSelfOptedTest() {
         WsSubjectLookup lookup = gs.makeWsSubjectLookup(username[4]);
-        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, lookup));
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
 
         gs.addSelfOpted(GROUPING_EXCLUDE, username[4]);
-        assertTrue(gs.checkSelfOpted(GROUPING_EXCLUDE, lookup));
+        assertTrue(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
 
         gs.removeSelfOpted(GROUPING_EXCLUDE, username[4]);
-        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, lookup));
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
     }
 
     @Test
