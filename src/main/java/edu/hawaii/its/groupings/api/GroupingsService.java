@@ -6,11 +6,12 @@ import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 import java.util.List;
 
-public interface GroupingsService{
+public interface GroupingsService {
 
     public boolean hasListserv(String grouping);
 
@@ -24,6 +25,9 @@ public interface GroupingsService{
 
     //TODO change to non-Grouper return type
     public WsSubjectLookup makeWsSubjectLookup(String username);
+
+    //TODO change to non-Grouper return type
+    public WsGroupLookup makeWsGroupLookup(String username);
 
     public boolean checkSelfOpted(String group, WsSubjectLookup lookup);
 

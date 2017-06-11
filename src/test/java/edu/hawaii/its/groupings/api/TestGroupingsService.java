@@ -27,7 +27,7 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsService {
 
-//    private final String GROUPING = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
+    //    private final String GROUPING = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
     private final String GROUPING = "tmp:win-many";
     private final String GROUPING_INCLUDE = GROUPING + ":include";
     private final String GROUPING_EXCLUDE = GROUPING + ":exclude";
@@ -290,11 +290,10 @@ public class TestGroupingsService {
         }
         List<String> groupNames = gs.extractGroupNames(groups);
 
-        for(int i = 0; i < 3; i ++){
+        for (int i = 0; i < 3; i++) {
             assertTrue(groupNames.contains("testName_" + i));
         }
     }
-
 
 
     //TODO add test for assignMembershipAttributes (both)

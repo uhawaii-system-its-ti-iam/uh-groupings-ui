@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public class MyGroupings{
+public class MyGroupings {
     List<Grouping> groupingsIn;
     List<Grouping> groupingsOwned;
     List<Grouping> groupingsOptedOutOf;

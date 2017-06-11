@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ public class GroupingsServiceTest {
 
     @Test
     public void makeWsSubjectLookup() {
-        GroupingsService groupingsService = new GroupingsServiceImpl();
         final String username = "someuser";
         WsSubjectLookup lookup = groupingsService.makeWsSubjectLookup(username);
         assertNotNull(lookup);
@@ -36,4 +36,15 @@ public class GroupingsServiceTest {
         assertThat(lookup.getSubjectSourceId(), equalTo(null));
     }
 
+    @Test
+    public void makeWsGroupLookup() {
+        final String group = "somegroup";
+        WsGroupLookup lookup = groupingsService.makeWsGroupLookup(group);
+        assertNotNull(lookup);
+        assertThat(lookup.getGroupName(), equalTo(group));
+        assertThat(lookup.getIdIndex(), equalTo(null));
+        assertThat(lookup.getUuid(), equalTo(null));
+    }
+
 }
+
