@@ -73,6 +73,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("basis.members", hasSize(3)))
                 .andExpect(jsonPath("basis.members[0].name").value("b0-name"))
                 .andExpect(jsonPath("basis.members[0].uuid").value("b0-uuid"))
+
                 .andExpect(jsonPath("basis.members[0].username").value("b0-username"))
                 .andExpect(jsonPath("basis.members[1].name").value("b1-name"))
                 .andExpect(jsonPath("basis.members[1].uuid").value("b1-uuid"))

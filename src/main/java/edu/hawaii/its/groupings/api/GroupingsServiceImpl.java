@@ -530,7 +530,9 @@ public class GroupingsServiceImpl implements GroupingsService {
         WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
 
         for (WsGroup group : trios) {
-            groupingsOpted.add(group.getName());
+            if(groupsOpted.contains(group.getName())) {
+                groupingsOpted.add(group.getName());
+            }
         }
         return makeGroupings(groupingsOpted);
     }
