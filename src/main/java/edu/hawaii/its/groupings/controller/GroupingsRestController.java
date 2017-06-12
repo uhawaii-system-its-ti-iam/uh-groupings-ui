@@ -282,21 +282,21 @@ public class GroupingsRestController {
     }
 
     /**
-     * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserve
+     * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserv
      *
      * @param grouping:    the path to the Grouping
      * @param username:    username of the Grouping's owner
-     * @param listServeOn: true if the listserve should be on, false if it should be off
+     * @param listservOn: true if the listserv should be on, false if it should be off
      * @return iformation about the success of the operation
      */
-    @RequestMapping(value = "/{grouping}/{username}/{listServeOn}/setListserve",
+    @RequestMapping(value = "/{grouping}/{username}/{listservOn}/setListserv",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult> setListserve(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean listServeOn) {
-        logger.info("Entered REST setListserve...");
+    public ResponseEntity<GroupingsServiceResult> setListserv(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean listservOn) {
+        logger.info("Entered REST setListserv...");
         return ResponseEntity
                 .ok()
-                .body(gs.changeListServeStatus(grouping, username, listServeOn));
+                .body(gs.changeListservStatus(grouping, username, listservOn));
     }
 
     /**

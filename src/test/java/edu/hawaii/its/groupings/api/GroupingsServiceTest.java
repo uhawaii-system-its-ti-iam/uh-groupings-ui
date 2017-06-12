@@ -1,42 +1,29 @@
 package edu.hawaii.its.groupings.api;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class GroupingsServiceTest {
+
     final String username = "username";
     final String group = "group";
 
-    @MockBean
+    @Mock
     private GroupingsService groupingsService;
 
-    private MockMvc mockMvc;
-
-    @Autowired
-    private WebApplicationContext context;
-
     @Before
-    public void setUp() {
-        mockMvc = webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+    public void setup() throws Exception {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
@@ -46,10 +33,7 @@ public class GroupingsServiceTest {
 
     @Test
     public void checkSelfOpted() {
-        given(groupingsService.checkSelfOpted(group, username))
-                .willReturn(true);
 
-        assertTrue(groupingsService.checkSelfOpted(group, username));
     }
 
     @Test
@@ -98,7 +82,7 @@ public class GroupingsServiceTest {
     }
 
     @Test
-    public void getGrouping () {
+    public void getGrouping() {
 
     }
 
@@ -116,6 +100,7 @@ public class GroupingsServiceTest {
     public void optOut() {
 
     }
+
     @Test
     public void cancelOptIn() {
 

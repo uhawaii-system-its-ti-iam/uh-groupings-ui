@@ -45,7 +45,7 @@ public interface GroupingsService {
 
     public List<GroupingsServiceResult> cancelOptOut(String grouping, String username);
 
-    public GroupingsServiceResult changeListServeStatus(String grouping, String username, boolean listServeOn);
+    public GroupingsServiceResult changeListservStatus(String grouping, String username, boolean listservOn);
 
     public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn);
 

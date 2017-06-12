@@ -21,7 +21,6 @@ import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @RunWith(SpringRunner.class)
@@ -279,13 +278,13 @@ public class TestGroupingsRestController {
     }
 
     @Test
-    public void changeListserveStatusTest() {
+    public void changeListservStatusTest() {
         assertTrue(gs.hasListserv(grouping));
 
-        gc.setListserve(grouping, tst[0], false);
+        gc.setListserv(grouping, tst[0], false);
         assertFalse(gs.hasListserv(grouping));
 
-        gc.setListserve(grouping, tst[0], true);
+        gc.setListserv(grouping, tst[0], true);
         assertTrue(gs.hasListserv(grouping));
     }
 

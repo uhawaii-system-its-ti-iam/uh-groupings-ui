@@ -85,16 +85,16 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param grouping:    the path of the Grouping that will have its listserve status changed
+     * @param grouping:    the path of the Grouping that will have its listserv status changed
      * @param username:    username of the Grouping Owner preforming the action
-     * @param listServeOn: true if the listserve should be turned on, false if it should be turned off
+     * @param listservOn: true if the listserv should be turned on, false if it should be turned off
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
     @Override
-    public GroupingsServiceResult changeListServeStatus(String grouping, String username, boolean listServeOn) {
+    public GroupingsServiceResult changeListservStatus(String grouping, String username, boolean listservOn) {
         String attributeName = LISTSERV;
 
-        return changeGroupAttributeStatus(grouping, username, attributeName, listServeOn);
+        return changeGroupAttributeStatus(grouping, username, attributeName, listservOn);
     }
 
     /**
@@ -197,7 +197,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         members.setInclude(includeGroup);
         members.setBasisPlusIncludeMinusExclude(basisPlusIncludeMinusExcludeGroup);
         members.setOwners(findOwners(grouping, username));
-        members.setListserveOn(hasListserv(grouping));
+        members.setListservOn(hasListserv(grouping));
         members.setOptInOn(optInPermission(grouping));
         members.setOptOutOn(optOutPermission(grouping));
 
@@ -457,8 +457,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param grouping: path to the Grouping that will have its listserve attribute checked
-     * @return true if the Grouping has a listserve attribute false if not
+     * @param grouping: path to the Grouping that will have its listserv attribute checked
+     * @return true if the Grouping has a listserv attribute false if not
      */
     @Override
     public boolean hasListserv(String grouping) {
@@ -599,9 +599,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("addSelfOpted; group: " + group + "; username: " + username);
 
         if (inGroup(group, username)) {
-            WsSubjectLookup lookup = makeWsSubjectLookup(username);
             if (!checkSelfOpted(group, username)) {
-                WsGetMembershipsResults includeMembershipsResults = membershipsResults(lookup, group);
+                WsGetMembershipsResults includeMembershipsResults = membershipsResults(username, group);
 
                 String membershipID = includeMembershipsResults
                         .getWsMemberships()[0]
@@ -626,15 +625,12 @@ public class GroupingsServiceImpl implements GroupingsService {
     public boolean checkSelfOpted(String group, String username) {
         logger.info("checkSelfOpted; group: " + group + "; username: " + username);
 
-        WsSubjectLookup lookup = makeWsSubjectLookup(username);
-
-        if (inGroup(group, lookup.getSubjectIdentifier())) {
-            WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(lookup, group);
+        if (inGroup(group, username)) {
+            WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(username, group);
             String assignType = "imm_mem";
-            String name = SELF_OPTED;
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            WsAttributeAssign[] wsAttributes = getMembershipAttributes(assignType, name, membershipID);
+            WsAttributeAssign[] wsAttributes = getMembershipAttributes(assignType, SELF_OPTED, membershipID);
             for (WsAttributeAssign att : wsAttributes) {
                 if (att.getAttributeDefNameName().equals(SELF_OPTED)) {
                     return true; // We are done, get out.
@@ -694,9 +690,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("removeSelfOpted; group: " + group + "; username: " + username);
 
         if (inGroup(group, username)) {
-            WsSubjectLookup lookup = makeWsSubjectLookup(username);
             if (checkSelfOpted(group, username)) {
-                WsGetMembershipsResults membershipsResults = membershipsResults(lookup, group);
+                WsGetMembershipsResults membershipsResults = membershipsResults(username, group);
                 String membershipID = membershipsResults
                         .getWsMemberships()[0]
                         .getMembershipId();
@@ -833,7 +828,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param membershipID: membership id for the membership between the user and Grouping
      * @return information about the success of the action
      */
-    private WsAttributeAssign[] getMembershipAttributes(String assignType, String name, String membershipID) {
+    public WsAttributeAssign[] getMembershipAttributes(String assignType, String name, String membershipID) {
         logger.info("getMembershipAttributes; assignType: " + assignType + "; name: " + name + "; membershipID: " + membershipID);
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
@@ -898,12 +893,14 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param lookup: WsSubjectLookup of user who's membership will be checked
+     * @param username: WsSubjectLookup of user who's membership will be checked
      * @param group:  group that membership status will be checked for
      * @return membership results for user
      */
-    public WsGetMembershipsResults membershipsResults(WsSubjectLookup lookup, String group) {
-        logger.info("membershipResults; lookup: " + lookup + "; group: " + group);
+    public WsGetMembershipsResults membershipsResults(String username, String group) {
+        logger.info("membershipResults; username: " + username + "; group: " + group);
+
+        WsSubjectLookup lookup = makeWsSubjectLookup(username);
 
         return new GcGetMemberships()
                 .addWsSubjectLookup(lookup)
@@ -1047,7 +1044,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .map(Grouping::new)
                 .collect(Collectors.toList());
         for (Grouping grouping : groupings) {
-            grouping.setListserveOn(hasListserv(grouping.getPath()));
+            grouping.setListservOn(hasListserv(grouping.getPath()));
             grouping.setOptInOn(optInPermission(grouping.getPath()));
             grouping.setOptOutOn(optOutPermission(grouping.getPath()));
         }
