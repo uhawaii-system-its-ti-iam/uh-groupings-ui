@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import edu.hawaii.its.groupings.api.type.*;
+import edu.hawaii.its.holiday.util.Dates;
 
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 
@@ -15,8 +16,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.stereotype.Service;
-
-import edu.hawaii.its.holiday.util.Dates;
 
 import edu.internet2.middleware.grouperClient.api.GcAddMember;
 import edu.internet2.middleware.grouperClient.api.GcAssignAttributes;
@@ -51,6 +50,14 @@ public class GroupingsServiceImpl implements GroupingsService {
     private static final String EXCLUDE = ":exclude";
     private static final String INCLUDE = ":include";
     private static final String OWNERS = ":owners";
+    private static final String ASSIGN_TYPE_GROUP = "group";
+    private static final String ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP = "imm_mem";
+    private static final String SUBJECT_ATTRIBUTE_NAME_UID = "uid";
+    private static final String OPERATION_ASSIGN_ATTRIBUTE = "assign_attr";
+    private static final String OPERATION_REMOVE_ATTRIBUTE = "remove_attr";
+    private static final String OPERATION_REPLACE_VALUES = "replace_values";
+    private static final String PRIVILAGE_OPT_OUT = "optout";
+    private static final String PRIVILAGE_OPT_IN = "optin";
     private static final WsStemLookup STEM = new WsStemLookup("tmp", null);
 
     /**
@@ -71,7 +78,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             WsAddMemberResults amr = new GcAddMember()
                     .assignActAsSubject(user)
                     .addSubjectIdentifier(newOwner)
-                    .assignGroupName(grouping + ":owners")
+                    .assignGroupName(grouping + OWNERS)
                     .execute();
             privilegeResult = makeGroupingsServiceResult(amr, "assign ownership to " + newOwner + " for " + grouping);
 
@@ -92,9 +99,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult changeListservStatus(String grouping, String username, boolean listservOn) {
-        String attributeName = LISTSERV;
-
-        return changeGroupAttributeStatus(grouping, username, attributeName, listservOn);
+        return changeGroupAttributeStatus(grouping, username, LISTSERV, listservOn);
     }
 
     /**
@@ -105,10 +110,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn) {
-        String attributeName = OPT_IN;
-
-
-        return changeGroupAttributeStatus(grouping, username, attributeName, optInOn);
+        return changeGroupAttributeStatus(grouping, username, OPT_IN, optInOn);
         //todo change opt in and out privileges for include/exclude group
     }
 
@@ -120,9 +122,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult changeOptOutStatus(String grouping, String username, boolean optOutOn) {
-        String attributeName = OPT_OUT;
-
-        return changeGroupAttributeStatus(grouping, username, attributeName, optOutOn);
+        return changeGroupAttributeStatus(grouping, username, OPT_OUT, optOutOn);
         //todo change opt in and out privileges for include/exclude group
     }
 
@@ -144,7 +144,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             WsDeleteMemberResults memberResults = new GcDeleteMember()
                     .assignActAsSubject(lookup)
                     .addSubjectIdentifier(ownerToRemove)
-                    .assignGroupName(grouping + ":owners")
+                    .assignGroupName(grouping + OWNERS)
                     .execute();
 
             privilege = makeGroupingsServiceResult(memberResults, "remove ownership of " + grouping + " from " + ownerToRemove);
@@ -364,7 +364,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (isOwner(grouping, username)) {
             WsGetMembersResults membersResults = new GcGetMembers()
                     .addGroupName(grouping + OWNERS)
-                    .addSubjectAttributeName("uid")
+                    .addSubjectAttributeName(SUBJECT_ATTRIBUTE_NAME_UID)
                     .execute();
             List<WsSubject> subjects = new ArrayList<>();
             if (membersResults.getResults() != null) {
@@ -386,9 +386,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public boolean optOutPermission(String grouping) {
-        String nameName = OPT_OUT;
-
-        return groupHasAttribute(grouping, nameName);
+        return groupHasAttribute(grouping, OPT_OUT);
     }
 
     /**
@@ -397,9 +395,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public boolean optInPermission(String grouping) {
-        String nameName = OPT_IN;
-
-        return groupHasAttribute(grouping, nameName);
+        return groupHasAttribute(grouping, OPT_IN);
     }
 
     /**
@@ -408,9 +404,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return true if that attribute exists in that Grouping
      */
     public boolean groupHasAttribute(String grouping, String nameName) {
-        String assignType = "group";
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
-                attributeAssignmentsResults(assignType, grouping, nameName);
+                attributeAssignmentsResults(ASSIGN_TYPE_GROUP, grouping, nameName);
         if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign attribute : wsGetAttributeAssignmentsResults.getWsAttributeAssigns()) {
                 if (attribute.getAttributeDefNameName().equals(nameName)) {
@@ -439,7 +434,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public boolean isGrouping(String group) {
         boolean returnValue = false;
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
-                .assignAttributeAssignType("group")
+                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
                 .addOwnerGroupName(group)
                 .execute();
 
@@ -521,7 +516,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
                 .addAttributeDefNameName(TRIO)
-                .assignAttributeAssignType("group");
+                .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
 
         groupsOpted.forEach(getAttributeAssignments::addOwnerGroupName);
 
@@ -543,7 +538,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<Grouping> groupingsToOptOutOf() {
 
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
-                .assignAttributeAssignType("group")
+                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
                 .addAttributeDefNameName(TRIO)
                 .addAttributeDefNameName(OPT_OUT)
                 .execute();
@@ -568,7 +563,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<Grouping> groupingsToOptInto() {
 
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
-                .assignAttributeAssignType("group")
+                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
                 .addAttributeDefNameName(TRIO)
                 .addAttributeDefNameName(OPT_IN)
                 .execute();
@@ -606,9 +601,8 @@ public class GroupingsServiceImpl implements GroupingsService {
                         .getWsMemberships()[0]
                         .getMembershipId();
 
-                String operation = "assign_attr";
                 return makeGroupingsServiceResult(
-                        assignMembershipAttributes(operation, SELF_OPTED, membershipID),
+                        assignMembershipAttributes(OPERATION_ASSIGN_ATTRIBUTE, SELF_OPTED, membershipID),
                         "add self-opted attribute to the membership of " + username + " to " + group);
             }
         }
@@ -627,10 +621,9 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (inGroup(group, username)) {
             WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(username, group);
-            String assignType = "imm_mem";
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            WsAttributeAssign[] wsAttributes = getMembershipAttributes(assignType, SELF_OPTED, membershipID);
+            WsAttributeAssign[] wsAttributes = getMembershipAttributes(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, membershipID);
             for (WsAttributeAssign att : wsAttributes) {
                 if (att.getAttributeDefNameName().equals(SELF_OPTED)) {
                     return true; // We are done, get out.
@@ -675,7 +668,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public boolean isOwner(String grouping, String username) {
         logger.info("isOwner; grouping: " + grouping + "; username: " + username);
 
-        return inGroup(grouping + ":owners", username);
+        return inGroup(grouping + OWNERS, username);
     }
 
     /**
@@ -695,9 +688,8 @@ public class GroupingsServiceImpl implements GroupingsService {
                 String membershipID = membershipsResults
                         .getWsMemberships()[0]
                         .getMembershipId();
-                String operation = "remove_attr";
                 return makeGroupingsServiceResult(
-                        assignMembershipAttributes(operation, SELF_OPTED, membershipID),
+                        assignMembershipAttributes(OPERATION_REMOVE_ATTRIBUTE, SELF_OPTED, membershipID),
                         "remove self-opted attribute from the membership of " + username + " to " + group);
             }
         }
@@ -724,8 +716,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public boolean groupOptOutPermission(String username, String group) {
         logger.info("groupOptOutPermission; group: " + group + "; username: " + username);
-        String privilegeName = "optout";
-        WsGetGrouperPrivilegesLiteResult result = grouperPrivilegesLite(username, privilegeName, group);
+        WsGetGrouperPrivilegesLiteResult result = grouperPrivilegesLite(username, PRIVILAGE_OPT_OUT, group);
 
         return result
                 .getResultMetadata()
@@ -743,8 +734,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public boolean groupOptInPermission(String username, String group) {
         logger.info("groupOptInPermission; group: " + group + "; username: " + username);
-        String privilegeName = "optin";
-        WsGetGrouperPrivilegesLiteResult result = grouperPrivilegesLite(username, privilegeName, group);
+        WsGetGrouperPrivilegesLiteResult result = grouperPrivilegesLite(username, PRIVILAGE_OPT_IN, group);
 
         return result
                 .getResultMetadata()
@@ -770,11 +760,11 @@ public class GroupingsServiceImpl implements GroupingsService {
         dateTimeValue.setValueSystem(time);
 
         WsAssignAttributesResults assignAttributesResults = new GcAssignAttributes()
-                .assignAttributeAssignType("group")
-                .assignAttributeAssignOperation("assign_attr")
+                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
+                .assignAttributeAssignOperation(OPERATION_ASSIGN_ATTRIBUTE)
                 .addOwnerGroupName(group)
                 .addAttributeDefNameName(YYYYMMDDTHHMM)
-                .assignAttributeAssignValueOperation("replace_values")
+                .assignAttributeAssignValueOperation(OPERATION_REPLACE_VALUES)
                 .addValue(dateTimeValue)
                 .execute();
 
@@ -813,9 +803,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     public WsAssignAttributesResults assignMembershipAttributes(String operation, String uuid, String membershipID) {
         logger.info("assignMembershipAttributes; operation: " + operation + "; uuid: " + uuid + "; membershipID: " + membershipID);
 
-        String assignType = "imm_mem";
         return new GcAssignAttributes()
-                .assignAttributeAssignType(assignType)
+                .assignAttributeAssignType(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP)
                 .assignAttributeAssignOperation(operation)
                 .addAttributeDefNameName(uuid)
                 .addOwnerMembershipId(membershipID)
@@ -852,7 +841,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("assignGroupAttributes; " + "; attributeName: " + attributeName + "; attributeOperation: " + attributeOperation + "; group: " + group);
 
         return new GcAssignAttributes()
-                .assignAttributeAssignType("group")
+                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
                 .assignAttributeAssignOperation(attributeOperation)
                 .addOwnerGroupName(group)
                 .addAttributeDefNameName(attributeName)
@@ -923,13 +912,13 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (group.endsWith(INCLUDE)) {
             new GcDeleteMember()
                     .assignActAsSubject(user)
-                    .assignGroupName(group.split(":include")[0] + EXCLUDE)
+                    .assignGroupName(group.split(INCLUDE)[0] + EXCLUDE)
                     .addSubjectIdentifier(userToAdd)
                     .execute();
         } else if (group.endsWith(EXCLUDE)) {
             new GcDeleteMember()
                     .assignActAsSubject(user)
-                    .assignGroupName(group.split(":exclude")[0] + INCLUDE)
+                    .assignGroupName(group.split(EXCLUDE)[0] + INCLUDE)
                     .addSubjectIdentifier(userToAdd)
                     .execute();
         }
@@ -984,7 +973,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         String grouping = extractGroupingNames(groupNames).get(0);
         if (isOwner(grouping, username)) {
             return new GcGetMembers()
-                    .addSubjectAttributeName("uid")
+                    .addSubjectAttributeName(SUBJECT_ATTRIBUTE_NAME_UID)
                     .assignActAsSubject(lookup)
                     .addGroupName(group)
                     .assignIncludeSubjectDetail(true)
@@ -1002,7 +991,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         GcGetAttributeAssignments g = new GcGetAttributeAssignments()
                 .addAttributeDefNameName(TRIO)
-                .assignAttributeAssignType("group");
+                .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
         groups.forEach(g::addOwnerGroupName);
 
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = g.execute();
@@ -1158,7 +1147,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             boolean hasAttribute = groupHasAttribute(group, attributeName);
             if (attributeOn) {
                 if (!hasAttribute) {
-                    assignGroupAttributes(attributeName, "assign_attr", group);
+                    assignGroupAttributes(attributeName, OPERATION_ASSIGN_ATTRIBUTE, group);
 
                     gsr.setResultCode("SUCCESS");
                 } else {
@@ -1166,7 +1155,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 }
             } else {
                 if (hasAttribute) {
-                    assignGroupAttributes(attributeName, "remove_attr", group);
+                    assignGroupAttributes(attributeName, OPERATION_REMOVE_ATTRIBUTE, group);
 
                     gsr.setResultCode("SUCCESS");
                 } else {

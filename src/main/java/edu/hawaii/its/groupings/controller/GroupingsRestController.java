@@ -287,7 +287,7 @@ public class GroupingsRestController {
      * @param grouping:    the path to the Grouping
      * @param username:    username of the Grouping's owner
      * @param listservOn: true if the listserv should be on, false if it should be off
-     * @return iformation about the success of the operation
+     * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{username}/{listservOn}/setListserv",
             method = RequestMethod.POST,
