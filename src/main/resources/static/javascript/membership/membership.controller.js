@@ -12,7 +12,7 @@
     //
     function MembershipJsController($scope, dataProvider, dataUpdater) {
         var currentUser = document.getElementById("name").innerText;
-        var groupings = "api/groupings/" + currentUser + "/myGroupings";
+        var groupingURL = "api/groupings/" + currentUser + "/myGroupings";
         $scope.membersList = [];
         $scope.optInList = [];
         $scope.optOutList = [];
@@ -60,7 +60,7 @@
                 $scope.grouptToPages();
                 if($scope.optedIn.length === 0)
                 {
-                    $scope.optedIn.push({'name': "NO GROUPINGS TO OPT IN TO"});
+                    $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
                 }
                 if($scope.optedOut.length === 0)
                 {
@@ -70,8 +70,9 @@
                 {
                     $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
                 }
+
                 $scope.loading = false;
-            }, groupings);
+            }, groupingURL);
         };
 
 
@@ -80,8 +81,9 @@
         // other than that, it will go through with opting out
         //@perams grouping
         //    takes in a grouping so it knows which group it is going into for the path
-        $scope.optOut = function (grouping) {
-            var optOutURL = "api/groupings/" +  $scope.membersList[grouping].path + "/" + currentUser + "/optOut";
+        $scope.optOut = function (index) {
+            console.log(index);
+            var optOutURL = "api/groupings/" +  $scope.membersList[index].path + "/" + currentUser + "/optOut";
             console.log(optOutURL);
             dataUpdater.updateData(function (d) {
                 console.log(d);
@@ -100,22 +102,23 @@
         // initializes using the init function.
         //@perams grouping
         //    takes in a grouping so it knows which group it is going into for the path
-
-        $scope.optIn = function (grouping) {
-            var optInURL = "api/groupings/" +  $scope.optInList[grouping].path + "/" + currentUser + "/optIn";
+        $scope.optIn = function (index) {
+            var optInURL = "api/groupings/" +  $scope.optInList[index].path + "/" + currentUser + "/optIn";
+            console.log(optInURL);
             dataUpdater.updateData(function (d) {
                 $scope.loading = true;
                 $scope.init();
             }, optInURL);
         };
 
-        // Cancels the opt in
+        // Cancel user opt into a grouping
         // Calls the URL "cancelOptIn" and gives it the data for the update in the
         // CRUD operation
         //@perams grouping
         //    takes in a grouping so it knows which group it is going into for the path
-        $scope.cancelOptIn = function (grouping) {
-            var cancelInURL = "api/groupings/" + $scope.optedIn[grouping].path + "/" + currentUser + "/cancelOptIn";
+        $scope.cancelOptIn = function (index) {
+            var cancelInURL = "api/groupings/" + $scope.optedIn[index].path + "/" + currentUser + "/cancelOptIn";
+            console.log(cancelInURL);
             dataUpdater.updateData(function (d) {
                 $scope.loading = true;
                 $scope.init();
@@ -127,15 +130,45 @@
         // CRUD operation
         //@perams grouping
         //    takes in a grouping so it knows which group it is going into for the path
-        $scope.cancelOptOut = function (grouping) {
-            var cancelOutURL = "api/groupings/" + $scope.optedOut[grouping].path + "/" + currentUser + "/cancelOptOut";
+        $scope.cancelOptOut = function (index) {
+            var cancelOutURL = "api/groupings/" + $scope.optedOut[index].path + "/" + currentUser + "/cancelOptOut";
+            console.log(cancelOutURL);
             dataUpdater.updateData(function (d) {
                 $scope.loading = true;
                 $scope.init();
             }, cancelOutURL);
         };
 
+        $scope.disableOptOut = function(index) {
+            for(var i = 0; i < $scope.optOutList.length; i++) {
+                if($scope.membersList[index].name === $scope.optOutList[i].name)
+                {
+                    console.log($scope.optOutList[i].name);
+                    return false;
+                }
+            }
+            return true;
+        };
 
+        //Disables opt in button if there are no groupings to opt into.
+        $scope.disableOptIn = function(index) {
+            for(var i = 0; i < $scope.membersList.length; i++) {
+                if($scope.membersList[i].name === $scope.optInList[index].name)
+                {
+                    return true;
+                }
+            }
+        };
+
+        //Disable button if list is empty
+        $scope.disableButton = function(type, index) {
+            var list = type[index];
+            return list.name.includes("NO GROUPINGS TO");
+        };
+
+        $scope.tooltipText = function(index) {
+            return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
+        };
         //groups all the items to pages
         //have sepperate arrays (hopefully)
         //no perams
@@ -241,19 +274,6 @@
         *     $scope.grouptToPages();
         **/ };
 
-        $scope.disableOptOut = function(index) {
-            for(var i = 0; i < $scope.optOutList.length; i++) {
-                if($scope.membersList[index].name != $scope.optOutList[i].name)
-                {
-                    $('.disabled').attr('title','You cannot opt out of this grouping');
-                    return true;
-                }
-            }
-        };
-
-        $scope.tooltipText = function(index) {
-            return $scope.disableOptOut(index) ? 'You cannot opt out of this grouping' : '';
-        };
     }
 
     membershipApp.controller("MembershipJsController", MembershipJsController);

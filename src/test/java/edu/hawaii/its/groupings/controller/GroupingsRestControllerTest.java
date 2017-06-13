@@ -15,7 +15,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hawaii.its.groupings.api.type.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,10 +68,11 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("bob"))
                 .andExpect(jsonPath("path").value("test:ing:me:bob"))
-                .andExpect(jsonPath("hasListserv").value("true"))
+                .andExpect(jsonPath("listservOn").value("true"))
                 .andExpect(jsonPath("basis.members", hasSize(3)))
                 .andExpect(jsonPath("basis.members[0].name").value("b0-name"))
                 .andExpect(jsonPath("basis.members[0].uuid").value("b0-uuid"))
+
                 .andExpect(jsonPath("basis.members[0].username").value("b0-username"))
                 .andExpect(jsonPath("basis.members[1].name").value("b1-name"))
                 .andExpect(jsonPath("basis.members[1].uuid").value("b1-uuid"))
@@ -118,7 +121,7 @@ public class GroupingsRestControllerTest {
         owners.addMember(new Person("o3-name", "o3-uuid", "o3-username"));
         grouping.setOwners(owners);
 
-        grouping.setHasListserv(true);
+        grouping.setListservOn(true);
 
         return grouping;
     }
@@ -201,12 +204,9 @@ public class GroupingsRestControllerTest {
     public void getAssignOwnership() throws Exception {
         final String grouping = "grouping";
         final String username = "username";
-        List<GroupingsServiceResult> gsr = new ArrayList<>();
+        GroupingsServiceResult gsr;
 
-        gsr.add(new GroupingsServiceResult("SUCCESS", "give user ownership privileges for grouping:basis"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "give user ownership privileges for grouping:basis+include"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "give user ownership privileges for grouping:exclude"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "give user ownership privileges for grouping:include"));
+        gsr = new GroupingsServiceResult("SUCCESS", "give user ownership of grouping");
 
         given(groupingsService.assignOwnership(grouping, username, username))
                 .willReturn(gsr);
@@ -214,15 +214,8 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(post("/api/groupings/grouping/username/username/assignOwnership")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(4)))
-                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[0].action").value("give user ownership privileges for grouping:basis"))
-                .andExpect(jsonPath("$[1].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[1].action").value("give user ownership privileges for grouping:basis+include"))
-                .andExpect(jsonPath("$[2].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[2].action").value("give user ownership privileges for grouping:exclude"))
-                .andExpect(jsonPath("$[3].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[3].action").value("give user ownership privileges for grouping:include"));
+                .andExpect(jsonPath("resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("action").value("give user ownership of grouping"));
     }
 
     @Test
@@ -230,12 +223,9 @@ public class GroupingsRestControllerTest {
     public void getRemoveOwnership() throws Exception {
         final String grouping = "grouping";
         final String username = "username";
-        List<GroupingsServiceResult> gsr = new ArrayList<>();
+        GroupingsServiceResult gsr;
 
-        gsr.add(new GroupingsServiceResult("SUCCESS", "remove ownership privileges for user from grouping:basis"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "remove ownership privileges for user from grouping:basis+include"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "remove ownership privileges for user from grouping:exclude"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "remove ownership privileges for user from grouping:include"));
+        gsr = new GroupingsServiceResult("SUCCESS", "remove user's ownership privilege for grouping");
 
         given(groupingsService.removeOwnership(grouping, username, username))
                 .willReturn(gsr);
@@ -243,66 +233,88 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(post("/api/groupings/grouping/username/username/removeOwnership")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(4)))
-                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[0].action").value("remove ownership privileges for user from grouping:basis"))
-                .andExpect(jsonPath("$[1].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[1].action").value("remove ownership privileges for user from grouping:basis+include"))
-                .andExpect(jsonPath("$[2].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[2].action").value("remove ownership privileges for user from grouping:exclude"))
-                .andExpect(jsonPath("$[3].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[3].action").value("remove ownership privileges for user from grouping:include"));
+                .andExpect(jsonPath("resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("action").value("remove user's ownership privilege for grouping"));
     }
-
-//    @Test
-//    @WithMockUhUser
-//    public void getMyGroupings() throws Exception {
-//        final String username = "username";
-//        List<Grouping> groupings = new ArrayList<>();
-//        for (int i = 0; i < 3; i++) {
-//            groupings.add(grouping());
-//            groupings.get(i).setPath("grouping" + i);
-//        }
-//
-//        given(groupingsService.getMyGroupings(username))
-//                .willReturn(myGroupings());
-//
-//        mockMvc.perform(get("/api/groupings/username/myGroupings"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("groupingsIn").value(groupings))
-//                .andExpect(jsonPath("groupingsOwned").value(groupings))
-//                .andExpect(jsonPath("groupingsOptedOutOf").value(groupings))
-//                .andExpect(jsonPath("groupingsOptedInTo").value(groupings))
-//                .andExpect(jsonPath("groupingsToOptOutOf").value(groupings))
-//                .andExpect(jsonPath("groupingsToOptInTo").value(groupings));
-//
-//
-//    }
 
     @Test
     @WithMockUhUser
-    public void getSetListserve() throws Exception {
+    public void getMyGroupings() throws Exception {
+        ObjectMapper om = new ObjectMapper();
+        final String username = "username";
+        List<Grouping> groupings = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            groupings.add(grouping());
+            groupings.get(i).setPath("grouping" + i);
+        }
+
+        given(groupingsService.getMyGroupings(username))
+                .willReturn(myGroupings());
+
+        String mvcResult = mockMvc.perform(get("/api/groupings/username/myGroupings"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        MyGroupings mg = om.readValue(mvcResult, MyGroupings.class);
+
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getUsernames().equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getSetListserv() throws Exception {
         final String grouping = "grouping";
         final String username = "username";
-        GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "listserve has been added to grouping");
-        GroupingsServiceResult gsr2 = new GroupingsServiceResult("SUCCESS", "listserve has been removed from grouping");
+        GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "listserv has been added to grouping");
+        GroupingsServiceResult gsr2 = new GroupingsServiceResult("SUCCESS", "listserv has been removed from grouping");
 
-        given(groupingsService.changeListServeStatus(grouping, username, true))
+        given(groupingsService.changeListservStatus(grouping, username, true))
                 .willReturn(gsr);
-        given(groupingsService.changeListServeStatus(grouping, username, false))
+        given(groupingsService.changeListservStatus(grouping, username, false))
                 .willReturn(gsr2);
 
-        mockMvc.perform(post("/api/groupings/grouping/username/true/setListserve")
+        mockMvc.perform(post("/api/groupings/grouping/username/true/setListserv")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("listserve has been added to grouping"));
+                .andExpect(jsonPath("action").value("listserv has been added to grouping"));
 
-        mockMvc.perform(post("/api/groupings/grouping/username/false/setListserve")
+        mockMvc.perform(post("/api/groupings/grouping/username/false/setListserv")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("listserve has been removed from grouping"));
+                .andExpect(jsonPath("action").value("listserv has been removed from grouping"));
     }
 
     @Test

@@ -132,7 +132,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/{newOwner}/assignOwnership",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GroupingsServiceResult>> assignOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String newOwner) {
+    public ResponseEntity<GroupingsServiceResult> assignOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String newOwner) {
         logger.info("Entered REST assignOwnership...");
         return ResponseEntity
                 .ok()
@@ -153,7 +153,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/{ownerToRemove}/removeOwnership",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GroupingsServiceResult>> removeOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String ownerToRemove) {
+    public ResponseEntity<GroupingsServiceResult> removeOwnership(@PathVariable String grouping, @PathVariable String username, @PathVariable String ownerToRemove) {
         logger.info("Entered REST removeOwnership...");
         return ResponseEntity
                 .ok()
@@ -282,21 +282,21 @@ public class GroupingsRestController {
     }
 
     /**
-     * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserve
+     * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserv
      *
      * @param grouping:    the path to the Grouping
      * @param username:    username of the Grouping's owner
-     * @param listServeOn: true if the listserve should be on, false if it should be off
-     * @return iformation about the success of the operation
+     * @param listservOn: true if the listserv should be on, false if it should be off
+     * @return information about the success of the operation
      */
-    @RequestMapping(value = "/{grouping}/{username}/{listServeOn}/setListserve",
+    @RequestMapping(value = "/{grouping}/{username}/{listservOn}/setListserv",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult> setListserve(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean listServeOn) {
-        logger.info("Entered REST setListserve...");
+    public ResponseEntity<GroupingsServiceResult> setListserv(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean listservOn) {
+        logger.info("Entered REST setListserv...");
         return ResponseEntity
                 .ok()
-                .body(gs.changeListServeStatus(grouping, username, listServeOn));
+                .body(gs.changeListservStatus(grouping, username, listservOn));
     }
 
     /**

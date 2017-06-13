@@ -6,11 +6,12 @@ import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 import java.util.List;
 
-public interface GroupingsService{
+public interface GroupingsService {
 
     public boolean hasListserv(String grouping);
 
@@ -22,24 +23,15 @@ public interface GroupingsService{
 
     public boolean inGroup(String group, String username);
 
-    //TODO change to non-Grouper return type
-    public WsSubjectLookup makeWsSubjectLookup(String username);
-
-    public boolean checkSelfOpted(String group, WsSubjectLookup lookup);
-
-    //TODO change to non-Grouper return type
-    public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName);
-
-    //TODO change to non-Grouper return type
-    public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName, String group);
+    public boolean checkSelfOpted(String group, String username);
 
     public GroupingsServiceResult addMemberAs(String username, String group, String userToAdd);
 
     public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete);
 
-    public List<GroupingsServiceResult> assignOwnership(String grouping, String username, String newOwner);
+    public GroupingsServiceResult assignOwnership(String grouping, String username, String newOwner);
 
-    public List<GroupingsServiceResult> removeOwnership(String grouping, String username, String ownerToRemove);
+    public GroupingsServiceResult removeOwnership(String grouping, String username, String ownerToRemove);
 
     public Grouping getGrouping(String grouping, String username);
 
@@ -53,7 +45,7 @@ public interface GroupingsService{
 
     public List<GroupingsServiceResult> cancelOptOut(String grouping, String username);
 
-    public GroupingsServiceResult changeListServeStatus(String grouping, String username, boolean listServeOn);
+    public GroupingsServiceResult changeListservStatus(String grouping, String username, boolean listservOn);
 
     public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn);
 
