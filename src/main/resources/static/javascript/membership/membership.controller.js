@@ -1,5 +1,6 @@
 (function () {
 
+    // BIG QUESTIONS: why is there so much output for the URL?
 
     //Membership controller for the whole memberships page
     //@perams $scope
@@ -22,8 +23,8 @@
         $scope.pagedItems=[];
         $scope.gap=5;
         $scope.itemsPerPage = 5;
-        $scope.currentPageTop = 0;
-        $scope.currentPageBot = 0;
+        $scope.currentPageOptIn = 0;
+        $scope.currentPageOptOut = 0;
 
         //init is something that is ussualy called at the start of something
         //so calling init would be called at the start
@@ -36,7 +37,6 @@
             //takes all of that data and puts them into pages as called by "grouptToPages"
             //
             dataProvider.loadData(function (d) {
-                console.log(d);
                 $scope.membersList = d.groupingsIn;
                 for(var i = 0 ; i < 27;i++){
                     $scope.membersList.push({name:"Group "+i});
@@ -75,8 +75,11 @@
         };
 
 
-        // TODO create documentation
         // Adds user to the exclude group.
+        // Sends back an alert saying if it failed
+        // other than that, it will go through with opting out
+        //@perams grouping
+        //    takes in a grouping so it knows which group it is going into for the path
         $scope.optOut = function (grouping) {
             var optOutURL = "api/groupings/" +  $scope.membersList[grouping].path + "/" + currentUser + "/optOut";
             console.log(optOutURL);
@@ -93,64 +96,70 @@
             }, optOutURL);
         };
 
-        //TODO create documention
         // Adds user to the include group
+        // initializes using the init function.
+        //@perams grouping
+        //    takes in a grouping so it knows which group it is going into for the path
+
         $scope.optIn = function (grouping) {
             var optInURL = "api/groupings/" +  $scope.optInList[grouping].path + "/" + currentUser + "/optIn";
-            console.log(optInURL);
             dataUpdater.updateData(function (d) {
-                console.log(d);
                 $scope.loading = true;
                 $scope.init();
             }, optInURL);
         };
 
-        // TODO create documention
+        // Cancels the opt in
+        // Calls the URL "cancelOptIn" and gives it the data for the update in the
+        // CRUD operation
+        //@perams grouping
+        //    takes in a grouping so it knows which group it is going into for the path
         $scope.cancelOptIn = function (grouping) {
             var cancelInURL = "api/groupings/" + $scope.optedIn[grouping].path + "/" + currentUser + "/cancelOptIn";
-            console.log(cancelInURL);
             dataUpdater.updateData(function (d) {
-                console.log(d);
                 $scope.loading = true;
                 $scope.init();
             }, cancelInURL);
         };
 
-        // TODO create documentation
+        // Cancels the opt out
+        // Calls the URL "cancelOptOut" and gives it the data for the update in the
+        // CRUD operation
+        //@perams grouping
+        //    takes in a grouping so it knows which group it is going into for the path
         $scope.cancelOptOut = function (grouping) {
             var cancelOutURL = "api/groupings/" + $scope.optedOut[grouping].path + "/" + currentUser + "/cancelOptOut";
-            console.log(cancelOutURL);
             dataUpdater.updateData(function (d) {
-               console.log(d);
                 $scope.loading = true;
                 $scope.init();
             }, cancelOutURL);
         };
 
-        //Disables opt in button if there are no groupings to opt into.
-        $scope.disabledOptIn = function(index) {
-            var optIn = $scope.optInList[index];
-            return optIn.name === "NO GROUPINGS TO OPT IN TO"
-        };
 
-
-        //handes the groups of stuff on the pages.
+        //groups all the items to pages
+        //have sepperate arrays (hopefully)
+        //no perams
         $scope.grouptToPages=function(){
             $scope.pagedItems=[];
             for(var i = 0; i < $scope.membersList.length ; i++){
                 if(i % $scope.itemsPerPage === 0){
-
                     $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)] = [ $scope.membersList[i]];
-
                 }else{
                     $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)].push( $scope.membersList[i]);
                 }
             }
-
         };
 
-        // Perams size
-        // Perams
+        //shows the range between the start and end
+        //checks for negative numbers
+        //
+        // @perams size
+        // @perams start
+        // @perams end
+        //  all the perams are self explanitory
+        // @return ret
+        //     everything within the range of start,
+        //     end, and making sure it's that size
         $scope.range = function (size,start, end) {
             var ret = [];
             if (size < end) {
@@ -166,58 +175,71 @@
             return ret;
         };
 
-        // Original Code make it to Functionality than location
+        // Conceptually the next bunch of functions are the
+        // same but with different names
+
+        //THIS SECTION WOULD BE FOR THE OptIn SECTION
+
+        //if the current page is not 0, it will minus the current page by one
+        //current page will never go negative
         $scope.prevPage = function () {
-            if ($scope.currentPageTop > 0) {
-                $scope.currentPageTop--;
+            if ($scope.currentPageOptIn > 0) {
+                $scope.currentPageOptIn--;
             }
         };
 
+        //if the current page is less than the items in the array, it will
+        //add one to current page
         $scope.nextPage = function () {
-            if ($scope.currentPageTop < $scope.pagedItems.length - 1) {
-                $scope.currentPageTop = $scope.currentPageTop +1;
+            if ($scope.currentPageOptIn < $scope.pagedItems.length - 1) {
+                $scope.currentPageOptIn = $scope.currentPageOptIn +1;
             }
         };
 
+        //takes the clicked page and set that to the current page
         $scope.setPage = function () {
-            $scope.currentPageTop = this.n;
+            $scope.currentPageOptIn = this.n;
         };
-        //
 
-        // New variable change
+        //THIS SECTION WOULD BE FOR THE OptOut SECTION
+
+        //if the current page is not 0, it will minus the current page by one
+        //current page will never go negative
         $scope.prevPageBot = function () {
-            if ($scope.currentPageBot > 0) {
-                $scope.currentPageBot--;
+            if ($scope.currentPageOptOut > 0) {
+                $scope.currentPageOptOut--;
             }
         };
 
+        //if the current page is less than the items in the array, it will
+        //add one to current page
         $scope.nextPageBot = function () {
-            if ($scope.currentPageBot < $scope.pagedItems.length - 1) {
-                $scope.currentPageBot = $scope.currentPageBot +1;
+            if ($scope.currentPageOptOut < $scope.pagedItems.length - 1) {
+                $scope.currentPageOptOut = $scope.currentPageOptOut +1;
             }
         };
-
+        //takes the clicked page and set that to the current page
         $scope.setPageBot = function () {
-            $scope.currentPageBot = this.n;
+            $scope.currentPageOptOut = this.n;
         };
-        //
 
-        $scope.set5 = function () {
-            $scope.itemsPerPage  = 5;
-            $scope.grouptToPages();
-        };
-        $scope.set10 = function () {
-            $scope.itemsPerPage  = 10;
-            $scope.grouptToPages();
-        };
-        $scope.set25 = function () {
-            $scope.itemsPerPage  = 25;
-            $scope.grouptToPages();
-        };
-        $scope.set100 = function () {
-            $scope.itemsPerPage  = 100;
-            $scope.grouptToPages();
-        };
+        /**code that will not be used
+        * $scope.set5 = function () {
+        *     $scope.itemsPerPage  = 5;
+        *     $scope.grouptToPages();
+        * };
+        * $scope.set10 = function () {
+        *     $scope.itemsPerPage  = 10;
+        *     $scope.grouptToPages();
+        * };
+        * $scope.set25 = function () {
+        *     $scope.itemsPerPage  = 25;
+        *     $scope.grouptToPages();
+        * };
+        * $scope.set100 = function () {
+        *     $scope.itemsPerPage  = 100;
+        *     $scope.grouptToPages();
+        **/ };
 
         $scope.disableOptOut = function(index) {
             for(var i = 0; i < $scope.optOutList.length; i++) {

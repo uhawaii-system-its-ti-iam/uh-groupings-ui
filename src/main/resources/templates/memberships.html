@@ -56,8 +56,8 @@
                                             <li>
                                                 <a href="" ng-click="prevPage()" >« Prev</a>
                                             </li>
-                                            <li ng-repeat="n in range(pagedItems.length, currentPageTop, currentPageTop + gap) "
-                                            ng-class="{active: n == currentPageTop}"
+                                            <li ng-repeat="n in range(pagedItems.length, currentPageOptIn, currentPageOptIn + gap) "
+                                            ng-class="{active: n == currentPageOptIn}"
 
                                             ng-click="setPage()"
                                             ><a href="" ng-bind="n + 1" >1</a>
@@ -78,7 +78,7 @@
                             </tfoot>
                             <tbody>
                             <!-- TODO find a way to fix pagination between the two tabs     -->
-                            <tr ng-repeat="l in pagedItems[currentPageTop] | filter:searchFor1">
+                            <tr ng-repeat="l in pagedItems[currentPageOptIn] | filter:searchFor1">
                                 <td>{{l.name}}</td>
                                 <td>
                                     <!-- TODO find a way to update index -->
@@ -113,7 +113,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="o in pagedItems[currentPageBot] | filter:searchFor2">
+                            <tr ng-repeat="o in pagedItems[currentPageOptOut] | filter:searchFor2">
                                 <td>{{o.name}}</td>
                                 <td>
                                     <button ng-disabled="disabledOptIn($index)" class="btn btn-default btn-block"
