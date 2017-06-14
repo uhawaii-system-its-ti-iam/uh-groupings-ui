@@ -8,6 +8,21 @@ insert into message (MSG_ID, MSG_ENABLED, MSG_TYPE_ID, MSG_TEXT) values (1, 'Y',
 insert into message (MSG_ID, MSG_ENABLED, MSG_TYPE_ID, MSG_TEXT) values (2, 'Y', 1, 'The access to this system is restricted.<br/>If you believe you should have access, <br/> please send an email to <a href=''mailto:duckart@hawaii.edu''>duckart@hawaii.edu</a>.');
 insert into message (MSG_ID, MSG_ENABLED, MSG_TYPE_ID, MSG_TEXT) values (3, 'N', 1, 'For Future Use.');
 
+
+--Campus codes and names
+insert into campus (id, code, actual, description) values(1, 'HA', 'Y','Hawaii Community College');
+insert into campus (id, code, actual, description) values(2, 'HI', 'Y','UH Hilo');
+insert into campus (id, code, actual, description) values(3, 'HO', 'Y', 'Honolulu Community College');
+insert into campus (id, code, actual, description) values(4, 'KA', 'Y','Kapiolani Community College');
+insert into campus (id, code, actual, description) values(5, 'KU', 'Y','Kauai Community College');
+insert into campus (id, code, actual, description) values(6, 'LE', 'Y','Leeward Community College');
+insert into campus (id, code, actual, description) values(7, 'MA', 'Y','UH Manoa');
+insert into campus (id, code, actual, description) values(8, 'MU', 'Y','UH Maui College');
+insert into campus (id, code, actual, description) values(9, 'WI', 'Y','Windward Community College');
+insert into campus (id, code, actual, description) values(10, 'WO', 'Y','UH West Oahu');
+insert into campus (id, code, actual, description) values(11, 'SW', 'Y','UH System');
+
+
 insert into role(id, version, authority) values(1, 1, 'ROLE_ADMIN');
 insert into role(id, version, authority) values(2, 1, 'ROLE_USER');
 
