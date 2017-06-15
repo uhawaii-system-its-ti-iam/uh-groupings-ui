@@ -54,16 +54,16 @@
                                 <td colspan="6">
                                         <ul class = "pagination pull-right" >
                                             <li>
-                                                <a href="" ng-click="prevPage()" >« Prev</a>
+                                                <a href="" ng-click="prevPageOptIn()" >« Prev</a>
                                             </li>
                                             <li ng-repeat="n in range(pagedItems.length, currentPageOptIn, currentPageOptIn + gap) "
                                             ng-class="{active: n == currentPageOptIn}"
 
-                                            ng-click="setPage()"
+                                            ng-click="setPageOptIn()"
                                             ><a href="" ng-bind="n + 1" >1</a>
                                             </li>
                                             <li >
-                                                <a href="" ng-click="nextPage()">Next »</a>
+                                                <a href="" ng-click="nextPageOptIn()">Next »</a>
                                             </li>
                                     </ul>
                                 </td>
@@ -128,16 +128,16 @@
                                     <!-- Botton part of the two  -->
                                         <ul class = "pagination pull-right" >
                                             <li>
-                                                <a href="" ng-click="prevPageBot()" >« Prev</a>
+                                                <a href="" ng-click="prevPageOptOut()" >« Prev</a>
                                             </li>
                                             <li ng-repeat="n in range(pagedItems.length, currentPageBot, currentPageBot + gap) "
                                             ng-class="{active: n == currentPageBot}"
 
-                                            ng-click="setPageBot()"
+                                            ng-click="setPageOptOut()"
                                             ><a href="" ng-bind="n + 1" >1</a>
                                             </li>
                                             <li >
-                                                <a href="" ng-click="nextPageBot()">Next »</a>
+                                                <a href="" ng-click="nextPageOptOut()">Next »</a>
                                             </li>
                                     </ul>
                                 </td>

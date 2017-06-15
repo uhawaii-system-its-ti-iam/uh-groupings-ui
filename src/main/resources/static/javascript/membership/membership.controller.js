@@ -22,7 +22,7 @@
 
         $scope.pagedItems=[];
         $scope.gap=5;
-        $scope.itemsPerPage = 5;
+        $scope.itemsPerPage = 25;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
 
@@ -39,26 +39,12 @@
             **/
             dataProvider.loadData(function (d) {
                 $scope.membersList = d.groupingsIn;
-                for(var i = 0 ; i < 27;i++){
-                    $scope.membersList.push({name:"Group "+i});
-                }
                 $scope.optOutList = d.groupingsToOptOutOf;
-                // for(var i = 0 ; i < 10;i++){
-                //     $scope.optOutList.push({name:"Group "+i});
-                // }
                 $scope.optInList = d.groupingsToOptInTo;
-                // for(var i = 0 ; i < 508;i++){
-                //     $scope.optInList.push({name:"Group "+i});
-                // }
                 $scope.optedIn = d.groupingsOptedInTo;
-                // for(var i = 0 ; i < 10;i++){
-                //     $scope.optedIn.push({name:"Group "+i});
-                // }
                 $scope.optedOut = d.groupingsOptedOutOf;
-                // for(var i = 0 ; i < 10;i++){
-                //     $scope.optedOut.push({name:"Group "+i});
-                // }
-                $scope.grouptToPages();
+
+                $scope.groupToPages();
                 if($scope.optedIn.length === 0)
                 {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
@@ -82,57 +68,6 @@
         * other than that, it will go through with opting out
         *
         **/
-    @describe("CampusJsController", function() {
-    beforeEach(module('campusApp'));
-
-    var scope;
-    var controller;
-    var dataProvider;
-
-    beforeEach(inject(function($rootScope, $controller, dataProvider) {
-        scope = $rootScope.$new();
-        controller = $controller('CampusJsController', {
-            $scope: scope,
-            dataProvider: dataProvider
-        });
-    }));
-
-    it("checkInitFunction", function() {
-        spyOn(scope, "loadData").and.callFake(function() {
-            scope.campuses.push({
-                "id": 1,
-                "code": "HA",
-                "description": "Hawaii Community College"
-            });
-            scope.campuses.push({
-                "id": 10,
-                "code": "WO",
-                "description": "UH West Oahu"
-            });
-        });
-
-        expect(controller).toBeDefined();
-        expect(scope.campuses).toBeDefined();
-        expect(scope.campuses.length).toEqual(0);
-
-        // What we are testing:
-        scope.init();
-
-        expect(scope.loadData).toHaveBeenCalled();
-        expect(scope.campuses).toBeDefined();
-        expect(scope.campuses.length).toEqual(2);
-
-        expect(scope.campuses[0].id).toEqual(1);
-        expect(scope.campuses[0].code).toEqual("HA");
-        expect(scope.campuses[0].description).toEqual("Hawaii Community College");
-
-        expect(scope.campuses[1].id).toEqual(10);
-        expect(scope.campuses[1].code).toEqual("WO");
-        expect(scope.campuses[1].description).toEqual("UH West Oahu");
-    });
-
-});
-        //    takes in a grouping so it knows which group it is going into for the path
         $scope.optOut = function (index) {
             console.log(index);
             var optOutURL = "api/groupings/" +  $scope.membersList[index].path + "/" + currentUser + "/optOut";
@@ -227,7 +162,7 @@
         //groups all the items to pages
         //have sepperate arrays (hopefully)
         //no param
-        $scope.grouptToPages=function(){
+        $scope.groupToPages=function(){
             $scope.pagedItems=[];
             for(var i = 0; i < $scope.membersList.length ; i++){
                 if(i % $scope.itemsPerPage === 0){
@@ -272,7 +207,7 @@
         /**if the current page is not 0, it will minus the current page by one
         *current page will never go negative
         **/
-        $scope.prevPage = function () {
+        $scope.prevPageOptIn = function () {
             if ($scope.currentPageOptIn > 0) {
                 $scope.currentPageOptIn--;
             }
@@ -281,14 +216,14 @@
         /**if the current page is less than the items in the array, it will
         *add one to current page
         **/
-        $scope.nextPage = function () {
+        $scope.nextPageOptIn = function () {
             if ($scope.currentPageOptIn < $scope.pagedItems.length - 1) {
                 $scope.currentPageOptIn = $scope.currentPageOptIn +1;
             }
         };
 
         //takes the clicked page and set that to the current page
-        $scope.setPage = function () {
+        $scope.setPageOptIn = function () {
             $scope.currentPageOptIn = this.n;
         };
 
@@ -297,7 +232,7 @@
         /**if the current page is not 0, it will minus the current page by one
         *current page will never go negative
         **/
-        $scope.prevPageBot = function () {
+        $scope.prevPageOptOut = function () {
             if ($scope.currentPageOptOut > 0) {
                 $scope.currentPageOptOut--;
             }
@@ -306,33 +241,17 @@
         /**if the current page is less than the items in the array, it will
         *add one to current page
         **/
-        $scope.nextPageBot = function () {
+        $scope.nextPageOptOut = function () {
             if ($scope.currentPageOptOut < $scope.pagedItems.length - 1) {
                 $scope.currentPageOptOut = $scope.currentPageOptOut +1;
             }
         };
         //takes the clicked page and set that to the current page
-        $scope.setPageBot = function () {
+        $scope.setPageOptOut = function () {
             $scope.currentPageOptOut = this.n;
         };
 
-        /**code that will not be used
-        * $scope.set5 = function () {
-        *     $scope.itemsPerPage  = 5;
-        *     $scope.grouptToPages();
-        * };
-        * $scope.set10 = function () {
-        *     $scope.itemsPerPage  = 10;
-        *     $scope.grouptToPages();
-        * };
-        * $scope.set25 = function () {
-        *     $scope.itemsPerPage  = 25;
-        *     $scope.grouptToPages();
-        * };
-        * $scope.set100 = function () {
-        *     $scope.itemsPerPage  = 100;
-        *     $scope.grouptToPages();
-        **/ };
+
 
     }
 
