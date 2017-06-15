@@ -2,14 +2,14 @@
 
     // BIG QUESTIONS: why is there so much output for the URL?
 
-    //Membership controller for the whole memberships page
-    //@perams $scope
-    //    defining what is within the controller
-    //@perams dataProvider
-    //     given the "loadData" function, it loads all the data to be viewed
-    //@perams dataUpdater
-    //    Using the CRUD opperators this would be the update of CRUD
-    //
+    /**Membership controller for the whole memberships page
+     *@param $scope
+     *    defining what is within the controller
+     *@param dataProvider
+     *     given the "loadData" function, it loads all the data to be viewed
+     *@param dataUpdater
+     *    Using the CRUD opperators this would be the update of CRUD
+    **/
     function MembershipJsController($scope, dataProvider, dataUpdater) {
         var currentUser = document.getElementById("name").innerText;
         var groupingURL = "api/groupings/" + currentUser + "/myGroupings";
@@ -26,16 +26,17 @@
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
 
-        //init is something that is ussualy called at the start of something
-        //so calling init would be called at the start
+        /**init is something that is ussualy called at the start of something
+         * so calling init would be called at the start
+        **/
         $scope.init = function () {
-            //Loads Data into a membersList
-            //                  optOutList
-            //                  optInList
-            //                  optedIn
-            //                  optedOut
-            //takes all of that data and puts them into pages as called by "grouptToPages"
-            //
+            /**Loads Data into a membersList
+            *                  optOutList
+            *                  optInList
+            *                  optedIn
+            *                  optedOut
+            *takes all of that data and puts them into pages as called by "grouptToPages"
+            **/
             dataProvider.loadData(function (d) {
                 $scope.membersList = d.groupingsIn;
                 for(var i = 0 ; i < 27;i++){
@@ -76,10 +77,61 @@
         };
 
 
-        // Adds user to the exclude group.
-        // Sends back an alert saying if it failed
-        // other than that, it will go through with opting out
-        //@perams grouping
+        /** Adds user to the exclude group.
+        * Sends back an alert saying if it failed
+        * other than that, it will go through with opting out
+        *
+        **/
+    @describe("CampusJsController", function() {
+    beforeEach(module('campusApp'));
+
+    var scope;
+    var controller;
+    var dataProvider;
+
+    beforeEach(inject(function($rootScope, $controller, dataProvider) {
+        scope = $rootScope.$new();
+        controller = $controller('CampusJsController', {
+            $scope: scope,
+            dataProvider: dataProvider
+        });
+    }));
+
+    it("checkInitFunction", function() {
+        spyOn(scope, "loadData").and.callFake(function() {
+            scope.campuses.push({
+                "id": 1,
+                "code": "HA",
+                "description": "Hawaii Community College"
+            });
+            scope.campuses.push({
+                "id": 10,
+                "code": "WO",
+                "description": "UH West Oahu"
+            });
+        });
+
+        expect(controller).toBeDefined();
+        expect(scope.campuses).toBeDefined();
+        expect(scope.campuses.length).toEqual(0);
+
+        // What we are testing:
+        scope.init();
+
+        expect(scope.loadData).toHaveBeenCalled();
+        expect(scope.campuses).toBeDefined();
+        expect(scope.campuses.length).toEqual(2);
+
+        expect(scope.campuses[0].id).toEqual(1);
+        expect(scope.campuses[0].code).toEqual("HA");
+        expect(scope.campuses[0].description).toEqual("Hawaii Community College");
+
+        expect(scope.campuses[1].id).toEqual(10);
+        expect(scope.campuses[1].code).toEqual("WO");
+        expect(scope.campuses[1].description).toEqual("UH West Oahu");
+    });
+
+});
         //    takes in a grouping so it knows which group it is going into for the path
         $scope.optOut = function (index) {
             console.log(index);
@@ -98,10 +150,11 @@
             }, optOutURL);
         };
 
-        // Adds user to the include group
-        // initializes using the init function.
-        //@perams grouping
-        //    takes in a grouping so it knows which group it is going into for the path
+        /** Adds user to the include group
+        * initializes using the init function.
+        *@param grouping
+        *takes in a grouping so it knows which group it is going into for the path
+        **/
         $scope.optIn = function (index) {
             var optInURL = "api/groupings/" +  $scope.optInList[index].path + "/" + currentUser + "/optIn";
             console.log(optInURL);
@@ -111,11 +164,12 @@
             }, optInURL);
         };
 
-        // Cancel user opt into a grouping
-        // Calls the URL "cancelOptIn" and gives it the data for the update in the
-        // CRUD operation
-        //@perams grouping
-        //    takes in a grouping so it knows which group it is going into for the path
+        /** Cancel user opt into a grouping
+        *   Calls the URL "cancelOptIn" and gives it the data for the update in the
+        *   CRUD operation
+        *   @param grouping
+        *   takes in a grouping so it knows which group it is going into for the path
+        **/
         $scope.cancelOptIn = function (index) {
             var cancelInURL = "api/groupings/" + $scope.optedIn[index].path + "/" + currentUser + "/cancelOptIn";
             console.log(cancelInURL);
@@ -125,11 +179,12 @@
             }, cancelInURL);
         };
 
-        // Cancels the opt out
-        // Calls the URL "cancelOptOut" and gives it the data for the update in the
-        // CRUD operation
-        //@perams grouping
-        //    takes in a grouping so it knows which group it is going into for the path
+        /** Cancels the opt out
+        * Calls the URL "cancelOptOut" and gives it the data for the update in the
+        * CRUD operation
+        *@param grouping
+        *takes in a grouping so it knows which group it is going into for the path
+        **/
         $scope.cancelOptOut = function (index) {
             var cancelOutURL = "api/groupings/" + $scope.optedOut[index].path + "/" + currentUser + "/cancelOptOut";
             console.log(cancelOutURL);
@@ -171,7 +226,7 @@
         };
         //groups all the items to pages
         //have sepperate arrays (hopefully)
-        //no perams
+        //no param
         $scope.grouptToPages=function(){
             $scope.pagedItems=[];
             for(var i = 0; i < $scope.membersList.length ; i++){
@@ -183,16 +238,17 @@
             }
         };
 
-        //shows the range between the start and end
-        //checks for negative numbers
-        //
-        // @perams size
-        // @perams start
-        // @perams end
-        //  all the perams are self explanitory
-        // @return ret
-        //     everything within the range of start,
-        //     end, and making sure it's that size
+        /**shows the range between the start and end
+        *checks for negative numbers
+        *
+        * @param size
+        * @param start
+        * @param end
+        *  all the param are self explanitory
+        * @return ret
+        *     everything within the range of start,
+        *       end, and making sure it's that size
+        **/
         $scope.range = function (size,start, end) {
             var ret = [];
             if (size < end) {
@@ -213,16 +269,18 @@
 
         //THIS SECTION WOULD BE FOR THE OptIn SECTION
 
-        //if the current page is not 0, it will minus the current page by one
-        //current page will never go negative
+        /**if the current page is not 0, it will minus the current page by one
+        *current page will never go negative
+        **/
         $scope.prevPage = function () {
             if ($scope.currentPageOptIn > 0) {
                 $scope.currentPageOptIn--;
             }
         };
 
-        //if the current page is less than the items in the array, it will
-        //add one to current page
+        /**if the current page is less than the items in the array, it will
+        *add one to current page
+        **/
         $scope.nextPage = function () {
             if ($scope.currentPageOptIn < $scope.pagedItems.length - 1) {
                 $scope.currentPageOptIn = $scope.currentPageOptIn +1;
@@ -236,16 +294,18 @@
 
         //THIS SECTION WOULD BE FOR THE OptOut SECTION
 
-        //if the current page is not 0, it will minus the current page by one
-        //current page will never go negative
+        /**if the current page is not 0, it will minus the current page by one
+        *current page will never go negative
+        **/
         $scope.prevPageBot = function () {
             if ($scope.currentPageOptOut > 0) {
                 $scope.currentPageOptOut--;
             }
         };
 
-        //if the current page is less than the items in the array, it will
-        //add one to current page
+        /**if the current page is less than the items in the array, it will
+        *add one to current page
+        **/
         $scope.nextPageBot = function () {
             if ($scope.currentPageOptOut < $scope.pagedItems.length - 1) {
                 $scope.currentPageOptOut = $scope.currentPageOptOut +1;
