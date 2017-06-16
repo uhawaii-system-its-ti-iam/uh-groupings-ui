@@ -1,2 +1,2 @@
 'use strict';
-var campusApp = angular.module("campusApp",[]);
+var campusApp = angular.module("campusApp", []);
