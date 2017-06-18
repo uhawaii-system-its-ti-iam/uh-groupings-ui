@@ -27,11 +27,16 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsRestController {
-    //    private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
-//    private String grouping = "hawaii.edu:custom:test:zknoebel:zknoebel-v2-empty-basis";
-    private String grouping = "tmp:win-many";
-    private String include = grouping + ":include";
-    private String exclude = grouping + ":exclude";
+
+    @Value("${groupings.api.test.grouping}")
+    private String grouping;
+
+    @Value("${groupings.api.test.grouping_include}")
+    private String include;
+
+    @Value("${groupings.api.test.grouping_exclude}")
+    private String exclude;
+
     private String[] tst = new String[6];
     private String[] tstName = {"tst01fname", "tst02name", "tst03name", "tst04name", "tst05name", "tst06name"};
 

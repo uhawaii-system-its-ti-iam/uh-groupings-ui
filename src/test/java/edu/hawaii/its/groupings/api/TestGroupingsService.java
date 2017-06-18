@@ -29,7 +29,6 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsService {
 
-    //    private final String GROUPING = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
     @Value("${groupings.api.test.grouping}")
     private String GROUPING;
 
