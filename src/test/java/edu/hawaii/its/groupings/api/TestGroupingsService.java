@@ -119,7 +119,8 @@ public class TestGroupingsService {
     @Value("${groupings.api.privilege_opt_in}")
     private String PRIVILEGE_OPT_IN;
 
-    private String[] username = new String[6];
+    @Value("${groupings.api.test.usernames}")
+    private String[] username;
 
     @Autowired
     private GroupingsServiceImpl gs;
@@ -139,9 +140,6 @@ public class TestGroupingsService {
 
     @Before
     public void setUp() {
-        for (int i = 0; i < 6; i++) {
-            username[i] = "iamtst0" + (i + 1);
-        }
     }
 
     @Test

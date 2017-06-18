@@ -37,17 +37,17 @@ public class TestGroupingsRestController {
     @Value("${groupings.api.test.grouping_exclude}")
     private String exclude;
 
-    private String[] tst = new String[6];
-    private String[] tstName = {"tst01fname", "tst02name", "tst03name", "tst04name", "tst05name", "tst06name"};
-
-
     @Value("${groupings.api.basis}")
     private String BASIS;
 
     @Value("${groupings.api.basis_plus_include}")
     private String BASIS_PLUS_INCLUDE;
 
-    private WsSubjectLookup[] tstLookup = new WsSubjectLookup[6];
+    @Value("${groupings.api.test.usernames}")
+    private String[] tst;
+
+    @Value("${groupings.api.test.names}")
+    private String[] tstName;
 
     @Autowired
     private GroupingsService gs;
@@ -70,9 +70,6 @@ public class TestGroupingsRestController {
 
     @Before
     public void setUp() {
-        for (int i = 0; i < 6; i++) {
-            tst[i] = "iamtst0" + (i + 1);
-        }
     }
 
     @Test
