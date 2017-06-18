@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import edu.hawaii.its.groupings.api.GroupingsService;
+import edu.hawaii.its.groupings.api.service.GroupingsService;
 import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
 import edu.hawaii.its.groupings.api.type.MyGroupings;

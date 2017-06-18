@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import edu.hawaii.its.groupings.api.service.GroupingsServiceImpl;
 import edu.hawaii.its.groupings.api.type.*;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
