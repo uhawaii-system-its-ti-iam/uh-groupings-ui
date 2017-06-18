@@ -370,13 +370,94 @@ public class TestGroupingsService {
     }
 
 
+    @Test
+    public void addMemberAsTest() {
+        assertFalse(gs.inGroup(GROUPING, username[4]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[4]));
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, username[4]));
+        GroupingsServiceResult addMember = gs.addMemberAs(username[0], GROUPING_INCLUDE, username[4]);
+
+        assertTrue(gs.inGroup(GROUPING, username[4]));
+        assertTrue(gs.inGroup(GROUPING_INCLUDE, username[4]));
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, username[4]));
+        assertEquals(addMember.getResultCode(), "SUCCESS");
+        assertEquals(addMember.getAction(), "add " + username[4] + " to " + GROUPING_INCLUDE);
+        addMember = gs.addMemberAs(username[0], GROUPING_EXCLUDE, username[4]);
+
+        assertFalse(gs.inGroup(GROUPING, username[4]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[4]));
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, username[4]));
+        assertEquals(addMember.getResultCode(), "SUCCESS");
+        assertEquals(addMember.getAction(), "add " + username[4] + " to " + GROUPING_EXCLUDE);
+        //test when already in group
+        addMember = gs.addMemberAs(username[0], GROUPING_EXCLUDE, username[4]);
+
+        assertFalse(gs.inGroup(GROUPING, username[4]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[4]));
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, username[4]));
+        assertEquals(addMember.getResultCode(), "SUCCESS");
+        assertEquals(addMember.getAction(), "add " + username[4] + " to " + GROUPING_EXCLUDE);
+
+        //TODO add use case when user is not in exclude group
+    }
+
+    @Test
+    public void deleteMemberAsTest() {
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[4]));
+        assertTrue(gs.inGroup(GROUPING_INCLUDE, username[2]));
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, username[4]));
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, username[2]));
+
+        GroupingsServiceResult deleteMember1 = gs.deleteMemberAs(username[0], GROUPING_EXCLUDE, username[4]);
+        GroupingsServiceResult deleteMember2 = gs.deleteMemberAs(username[0], GROUPING_INCLUDE, username[2]);
+
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, username[4]));
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, username[4]));
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, username[2]));
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, username[2]));
+
+        assertEquals(deleteMember1.getResultCode(), "SUCCESS");
+        assertEquals(deleteMember2.getResultCode(), "SUCCESS");
+        assertEquals(deleteMember1.getAction(), "delete " + username[4] + " from " + GROUPING_EXCLUDE);
+        assertEquals(deleteMember2.getAction(), "delete " + username[2] + " from " + GROUPING_INCLUDE);
+
+        //test when not in group
+        deleteMember1 = gs.deleteMemberAs(username[0], GROUPING_EXCLUDE, username[4]);
+        deleteMember2 = gs.deleteMemberAs(username[0], GROUPING_INCLUDE, username[2]);
+
+        assertEquals(deleteMember1.getResultCode(), "SUCCESS");
+        assertEquals(deleteMember2.getResultCode(), "SUCCESS");
+        assertEquals(deleteMember1.getAction(), "delete " + username[4] + " from " + GROUPING_EXCLUDE);
+        assertEquals(deleteMember2.getAction(), "delete " + username[2] + " from " + GROUPING_INCLUDE);
+
+        //reset Grouping
+        gs.addMemberAs(username[0], GROUPING_EXCLUDE, username[4]);
+        gs.addMemberAs(username[0], GROUPING_INCLUDE, username[2]);
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[4]));
+        assertTrue(gs.inGroup(GROUPING_INCLUDE, username[2]));
+
+    }
+
+    @Test
+    public void getGroupNamesTest() {
+        List<String> groupNames1 = gs.getGroupNames(username[4]);
+        List<String> groupNames2 = gs.getGroupNames(username[2]);
+
+        assertTrue(groupNames1.contains(GROUPING_EXCLUDE));
+        assertFalse(groupNames1.contains(GROUPING));
+        assertFalse(groupNames1.contains(GROUPING_INCLUDE));
+
+        assertTrue(groupNames2.contains(GROUPING_INCLUDE));
+        assertTrue(groupNames2.contains(GROUPING));
+        assertFalse(groupNames2.contains(GROUPING_EXCLUDE));
+
+
+    }
     //TODO add test for assignMembershipAttributes (both)
     //TODO add test for membershipAttributeAssign
     //TODO add test for attributeAssignments
     //TODO add test for grouperPrivilegesLite (both)
     //TODO add test for membershipsResults
-    //TODO add test for addMemberAs
-    //TODO add test for deleteMemberAs
     //TODO add test for getMember
     //TODO add test for extractGroupings
     //TODO add test for getGroupNames

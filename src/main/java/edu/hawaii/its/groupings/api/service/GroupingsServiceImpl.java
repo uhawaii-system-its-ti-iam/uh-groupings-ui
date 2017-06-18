@@ -236,6 +236,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             excludeGroup = makeGroup(excludeResults.getResults()[0].getWsSubjects());
         }
 
+        //TODO either change owner privilege to be able to see basis group or do getMembers with api accounta
         Group basisGroup = new Group();
         WsGetMembersResults basisResults = getMembers(user, grouping + BASIS);
         if (basisResults.getResults() != null) {
@@ -982,6 +983,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("addMemberAs; user: " + username + "; group: " + group + "; userToAdd: " + userToAdd);
 
         WsSubjectLookup user = makeWsSubjectLookup(username);
+        String action = "add " + userToAdd + " to " + group;
 
         if (group.endsWith(INCLUDE)) {
             new GcDeleteMember()
@@ -1004,7 +1006,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         updateLastModified(parentGroupingPath(group));
 
-        return makeGroupingsServiceResult(addMemberResults, "add " + userToAdd + " to " + group);
+        return makeGroupingsServiceResult(addMemberResults, action);
     }
 
     /**
