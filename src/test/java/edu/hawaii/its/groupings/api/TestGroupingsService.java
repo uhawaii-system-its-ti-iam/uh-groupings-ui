@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,9 +30,96 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 public class TestGroupingsService {
 
     //    private final String GROUPING = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
-    private final String GROUPING = "tmp:win-many";
-    private final String GROUPING_INCLUDE = GROUPING + ":include";
-    private final String GROUPING_EXCLUDE = GROUPING + ":exclude";
+    @Value("${groupings.api.test.grouping}")
+    private String GROUPING;
+
+    @Value("${groupings.api.test.grouping_include}")
+    private String GROUPING_INCLUDE;
+
+    @Value("${groupings.api.test.grouping_exclude}")
+    private String GROUPING_EXCLUDE;
+
+    @Value("${groupings.api.settings}")
+    private String SETTINGS;
+
+    @Value("${groupings.api.attributes}")
+    private String ATTRIBUTES;
+
+    @Value("${groupings.api.for_groups}")
+    private String FOR_GROUPS;
+
+    @Value("${groupings.api.for_memberships}")
+    private String FOR_MEMBERSHIPS;
+
+    @Value("${groupings.api.last_modified}")
+    private String LAST_MODIFIED;
+
+    @Value("${groupings.api.yyyymmddThhmm}")
+    private String YYYYMMDDTHHMM;
+
+    @Value("${groupings.api.uhgrouping}")
+    private String UHGROUPING;
+
+    @Value("${groupings.api.destinations}")
+    private String DESTINATIONS;
+
+    @Value("${groupings.api.listserv}")
+    private String LISTSERV;
+
+    @Value("${groupings.api.trio}")
+    private String TRIO;
+
+    @Value("${groupings.api.self_opted}")
+    private String SELF_OPTED;
+
+    @Value("${groupings.api.anyone_can}")
+    private String ANYONE_CAN;
+
+    @Value("${groupings.api.opt_in}")
+    private String OPT_IN;
+
+    @Value("${groupings.api.opt_out}")
+    private String OPT_OUT;
+
+    @Value("${groupings.api.basis}")
+    private String BASIS;
+
+    @Value("${groupings.api.basis_plus_include}")
+    private String BASIS_PLUS_INCLUDE;
+
+    @Value("${groupings.api.exclude}")
+    private String EXCLUDE;
+
+    @Value("${groupings.api.include}")
+    private String INCLUDE;
+
+    @Value("${groupings.api.owners}")
+    private String OWNERS;
+
+    @Value("${groupings.api.assign_type_group}")
+    private String ASSIGN_TYPE_GROUP;
+
+    @Value("${groupings.api.assign_type_immediate_membership}")
+    private String ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP;
+
+    @Value("${groupings.api.subject_attribute_name_uuid}")
+    private String SUBJECT_ATTRIBUTE_NAME_UID;
+
+    @Value("${groupings.api.operation_assign_attribute}")
+    private String OPERATION_ASSIGN_ATTRIBUTE;
+
+    @Value("${groupings.api.operation_remove_attribute}")
+    private String OPERATION_REMOVE_ATTRIBUTE;
+
+    @Value("${groupings.api.operation_replace_values}")
+    private String OPERATION_REPLACE_VALUES;
+
+    @Value("${groupings.api.privilege_opt_out}")
+    private String PRIVILEGE_OPT_OUT;
+
+    @Value("${groupings.api.privilege_opt_in}")
+    private String PRIVILEGE_OPT_IN;
+
     private String[] username = new String[6];
 
     @Autowired
@@ -86,11 +174,8 @@ public class TestGroupingsService {
         GroupingsServiceResult gsr = gs.updateLastModified(group);
         String dateStr = gsr.getAction().split(" to time ")[1];
 
-        String assignType = "group";
-        String nameName = "uh-settings:attributes:for-groups:last-modified:yyyymmddThhmm";
-
         WsGetAttributeAssignmentsResults assignments =
-                gs.attributeAssignmentsResults(assignType, group, nameName);
+                gs.attributeAssignmentsResults(ASSIGN_TYPE_GROUP, group, YYYYMMDDTHHMM);
         String assignedValue = assignments.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
 
         assertEquals(dateStr, assignedValue);
@@ -192,7 +277,6 @@ public class TestGroupingsService {
 
     @Test
     public void addRemoveSelfOptedTest() {
-        WsSubjectLookup lookup = gs.makeWsSubjectLookup(username[4]);
         assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
 
         gs.addSelfOpted(GROUPING_EXCLUDE, username[4]);
@@ -232,14 +316,6 @@ public class TestGroupingsService {
         WsGroupLookup lookup = gs.makeWsGroupLookup(GROUPING_EXCLUDE);
         assertTrue(lookup.getGroupName().equals(GROUPING_EXCLUDE));
     }
-
-//    @Test
-//    public void allGroupingsTest() {
-//        List<String> allGroupings = gs.allGroupings();
-//        assertTrue(allGroupings.contains(GROUPING));
-//        assertFalse(allGroupings.contains(GROUPING_EXCLUDE));
-//        assertFalse(allGroupings.contains(GROUPING_INCLUDE));
-//    }
 
     @Test
     public void makeGroupTest() {

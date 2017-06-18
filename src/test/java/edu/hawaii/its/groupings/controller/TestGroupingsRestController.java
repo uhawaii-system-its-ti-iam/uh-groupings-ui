@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -33,6 +34,13 @@ public class TestGroupingsRestController {
     private String exclude = grouping + ":exclude";
     private String[] tst = new String[6];
     private String[] tstName = {"tst01fname", "tst02name", "tst03name", "tst04name", "tst05name", "tst06name"};
+
+
+    @Value("${groupings.api.basis}")
+    private String BASIS;
+
+    @Value("${groupings.api.basis_plus_include}")
+    private String BASIS_PLUS_INCLUDE;
 
     private WsSubjectLookup[] tstLookup = new WsSubjectLookup[6];
 
@@ -243,7 +251,7 @@ public class TestGroupingsRestController {
     @Test
     public void optInTest() {
         assertFalse(gs.inGroup(grouping, tst[4]));
-        assertTrue(gs.inGroup(grouping + ":basis", tst[5]));
+        assertTrue(gs.inGroup(grouping + BASIS, tst[5]));
 
         gc.optIn(grouping, tst[4]);
         assertTrue(gs.checkSelfOpted(include, tst[4]));
@@ -274,7 +282,7 @@ public class TestGroupingsRestController {
         assertFalse(gs.checkSelfOpted(exclude, tst[5]));
         assertFalse(gs.checkSelfOpted(include, tst[5]));
 
-        assertTrue(gs.inGroup(grouping + ":basis+include", tst[5]));
+        assertTrue(gs.inGroup(grouping + BASIS_PLUS_INCLUDE, tst[5]));
     }
 
     @Test
