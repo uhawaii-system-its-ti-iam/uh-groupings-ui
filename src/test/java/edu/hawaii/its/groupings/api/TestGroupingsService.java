@@ -29,14 +29,32 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsService {
 
-    @Value("${groupings.api.test.grouping}")
+    @Value("${groupings.api.test.grouping_many}")
     private String GROUPING;
-
-    @Value("${groupings.api.test.grouping_include}")
+    @Value("${groupings.api.test.grouping_many_include}")
     private String GROUPING_INCLUDE;
-
-    @Value("${groupings.api.test.grouping_exclude}")
+    @Value("${groupings.api.test.grouping_many_exclude}")
     private String GROUPING_EXCLUDE;
+    @Value("${groupings.api.test.grouping_many_owners}")
+    private String GROUPING_OWNERS;
+
+    @Value("${groupings.api.test.grouping_store_empty}")
+    private String GROUPING_STORE_EMPTY;
+    @Value("${groupings.api.test.grouping_store_empty_include}")
+    private String GROUPING_STORE_EMPTY_INCLUDE;
+    @Value("${groupings.api.test.grouping_store_empty_exclude}")
+    private String GROUPING_STORE_EMPTY_EXCLUDE;
+    @Value("${groupings.api.test.grouping_store_empty_owners}")
+    private String GROUPING_STORE_EMPTY_OWNERS;
+
+    @Value("${groupings.api.test.grouping_true_empty}")
+    private String GROUPING_TRUE_EMPTY;
+    @Value("${groupings.api.test.grouping_true_empty_include}")
+    private String GROUPING_TRUE_EMPTY_INCLUDE;
+    @Value("${groupings.api.test.grouping_true_empty_exclude}")
+    private String GROUPING_TRUE_EMPTY_EXCLUDE;
+    @Value("${groupings.api.test.grouping_true_empty_owners}")
+    private String GROUPING_TRUE_EMPTY_OWNERS;
 
     @Value("${groupings.api.settings}")
     private String SETTINGS;
@@ -453,6 +471,34 @@ public class TestGroupingsService {
 
 
     }
+
+    @Test
+    public void getGroupNames() {
+        List<String> groups = gs.getGroupNames(username[0]);
+
+        assertTrue(groups.contains(GROUPING_OWNERS));
+        assertTrue(groups.contains(GROUPING_STORE_EMPTY_OWNERS));
+        assertTrue(groups.contains(GROUPING_TRUE_EMPTY_OWNERS));
+
+        List<String> groups2 = gs.getGroupNames(username[1]);
+
+        assertFalse(groups2.contains(GROUPING_OWNERS));
+        assertFalse(groups2.contains(GROUPING_STORE_EMPTY_OWNERS));
+        assertFalse(groups2.contains(GROUPING_TRUE_EMPTY_OWNERS));
+        //TODO add the rest of the groups
+    }
+
+    @Test
+    public void makeGroupingsTest() {
+        List<String> groupingPaths = new ArrayList<>();
+        groupingPaths.add(GROUPING);
+        groupingPaths.add(GROUPING_STORE_EMPTY);
+        groupingPaths.add(GROUPING_TRUE_EMPTY);
+
+        List<Grouping> groupings = gs.makeGroupings(groupingPaths);
+
+        assertTrue(groupings.size() == 3);
+    }
     //TODO add test for assignMembershipAttributes (both)
     //TODO add test for membershipAttributeAssign
     //TODO add test for attributeAssignments
@@ -460,8 +506,6 @@ public class TestGroupingsService {
     //TODO add test for membershipsResults
     //TODO add test for getMember
     //TODO add test for extractGroupings
-    //TODO add test for getGroupNames
-    //TODO add test for makeGroupings
     //TODO add test for extractGroupingNames
     //TODO add test for removeGroupOwnership
     //TODO add test for addGroupOwnership
