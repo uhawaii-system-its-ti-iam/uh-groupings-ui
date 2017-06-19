@@ -9,8 +9,8 @@
      * @constructor
      */
     function AdminJsController($scope, dataProvider, dataUpdater, dataDelete) {
-        var currentUser = document.getElementById("name").innerText;
-        var url = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/grouping";
+        var currentUser = "aaron";//document.getElementById("name").innerHTML;
+        var url = "api/groupings/tmp:win-aux/" + currentUser + "/grouping";
         $scope.list = [];
         //Adds the loading spinner
         $scope.loading = true;
@@ -59,6 +59,7 @@
             }, url);
         };
 
+
         /**
          * Adds function that adds an member to the admin grouping.
          * Uses dataUpdater service to post the user that is being added.
@@ -94,14 +95,13 @@
         $scope.remove = function (index) {
             var deleteUser = $scope.list[index].username;
             var deleteUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/" + deleteUser + "/deleteMemberFromIncludeGroup";
-
             if ($scope.list.length > 1) {
                 dataDelete.deleteData(function (d) {
                     $scope.list.splice(index, 1);
                     $scope.init();
                 }, deleteUrl);
             }
-        }
+        };
     }
 
     adminApp.controller("AdminJsController", AdminJsController);
