@@ -158,16 +158,6 @@
             <artifactId>angularjs</artifactId>
             <version>${angularjs-version}</version>
         </dependency>
-        <!-- <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angular-animate</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angular-touch</artifactId>
-            <version>1.6.4</version>
-        </dependency> -->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angular-ui-bootstrap</artifactId>
