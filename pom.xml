@@ -226,6 +226,9 @@
                         <source>${basedir}/src/main/resources/static/javascript/campus/campus.app.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/campus/campus.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/campus/campus.service.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/admin/admin.app.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/admin/admin.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/admin/admin.service.js</source>
                     </preloadSources>
                     <specIncludes>
                         <include>**/**.test.js</include>
