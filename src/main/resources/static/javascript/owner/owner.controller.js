@@ -114,6 +114,11 @@
          * and determines if a user is in the basis group or not.
          *
          * @param grouping : The name of the grouping of which its data will be modified.
+         *
+         * @returns returns
+         *                1 for ascending
+         *                -1 for descending
+         *                0 for failed attempt
          */
         $scope.modify = function (grouping) {
             //sorts data in alphabetic order

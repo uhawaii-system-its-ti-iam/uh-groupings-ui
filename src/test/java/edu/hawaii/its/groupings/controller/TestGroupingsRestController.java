@@ -11,31 +11,59 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.groupings.api.GroupingsService;
+import edu.hawaii.its.groupings.api.service.GroupingsService;
 import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsRestController {
-//    private String grouping = "hawaii.edu:custom:test:zknoebel:groupings-api-test";
-//    private String grouping = "hawaii.edu:custom:test:zknoebel:zknoebel-v2-empty-basis";
-    private String grouping = "tmp:win-many";
-    private String include = grouping + ":include";
-    private String exclude = grouping + ":exclude";
-    private String[] tst = new String[6];
-    private String[] tstName = {"tst01fname", "tst02name", "tst03name", "tst04name", "tst05name", "tst06name"};
 
-    private WsSubjectLookup[] tstLookup = new WsSubjectLookup[6];
+    @Value("${groupings.api.test.grouping_many}")
+    private String GROUPING;
+
+    @Value("${groupings.api.test.grouping_many_include}")
+    private String GROUPING_INCLUDE;
+
+    @Value("${groupings.api.test.grouping_many_exclude}")
+    private String GROUPING_EXCLUDE;
+
+    @Value("${groupings.api.test.grouping_store_empty}")
+    private String GROUPING_STORE_EMPTY;
+
+    @Value("${groupings.api.test.grouping_store_empty_include}")
+    private String GROUPING_STORE_EMPTY_INCLUDE;
+
+    @Value("${groupings.api.test.grouping_store_empty_exclude}")
+    private String GROUPING_STORE_EMPTY_EXCLUDE;
+
+    @Value("${groupings.api.test.grouping_true_empty}")
+    private String GROUPING_TRUE_EMPTY;
+
+    @Value("${groupings.api.test.grouping_true_empty_include}")
+    private String GROUPING_TRUE_EMPTY_INCLUDE;
+
+    @Value("${groupings.api.test.grouping_true_empty_exclude}")
+    private String GROUPING_TRUE_EMPTY_EXCLUDE;
+
+    @Value("${groupings.api.basis}")
+    private String BASIS;
+
+    @Value("${groupings.api.basis_plus_include}")
+    private String BASIS_PLUS_INCLUDE;
+
+    @Value("${groupings.api.test.usernames}")
+    private String[] tst;
+
+    @Value("${groupings.api.test.names}")
+    private String[] tstName;
 
     @Autowired
     private GroupingsService gs;
@@ -58,10 +86,6 @@ public class TestGroupingsRestController {
 
     @Before
     public void setUp() {
-        for (int i = 0; i < 6; i++) {
-            tst[i] = "iamtst0" + (i + 1);
-            tstLookup[i] = gs.makeWsSubjectLookup(tst[i]);
-        }
     }
 
     @Test
@@ -72,53 +96,53 @@ public class TestGroupingsRestController {
 
     @Test
     public void assignAndRemoveOwnershipTest() {
-        Grouping g = gc.grouping(grouping, tst[0]).getBody();
+        Grouping g = gc.grouping(GROUPING, tst[0]).getBody();
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
 
-        gc.assignOwnership(grouping, tst[0], tst[1]);
-        g = gc.grouping(grouping, tst[0]).getBody();
+        gc.assignOwnership(GROUPING, tst[0], tst[1]);
+        g = gc.grouping(GROUPING, tst[0]).getBody();
         assertTrue(g.getOwners().getUsernames().contains(tst[1]));
 
-        gc.removeOwnership(grouping, tst[0], tst[1]);
-        g = gc.grouping(grouping, tst[0]).getBody();
+        gc.removeOwnership(GROUPING, tst[0], tst[1]);
+        g = gc.grouping(GROUPING, tst[0]).getBody();
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
     }
 
     @Test
     public void addMemberTest() {
 
-        assertTrue(gs.inGroup(exclude, tst[4]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
 
-        gc.addMemberToIncludeGroup(grouping, tst[0], tst[4]);
-        assertFalse(gs.inGroup(exclude, tst[4]));
-        assertTrue(gs.inGroup(include, tst[4]));
+        gc.addMemberToIncludeGroup(GROUPING, tst[0], tst[4]);
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[4]));
 
-        gc.addMemberToExcludeGroup(grouping, tst[0], tst[4]);
-        assertFalse(gs.inGroup(include, tst[4]));
-        assertTrue(gs.inGroup(exclude, tst[4]));
+        gc.addMemberToExcludeGroup(GROUPING, tst[0], tst[4]);
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[4]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
     }
 
     @Test
     public void deleteMemberTest() {
 
-        assertTrue(gs.inGroup(exclude, tst[4]));
-        gc.deleteMemberFromExcludeGroup(grouping, tst[0], tst[4]);
-        assertFalse(gs.inGroup(exclude, tst[4]));
-        assertTrue(gs.inGroup(grouping, tst[4]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+        gc.deleteMemberFromExcludeGroup(GROUPING, tst[0], tst[4]);
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+        assertTrue(gs.inGroup(GROUPING, tst[4]));
 
-        assertTrue(gs.inGroup(include, tst[1]));
-        gc.deleteMemberFromIncludeGroup(grouping, tst[0], tst[1]);
-        assertFalse(gs.inGroup(exclude, tst[1]));
-        assertFalse(gs.inGroup(include, tst[1]));
+        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[1]));
+        gc.deleteMemberFromIncludeGroup(GROUPING, tst[0], tst[1]);
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[1]));
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[1]));
 
         //reset Grouping
-        gc.addMemberToExcludeGroup(grouping, tst[0], tst[4]);
-        gc.addMemberToIncludeGroup(grouping, tst[0], tst[1]);
+        gc.addMemberToExcludeGroup(GROUPING, tst[0], tst[4]);
+        gc.addMemberToIncludeGroup(GROUPING, tst[0], tst[1]);
     }
 
     @Test
     public void getGroupingTest() {
-        Grouping grouping = gc.grouping(this.grouping, tst[0]).getBody();
+        Grouping grouping = gc.grouping(this.GROUPING, tst[0]).getBody();
 
         assertTrue(grouping.getInclude().getNames().contains(tstName[0]));
         assertTrue(grouping.getInclude().getNames().contains(tstName[1]));
@@ -140,10 +164,10 @@ public class TestGroupingsRestController {
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
         gc.assignOwnership(grouping.getPath(), tst[0], tst[5]);
-        grouping = gc.grouping(this.grouping, tst[0]).getBody();
+        grouping = gc.grouping(this.GROUPING, tst[0]).getBody();
         assertTrue(grouping.getOwners().getNames().contains(tstName[5]));
         gc.removeOwnership(grouping.getPath(), tst[0], tst[5]);
-        grouping = gc.grouping(this.grouping, tst[0]).getBody();
+        grouping = gc.grouping(this.GROUPING, tst[0]).getBody();
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
     }
 
@@ -153,7 +177,7 @@ public class TestGroupingsRestController {
 
         boolean inGrouping = false;
         for (Grouping grouping : groupings.getGroupingsIn()) {
-            if (grouping.getPath().contains(this.grouping)) {
+            if (grouping.getPath().contains(this.GROUPING)) {
                 inGrouping = true;
                 break;
             }
@@ -162,7 +186,7 @@ public class TestGroupingsRestController {
 
         boolean canOptin = false;
         for (Grouping grouping : groupings.getGroupingsToOptInTo()) {
-            if (grouping.getPath().contains(this.grouping)) {
+            if (grouping.getPath().contains(this.GROUPING)) {
                 canOptin = true;
                 break;
             }
@@ -171,7 +195,7 @@ public class TestGroupingsRestController {
 
         boolean canOptOut = false;
         for (Grouping grouping : groupings.getGroupingsToOptOutOf()) {
-            if (grouping.getPath().contains(this.grouping)) {
+            if (grouping.getPath().contains(this.GROUPING)) {
                 canOptOut = true;
                 break;
             }
@@ -180,7 +204,7 @@ public class TestGroupingsRestController {
 
         boolean ownsGrouping = false;
         for (Grouping grouping : groupings.getGroupingsOwned()) {
-            if (grouping.getPath().contains(this.grouping)) {
+            if (grouping.getPath().contains(this.GROUPING)) {
                 ownsGrouping = true;
                 break;
             }
@@ -195,7 +219,7 @@ public class TestGroupingsRestController {
 
         boolean inGrouping = false;
         for (Grouping grouping : groupings.getGroupingsIn()) {
-            if (grouping.getPath().contains(this.grouping)) {
+            if (grouping.getPath().contains(this.GROUPING)) {
                 inGrouping = true;
                 break;
             }
@@ -204,7 +228,7 @@ public class TestGroupingsRestController {
 
         boolean ownsGrouping = false;
         for (Grouping grouping : groupings.getGroupingsOwned()) {
-            if (grouping.getPath().contains(this.grouping)) {
+            if (grouping.getPath().contains(this.GROUPING)) {
                 ownsGrouping = true;
                 break;
             }
@@ -217,98 +241,118 @@ public class TestGroupingsRestController {
         boolean optedIn = false;
         boolean optedOut = false;
 
-        gc.optIn(grouping, tst[4]);
+        gc.optIn(GROUPING, tst[4]);
         MyGroupings tst4Groupings = gc.myGroupings(tst[4]).getBody();
         for (Grouping grouping : tst4Groupings.getGroupingsOptedInTo()) {
-            if (grouping.getPath().contains(this.grouping)) {
+            if (grouping.getPath().contains(this.GROUPING)) {
                 optedIn = true;
             }
         }
         assertTrue(optedIn);
 
-        gc.optOut(grouping, tst[5]);
+        gc.optOut(GROUPING, tst[5]);
         MyGroupings tst5Groupings = gc.myGroupings(tst[5]).getBody();
         for (Grouping grouping : tst5Groupings.getGroupingsOptedOutOf()) {
-            if (grouping.getPath().contains(this.grouping)) {
+            if (grouping.getPath().contains(this.GROUPING)) {
                 optedOut = true;
             }
         }
         assertTrue(optedOut);
 
         //reset Grouping
-        gc.cancelOptIn(grouping, tst[4]);
-        gc.addMemberToExcludeGroup(grouping, tst[0], tst[4]);
-        gc.cancelOptOut(grouping, tst[5]);
+        gc.cancelOptIn(GROUPING, tst[4]);
+        gc.addMemberToExcludeGroup(GROUPING, tst[0], tst[4]);
+        gc.cancelOptOut(GROUPING, tst[5]);
     }
 
 
     @Test
     public void optInTest() {
-        assertFalse(gs.inGroup(grouping, tst[4]));
-        assertTrue(gs.inGroup(grouping + ":basis", tst[5]));
+        assertFalse(gs.inGroup(GROUPING, tst[4]));
+        assertTrue(gs.inGroup(GROUPING + BASIS, tst[5]));
 
-        gc.optIn(grouping, tst[4]);
-        assertTrue(gs.checkSelfOpted(include, tstLookup[4]));
-        assertFalse(gs.checkSelfOpted(exclude, tstLookup[4]));
-        assertTrue(gs.inGroup(grouping, tst[4]));
+        gc.optIn(GROUPING, tst[4]);
+        assertTrue(gs.checkSelfOpted(GROUPING_INCLUDE, tst[4]));
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[4]));
+        assertTrue(gs.inGroup(GROUPING, tst[4]));
 
-        gc.cancelOptIn(grouping, tst[4]);
-        assertFalse(gs.checkSelfOpted(exclude, tstLookup[4]));
-        assertFalse(gs.checkSelfOpted(include, tstLookup[4]));
+        gc.cancelOptIn(GROUPING, tst[4]);
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[4]));
+        assertFalse(gs.checkSelfOpted(GROUPING_INCLUDE, tst[4]));
 
-        assertTrue(gs.inGroup(grouping, tst[5]));
+        assertTrue(gs.inGroup(GROUPING, tst[5]));
 
         //reset Grouping
-        gc.addMemberToExcludeGroup(grouping, tst[0], tst[4]);
-        assertFalse(gs.inGroup(grouping, tst[4]));
+        gc.addMemberToExcludeGroup(GROUPING, tst[0], tst[4]);
+        assertFalse(gs.inGroup(GROUPING, tst[4]));
     }
 
     @Test
     public void optOutTest() {
-        assertTrue(gs.inGroup(grouping, tst[5]));
+        assertTrue(gs.inGroup(GROUPING, tst[5]));
 
-        gc.optOut(grouping, tst[5]);
-        assertTrue(gs.checkSelfOpted(exclude, tstLookup[5]));
-        assertFalse(gs.checkSelfOpted(include, tstLookup[5]));
-        assertFalse(gs.inGroup(grouping, tst[5]));
+        gc.optOut(GROUPING, tst[5]);
+        assertTrue(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[5]));
+        assertFalse(gs.checkSelfOpted(GROUPING_INCLUDE, tst[5]));
+        assertFalse(gs.inGroup(GROUPING, tst[5]));
 
-        gc.cancelOptOut(grouping, tst[5]);
-        assertFalse(gs.checkSelfOpted(exclude, tstLookup[5]));
-        assertFalse(gs.checkSelfOpted(include, tstLookup[5]));
+        gc.cancelOptOut(GROUPING, tst[5]);
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[5]));
+        assertFalse(gs.checkSelfOpted(GROUPING_INCLUDE, tst[5]));
 
-        assertTrue(gs.inGroup(grouping + ":basis+include", tst[5]));
+        assertTrue(gs.inGroup(GROUPING + BASIS_PLUS_INCLUDE, tst[5]));
     }
 
     @Test
-    public void changeListserveStatusTest() {
-        assertTrue(gs.hasListserv(grouping));
+    public void changeListservStatusTest() {
+        assertTrue(gs.hasListserv(GROUPING));
 
-        gc.setListserve(grouping, tst[0], false);
-        assertFalse(gs.hasListserv(grouping));
+        gc.setListserv(GROUPING, tst[0], false);
+        assertFalse(gs.hasListserv(GROUPING));
 
-        gc.setListserve(grouping, tst[0], true);
-        assertTrue(gs.hasListserv(grouping));
+        gc.setListserv(GROUPING, tst[0], true);
+        assertTrue(gs.hasListserv(GROUPING));
     }
 
     @Test
     public void changeOptInTest() {
-        assertTrue(gs.optInPermission(grouping));
+        assertTrue(gs.optInPermission(GROUPING));
 
-        gc.setOptIn(grouping, tst[0], false);
-        assertFalse(gs.optInPermission(grouping));
+        gc.setOptIn(GROUPING, tst[0], false);
+        assertFalse(gs.optInPermission(GROUPING));
 
-        gc.setOptIn(grouping, tst[0], true);
-        assertTrue(gs.optInPermission(grouping));
+        gc.setOptIn(GROUPING, tst[0], true);
+        assertTrue(gs.optInPermission(GROUPING));
     }
 
     @Test
     public void changeOptOutTest() {
-        assertTrue(gs.optOutPermission(grouping));
+        assertTrue(gs.optOutPermission(GROUPING));
 
-        gc.setOptOut(grouping, tst[0], false);
-        assertFalse(gs.optOutPermission(grouping));
+        gc.setOptOut(GROUPING, tst[0], false);
+        assertFalse(gs.optOutPermission(GROUPING));
 
-        gc.setOptOut(grouping, tst[0], true);
-        assertTrue(gs.optOutPermission(grouping));
+        gc.setOptOut(GROUPING, tst[0], true);
+        assertTrue(gs.optOutPermission(GROUPING));
+    }
+
+    @Test
+    public void getEmptyGroupingTest() {
+
+        Grouping storeEmpty = gs.getGrouping(GROUPING_STORE_EMPTY, tst[0]);
+        Grouping trueEmpty = gs.getGrouping(GROUPING_TRUE_EMPTY, tst[0]);
+
+        assertTrue(storeEmpty.getBasis().getMembers().size() == 0);
+        assertTrue(storeEmpty.getBasisPlusIncludeMinusExclude().getMembers().size() == 0);
+        assertTrue(storeEmpty.getExclude().getMembers().size() == 0);
+        assertTrue(storeEmpty.getInclude().getMembers().size() == 0);
+        assertTrue(storeEmpty.getOwners().getUsernames().contains(tst[0]));
+
+        assertTrue(trueEmpty.getBasis().getMembers().size() == 0);
+        assertTrue(trueEmpty.getBasisPlusIncludeMinusExclude().getMembers().size() == 0);
+        assertTrue(trueEmpty.getExclude().getMembers().size() == 0);
+        assertTrue(trueEmpty.getInclude().getMembers().size() == 0);
+        assertTrue(trueEmpty.getOwners().getUsernames().contains(tst[0]));
+
     }
 }

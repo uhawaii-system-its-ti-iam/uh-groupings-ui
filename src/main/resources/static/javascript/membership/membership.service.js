@@ -1,5 +1,6 @@
 (function() {
 
+    // TODO create documentation
     membershipApp.factory('dataProvider', function($http) {
         return {
             loadData: function(callback, url) {
@@ -14,6 +15,8 @@
         }
     });
 
+
+    // TODO create documentation
     membershipApp.factory('dataUpdater', function($http) {
         return {
             updateData: function(callback, url) {

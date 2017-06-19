@@ -1,5 +1,15 @@
 (function () {
 
+    // BIG QUESTIONS: why is there so much output for the URL?
+
+    /**Membership controller for the whole memberships page
+     *@param $scope
+     *    defining what is within the controller
+     *@param dataProvider
+     *     given the "loadData" function, it loads all the data to be viewed
+     *@param dataUpdater
+     *    Using the CRUD opperators this would be the update of CRUD
+    **/
     function MembershipJsController($scope, dataProvider, dataUpdater) {
         var currentUser = document.getElementById("name").innerText;
         var groupingURL = "api/groupings/" + currentUser + "/myGroupings";
@@ -12,18 +22,28 @@
 
         $scope.pagedItems=[];
         $scope.gap=5;
-        $scope.itemsPerPage = 20;
-        $scope.currentPage = 0;
+        $scope.itemsPerPage = 25;
+        $scope.currentPageOptIn = 0;
+        $scope.currentPageOptOut = 0;
 
+        /**init is something that is ussualy called at the start of something
+         * so calling init would be called at the start
+        **/
         $scope.init = function () {
-            //Loads Data
+            /**Loads Data into a membersList
+            *                  optOutList
+            *                  optInList
+            *                  optedIn
+            *                  optedOut
+            *takes all of that data and puts them into pages as called by "grouptToPages"
+            **/
             dataProvider.loadData(function (d) {
-                console.log(d);
                 $scope.membersList = d.groupingsIn;
                 $scope.optOutList = d.groupingsToOptOutOf;
                 $scope.optInList = d.groupingsToOptInTo;
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
+
                 $scope.groupToPages();
                 if($scope.optedIn.length === 0)
                 {
@@ -43,7 +63,11 @@
         };
 
 
-        // Adds user to the exclude group.
+        /** Adds user to the exclude group.
+        * Sends back an alert saying if it failed
+        * other than that, it will go through with opting out
+        *
+        **/
         $scope.optOut = function (index) {
             console.log(index);
             var optOutURL = "api/groupings/" +  $scope.membersList[index].path + "/" + currentUser + "/optOut";
@@ -61,34 +85,45 @@
             }, optOutURL);
         };
 
-        // Adds user to the include group
+        /** Adds user to the include group
+        * initializes using the init function.
+        *@param grouping
+        *takes in a grouping so it knows which group it is going into for the path
+        **/
         $scope.optIn = function (index) {
             var optInURL = "api/groupings/" +  $scope.optInList[index].path + "/" + currentUser + "/optIn";
             console.log(optInURL);
             dataUpdater.updateData(function (d) {
-                console.log(d);
                 $scope.loading = true;
                 $scope.init();
             }, optInURL);
         };
 
-        // Cancel user opt into a grouping
+        /** Cancel user opt into a grouping
+        *   Calls the URL "cancelOptIn" and gives it the data for the update in the
+        *   CRUD operation
+        *   @param grouping
+        *   takes in a grouping so it knows which group it is going into for the path
+        **/
         $scope.cancelOptIn = function (index) {
             var cancelInURL = "api/groupings/" + $scope.optedIn[index].path + "/" + currentUser + "/cancelOptIn";
             console.log(cancelInURL);
             dataUpdater.updateData(function (d) {
-                console.log(d);
                 $scope.loading = true;
                 $scope.init();
             }, cancelInURL);
         };
 
-        // Cancel user opt out of a grouping
+        /** Cancels the opt out
+        * Calls the URL "cancelOptOut" and gives it the data for the update in the
+        * CRUD operation
+        *@param grouping
+        *takes in a grouping so it knows which group it is going into for the path
+        **/
         $scope.cancelOptOut = function (index) {
             var cancelOutURL = "api/groupings/" + $scope.optedOut[index].path + "/" + currentUser + "/cancelOptOut";
             console.log(cancelOutURL);
             dataUpdater.updateData(function (d) {
-               console.log(d);
                 $scope.loading = true;
                 $scope.init();
             }, cancelOutURL);
@@ -124,21 +159,31 @@
         $scope.tooltipText = function(index) {
             return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
         };
-
-        //handles the groups of stuff on the pages.
+        //groups all the items to pages
+        //have sepperate arrays (hopefully)
+        //no param
         $scope.groupToPages=function(){
             $scope.pagedItems=[];
             for(var i = 0; i < $scope.membersList.length ; i++){
                 if(i % $scope.itemsPerPage === 0){
-
                     $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)] = [ $scope.membersList[i]];
-
                 }else{
                     $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)].push( $scope.membersList[i]);
                 }
             }
         };
 
+        /**shows the range between the start and end
+        *checks for negative numbers
+        *
+        * @param size
+        * @param start
+        * @param end
+        *  all the param are self explanitory
+        * @return ret
+        *     everything within the range of start,
+        *       end, and making sure it's that size
+        **/
         $scope.range = function (size,start, end) {
             var ret = [];
             if (size < end) {
@@ -154,37 +199,58 @@
             return ret;
         };
 
-        $scope.prevPage = function () {
-            if ($scope.currentPage > 0) {
-                $scope.currentPage--;
+        // Conceptually the next bunch of functions are the
+        // same but with different names
+
+        //THIS SECTION WOULD BE FOR THE OptIn SECTION
+
+        /**if the current page is not 0, it will minus the current page by one
+        *current page will never go negative
+        **/
+        $scope.prevPageOptIn = function () {
+            if ($scope.currentPageOptIn > 0) {
+                $scope.currentPageOptIn--;
             }
         };
 
-        $scope.nextPage = function () {
-            if ($scope.currentPage < $scope.pagedItems.length - 1) {
-                $scope.currentPage = $scope.currentPage + 1;
+        /**if the current page is less than the items in the array, it will
+        *add one to current page
+        **/
+        $scope.nextPageOptIn = function () {
+            if ($scope.currentPageOptIn < $scope.pagedItems.length - 1) {
+                $scope.currentPageOptIn = $scope.currentPageOptIn +1;
             }
         };
 
-        $scope.setPage = function () {
-            $scope.currentPage = this.n;
+        //takes the clicked page and set that to the current page
+        $scope.setPageOptIn = function () {
+            $scope.currentPageOptIn = this.n;
         };
-        $scope.set5 = function () {
-            $scope.itemsPerPage  = 5;
-            $scope.groupToPages();
+
+        //THIS SECTION WOULD BE FOR THE OptOut SECTION
+
+        /**if the current page is not 0, it will minus the current page by one
+        *current page will never go negative
+        **/
+        $scope.prevPageOptOut = function () {
+            if ($scope.currentPageOptOut > 0) {
+                $scope.currentPageOptOut--;
+            }
         };
-        $scope.set10 = function () {
-            $scope.itemsPerPage  = 10;
-            $scope.groupToPages();
+
+        /**if the current page is less than the items in the array, it will
+        *add one to current page
+        **/
+        $scope.nextPageOptOut = function () {
+            if ($scope.currentPageOptOut < $scope.pagedItems.length - 1) {
+                $scope.currentPageOptOut = $scope.currentPageOptOut +1;
+            }
         };
-        $scope.set25 = function () {
-            $scope.itemsPerPage  = 25;
-            $scope.groupToPages();
+        //takes the clicked page and set that to the current page
+        $scope.setPageOptOut = function () {
+            $scope.currentPageOptOut = this.n;
         };
-        $scope.set100 = function () {
-            $scope.itemsPerPage  = 100;
-            $scope.groupToPages();
-        };
+
 
 
     }

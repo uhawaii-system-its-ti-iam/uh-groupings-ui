@@ -50,24 +50,23 @@
                             </tr>
                             </thead>
                             <tfoot>
-                                <tr>
+                                <!-- Top part of the two parts  -->
                                 <td colspan="6">
                                         <ul class = "pagination pull-right" >
                                             <li>
-                                                <a href="" ng-click="prevPage()" >« Prev</a>
+                                                <a href="" ng-click="prevPageOptIn()" >« Prev</a>
                                             </li>
-                                            <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
-                                            ng-class="{active: n == currentPage}"
+                                            <li ng-repeat="n in range(pagedItems.length, currentPageOptIn, currentPageOptIn + gap) "
+                                            ng-class="{active: n == currentPageOptIn}"
 
-                                            ng-click="setPage()"
+                                            ng-click="setPageOptIn()"
                                             ><a href="" ng-bind="n + 1" >1</a>
                                             </li>
                                             <li >
-                                                <a href="" ng-click="nextPage()">Next »</a>
+                                                <a href="" ng-click="nextPageOptIn()">Next »</a>
                                             </li>
                                     </ul>
                                 </td>
-                            </tr>
                                     <!--
                                     <div class = "btn-group" role="group">
                                         <button type="button" class="btn btn-default" ng-click="set5()">5</button>
@@ -78,9 +77,11 @@
                                 -->
                             </tfoot>
                             <tbody>
-                            <tr ng-repeat="l in pagedItems[currentPage] | filter:searchFor1">
+                            <!-- TODO find a way to fix pagination between the two tabs     -->
+                            <tr ng-repeat="l in pagedItems[currentPageOptIn] | filter:searchFor1">
                                 <td>{{l.name}}</td>
                                 <td>
+                                    <!-- TODO find a way to update index -->
                                     <button id="optOutButton" class="btn btn-default btn-block"
                                             ng-click="optOut($index + (currentPage * itemsPerPage))" ng-disabled="disableOptOut($index + (currentPage * itemsPerPage))"
                                             ng-attr-title="{{ tooltipText($index + (currentPage * itemsPerPage)) }}">
@@ -112,7 +113,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="o in optInList | filter:searchFor2">
+                            <tr ng-repeat="o in pagedItems[currentPageOptOut] | filter:searchFor2">
                                 <td>{{o.name}}</td>
                                 <td>
                                     <button ng-disabled="disableOptIn($index)" class="btn btn-default btn-block"
@@ -121,10 +122,43 @@
                                 </td>
                             </tr>
                             </tbody>
+                            <tfoot>
+                                <td colspan="6">
+                                    <!-- TODO change to fit new variable -->
+                                    <!-- Botton part of the two  -->
+                                        <ul class = "pagination pull-right" >
+                                            <li>
+                                                <a href="" ng-click="prevPageOptOut()" >« Prev</a>
+                                            </li>
+                                            <li ng-repeat="n in range(pagedItems.length, currentPageBot, currentPageBot + gap) "
+                                            ng-class="{active: n == currentPageBot}"
+
+                                            ng-click="setPageOptOut()"
+                                            ><a href="" ng-bind="n + 1" >1</a>
+                                            </li>
+                                            <li >
+                                                <a href="" ng-click="nextPageOptOut()">Next »</a>
+                                            </li>
+                                    </ul>
+                                </td>
+                                <!-- TODO implement this back in  -->
+                                    <!--
+                                    <div class = "btn-group" role="group">
+                                        <button type="button" class="btn btn-default" ng-click="set5()">5</button>
+                                        <button type="button" class="btn btn-default" ng-click="set10()">10</button>
+                                        <button type="button" class="btn btn-default" ng-click="set25()">25</button>
+                                        <button type="button" class="btn btn-default" ng-click="set100()">100</button>
+                                    </div>
+                                -->
+                            </tfoot>
                         </table>
                     </div>
                 </div>
 
+
+
+
+                <!-- Divide between the tabs  -->
                 <div class="tab-pane fade" id="optOut">
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding: 2px">
@@ -136,6 +170,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Make an "On load" pagination so it loads for differnt tabs -->
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
@@ -189,15 +225,11 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
-
-
     </div>
 </div>
 
-
+<!-- to map out  CurrentWindow * (WindowSize - 1) + 1 -->
 
 
 <!-- / Content container. -->

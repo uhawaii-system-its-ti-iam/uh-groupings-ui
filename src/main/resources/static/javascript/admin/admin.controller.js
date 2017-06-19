@@ -18,6 +18,10 @@
         /**
          * Initializing function for the admin page.
          * Calls dataProvider service to retrieve a list of admins.
+         * @returns returns
+         *                1 for ascending
+         *                -1 for descending
+         *                0 for failed attempt
          */
         $scope.init = function () {
             dataProvider.loadData(function (d) {

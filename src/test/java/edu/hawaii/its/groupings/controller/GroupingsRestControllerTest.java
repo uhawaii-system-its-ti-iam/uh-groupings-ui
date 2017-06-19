@@ -28,10 +28,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
-import edu.hawaii.its.groupings.api.GroupingsService;
+import edu.hawaii.its.groupings.api.service.GroupingsService;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 @RunWith(SpringRunner.class)
@@ -69,10 +68,11 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("bob"))
                 .andExpect(jsonPath("path").value("test:ing:me:bob"))
-                .andExpect(jsonPath("listserveOn").value("true"))
+                .andExpect(jsonPath("listservOn").value("true"))
                 .andExpect(jsonPath("basis.members", hasSize(3)))
                 .andExpect(jsonPath("basis.members[0].name").value("b0-name"))
                 .andExpect(jsonPath("basis.members[0].uuid").value("b0-uuid"))
+
                 .andExpect(jsonPath("basis.members[0].username").value("b0-username"))
                 .andExpect(jsonPath("basis.members[1].name").value("b1-name"))
                 .andExpect(jsonPath("basis.members[1].uuid").value("b1-uuid"))
@@ -121,7 +121,7 @@ public class GroupingsRestControllerTest {
         owners.addMember(new Person("o3-name", "o3-uuid", "o3-username"));
         grouping.setOwners(owners);
 
-        grouping.setListserveOn(true);
+        grouping.setListservOn(true);
 
         return grouping;
     }
@@ -293,28 +293,28 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void getSetListserve() throws Exception {
+    public void getSetListserv() throws Exception {
         final String grouping = "grouping";
         final String username = "username";
-        GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "listserve has been added to grouping");
-        GroupingsServiceResult gsr2 = new GroupingsServiceResult("SUCCESS", "listserve has been removed from grouping");
+        GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "listserv has been added to grouping");
+        GroupingsServiceResult gsr2 = new GroupingsServiceResult("SUCCESS", "listserv has been removed from grouping");
 
-        given(groupingsService.changeListServeStatus(grouping, username, true))
+        given(groupingsService.changeListservStatus(grouping, username, true))
                 .willReturn(gsr);
-        given(groupingsService.changeListServeStatus(grouping, username, false))
+        given(groupingsService.changeListservStatus(grouping, username, false))
                 .willReturn(gsr2);
 
-        mockMvc.perform(post("/api/groupings/grouping/username/true/setListserve")
+        mockMvc.perform(post("/api/groupings/grouping/username/true/setListserv")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("listserve has been added to grouping"));
+                .andExpect(jsonPath("action").value("listserv has been added to grouping"));
 
-        mockMvc.perform(post("/api/groupings/grouping/username/false/setListserve")
+        mockMvc.perform(post("/api/groupings/grouping/username/false/setListserv")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("listserve has been removed from grouping"));
+                .andExpect(jsonPath("action").value("listserv has been removed from grouping"));
     }
 
     @Test

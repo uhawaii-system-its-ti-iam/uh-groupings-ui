@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import edu.hawaii.its.groupings.api.GroupingsService;
+import edu.hawaii.its.groupings.api.service.GroupingsService;
 import edu.hawaii.its.groupings.api.type.Grouping;
 import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
 import edu.hawaii.its.groupings.api.type.MyGroupings;
@@ -282,21 +282,21 @@ public class GroupingsRestController {
     }
 
     /**
-     * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserve
+     * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserv
      *
      * @param grouping:    the path to the Grouping
      * @param username:    username of the Grouping's owner
-     * @param listServeOn: true if the listserve should be on, false if it should be off
-     * @return iformation about the success of the operation
+     * @param listservOn: true if the listserv should be on, false if it should be off
+     * @return information about the success of the operation
      */
-    @RequestMapping(value = "/{grouping}/{username}/{listServeOn}/setListserve",
+    @RequestMapping(value = "/{grouping}/{username}/{listservOn}/setListserv",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult> setListserve(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean listServeOn) {
-        logger.info("Entered REST setListserve...");
+    public ResponseEntity<GroupingsServiceResult> setListserv(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean listservOn) {
+        logger.info("Entered REST setListserv...");
         return ResponseEntity
                 .ok()
-                .body(gs.changeListServeStatus(grouping, username, listServeOn));
+                .body(gs.changeListservStatus(grouping, username, listservOn));
     }
 
     /**
