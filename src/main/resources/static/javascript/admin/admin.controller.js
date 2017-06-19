@@ -9,8 +9,8 @@
      * @constructor
      */
     function AdminJsController($scope, dataProvider, dataUpdater, dataDelete) {
-        var currentUser = "aaron";//document.getElementById("name").innerHTML;
-        var url = "api/groupings/tmp:win-aux/" + currentUser + "/grouping";
+        var currentUser = document.getElementById("name").innerHTML;
+        var url = "api/groupings/tmp:win-many/" + currentUser + "/grouping";
         $scope.list = [];
         //Adds the loading spinner
         $scope.loading = true;
