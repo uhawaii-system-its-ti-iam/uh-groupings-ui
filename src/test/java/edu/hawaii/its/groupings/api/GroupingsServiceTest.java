@@ -1,5 +1,6 @@
 package edu.hawaii.its.groupings.api;
 
+import edu.hawaii.its.groupings.api.service.GroupingsService;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import org.junit.Before;
 import org.junit.Test;

@@ -26,7 +26,7 @@
 // import org.springframework.test.web.servlet.MockMvc;
 // import org.springframework.web.context.WebApplicationContext;
 //
-// import edu.hawaii.its.groupings.api.GroupingsService;
+// import edu.hawaii.its.groupings.api.service.GroupingsService;
 // import edu.hawaii.its.groupings.api.type.Group;
 // import edu.hawaii.its.groupings.api.type.Grouping;
 // import edu.hawaii.its.groupings.api.type.Person;

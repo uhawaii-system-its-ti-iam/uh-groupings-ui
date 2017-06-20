@@ -61,6 +61,7 @@
 
                 $scope.loading = false;
             }, groupingURL);
+            console.log("Finish dataProvider");
         };
 
 
@@ -251,9 +252,6 @@
         $scope.setPageOptOut = function () {
             $scope.currentPageOptOut = this.n;
         };
-
-
-
     }
 
     membershipApp.controller("MembershipJsController", MembershipJsController);

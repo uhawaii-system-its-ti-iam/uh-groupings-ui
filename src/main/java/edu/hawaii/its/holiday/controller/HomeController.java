@@ -17,16 +17,16 @@ public class HomeController {
 
     private static final Log logger = LogFactory.getLog(HomeController.class);
 
-    //Mapping to home
+    // Mapping to home.
     @RequestMapping(value = { "/", "/home" }, method = { RequestMethod.GET })
     public String home(Map<String, Object> model, Locale locale) {
         logger.info("User at home. The client locale is " + locale);
         return "home";
     }
 
-    @GetMapping(value={"/campus","/campuses"})
-    public String campus(){
-        logger.debug("User at campus");
+    @GetMapping(value = { "/campus", "/campuses" })
+    public String campus() {
+        logger.debug("User at campus.");
         return "campus";
     }
 

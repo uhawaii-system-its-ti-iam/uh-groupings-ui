@@ -8,12 +8,18 @@
      * @param dataDelete    : service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function AdminJsController($scope, dataProvider, dataUpdater, dataDelete) {
-        var currentUser = document.getElementById("name").innerText;
-        var url = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/grouping";
+    function AdminJsController($scope, $window, dataProvider, dataUpdater, dataDelete) {
+
+        $scope.currentUsername = "";
         $scope.list = [];
-        //Adds the loading spinner
-        $scope.loading = true;
+
+        $scope.initCurrentUsername = function() {
+            $scope.currentUsername = $window.document.getElementById("name").innerHTML;
+        };
+
+        $scope.getCurrentUsername = function() {
+            return $scope.currentUsername;
+        };
 
         /**
          * Initializing function for the admin page.
@@ -24,10 +30,20 @@
          *                0 for failed attempt
          */
         $scope.init = function () {
-            dataProvider.loadData(function (d) {
+
+            // Adds the loading spinner.
+            $scope.loading = true;
+
+            $scope.initCurrentUsername(); 
+            console.log("AdminJsController.init; currentUsername: " + $scope.getCurrentUsername());
+
+            var url = "api/groupings/tmp:win-many/" + $scope.getCurrentUsername() + "/grouping";
+            console.log("AdminJsController.init; url: " + url);
+
+            dataProvider.loadData(function(d) {
                 var tempList = d.basisPlusIncludeMinusExclude.members;
 
-                //sorts the data by name
+                // Sorts the data by name.
                 tempList.sort(function (a, b) {
                     var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
                     if (nameA < nameB) //sort string ascending
@@ -39,12 +55,12 @@
 
                 var basis = d.basis.members;
 
-                //Default add everyone as not in basis
+                // Default add everyone as not in basis.
                 for (var k = 0; k < tempList.length; k++) {
                     tempList[k].basis = "\u2716";
                 }
 
-                //Adds whether or not a member is in the basis group or not
+                // Adds whether or not a member is in the basis group or not.
                 for (var l = 0; l < basis.length; l++) {
                     for (var m = 0; m < tempList.length; m++) {
                         if (basis[l].name === tempList[m].name) {
@@ -59,6 +75,7 @@
             }, url);
         };
 
+
         /**
          * Adds function that adds an member to the admin grouping.
          * Uses dataUpdater service to post the user that is being added.
@@ -66,7 +83,7 @@
          * Else if resultCode is undefined, then user was not successfully added.
          */
         $scope.add = function () {
-            var addUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/" + $scope.username + "/addMemberToIncludeGroup";
+            var addUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + $scope.getCurrentUsername() + "/" + $scope.username + "/addMemberToIncludeGroup";
             $scope.testdata = [];
 
             if (confirm("You are adding " + $scope.username + " to the include list of this grouping")) {
@@ -93,15 +110,14 @@
          */
         $scope.remove = function (index) {
             var deleteUser = $scope.list[index].username;
-            var deleteUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + currentUser + "/" + deleteUser + "/deleteMemberFromIncludeGroup";
-
+            var deleteUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteMemberFromIncludeGroup";
             if ($scope.list.length > 1) {
                 dataDelete.deleteData(function (d) {
                     $scope.list.splice(index, 1);
                     $scope.init();
                 }, deleteUrl);
             }
-        }
+        };
     }
 
     adminApp.controller("AdminJsController", AdminJsController);
