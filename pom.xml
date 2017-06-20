@@ -28,7 +28,7 @@
 
         <jquery-version>3.2.0</jquery-version>
         <angular-mocks-version>1.5.8</angular-mocks-version>
-        <!-- <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version> -->
+        <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version>
         <angularjs-version>1.5.8</angularjs-version>
         <bootstrap-version>3.3.7</bootstrap-version>
     </properties>
@@ -163,7 +163,6 @@
             <artifactId>angular-ui-bootstrap</artifactId>
             <version>${angular-ui-bootstrap-version}</version>
         </dependency>
-    -->
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-mocks</artifactId>
