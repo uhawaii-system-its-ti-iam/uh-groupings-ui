@@ -19,6 +19,7 @@
         $scope.optedIn = [];
         $scope.optedOut = [];
         $scope.loading = true;
+        
 
         $scope.pagedItems=[];
         $scope.gap=5;
