@@ -11,6 +11,7 @@ import edu.hawaii.its.groupings.api.type.*;
 import edu.hawaii.its.holiday.util.Dates;
 
 import edu.internet2.middleware.grouperClient.api.*;
+import edu.internet2.middleware.grouperClient.ws.WsMemberFilter;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 
 import org.apache.commons.logging.Log;
@@ -1045,6 +1046,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("getMembers; lookup: " + lookup + "; group: " + group);
         String username = lookup.getSubjectIdentifier();
 
+        //TODO think about not showing Groups, only users
         List<String> groupNames = Collections.singletonList(group);
         String grouping = extractGroupingNames(groupNames).get(0);
         if (isOwner(grouping, username)) {
