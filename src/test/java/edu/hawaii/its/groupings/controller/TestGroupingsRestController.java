@@ -342,7 +342,7 @@ public class TestGroupingsRestController {
         Grouping storeEmpty = gs.getGrouping(GROUPING_STORE_EMPTY, tst[0]);
         Grouping trueEmpty = gs.getGrouping(GROUPING_TRUE_EMPTY, tst[0]);
 
-        assertTrue(storeEmpty.getBasis().getMembers().size() == 0);
+        assertTrue(storeEmpty.getBasis().getMembers().size() == 1);
         assertTrue(storeEmpty.getBasisPlusIncludeMinusExclude().getMembers().size() == 0);
         assertTrue(storeEmpty.getExclude().getMembers().size() == 0);
         assertTrue(storeEmpty.getInclude().getMembers().size() == 0);
