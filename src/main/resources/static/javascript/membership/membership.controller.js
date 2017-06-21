@@ -20,6 +20,7 @@
         $scope.optedOut = [];
         $scope.loading = true;
 
+
         $scope.pagedItems=[];
         $scope.gap=5;
         $scope.itemsPerPage = 25;
