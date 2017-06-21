@@ -50,17 +50,30 @@ describe("MembershipJsController", function () {
     });
 
     it("checkPageGroupFunction", function() {
-        spyOn(scope, "init").and.callFake(function () {
-            for(var i = 0; i < 100; i++) {
+        spyOn(scope, "init").and.callFake(function() {
+            for(var i = 1; i < 101; i++) {
                 scope.membersList.push({
-                    "name": "ksanidad-test",
+                    "name": "group "+i
+                });
+                scope.pagedItems.push({
+                    "name": "group "+i
                 });
             }
         });
 
+
         scope.init();
+        // scope.groupToPages();
         expect(scope.init).toHaveBeenCalled();
-        expect(scope.groupToPages).toHaveBeenCalled();
+        // expect(scope.groupToPages).toHaveBeenCalled();
+        expect(scope.membersList.length).toEqual(100);
+        expect(scope.itemsPerPage).toEqual(25);
+        expect(scope.pagedItems.length).toEqual(100);
+        expect(scope.currentPageOptIn).toEqual(0);
+        scope.prevPageOptIn();
+        expect(scope.currentPageOptIn).toEqual(0);
+        scope.nextPageOptIn();
+        expect(scope.currentPageOptIn).toEqual(1);
     });
 
 });
