@@ -143,8 +143,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param grouping:    the path of the Grouping that will have its listserv status changed
-     * @param username:    username of the Grouping Owner preforming the action
+     * @param grouping:   the path of the Grouping that will have its listserv status changed
+     * @param username:   username of the Grouping Owner preforming the action
      * @param listservOn: true if the listserv should be turned on, false if it should be turned off
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
@@ -162,10 +162,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn) {
         assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, grouping + INCLUDE, optInOn);
-        if(optInOn) {
-            assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + INCLUDE, optInOn);
-            assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + EXCLUDE, optInOn);
-        }
+        assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + EXCLUDE, optInOn);
         return changeGroupAttributeStatus(grouping, username, OPT_IN, optInOn);
     }
 
@@ -178,10 +175,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public GroupingsServiceResult changeOptOutStatus(String grouping, String username, boolean optOutOn) {
         assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, grouping + EXCLUDE, optOutOn);
-        if(optOutOn) {
-            assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + EXCLUDE, optOutOn);
-            assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + INCLUDE, optOutOn);
-        }
+        assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + INCLUDE, optOutOn);
         return changeGroupAttributeStatus(grouping, username, OPT_OUT, optOutOn);
     }
 
@@ -359,25 +353,29 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<GroupingsServiceResult> cancelOptIn(String grouping, String username) {
         List<GroupingsServiceResult> results = new ArrayList<>();
         String group = grouping + INCLUDE;
+        String action = "cancel opt in for " + username + " to " + grouping;
 
         if (inGroup(group, username)) {
-            if (groupOptInPermission(username, group)) {
-                results.add(deleteMemberAs(username, group, username));
+            if (checkSelfOpted(group, username)) {
+                results.add(deleteMember(group, username));
                 results.add(updateLastModified(group));
 
                 return results;
             } else {
                 results.add(new GroupingsServiceResult(
-                        username + " is not allowed to opt out of " + group,
-                        "opt " + username + " out of " + group));
+                        "FAILURE, " + username + " is not allowed to opt out of " + group,
+                        action));
             }
         } else {
             results.add(new GroupingsServiceResult(
                     "SUCCESS, " + username + " is not opted in, because " + username + " was not in " + group,
-                    "cancel opt in for " + username + " to " + grouping));
+                    action));
         }
 
         return results;
+        //TODO dont act as user
+        //TODO check self opted status
+
     }
 
     /**
@@ -391,22 +389,23 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<GroupingsServiceResult> cancelOptOut(String grouping, String username) {
         String group = grouping + EXCLUDE;
         List<GroupingsServiceResult> results = new ArrayList<>();
+        String action = "cancel opt out for " + username + " to " + grouping;
 
-        if (inGroup(group, username)) {
+        if (checkSelfOpted(group, username)) {
             if (groupOptOutPermission(username, group)) {
-                results.add(deleteMemberAs(username, group, username));
+                results.add(deleteMember(group, username));
                 results.add(updateLastModified(group));
 
                 return results;
             } else {
                 results.add(new GroupingsServiceResult(
-                        username + " is not allowed to opt out of " + group,
-                        "opt " + username + " out of " + group));
+                        "FAILURE, " + username + " is not allowed to opt out of " + group,
+                        action));
             }
         } else {
             results.add(new GroupingsServiceResult(
                     "SUCCESS, " + username + " is not opted out, because " + username + " was not in " + group,
-                    "cancel opt out for " + username + " to " + grouping));
+                    action));
         }
         return results;
     }
@@ -585,7 +584,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
 
         for (WsGroup group : trios) {
-            if(groupsOpted.contains(group.getName())) {
+            if (groupsOpted.contains(group.getName())) {
                 groupingsOpted.add(group.getName());
             }
         }
@@ -673,7 +672,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param group:  group to search through (include extension of Grouping ie. ":include" or ":exclude")
+     * @param group:    group to search through (include extension of Grouping ie. ":include" or ":exclude")
      * @param username: username
      * @return true if the membership between the user and the group has the "self-opted" attribute
      */
@@ -959,7 +958,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     /**
      * @param username: WsSubjectLookup of user who's membership will be checked
-     * @param group:  group that membership status will be checked for
+     * @param group:    group that membership status will be checked for
      * @return membership results for user
      */
     public WsGetMembershipsResults membershipsResults(String username, String group) {
@@ -1028,6 +1027,24 @@ public class GroupingsServiceImpl implements GroupingsService {
         WsSubjectLookup user = makeWsSubjectLookup(username);
         WsDeleteMemberResults deleteMemberResults = new GcDeleteMember()
                 .assignActAsSubject(user)
+                .assignGroupName(group)
+                .addSubjectIdentifier(userToDelete)
+                .execute();
+
+        updateLastModified(parentGroupingPath(group));
+
+        return makeGroupingsServiceResult(deleteMemberResults, "delete " + userToDelete + " from " + group);
+    }
+
+    /**
+     * @param group:        path to group that the member will be removed from
+     * @param userToDelete: username of user to be removed from group
+     * @return information about success of action
+     */
+    public GroupingsServiceResult deleteMember(String group, String userToDelete) {
+        logger.info("delteMemberAs; group: " + group + "; userToDelete: " + userToDelete);
+
+        WsDeleteMemberResults deleteMemberResults = new GcDeleteMember()
                 .assignGroupName(group)
                 .addSubjectIdentifier(userToDelete)
                 .execute();
