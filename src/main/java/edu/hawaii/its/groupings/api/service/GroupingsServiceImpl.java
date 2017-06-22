@@ -275,8 +275,8 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         myGroupings.setGroupingsIn(groupingsIn(username));
         myGroupings.setGroupingsOwned(groupingsOwned(username));
-        myGroupings.setGroupingsToOptInTo(groupingsToOptInto());
-        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf());
+        myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username));
+        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username));
         myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username));
         myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username));
 
@@ -595,7 +595,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @return a list of all groupings that the user is able to opt out of
      */
-    public List<Grouping> groupingsToOptOutOf() {
+    public List<Grouping> groupingsToOptOutOf(String username) {
 
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
                 .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
@@ -608,7 +608,9 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         List<String> groups = new ArrayList<>();
         for (WsGroup group : wsGroups) {
-            groups.add(group.getName());
+            if (!inGroup(group.getName() + EXCLUDE, username)) {
+                groups.add(group.getName());
+            }
         }
 
 
@@ -620,7 +622,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @return a list of all groupings that the user is able to opt into
      */
-    public List<Grouping> groupingsToOptInto() {
+    public List<Grouping> groupingsToOptInto(String username) {
 
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
                 .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
@@ -633,7 +635,9 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         List<String> groups = new ArrayList<>();
         for (WsGroup group : wsGroups) {
-            groups.add(group.getName());
+            if (!inGroup(group.getName() + INCLUDE, username)) {
+                groups.add(group.getName());
+            }
         }
 
 

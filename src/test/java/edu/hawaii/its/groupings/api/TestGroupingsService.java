@@ -278,7 +278,7 @@ public class TestGroupingsService {
                 break;
             }
         }
-        assertTrue(canOptIn);
+        assertFalse(canOptIn);
 
         boolean canOptOut = false;
         for (Grouping grouping : myGroupings.getGroupingsToOptOutOf()) {

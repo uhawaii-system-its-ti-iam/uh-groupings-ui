@@ -191,7 +191,7 @@ public class TestGroupingsRestController {
                 break;
             }
         }
-        assertTrue(canOptin);
+        assertFalse(canOptin);
 
         boolean canOptOut = false;
         for (Grouping grouping : groupings.getGroupingsToOptOutOf()) {
