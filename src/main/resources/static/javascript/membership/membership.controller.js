@@ -20,8 +20,12 @@
         $scope.optedOut = [];
         $scope.loading = true;
 
-
-        $scope.pagedItems=[];
+        //these will be place holders for now
+        $scope.pagedItems1=[];
+        $scope.pagedItems2=[];
+        $scope.pagedItems3=[];
+        $scope.pagedItems4=[];
+        $scope.pagedItems5=[];
         $scope.gap=5;
         $scope.itemsPerPage = 25;
         $scope.currentPageOptIn = 0;
@@ -45,7 +49,11 @@
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
 
-                $scope.groupToPages();
+                $scope.pagedItems1 = $scope.groupToPages($scope.membersList);
+                $scope.pagedItems2 = $scope.groupToPages($scope.optOutList);
+                $scope.pagedItems3 = $scope.groupToPages($scope.optInList);
+                $scope.pagedItems4 = $scope.groupToPages($scope.optedIn);
+                $scope.pagedItems5 = $scope.groupToPages($scope.optedOut);
                 if($scope.optedIn.length === 0)
                 {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
@@ -161,18 +169,21 @@
         $scope.tooltipText = function(index) {
             return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
         };
-        //groups all the items to pages
-        //have sepperate arrays (hopefully)
-        //no param
-        $scope.groupToPages=function(){
-            $scope.pagedItems=[];
-            for(var i = 0; i < $scope.membersList.length ; i++){
+        /**groups all the items to pages
+           have sepperate arrays (hopefully)
+           @param
+        **/
+        $scope.groupToPages=function(theList){
+            var pagedList = theList;
+
+            for(var i = 0; i < theList.length ; i++){
                 if(i % $scope.itemsPerPage === 0){
-                    $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)] = [ $scope.membersList[i]];
+                    pagedList[Math.floor(i/$scope.itemsPerPage)] = [ theList[i]];
                 }else{
-                    $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)].push( $scope.membersList[i]);
+                    pagedList[Math.floor(i/$scope.itemsPerPage)].push( theList[i]);
                 }
             }
+            return pagedList;
         };
 
         /**shows the range between the start and end

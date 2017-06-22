@@ -78,7 +78,7 @@
                             </tfoot>
                             <tbody>
                             <!-- TODO find a way to fix pagination between the two tabs     -->
-                            <tr ng-repeat="l in pagedItems[currentPageOptIn] | filter:searchFor1">
+                            <tr ng-repeat="l in pagedItems1[currentPageOptIn] | filter:searchFor1">
                                 <td>{{l.name}}</td>
                                 <td>
                                     <!-- TODO find a way to update index -->
@@ -113,7 +113,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="o in pagedItems[currentPageOptOut] | filter:searchFor2">
+                            <tr ng-repeat="o in pagedItems2[currentPageOptOut] | filter:searchFor2">
                                 <td>{{o.name}}</td>
                                 <td>
                                     <button ng-disabled="disableOptIn($index)" class="btn btn-default btn-block"
