@@ -21,6 +21,8 @@
         $scope.groupingExclude = [];
         $scope.ownerList = [];
         $scope.pref = [];
+        $scope.allowOptIn = [];
+        $scope.allowOptOut = [];
         $scope.showGrouping = false;
         $scope.loading = true;
         $scope.groupingName = '';
@@ -98,10 +100,20 @@
 
                 //Gets owners of the grouping
                 $scope.ownerList = d.owners.members;
+                $scope.modify($scope.ownerList);
 
-                $scope.pref = d.hasListserv;
+                $scope.pref = d.listservOn;
+                $scope.allowOptIn = d.optInOn;
+                $scope.allowOptOut = d.optOutOn;
+
                 if ($scope.pref == true) {
                     $('#listserv').prop("checked", true);
+                }
+                if ($scope.allowOptIn == true) {
+                    $('#optInOption').prop("checked", true);
+                }
+                if ($scope.allowOptOut == true) {
+                    $('#optOutOption').prop("checked", true);
                 }
 
                 //Stop loading spinner
@@ -121,16 +133,6 @@
          *                0 for failed attempt
          */
         $scope.modify = function (grouping) {
-            //sorts data in alphabetic order
-            grouping.sort(function (a, b) {
-                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
-                if (nameA < nameB) //sort string ascending
-                    return -1;
-                if (nameA > nameB)
-                    return 1;
-                return 0
-            });
-
             //Filter out names with hawaii.edu and adds basis object.
             for (var i = 0; i < grouping.length; i++) {
                 grouping[i].basis = "\u2716";
@@ -148,6 +150,16 @@
                     }
                 }
             }
+
+            //sorts data in alphabetic order
+            grouping.sort(function (a, b) {
+                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                if (nameA < nameB) //sort string ascending
+                    return -1;
+                if (nameA > nameB)
+                    return 1;
+                return 0
+            });
         };
 
         /**
@@ -160,7 +172,15 @@
             }
             else {
                 $scope.showGrouping = false;
-                $scope.groupingName = ''
+                $scope.groupingName = '';
+                $scope.groupingsList = [];
+                $scope.groupingsBasis = [];
+                $scope.groupingInclude = [];
+                $scope.groupingExclude = [];
+                $scope.ownerList = [];
+                $scope.pref = false;
+                $scope.allowOptIn = false;
+                $scope.allowOptOut = false;
             }
         };
 
