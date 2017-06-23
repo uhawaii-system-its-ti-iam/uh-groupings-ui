@@ -3,7 +3,7 @@
     /**
      * Owner controller for the groupings page
      *
-     * @param $scope        : Binding variable between controller and html page.
+     * @param $scope        : A Binding variable between controller and html page.
      * @param dataProvider  : service function that acts as the AJAX get.
      * @param dataUpdater   : service function that acts as AJAX post, used mainly for adding or updating
      * @param dataDeleter    : service function that acts as AJAX psst, use function mainly for delete function.
@@ -33,6 +33,7 @@
         $scope.init = function () {
             dataProvider.loadData(function (d) {
                 var temp = [];
+                console.log(d);
                 //Assigns grouping name, folder directories and url used for api call.
                 for (var i = 0; i < d.groupingsOwned.length; i++) {
                     temp[i] = d.groupingsOwned[i].path.substr(18).split(':');
@@ -88,7 +89,7 @@
 
                 //Gets members in the basis group
                 $scope.groupingsBasis = d.basis.members;
-                 $scope.modify($scope.groupingsBasis);
+                $scope.modify($scope.groupingsBasis);
 
                 //Gets members in the include group
                 $scope.groupingInclude = d.include.members;
@@ -109,12 +110,21 @@
                 if ($scope.pref == true) {
                     $('#listserv').prop("checked", true);
                 }
+                else {
+                    $('#listserv').prop("checked", false);
+                }
                 if ($scope.allowOptIn == true) {
                     $('#optInOption').prop("checked", true);
                 }
+    /*            else {
+                    $('#optInOption').prop("checked", false);
+                }*/
                 if ($scope.allowOptOut == true) {
                     $('#optOutOption').prop("checked", true);
                 }
+               /* else {
+                    $('#optOutOption').prop("checked", false);
+                }*/
 
                 //Stop loading spinner
                 $scope.loading = false;
@@ -215,10 +225,10 @@
          */
         $scope.removeMember = function (type, row) {
             var user;
-            if(type === 'Include'){
+            if (type === 'Include') {
                 user = $scope.groupingInclude[row].username;
             }
-            if(type === 'Exclude'){
+            if (type === 'Exclude') {
                 user = $scope.groupingExclude[row].username;
             }
 
@@ -269,24 +279,43 @@
          * Saves changes made to grouping privileges
          */
         $scope.savePref = function () {
+            var prefUrls = [];
             if (confirm("Are you sure you want to save")) {
-                if ($('#addOption').is(':checked')) {
-                    console.log("You are allowing members to opt in your grouping")
+                if ($('#optInOption').is(':checked')) {
+                    $scope.allowOptIn = true;
                 }
                 else {
-                    console.log("You are not allowing members to opt in your grouping")
+                    $scope.allowOptIn = false;
                 }
-                if ($('#removeOption').is(':checked')) {
-                    console.log("You are allowing members to exclude themselves from your groupings")
+                if ($('#optOutOption').is(':checked')) {
+                    $scope.allowOptOut = true;
                 }
                 else {
-                    console.log("You are not allowing members to exclude themselves from your groupings")
+                    $scope.allowOptOut = false;
                 }
                 if ($('#listserv').is(':checked')) {
-                    console.log("LISTSERV is true")
+                    $scope.pref = true;
                 }
                 else {
-                    console.log("LISTSERV is false")
+                    $scope.pref = false;
+                }
+                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.pref + "/setListserv", "name" : "Listserv"});
+                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.allowOptIn + "/setOptIn", "name" : "optInOption"});
+                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.allowOptOut + "/setOptOut", "name" : "optOutOption"});
+
+                for (var i = 0; i < prefUrls.length; i++) {
+                    dataUpdater.addData(function (d) {
+                        console.log(d);
+                        if (d.resultCode === "SUCCESS") {
+                            console.log("preference successfully updated");
+                            alert("preference successfully updated");
+                            $scope.getData();
+                        }
+                        else if (typeof d.resultsCode === 'undefined') {
+                            console.log("preference did not change");
+                            alert("preference did not change");
+                        }
+                    }, prefUrls[i].url);
                 }
             }
         };
@@ -337,5 +366,6 @@
             return str;
         };
     }
+
     ownerApp.controller("OwnerJsController", OwnerJsController);
 })();
