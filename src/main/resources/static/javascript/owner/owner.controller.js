@@ -9,9 +9,17 @@
      * @param dataDeleter    : service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function OwnerJsController($scope, dataProvider, dataUpdater, dataDeleter) {
-        var currentUser = document.getElementById("name").innerText;
-        var groupingsOwned = "api/groupings/" + currentUser + "/myGroupings";
+    function OwnerJsController($scope, $window, dataProvider, dataUpdater, dataDeleter) {
+        $scope.currentUsername = "";
+        $scope.initCurrentUsername = function() {
+            $scope.currentUsername = $window.document.getElementById("name").innerHTML;
+        };
+
+        $scope.getCurrentUsername = function() {
+            return $scope.currentUsername;
+        };
+
+        var groupingsOwned;
         var getUrl;
 
         $scope.ownedList = [];
@@ -31,6 +39,9 @@
          * Initialize function that retrieves the groupings you own.
          */
         $scope.init = function () {
+            $scope.initCurrentUsername();
+
+            groupingsOwned = "api/groupings/" + $scope.getCurrentUsername() + "/myGroupings";
             dataProvider.loadData(function (d) {
                 var temp = [];
                 console.log(d);
@@ -77,7 +88,7 @@
          *  owners list and grouping privileges.
          */
         $scope.getData = function () {
-            getUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/grouping";
+            getUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/grouping";
             $scope.loading = true;
             dataProvider.loadData(function (d) {
                 console.log(d);
@@ -199,7 +210,7 @@
          * @param type : the type of group that the user is being added into. Include or exclude.
          */
         $scope.addMember = function (type) {
-            var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
+            var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataUpdater.addData(function (d) {
                 if (d.resultCode === "SUCCESS") {
                     console.log("success in adding " + $scope.addUser);
@@ -229,7 +240,7 @@
                 user = $scope.groupingExclude[row].username;
             }
 
-            var URL = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + user + "/deleteMemberFrom" + type + "Group";
+            var URL = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
             dataDeleter.deleteData(function (d) {
                 console.log(d);
                 $scope.getData();
@@ -243,7 +254,7 @@
          */
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.ownerList[index].username;
-            var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + removeOwner + "/removeOwnership";
+            var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
             if ($scope.ownerList.length > 1) {
                 dataDeleter.deleteData(function (d) {
                     $scope.getData();
@@ -257,7 +268,7 @@
          * Otherwise alerts that the user does not exist.
          */
         $scope.addOwner = function () {
-            var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.ownerUser + "/assignOwnership";
+            var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.ownerUser + "/assignOwnership";
             dataUpdater.addData(function (d) {
                 if (d[0].resultCode === "SUCCESS") {
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
@@ -296,9 +307,9 @@
                 else {
                     $scope.pref = false;
                 }
-                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.pref + "/setListserv", "name" : "Listserv"});
-                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.allowOptIn + "/setOptIn", "name" : "optInOption"});
-                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.allowOptOut + "/setOptOut", "name" : "optOutOption"});
+                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.pref + "/setListserv", "name" : "Listserv"});
+                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn", "name" : "optInOption"});
+                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut", "name" : "optOutOption"});
 
                 for (var i = 0; i < prefUrls.length; i++) {
                     dataUpdater.addData(function (d) {
