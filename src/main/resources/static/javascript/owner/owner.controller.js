@@ -116,15 +116,15 @@
                 if ($scope.allowOptIn == true) {
                     $('#optInOption').prop("checked", true);
                 }
-    /*            else {
+                else {
                     $('#optInOption').prop("checked", false);
-                }*/
+                }
                 if ($scope.allowOptOut == true) {
                     $('#optOutOption').prop("checked", true);
                 }
-               /* else {
+                else {
                     $('#optOutOption').prop("checked", false);
-                }*/
+                }
 
                 //Stop loading spinner
                 $scope.loading = false;
@@ -188,9 +188,6 @@
                 $scope.groupingInclude = [];
                 $scope.groupingExclude = [];
                 $scope.ownerList = [];
-                $scope.pref = false;
-                $scope.allowOptIn = false;
-                $scope.allowOptOut = false;
             }
         };
 
