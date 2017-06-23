@@ -39,14 +39,38 @@
                             <th>remove</th>
                         </tr>
                         </thead>
+                      <tfoot>
+                      <td colspan="6">
+                        <ul class = "pagination pull-right" >
+                          <li>
+                            <a href="" ng-click="firstPage()">«« First</a>
+                          </li>
+                          <li>
+                            <a href="" ng-click="prevPage()">« Prev</a>
+                          </li>
+                          <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
+                              ng-class="{active: n == currentPage}"
+
+                              ng-click="setPage()"
+                          ><a href="" ng-bind="n + 1" >1</a>
+                          </li>
+                          <li>
+                            <a href="" ng-click="nextPage()">Next »</a>
+                          </li>
+                          <li>
+                            <a href="" ng-click="lastPage()">Last »»</a>
+                          </li>
+                        </ul>
+                      </td>
+                      </tfoot>
                         <tbody>
-                        <tr ng-repeat="l in list | filter:searchFor">
+                        <tr ng-repeat="l in pagedItems[currentPage] | filter:searchFor">
                             <td class="text-center" style="width: 3%">{{l.basis}}</td>
                             <td>{{l.name}}</td>
                             <td>{{l.uuid}}</td>
                             <td>{{l.username}}</td>
                             <td>
-                                <button class="btn btn-default btn-block" ng-click="remove($index)"><span
+                                <button class="btn btn-default btn-block" ng-click="remove($index + (currentPage * itemsPerPage))"><span
                                         class="glyphicon glyphicon-remove"></span></button>
                             </td>
                         </tr>
