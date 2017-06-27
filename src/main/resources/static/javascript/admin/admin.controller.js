@@ -42,10 +42,8 @@
             $scope.loading = true;
 
             $scope.initCurrentUsername();
-            console.log("AdminJsController.init; currentUsername: " + $scope.getCurrentUsername());
 
             var url = "api/groupings/tmp:win-many/" + $scope.getCurrentUsername() + "/grouping";
-            console.log("AdminJsController.init; url: " + url);
 
             dataProvider.loadData(function (d) {
                 var tempList = d.basisPlusIncludeMinusExclude.members;
@@ -79,7 +77,6 @@
                 $scope.list = tempList;
                 $scope.groupToPages();
                 $scope.loading = false;
-                console.log($scope.list);
             }, url);
         };
 
@@ -120,12 +117,12 @@
             var deleteUser = $scope.list[index].username;
             var deleteUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteMemberFromIncludeGroup";
             console.log(deleteUrl);
-            /*if ($scope.list.length > 1) {
+            if ($scope.list.length > 1) {
              dataDelete.deleteData(function (d) {
              $scope.list.splice(index, 1);
              $scope.init();
              }, deleteUrl);
-             }*/
+             }
         };
 
         $scope.groupToPages=function(){
@@ -165,42 +162,34 @@
             return ret;
         };
 
-        // Conceptually the next bunch of functions are the
-        // same but with different names
-
-        //THIS SECTION WOULD BE FOR THE OptIn SECTION
-
-        $scope.firstPage = function () {
-            $scope.currentPage = 0;
-        };
-
-        /**if the current page is not 0, it will minus the current page by one
-         *current page will never go negative
-         **/
-        $scope.prevPage = function () {
-            if ($scope.currentPage > 0) {
-                $scope.currentPage--;
+        /**
+         * Determines which page the pagination moves to. Defaults to setting the page to whatever page is.
+         *
+         * @param page, the page moving to.
+         */
+        $scope.paging = function (page) {
+            switch (page) {
+                case "first":
+                    $scope.currentPage = 0;
+                    break;
+                case "prev":
+                    if ($scope.currentPage > 0) {
+                        $scope.currentPage--;
+                    }
+                    break;
+                case "next" :
+                    if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                        $scope.currentPage = $scope.currentPage +1;
+                    }
+                    break;
+                case "last" :
+                    $scope.currentPage = $scope.pagedItems.length - 1;
+                    break;
+                default :
+                    $scope.currentPage = page;
+                    break;
             }
         };
-
-        /**if the current page is less than the items in the array, it will
-         *add one to current page
-         **/
-        $scope.nextPage = function () {
-            if ($scope.currentPage < $scope.pagedItems.length - 1) {
-                $scope.currentPage = $scope.currentPage +1;
-            }
-        };
-
-        $scope.lastPage = function () {
-            $scope.currentPage = $scope.pagedItems.length - 1;
-        };
-
-        //takes the clicked page and set that to the current page
-        $scope.setPage = function () {
-            $scope.currentPage = this.n;
-        };
-
     }
 
     adminApp.controller("AdminJsController", AdminJsController);

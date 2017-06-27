@@ -43,22 +43,22 @@
                       <td colspan="6">
                         <ul class = "pagination pull-right" >
                           <li>
-                            <a href="" ng-click="firstPage()">«« First</a>
+                            <a href="" ng-click="paging('first')">«« First</a>
                           </li>
                           <li>
-                            <a href="" ng-click="prevPage()">« Prev</a>
+                            <a href="" ng-click="paging('prev')">« Prev</a>
                           </li>
                           <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
                               ng-class="{active: n == currentPage}"
 
-                              ng-click="setPage()"
+                              ng-click="paging(n)"
                           ><a href="" ng-bind="n + 1" >1</a>
                           </li>
                           <li>
-                            <a href="" ng-click="nextPage()">Next »</a>
+                            <a href="" ng-click="paging('next')">Next »</a>
                           </li>
                           <li>
-                            <a href="" ng-click="lastPage()">Last »»</a>
+                            <a href="" ng-click="paging('last')">Last »»</a>
                           </li>
                         </ul>
                       </td>
