@@ -3,15 +3,23 @@
     /**
      * Owner controller for the groupings page
      *
-     * @param $scope        : Binding variable between controller and html page.
+     * @param $scope        : A Binding variable between controller and html page.
      * @param dataProvider  : service function that acts as the AJAX get.
      * @param dataUpdater   : service function that acts as AJAX post, used mainly for adding or updating
      * @param dataDeleter    : service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function OwnerJsController($scope, dataProvider, dataUpdater, dataDeleter) {
-        var currentUser = document.getElementById("name").innerText;
-        var groupingsOwned = "api/groupings/" + currentUser + "/myGroupings";
+    function OwnerJsController($scope, $window, dataProvider, dataUpdater, dataDeleter) {
+        $scope.currentUsername = "";
+        $scope.initCurrentUsername = function() {
+            $scope.currentUsername = $window.document.getElementById("name").innerHTML;
+        };
+
+        $scope.getCurrentUsername = function() {
+            return $scope.currentUsername;
+        };
+
+        var groupingsOwned;
         var getUrl;
 
         $scope.ownedList = [];
@@ -21,6 +29,8 @@
         $scope.groupingExclude = [];
         $scope.ownerList = [];
         $scope.pref = [];
+        $scope.allowOptIn = [];
+        $scope.allowOptOut = [];
         $scope.showGrouping = false;
         $scope.loading = true;
         $scope.groupingName = '';
@@ -29,8 +39,12 @@
          * Initialize function that retrieves the groupings you own.
          */
         $scope.init = function () {
+            $scope.initCurrentUsername();
+
+            groupingsOwned = "api/groupings/" + $scope.getCurrentUsername() + "/myGroupings";
             dataProvider.loadData(function (d) {
                 var temp = [];
+                console.log(d);
                 //Assigns grouping name, folder directories and url used for api call.
                 for (var i = 0; i < d.groupingsOwned.length; i++) {
                     temp[i] = d.groupingsOwned[i].path.substr(18).split(':');
@@ -74,7 +88,7 @@
          *  owners list and grouping privileges.
          */
         $scope.getData = function () {
-            getUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/grouping";
+            getUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/grouping";
             $scope.loading = true;
             dataProvider.loadData(function (d) {
                 console.log(d);
@@ -86,7 +100,7 @@
 
                 //Gets members in the basis group
                 $scope.groupingsBasis = d.basis.members;
-                 $scope.modify($scope.groupingsBasis);
+                $scope.modify($scope.groupingsBasis);
 
                 //Gets members in the include group
                 $scope.groupingInclude = d.include.members;
@@ -98,10 +112,29 @@
 
                 //Gets owners of the grouping
                 $scope.ownerList = d.owners.members;
+                $scope.modify($scope.ownerList);
 
-                $scope.pref = d.hasListserv;
+                $scope.pref = d.listservOn;
+                $scope.allowOptIn = d.optInOn;
+                $scope.allowOptOut = d.optOutOn;
+
                 if ($scope.pref == true) {
                     $('#listserv').prop("checked", true);
+                }
+                else {
+                    $('#listserv').prop("checked", false);
+                }
+                if ($scope.allowOptIn == true) {
+                    $('#optInOption').prop("checked", true);
+                }
+                else {
+                    $('#optInOption').prop("checked", false);
+                }
+                if ($scope.allowOptOut == true) {
+                    $('#optOutOption').prop("checked", true);
+                }
+                else {
+                    $('#optOutOption').prop("checked", false);
                 }
 
                 //Stop loading spinner
@@ -121,16 +154,6 @@
          *                0 for failed attempt
          */
         $scope.modify = function (grouping) {
-            //sorts data in alphabetic order
-            grouping.sort(function (a, b) {
-                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
-                if (nameA < nameB) //sort string ascending
-                    return -1;
-                if (nameA > nameB)
-                    return 1;
-                return 0
-            });
-
             //Filter out names with hawaii.edu and adds basis object.
             for (var i = 0; i < grouping.length; i++) {
                 grouping[i].basis = "\u2716";
@@ -148,6 +171,16 @@
                     }
                 }
             }
+
+            //sorts data in alphabetic order
+            grouping.sort(function (a, b) {
+                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                if (nameA < nameB) //sort string ascending
+                    return -1;
+                if (nameA > nameB)
+                    return 1;
+                return 0
+            });
         };
 
         /**
@@ -160,7 +193,12 @@
             }
             else {
                 $scope.showGrouping = false;
-                $scope.groupingName = ''
+                $scope.groupingName = '';
+                $scope.groupingsList = [];
+                $scope.groupingsBasis = [];
+                $scope.groupingInclude = [];
+                $scope.groupingExclude = [];
+                $scope.ownerList = [];
             }
         };
 
@@ -172,7 +210,7 @@
          * @param type : the type of group that the user is being added into. Include or exclude.
          */
         $scope.addMember = function (type) {
-            var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
+            var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataUpdater.addData(function (d) {
                 if (d.resultCode === "SUCCESS") {
                     console.log("success in adding " + $scope.addUser);
@@ -195,14 +233,14 @@
          */
         $scope.removeMember = function (type, row) {
             var user;
-            if(type === 'Include'){
+            if (type === 'Include') {
                 user = $scope.groupingInclude[row].username;
             }
-            if(type === 'Exclude'){
+            if (type === 'Exclude') {
                 user = $scope.groupingExclude[row].username;
             }
 
-            var URL = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + user + "/deleteMemberFrom" + type + "Group";
+            var URL = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
             dataDeleter.deleteData(function (d) {
                 console.log(d);
                 $scope.getData();
@@ -216,7 +254,7 @@
          */
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.ownerList[index].username;
-            var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + removeOwner + "/removeOwnership";
+            var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
             if ($scope.ownerList.length > 1) {
                 dataDeleter.deleteData(function (d) {
                     $scope.getData();
@@ -230,7 +268,7 @@
          * Otherwise alerts that the user does not exist.
          */
         $scope.addOwner = function () {
-            var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + currentUser + "/" + $scope.ownerUser + "/assignOwnership";
+            var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.ownerUser + "/assignOwnership";
             dataUpdater.addData(function (d) {
                 if (d[0].resultCode === "SUCCESS") {
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
@@ -249,24 +287,43 @@
          * Saves changes made to grouping privileges
          */
         $scope.savePref = function () {
+            var prefUrls = [];
             if (confirm("Are you sure you want to save")) {
-                if ($('#addOption').is(':checked')) {
-                    console.log("You are allowing members to opt in your grouping")
+                if ($('#optInOption').is(':checked')) {
+                    $scope.allowOptIn = true;
                 }
                 else {
-                    console.log("You are not allowing members to opt in your grouping")
+                    $scope.allowOptIn = false;
                 }
-                if ($('#removeOption').is(':checked')) {
-                    console.log("You are allowing members to exclude themselves from your groupings")
+                if ($('#optOutOption').is(':checked')) {
+                    $scope.allowOptOut = true;
                 }
                 else {
-                    console.log("You are not allowing members to exclude themselves from your groupings")
+                    $scope.allowOptOut = false;
                 }
                 if ($('#listserv').is(':checked')) {
-                    console.log("LISTSERV is true")
+                    $scope.pref = true;
                 }
                 else {
-                    console.log("LISTSERV is false")
+                    $scope.pref = false;
+                }
+                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.pref + "/setListserv", "name" : "Listserv"});
+                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn", "name" : "optInOption"});
+                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut", "name" : "optOutOption"});
+
+                for (var i = 0; i < prefUrls.length; i++) {
+                    dataUpdater.addData(function (d) {
+                        console.log(d);
+                        if (d.resultCode === "SUCCESS") {
+                            console.log("preference successfully updated");
+                            alert("preference successfully updated");
+                            $scope.getData();
+                        }
+                        else if (typeof d.resultsCode === 'undefined') {
+                            console.log("preference did not change");
+                            alert("preference did not change");
+                        }
+                    }, prefUrls[i].url);
                 }
             }
         };
@@ -317,5 +374,6 @@
             return str;
         };
     }
+
     ownerApp.controller("OwnerJsController", OwnerJsController);
 })();
