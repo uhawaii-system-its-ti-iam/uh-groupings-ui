@@ -596,7 +596,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all groupings that the user is able to opt out of
      */
     public List<Grouping> groupingsToOptOutOf(String username) {
-
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
                 .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
                 .addAttributeDefNameName(TRIO)
@@ -608,7 +607,8 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         List<String> groups = new ArrayList<>();
         for (WsGroup group : wsGroups) {
-            if (!inGroup(group.getName() + EXCLUDE, username)) {
+            if (!inGroup(group.getName() + EXCLUDE, username)
+                    && inGroup(group.getName(), username)) {
                 groups.add(group.getName());
             }
         }
