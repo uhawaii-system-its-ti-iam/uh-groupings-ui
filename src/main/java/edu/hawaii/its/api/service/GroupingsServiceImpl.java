@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.api.service;
+package edu.hawaii.its.api.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

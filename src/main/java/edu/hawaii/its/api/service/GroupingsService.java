@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.api.service;
+package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
