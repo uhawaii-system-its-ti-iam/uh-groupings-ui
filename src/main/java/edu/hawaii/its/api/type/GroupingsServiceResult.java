@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.api.type;
+package edu.hawaii.its.api.type;
 
 public class GroupingsServiceResult {
     private String action;

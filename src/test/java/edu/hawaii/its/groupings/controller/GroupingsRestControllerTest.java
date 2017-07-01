@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.hawaii.its.groupings.api.type.*;
+import edu.hawaii.its.api.type.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

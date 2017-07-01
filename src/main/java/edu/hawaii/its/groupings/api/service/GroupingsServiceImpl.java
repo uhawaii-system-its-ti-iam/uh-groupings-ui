@@ -7,11 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import edu.hawaii.its.groupings.api.type.*;
+import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.util.Dates;
 
 import edu.internet2.middleware.grouperClient.api.*;
-import edu.internet2.middleware.grouperClient.ws.WsMemberFilter;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 
 import org.apache.commons.logging.Log;
