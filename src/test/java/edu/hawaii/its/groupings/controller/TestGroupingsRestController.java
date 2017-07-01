@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import javax.annotation.PostConstruct;
 
+import edu.hawaii.its.api.controller.GroupingsRestController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

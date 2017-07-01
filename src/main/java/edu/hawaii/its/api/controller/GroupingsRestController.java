@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.controller;
+package edu.hawaii.its.api.controller;
 
 import javax.annotation.PostConstruct;
 
