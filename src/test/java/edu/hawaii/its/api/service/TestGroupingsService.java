@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.api;
+package edu.hawaii.its.api.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

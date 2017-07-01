@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.api;
+package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.service.GroupingsService;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
