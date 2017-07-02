@@ -110,6 +110,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("${groupings.api.every_entity}")
     private String EVERY_ENTITY;
 
+    @Value("${groupings.api.is_member}")
+    private String IS_MEMBER;
+
     /**
      * gives a user ownership permissions for a Grouping
      *
@@ -699,18 +702,19 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param username: username
      * @return true if the membership between the user and the group has the "self-opted" attribute
      */
-    //TODO optimize
     public boolean checkSelfOpted(String group, String username) {
         logger.info("checkSelfOpted; group: " + group + "; username: " + username);
 
         if (inGroup(group, username)) {
+            //todo check for optimization
             WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(username, group);
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
+            //todo check for optimization
             WsAttributeAssign[] wsAttributes = getMembershipAttributes(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, membershipID);
             for (WsAttributeAssign att : wsAttributes) {
                 if (att.getAttributeDefNameName().equals(SELF_OPTED)) {
-                    return true; // We are done, get out.
+                    return true;
                 }
             }
         }
@@ -724,24 +728,22 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return true if username is a member of group
      */
     @Override
-    //TODO optimize
     public boolean inGroup(String group, String username) {
         logger.info("inGroup; group: " + group + "; username: " + username);
 
-        WsHasMemberResults wsHasMemberResults =
-                new GcHasMember()
+        WsHasMemberResults memberResults = new GcHasMember()
                         .assignGroupName(group)
                         .addSubjectIdentifier(username)
                         .execute();
-        WsHasMemberResult[] memberResultArray = wsHasMemberResults.getResults();
-        boolean userIsInGroup = false;
+
+        WsHasMemberResult[] memberResultArray = memberResults.getResults();
+
         for (WsHasMemberResult hasMember : memberResultArray) {
-            if (hasMember.getResultMetadata().getResultCode().equals("IS_MEMBER")) {
-                userIsInGroup = true;
-                break; // Found it, break out.
+            if (hasMember.getResultMetadata().getResultCode().equals(IS_MEMBER)) {
+                return true;
             }
         }
-        return userIsInGroup;
+        return false;
     }
 
     /**
@@ -750,7 +752,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return true if user owns grouping false if not
      */
     @Override
-    //TODO optimize
     public boolean isOwner(String grouping, String username) {
         logger.info("isOwner; grouping: " + grouping + "; username: " + username);
 
@@ -997,7 +998,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param group:    group that membership status will be checked for
      * @return membership results for user
      */
-    //TODO optimize
     public WsGetMembershipsResults membershipsResults(String username, String group) {
         logger.info("membershipResults; username: " + username + "; group: " + group);
 
@@ -1107,9 +1107,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         Group groupMembers = new Group();
 
         List<String> groupNames = Collections.singletonList(group);
-        //todo check for optimization
         String grouping = extractGroupingNames(groupNames).get(0);
-        //todo check for optimization
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
 
         //todo check for optimization
