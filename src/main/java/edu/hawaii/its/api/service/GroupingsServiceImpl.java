@@ -113,6 +113,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("${groupings.api.is_member}")
     private String IS_MEMBER;
 
+    @Value("${groupings.api.success_allowed}")
+    private String SUCCESS_ALLOWED;
+
     /**
      * gives a user ownership permissions for a Grouping
      *
@@ -152,8 +155,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
     @Override
-    //TODO optimize
     public GroupingsServiceResult changeListservStatus(String grouping, String username, boolean listservOn) {
+        //todo check for optimization
         return changeGroupAttributeStatus(grouping, username, LISTSERV, listservOn);
     }
 
@@ -164,10 +167,11 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
     @Override
-    //TODO optimize
     public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn) {
+        //todo check for optimization
         assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, grouping + INCLUDE, optInOn);
         assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + EXCLUDE, optInOn);
+        //todo check for optimization
         return changeGroupAttributeStatus(grouping, username, OPT_IN, optInOn);
     }
 
@@ -278,15 +282,20 @@ public class GroupingsServiceImpl implements GroupingsService {
      * has opted out of
      */
     @Override
-    //TODO optimize
     public MyGroupings getMyGroupings(String username) {
         MyGroupings myGroupings = new MyGroupings();
 
+        //todo check for optimization
         myGroupings.setGroupingsIn(groupingsIn(username));
+        //todo check for optimization
         myGroupings.setGroupingsOwned(groupingsOwned(username));
+        //todo check for optimization
         myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username));
+        //todo check for optimization
         myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username));
+        //todo check for optimization
         myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username));
+        //todo check for optimization
         myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username));
 
         return myGroupings;
@@ -493,7 +502,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public List<Grouping> groupingsIn(String username) {
-        //todo check for optomization
         List<String> groupsIn = getGroupNames(username);
         List<String> groupingsIn = groupsIn
                 .stream()
@@ -810,7 +818,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return result
                 .getResultMetadata()
                 .getResultCode()
-                .equals("SUCCESS_ALLOWED");
+                .equals(SUCCESS_ALLOWED);
     }
 
     /**
@@ -824,25 +832,24 @@ public class GroupingsServiceImpl implements GroupingsService {
     //TODO optimize
     public boolean groupOptInPermission(String username, String group) {
         logger.info("groupOptInPermission; group: " + group + "; username: " + username);
+
         WsGetGrouperPrivilegesLiteResult result = getGrouperPrivilege(username, PRIVILEGE_OPT_IN, group);
 
         return result
                 .getResultMetadata()
                 .getResultCode()
-                .equals("SUCCESS_ALLOWED");
+                .equals(SUCCESS_ALLOWED);
     }
 
     /**
      * updates the last modified time of a group
      * this should be done whenever a group is modified
-     * <p>
      * ie. a member was added or deleted
      *
      * @param group: group who's last modified attribute will be updated
      * @return results from Grouper Web Service
      */
     @Override
-    //TODO optimize
     public GroupingsServiceResult updateLastModified(String group) {
         logger.info("updateLastModified; group: " + group);
         String time = wsDateTime();
