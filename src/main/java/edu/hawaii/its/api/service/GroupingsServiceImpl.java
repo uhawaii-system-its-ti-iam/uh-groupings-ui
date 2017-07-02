@@ -489,7 +489,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign attribute : wsGetAttributeAssignmentsResults.getWsAttributeAssigns()) {
                 if (attribute.getAttributeDefNameName().equals(nameName)) {
-                    return true; // Found it, get out now.
+                    return true;
                 }
             }
         }
@@ -539,7 +539,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public boolean hasListserv(String grouping) {
-        //todo check for optimization
         return groupHasAttribute(grouping, LISTSERV);
     }
 
@@ -1020,7 +1019,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about success of action
      */
     @Override
-    //TODO optimize
     public GroupingsServiceResult addMemberAs(String username, String group, String userToAdd) {
         logger.info("addMemberAs; user: " + username + "; group: " + group + "; userToAdd: " + userToAdd);
 
@@ -1030,13 +1028,13 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (group.endsWith(INCLUDE)) {
             new GcDeleteMember()
                     .assignActAsSubject(user)
-                    .assignGroupName(group.split(INCLUDE)[0] + EXCLUDE)
+                    .assignGroupName(group.substring(0, group.length() - INCLUDE.length()) + EXCLUDE)
                     .addSubjectIdentifier(userToAdd)
                     .execute();
         } else if (group.endsWith(EXCLUDE)) {
             new GcDeleteMember()
                     .assignActAsSubject(user)
-                    .assignGroupName(group.split(EXCLUDE)[0] + INCLUDE)
+                    .assignGroupName(group.substring(0, group.length() - EXCLUDE.length()) + INCLUDE)
                     .addSubjectIdentifier(userToAdd)
                     .execute();
         }
@@ -1064,7 +1062,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about success of action
      */
     @Override
-    //TODO optimize
     public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete) {
         logger.info("delteMemberAs; user: " + username + "; group: " + group + "; userToDelete: " + userToDelete);
 
@@ -1085,9 +1082,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param userToDelete: username of user to be removed from group
      * @return information about success of action
      */
-    //TODO optimize
     public GroupingsServiceResult deleteMember(String group, String userToDelete) {
-        logger.info("delteMemberAs; group: " + group + "; userToDelete: " + userToDelete);
+        logger.info("deleteMember; group: " + group + "; userToDelete: " + userToDelete);
 
         WsDeleteMemberResults deleteMemberResults = new GcDeleteMember()
                 .assignGroupName(group)
@@ -1114,7 +1110,6 @@ public class GroupingsServiceImpl implements GroupingsService {
         String grouping = extractGroupingNames(groupNames).get(0);
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
 
-        //todo check for optimization
         if (isOwner(grouping, username)) {
             members = new GcGetMembers()
                     .addSubjectAttributeName(SUBJECT_ATTRIBUTE_NAME_UID)
@@ -1124,7 +1119,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                     .execute();
 
             if (members.getResults() != null) {
-                //todo check for optimization
                 groupMembers = makeGroup(members
                         .getResults()[0]
                         .getWsSubjects());
@@ -1134,20 +1128,19 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param groups: list of groups paths
-     * @return a list of Groupings that were is the list groups
+     * @param groupPaths: list of group paths
+     * @return a list of Grouping paths that were is the list group paths
      */
-    //TODO optimize
-    public List<String> extractGroupings(List<String> groups) {
+    public List<String> extractGroupings(List<String> groupPaths) {
         List<String> groupings = new ArrayList<>();
 
-        GcGetAttributeAssignments g = new GcGetAttributeAssignments()
+        GcGetAttributeAssignments trioGroups = new GcGetAttributeAssignments()
                 .addAttributeDefNameName(TRIO)
                 .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
 
-        groups.forEach(g::addOwnerGroupName);
+        groupPaths.forEach(trioGroups::addOwnerGroupName);
 
-        WsGetAttributeAssignmentsResults attributeAssignmentsResults = g.execute();
+        WsGetAttributeAssignmentsResults attributeAssignmentsResults = trioGroups.execute();
 
         WsGroup[] wsGroups = attributeAssignmentsResults.getWsGroups();
 
@@ -1187,11 +1180,8 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .collect(Collectors.toList());
         for (Grouping grouping : groupings) {
 
-            //todo check for optomization
             grouping.setListservOn(hasListserv(grouping.getPath()));
-            //todo check for optomization
             grouping.setOptInOn(optInPermission(grouping.getPath()));
-            //todo check for optomization
             grouping.setOptOutOn(optOutPermission(grouping.getPath()));
         }
         return groupings;
@@ -1292,7 +1282,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param attributeOn:   on if the attribute should exist false otherwise
      * @return information about success of the action
      */
-    //TODO optimize
     public GroupingsServiceResult changeGroupAttributeStatus(String group, String username, String attributeName, boolean attributeOn) {
         GroupingsServiceResult gsr = new GroupingsServiceResult();
 
@@ -1322,7 +1311,8 @@ public class GroupingsServiceImpl implements GroupingsService {
                 }
             }
         } else {
-            gsr.setResultCode("FAILURE, " + username + " does not own " + group);
+            gsr.setResultCode("FAILURE, " + username + "does not have permission to set " + attributeName
+                    + " because " + username + " does not own " + group);
         }
 
         return gsr;
