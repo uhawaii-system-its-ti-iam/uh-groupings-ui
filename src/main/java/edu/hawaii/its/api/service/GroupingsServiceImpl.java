@@ -732,9 +732,9 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("inGroup; group: " + group + "; username: " + username);
 
         WsHasMemberResults memberResults = new GcHasMember()
-                        .assignGroupName(group)
-                        .addSubjectIdentifier(username)
-                        .execute();
+                .assignGroupName(group)
+                .addSubjectIdentifier(username)
+                .execute();
 
         WsHasMemberResult[] memberResultArray = memberResults.getResults();
 
@@ -805,7 +805,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     //TODO optimize
     public boolean groupOptOutPermission(String username, String group) {
         logger.info("groupOptOutPermission; group: " + group + "; username: " + username);
-        WsGetGrouperPrivilegesLiteResult result = grouperPrivilegesLite(username, PRIVILEGE_OPT_OUT, group);
+        WsGetGrouperPrivilegesLiteResult result = getGrouperPrivilege(username, PRIVILEGE_OPT_OUT, group);
 
         return result
                 .getResultMetadata()
@@ -824,7 +824,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     //TODO optimize
     public boolean groupOptInPermission(String username, String group) {
         logger.info("groupOptInPermission; group: " + group + "; username: " + username);
-        WsGetGrouperPrivilegesLiteResult result = grouperPrivilegesLite(username, PRIVILEGE_OPT_IN, group);
+        WsGetGrouperPrivilegesLiteResult result = getGrouperPrivilege(username, PRIVILEGE_OPT_IN, group);
 
         return result
                 .getResultMetadata()
@@ -878,7 +878,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param group: group to be looked up
      * @return a WsGroupLookup with group as the group name
      */
-    //TODO optimize
     public WsGroupLookup makeWsGroupLookup(String group) {
         WsGroupLookup groupLookup = new WsGroupLookup();
         groupLookup.setGroupName(group);
@@ -892,7 +891,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param membershipID: membership id for the membership between the user and Grouping
      * @return information about the success of the action
      */
-    //TODO optimize
     public WsAssignAttributesResults assignMembershipAttributes(String operation, String uuid, String membershipID) {
         logger.info("assignMembershipAttributes; operation: " + operation + "; uuid: " + uuid + "; membershipID: " + membershipID);
 
@@ -910,16 +908,15 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param membershipID: membership id for the membership between the user and Grouping
      * @return information about the success of the action
      */
-    //TODO optimize
     public WsAttributeAssign[] getMembershipAttributes(String assignType, String name, String membershipID) {
         logger.info("getMembershipAttributes; assignType: " + assignType + "; name: " + name + "; membershipID: " + membershipID);
 
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
-                new GcGetAttributeAssignments()
-                        .assignAttributeAssignType(assignType)
-                        .addAttributeDefNameName(name)
-                        .addOwnerMembershipId(membershipID)
-                        .execute();
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
+                .assignAttributeAssignType(assignType)
+                .addAttributeDefNameName(name)
+                .addOwnerMembershipId(membershipID)
+                .execute();
+
         WsAttributeAssign[] wsAttributes = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
 
         return wsAttributes != null ? wsAttributes : new WsAttributeAssign[0];
@@ -931,7 +928,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param group:              path to the group to have the attribute acted upon
      * @return information about the success of the operation
      */
-    //TODO optimize
     public WsAssignAttributesResults assignGroupAttributes(String attributeName, String attributeOperation, String group) {
         logger.info("assignGroupAttributes; " + "; attributeName: " + attributeName + "; attributeOperation: " + attributeOperation + "; group: " + group);
 
@@ -965,11 +961,11 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param group:         name of group the privilege is for
      * @return return information about user's privileges in the group
      */
-    //TODO optimize
-    public WsGetGrouperPrivilegesLiteResult grouperPrivilegesLite(String username, String privilegeName, String group) {
-        logger.info("grouperPrivilegesLite; username: " + username + "; group: " + group + "; privilegeName: " + privilegeName);
+    public WsGetGrouperPrivilegesLiteResult getGrouperPrivilege(String username, String privilegeName, String group) {
+        logger.info("getGrouperPrivilege; username: " + username + "; group: " + group + "; privilegeName: " + privilegeName);
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
+
         return new GcGetGrouperPrivilegesLite()
                 .assignGroupName(group)
                 .assignPrivilegeName(privilegeName)
@@ -977,12 +973,12 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .execute();
     }
 
-    //TODO optimize
     public GroupingsServiceResult assignGrouperPrivilege(String username, String privilegeName, String group, boolean set) {
         logger.info("assignGrouperPrivilege; username: " + username + "; group: " + group + "; privilegeName: " + privilegeName + " set: " + set);
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
         String action = "set " + privilegeName + " " + set + " for " + username + " in " + group;
+
         WsAssignGrouperPrivilegesLiteResult grouperPrivilegesLiteResult = new GcAssignGrouperPrivilegesLite()
                 .assignGroupName(group)
                 .assignPrivilegeName(privilegeName)
@@ -990,6 +986,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .assignAllowed(set)
                 .execute();
 
+        //todo check for optimization
         return makeGroupingsServiceResult(grouperPrivilegesLiteResult, action);
     }
 

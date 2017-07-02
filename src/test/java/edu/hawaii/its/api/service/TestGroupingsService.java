@@ -502,7 +502,7 @@ public class TestGroupingsService {
     //TODO add test for assignMembershipAttributes (both)
     //TODO add test for membershipAttributeAssign
     //TODO add test for attributeAssignments
-    //TODO add test for grouperPrivilegesLite (both)
+    //TODO add test for getGrouperPrivilege (both)
     //TODO add test for membershipsResults
     //TODO add test for getMember
     //TODO add test for extractGroupings
