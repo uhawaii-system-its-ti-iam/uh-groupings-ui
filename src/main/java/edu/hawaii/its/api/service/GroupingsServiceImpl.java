@@ -285,17 +285,16 @@ public class GroupingsServiceImpl implements GroupingsService {
     public MyGroupings getMyGroupings(String username) {
         MyGroupings myGroupings = new MyGroupings();
 
-        //todo check for optimization
         myGroupings.setGroupingsIn(groupingsIn(username));
-        //todo check for optimization
+        //todo check for optimization groupingsOwned
         myGroupings.setGroupingsOwned(groupingsOwned(username));
-        //todo check for optimization
+        //todo check for optimization groupingsToOptInto
         myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username));
-        //todo check for optimization
+        //todo check for optimization groupingsToOptOutOf
         myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username));
-        //todo check for optimization
+        //todo check for optimization groupingsOptedOutOf
         myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username));
-        //todo check for optimization
+        //todo check for optimization groupingsOptedInto
         myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username));
 
         return myGroupings;
@@ -508,7 +507,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .filter(this::isGrouping)
                 .collect(Collectors.toList());
 
-        //todo check for optomization
         return makeGroupings(groupingsIn);
     }
 
@@ -546,18 +544,18 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param username: username of the user who's groupings will be looked for
      * @return a list of all of the Groupings that the user owns
      */
-    //TODO optimize
     public List<Grouping> groupingsOwned(String username) {
-        List<String> groupingsOwned = new ArrayList<>();
-        List<String> groupsIn = getGroupNames(username);
+        List<String> ownerGroups = new ArrayList<>();
 
-        groupsIn.stream().filter(group -> group.endsWith(OWNERS)).forEach(group -> {
-            String grouping = group.split(OWNERS)[0];
-            if (isGrouping(grouping)) {
-                groupingsOwned.add(grouping);
+        for (String groupPath : getGroupNames(username)) {
+            if (groupPath.endsWith(OWNERS)) {
+                ownerGroups.add(groupPath.substring(0, groupPath.length() - OWNERS.length()));
             }
-        });
-        return makeGroupings(groupingsOwned);
+        }
+
+        List<String> ownedGroupings = extractGroupings(ownerGroups);
+
+        return makeGroupings(ownedGroupings);
     }
 
     /**
@@ -1134,20 +1132,22 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<String> extractGroupings(List<String> groupPaths) {
         List<String> groupings = new ArrayList<>();
 
-        GcGetAttributeAssignments trioGroups = new GcGetAttributeAssignments()
-                .addAttributeDefNameName(TRIO)
-                .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
+        if (groupPaths.size() > 0) {
+            GcGetAttributeAssignments trioGroups = new GcGetAttributeAssignments()
+                    .addAttributeDefNameName(TRIO)
+                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
 
-        groupPaths.forEach(trioGroups::addOwnerGroupName);
+            groupPaths.forEach(trioGroups::addOwnerGroupName);
 
-        WsGetAttributeAssignmentsResults attributeAssignmentsResults = trioGroups.execute();
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults = trioGroups.execute();
 
-        WsGroup[] wsGroups = attributeAssignmentsResults.getWsGroups();
+            WsGroup[] wsGroups = attributeAssignmentsResults.getWsGroups();
 
-        for (WsGroup grouping : wsGroups) {
-            groupings.add(grouping.getName());
+            for (WsGroup grouping : wsGroups) {
+                groupings.add(grouping.getName());
+            }
+
         }
-
         return groupings;
     }
 
