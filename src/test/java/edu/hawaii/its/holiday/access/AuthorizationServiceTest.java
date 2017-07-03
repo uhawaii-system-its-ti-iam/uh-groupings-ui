@@ -29,21 +29,21 @@ public class AuthorizationServiceTest {
 
     @Test
     public void fetch() {
-        RoleHolder roleHolder = authorizationService.fetchRoles("10000001");
+        RoleHolder roleHolder = authorizationService.fetchRoles("10000001", "test");
         assertThat(roleHolder.size(), equalTo(4));
         assertTrue(roleHolder.contains(Role.ANONYMOUS)); // ???
         assertTrue(roleHolder.contains(Role.UH));
         assertTrue(roleHolder.contains(Role.EMPLOYEE));
         assertTrue(roleHolder.contains(Role.ADMIN));
 
-        roleHolder = authorizationService.fetchRoles("10000004");
+        roleHolder = authorizationService.fetchRoles("10000004", "test");
         assertThat(roleHolder.size(), equalTo(3));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
         assertTrue(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
 
-        roleHolder = authorizationService.fetchRoles("10000004");
+        roleHolder = authorizationService.fetchRoles("10000004", "test");
         assertThat(roleHolder.size(), equalTo(3));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
@@ -51,14 +51,14 @@ public class AuthorizationServiceTest {
         assertFalse(roleHolder.contains(Role.ADMIN));
 
         // 10000005
-        roleHolder = authorizationService.fetchRoles("10000005");
+        roleHolder = authorizationService.fetchRoles("10000005", "test");
         assertThat(roleHolder.size(), equalTo(2));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
         assertFalse(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
 
-        roleHolder = authorizationService.fetchRoles("90000009");
+        roleHolder = authorizationService.fetchRoles("90000009", "test");
         assertThat(roleHolder.size(), equalTo(2));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
