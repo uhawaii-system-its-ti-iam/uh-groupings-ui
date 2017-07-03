@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.controller;
+package edu.hawaii.its.api.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.hawaii.its.groupings.api.type.*;
+import edu.hawaii.its.api.type.*;
+import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import edu.hawaii.its.groupings.api.service.GroupingsService;
+import edu.hawaii.its.api.service.GroupingsService;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 @RunWith(SpringRunner.class)

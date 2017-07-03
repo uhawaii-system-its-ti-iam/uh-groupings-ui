@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.controller;
+package edu.hawaii.its.api.controller;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import javax.annotation.PostConstruct;
 
+import edu.hawaii.its.api.controller.GroupingsRestController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,9 +18,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.groupings.api.service.GroupingsService;
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.type.MyGroupings;
+import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.MyGroupings;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 @RunWith(SpringRunner.class)
@@ -191,7 +192,7 @@ public class TestGroupingsRestController {
                 break;
             }
         }
-        assertTrue(canOptin);
+        assertFalse(canOptin);
 
         boolean canOptOut = false;
         for (Grouping grouping : groupings.getGroupingsToOptOutOf()) {

@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.api;
+package edu.hawaii.its.api.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -9,8 +9,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import edu.hawaii.its.groupings.api.service.GroupingsServiceImpl;
-import edu.hawaii.its.groupings.api.type.*;
+import edu.hawaii.its.api.type.*;
+import edu.hawaii.its.api.service.GroupingsServiceImpl;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -278,7 +278,7 @@ public class TestGroupingsService {
                 break;
             }
         }
-        assertTrue(canOptIn);
+        assertFalse(canOptIn);
 
         boolean canOptOut = false;
         for (Grouping grouping : myGroupings.getGroupingsToOptOutOf()) {
@@ -502,7 +502,7 @@ public class TestGroupingsService {
     //TODO add test for assignMembershipAttributes (both)
     //TODO add test for membershipAttributeAssign
     //TODO add test for attributeAssignments
-    //TODO add test for grouperPrivilegesLite (both)
+    //TODO add test for getGrouperPrivilege (both)
     //TODO add test for membershipsResults
     //TODO add test for getMember
     //TODO add test for extractGroupings

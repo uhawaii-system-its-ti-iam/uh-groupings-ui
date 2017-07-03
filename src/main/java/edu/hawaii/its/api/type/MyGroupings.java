@@ -1,7 +1,4 @@
-package edu.hawaii.its.groupings.api.type;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+package edu.hawaii.its.api.type;
 
 import java.util.List;
 

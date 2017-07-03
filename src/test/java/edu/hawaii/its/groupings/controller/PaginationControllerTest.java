@@ -13,7 +13,7 @@
 //
 // import java.net.URI;
 //
-// import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
+// import edu.hawaii.its.api.type.GroupingsServiceResult;
 // import org.junit.Before;
 // import org.junit.Test;
 // import org.junit.runner.RunWith;
@@ -26,10 +26,10 @@
 // import org.springframework.test.web.servlet.MockMvc;
 // import org.springframework.web.context.WebApplicationContext;
 //
-// import edu.hawaii.its.groupings.api.service.GroupingsService;
-// import edu.hawaii.its.groupings.api.type.Group;
-// import edu.hawaii.its.groupings.api.type.Grouping;
-// import edu.hawaii.its.groupings.api.type.Person;
+// import edu.hawaii.its.api.service.GroupingsService;
+// import edu.hawaii.its.api.type.Group;
+// import edu.hawaii.its.api.type.Grouping;
+// import edu.hawaii.its.api.type.Person;
 // import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 //
 // @RunWith(SpringRunner.class)

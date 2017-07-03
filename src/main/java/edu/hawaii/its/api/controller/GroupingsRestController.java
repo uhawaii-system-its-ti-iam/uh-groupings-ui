@@ -1,4 +1,4 @@
-package edu.hawaii.its.groupings.controller;
+package edu.hawaii.its.api.controller;
 
 import javax.annotation.PostConstruct;
 
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import edu.hawaii.its.groupings.api.service.GroupingsService;
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
-import edu.hawaii.its.groupings.api.type.MyGroupings;
+import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.MyGroupings;
 
 import java.util.List;
 

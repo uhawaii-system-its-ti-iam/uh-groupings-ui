@@ -222,6 +222,10 @@
                         <source>${basedir}/src/main/resources/static/javascript/membership/membership.app.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/membership/membership.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/membership/membership.service.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/owner/owner.app.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/owner/owner.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/owner/owner.service.js</source>
+
                     </preloadSources>
                     <specIncludes>
                         <include>**/**.test.js</include>

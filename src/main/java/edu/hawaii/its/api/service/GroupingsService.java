@@ -1,13 +1,9 @@
-package edu.hawaii.its.groupings.api.service;
+package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.groupings.api.type.Group;
-import edu.hawaii.its.groupings.api.type.GroupingsServiceResult;
-import edu.hawaii.its.groupings.api.type.Grouping;
-import edu.hawaii.its.groupings.api.type.MyGroupings;
-
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.MyGroupings;
 
 import java.util.List;
 

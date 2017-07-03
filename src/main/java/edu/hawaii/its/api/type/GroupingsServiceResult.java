@@ -1,8 +1,8 @@
-package edu.hawaii.its.groupings.api.type;
+package edu.hawaii.its.api.type;
 
 public class GroupingsServiceResult {
-    private String action;
-    private String resultCode;
+    private String action = "null";
+    private String resultCode = "null";
 
     public GroupingsServiceResult() {
         // Empty.
@@ -27,5 +27,12 @@ public class GroupingsServiceResult {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    @Override
+    public String toString() {
+        return "GroupingsServiceResult [action=" + action
+                + ", resultCode=" + resultCode
+                + "]";
     }
 }
