@@ -28,7 +28,7 @@
         $scope.pagedItems5=[];
         $scope.gap=5;
 
-        $scope.itemsPerPage = 25;
+        $scope.itemsPerPage = 5;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
 
@@ -61,11 +61,12 @@
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
 
-                $scope.pagedItems1 = $scope.groupToPages($scope.membersList);
-                $scope.pagedItems2 = $scope.groupToPages($scope.optOutList);
+                // $scope.pagedItems1 = $scope.groupToPages($scope.membersList);
+                // $scope.pagedItems2 = $scope.groupToPages($scope.optOutList);
                 $scope.pagedItems3 = $scope.groupToPages($scope.optInList);
-                $scope.pagedItems4 = $scope.groupToPages($scope.optedIn);
-                $scope.pagedItems5 = $scope.groupToPages($scope.optedOut);
+                console.log($scope.pagedItems3.length);
+                // $scope.pagedItems4 = $scope.groupToPages($scope.optedIn);
+                // $scope.pagedItems5 = $scope.groupToPages($scope.optedOut);
                 if($scope.optedIn.length === 0)
                 {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
@@ -184,13 +185,16 @@
         **/
         $scope.groupToPages=function(theList){
             var pagedList = theList;
-
+            // console.log(theList.length);
             for(var i = 0; i < theList.length ; i++){
                 if(i % $scope.itemsPerPage === 0){
+                    // console.log("beep");
                     pagedList[Math.floor(i/$scope.itemsPerPage)] = [ theList[i]];
                 }else{
+                    // console.log("boop");
                     pagedList[Math.floor(i/$scope.itemsPerPage)].push( theList[i]);
                 }
+                // console.log("Yare Yare Daze");
             }
             return pagedList;
         };
@@ -208,6 +212,7 @@
          **/
         $scope.range = function (size, start, end) {
             var ret = [];
+
             if (size < end) {
                 end = size;
                 start = size - $scope.gap;
@@ -216,6 +221,7 @@
                 start = 0;
             }
             for (var i = start; i < end; i++) {
+                // console.log(i);
                 ret.push(i);
             }
             return ret;
@@ -246,6 +252,7 @@
 
         //takes the clicked page and set that to the current page
         $scope.setPageOptIn = function () {
+            // console.log($scope.currentPageOptOut);
             $scope.currentPageOptIn = this.n;
         };
 
@@ -258,18 +265,21 @@
             if ($scope.currentPageOptOut > 0) {
                 $scope.currentPageOptOut--;
             }
+            // console.log($scope.currentPageOptOut);
         };
 
         /**if the current page is less than the items in the array, it will
          *add one to current page
          **/
         $scope.nextPageOptOut = function () {
-            if ($scope.currentPageOptOut < $scope.pagedItems.length - 1) {
+            if ($scope.currentPageOptOut < $scope.pagedItems3.length - 1) {
                 $scope.currentPageOptOut = $scope.currentPageOptOut + 1;
             }
+            // console.log($scope.currentPageOptOut);
         };
         //takes the clicked page and set that to the current page
         $scope.setPageOptOut = function () {
+            // console.log(this.n);
             $scope.currentPageOptOut = this.n;
         };
     }
