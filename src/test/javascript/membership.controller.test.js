@@ -55,7 +55,7 @@ describe("MembershipJsController", function () {
                 scope.membersList.push({
                     "name": "group "+i
                 });
-                scope.pagedItems.push({
+                scope.pagedItems1.push({
                     "name": "group "+i
                 });
             }
@@ -67,12 +67,12 @@ describe("MembershipJsController", function () {
         expect(scope.init).toHaveBeenCalled();
         // expect(scope.groupToPages).toHaveBeenCalled();
         expect(scope.membersList.length).toEqual(100);
-        expect(scope.itemsPerPage).toEqual(25);
-        expect(scope.pagedItems.length).toEqual(100);
+        expect(scope.itemsPerPage).toEqual(5);
+        expect(scope.pagedItems1.length).toEqual(100);
         expect(scope.currentPageOptIn).toEqual(0);
-        scope.prevPageOptIn();
+        scope.currentPage('Page Opt In Prev');
         expect(scope.currentPageOptIn).toEqual(0);
-        scope.nextPageOptIn();
+        scope.currentPage('Page Opt In Next');
         expect(scope.currentPageOptIn).toEqual(1);
     });
 
@@ -80,16 +80,16 @@ describe("MembershipJsController", function () {
         spyOn(scope, "init").and.callFake(function() {
             for(var i = 1; i < 101; i++) {
                 scope.optInList.push({
-                    "name": "group "+i
+                    "name": "Grouped "+i
                 });
-                scope.optOutList.push({
-                    "name": "group "+i
+                scope.membersList.push({
+                    "name": "Member "+i
                 });
                 scope.optedIn.push({
-                    "name": "group "+i
+                    "name": "Opted In "+i
                 });
                 scope.optedOut.push({
-                    "name": "group "+i
+                    "name": "Opted Out "+i
                 });
             }
         });
@@ -106,9 +106,47 @@ describe("MembershipJsController", function () {
 
         scope.init();
         expect(scope.optInList.length).toEqual(100);
-        expect(scope.optOutList.length).toEqual(100);
+        expect(scope.membersList.length).toEqual(100);
         expect(scope.optedIn.length).toEqual(100);
         expect(scope.optedOut.length).toEqual(100);
+
+        expect(scope.membersList[0].name).toEqual("Member 1");
+        expect(scope.optInList[25].name).toEqual("Grouped 26");
+        expect(scope.optedIn[56].name).toEqual("Opted In 57");
+        expect(scope.optedOut[17].name).toEqual("Opted Out 18");
+    });
+
+    it("groupToPagesTesting", function(){
+        spyOn(scope, "init").and.callFake(function() {
+            for(var i = 1; i < 101; i++) {
+                scope.optInList.push({
+                    "name": "Grouped "+i
+                });
+                scope.membersList.push({
+                    "name": "Member "+i
+                });
+                scope.optedIn.push({
+                    "name": "Opted In "+i
+                });
+                scope.optedOut.push({
+                    "name": "Opted Out "+i
+                });
+            }
+        });
+
+        var testOptInList = [];
+        var testMembersList = [];
+        var testOptedIn = [];
+        var testOptedOut = [];
+
+        expect(testOptInList).toBeDefined();
+        expect(testOptInList[0]).not.toBeDefined();
+        expect(testMembersList).toBeDefined();
+        expect(testOptedOut).toBeDefined();
+        expect(testOptedIn).toBeDefined();
+
+        testOptInList = scope.groupToPages(scope.optInList, testOptInList);
+        expect(testOptInList).not.toBe(null);
     });
 
 });
