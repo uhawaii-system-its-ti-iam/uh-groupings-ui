@@ -1,15 +1,23 @@
 package edu.hawaii.its.holiday.access;
 
 import java.util.ArrayList;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import edu.hawaii.its.api.controller.*;
+import edu.hawaii.its.api.service.*;
+import edu.hawaii.its.api.type.*;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
@@ -22,6 +30,14 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private List<String> users;
 
     private Map<String, List<Role>> userMap = new HashMap<>();
+
+    @Autowired
+    private GroupingsService gs;
+
+    @Autowired
+    private GroupingsRestController gc;
+
+    private static final Log logger = LogFactory.getLog(UserBuilder.class);
 
     @PostConstruct
     public void init() {
@@ -42,17 +58,38 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         }
     }
 
-    public RoleHolder fetchRoles(String uhuuid) {
+    /**
+     * Assigns roles to user
+     *
+     * @param uhuuid    : The UH uuid of the user.
+     * @param username  : The username of the person to find the user.
+     * @return          : Returns an array list of roles assigned to the user.
+     */
+    public RoleHolder fetchRoles(String uhuuid, String username) {
         RoleHolder roleHolder = new RoleHolder();
         roleHolder.add(Role.ANONYMOUS);
         roleHolder.add(Role.UH);
+        //Determines if a user has owner role in a grouping.
+        try {
+            MyGroupings result = gc.myGroupings(username).getBody();
+            System.out.println("//////////////////////////////");
+            if (!result.getGroupingsOwned().isEmpty()) {
+                System.out.println("This person is an owner");
+                roleHolder.add(Role.OWNER);
+            } else {
+                System.out.println("This person is not owner");
+            }
+            System.out.println("//////////////////////////////");
+        } catch (Exception e) {
+            logger.info("The grouping for this person is " + e.getMessage());
+        }
+
         List<Role> roles = userMap.get(uhuuid);
         if (roles != null) {
             for (Role role : roles) {
                 roleHolder.add(role);
             }
         }
-
         return roleHolder;
     }
 }
