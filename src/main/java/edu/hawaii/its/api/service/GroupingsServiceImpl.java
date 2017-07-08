@@ -113,6 +113,12 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("${groupings.api.is_member}")
     private String IS_MEMBER;
 
+    @Value("${groupings.api.success}")
+    private String SUCCESS;
+
+    @Value("{groupings.api.failure}")
+    private String FAILURE;
+
     @Value("${groupings.api.success_allowed}")
     private String SUCCESS_ALLOWED;
 
@@ -146,7 +152,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         }
 
         ownershipResult = new GroupingsServiceResult(
-                "FAILURE, " + username + " does not own " + grouping, action);
+                FAILURE + ", " + username + " does not own " + grouping, action);
         return ownershipResult;
     }
 
@@ -219,7 +225,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             return ownershipResults;
         }
 
-        ownershipResults = new GroupingsServiceResult("FAILURE, " + username + " does not own " + grouping, action);
+        ownershipResults = new GroupingsServiceResult(FAILURE + ", " + username + " does not own " + grouping, action);
         return ownershipResults;
     }
 
@@ -327,7 +333,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             return results;
         }
         results.add(new GroupingsServiceResult(
-                "FAILURE, " + username + " does not have permission to opt in to " + grouping,
+                FAILURE + ", " + username + " does not have permission to opt in to " + grouping,
                 "opt in " + username + " to " + grouping));
         return results;
     }
@@ -356,7 +362,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         }
 
         results.add(new GroupingsServiceResult(
-                "FAILURE, " + username + " does not have permission to opt out of " + grouping,
+                FAILURE + ", " + username + " does not have permission to opt out of " + grouping,
                 "opt out " + username + " from " + grouping));
         return results;
     }
@@ -383,12 +389,12 @@ public class GroupingsServiceImpl implements GroupingsService {
                 return results;
             } else {
                 results.add(new GroupingsServiceResult(
-                        "FAILURE, " + username + " is not allowed to opt out of " + group,
+                        FAILURE + ", " + username + " is not allowed to opt out of " + group,
                         action));
             }
         } else {
             results.add(new GroupingsServiceResult(
-                    "SUCCESS, " + username + " is not opted in, because " + username + " was not in " + group,
+                    SUCCESS + ", " + username + " is not opted in, because " + username + " was not in " + group,
                     action));
         }
 
@@ -417,12 +423,12 @@ public class GroupingsServiceImpl implements GroupingsService {
                 return results;
             } else {
                 results.add(new GroupingsServiceResult(
-                        "FAILURE, " + username + " is not allowed to opt out of " + group,
+                        FAILURE + ", " + username + " is not allowed to opt out of " + group,
                         action));
             }
         } else {
             results.add(new GroupingsServiceResult(
-                    "SUCCESS, " + username + " is not opted out, because " + username + " was not in " + group,
+                    SUCCESS + ", " + username + " is not opted out, because " + username + " was not in " + group,
                     action));
         }
         return results;
@@ -697,11 +703,11 @@ public class GroupingsServiceImpl implements GroupingsService {
                         action);
             }
             return new GroupingsServiceResult(
-                    "SUCCESS, " + username + " was already self opted into " + group,
+                    SUCCESS + ", " + username + " was already self opted into " + group,
                     action);
         }
         return new GroupingsServiceResult(
-                "FAILURE, " + username + " is not a member of " + group,
+                FAILURE + ", " + username + " is not a member of " + group,
                 action);
     }
 
@@ -791,7 +797,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             }
         }
         return new GroupingsServiceResult(
-                "FAILURE, " + username + " is not a member of " + group,
+                FAILURE + ", " + username + " is not a member of " + group,
                 action);
     }
 
@@ -1299,21 +1305,21 @@ public class GroupingsServiceImpl implements GroupingsService {
                 if (!hasAttribute) {
                     assignGroupAttributes(attributeName, OPERATION_ASSIGN_ATTRIBUTE, group);
 
-                    gsr.setResultCode("SUCCESS");
+                    gsr.setResultCode(SUCCESS);
                 } else {
-                    gsr.setResultCode("SUCCESS, " + attributeName + " already existed");
+                    gsr.setResultCode(SUCCESS + ", " + attributeName + " already existed");
                 }
             } else {
                 if (hasAttribute) {
                     assignGroupAttributes(attributeName, OPERATION_REMOVE_ATTRIBUTE, group);
 
-                    gsr.setResultCode("SUCCESS");
+                    gsr.setResultCode(SUCCESS);
                 } else {
-                    gsr.setResultCode("SUCCESS, " + attributeName + " did not exist");
+                    gsr.setResultCode(SUCCESS + ", " + attributeName + " did not exist");
                 }
             }
         } else {
-            gsr.setResultCode("FAILURE, " + username + "does not have permission to set " + attributeName
+            gsr.setResultCode(FAILURE + ", " + username + "does not have permission to set " + attributeName
                     + " because " + username + " does not own " + group);
         }
 
