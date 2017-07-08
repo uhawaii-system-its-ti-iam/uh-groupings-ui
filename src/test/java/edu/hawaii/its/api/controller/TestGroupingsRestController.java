@@ -163,6 +163,12 @@ public class TestGroupingsRestController {
         assertTrue(grouping.getExclude().getUuids().contains(tst[3]));
         assertTrue(grouping.getExclude().getUuids().contains(tst[4]));
 
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[0]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[1]));
+        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[2]));
+        assertFalse(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[3]));
+        assertFalse(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[4]));
+
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
         gc.assignOwnership(grouping.getPath(), tst[0], tst[5]);
         grouping = gc.grouping(this.GROUPING, tst[0]).getBody();
