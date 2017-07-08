@@ -31,6 +31,8 @@
         $scope.itemsPerPage = 5;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
+        $scope.currentPageCancelOptIn = 0;
+        $scope.currentPageCancelOptOut = 0;
 
         $scope.initCurrentUsername = function() {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -61,11 +63,23 @@
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
 
-                // $scope.pagedItems1 = $scope.groupToPages($scope.membersList);
+                for(var i =0; i < 100; i++){
+                    $scope.optedIn.push(
+                        {name:"Group In "+i}
+                    );
+                    $scope.membersList.push(
+                        {name:"Member Number "+i}
+                    );
+                    $scope.optedOut.push(
+                        {name:"Group Out "+i}
+                    );
+                }
+                $scope.pagedItems1 = $scope.groupToPages($scope.membersList,$scope.pagedItems1);
                 // $scope.pagedItems2 = $scope.groupToPages($scope.optOutList);
                 $scope.pagedItems3 = $scope.groupToPages($scope.optInList, $scope.pagedItems3);
-                // $scope.pagedItems4 = $scope.groupToPages($scope.optedIn);
-                // $scope.pagedItems5 = $scope.groupToPages($scope.optedOut);
+                $scope.pagedItems4 = $scope.groupToPages($scope.optedIn,$scope.pagedItems4);
+                $scope.pagedItems5 = $scope.groupToPages($scope.optedOut,$scope.pagedItems5);
+                console.log($scope.pagedItems4.length);
                 if($scope.optedIn.length === 0)
                 {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
@@ -220,57 +234,78 @@
             return ret;
         };
 
-        // Conceptually the next bunch of functions are the
-        // same but with different names
+        
+        //might make this into my one function
+        $scope.currentPage = function(pages){
+            switch(pages){
+                case 'Cancel Opt In Next':
+                    if ($scope.currentPageCancelOptIn < $scope.pagedItems4.length - 1) {
+                        $scope.currentPageCancelOptIn = $scope.currentPageCancelOptIn + 1;
+                    }
+                    break;
 
-        //THIS SECTION WOULD BE FOR THE OptIn SECTION
+                case 'Cancel Opt In Set':
+                    $scope.currentPageCancelOptIn = this.n;
+                    break;
 
-        /**if the current page is not 0, it will minus the current page by one
-         *current page will never go negative
-         **/
-        $scope.prevPageOptIn = function () {
-            if ($scope.currentPageOptIn > 0) {
-                $scope.currentPageOptIn--;
+                case 'Cancel Opt In Prev':
+                    if ($scope.currentPageCancelOptIn > 0) {
+                        $scope.currentPageCancelOptIn--;
+                    }
+                    break;
+
+                case 'Cancel Opt Out Next':
+                    if ($scope.currentPageCancelOptOut < $scope.pagedItems5.length - 1) {
+                        $scope.currentPageCancelOptOut = $scope.currentPageCancelOptOut + 1;
+                    }
+                    break;
+
+                case 'Cancel Opt Out Set':
+                    $scope.currentPageCancelOptOut = this.n;
+                    break;
+
+                case 'Cancel Opt Out Prev':
+                    if ($scope.currentPageCancelOptOut > 0) {
+                        $scope.currentPageCancelOptOut--;
+                    }
+                    break;
+
+                    //
+                case 'Page Opt Out Next':
+                    if ($scope.currentPageOptOut < $scope.pagedItems3.length - 1) {
+                        $scope.currentPageOptOut = $scope.currentPageOptOut + 1;
+                    }
+                    break;
+
+                case 'Page Opt Out Set':
+                    $scope.currentPageOptOut = this.n;
+                    break;
+
+                case 'Page Opt Out Prev':
+                    if ($scope.currentPageOptOut > 0) {
+                        $scope.currentPageOptOut--;
+                    }
+                    break;
+                //
+                case 'Page Opt In Next':
+                    if ($scope.currentPageOptIn < $scope.pagedItems1.length - 1) {
+                        $scope.currentPageOptIn = $scope.currentPageOptIn + 1;
+                    }
+                    break;
+
+                case 'Page Opt In Set':
+                    $scope.currentPageOptIn = this.n;
+                    break;
+
+                case 'Page Opt In Prev':
+                    if ($scope.currentPageOptIn > 0) {
+                        $scope.currentPageOptIn--;
+                    }
+                    break;
+
             }
         };
 
-        /**if the current page is less than the items in the array, it will
-         *add one to current page
-         **/
-        $scope.nextPageOptIn = function () {
-            if ($scope.currentPageOptIn < $scope.pagedItems.length - 1) {
-                $scope.currentPageOptIn = $scope.currentPageOptIn + 1;
-            }
-        };
-
-        //takes the clicked page and set that to the current page
-        $scope.setPageOptIn = function () {
-            $scope.currentPageOptIn = this.n;
-        };
-
-        //THIS SECTION WOULD BE FOR THE OptOut SECTION
-
-        /**if the current page is not 0, it will minus the current page by one
-         *current page will never go negative
-         **/
-        $scope.prevPageOptOut = function () {
-            if ($scope.currentPageOptOut > 0) {
-                $scope.currentPageOptOut--;
-            }
-        };
-
-        /**if the current page is less than the items in the array, it will
-         *add one to current page
-         **/
-        $scope.nextPageOptOut = function () {
-            if ($scope.currentPageOptOut < $scope.pagedItems3.length - 1) {
-                $scope.currentPageOptOut = $scope.currentPageOptOut + 1;
-            }
-        };
-        //takes the clicked page and set that to the current page
-        $scope.setPageOptOut = function () {
-            $scope.currentPageOptOut = this.n;
-        };
     }
 
     membershipApp.controller("MembershipJsController", MembershipJsController);
