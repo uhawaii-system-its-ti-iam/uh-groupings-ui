@@ -47,8 +47,6 @@ public interface GroupingsService {
 
     public GroupingsServiceResult changeOptOutStatus(String grouping, String username, boolean optOutOn);
 
-    public Group findOwners(String grouping, String username);
-
     public boolean isOwner(String grouping, String username);
 
     public boolean groupOptInPermission(String username, String group);

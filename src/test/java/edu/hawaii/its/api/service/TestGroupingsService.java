@@ -197,14 +197,6 @@ public class TestGroupingsService {
     }
 
     @Test
-    public void findOwners() {
-        Group owners = gs.findOwners(GROUPING, username[0]);
-
-        assertTrue(owners.getUsernames().contains(username[0]));
-        assertFalse(owners.getUsernames().contains(username[1]));
-    }
-
-    @Test
     public void optOutPermissionTest() {
         assertTrue(gs.optOutPermission(GROUPING));
     }

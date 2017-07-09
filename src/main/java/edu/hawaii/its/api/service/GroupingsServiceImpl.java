@@ -424,39 +424,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param grouping: the path of the Grouping to be searched for
-     * @param username: the user doing the search
-     * @return a Group of owners for the Grouping
-     */
-    @Override
-    public Group findOwners(String grouping, String username) {
-        logger.info("findOwners; grouping: " + grouping + "; username: " + username);
-
-        Group owners = new Group();
-
-        if (isOwner(grouping, username)) {
-            WsGetMembersResults membersResults = new GcGetMembers()
-                    .addGroupName(grouping + OWNERS)
-                    .addSubjectAttributeName(SUBJECT_ATTRIBUTE_NAME_UID)
-                    .execute();
-
-            //TODO look into going straight from an array rather that to ArrayList and back
-            List<WsSubject> subjects = new ArrayList<>();
-
-            if (membersResults.getResults() != null) {
-                for (WsGetMembersResult membersResult : membersResults.getResults()) {
-                    if (membersResult != null) {
-                        Collections.addAll(subjects, membersResult.getWsSubjects());
-                    }
-                }
-            }
-            owners = makeGroup(subjects.toArray(new WsSubject[subjects.size()]));
-        }
-
-        return owners;
-    }
-
-    /**
      * @param grouping: path to the Grouping that will have its permissions checked
      * @return true if the Grouping is allowed to be opted out of and false if not
      */
