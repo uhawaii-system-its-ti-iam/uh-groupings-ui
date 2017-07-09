@@ -375,7 +375,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    //TODO optimize
     public List<GroupingsServiceResult> cancelOptIn(String grouping, String username) {
         List<GroupingsServiceResult> results = new ArrayList<>();
         String group = grouping + INCLUDE;
@@ -385,6 +384,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             if (checkSelfOpted(group, username)) {
                 results.add(deleteMember(group, username));
                 results.add(updateLastModified(group));
+                //TODO update group, grouping or both?
 
                 return results;
             } else {
@@ -409,7 +409,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about the success of the operation
      */
     @Override
-    //TODO optimize
     public List<GroupingsServiceResult> cancelOptOut(String grouping, String username) {
         String group = grouping + EXCLUDE;
         List<GroupingsServiceResult> results = new ArrayList<>();
@@ -419,6 +418,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             if (groupOptOutPermission(username, group)) {
                 results.add(deleteMember(group, username));
                 results.add(updateLastModified(group));
+                //TODO update group, grouping or both?
 
                 return results;
             } else {
@@ -440,7 +440,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a Group of owners for the Grouping
      */
     @Override
-    //TODO optimize
     public Group findOwners(String grouping, String username) {
         logger.info("findOwners; grouping: " + grouping + "; username: " + username);
 
@@ -451,7 +450,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                     .addGroupName(grouping + OWNERS)
                     .addSubjectAttributeName(SUBJECT_ATTRIBUTE_NAME_UID)
                     .execute();
+
+            //TODO look into going straight from an array rather that to ArrayList and back
             List<WsSubject> subjects = new ArrayList<>();
+
             if (membersResults.getResults() != null) {
                 for (WsGetMembersResult membersResult : membersResults.getResults()) {
                     if (membersResult != null) {
@@ -516,8 +518,9 @@ public class GroupingsServiceImpl implements GroupingsService {
         return makeGroupings(groupingsIn);
     }
 
-    //TODO optimize
     public boolean isGrouping(String group) {
+        logger.info("isGrouping; group: " + group);
+
         boolean returnValue = false;
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
                 .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
@@ -587,7 +590,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the groups that the user is opted into that end
      * with the suffix defined in includeOrrExclude
      */
-    //TODO optimize
     public List<Grouping> groupingsOpted(String includeOrrExclude, String username) {
 
         List<String> groupsIn = getGroupNames(username);
@@ -595,10 +597,11 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> groupingsOpted = new ArrayList<>();
 
         for (String group : groupsIn) {
-            String parentGrouping = parentGroupingPath(group);
             if (group.endsWith(includeOrrExclude)
+                    //TODO do I have to check selfOpted individually?
+                    //TODO search for memberships instead of groups?
                     && checkSelfOpted(group, username)) {
-                groupsOpted.add(parentGrouping);
+                groupsOpted.add(parentGroupingPath(group));
             }
         }
 
@@ -612,10 +615,9 @@ public class GroupingsServiceImpl implements GroupingsService {
         WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
 
         for (WsGroup group : trios) {
-            if (groupsOpted.contains(group.getName())) {
-                groupingsOpted.add(group.getName());
-            }
+            groupingsOpted.add(group.getName());
         }
+
         return makeGroupings(groupingsOpted);
     }
 
@@ -623,27 +625,28 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @return a list of all groupings that the user is able to opt out of
      */
-    //TODO optimize
     public List<Grouping> groupingsToOptOutOf(String username) {
-        WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
+        logger.info("groupingsToOptOutOf; username: " + username);
+
+        List<String> groups = getGroupNames(username);
+        List<String> groupings = new ArrayList<>();
+
+        GcGetAttributeAssignments attributeAssignmentsResults = new GcGetAttributeAssignments()
                 .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
                 .addAttributeDefNameName(TRIO)
-                .addAttributeDefNameName(OPT_OUT)
-                .execute();
+                .addAttributeDefNameName(OPT_OUT);
 
-
-        WsGroup[] wsGroups = attributeAssignmentsResults.getWsGroups();
-
-        List<String> groups = new ArrayList<>();
-        for (WsGroup group : wsGroups) {
-            if (!inGroup(group.getName() + EXCLUDE, username)
-                    && inGroup(group.getName(), username)) {
-                groups.add(group.getName());
-            }
+        for (String g : groups) {
+            attributeAssignmentsResults.addOwnerGroupName(g);
         }
 
+        WsGetAttributeAssignmentsResults assignmentsResults = attributeAssignmentsResults.execute();
 
-        List<String> groupings = extractGroupings(groups);
+        WsGroup[] wsGroups = assignmentsResults.getWsGroups();
+
+        for (WsGroup group : wsGroups) {
+            groupings.add(group.getName());
+        }
 
         return makeGroupings(groupings);
     }
@@ -653,6 +656,10 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     //TODO optimize
     public List<Grouping> groupingsToOptInto(String username) {
+        logger.info("groupingsToOptInto; username: " + username);
+
+        List<String> groups = new ArrayList<>();
+        List<String> groupsIn = getGroupNames(username);
 
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
                 .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
@@ -663,13 +670,13 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         WsGroup[] wsGroups = attributeAssignmentsResults.getWsGroups();
 
-        List<String> groups = new ArrayList<>();
-        for (WsGroup group : wsGroups) {
-            if (!inGroup(group.getName() + INCLUDE, username)) {
-                groups.add(group.getName());
+        if (wsGroups != null) {
+            for (WsGroup group : wsGroups) {
+                if (!groupsIn.contains(group.getName() + INCLUDE)
+                        && (!groupsIn.contains(group.getName()) || groupsIn.contains(group.getName() + EXCLUDE)))
+                    groups.add(group.getName());
             }
         }
-
 
         List<String> groupings = extractGroupings(groups);
 
