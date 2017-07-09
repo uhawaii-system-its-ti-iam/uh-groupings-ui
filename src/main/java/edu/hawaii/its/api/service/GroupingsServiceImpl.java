@@ -233,45 +233,49 @@ public class GroupingsServiceImpl implements GroupingsService {
     public Grouping getGrouping(String grouping, String username) {
         logger.info("getGrouping; grouping: " + grouping + "; username: " + username);
 
-        Grouping compositeGrouping = new Grouping(grouping);
+        Grouping compositeGrouping = new Grouping();
 
-        Group include = getMembers(username, grouping + INCLUDE);
-        Group exclude = getMembers(username, grouping + EXCLUDE);
-        Group basis = getMembers(username, grouping + BASIS);
-        Group composite = getMembers(username, grouping);
-        Group owners = getMembers(username, grouping + OWNERS);
+        if(isOwner(grouping, username)) {
+            compositeGrouping = new Grouping(grouping);
 
-        boolean listserveOn = false;
-        boolean optOutOn = false;
-        boolean optInOn = false;
+            Group include = getMembers(username, grouping + INCLUDE);
+            Group exclude = getMembers(username, grouping + EXCLUDE);
+            Group basis = getMembers(username, grouping + BASIS);
+            Group composite = getMembers(username, grouping);
+            Group owners = getMembers(username, grouping + OWNERS);
 
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
-                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
-                .addOwnerGroupName(grouping)
-                .execute();
+            boolean listserveOn = false;
+            boolean optOutOn = false;
+            boolean optInOn = false;
 
-        WsAttributeDefName[] attributeDefNames = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
-        for (WsAttributeDefName defName : attributeDefNames) {
-            String name = defName.getName();
-            if (name.equals(LISTSERV)) {
-                listserveOn = true;
-            } else if (name.equals(OPT_IN)) {
-                optInOn = true;
-            } else if (name.equals(OPT_OUT)) {
-                optOutOn = true;
+            WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
+                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
+                    .addOwnerGroupName(grouping)
+                    .execute();
+
+            WsAttributeDefName[] attributeDefNames = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
+            for (WsAttributeDefName defName : attributeDefNames) {
+                String name = defName.getName();
+                if (name.equals(LISTSERV)) {
+                    listserveOn = true;
+                } else if (name.equals(OPT_IN)) {
+                    optInOn = true;
+                } else if (name.equals(OPT_OUT)) {
+                    optOutOn = true;
+                }
             }
+
+            compositeGrouping.setBasis(basis);
+            compositeGrouping.setExclude(exclude);
+            compositeGrouping.setInclude(include);
+            compositeGrouping.setBasisPlusIncludeMinusExclude(composite);
+            compositeGrouping.setOwners(owners);
+
+            compositeGrouping.setListservOn(listserveOn);
+            compositeGrouping.setOptOutOn(optOutOn);
+            compositeGrouping.setOptInOn(optInOn);
+
         }
-
-        compositeGrouping.setBasis(basis);
-        compositeGrouping.setExclude(exclude);
-        compositeGrouping.setInclude(include);
-        compositeGrouping.setBasisPlusIncludeMinusExclude(composite);
-        compositeGrouping.setOwners(owners);
-
-        compositeGrouping.setListservOn(listserveOn);
-        compositeGrouping.setOptOutOn(optOutOn);
-        compositeGrouping.setOptInOn(optInOn);
-
         return compositeGrouping;
     }
 
@@ -1067,15 +1071,10 @@ public class GroupingsServiceImpl implements GroupingsService {
     public Group getMembers(String username, String group) {
         logger.info("getMembers; user: " + username + "; group: " + group);
 
-        WsGetMembersResults members;
         Group groupMembers = new Group();
-
-        List<String> groupNames = Collections.singletonList(group);
-        String grouping = extractGroupingNames(groupNames).get(0);
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
 
-        if (isOwner(grouping, username)) {
-            members = new GcGetMembers()
+            WsGetMembersResults members = new GcGetMembers()
                     .addSubjectAttributeName(SUBJECT_ATTRIBUTE_NAME_UID)
                     .assignActAsSubject(lookup)
                     .addGroupName(group)
@@ -1087,7 +1086,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                         .getResults()[0]
                         .getWsSubjects());
             }
-        }
         return groupMembers;
     }
 
