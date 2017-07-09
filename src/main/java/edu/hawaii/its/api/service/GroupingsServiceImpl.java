@@ -3,7 +3,6 @@ package edu.hawaii.its.api.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +23,6 @@ import edu.internet2.middleware.grouperClient.ws.StemScope;
 @Service("groupingsService")
 public class GroupingsServiceImpl implements GroupingsService {
     public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
-    private static final WsStemLookup STEM = new WsStemLookup("tmp", null);
 
     @Value("${groupings.api.settings}")
     private String SETTINGS;
@@ -121,6 +119,11 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     @Value("${groupings.api.success_allowed}")
     private String SUCCESS_ALLOWED;
+
+    @Value("$groupings.api.stem}")
+    private String STEM;
+
+    private WsStemLookup STEM_LOOKUP = new WsStemLookup(STEM, null);
 
     /**
      * gives a user ownership permissions for a Grouping
@@ -470,10 +473,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public List<Grouping> groupingsIn(String username) {
         List<String> groupsIn = getGroupNames(username);
-        List<String> groupingsIn = groupsIn
-                .stream()
-                .filter(this::isGrouping)
-                .collect(Collectors.toList());
+        List<String> groupingsIn = extractGroupings(groupsIn);
 
         return makeGroupings(groupingsIn);
     }
@@ -1107,12 +1107,13 @@ public class GroupingsServiceImpl implements GroupingsService {
 
             WsGetAttributeAssignmentsResults attributeAssignmentsResults = trioGroups.execute();
 
-            WsGroup[] wsGroups = attributeAssignmentsResults.getWsGroups();
+            WsAttributeAssign[] wsGroups = attributeAssignmentsResults.getWsAttributeAssigns();
 
-            for (WsGroup grouping : wsGroups) {
-                groupings.add(grouping.getName());
+            if(wsGroups != null && wsGroups.length > 0) {
+                for (WsAttributeAssign grouping : wsGroups) {
+                    groupings.add(grouping.getOwnerGroupName());
+                }
             }
-
         }
         return groupings;
     }
@@ -1126,7 +1127,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
                 .addSubjectIdentifier(username)
-                .assignWsStemLookup(STEM)
+                .assignWsStemLookup(STEM_LOOKUP)
                 .assignStemScope(StemScope.ALL_IN_SUBTREE)
                 .execute();
 
