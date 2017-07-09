@@ -122,8 +122,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("${groupings.api.success_allowed}")
     private String SUCCESS_ALLOWED;
 
-    //TODO make sure all methods using Grouper methods to go to the server are logged
-
     /**
      * gives a user ownership permissions for a Grouping
      *
@@ -164,7 +162,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult changeListservStatus(String grouping, String username, boolean listservOn) {
-        //todo check for optimization
         return changeGroupAttributeStatus(grouping, username, LISTSERV, listservOn);
     }
 
@@ -176,10 +173,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn) {
-        //todo check for optimization
         assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, grouping + INCLUDE, optInOn);
         assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + EXCLUDE, optInOn);
-        //todo check for optimization
         return changeGroupAttributeStatus(grouping, username, OPT_IN, optInOn);
     }
 
@@ -240,7 +235,6 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         Grouping compositeGrouping = new Grouping(grouping);
 
-        //todo check for optimization
         Group include = getMembers(username, grouping + INCLUDE);
         Group exclude = getMembers(username, grouping + EXCLUDE);
         Group basis = getMembers(username, grouping + BASIS);
@@ -296,15 +290,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         MyGroupings myGroupings = new MyGroupings();
 
         myGroupings.setGroupingsIn(groupingsIn(username));
-        //todo check for optimization groupingsOwned
         myGroupings.setGroupingsOwned(groupingsOwned(username));
-        //todo check for optimization groupingsToOptInto
         myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username));
-        //todo check for optimization groupingsToOptOutOf
         myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username));
-        //todo check for optimization groupingsOptedOutOf
         myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username));
-        //todo check for optimization groupingsOptedInto
         myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username));
 
         return myGroupings;
@@ -570,7 +559,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the Groupings that the user is opted into
      */
     public List<Grouping> groupingsOptedInto(String username) {
-        //todo check for optimization groupingsOpted
         return groupingsOpted(INCLUDE, username);
     }
 
@@ -579,7 +567,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the Groupings that the user is opted out of
      */
     public List<Grouping> groupingsOptedOutOf(String username) {
-        //todo check for optimization groupingsOpted
         return groupingsOpted(EXCLUDE, username);
     }
 
@@ -591,6 +578,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * with the suffix defined in includeOrrExclude
      */
     public List<Grouping> groupingsOpted(String includeOrrExclude, String username) {
+        logger.info("groupingsOpted; includeOrrExclude: " + includeOrrExclude + "; username: " + username);
 
         List<String> groupsIn = getGroupNames(username);
         List<String> groupsOpted = new ArrayList<>();
@@ -654,7 +642,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @return a list of all groupings that the user is able to opt into
      */
-    //TODO optimize
     public List<Grouping> groupingsToOptInto(String username) {
         logger.info("groupingsToOptInto; username: " + username);
 
@@ -672,8 +659,8 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (wsGroups != null) {
             for (WsGroup group : wsGroups) {
-                if (!groupsIn.contains(group.getName() + INCLUDE)
-                        && (!groupsIn.contains(group.getName()) || groupsIn.contains(group.getName() + EXCLUDE)))
+                if (groupsIn.contains(group.getName() + EXCLUDE)
+                        || !groupsIn.contains(group.getName()))
                     groups.add(group.getName());
             }
         }
@@ -727,11 +714,9 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("checkSelfOpted; group: " + group + "; username: " + username);
 
         if (inGroup(group, username)) {
-            //todo check for optimization
             WsGetMembershipsResults wsGetMembershipsResults = membershipsResults(username, group);
             String membershipID = wsGetMembershipsResults.getWsMemberships()[0].getMembershipId();
 
-            //todo check for optimization
             WsAttributeAssign[] wsAttributes = getMembershipAttributes(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, membershipID);
             for (WsAttributeAssign att : wsAttributes) {
                 if (att.getAttributeDefNameName().equals(SELF_OPTED)) {
@@ -1005,7 +990,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .assignAllowed(set)
                 .execute();
 
-        //todo check for optimization
         return makeGroupingsServiceResult(grouperPrivilegesLiteResult, action);
     }
 
@@ -1145,6 +1129,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of Grouping paths that were is the list group paths
      */
     public List<String> extractGroupings(List<String> groupPaths) {
+        logger.info("extractGroupings; groupPaths: " + groupPaths);
+
         List<String> groupings = new ArrayList<>();
 
         if (groupPaths.size() > 0) {
@@ -1171,6 +1157,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all groups that the user is a member of
      */
     public List<String> getGroupNames(String username) {
+        logger.info("getGroupNames; username: " + username);
 
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
                 .addSubjectIdentifier(username)
@@ -1189,15 +1176,40 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of Grouping Objects made from the list of Grouping paths
      */
     public List<Grouping> makeGroupings(List<String> groupingPaths) {
+        //TODO log
+
+        boolean listserveOn = false;
+        boolean optInOn = false;
+        boolean optOutOn = false;
+
         List<Grouping> groupings = groupingPaths
                 .stream()
                 .map(Grouping::new)
                 .collect(Collectors.toList());
         for (Grouping grouping : groupings) {
 
-            grouping.setListservOn(hasListserv(grouping.getPath()));
-            grouping.setOptInOn(optInPermission(grouping.getPath()));
-            grouping.setOptOutOn(optOutPermission(grouping.getPath()));
+            WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
+                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
+                    .addOwnerGroupName(grouping.getPath())
+                    .execute();
+
+            WsAttributeDefName[] attributeDefNames = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
+
+            for (WsAttributeDefName defName : attributeDefNames) {
+                String name = defName.getName();
+                if (name.equals(LISTSERV)) {
+                    listserveOn = true;
+                } else if (name.equals(OPT_IN)) {
+                    optInOn = true;
+                } else if (name.equals(OPT_OUT)) {
+                    optOutOn = true;
+                }
+            }
+
+            grouping.setListservOn(listserveOn);
+            grouping.setOptInOn(optInOn);
+            grouping.setOptOutOn(optOutOn);
+
         }
         return groupings;
     }
