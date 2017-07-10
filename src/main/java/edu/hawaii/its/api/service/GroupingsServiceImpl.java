@@ -247,30 +247,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             Group composite = getMembers(username, grouping);
             Group owners = getMembers(username, grouping + OWNERS);
 
-            boolean listserveOn = false;
-            boolean optOutOn = false;
-            boolean optInOn = false;
-
-            WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
-                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
-                    .addOwnerGroupName(grouping)
-                    .execute();
-
-            WsAttributeDefName[] attributeDefNames = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
-            for (WsAttributeDefName defName : attributeDefNames) {
-                String name = defName.getName();
-                if (name.equals(LISTSERV)) {
-                    listserveOn = true;
-                } else if (name.equals(OPT_IN)) {
-                    optInOn = true;
-                } else if (name.equals(OPT_OUT)) {
-                    optOutOn = true;
-                }
-            }
-
-            compositeGrouping.setListservOn(listserveOn);
-            compositeGrouping.setOptOutOn(optOutOn);
-            compositeGrouping.setOptInOn(optInOn);
+            compositeGrouping = setGroupingAttributes(compositeGrouping);
 
             compositeGrouping.setBasis(basis);
             compositeGrouping.setExclude(exclude);
@@ -1132,33 +1109,42 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .stream()
                 .map(Grouping::new)
                 .collect(Collectors.toList());
-        for (Grouping grouping : groupings) {
-
-            WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
-                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
-                    .addOwnerGroupName(grouping.getPath())
-                    .execute();
-
-            WsAttributeDefName[] attributeDefNames = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
-            for (WsAttributeDefName defName : attributeDefNames) {
-                String name = defName.getName();
-                if (name.equals(LISTSERV)) {
-                    listserveOn = true;
-                } else if (name.equals(OPT_IN)) {
-                    optInOn = true;
-                } else if (name.equals(OPT_OUT)) {
-                    optOutOn = true;
-                }
-            }
-
-            grouping.setListservOn(listserveOn);
-            grouping.setOptInOn(optInOn);
-            grouping.setOptOutOn(optOutOn);
-
+        for (int i = 0; i < groupings.size(); i ++) {
+            groupings.set(i, setGroupingAttributes(groupings.get(i)));
         }
         return groupings;
     }
 
+    public Grouping setGroupingAttributes(Grouping grouping) {
+        logger.info("setGroupingAttributes; grouping: " + grouping + ";");
+        boolean listserveOn = false;
+        boolean optInOn = false;
+        boolean optOutOn = false;
+
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
+                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
+                .addOwnerGroupName(grouping.getPath())
+                .execute();
+
+        WsAttributeDefName[] attributeDefNames = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
+        for (WsAttributeDefName defName : attributeDefNames) {
+            String name = defName.getName();
+            if (name.equals(LISTSERV)) {
+                listserveOn = true;
+            } else if (name.equals(OPT_IN)) {
+                optInOn = true;
+            } else if (name.equals(OPT_OUT)) {
+                optOutOn = true;
+            }
+        }
+
+        grouping.setListservOn(listserveOn);
+        grouping.setOptInOn(optInOn);
+        grouping.setOptOutOn(optOutOn);
+
+
+        return grouping;
+    }
 
 
     /**
@@ -1297,7 +1283,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param action:               the action being preformed in the resultMetadataHolder
      * @return a GroupingsServiceResult made from the ResultMetadataHolder and the action
      */
-    public GroupingsServiceResult makeGroupingsServiceResult(ResultMetadataHolder resultMetadataHolder, String action) {
+    private GroupingsServiceResult makeGroupingsServiceResult(ResultMetadataHolder resultMetadataHolder, String action) {
         GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();
         groupingsServiceResult.setAction(action);
         groupingsServiceResult.setResultCode(resultMetadataHolder.getResultMetadata().getResultCode());
