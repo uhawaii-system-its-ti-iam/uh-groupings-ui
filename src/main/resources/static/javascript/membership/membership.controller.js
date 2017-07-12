@@ -223,7 +223,7 @@
 
             if (size < end) {
                 end = size;
-                start = size - $scope.gap;
+                // start = size - $scope.gap;
             }
             if (start < 0) {
                 start = 0;
@@ -234,7 +234,7 @@
             return ret;
         };
 
-        
+
         //might make this into my one function
         $scope.currentPage = function(pages){
             switch(pages){
