@@ -146,7 +146,19 @@ describe("MembershipJsController", function () {
         expect(testOptedIn).toBeDefined();
 
         testOptInList = scope.groupToPages(scope.optInList, testOptInList);
-        expect(testOptInList).not.toBe(null);
+        // expect(testOptInList.length).toBe(19);
     });
 
+    it("testingRangem", function(){
+
+        var testingRange = [];
+
+        expect(testingRange).toBeDefined();
+        testingRange = scope.range(20,15,20);
+        expect(testingRange.length).toEqual(5);
+        expect(testingRange[0]).toEqual(15);
+        testingRange = scope.range(20,16,21);
+        expect(testingRange.length).toEqual(4);
+        expect(testingRange[0]).toEqual(16);
+    });
 });
