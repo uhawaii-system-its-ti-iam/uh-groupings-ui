@@ -2,7 +2,8 @@
     /**
      * Admin controller for the entire admin page.
      *
-     * @param $scope        : Binding variable between controller and html page.
+     * @param $scope        : A Binding variable between controller and html page.
+     * @param $window       :
      * @param dataProvider  : service function that acts as the AJAX get.
      * @param dataUpdater   : service function that acts as AJAX post, used mainly for adding or updating
      * @param dataDelete    : service function that acts as AJAX psst, use function mainly for delete function.
@@ -15,7 +16,7 @@
 
         //Variables for pagination
         $scope.pagedItems = [];
-        $scope.gap = 5;
+        $scope.gap = 2;
         $scope.itemsPerPage = 10;
         $scope.currentPage = 0;
         $scope.currentPageOptOut = 0;
@@ -46,7 +47,8 @@
             var url = "api/groupings/tmp:win-many/" + $scope.getCurrentUsername() + "/grouping";
 
             dataProvider.loadData(function (d) {
-                var tempList = d.basisPlusIncludeMinusExclude.members;
+                console.log(d);
+                var tempList = d.basis.members;
 
                 // Sorts the data by name.
                 tempList.sort(function (a, b) {
@@ -75,6 +77,7 @@
                 }
 
                 $scope.list = tempList;
+                console.log($scope.list);
                 $scope.groupToPages();
                 $scope.loading = false;
             }, url);
@@ -118,11 +121,11 @@
             var deleteUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteMemberFromIncludeGroup";
             console.log(deleteUrl);
             if ($scope.list.length > 1) {
-             dataDelete.deleteData(function (d) {
-             $scope.list.splice(index, 1);
-             $scope.init();
-             }, deleteUrl);
-             }
+                dataDelete.deleteData(function (d) {
+                    $scope.list.splice(index, 1);
+                    $scope.init();
+                }, deleteUrl);
+            }
         };
 
         $scope.groupToPages=function(){

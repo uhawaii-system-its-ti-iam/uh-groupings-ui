@@ -48,7 +48,7 @@
                           <li>
                             <a href="" ng-click="paging('prev')">« Prev</a>
                           </li>
-                          <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
+                            <li ng-repeat="n in range(pagedItems.length, currentPage - gap, currentPage + gap + 1) "
                               ng-class="{active: n == currentPage}"
 
                               ng-click="paging(n)"
