@@ -69,19 +69,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         RoleHolder roleHolder = new RoleHolder();
         roleHolder.add(Role.ANONYMOUS);
         roleHolder.add(Role.UH);
-        //Determines if a user has owner role in a grouping.
-        try {
-            MyGroupings result = gc.myGroupings(username).getBody();
-            System.out.println("//////////////////////////////");
-            if (!result.getGroupingsOwned().isEmpty()) {
-                System.out.println("This person is an owner");
-                roleHolder.add(Role.OWNER);
-            } else {
-                System.out.println("This person is not owner");
-            }
-            System.out.println("//////////////////////////////");
-        } catch (Exception e) {
-            logger.info("The grouping for this person is " + e.getMessage());
+        if(fetchOwner(username)) {
+            roleHolder.add(Role.OWNER);
         }
 
         List<Role> roles = userMap.get(uhuuid);
@@ -91,5 +80,28 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             }
         }
         return roleHolder;
+    }
+
+    /**
+     * Determines if a user is a owner of any grouping.
+     *
+     * @param username the username of the user.
+     * @return true if the person has groupings that they own, otherwise false.
+     */
+    public boolean fetchOwner(String username) {
+        try {
+            MyGroupings result = gc.myGroupings(username).getBody();
+            System.out.println("//////////////////////////////");
+            if (!result.getGroupingsOwned().isEmpty()) {
+                System.out.println("This person is an owner");
+                return true;
+            } else {
+                System.out.println("This person is not owner");
+            }
+            System.out.println("//////////////////////////////");
+        } catch (Exception e) {
+            logger.info("The grouping for this person is " + e.getMessage());
+        }
+        return false;
     }
 }
