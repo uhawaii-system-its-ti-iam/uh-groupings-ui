@@ -90,23 +90,20 @@ public class TestGroupingsRestController {
 
     @Before
     public void setUp() {
-//        gs.addMemberAs(tst[0], GROUPING_BASIS, tst[4]);
-//        gs.addMemberAs(tst[0], GROUPING_BASIS, tst[5]);
-//
-//        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[0]);
-//        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[0]);
-//
-//        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[1]);
-//        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[1]);
-//
-//        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[2]);
-//        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[2]);
-//
-//        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[3]);
-//        gs.deleteMemberAs(tst[0], GROUPING_INCLUDE, tst[3]);
-//
-//        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[4]);
-//        gs.deleteMemberAs(tst[0], GROUPING_INCLUDE, tst[4]);
+        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[0]);
+        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[0]);
+
+        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[1]);
+        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[1]);
+
+        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[2]);
+        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[2]);
+
+        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[3]);
+        gs.deleteMemberAs(tst[0], GROUPING_INCLUDE, tst[3]);
+
+        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[4]);
+        gs.deleteMemberAs(tst[0], GROUPING_INCLUDE, tst[4]);
     }
 
     @Test
@@ -361,6 +358,12 @@ public class TestGroupingsRestController {
 
         gc.setOptOut(GROUPING, tst[0], true);
         assertTrue(gs.optOutPermission(GROUPING));
+    }
+
+    @Test
+    public void aaronTest () {
+        MyGroupings aaronsGroupings = gs.getMyGroupings("aaronvil");
+        assertNotNull(aaronsGroupings);
     }
 
     @Test
