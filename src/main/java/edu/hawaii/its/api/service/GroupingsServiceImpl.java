@@ -589,9 +589,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             }
         }
 
-        List<String> groupings = extractGroupings(groups);
-
-        return makeGroupings(groupings);
+        return makeGroupings(groups);
     }
 
     /**

@@ -1,16 +1,14 @@
 package edu.hawaii.its.api.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.api.service.GroupingsServiceImpl;
+import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +22,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
@@ -158,6 +158,20 @@ public class TestGroupingsService {
 
     @Before
     public void setUp() {
+        gs.addMemberAs(username[0], GROUPING_INCLUDE, username[0]);
+        gs.deleteMemberAs(username[0], GROUPING_EXCLUDE, username[0]);
+
+        gs.addMemberAs(username[0], GROUPING_INCLUDE, username[1]);
+        gs.deleteMemberAs(username[0], GROUPING_EXCLUDE, username[1]);
+
+        gs.addMemberAs(username[0], GROUPING_INCLUDE, username[2]);
+        gs.deleteMemberAs(username[0], GROUPING_EXCLUDE, username[2]);
+
+        gs.addMemberAs(username[0], GROUPING_EXCLUDE, username[3]);
+        gs.deleteMemberAs(username[0], GROUPING_INCLUDE, username[3]);
+
+        gs.addMemberAs(username[0], GROUPING_EXCLUDE, username[4]);
+        gs.deleteMemberAs(username[0], GROUPING_INCLUDE, username[4]);
     }
 
     @Test
@@ -478,6 +492,65 @@ public class TestGroupingsService {
         assertFalse(groups2.contains(GROUPING_STORE_EMPTY_OWNERS));
         assertFalse(groups2.contains(GROUPING_TRUE_EMPTY_OWNERS));
         //TODO add the rest of the groups
+    }
+
+    @Test
+    public void grouperTest() {
+       List<String> groupPaths = gs.getGroupNames(username[0]);
+
+
+        List<String> groupings = new ArrayList<>();
+        List<String> groupings2 = new ArrayList<>();
+
+
+
+        if (groupPaths.size() > 0) {
+
+            List<WsAttributeAssign> attributes = new ArrayList<>();
+
+            for(String path : groupPaths) {
+                WsGetAttributeAssignmentsResults trioGroups = new GcGetAttributeAssignments()
+                        .addAttributeDefNameName(TRIO)
+                        .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
+                        .addOwnerGroupName(path)
+                        .execute();
+
+                if (trioGroups.getWsAttributeAssigns() != null) {
+                    Collections.addAll(attributes, trioGroups.getWsAttributeAssigns());
+                }
+            }
+
+            if (attributes.size() > 0) {
+                for (WsAttributeAssign grouping : attributes) {
+                    groupings.add(grouping.getOwnerGroupName());
+                }
+            }
+
+            assertNotNull(groupings);
+
+        //////////////////////////////////////////////////////////////////////////////////
+
+            GcGetAttributeAssignments trioGroups2 = new GcGetAttributeAssignments()
+                    .addAttributeDefNameName(TRIO)
+                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
+
+            groupPaths.forEach(trioGroups2::addOwnerGroupName);
+
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults2 = trioGroups2.execute();
+
+            assertNotNull(attributeAssignmentsResults2);
+
+            WsAttributeAssign[] wsGroups2 = attributeAssignmentsResults2.getWsAttributeAssigns();
+
+            if (wsGroups2 != null && wsGroups2.length > 0) {
+                for (WsAttributeAssign grouping : wsGroups2) {
+                    groupings2.add(grouping.getOwnerGroupName());
+                }
+            }
+        }
+
+        assertNotNull(groupings2);
+
     }
 
     @Test
