@@ -538,8 +538,6 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         for (String group : groupsIn) {
             if (group.endsWith(includeOrrExclude)
-                    //TODO do I have to check selfOpted individually?
-                    //TODO search for memberships instead of groups?
                     && checkSelfOpted(group, username)) {
                 groupsOpted.add(parentGroupingPath(group));
             }
@@ -1176,7 +1174,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     private Grouping setGroupingAttributes(Grouping grouping) {
         logger.info("setGroupingAttributes; grouping: " + grouping + ";");
-        boolean listserveOn = false;
+        boolean listservOn = false;
         boolean optInOn = false;
         boolean optOutOn = false;
 
@@ -1189,7 +1187,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         for (WsAttributeDefName defName : attributeDefNames) {
             String name = defName.getName();
             if (name.equals(LISTSERV)) {
-                listserveOn = true;
+                listservOn = true;
             } else if (name.equals(OPT_IN)) {
                 optInOn = true;
             } else if (name.equals(OPT_OUT)) {
@@ -1197,10 +1195,9 @@ public class GroupingsServiceImpl implements GroupingsService {
             }
         }
 
-        grouping.setListservOn(listserveOn);
+        grouping.setListservOn(listservOn);
         grouping.setOptInOn(optInOn);
         grouping.setOptOutOn(optOutOn);
-
 
         return grouping;
     }
