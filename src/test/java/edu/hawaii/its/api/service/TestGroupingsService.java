@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import edu.hawaii.its.api.type.*;
-import edu.hawaii.its.api.service.GroupingsServiceImpl;
 import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
@@ -386,7 +385,7 @@ public class TestGroupingsService {
             groups.add(new WsGroup());
             groups.get(i).setName("testName_" + i);
         }
-        List<String> groupNames = gs.extractGroupNames(groups);
+        List<String> groupNames = gs.extractGroupPaths(groups);
 
         for (int i = 0; i < 3; i++) {
             assertTrue(groupNames.contains("testName_" + i));
