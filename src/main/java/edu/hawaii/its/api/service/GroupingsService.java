@@ -43,9 +43,9 @@ public interface GroupingsService {
 
     public GroupingsServiceResult changeListservStatus(String grouping, String username, boolean listservOn);
 
-    public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn);
+    public List<GroupingsServiceResult> changeOptInStatus(String grouping, String username, boolean optInOn);
 
-    public GroupingsServiceResult changeOptOutStatus(String grouping, String username, boolean optOutOn);
+    public List<GroupingsServiceResult> changeOptOutStatus(String grouping, String username, boolean optOutOn);
 
     public boolean isOwner(String grouping, String username);
 

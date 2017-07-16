@@ -323,25 +323,29 @@ public class GroupingsRestControllerTest {
     public void getSetOptIn() throws Exception {
         final String grouping = "grouping";
         final String username = "username";
+        List<GroupingsServiceResult> gsResults = new ArrayList<>();
+        List<GroupingsServiceResult> gsResults2 = new ArrayList<>();
         GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "OptIn has been added to grouping");
         GroupingsServiceResult gsr2 = new GroupingsServiceResult("SUCCESS", "OptIn has been removed from grouping");
+        gsResults.add(gsr);
+        gsResults2.add(gsr2);
 
         given(groupingsService.changeOptInStatus(grouping, username, true))
-                .willReturn(gsr);
+                .willReturn(gsResults);
         given(groupingsService.changeOptInStatus(grouping, username, false))
-                .willReturn(gsr2);
+                .willReturn(gsResults2);
 
         mockMvc.perform(post("/api/groupings/grouping/username/true/setOptIn")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("OptIn has been added to grouping"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("OptIn has been added to grouping"));
 
         mockMvc.perform(post("/api/groupings/grouping/username/false/setOptIn")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("OptIn has been removed from grouping"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("OptIn has been removed from grouping"));
     }
 
     @Test
@@ -349,25 +353,29 @@ public class GroupingsRestControllerTest {
     public void getSetOptOut() throws Exception {
         final String grouping = "grouping";
         final String username = "username";
+        List<GroupingsServiceResult> gsResults = new ArrayList<>();
+        List<GroupingsServiceResult> gsResults2 = new ArrayList<>();
         GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "OptOut has been added to grouping");
         GroupingsServiceResult gsr2 = new GroupingsServiceResult("SUCCESS", "OptOut has been removed from grouping");
+        gsResults.add(gsr);
+        gsResults2.add(gsr2);
 
         given(groupingsService.changeOptOutStatus(grouping, username, true))
-                .willReturn(gsr);
+                .willReturn(gsResults);
         given(groupingsService.changeOptOutStatus(grouping, username, false))
-                .willReturn(gsr2);
+                .willReturn(gsResults2);
 
         mockMvc.perform(post("/api/groupings/grouping/username/true/setOptOut")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("OptOut has been added to grouping"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("OptOut has been added to grouping"));
 
         mockMvc.perform(post("/api/groupings/grouping/username/false/setOptOut")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("OptOut has been removed from grouping"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("OptOut has been removed from grouping"));
     }
 
     @Test
