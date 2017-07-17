@@ -177,30 +177,30 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @param grouping: the path of the Grouping that will have its optIn permission changed
      * @param username: username of the Grouping Owner preforming the action
-     * @param optInOn:  true if the optIn permission should be turned on, false if it should be turned off
+     * @param set:  true if the optIn permission should be turned on, false if it should be turned off
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
     @Override
-    public List<GroupingsServiceResult> changeOptInStatus(String grouping, String username, boolean optInOn) {
+    public List<GroupingsServiceResult> changeOptInStatus(String grouping, String username, boolean set) {
         List<GroupingsServiceResult> results = new ArrayList<>();
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, grouping + INCLUDE, optInOn));
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + EXCLUDE, optInOn));
-        results.add(changeGroupAttributeStatus(grouping, username, OPT_IN, optInOn));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, grouping + INCLUDE, set));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + EXCLUDE, set));
+        results.add(changeGroupAttributeStatus(grouping, username, OPT_IN, set));
         return results;
     }
 
     /**
      * @param grouping: the path of the Grouping that will have its optOut permission changed
      * @param username: username of the Grouping Owner preforming the action
-     * @param optOutOn: true if the optOut permission should be turned on, false if it should be turned off
+     * @param set: true if the optOut permission should be turned on, false if it should be turned off
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
     @Override
-    public List<GroupingsServiceResult> changeOptOutStatus(String grouping, String username, boolean optOutOn) {
+    public List<GroupingsServiceResult> changeOptOutStatus(String grouping, String username, boolean set) {
         List<GroupingsServiceResult> results = new ArrayList<>();
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, grouping + EXCLUDE, optOutOn));
-        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + INCLUDE, optOutOn));
-        results.add(changeGroupAttributeStatus(grouping, username, OPT_OUT, optOutOn));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, grouping + EXCLUDE, set));
+        results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + INCLUDE, set));
+        results.add(changeGroupAttributeStatus(grouping, username, OPT_OUT, set));
         return results;
     }
 

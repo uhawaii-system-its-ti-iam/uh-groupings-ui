@@ -362,7 +362,7 @@ public class TestGroupingsRestController {
 
     @Test
     public void aaronTest () {
-        MyGroupings aaronsGroupings = gs.getMyGroupings("zknoebel");
+        MyGroupings aaronsGroupings = gs.getMyGroupings("aaronvil");
         assertNotNull(aaronsGroupings);
     }
 
