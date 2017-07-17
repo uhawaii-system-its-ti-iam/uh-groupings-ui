@@ -11,11 +11,11 @@ public interface GroupingsService {
 
     public boolean hasListserv(String grouping);
 
-    public List<Grouping> groupingsIn(String username);
+    public List<Grouping> groupingsIn(String username, List<String> groupPaths);
 
-    public List<Grouping> groupingsOptedInto(String username);
+    public List<Grouping> groupingsOptedInto(String username, List<String> groupPaths);
 
-    public List<Grouping> groupingsOptedOutOf(String username);
+    public List<Grouping> groupingsOptedOutOf(String username, List<String> groupPaths);
 
     public boolean inGroup(String group, String username);
 

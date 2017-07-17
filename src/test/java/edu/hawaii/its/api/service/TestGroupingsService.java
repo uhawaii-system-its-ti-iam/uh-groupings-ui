@@ -463,8 +463,8 @@ public class TestGroupingsService {
 
     @Test
     public void getGroupNamesTest() {
-        List<String> groupNames1 = gs.getGroupNames(username[4]);
-        List<String> groupNames2 = gs.getGroupNames(username[2]);
+        List<String> groupNames1 = gs.getGroupPaths(username[4]);
+        List<String> groupNames2 = gs.getGroupPaths(username[2]);
 
         assertTrue(groupNames1.contains(GROUPING_EXCLUDE));
         assertFalse(groupNames1.contains(GROUPING));
@@ -479,13 +479,13 @@ public class TestGroupingsService {
 
     @Test
     public void getGroupNames() {
-        List<String> groups = gs.getGroupNames(username[0]);
+        List<String> groups = gs.getGroupPaths(username[0]);
 
         assertTrue(groups.contains(GROUPING_OWNERS));
         assertTrue(groups.contains(GROUPING_STORE_EMPTY_OWNERS));
         assertTrue(groups.contains(GROUPING_TRUE_EMPTY_OWNERS));
 
-        List<String> groups2 = gs.getGroupNames(username[1]);
+        List<String> groups2 = gs.getGroupPaths(username[1]);
 
         assertFalse(groups2.contains(GROUPING_OWNERS));
         assertFalse(groups2.contains(GROUPING_STORE_EMPTY_OWNERS));
@@ -495,7 +495,7 @@ public class TestGroupingsService {
 
     @Test
     public void grouperTest() {
-       List<String> groupPaths = gs.getGroupNames(username[0]);
+       List<String> groupPaths = gs.getGroupPaths(username[0]);
 
 
         List<String> groupings = new ArrayList<>();

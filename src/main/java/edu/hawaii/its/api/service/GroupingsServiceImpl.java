@@ -288,13 +288,14 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public MyGroupings getMyGroupings(String username) {
         MyGroupings myGroupings = new MyGroupings();
+        List<String> groupPaths = getGroupPaths(username);
 
-        myGroupings.setGroupingsIn(groupingsIn(username));
-        myGroupings.setGroupingsOwned(groupingsOwned(username));
-        myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username));
-        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username));
-        myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username));
-        myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username));
+        myGroupings.setGroupingsIn(groupingsIn(username, groupPaths));
+        myGroupings.setGroupingsOwned(groupingsOwned(groupPaths));
+        myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
+        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username, groupPaths));
+        myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username, groupPaths));
+        myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username, groupPaths));
 
         return myGroupings;
     }
@@ -474,9 +475,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the Groupings that the user is in
      */
     @Override
-    public List<Grouping> groupingsIn(String username) {
-        List<String> groupsIn = getGroupNames(username);
-        List<String> groupingsIn = extractGroupings(groupsIn);
+    public List<Grouping> groupingsIn(String username, List<String> groupPaths) {
+        List<String> groupingsIn = extractGroupings(groupPaths);
 
         return makeGroupings(groupingsIn);
     }
@@ -491,11 +491,10 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param username: username of the user who's groupings will be looked for
      * @return a list of all of the Groupings that the user owns
      */
-    private List<Grouping> groupingsOwned(String username) {
-        List<String> ownerGroups = getGroupNames(username)
+    private List<Grouping> groupingsOwned(List<String> groupPaths) {
+        List<String> ownerGroups = groupPaths
                 .stream()
                 .filter(groupPath -> groupPath.endsWith(OWNERS))
                 .map(groupPath -> groupPath.substring(0, groupPath.length() - OWNERS.length()))
@@ -510,16 +509,18 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param username: username of the user who's groupings will be looked for
      * @return a list of all of the Groupings that the user is opted into
      */
-    public List<Grouping> groupingsOptedInto(String username) {
-        return groupingsOpted(INCLUDE, username);
+    @Override
+    public List<Grouping> groupingsOptedInto(String username, List<String> groupPaths) {
+        return groupingsOpted(INCLUDE, username, groupPaths);
     }
 
     /**
      * @param username: username of the user who's groupings will be looked for
      * @return a list of all of the Groupings that the user is opted out of
      */
-    public List<Grouping> groupingsOptedOutOf(String username) {
-        return groupingsOpted(EXCLUDE, username);
+    @Override
+    public List<Grouping> groupingsOptedOutOf(String username, List<String> groupPaths) {
+        return groupingsOpted(EXCLUDE, username, groupPaths);
     }
 
     /**
@@ -529,14 +530,13 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the groups that the user is opted into that end
      * with the suffix defined in includeOrrExclude
      */
-    private List<Grouping> groupingsOpted(String includeOrrExclude, String username) {
+    private List<Grouping> groupingsOpted(String includeOrrExclude, String username, List<String> groupPaths) {
         logger.info("groupingsOpted; includeOrrExclude: " + includeOrrExclude + "; username: " + username + ";");
 
-        List<String> groupsIn = getGroupNames(username);
         List<String> groupsOpted = new ArrayList<>();
         List<String> groupingsOpted = new ArrayList<>();
 
-        for (String group : groupsIn) {
+        for (String group : groupPaths) {
             if (group.endsWith(includeOrrExclude)
                     && checkSelfOpted(group, username)) {
                 groupsOpted.add(parentGroupingPath(group));
@@ -563,10 +563,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @return a list of all groupings that the user is able to opt out of
      */
-    private List<Grouping> groupingsToOptOutOf(String username) {
-        logger.info("groupingsToOptOutOf; username: " + username + ";");
+    private List<Grouping> groupingsToOptOutOf(String username, List<String> groupPaths) {
+        logger.info("groupingsToOptOutOf; username: " + username + "; groupPaths: " + groupPaths + ";");
 
-        List<String> groups = getGroupNames(username);
         List<String> groupings = new ArrayList<>();
 
         GcGetAttributeAssignments attributeAssignmentsResults = new GcGetAttributeAssignments()
@@ -574,7 +573,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .addAttributeDefNameName(TRIO)
                 .addAttributeDefNameName(OPT_OUT);
 
-        groups.forEach(attributeAssignmentsResults::addOwnerGroupName);
+        groupPaths.forEach(attributeAssignmentsResults::addOwnerGroupName);
 
         WsGetAttributeAssignmentsResults assignmentsResults = attributeAssignmentsResults.execute();
 
@@ -590,11 +589,10 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @return a list of all groupings that the user is able to opt into
      */
-    private List<Grouping> groupingsToOptInto(String username) {
-        logger.info("groupingsToOptInto; username: " + username + ";");
+    private List<Grouping> groupingsToOptInto(String username, List<String> groupPaths) {
+        logger.info("groupingsToOptInto; username: " + username + "; groupPaths : " + groupPaths + ";");
 
         List<String> groups = new ArrayList<>();
-        List<String> groupsIn = getGroupNames(username);
 
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
                 .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
@@ -607,8 +605,8 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (wsGroups != null) {
             for (WsGroup group : wsGroups) {
-                if (groupsIn.contains(group.getName() + EXCLUDE)
-                        || !groupsIn.contains(group.getName()))
+                if (groupPaths.contains(group.getName() + EXCLUDE)
+                        || !groupPaths.contains(group.getName()))
                     groups.add(group.getName());
             }
         }
@@ -1140,8 +1138,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param username: username of user who's groups will be searched for
      * @return a list of all groups that the user is a member of
      */
-    List<String> getGroupNames(String username) {
-        logger.info("getGroupNames; username: " + username + ";");
+    List<String> getGroupPaths(String username) {
+        logger.info("getGroupPaths; username: " + username + ";");
 
         WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
                 .addSubjectIdentifier(username)
