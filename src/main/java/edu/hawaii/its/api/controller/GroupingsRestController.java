@@ -310,7 +310,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/{optInOn}/setOptIn",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult> setOptIn(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optInOn) {
+    public ResponseEntity<List<GroupingsServiceResult>> setOptIn(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optInOn) {
         logger.info("Entered REST setOptIn...");
         return ResponseEntity
                 .ok()
@@ -328,7 +328,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{username}/{optOutOn}/setOptOut",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult> setOptOut(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optOutOn) {
+    public ResponseEntity<List<GroupingsServiceResult>> setOptOut(@PathVariable String grouping, @PathVariable String username, @PathVariable boolean optOutOn) {
         logger.info("Entered REST setOptIn...");
         return ResponseEntity
                 .ok()

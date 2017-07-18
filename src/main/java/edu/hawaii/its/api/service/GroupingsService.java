@@ -11,11 +11,11 @@ public interface GroupingsService {
 
     public boolean hasListserv(String grouping);
 
-    public List<Grouping> groupingsIn(String username);
+    public List<Grouping> groupingsIn(String username, List<String> groupPaths);
 
-    public List<Grouping> groupingsOptedInto(String username);
+    public List<Grouping> groupingsOptedInto(String username, List<String> groupPaths);
 
-    public List<Grouping> groupingsOptedOutOf(String username);
+    public List<Grouping> groupingsOptedOutOf(String username, List<String> groupPaths);
 
     public boolean inGroup(String group, String username);
 
@@ -43,9 +43,9 @@ public interface GroupingsService {
 
     public GroupingsServiceResult changeListservStatus(String grouping, String username, boolean listservOn);
 
-    public GroupingsServiceResult changeOptInStatus(String grouping, String username, boolean optInOn);
+    public List<GroupingsServiceResult> changeOptInStatus(String grouping, String username, boolean optInOn);
 
-    public GroupingsServiceResult changeOptOutStatus(String grouping, String username, boolean optOutOn);
+    public List<GroupingsServiceResult> changeOptOutStatus(String grouping, String username, boolean optOutOn);
 
     public boolean isOwner(String grouping, String username);
 
