@@ -63,23 +63,12 @@
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
 
-                for(var i =0; i < 100; i++){
-                    $scope.optedIn.push(
-                        {name:"Group In "+i}
-                    );
-                    $scope.membersList.push(
-                        {name:"Member Number "+i}
-                    );
-                    $scope.optedOut.push(
-                        {name:"Group Out "+i}
-                    );
-                }
                 $scope.pagedItems1 = $scope.groupToPages($scope.membersList,$scope.pagedItems1);
                 // $scope.pagedItems2 = $scope.groupToPages($scope.optOutList);
                 $scope.pagedItems3 = $scope.groupToPages($scope.optInList, $scope.pagedItems3);
                 $scope.pagedItems4 = $scope.groupToPages($scope.optedIn,$scope.pagedItems4);
                 $scope.pagedItems5 = $scope.groupToPages($scope.optedOut,$scope.pagedItems5);
-                console.log($scope.pagedItems4.length);
+
                 if($scope.optedIn.length === 0)
                 {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
@@ -163,34 +152,34 @@
             }, cancelOutURL);
         };
 
-        $scope.disableOptOut = function (index) {
-            for (var i = 0; i < $scope.optOutList.length; i++) {
-                if ($scope.membersList[index].name === $scope.optOutList[i].name) {
-                    console.log($scope.optOutList[i].name);
-                    return false;
-                }
-            }
-            return true;
-        };
-
-        //Disables opt in button if there are no groupings to opt into.
-        $scope.disableOptIn = function (index) {
-            for (var i = 0; i < $scope.membersList.length; i++) {
-                if ($scope.membersList[i].name === $scope.optInList[index].name) {
-                    return true;
-                }
-            }
-        };
-
-        //Disable button if list is empty
-        $scope.disableButton = function (type, index) {
-            var list = type[index];
-            return list.name.includes("NO GROUPINGS TO");
-        };
-
-        $scope.tooltipText = function (index) {
-            return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
-        };
+        // $scope.disableOptOut = function (index) {
+        //     for (var i = 0; i < $scope.optOutList.length; i++) {
+        //         if ($scope.membersList[index].name === $scope.optOutList[i].name) {
+        //             console.log($scope.optOutList[i].name);
+        //             return false;
+        //         }
+        //     }
+        //     return true;
+        // };
+        //
+        // //Disables opt in button if there are no groupings to opt into.
+        // $scope.disableOptIn = function (index) {
+        //     for (var i = 0; i < $scope.membersList.length; i++) {
+        //         if ($scope.membersList[i].name === $scope.optInList[index].name) {
+        //             return true;
+        //         }
+        //     }
+        // };
+        //
+        // //Disable button if list is empty
+        // $scope.disableButton = function (type, index) {
+        //     var list = type[index];
+        //     return list.name.includes("NO GROUPINGS TO");
+        // };
+        //
+        // $scope.tooltipText = function (index) {
+        //     return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
+        // };
         /**groups all the items to pages
            have sepperate arrays (hopefully)
            @param
