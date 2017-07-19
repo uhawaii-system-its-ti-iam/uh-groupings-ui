@@ -20,12 +20,19 @@
         $scope.optedOut = [];
         $scope.loading = true;
 
-        $scope.pagedItems=[];
-        $scope.gap=5;
+        //these will be place holders for now
+        $scope.pagedItems1=[];
+        $scope.pagedItems2=[];
+        $scope.pagedItems3=[];
+        $scope.pagedItems4=[];
+        $scope.pagedItems5=[];
+        $scope.gap=2;
 
-        $scope.itemsPerPage = 25;
+        $scope.itemsPerPage = 5;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
+        $scope.currentPageCancelOptIn = 0;
+        $scope.currentPageCancelOptOut = 0;
 
         $scope.initCurrentUsername = function() {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -56,9 +63,14 @@
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
 
-                $scope.groupToPages();
+                $scope.pagedItems1 = $scope.groupToPages($scope.membersList,$scope.pagedItems1);
+                // $scope.pagedItems2 = $scope.groupToPages($scope.optOutList);
+                $scope.pagedItems3 = $scope.groupToPages($scope.optInList, $scope.pagedItems3);
+                $scope.pagedItems4 = $scope.groupToPages($scope.optedIn,$scope.pagedItems4);
+                $scope.pagedItems5 = $scope.groupToPages($scope.optedOut,$scope.pagedItems5);
 
-                if ($scope.optedIn.length === 0) {
+                if($scope.optedIn.length === 0)
+                {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
                 }
                 if ($scope.optedOut.length === 0) {
@@ -69,7 +81,6 @@
                 }
 
                 $scope.loading = false;
-                console.log($scope.optOutList);
             }, groupingURL);
             console.log("Finish dataProvider");
         };
@@ -141,46 +152,48 @@
             }, cancelOutURL);
         };
 
-        $scope.disableOptOut = function (index) {
-            for (var i = 0; i < $scope.optOutList.length; i++) {
-                if ($scope.membersList[index].name === $scope.optOutList[i].name) {
-                    console.log($scope.optOutList[i].name);
-                    return false;
+        // $scope.disableOptOut = function (index) {
+        //     for (var i = 0; i < $scope.optOutList.length; i++) {
+        //         if ($scope.membersList[index].name === $scope.optOutList[i].name) {
+        //             console.log($scope.optOutList[i].name);
+        //             return false;
+        //         }
+        //     }
+        //     return true;
+        // };
+        //
+        // //Disables opt in button if there are no groupings to opt into.
+        // $scope.disableOptIn = function (index) {
+        //     for (var i = 0; i < $scope.membersList.length; i++) {
+        //         if ($scope.membersList[i].name === $scope.optInList[index].name) {
+        //             return true;
+        //         }
+        //     }
+        // };
+        //
+        // //Disable button if list is empty
+        // $scope.disableButton = function (type, index) {
+        //     var list = type[index];
+        //     return list.name.includes("NO GROUPINGS TO");
+        // };
+        //
+        // $scope.tooltipText = function (index) {
+        //     return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
+        // };
+        /**groups all the items to pages
+           have sepperate arrays (hopefully)
+           @param
+        **/
+        $scope.groupToPages=function(theList , pagedList){
+            var pagedList = [];
+            for(var i = 0; i < theList.length ; i++){
+                if(i % $scope.itemsPerPage === 0){
+                    pagedList[Math.floor(i/$scope.itemsPerPage)] = [ theList[i]];
+                }else{
+                    pagedList[Math.floor(i/$scope.itemsPerPage)].push( theList[i]);
                 }
             }
-            return true;
-        };
-
-        //Disables opt in button if there are no groupings to opt into.
-        $scope.disableOptIn = function (index) {
-            for (var i = 0; i < $scope.membersList.length; i++) {
-                if ($scope.membersList[i].name === $scope.optInList[index].name) {
-                    return true;
-                }
-            }
-        };
-
-        //Disable button if list is empty
-        $scope.disableButton = function (type, index) {
-            var list = type[index];
-            return list.name.includes("NO GROUPINGS TO");
-        };
-
-        $scope.tooltipText = function (index) {
-            return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
-        };
-        //groups all the items to pages
-        //have sepperate arrays (hopefully)
-        //no param
-        $scope.groupToPages = function () {
-            $scope.pagedItems = [];
-            for (var i = 0; i < $scope.membersList.length; i++) {
-                if (i % $scope.itemsPerPage === 0) {
-                    $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.membersList[i]];
-                } else {
-                    $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.membersList[i]);
-                }
-            }
+            return pagedList;
         };
 
         /**shows the range between the start and end
@@ -196,9 +209,10 @@
          **/
         $scope.range = function (size, start, end) {
             var ret = [];
+
             if (size < end) {
                 end = size;
-                start = size - $scope.gap;
+                // start = size - $scope.gap;
             }
             if (start < 0) {
                 start = 0;
@@ -209,57 +223,78 @@
             return ret;
         };
 
-        // Conceptually the next bunch of functions are the
-        // same but with different names
 
-        //THIS SECTION WOULD BE FOR THE OptIn SECTION
+        //might make this into my one function
+        $scope.currentPage = function(pages){
+            switch(pages){
+                case 'Cancel Opt In Next':
+                    if ($scope.currentPageCancelOptIn < $scope.pagedItems4.length - 1) {
+                        $scope.currentPageCancelOptIn = $scope.currentPageCancelOptIn + 1;
+                    }
+                    break;
 
-        /**if the current page is not 0, it will minus the current page by one
-         *current page will never go negative
-         **/
-        $scope.prevPageOptIn = function () {
-            if ($scope.currentPageOptIn > 0) {
-                $scope.currentPageOptIn--;
+                case 'Cancel Opt In Set':
+                    $scope.currentPageCancelOptIn = this.n;
+                    break;
+
+                case 'Cancel Opt In Prev':
+                    if ($scope.currentPageCancelOptIn > 0) {
+                        $scope.currentPageCancelOptIn--;
+                    }
+                    break;
+
+                case 'Cancel Opt Out Next':
+                    if ($scope.currentPageCancelOptOut < $scope.pagedItems5.length - 1) {
+                        $scope.currentPageCancelOptOut = $scope.currentPageCancelOptOut + 1;
+                    }
+                    break;
+
+                case 'Cancel Opt Out Set':
+                    $scope.currentPageCancelOptOut = this.n;
+                    break;
+
+                case 'Cancel Opt Out Prev':
+                    if ($scope.currentPageCancelOptOut > 0) {
+                        $scope.currentPageCancelOptOut--;
+                    }
+                    break;
+
+                    //
+                case 'Page Opt Out Next':
+                    if ($scope.currentPageOptOut < $scope.pagedItems3.length - 1) {
+                        $scope.currentPageOptOut = $scope.currentPageOptOut + 1;
+                    }
+                    break;
+
+                case 'Page Opt Out Set':
+                    $scope.currentPageOptOut = this.n;
+                    break;
+
+                case 'Page Opt Out Prev':
+                    if ($scope.currentPageOptOut > 0) {
+                        $scope.currentPageOptOut--;
+                    }
+                    break;
+                //
+                case 'Page Opt In Next':
+                    if ($scope.currentPageOptIn < $scope.pagedItems1.length - 1) {
+                        $scope.currentPageOptIn = $scope.currentPageOptIn + 1;
+                    }
+                    break;
+
+                case 'Page Opt In Set':
+                    $scope.currentPageOptIn = this.n;
+                    break;
+
+                case 'Page Opt In Prev':
+                    if ($scope.currentPageOptIn > 0) {
+                        $scope.currentPageOptIn--;
+                    }
+                    break;
+
             }
         };
 
-        /**if the current page is less than the items in the array, it will
-         *add one to current page
-         **/
-        $scope.nextPageOptIn = function () {
-            if ($scope.currentPageOptIn < $scope.pagedItems.length - 1) {
-                $scope.currentPageOptIn = $scope.currentPageOptIn + 1;
-            }
-        };
-
-        //takes the clicked page and set that to the current page
-        $scope.setPageOptIn = function () {
-            $scope.currentPageOptIn = this.n;
-        };
-
-        //THIS SECTION WOULD BE FOR THE OptOut SECTION
-
-        /**if the current page is not 0, it will minus the current page by one
-         *current page will never go negative
-         **/
-        $scope.prevPageOptOut = function () {
-            if ($scope.currentPageOptOut > 0) {
-                $scope.currentPageOptOut--;
-            }
-        };
-
-        /**if the current page is less than the items in the array, it will
-         *add one to current page
-         **/
-        $scope.nextPageOptOut = function () {
-            if ($scope.currentPageOptOut < $scope.pagedItems.length - 1) {
-                $scope.currentPageOptOut = $scope.currentPageOptOut + 1;
-            }
-        };
-        //takes the clicked page and set that to the current page
-        $scope.setPageOptOut = function () {
-            $scope.currentPageOptOut = this.n;
-        };
     }
 
     membershipApp.controller("MembershipJsController", MembershipJsController);
