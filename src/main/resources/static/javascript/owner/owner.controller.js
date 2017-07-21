@@ -39,7 +39,7 @@
         *pagination variables
         */
         $scope.gap=2;
-        $scope.itemsPerPage = 5;
+        $scope.itemsPerPage = 25;
         //figure out how much pages to paginate. so far lets do one
         $scope.pagedItemsInclude = [];
         $scope.currentPageInclude = 0;

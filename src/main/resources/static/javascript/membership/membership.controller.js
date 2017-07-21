@@ -28,7 +28,7 @@
         $scope.pagedItems5=[];
         $scope.gap=2;
 
-        $scope.itemsPerPage = 5;
+        $scope.itemsPerPage = 25;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
         $scope.currentPageCancelOptIn = 0;
