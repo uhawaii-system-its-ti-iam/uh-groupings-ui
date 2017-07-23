@@ -5,22 +5,28 @@ import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.api.GcAddMember;
+import edu.internet2.middleware.grouperClient.api.GcHasMember;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
@@ -127,20 +133,40 @@ public class GroupingsServiceMockTest {
     @Value("$groupings.api.stem}")
     private String STEM;
 
-    final String username = "username";
-    final String group = "group";
+    private static final String[] USERNAME = new String[]{"username_0", "username_1", "username_2", "username_3", "username_4"};
+    private static final String GROUP = "group";
+    private static final String GROUPING = "grouping";
+    private static final String GROUPING_PATH = "path_to:" + GROUPING;
+    private static final String GROUPING_OWNERS_PATH = GROUPING_PATH + ":OWNERS";
 
+    WsSubjectLookup[] subjectLookups = new WsSubjectLookup[5];
+    WsHasMemberResults hasMemberResults = new WsHasMemberResults();
+    WsHasMemberResult hasMemberResult = new WsHasMemberResult();
+    WsResultMeta resultMeta = new WsResultMeta();
+    WsAddMemberResults addMemberResults = new WsAddMemberResults();
+
+    @Mock
+    private GcHasMember gcHasMember;
+
+    @Mock
+    private GcAddMember gcAddMember;
+
+    @InjectMocks
     @Autowired
     private GroupingsService groupingsService;
 
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
-    }
 
-    @Test
-    public void checkValues() {
-        assertEquals(FAILURE, "FAILURE");
+        for(int i = 0; i < 5; i ++){
+            subjectLookups[i] = new WsSubjectLookup();
+            subjectLookups[i].setSubjectIdentifier(USERNAME[i]);
+        }
+
+        resultMeta.setResultCode("not member");
+        hasMemberResult.setResultMetadata(resultMeta);
+        hasMemberResults.setResults(new WsHasMemberResult[]{hasMemberResult});
     }
 
     @Test
@@ -291,5 +317,10 @@ public class GroupingsServiceMockTest {
     @Test
     public void optInPermission() {
 
+    }
+
+    private WsAddMemberResults mockAddOwner() {
+        hasMemberResults.getResults()[0].getResultMetadata().setResultCode(IS_MEMBER);
+        return addMemberResults;
     }
 }

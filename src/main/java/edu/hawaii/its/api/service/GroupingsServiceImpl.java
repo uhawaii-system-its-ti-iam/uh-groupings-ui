@@ -735,8 +735,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public boolean isOwner(String grouping, String username) {
-        logger.info("isOwner; grouping: " + grouping + "; username: " + username + ";");
-
         return inGroup(grouping + OWNERS, username);
     }
 
