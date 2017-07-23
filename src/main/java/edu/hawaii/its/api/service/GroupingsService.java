@@ -65,4 +65,6 @@ public interface GroupingsService {
 
     public boolean optInPermission(String grouping);
 
+    public List<Grouping> allGroupings(String username);
+
 }

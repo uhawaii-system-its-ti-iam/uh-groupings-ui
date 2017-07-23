@@ -23,6 +23,8 @@ import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.MyGroupings;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
+import java.util.List;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsRestController {
@@ -361,7 +363,7 @@ public class TestGroupingsRestController {
     }
 
     @Test
-    public void aaronTest () {
+    public void aaronTest() {
         MyGroupings aaronsGroupings = gs.getMyGroupings("aaronvil");
         assertNotNull(aaronsGroupings);
     }
@@ -384,5 +386,12 @@ public class TestGroupingsRestController {
         assertTrue(trueEmpty.getInclude().getMembers().size() == 0);
         assertTrue(trueEmpty.getOwners().getUsernames().contains(tst[0]));
 
+    }
+
+    @Test
+    public void getAllGroupingsTest() {
+        List<Grouping> groupings = gs.allGroupings("_groupings_api_2");
+
+        assertNotNull(groupings);
     }
 }

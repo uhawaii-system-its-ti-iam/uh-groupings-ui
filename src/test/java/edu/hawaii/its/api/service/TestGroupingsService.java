@@ -495,19 +495,18 @@ public class TestGroupingsService {
 
     @Test
     public void grouperTest() {
-       List<String> groupPaths = gs.getGroupPaths(username[0]);
+        List<String> groupPaths = gs.getGroupPaths(username[0]);
 
 
         List<String> groupings = new ArrayList<>();
         List<String> groupings2 = new ArrayList<>();
 
 
-
         if (groupPaths.size() > 0) {
 
             List<WsAttributeAssign> attributes = new ArrayList<>();
 
-            for(String path : groupPaths) {
+            for (String path : groupPaths) {
                 WsGetAttributeAssignmentsResults trioGroups = new GcGetAttributeAssignments()
                         .addAttributeDefNameName(TRIO)
                         .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
@@ -527,7 +526,7 @@ public class TestGroupingsService {
 
             assertNotNull(groupings);
 
-        //////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////
 
             GcGetAttributeAssignments trioGroups2 = new GcGetAttributeAssignments()
                     .addAttributeDefNameName(TRIO)
@@ -559,7 +558,7 @@ public class TestGroupingsService {
         groupingPaths.add(GROUPING_STORE_EMPTY);
         groupingPaths.add(GROUPING_TRUE_EMPTY);
 
-        List<Grouping> groupings = gs.makeGroupings(groupingPaths);
+        List<Grouping> groupings = gs.makeGroupings(groupingPaths, true);
 
         assertTrue(groupings.size() == 3);
     }

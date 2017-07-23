@@ -27,6 +27,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("${groupings.api.settings}")
     private String SETTINGS;
 
+    @Value("${groupings.api.admins}")
+    private String ADMINS;
+
     @Value("${groupings.api.attributes}")
     private String ATTRIBUTES;
 
@@ -177,7 +180,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @param grouping: the path of the Grouping that will have its optIn permission changed
      * @param username: username of the Grouping Owner preforming the action
-     * @param set:  true if the optIn permission should be turned on, false if it should be turned off
+     * @param set:      true if the optIn permission should be turned on, false if it should be turned off
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
     @Override
@@ -192,7 +195,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @param grouping: the path of the Grouping that will have its optOut permission changed
      * @param username: username of the Grouping Owner preforming the action
-     * @param set: true if the optOut permission should be turned on, false if it should be turned off
+     * @param set:      true if the optOut permission should be turned on, false if it should be turned off
      * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
      */
     @Override
@@ -314,7 +317,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         String outOrrIn = "in ";
         String preposition = "to ";
         String addGroup = grouping + INCLUDE;
-        String deleteGroup  = grouping + EXCLUDE;
+        String deleteGroup = grouping + EXCLUDE;
 
         return opt(username, grouping, addGroup, deleteGroup, outOrrIn, preposition);
     }
@@ -333,7 +336,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         String outOrrIn = "out ";
         String preposition = "from ";
         String addGroup = grouping + EXCLUDE;
-        String deleteGroup  = grouping + INCLUDE;
+        String deleteGroup = grouping + INCLUDE;
 
         return opt(username, grouping, addGroup, deleteGroup, outOrrIn, preposition);
     }
@@ -478,7 +481,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<Grouping> groupingsIn(String username, List<String> groupPaths) {
         List<String> groupingsIn = extractGroupings(groupPaths);
 
-        return makeGroupings(groupingsIn);
+        return makeGroupings(groupingsIn, false);
     }
 
     /**
@@ -502,7 +505,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         List<String> ownedGroupings = extractGroupings(ownerGroups);
 
-        return makeGroupings(ownedGroupings);
+        return makeGroupings(ownedGroupings, true);
     }
 
     /**
@@ -556,7 +559,36 @@ public class GroupingsServiceImpl implements GroupingsService {
             groupingsOpted.add(group.getName());
         }
 
-        return makeGroupings(groupingsOpted);
+        return makeGroupings(groupingsOpted, false);
+    }
+
+    /**
+     *
+     * @param username: username of user making request
+     * @return a list of all of the groupings in the database
+     */
+    @Override
+    public List<Grouping> allGroupings(String username) {
+        List<Grouping> groupings = new ArrayList<>();
+
+        if(inGroup(ADMINS, username)) {
+            List<String> groupPaths = new ArrayList<>();
+
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
+                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
+                    .addAttributeDefNameName(TRIO)
+                    .execute();
+
+            List<WsGroup> groups = new ArrayList<>(Arrays.asList(attributeAssignmentsResults.getWsGroups()));
+
+            for (WsGroup group : groups) {
+                groupPaths.add(group.getName());
+            }
+
+            groupings = makeGroupings(groupPaths, true);
+        }
+
+        return groupings;
     }
 
 
@@ -583,7 +615,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             groupings.add(group.getName());
         }
 
-        return makeGroupings(groupings);
+        return makeGroupings(groupings, false);
     }
 
     /**
@@ -611,7 +643,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             }
         }
 
-        return makeGroupings(groups);
+        return makeGroupings(groups, false);
     }
 
     /**
@@ -966,7 +998,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + privilegeName
                 + " set: "
                 + set
-                +";");
+                + ";");
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
         String action = "set " + privilegeName + " " + set + " for " + username + " in " + group;
@@ -1157,15 +1189,17 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param groupingPaths: list of paths to groups that are Groupings
      * @return a list of Grouping Objects made from the list of Grouping paths
      */
-    List<Grouping> makeGroupings(List<String> groupingPaths) {
+    List<Grouping> makeGroupings(List<String> groupingPaths, boolean getAttributes) {
         logger.info("makeGroupings; groupingPaths: " + groupingPaths + ";");
 
         List<Grouping> groupings = groupingPaths
                 .stream()
                 .map(Grouping::new)
                 .collect(Collectors.toList());
-        for (int i = 0; i < groupings.size(); i ++) {
-            groupings.set(i, setGroupingAttributes(groupings.get(i)));
+        if(getAttributes) {
+            for (int i = 0; i < groupings.size(); i++) {
+                groupings.set(i, setGroupingAttributes(groupings.get(i)));
+            }
         }
         return groupings;
     }
