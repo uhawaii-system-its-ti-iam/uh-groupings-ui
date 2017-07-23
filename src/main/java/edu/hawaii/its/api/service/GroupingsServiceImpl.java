@@ -117,7 +117,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("${groupings.api.success}")
     private String SUCCESS;
 
-    @Value("{groupings.api.failure}")
+    @Value("${groupings.api.failure}")
     private String FAILURE;
 
     @Value("${groupings.api.success_allowed}")
@@ -363,6 +363,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             results.add(addMemberAs(username, addGroup, username));
             results.add(updateLastModified(deleteGroup));
             results.add(updateLastModified(addGroup));
+            results.add(updateLastModified(grouping));
             results.add(addSelfOpted(addGroup, username));
             return results;
         }
@@ -387,7 +388,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             if (checkSelfOpted(group, username)) {
                 results.add(deleteMember(group, username));
                 results.add(updateLastModified(group));
-                //TODO update group, grouping or both?
+                results.add(updateLastModified(grouping));
 
                 return results;
             } else {
@@ -767,7 +768,12 @@ public class GroupingsServiceImpl implements GroupingsService {
                 action);
     }
 
-    private String extractFirstMembershipID(WsGetMembershipsResults wsGetMembershipsResults) {
+    /**
+     * @param wsGetMembershipsResults: has an array of memberships, but we are just interested
+     *                                 in the first one. (there will probably only be one anyway)
+     * @return
+     */
+    public String extractFirstMembershipID(WsGetMembershipsResults wsGetMembershipsResults) {
         return wsGetMembershipsResults
                 .getWsMemberships()[0]
                 .getMembershipId();
@@ -1240,18 +1246,21 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public String parentGroupingPath(String group) {
-        if (group.endsWith(EXCLUDE)) {
-            return group.substring(0, group.length() - EXCLUDE.length());
-        } else if (group.endsWith(INCLUDE)) {
-            return group.substring(0, group.length() - INCLUDE.length());
-        } else if (group.endsWith(OWNERS)) {
-            return group.substring(0, group.length() - OWNERS.length());
-        } else if (group.endsWith(BASIS)) {
-            return group.substring(0, group.length() - BASIS.length());
-        } else if (group.endsWith(BASIS_PLUS_INCLUDE)) {
-            return group.substring(0, group.length() - BASIS_PLUS_INCLUDE.length());
+        if(group != null) {
+            if (group.endsWith(EXCLUDE)) {
+                return group.substring(0, group.length() - EXCLUDE.length());
+            } else if (group.endsWith(INCLUDE)) {
+                return group.substring(0, group.length() - INCLUDE.length());
+            } else if (group.endsWith(OWNERS)) {
+                return group.substring(0, group.length() - OWNERS.length());
+            } else if (group.endsWith(BASIS)) {
+                return group.substring(0, group.length() - BASIS.length());
+            } else if (group.endsWith(BASIS_PLUS_INCLUDE)) {
+                return group.substring(0, group.length() - BASIS_PLUS_INCLUDE.length());
+            }
+            return group;
         }
-        return group;
+        return "";
     }
 
     /**
@@ -1354,7 +1363,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param action:               the action being preformed in the resultMetadataHolder
      * @return a GroupingsServiceResult made from the ResultMetadataHolder and the action
      */
-    private GroupingsServiceResult makeGroupingsServiceResult(ResultMetadataHolder resultMetadataHolder, String action) {
+    public GroupingsServiceResult makeGroupingsServiceResult(ResultMetadataHolder resultMetadataHolder, String action) {
         GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();
         groupingsServiceResult.setAction(action);
         groupingsServiceResult.setResultCode(resultMetadataHolder.getResultMetadata().getResultCode());

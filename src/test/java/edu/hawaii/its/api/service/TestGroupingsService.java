@@ -421,6 +421,7 @@ public class TestGroupingsService {
 
     }
 
+
     @Test
     public void getGroupNames() {
         List<String> groups = gs.getGroupPaths(username[0]);
