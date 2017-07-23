@@ -1239,7 +1239,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param group: path of group to be checked
      * @return the parent Grouping of the group
      */
-    private String parentGroupingPath(String group) {
+    @Override
+    public String parentGroupingPath(String group) {
         if (group.endsWith(EXCLUDE)) {
             return group.substring(0, group.length() - EXCLUDE.length());
         } else if (group.endsWith(INCLUDE)) {

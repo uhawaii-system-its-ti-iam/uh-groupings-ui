@@ -67,4 +67,6 @@ public interface GroupingsService {
 
     public List<Grouping> allGroupings(String username);
 
+    public String parentGroupingPath(String group);
+
 }
