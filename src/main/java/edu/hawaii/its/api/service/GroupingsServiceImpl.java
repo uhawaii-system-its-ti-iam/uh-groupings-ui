@@ -421,7 +421,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             if (groupOptOutPermission(username, group)) {
                 results.add(deleteMember(group, username));
                 results.add(updateLastModified(group));
-                //TODO update group, grouping or both?
+                results.add(updateLastModified(grouping));
 
                 return results;
             } else {
@@ -563,7 +563,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     *
      * @param username: username of user making request
      * @return a list of all of the groupings in the database
      */
@@ -571,7 +570,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<Grouping> allGroupings(String username) {
         List<Grouping> groupings = new ArrayList<>();
 
-        if(inGroup(ADMINS, username)) {
+        if (inGroup(ADMINS, username)) {
             List<String> groupPaths = new ArrayList<>();
 
             WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
@@ -1196,7 +1195,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .stream()
                 .map(Grouping::new)
                 .collect(Collectors.toList());
-        if(getAttributes) {
+        if (getAttributes) {
             for (int i = 0; i < groupings.size(); i++) {
                 groupings.set(i, setGroupingAttributes(groupings.get(i)));
             }
@@ -1292,10 +1291,16 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a person made from the WsSubject
      */
     Person makePerson(WsSubject person) {
-        String name = person.getName();
-        String uuid = person.getId();
-        String username = person.getAttributeValue(0);
-        return new Person(name, uuid, username);
+        if (person != null) {
+            String username = null;
+            String name = person.getName();
+            String uuid = person.getId();
+            if (person.getAttributeValues() != null) {
+                username = person.getAttributeValue(0);
+            }
+            return new Person(name, uuid, username);
+        }
+        return new Person();
     }
 
     /**

@@ -390,7 +390,7 @@ public class TestGroupingsRestController {
 
     @Test
     public void getAllGroupingsTest() {
-        List<Grouping> groupings = gs.allGroupings("_groupings_api_2");
+        List<Grouping> groupings = gs.allGroupings(tst[0]);
 
         assertNotNull(groupings);
     }

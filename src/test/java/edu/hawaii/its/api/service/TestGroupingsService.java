@@ -338,62 +338,6 @@ public class TestGroupingsService {
     }
 
     @Test
-    public void makeGroupTest() {
-        WsSubject[] list = new WsSubject[3];
-        for (int i = 0; i < 3; i++) {
-            list[i] = new WsSubject();
-            list[i].setName("testSubject_" + i);
-            list[i].setId("testSubject_uuid_" + i);
-            list[i].setAttributeValues(new String[]{"testSubject_username_" + i});
-        }
-
-        Group group = gs.makeGroup(list);
-
-        for (int i = 0; i < group.getMembers().size(); i++) {
-            assertTrue(group.getMembers().get(i).getName().equals("testSubject_" + i));
-            assertTrue(group.getNames().contains("testSubject_" + i));
-            assertTrue(group.getMembers().get(i).getUuid().equals("testSubject_uuid_" + i));
-            assertTrue(group.getUuids().contains("testSubject_uuid_" + i));
-            assertTrue(group.getMembers().get(i).getUsername().equals("testSubject_username_" + i));
-            assertTrue(group.getUsernames().contains("testSubject_username_" + i));
-        }
-    }
-
-    @Test
-    public void makePersonTest() {
-        String name = "name";
-        String id = "uuid";
-        String identifier = "username";
-
-        WsSubject subject = new WsSubject();
-        subject.setName(name);
-        subject.setId(id);
-        subject.setAttributeValues(new String[]{identifier});
-
-        Person person = gs.makePerson(subject);
-
-        assertTrue(person.getName().equals(name));
-        assertTrue(person.getUuid().equals(id));
-        assertTrue(person.getUsername().equals(identifier));
-
-    }
-
-    @Test
-    public void extractGroupNamesTest() {
-        List<WsGroup> groups = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            groups.add(new WsGroup());
-            groups.get(i).setName("testName_" + i);
-        }
-        List<String> groupNames = gs.extractGroupPaths(groups);
-
-        for (int i = 0; i < 3; i++) {
-            assertTrue(groupNames.contains("testName_" + i));
-        }
-    }
-
-
-    @Test
     public void addMemberAsTest() {
         assertFalse(gs.inGroup(GROUPING, username[4]));
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[4]));
