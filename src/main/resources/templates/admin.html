@@ -17,92 +17,284 @@
                     <div class="loader" ng-show="loading"></div>
                 </div>
 
+                <ul class="nav nav-tabs" id="adminTab">
+                    <li role="presentation" class="active">
+                        <a href="#list" data-toggle="tab" role="tab">
+                            <i class="icon ion-android-people" id="icons"></i>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#grouping" data-toggle="tab" role="tab">
+                            <i class="icon ion-android-list size-64" id="icons "></i>
+                        </a>
+                    </li>
+                </ul>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading" style="padding: 2px">
-                        <div class="form-group">
-                            <h3 class="col-xs-6 col-md-4" style="margin-top: 5px">Designated Admins</h3>
-                            <div align="right" style="margin-top: 10px">
-                                <input placeholder="Type to filter text..." type="text" ng-model="searchFor"/>
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="list">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="padding: 2px">
+                                <div class="form-group">
+                                    <h3 class="col-xs-6 col-md-4" style="margin-top: 5px">Designated Admins</h3>
+
+                                    <div align="right" style="margin-top: 10px">
+                                        <input placeholder="Type to filter text..." type="text" ng-model="searchFor"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Table -->
+                            <table class="table table-bordered table-condensed table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Basis</th>
+                                    <th>Name</th>
+                                    <th>UH ID</th>
+                                    <th>Username</th>
+                                    <th>remove</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <td colspan="6">
+                                    <ul class="pagination pull-right">
+                                        <li ng-class="{disabled: (currentPage) == 0}">
+                                            <a href="" ng-click="paging('first')">«« First</a>
+                                        </li>
+                                        <li ng-class="{disabled: (currentPage) == 0}">
+                                            <a href="" ng-click="paging('prev')">« Prev</a>
+                                        </li>
+                                        <li ng-repeat="n in range(pagedItems.length, currentPage - gap, currentPage + gap + 1) "
+                                            ng-class="{active: n == currentPage}"
+
+                                            ng-click="paging(n)"
+                                                ><a href="" ng-bind="n + 1">1</a>
+                                        </li>
+                                        <li ng-class="{disabled: (currentPage) == pagedItems.length - 1 }">
+                                            <a href="" ng-click="paging('next')">Next »</a>
+                                        </li>
+                                        <li ng-class="{disabled: (currentPage) == pagedItems.length - 1 }">
+                                            <a href="" ng-click="paging('last')">Last »»</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                                </tfoot>
+                                <tbody>
+                                <tr ng-repeat="l in pagedItems[currentPage] | filter:searchFor">
+                                    <td class="text-center" style="width: 3%">{{l.basis}}</td>
+                                    <td>{{l.name}}</td>
+                                    <td>{{l.uuid}}</td>
+                                    <td>{{l.username}}</td>
+                                    <td>
+                                        <button class="btn btn-default btn-block"
+                                                ng-click="remove($index + (currentPage * itemsPerPage))"><span
+                                                class="glyphicon glyphicon-remove"></span></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="panel-footer">
+                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#addAdmin"
+                                        aria-expanded="false" aria-controls="addAdmin">
+                                    Add Admin
+                                </button>
+                                <div class="collapse" id="addAdmin">
+                                    <input type="text" ng-model="username"/>
+                                    <button class="btn btn-success" ng-click="add()">Add Admin</button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Table -->
-                    <table class="table table-bordered table-condensed table-hover">
-                        <thead>
-                        <tr>
-                            <th>Basis</th>
-                            <th>Name</th>
-                            <th>UH ID</th>
-                            <th>Username</th>
-                            <th>remove</th>
-                        </tr>
-                        </thead>
-                      <tfoot>
-                      <td colspan="6">
-                        <ul class = "pagination pull-right" >
-                          <li>
-                            <a href="" ng-click="paging('first')">«« First</a>
-                          </li>
-                          <li>
-                            <a href="" ng-click="paging('prev')">« Prev</a>
-                          </li>
-                            <li ng-repeat="n in range(pagedItems.length, currentPage - gap, currentPage + gap + 1) "
-                              ng-class="{active: n == currentPage}"
+                    <div class="tab-pane fade" id="grouping">
+                        <h2 class="text-center">Search For Grouping</h2>
 
-                              ng-click="paging(n)"
-                          ><a href="" ng-bind="n + 1" >1</a>
-                          </li>
-                          <li>
-                            <a href="" ng-click="paging('next')">Next »</a>
-                          </li>
-                          <li>
-                            <a href="" ng-click="paging('last')">Last »»</a>
-                          </li>
-                        </ul>
-                      </td>
-                      </tfoot>
-                        <tbody>
-                        <tr ng-repeat="l in pagedItems[currentPage] | filter:searchFor">
-                            <td class="text-center" style="width: 3%">{{l.basis}}</td>
-                            <td>{{l.name}}</td>
-                            <td>{{l.uuid}}</td>
-                            <td>{{l.username}}</td>
-                            <td>
-                                <button class="btn btn-default btn-block" ng-click="remove($index + (currentPage * itemsPerPage))"><span
-                                        class="glyphicon glyphicon-remove"></span></button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        <div class="input-group">
+                            <input class="form-control" list="testList"
+                                   ng-keyup="$event.keyCode == 13 ? search() : null"
+                                   data-list="testList"
+                                   type="text" ng-model="groupingName"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="search()">Search</button>
+                            </span>
+                            <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
+                                <option ng-repeat="o in groupingList" value="{{o.path}}"></option>
+                            </datalist>
+                        </div>
+                        <h2 class="text-center">Hello {{groupingName}}</h2>
+                        <div id="members" class="tab-pane fade in active">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
 
-                    <div class="panel-footer">
-                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addAdmin"
-                                aria-expanded="false" aria-controls="addAdmin">
-                            Add Admin
-                        </button>
-                        <div class="collapse" id="addAdmin">
-                            <input type="text" ng-model="username"/>
-                            <button class="btn btn-success" ng-click="add()">Add Admin</button>
+                                    <h2 class="text-center">Members</h2>
+
+                                    <div class="col-md-2 col-xs-2" style="top: 55px; width: 80px">
+                                        <ul class="nav nav-tabs nav-stacked">
+                                            <li class="active"><a data-toggle="tab" href="#all"><span
+                                                    class="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
+                                            <li><a data-toggle="tab" href="#basis"><span class="glyphicon glyphicon-lock"
+                                                                                         aria-hidden="true"></span></a></li>
+                                            <li><a data-toggle="tab" href="#include"><span class="glyphicon glyphicon-plus"
+                                                                                           aria-hidden="true"></span></a>
+                                            </li>
+                                            <li><a data-toggle="tab" href="#exclude"><span class="glyphicon glyphicon-minus"
+                                                                                           aria-hidden="true"></span></a>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+
+                                    <div class="tab-content col-md-10 col-xs-8">
+                                        <div id="all" class="tab-pane fade in active">
+                                            <h3 class="text-center">List</h3>
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>UH ID</th>
+                                                    <th>Username</th>
+                                                    <th>Basis</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="g in groupingsList">
+                                                    <td>{{g.name}}</td>
+                                                    <td>{{g.uuid}}</td>
+                                                    <td>{{g.username}}</td>
+                                                    <td class="text-center" style="width: 3%">{{g.basis}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <button class="btn btn-default" ng-click="export(groupingsList, 'members')">Export
+                                                To CSV
+                                            </button>
+                                        </div>
+                                        <div id="basis" class="tab-pane fade">
+                                            <h3 class="text-center">Basis</h3>
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>UH ID</th>
+                                                    <th>Username</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="b in groupingsBasis">
+                                                    <td>{{b.name}}</td>
+                                                    <td>{{b.uuid}}</td>
+                                                    <td>{{b.username}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            <button class="btn btn-default" ng-click="export(groupingsBasis, 'basis')">Export To
+                                                CSV
+                                            </button>
+                                        </div>
+                                        <div id="include" class="tab-pane fade">
+                                            <h3 class="text-center">Include</h3>
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>UH ID</th>
+                                                    <th>Username</th>
+                                                    <th>Basis</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="i in groupingInclude">
+                                                    <td>
+                                                        {{i.name}}
+                                                <span class="glyphicon glyphicon-trash pull-right"
+                                                      ng-click="removeMember('Include', $index)" data-toggle="tooltip"
+                                                      data-placement="top" onmouseover="$(this).tooltip('show')"
+                                                      title="Delete member from the include grouping"
+                                                      style="margin-right: 10px"></span>
+                                                    </td>
+                                                    <td>{{i.uuid}}</td>
+                                                    <td>{{i.username}}</td>
+                                                    <td class="text-center" style="width: 3%">{{i.basis}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <div>
+                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                                        data-target="#addInclude" aria-expanded="false"
+                                                        aria-controls="addOwner">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </button>
+                                                <div class="collapse" id="addInclude">
+                                                    <input type="text" placeholder="Add user to include"
+                                                           ng-model="addUser"/>
+                                                    <button class="btn btn-success" ng-click="addMember('Include')">Add to
+                                                        Included
+                                                    </button>
+                                                </div>
+                                                <button class="btn btn-default" ng-click="export(groupingInclude, 'include')">
+                                                    Export To CSV
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="exclude" class="tab-pane fade">
+                                            <h3 class="text-center">Exclude</h3>
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>UH ID</th>
+                                                    <th>Username</th>
+                                                    <th>Basis</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="e in groupingExclude">
+                                                    <td>
+                                                        {{e.name}}
+                                                <span class="glyphicon glyphicon-trash pull-right" data-toggle="tooltip"
+                                                      data-placement="top" onmouseover="$(this).tooltip('show')"
+                                                      title="Delete member from the exclude group"
+                                                      ng-click="removeMember('Exclude', $index)"
+                                                      style="margin-right: 10px"></span>
+                                                    </td>
+                                                    <td>{{e.uuid}}</td>
+                                                    <td>{{e.username}}</td>
+                                                    <td class="text-center" style="width: 3%">{{e.basis}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <div>
+                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                                        data-target="#addExclude" aria-expanded="false"
+                                                        aria-controls="addOwner">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </button>
+                                                <div class="collapse" id="addExclude">
+                                                    <input type="text" placeholder="Add user to exclude"
+                                                           ng-model="addUser"/>
+                                                    <button class="btn btn-success" ng-click="addMember('Exclude')">Add to
+                                                        Excluded
+                                                    </button>
+                                                </div>
+                                                <button class="btn btn-default" ng-click="export(groupingExclude, 'exclude')">
+                                                    Export To CSV
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-            <br/>
-            <!--
-            <div sec:authorize="isAuthenticated()">
-                <h5>Selected Spring Security Information</h5>
-                <p>Logged in user: <span id="name" sec:authentication="name"></span></p>
-                <p>Roles: <span sec:authentication="principal.authorities"></span></p>
-            </div>-->
-
         </div>
     </div>
 </div>
 <!-- / Content container. -->
-
 <div th:substituteby="footer :: copy"></div>
 </body>
 </html>

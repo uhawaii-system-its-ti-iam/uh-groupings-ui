@@ -2,17 +2,22 @@
     /**
      * Admin controller for the entire admin page.
      *
-     * @param $scope        : A Binding variable between controller and html page.
-     * @param $window       :
-     * @param dataProvider  : service function that acts as the AJAX get.
-     * @param dataUpdater   : service function that acts as AJAX post, used mainly for adding or updating
-     * @param dataDelete    : service function that acts as AJAX psst, use function mainly for delete function.
+     * @param $scope       - Binding variable between controller and html page.
+     * @param $window      - Reference to the browser's window
+     * @param dataProvider - service function that acts as the AJAX get.
+     * @param dataUpdater  - service function that acts as AJAX post, used mainly for adding or updating
+     * @param dataDelete   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
     function AdminJsController($scope, $window, dataProvider, dataUpdater, dataDelete) {
 
         $scope.currentUsername = "";
         $scope.list = [];
+        $scope.groupingList = [];
+        $scope.groupingsList = [];
+        $scope.groupingsBasis = [];
+        $scope.groupingInclude = [];
+        $scope.groupingExclude = [];
 
         //Variables for pagination
         $scope.pagedItems = [];
@@ -79,8 +84,17 @@
                 $scope.list = tempList;
                 console.log($scope.list);
                 $scope.groupToPages();
-                $scope.loading = false;
+                $scope.getGroupings();
             }, url);
+        };
+
+        $scope.getGroupings = function() {
+            var groupingUrl =  "api/groupings/" + $scope.getCurrentUsername() + "/myGroupings";
+            dataProvider.loadData(function (d) {
+                $scope.groupingList = d.groupingsOwned;
+                $scope.loading = false;
+            }, groupingUrl);
+
         };
 
         /**
@@ -114,7 +128,7 @@
          * Remove function uses dataDelete Service to remove user from admin grouping.
          * Will not delete admin if there is only one admin in the list.
          *
-         * @param index, the index of the user based on the html table.
+         * @param index - the index of the user based on the html table.
          */
         $scope.remove = function (index) {
             var deleteUser = $scope.list[index].username;
@@ -144,8 +158,7 @@
          *
          * @param size
          * @param start
-         * @param end
-         *  all the param are self explanitory
+         * @param end - all the param are self explanitory
          * @return ret
          *     everything within the range of start,
          *       end, and making sure it's that size
@@ -154,7 +167,7 @@
             var ret = [];
             if (size < end) {
                 end = size;
-                start = size-$scope.gap;
+                //start = size-$scope.gap;
             }
             if(start < 0 ){
                 start = 0;
@@ -168,7 +181,7 @@
         /**
          * Determines which page the pagination moves to. Defaults to setting the page to whatever page is.
          *
-         * @param page, the page moving to.
+         * @param page - the page moving to.
          */
         $scope.paging = function (page) {
             switch (page) {
@@ -193,6 +206,85 @@
                     break;
             }
         };
+
+
+        $scope.search = function () {
+            console.log($scope.groupingName);
+            var groupingDataUrl = "api/groupings/" + $scope.groupingName + "/" + $scope.getCurrentUsername() + "/grouping";
+            console.log(groupingDataUrl);
+            dataProvider.loadData(function (d) {
+                console.log(d);
+                if (typeof d.path === 'undefined') {
+                    console.log("Not a valid grouping");
+                    alert("Not a valid grouping");
+                    //Empties array
+                    $scope.groupingsList = [];
+                    $scope.groupingsBasis = [];
+                    $scope.groupingInclude = [];
+                    $scope.groupingExclude = [];
+                    $scope.ownerList = [];
+                } else {
+                    console.log(d);
+                    $scope.basis = d.basis.members;
+                    //Gets members in grouping
+                    $scope.groupingsList = d.basisPlusIncludeMinusExclude.members;
+                    //$scope.modify($scope.groupingsList);
+
+                    //Gets members in the basis group
+                    $scope.groupingsBasis = d.basis.members;
+                    //$scope.modify($scope.groupingsBasis);
+
+                    //Gets members in the include group
+                    $scope.groupingInclude = d.include.members;
+                    //$scope.modify($scope.groupingInclude);
+
+                    //Gets members in the exclude group
+                    $scope.groupingExclude = d.exclude.members;
+                    //$scope.modify($scope.groupingExclude);
+
+                    //Gets owners of the grouping
+                    $scope.ownerList = d.owners.members;
+                    //$scope.modify($scope.ownerList);
+
+                    $scope.pref = d.listservOn;
+                    $scope.allowOptIn = d.optInOn;
+                    $scope.allowOptOut = d.optOutOn;
+
+                    if ($scope.pref == true) {
+                        $('#listserv').prop("checked", true);
+                    }
+                    else {
+                        $('#listserv').prop("checked", false);
+                    }
+                    if ($scope.allowOptIn == true) {
+                        $('#optInOption').prop("checked", true);
+                    }
+                    else {
+                        $('#optInOption').prop("checked", false);
+                    }
+                    if ($scope.allowOptOut == true) {
+                        $('#optOutOption').prop("checked", true);
+                    }
+                    else {
+                        $('#optOutOption').prop("checked", false);
+                    }
+                    //Stop loading spinner
+                    $scope.loading = false;
+                }
+            }, groupingDataUrl);
+        };
+
+        //Makes it so that you have to type at least 3 characters in order for the datalist to autocomplete
+        $('input[list]').on('input', function(e) {
+            var input = $(e.target),
+                datalist = input.attr('data-list');
+
+            if(input.val().length < 3) {
+                input.attr('list', '');
+            } else {
+                input.attr('list', datalist);
+            }
+        });
     }
 
     adminApp.controller("AdminJsController", AdminJsController);
