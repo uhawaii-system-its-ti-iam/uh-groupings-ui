@@ -335,6 +335,16 @@ public class GroupingsRestController {
                 .body(gs.changeOptOutStatus(grouping, username, optOutOn));
     }
 
+    @RequestMapping(value = "/{username}/getAllGroupings",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Grouping>> getAllGroupings(@PathVariable String username) {
+        logger.info("Entered REST getAllGroupings...");
+        return ResponseEntity
+                .ok()
+                .body(gs.allGroupings(username));
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

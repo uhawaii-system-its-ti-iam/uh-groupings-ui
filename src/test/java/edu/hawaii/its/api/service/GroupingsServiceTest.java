@@ -1,179 +1,220 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import org.junit.Before;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class GroupingsServiceTest {
+    @Value("${groupings.api.settings}")
+    private String SETTINGS;
 
-    final String username = "username";
-    final String group = "group";
+    @Value("${groupings.api.admins}")
+    private String ADMINS;
 
-    @Mock
-    private GroupingsService groupingsService;
+    @Value("${groupings.api.attributes}")
+    private String ATTRIBUTES;
 
-    @Before
-    public void setup() throws Exception {
-        MockitoAnnotations.initMocks(this);
+    @Value("${groupings.api.for_groups}")
+    private String FOR_GROUPS;
+
+    @Value("${groupings.api.for_memberships}")
+    private String FOR_MEMBERSHIPS;
+
+    @Value("${groupings.api.last_modified}")
+    private String LAST_MODIFIED;
+
+    @Value("${groupings.api.yyyymmddThhmm}")
+    private String YYYYMMDDTHHMM;
+
+    @Value("${groupings.api.uhgrouping}")
+    private String UHGROUPING;
+
+    @Value("${groupings.api.destinations}")
+    private String DESTINATIONS;
+
+    @Value("${groupings.api.listserv}")
+    private String LISTSERV;
+
+    @Value("${groupings.api.trio}")
+    private String TRIO;
+
+    @Value("${groupings.api.self_opted}")
+    private String SELF_OPTED;
+
+    @Value("${groupings.api.anyone_can}")
+    private String ANYONE_CAN;
+
+    @Value("${groupings.api.opt_in}")
+    private String OPT_IN;
+
+    @Value("${groupings.api.opt_out}")
+    private String OPT_OUT;
+
+    @Value("${groupings.api.basis}")
+    private String BASIS;
+
+    @Value("${groupings.api.basis_plus_include}")
+    private String BASIS_PLUS_INCLUDE;
+
+    @Value("${groupings.api.exclude}")
+    private String EXCLUDE;
+
+    @Value("${groupings.api.include}")
+    private String INCLUDE;
+
+    @Value("${groupings.api.owners}")
+    private String OWNERS;
+
+    @Value("${groupings.api.assign_type_group}")
+    private String ASSIGN_TYPE_GROUP;
+
+    @Value("${groupings.api.assign_type_immediate_membership}")
+    private String ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP;
+
+    @Value("${groupings.api.subject_attribute_name_uuid}")
+    private String SUBJECT_ATTRIBUTE_NAME_UID;
+
+    @Value("${groupings.api.operation_assign_attribute}")
+    private String OPERATION_ASSIGN_ATTRIBUTE;
+
+    @Value("${groupings.api.operation_remove_attribute}")
+    private String OPERATION_REMOVE_ATTRIBUTE;
+
+    @Value("${groupings.api.operation_replace_values}")
+    private String OPERATION_REPLACE_VALUES;
+
+    @Value("${groupings.api.privilege_opt_out}")
+    private String PRIVILEGE_OPT_OUT;
+
+    @Value("${groupings.api.privilege_opt_in}")
+    private String PRIVILEGE_OPT_IN;
+
+    @Value("${groupings.api.every_entity}")
+    private String EVERY_ENTITY;
+
+    @Value("${groupings.api.is_member}")
+    private String IS_MEMBER;
+
+    @Value("${groupings.api.success}")
+    private String SUCCESS;
+
+    @Value("{groupings.api.failure}")
+    private String FAILURE;
+
+    @Value("${groupings.api.success_allowed}")
+    private String SUCCESS_ALLOWED;
+
+    @Value("$groupings.api.stem}")
+    private String STEM;
+
+    String grouping = "grouping";
+
+    @Autowired
+    GroupingsServiceImpl gs;
+
+    @Test
+    public void groupingParentPath() {
+        String[] groups = new String[]
+                {grouping + EXCLUDE,
+                grouping + INCLUDE,
+                grouping + OWNERS,
+                grouping + BASIS,
+                grouping + BASIS_PLUS_INCLUDE,
+                grouping};
+
+        for(String g : groups) {
+            assertEquals(grouping, gs.parentGroupingPath(g));
+        }
     }
 
     @Test
-    public void construction() {
-        assertNotNull(groupingsService);
+    public void extractGroupPaths() {
+        List<WsGroup> groups = new ArrayList<>();
+        List<String> groupNames = gs.extractGroupPaths(groups);
+
+        for (int i = 0; i < 3; i++) {
+            groups.add(new WsGroup());
+            groups.get(i).setName("testName_" + i);
+        }
+
+        groupNames = gs.extractGroupPaths(groups);
+
+        for (int i = 0; i < 3; i++) {
+            assertTrue(groupNames.contains("testName_" + i));
+        }
     }
 
     @Test
-    public void checkSelfOpted() {
+    public void makeGroup() {
+        WsSubject[] subjects = new WsSubject[0];
+        assertNotNull(gs.makeGroup(subjects));
 
-    }
+        subjects = new WsSubject[1];
+        assertNotNull(gs.makeGroup(subjects));
 
-    @Test
-    public void hasListserv() {
-
-    }
-
-    @Test
-    public void groupingsIn() {
-
-    }
-
-    @Test
-    public void groupingsOptedInto() {
-
-    }
-
-    @Test
-    public void groupingsOptedOutOf() {
-
-    }
-
-    @Test
-    public void inGroup() {
-
-    }
-
-    @Test
-    public void addMemberAs() {
-
-    }
-
-    @Test
-    public void deleteMemberAs() {
-
-    }
-
-    @Test
-    public void assignOwnership() {
-
-    }
-
-    @Test
-    public void removeOwnership() {
-
-    }
-
-    @Test
-    public void getGrouping() {
-
-    }
-
-    @Test
-    public void getMyGroupings() {
-
-    }
-
-    @Test
-    public void optIn() {
-
-    }
-
-    @Test
-    public void optOut() {
-
-    }
-
-    @Test
-    public void cancelOptIn() {
-
-    }
-
-    @Test
-    public void cancelOptOut() {
-
-    }
-
-    @Test
-    public void changeListservStatus() {
-
-    }
-
-    @Test
-    public void changeOptInStatus() {
-
-    }
-
-    @Test
-    public void changeOptOutStatus() {
-
-    }
-
-    @Test
-    public void findOwners() {
-
-    }
-
-    @Test
-    public void isOwner() {
-
-    }
-
-    @Test
-    public void groupOptInPermission() {
-
-    }
-
-    @Test
-    public void addSelfOpted() {
-
-    }
-
-    @Test
-    public void removeSelfOpted() {
-
-    }
-
-    @Test
-    public void groupOptOutPermission() {
-
-    }
-
-    @Test
-    public void updateLastModified() {
-
-    }
-
-    @Test
-    public void groupHasAttribute() {
-
-    }
-
-    @Test
-    public void optOutPermission() {
+        subjects[0] = new WsSubject();
+        assertNotNull(gs.makeGroup(subjects));
 
     }
 
     @Test
-    public void optInPermission() {
+    public void makeGroupTest() {
+        WsSubject[] list = new WsSubject[3];
+        for (int i = 0; i < 3; i++) {
+            list[i] = new WsSubject();
+            list[i].setName("testSubject_" + i);
+            list[i].setId("testSubject_uuid_" + i);
+            list[i].setAttributeValues(new String[]{"testSubject_username_" + i});
+        }
+
+        Group group = gs.makeGroup(list);
+
+        for (int i = 0; i < group.getMembers().size(); i++) {
+            assertTrue(group.getMembers().get(i).getName().equals("testSubject_" + i));
+            assertTrue(group.getNames().contains("testSubject_" + i));
+            assertTrue(group.getMembers().get(i).getUuid().equals("testSubject_uuid_" + i));
+            assertTrue(group.getUuids().contains("testSubject_uuid_" + i));
+            assertTrue(group.getMembers().get(i).getUsername().equals("testSubject_username_" + i));
+            assertTrue(group.getUsernames().contains("testSubject_username_" + i));
+        }
+    }
+
+
+    @Test
+    public void makePerson() {
+        String name = "name";
+        String id = "uuid";
+        String identifier = "username";
+
+        WsSubject subject = new WsSubject();
+        subject.setName(name);
+        subject.setId(id);
+        subject.setAttributeValues(new String[]{identifier});
+
+        Person person = gs.makePerson(subject);
+
+        assertTrue(person.getName().equals(name));
+        assertTrue(person.getUuid().equals(id));
+        assertTrue(person.getUsername().equals(identifier));
 
     }
+
+
 }
