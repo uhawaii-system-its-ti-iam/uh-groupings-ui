@@ -243,12 +243,12 @@
                         $scope.currentPageCancelOptIn--;
                     }
                     break;
-                case 'Page Opt In First':
+                case 'Cancel Opt In First':
                     if ($scope.currentPageCancelOptIn > 0) {
                         $scope.currentPageCancelOptIn = 0;
                     }
                     break;
-                case 'Page Opt In Last':
+                case 'Cancel Opt In Last':
                     if ($scope.currentPageCancelOptIn > 0) {
                         $scope.currentPageCancelOptIn = $scope.pagedItems4.length -1;
                     }
@@ -270,13 +270,13 @@
                         $scope.currentPageCancelOptOut--;
                     }
                     break;
-                case 'Page Opt In First':
+                case 'Cancel Opt Out First':
                     if ($scope.currentPageCancelOptOut > 0) {
                         $scope.currentPageCancelOptOut = 0;
                     }
                     break;
-                case 'Page Opt In Last':
-                    if ($scope.currentPageCancelOptOut > 0) {
+                case 'Cancel Opt Out Last':
+                    if ($scope.currentPageCancelOptOut >= 0) {
                         $scope.currentPageCancelOptOut = $scope.pagedItems5.length -1;
                     }
                     break;
@@ -302,8 +302,8 @@
                         $scope.currentPageOptOut = 0;
                     }
                     break;
-                case 'Page Opt In Last':
-                    if ($scope.currentPageOptOut > 0) {
+                case 'Page Opt Out Last':
+                    if ($scope.currentPageOptOut >= 0) {
                         $scope.currentPageOptOut = $scope.pagedItems1.length -1;
                     }
                     break;
@@ -322,6 +322,16 @@
                 case 'Page Opt In Prev':
                     if ($scope.currentPageOptIn > 0) {
                         $scope.currentPageOptIn--;
+                    }
+                    break;
+                case 'Page Opt In First':
+                    if ($scope.currentPageOptIn > 0) {
+                        $scope.currentPageOptIn = 0;
+                    }
+                    break;
+                case 'Page Opt In Last':
+                    if ($scope.currentPageOptIn >= 0) {
+                        $scope.currentPageOptIn = $scope.pagedItems3.length -1;
                     }
                     break;
 
