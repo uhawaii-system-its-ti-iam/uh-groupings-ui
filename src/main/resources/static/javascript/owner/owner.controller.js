@@ -142,7 +142,7 @@
                 //Gets owners of the grouping
                 $scope.ownerList = d.owners.members;
                 $scope.modify($scope.ownerList);
-                $scope.pagedItemsOwners = $scope.groupToPages($scope.ownersList,$scope.pagedItemsOwners);
+                $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
 
                 $scope.pref = d.listservOn;
                 $scope.allowOptIn = d.optInOn;
@@ -414,12 +414,17 @@
     **/
     $scope.groupToPages=function(theList , pagedList){
         var pagedList = [];
+        if(theList == null){
+            console.log("I AM NULL ... WHY?!");
+        }
+        if(theList != null){
         for(var i = 0; i < theList.length ; i++){
             if(i % $scope.itemsPerPage === 0){
                 pagedList[Math.floor(i/$scope.itemsPerPage)] = [ theList[i]];
             }else{
                 pagedList[Math.floor(i/$scope.itemsPerPage)].push( theList[i]);
             }
+        }
         }
         return pagedList;
     };
