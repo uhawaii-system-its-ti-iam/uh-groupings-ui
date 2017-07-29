@@ -600,7 +600,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     private List<Grouping> groupingsToOptOutOf(String username, List<String> groupPaths) {
         logger.info("groupingsToOptOutOf; username: " + username + "; groupPaths: " + groupPaths + ";");
 
-        List<String> groupings = new ArrayList<>();
+        List<String> groups = new ArrayList<>();
+        List<String> trios = new ArrayList<>();
+        List<String> opts = new ArrayList<>();
 
         GcGetAttributeAssignments attributeAssignmentsResults = new GcGetAttributeAssignments()
                 .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
@@ -613,14 +615,22 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (assignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign assign : assignmentsResults.getWsAttributeAssigns()) {
-                //todo change from list to set?
-                if (!groupings.contains(assign.getOwnerGroupName())) {
-                    groupings.add(assign.getOwnerGroupName());
+                if (assign.getAttributeDefNameName().equals(TRIO)) {
+                    trios.add(assign.getOwnerGroupName());
+                }
+                if (assign.getAttributeDefNameName().equals(OPT_OUT)) {
+                    opts.add(assign.getOwnerGroupName());
+                }
+            }
+
+            for (String group : opts) {
+                if (trios.contains(group)) {
+                    groups.add(group);
                 }
             }
         }
 
-        return makeGroupings(groupings, false);
+        return makeGroupings(groups, false);
     }
 
     /**
@@ -630,6 +640,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("groupingsToOptInto; username: " + username + "; groupPaths : " + groupPaths + ";");
 
         List<String> groups = new ArrayList<>();
+        List<String> trios = new ArrayList<>();
+        List<String> opts = new ArrayList<>();
 
         WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
                 .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
@@ -637,14 +649,22 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .addAttributeDefNameName(OPT_IN)
                 .execute();
 
+        if (attributeAssignmentsResults.getWsAttributeAssigns() != null) {
+            for (WsAttributeAssign assign : attributeAssignmentsResults.getWsAttributeAssigns()) {
+                if (assign.getAttributeDefNameName().equals(TRIO)) {
+                    trios.add(assign.getOwnerGroupName());
+                } else if (assign.getAttributeDefNameName().equals(OPT_IN)) {
+                    opts.add(assign.getOwnerGroupName());
+                }
+            }
 
-        WsGroup[] wsGroups = attributeAssignmentsResults.getWsGroups();
+            for (String group : opts) {
+                if (trios.contains(group)) {
 
-        if (wsGroups != null) {
-            for (WsGroup group : wsGroups) {
-                if (groupPaths.contains(group.getName() + EXCLUDE)
-                        || !groupPaths.contains(group.getName()))
-                    groups.add(group.getName());
+                    if (groupPaths.contains(group + EXCLUDE)
+                            || !groupPaths.contains(group))
+                        groups.add(group);
+                }
             }
         }
 
