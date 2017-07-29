@@ -547,7 +547,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             }
         }
 
-        if(groupsOpted.size() > 0) {
+        if (groupsOpted.size() > 0) {
             GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
                     .addAttributeDefNameName(TRIO)
                     .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
@@ -611,10 +611,13 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         WsGetAttributeAssignmentsResults assignmentsResults = attributeAssignmentsResults.execute();
 
-        WsGroup[] wsGroups = assignmentsResults.getWsGroups();
-
-        for (WsGroup group : wsGroups) {
-            groupings.add(group.getName());
+        if (assignmentsResults.getWsAttributeAssigns() != null) {
+            for (WsAttributeAssign assign : assignmentsResults.getWsAttributeAssigns()) {
+                //todo change from list to set?
+                if (!groupings.contains(assign.getOwnerGroupName())) {
+                    groupings.add(assign.getOwnerGroupName());
+                }
+            }
         }
 
         return makeGroupings(groupings, false);
@@ -1199,7 +1202,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         List<Grouping> groupings = new ArrayList<>();
 
-        if(groupingPaths.size() > 0) {
+        if (groupingPaths.size() > 0) {
             groupings = groupingPaths
                     .stream()
                     .map(Grouping::new)
@@ -1250,7 +1253,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public String parentGroupingPath(String group) {
-        if(group != null) {
+        if (group != null) {
             if (group.endsWith(EXCLUDE)) {
                 return group.substring(0, group.length() - EXCLUDE.length());
             } else if (group.endsWith(INCLUDE)) {

@@ -159,7 +159,7 @@ public class GroupingsServiceMockTest {
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        for(int i = 0; i < 5; i ++){
+        for (int i = 0; i < 5; i++) {
             subjectLookups[i] = new WsSubjectLookup();
             subjectLookups[i].setSubjectIdentifier(USERNAME[i]);
         }
