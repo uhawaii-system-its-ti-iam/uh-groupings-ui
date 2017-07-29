@@ -569,7 +569,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the groupings in the database
      */
     @Override
-    public List<Grouping> adminInfo(String username) {
+    public AdminInfo adminInfo(String username) {
+        AdminInfo info = new AdminInfo();
         List<Grouping> groupings = new ArrayList<>();
 
         if (inGroup(ADMINS, username)) {
@@ -586,11 +587,12 @@ public class GroupingsServiceImpl implements GroupingsService {
                 groupPaths.add(group.getName());
             }
 
+            Group admin = getMembers(username, ADMINS);
             groupings = makeGroupings(groupPaths, true);
-//            groupings.add(getGrouping(ADMINS, username));
+            info.setAdminGroup(admin);
+            info.setAllGroupings(groupings);
         }
-
-        return groupings;
+        return info;
     }
 
 

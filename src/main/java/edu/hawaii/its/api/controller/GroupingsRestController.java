@@ -2,6 +2,7 @@ package edu.hawaii.its.api.controller;
 
 import javax.annotation.PostConstruct;
 
+import edu.hawaii.its.api.type.AdminInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -335,11 +336,11 @@ public class GroupingsRestController {
                 .body(gs.changeOptOutStatus(grouping, username, optOutOn));
     }
 
-    @RequestMapping(value = "/{username}/getAllGroupings",
+    @RequestMapping(value = "/{username}/adminInfo",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Grouping>> getAllGroupings(@PathVariable String username) {
-        logger.info("Entered REST getAllGroupings...");
+    public ResponseEntity<AdminInfo> adminInfo(@PathVariable String username) {
+        logger.info("Entered REST adminInfo...");
         return ResponseEntity
                 .ok()
                 .body(gs.adminInfo(username));
