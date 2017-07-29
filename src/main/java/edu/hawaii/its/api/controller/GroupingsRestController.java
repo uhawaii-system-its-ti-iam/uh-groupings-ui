@@ -342,7 +342,7 @@ public class GroupingsRestController {
         logger.info("Entered REST getAllGroupings...");
         return ResponseEntity
                 .ok()
-                .body(gs.allGroupings(username));
+                .body(gs.adminInfo(username));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

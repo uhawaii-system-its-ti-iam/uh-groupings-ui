@@ -271,7 +271,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             compositeGrouping.setBasis(basis);
             compositeGrouping.setExclude(exclude);
             compositeGrouping.setInclude(include);
-            compositeGrouping.setBasisPlusIncludeMinusExclude(composite);
+            compositeGrouping.setComposite(composite);
             compositeGrouping.setOwners(owners);
 
         }
@@ -547,19 +547,20 @@ public class GroupingsServiceImpl implements GroupingsService {
             }
         }
 
-        GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
-                .addAttributeDefNameName(TRIO)
-                .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
+        if(groupsOpted.size() > 0) {
+            GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
+                    .addAttributeDefNameName(TRIO)
+                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
 
-        groupsOpted.forEach(getAttributeAssignments::addOwnerGroupName);
+            groupsOpted.forEach(getAttributeAssignments::addOwnerGroupName);
 
-        WsGetAttributeAssignmentsResults attributeAssignmentsResults = getAttributeAssignments.execute();
-        WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults = getAttributeAssignments.execute();
+            WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
 
-        for (WsGroup group : trios) {
-            groupingsOpted.add(group.getName());
+            for (WsGroup group : trios) {
+                groupingsOpted.add(group.getName());
+            }
         }
-
         return makeGroupings(groupingsOpted, false);
     }
 
@@ -568,7 +569,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the groupings in the database
      */
     @Override
-    public List<Grouping> allGroupings(String username) {
+    public List<Grouping> adminInfo(String username) {
         List<Grouping> groupings = new ArrayList<>();
 
         if (inGroup(ADMINS, username)) {
@@ -586,6 +587,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             }
 
             groupings = makeGroupings(groupPaths, true);
+//            groupings.add(getGrouping(ADMINS, username));
         }
 
         return groupings;
@@ -1195,13 +1197,17 @@ public class GroupingsServiceImpl implements GroupingsService {
     List<Grouping> makeGroupings(List<String> groupingPaths, boolean getAttributes) {
         logger.info("makeGroupings; groupingPaths: " + groupingPaths + ";");
 
-        List<Grouping> groupings = groupingPaths
-                .stream()
-                .map(Grouping::new)
-                .collect(Collectors.toList());
-        if (getAttributes) {
-            for (int i = 0; i < groupings.size(); i++) {
-                groupings.set(i, setGroupingAttributes(groupings.get(i)));
+        List<Grouping> groupings = new ArrayList<>();
+
+        if(groupingPaths.size() > 0) {
+            groupings = groupingPaths
+                    .stream()
+                    .map(Grouping::new)
+                    .collect(Collectors.toList());
+            if (getAttributes) {
+                for (int i = 0; i < groupings.size(); i++) {
+                    groupings.set(i, setGroupingAttributes(groupings.get(i)));
+                }
             }
         }
         return groupings;
