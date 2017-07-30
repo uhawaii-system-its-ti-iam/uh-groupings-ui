@@ -157,6 +157,10 @@ public class TestGroupingsService {
 
     @Before
     public void setUp() {
+        gs.changeListservStatus(GROUPING, username[0], true);
+        gs.changeOptInStatus(GROUPING, username[0], true);
+        gs.changeOptOutStatus(GROUPING, username[0], true);
+
         gs.addMemberAs(username[0], GROUPING_INCLUDE, username[0]);
         gs.deleteMemberAs(username[0], GROUPING_EXCLUDE, username[0]);
 
@@ -301,9 +305,16 @@ public class TestGroupingsService {
 
         gs.addSelfOpted(GROUPING_EXCLUDE, username[4]);
         assertTrue(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
+        gs.addSelfOpted(GROUPING_EXCLUDE, username[4]);
+        assertTrue(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
 
         gs.removeSelfOpted(GROUPING_EXCLUDE, username[4]);
         assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
+        gs.removeSelfOpted(GROUPING_EXCLUDE, username[4]);
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
+
+        gs.addSelfOpted(GROUPING_EXCLUDE, username[2]);
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[2]));
     }
 
     @Test
@@ -366,6 +377,11 @@ public class TestGroupingsService {
         assertEquals(addMember.getAction(), "add " + username[4] + " to " + GROUPING_EXCLUDE);
 
         //TODO add use case when user is not in exclude group
+    }
+
+    @Test
+    public void deleteMemberTest() {
+
     }
 
     @Test
@@ -493,6 +509,105 @@ public class TestGroupingsService {
         }
 
         assertNotNull(groupings2);
+
+    }
+
+    @Test
+    public void changeListServeStatusTest() {
+        assertTrue(gs.isOwner(GROUPING, username[0]));
+        assertTrue(gs.hasListserv(GROUPING));
+        gs.changeListservStatus(GROUPING, username[0], true);
+        assertTrue(gs.hasListserv(GROUPING));
+        gs.changeListservStatus(GROUPING, username[0], false);
+        assertFalse(gs.hasListserv(GROUPING));
+        gs.changeListservStatus(GROUPING, username[0], false);
+        assertFalse(gs.hasListserv(GROUPING));
+
+        assertFalse(gs.isOwner(GROUPING, username[1]));
+        gs.changeListservStatus(GROUPING, username[1], true);
+        assertFalse(gs.hasListserv(GROUPING));
+        gs.changeListservStatus(GROUPING, username[0], true);
+        assertTrue(gs.hasListserv(GROUPING));
+        gs.changeListservStatus(GROUPING, username[1], false);
+        assertTrue(gs.hasListserv(GROUPING));
+    }
+
+    @Test
+    public void changeOptInStatusTest() {
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+
+        assertTrue(gs.isOwner(GROUPING, username[0]));
+        assertTrue(gs.optInPermission(GROUPING));
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+
+        gs.changeOptInStatus(GROUPING, username[0], true);
+        assertTrue(gs.optInPermission(GROUPING));
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+
+        gs.changeOptInStatus(GROUPING, username[0], false);
+        assertFalse(gs.optInPermission(GROUPING));
+        assertFalse(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        gs.changeOptInStatus(GROUPING, username[0], false);
+        assertFalse(gs.optInPermission(GROUPING));
+        assertFalse(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+
+        assertFalse(gs.isOwner(GROUPING, username[1]));
+        gs.changeOptInStatus(GROUPING, username[1], true);
+        assertFalse(gs.optInPermission(GROUPING));
+        assertFalse(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        gs.changeOptInStatus(GROUPING, username[0], true);
+        assertTrue(gs.optInPermission(GROUPING));
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        gs.changeOptInStatus(GROUPING, username[1], false);
+        assertTrue(gs.optInPermission(GROUPING));
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+    }
+
+    @Test
+    public void changeOptOutStatusTest() {
+        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+
+        assertTrue(gs.isOwner(GROUPING, username[0]));
+        assertTrue(gs.optOutPermission(GROUPING));
+        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+
+        gs.changeOptOutStatus(GROUPING, username[0], true);
+        assertTrue(gs.optOutPermission(GROUPING));
+        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+
+        gs.changeOptOutStatus(GROUPING, username[0], false);
+        assertFalse(gs.optOutPermission(GROUPING));
+        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        gs.changeOptOutStatus(GROUPING, username[0], false);
+        assertFalse(gs.optOutPermission(GROUPING));
+        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+
+        assertFalse(gs.isOwner(GROUPING, username[1]));
+        gs.changeOptOutStatus(GROUPING, username[1], true);
+        assertFalse(gs.optOutPermission(GROUPING));
+        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        gs.changeOptOutStatus(GROUPING, username[0], true);
+        assertTrue(gs.optOutPermission(GROUPING));
+        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        gs.changeOptOutStatus(GROUPING, username[1], false);
+        assertTrue(gs.optOutPermission(GROUPING));
+        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
     }
 
