@@ -432,8 +432,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<GroupingsServiceResult> results = new ArrayList<>();
         String action = "cancel opt out for " + username + " to " + grouping;
 
-        if (checkSelfOpted(group, username)) {
-            if (groupOptOutPermission(username, group)) {
+        if (inGroup(group, username)) {
+            if (checkSelfOpted(group, username)) {
                 results.add(deleteMember(group, username));
                 results.add(updateLastModified(group));
                 results.add(updateLastModified(grouping));
@@ -1146,7 +1146,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param userToDelete: username of user to be removed from group
      * @return information about success of action
      */
-    private GroupingsServiceResult deleteMember(String group, String userToDelete) {
+    GroupingsServiceResult deleteMember(String group, String userToDelete) {
         logger.info("deleteMember; group: " + group + "; userToDelete: " + userToDelete + ";");
 
         WsDeleteMemberResults deleteMemberResults = new GcDeleteMember()
@@ -1154,6 +1154,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .addSubjectIdentifier(userToDelete)
                 .execute();
 
+        updateLastModified(group);
         updateLastModified(parentGroupingPath(group));
 
         return makeGroupingsServiceResult(deleteMemberResults, "delete " + userToDelete + " from " + group);
@@ -1164,7 +1165,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param group:    path to group to be searched
      * @return results for members of the group
      */
-    private Group getMembers(String username, String group) {
+    Group getMembers(String username, String group) {
         logger.info("getMembers; user: " + username + "; group: " + group + ";");
 
         Group groupMembers = new Group();
