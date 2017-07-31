@@ -54,6 +54,8 @@ public class GroupingsRestControllerTest {
         mockMvc = webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+
+
     }
 
     @Test
@@ -93,7 +95,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("owners.members[3].name").value("o3-name"))
                 .andExpect(jsonPath("owners.members[3].uuid").value("o3-uuid"))
                 .andExpect(jsonPath("owners.members[3].username").value("o3-username"))
-                .andExpect(jsonPath("basisPlusIncludeMinusExclude.members", hasSize(0)));
+                .andExpect(jsonPath("composite.members", hasSize(0)));
     }
 
     // Test data.

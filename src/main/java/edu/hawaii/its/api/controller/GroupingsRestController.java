@@ -284,8 +284,8 @@ public class GroupingsRestController {
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserv
      *
-     * @param grouping:    the path to the Grouping
-     * @param username:    username of the Grouping's owner
+     * @param grouping:   the path to the Grouping
+     * @param username:   username of the Grouping's owner
      * @param listservOn: true if the listserv should be on, false if it should be off
      * @return information about the success of the operation
      */
@@ -342,7 +342,7 @@ public class GroupingsRestController {
         logger.info("Entered REST getAllGroupings...");
         return ResponseEntity
                 .ok()
-                .body(gs.allGroupings(username));
+                .body(gs.adminInfo(username));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

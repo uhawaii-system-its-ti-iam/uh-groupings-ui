@@ -1,12 +1,7 @@
 package edu.hawaii.its.api.controller;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import javax.annotation.PostConstruct;
 
-import edu.hawaii.its.api.controller.GroupingsRestController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +19,8 @@ import edu.hawaii.its.api.type.MyGroupings;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
@@ -182,11 +179,11 @@ public class TestGroupingsRestController {
         assertTrue(grouping.getExclude().getUuids().contains(tst[3]));
         assertTrue(grouping.getExclude().getUuids().contains(tst[4]));
 
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[0]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[1]));
-        assertTrue(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[2]));
-        assertFalse(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[3]));
-        assertFalse(grouping.getBasisPlusIncludeMinusExclude().getUsernames().contains(tst[4]));
+        assertTrue(grouping.getComposite().getUsernames().contains(tst[0]));
+        assertTrue(grouping.getComposite().getUsernames().contains(tst[1]));
+        assertTrue(grouping.getComposite().getUsernames().contains(tst[2]));
+        assertFalse(grouping.getComposite().getUsernames().contains(tst[3]));
+        assertFalse(grouping.getComposite().getUsernames().contains(tst[4]));
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
         gc.assignOwnership(grouping.getPath(), tst[0], tst[5]);
@@ -267,8 +264,10 @@ public class TestGroupingsRestController {
         boolean optedIn = false;
         boolean optedOut = false;
 
-        gc.optIn(GROUPING, tst[4]);
         MyGroupings tst4Groupings = gc.myGroupings(tst[4]).getBody();
+        assertEquals(tst4Groupings.getGroupingsOptedInTo().size(), 0);
+        gc.optIn(GROUPING, tst[4]);
+        tst4Groupings = gc.myGroupings(tst[4]).getBody();
         for (Grouping grouping : tst4Groupings.getGroupingsOptedInTo()) {
             if (grouping.getPath().contains(this.GROUPING)) {
                 optedIn = true;
@@ -276,8 +275,10 @@ public class TestGroupingsRestController {
         }
         assertTrue(optedIn);
 
-        gc.optOut(GROUPING, tst[5]);
         MyGroupings tst5Groupings = gc.myGroupings(tst[5]).getBody();
+        assertEquals(tst5Groupings.getGroupingsOptedOutOf().size(), 0);
+        gc.optOut(GROUPING, tst[5]);
+        tst5Groupings = gc.myGroupings(tst[5]).getBody();
         for (Grouping grouping : tst5Groupings.getGroupingsOptedOutOf()) {
             if (grouping.getPath().contains(this.GROUPING)) {
                 optedOut = true;
@@ -375,13 +376,13 @@ public class TestGroupingsRestController {
         Grouping trueEmpty = gs.getGrouping(GROUPING_TRUE_EMPTY, tst[0]);
 
         assertTrue(storeEmpty.getBasis().getMembers().size() == 1);
-        assertTrue(storeEmpty.getBasisPlusIncludeMinusExclude().getMembers().size() == 0);
+        assertTrue(storeEmpty.getComposite().getMembers().size() == 0);
         assertTrue(storeEmpty.getExclude().getMembers().size() == 0);
         assertTrue(storeEmpty.getInclude().getMembers().size() == 0);
         assertTrue(storeEmpty.getOwners().getUsernames().contains(tst[0]));
 
         assertTrue(trueEmpty.getBasis().getMembers().size() == 0);
-        assertTrue(trueEmpty.getBasisPlusIncludeMinusExclude().getMembers().size() == 0);
+        assertTrue(trueEmpty.getComposite().getMembers().size() == 0);
         assertTrue(trueEmpty.getExclude().getMembers().size() == 0);
         assertTrue(trueEmpty.getInclude().getMembers().size() == 0);
         assertTrue(trueEmpty.getOwners().getUsernames().contains(tst[0]));
@@ -390,7 +391,7 @@ public class TestGroupingsRestController {
 
     @Test
     public void getAllGroupingsTest() {
-        List<Grouping> groupings = gs.allGroupings(tst[0]);
+        List<Grouping> groupings = gs.adminInfo(tst[0]);
 
         assertNotNull(groupings);
     }

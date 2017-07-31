@@ -1,10 +1,11 @@
 package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
+import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +116,7 @@ public class GroupingsServiceTest {
     @Value("${groupings.api.success}")
     private String SUCCESS;
 
-    @Value("{groupings.api.failure}")
+    @Value("${groupings.api.failure}")
     private String FAILURE;
 
     @Value("${groupings.api.success_allowed}")
@@ -133,15 +134,17 @@ public class GroupingsServiceTest {
     public void groupingParentPath() {
         String[] groups = new String[]
                 {grouping + EXCLUDE,
-                grouping + INCLUDE,
-                grouping + OWNERS,
-                grouping + BASIS,
-                grouping + BASIS_PLUS_INCLUDE,
-                grouping};
+                        grouping + INCLUDE,
+                        grouping + OWNERS,
+                        grouping + BASIS,
+                        grouping + BASIS_PLUS_INCLUDE,
+                        grouping};
 
-        for(String g : groups) {
+        for (String g : groups) {
             assertEquals(grouping, gs.parentGroupingPath(g));
         }
+
+        assertEquals("", gs.parentGroupingPath(null));
     }
 
     @Test
@@ -159,6 +162,33 @@ public class GroupingsServiceTest {
         for (int i = 0; i < 3; i++) {
             assertTrue(groupNames.contains("testName_" + i));
         }
+    }
+
+    @Test
+    public void extractFirstMembershipID() {
+        WsGetMembershipsResults mr = new WsGetMembershipsResults();
+        WsMembership[] memberships = new WsMembership[3];
+        for (int i = 0; i < 3; i++) {
+            memberships[i] = new WsMembership();
+            memberships[i].setMembershipId("membershipID_" + i);
+        }
+        mr.setWsMemberships(memberships);
+
+        assertEquals("membershipID_0", gs.extractFirstMembershipID(mr));
+    }
+
+    @Test
+    public void makeWsSubjectLookup() {
+        WsSubjectLookup sl = gs.makeWsSubjectLookup("username");
+
+        assertEquals("username", sl.getSubjectIdentifier());
+    }
+
+    @Test
+    public void makeWsGroupLookup() {
+        WsGroupLookup gl = gs.makeWsGroupLookup(grouping);
+
+        assertEquals(grouping, gl.getGroupName());
     }
 
     @Test
@@ -196,6 +226,24 @@ public class GroupingsServiceTest {
         }
     }
 
+    @Test
+    public void makeGroupingsNoAttributes() {
+        List<String> groupPaths = new ArrayList<>();
+
+        for(int i = 0; i < 5; i ++) {
+            groupPaths.add("grouping_" + i);
+        }
+        for(int i = 0; i < 5; i ++) {
+            groupPaths.add("path:grouping_" + (i + 5));
+        }
+
+        List<Grouping> groupings = gs.makeGroupings(groupPaths, false);
+
+        for(int i = 5; i < 10; i ++) {
+            assertEquals("path:grouping_" + i, groupings.get(i).getPath());
+            assertEquals("grouping_" + i, groupings.get(i).getName());
+        }
+    }
 
     @Test
     public void makePerson() {
@@ -214,7 +262,21 @@ public class GroupingsServiceTest {
         assertTrue(person.getUuid().equals(id));
         assertTrue(person.getUsername().equals(identifier));
 
+        assertNotNull(gs.makePerson(null));
     }
 
+    @Test
+    public void makeGroupingsServiceResult() {
+        String action = "add a member";
+        String resultCode = "successfully added member";
+        WsAddMemberResults gr = new WsAddMemberResults();
+        WsResultMeta resultMeta = new WsResultMeta();
+        resultMeta.setResultCode(resultCode);
+        gr.setResultMetadata(resultMeta);
 
+        GroupingsServiceResult gsr = gs.makeGroupingsServiceResult(gr, action);
+
+        assertEquals(action, gsr.getAction());
+        assertEquals(resultCode, gsr.getResultCode());
+    }
 }

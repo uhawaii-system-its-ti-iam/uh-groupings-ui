@@ -4,7 +4,7 @@ public class Grouping {
     private Group basis;
     private Group exclude;
     private Group include;
-    private Group basisPlusIncludeMinusExclude;
+    private Group composite;
     private Group owners;
     private String name;
     private String path;
@@ -22,7 +22,7 @@ public class Grouping {
         setBasis(new EmptyGroup());
         setExclude(new EmptyGroup());
         setInclude(new EmptyGroup());
-        setBasisPlusIncludeMinusExclude(new EmptyGroup());
+        setComposite(new EmptyGroup());
         setOwners(new EmptyGroup());
     }
 
@@ -63,12 +63,12 @@ public class Grouping {
         this.include = include != null ? include : new EmptyGroup();
     }
 
-    public Group getBasisPlusIncludeMinusExclude() {
-        return basisPlusIncludeMinusExclude;
+    public Group getComposite() {
+        return composite;
     }
 
-    public void setBasisPlusIncludeMinusExclude(Group basisPlusIncludeMinusExclude) {
-        this.basisPlusIncludeMinusExclude = basisPlusIncludeMinusExclude != null ? basisPlusIncludeMinusExclude : new EmptyGroup();
+    public void setComposite(Group composite) {
+        this.composite = composite != null ? composite : new EmptyGroup();
     }
 
     public Group getOwners() {

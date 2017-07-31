@@ -65,7 +65,7 @@ public interface GroupingsService {
 
     public boolean optInPermission(String grouping);
 
-    public List<Grouping> allGroupings(String username);
+    public List<Grouping> adminInfo(String username);
 
     public String parentGroupingPath(String group);
 
