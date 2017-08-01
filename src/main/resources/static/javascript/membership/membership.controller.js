@@ -28,7 +28,7 @@
         $scope.pagedItems5=[];
         $scope.gap=2;
 
-        $scope.itemsPerPage = 5;
+        $scope.itemsPerPage = 25;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
         $scope.currentPageCancelOptIn = 0;
@@ -227,6 +227,7 @@
         //might make this into my one function
         $scope.currentPage = function(pages){
             switch(pages){
+                // Cases for Cancel Opt In Pagination
                 case 'Cancel Opt In Next':
                     if ($scope.currentPageCancelOptIn < $scope.pagedItems4.length - 1) {
                         $scope.currentPageCancelOptIn = $scope.currentPageCancelOptIn + 1;
@@ -242,7 +243,18 @@
                         $scope.currentPageCancelOptIn--;
                     }
                     break;
+                case 'Cancel Opt In First':
+                    if ($scope.currentPageCancelOptIn > 0) {
+                        $scope.currentPageCancelOptIn = 0;
+                    }
+                    break;
+                case 'Cancel Opt In Last':
+                    if ($scope.currentPageCancelOptIn > 0) {
+                        $scope.currentPageCancelOptIn = $scope.pagedItems4.length -1;
+                    }
+                    break;
 
+                    //Cases for Cancel Opt Out Pagination
                 case 'Cancel Opt Out Next':
                     if ($scope.currentPageCancelOptOut < $scope.pagedItems5.length - 1) {
                         $scope.currentPageCancelOptOut = $scope.currentPageCancelOptOut + 1;
@@ -258,10 +270,20 @@
                         $scope.currentPageCancelOptOut--;
                     }
                     break;
+                case 'Cancel Opt Out First':
+                    if ($scope.currentPageCancelOptOut > 0) {
+                        $scope.currentPageCancelOptOut = 0;
+                    }
+                    break;
+                case 'Cancel Opt Out Last':
+                    if ($scope.currentPageCancelOptOut >= 0) {
+                        $scope.currentPageCancelOptOut = $scope.pagedItems5.length -1;
+                    }
+                    break;
 
-                    //
+                    //Cases  for Opt out in Pagination
                 case 'Page Opt Out Next':
-                    if ($scope.currentPageOptOut < $scope.pagedItems3.length - 1) {
+                    if ($scope.currentPageOptOut < $scope.pagedItems1.length - 1) {
                         $scope.currentPageOptOut = $scope.currentPageOptOut + 1;
                     }
                     break;
@@ -275,9 +297,20 @@
                         $scope.currentPageOptOut--;
                     }
                     break;
-                //
+                case 'Page Opt In First':
+                    if ($scope.currentPageOptOut > 0) {
+                        $scope.currentPageOptOut = 0;
+                    }
+                    break;
+                case 'Page Opt Out Last':
+                    if ($scope.currentPageOptOut >= 0) {
+                        $scope.currentPageOptOut = $scope.pagedItems1.length -1;
+                    }
+                    break;
+
+                // Cases for Opt in Pagination
                 case 'Page Opt In Next':
-                    if ($scope.currentPageOptIn < $scope.pagedItems1.length - 1) {
+                    if ($scope.currentPageOptIn < $scope.pagedItems3.length - 1) {
                         $scope.currentPageOptIn = $scope.currentPageOptIn + 1;
                     }
                     break;
@@ -289,6 +322,16 @@
                 case 'Page Opt In Prev':
                     if ($scope.currentPageOptIn > 0) {
                         $scope.currentPageOptIn--;
+                    }
+                    break;
+                case 'Page Opt In First':
+                    if ($scope.currentPageOptIn > 0) {
+                        $scope.currentPageOptIn = 0;
+                    }
+                    break;
+                case 'Page Opt In Last':
+                    if ($scope.currentPageOptIn >= 0) {
+                        $scope.currentPageOptIn = $scope.pagedItems3.length -1;
                     }
                     break;
 
