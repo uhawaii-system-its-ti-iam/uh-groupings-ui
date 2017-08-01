@@ -9,6 +9,10 @@ public class Group {
         //empty
     }
 
+    public Group(List<Person> members) {
+        this.members = members;
+    }
+
     private List<Person> members = new ArrayList<>();
 
     public List<Person> getMembers() {

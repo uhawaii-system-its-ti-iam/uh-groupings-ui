@@ -1,9 +1,6 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.Group;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.MyGroupings;
+import edu.hawaii.its.api.type.*;
 
 import java.util.List;
 
@@ -65,7 +62,7 @@ public interface GroupingsService {
 
     public boolean optInPermission(String grouping);
 
-    public List<Grouping> adminInfo(String username);
+    public AdminInfo adminInfo(String username);
 
     public String parentGroupingPath(String group);
 
