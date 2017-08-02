@@ -35,27 +35,6 @@
         $scope.loading = true;
         $scope.groupingName = '';
 
-        /*
-        *pagination variables
-        */
-        $scope.gap=2;
-        $scope.itemsPerPage = 5;
-        //figure out how much pages to paginate. so far lets do one
-        $scope.pagedItemsInclude = [];
-        $scope.currentPageInclude = 0;
-
-        $scope.pagedItemsGroupings = [];
-        $scope.currentPageGroupings = 0;
-
-        $scope.pagedItemsBasis = [];
-        $scope.currentPageBasis = 0;
-
-        $scope.pagedItemsExclude = [];
-        $scope.currentPageExclude = 0;
-
-        $scope.pagedItemsOwners = [];
-        $scope.currentPageOwners = 0;
-
         /**
          * Initialize function that retrieves the groupings you own.
          */
@@ -83,8 +62,6 @@
                     });
                 }
                 $scope.loading = false;
-
-
             }, groupingsOwned);
         };
 
@@ -118,7 +95,7 @@
                 $scope.basis = d.basis.members;
 
                 //Gets members in grouping
-                $scope.groupingsList = d.basisPlusIncludeMinusExclude.members;
+                $scope.groupingsList = d.composite.members;
                 $scope.modify($scope.groupingsList);
 
                 //Gets members in the basis group
@@ -128,7 +105,6 @@
                 //Gets members in the include group
                 $scope.groupingInclude = d.include.members;
                 $scope.modify($scope.groupingInclude);
-                $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude,$scope.pagedItemsInclude);
 
                 //Gets members in the exclude group
                 $scope.groupingExclude = d.exclude.members;
@@ -190,7 +166,7 @@
             //Determines if member is in the basis or not
             for (var l = 0; l < $scope.basis.length; l++) {
                 for (var m = 0; m < grouping.length; m++) {
-                    if ($scope.basis[l].name === grouping[m].name) {
+                    if ($scope.basis[l].uuid === grouping[m].uuid) {
                         grouping[m].basis = "\u2714";
                     }
                 }
@@ -398,54 +374,7 @@
             return str;
         };
 
-
-
-
-    //Pagination code
-    /**groups all the items to pages
-       have sepperate arrays (hopefully)
-       @param
-    **/
-    $scope.groupToPages=function(theList , pagedList){
-        var pagedList = [];
-        for(var i = 0; i < theList.length ; i++){
-            if(i % $scope.itemsPerPage === 0){
-                pagedList[Math.floor(i/$scope.itemsPerPage)] = [ theList[i]];
-            }else{
-                pagedList[Math.floor(i/$scope.itemsPerPage)].push( theList[i]);
-            }
-        }
-        return pagedList;
-    };
-
-    /**shows the range between the start and end
-     *checks for negative numbers
-     *
-     * @param size
-     * @param start
-     * @param end
-     *  all the param are self explanitory
-     * @return ret
-     *     everything within the range of start,
-     *       end, and making sure it's that size
-     **/
-    $scope.range = function (size, start, end) {
-        var ret = [];
-
-        if (size < end) {
-            end = size;
-            // start = size - $scope.gap;
-        }
-        if (start < 0) {
-            start = 0;
-        }
-        for (var i = start; i < end; i++) {
-            ret.push(i);
-        }
-        return ret;
-    };
-    
-}
+    }
 
     ownerApp.controller("OwnerJsController", OwnerJsController);
 })();
