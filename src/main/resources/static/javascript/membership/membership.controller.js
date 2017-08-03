@@ -28,11 +28,13 @@
         $scope.pagedItems5=[];
         $scope.gap=2;
 
-        $scope.itemsPerPage = 25;
+        $scope.itemsPerPage = 5;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
         $scope.currentPageCancelOptIn = 0;
         $scope.currentPageCancelOptOut = 0;
+
+        var getter
 
         $scope.initCurrentUsername = function() {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -330,12 +332,40 @@
                     }
                     break;
                 case 'Page Opt In Last':
+                getter = document.getElementById("search").value;
+                    console.log(getter);
                     if ($scope.currentPageOptIn >= 0) {
                         $scope.currentPageOptIn = $scope.pagedItems3.length -1;
                     }
                     break;
 
             }
+        };
+
+
+    var searchMatch = function (haystack, needle) {
+        if (!needle) {
+            return true;
+        }
+        return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+    };
+
+    // init the filtered items
+    $scope.search = function (list) {
+        $scope.filteredItems = $filter('filter')($scope.items, function (list) {
+            for(var attr in list) {
+                if (searchMatch(list[attr], $scope.query))
+                    return true;
+                }
+                return false;
+            });
+            // take care of the sorting order
+            if ($scope.sortingOrder !== '') {
+                $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+            }
+            $scope.currentPage = 0;
+            // now group by pages
+            $scope.groupToPages();
         };
 
     }
