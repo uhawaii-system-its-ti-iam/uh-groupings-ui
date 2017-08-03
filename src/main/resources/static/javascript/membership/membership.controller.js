@@ -28,7 +28,7 @@
         $scope.pagedItems5=[];
         $scope.gap=2;
 
-        $scope.itemsPerPage = 5;
+        $scope.itemsPerPage = 25;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
         $scope.currentPageCancelOptIn = 0;
@@ -332,15 +332,21 @@
                     }
                     break;
                 case 'Page Opt In Last':
+<<<<<<< HEAD
                 getter = document.getElementById("search").value;
                     console.log(getter);
+=======
+>>>>>>> 1af5408ecf8e75c9612d00d57ca9a99c9db12f75
                     if ($scope.currentPageOptIn >= 0) {
                         $scope.currentPageOptIn = $scope.pagedItems3.length -1;
                     }
                     break;
+<<<<<<< HEAD
 
             }
         };
+=======
+>>>>>>> 1af5408ecf8e75c9612d00d57ca9a99c9db12f75
 
 
     var searchMatch = function (haystack, needle) {
