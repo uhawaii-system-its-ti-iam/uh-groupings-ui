@@ -55,17 +55,10 @@
                                         <ul class = "pagination pull-right" >
                                             <li ng-class="{disabled: (currentPageOptOut) == 0}">
                                                 <a href="" ng-click="currentPage('Page Opt Out First')" >« Frist</a>
-<<<<<<< HEAD
                                             </li>
                                             <li ng-class="{disabled: (currentPageOptOut) == 0}">
                                                 <a href="" ng-click="currentPage('Page Opt Out Prev')" >« Prev</a>
                                             </li>
-=======
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageOptOut) == 0}">
-                                                <a href="" ng-click="currentPage('Page Opt Out Prev')" >« Prev</a>
-                                            </li>
->>>>>>> 1af5408ecf8e75c9612d00d57ca9a99c9db12f75
                                             <li ng-repeat="n in range(pagedItems1.length, currentPageOptOut - gap, currentPageOptOut + gap + 1) "
                                             ng-class="{active: n == currentPageOptOut}"
 
