@@ -1,6 +1,8 @@
 (function () {
 
-/**Membership controller for the whole memberships page
+    // BIG QUESTIONS: why is there so much output for the URL?
+
+    /**Membership controller for the whole memberships page
      *@param $scope
      *    defining what is within the controller
      *@param dataProvider
