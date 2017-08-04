@@ -50,6 +50,7 @@
                             </tr>
                             </thead>
                             <tfoot>
+
                                 <!-- Top part of the two parts  -->
                                 <td colspan="6">
                                         <ul class = "pagination pull-right" >
@@ -76,19 +77,19 @@
                             </tfoot>
                             <tbody>
                             <tr ng-repeat="l in pagedItems1[currentPageOptOut] | filter:searchFor1">
+
                                 <td>{{l.name}}</td>
                                 <td>
                                     <!-- TODO find a way to update index -->
                                     <button id="optOutButton" class="btn btn-default btn-block"
-                                            ng-click="optOut($index + (currentPage * itemsPerPage))" ng-disabled="disableOptOut($index + (currentPage * itemsPerPage))"
-                                            ng-attr-title="{{ tooltipText($index + (currentPage * itemsPerPage)) }}">
+                                            ng-click="optOut($index + (currentPageOptIn * itemsPerPage))" ng-disabled="disableOptOut($index + (currentPageOptIn * itemsPerPage))"
+                                            ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
                                         OPT OUT
                                     </button>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
-
                     </div>
 
                     <div class="panel panel-default">
@@ -113,8 +114,8 @@
                             <tr ng-repeat="o in pagedItems3[currentPageOptIn] | filter:searchFor2">
                                 <td>{{o.name}}</td>
                                 <td>
-                                    <button ng-disabled="disableOptIn($index)" class="btn btn-default btn-block"
-                                            ng-click="optIn($index)">OPT IN
+                                    <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-default btn-block"
+                                            ng-click="optIn($index + (currentPageOptOut * itemsPerPage))">OPT IN
                                     </button>
                                 </td>
                             </tr>
@@ -175,8 +176,8 @@
                             <tr ng-repeat="out in pagedItems5[currentPageCancelOptOut] | filter:searchFor2">
                                 <td>{{out.name}}</td>
                                 <td>
-                                    <button class="btn btn-default btn-block" ng-disabled="disableButton(optedOut, $index)"
-                                            ng-click="cancelOptOut($index)">
+                                    <button class="btn btn-default btn-block" ng-disabled="disableButton(optedOut, $index + (currentPageCancelOptOut * itemsPerPage))"
+                                            ng-click="cancelOptOut($index + (currentPageCancelOptOut * itemsPerPage))">
                                         CANCEL OPT OUT
                                     </button>
                                 </td>
@@ -230,8 +231,8 @@
                             <tr ng-repeat="in in pagedItems4[currentPageCancelOptIn] | filter:searchFor2">
                                 <td>{{in.name}}</td>
                                 <td>
-                                    <button class="btn btn-default btn-block" ng-disabled="disableButton(optedIn, $index)"
-                                            ng-click="cancelOptIn($index)">
+                                    <button class="btn btn-default btn-block" ng-disabled="disableButton(optedIn, $index + (currentPageCancelOptIn * itemsPerPage))"
+                                            ng-click="cancelOptIn($index + (currentPageCancelOptIn * itemsPerPage))">
                                         CANCEL OPT IN
                                     </button>
                                 </td>
