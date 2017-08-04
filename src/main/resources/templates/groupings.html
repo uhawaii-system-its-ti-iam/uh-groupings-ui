@@ -100,13 +100,32 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="g in groupingsList">
+                                        <tr ng-repeat="g in pagedItemsList[currentPageList]">
                                             <td>{{g.name}}</td>
                                             <td>{{g.uuid}}</td>
                                             <td>{{g.username}}</td>
                                             <td class="text-center" style="width: 3%">{{g.basis}}</td>
                                         </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <!-- Top part of the two parts  -->
+                                            <td colspan="6">
+                                                    <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageList) == 0 }">
+                                                            <a href="" ng-click="currentPage('List Prev')" >« Prev</a>
+                                                        </li>
+                                                        <li ng-repeat="n in range(pagedItemsList.length, currentPageList - gap, currentPageList + gap + 1) "
+                                                        ng-class="{active: n == currentPageList}"
+
+                                                        ng-click="currentPage('List Set')"
+                                                        ><a href="" ng-bind="n + 1" >1</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 }">
+                                                            <a href="" ng-click="currentPage('List Next')">Next »</a>
+                                                        </li>
+                                                </ul>
+                                            </td>
+                                        </tfoot>
                                     </table>
                                     <button class="btn btn-default" ng-click="export(groupingsList, 'members')">Export
                                         To CSV
@@ -123,12 +142,31 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="b in groupingsBasis">
+                                        <tr ng-repeat="b in pagedItemsBasis[currentPageBasis]">
                                             <td>{{b.name}}</td>
                                             <td>{{b.uuid}}</td>
                                             <td>{{b.username}}</td>
                                         </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <!-- Top part of the two parts  -->
+                                            <td colspan="6">
+                                                    <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageBasis) == 0}">
+                                                            <a href="" ng-click="currentPage('Basis Prev')" >« Prev</a>
+                                                        </li>
+                                                        <li ng-repeat="n in range(pagedItemsBasis.length, currentPageBasis - gap, currentPageBasis + gap + 1) "
+                                                        ng-class="{active: n == currentPageBasis}"
+
+                                                        ng-click="currentPage('Basis Set')"
+                                                        ><a href="" ng-bind="n + 1" >1</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 }">
+                                                            <a href="" ng-click="currentPage('Basis Next')">Next »</a>
+                                                        </li>
+                                                </ul>
+                                            </td>
+                                        </tfoot>
                                     </table>
                                     <button class="btn btn-default" ng-click="export(groupingsBasis, 'basis')">Export To
                                         CSV
@@ -146,7 +184,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="i in groupingInclude">
+                                        <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]">
                                             <td>
                                                 {{i.name}}
                                                 <span class="glyphicon glyphicon-trash pull-right"
@@ -160,6 +198,25 @@
                                             <td class="text-center" style="width: 3%">{{i.basis}}</td>
                                         </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <!-- Top part of the two parts  -->
+                                            <td colspan="6">
+                                                    <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageBasis) == 0 }">
+                                                            <a href="" ng-click="currentPage('Include Prev')" >« Prev</a>
+                                                        </li>
+                                                        <li ng-repeat="n in range(pagedItemsInclude.length, currentPageInclude - gap, currentPageInclude + gap + 1) "
+                                                        ng-class="{active: n == currentPageInclude}"
+
+                                                        ng-click="currentPage('Include Set')"
+                                                        ><a href="" ng-bind="n + 1" >1</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 }">
+                                                            <a href="" ng-click="currentPage('Include Next')">Next »</a>
+                                                        </li>
+                                                </ul>
+                                            </td>
+                                        </tfoot>
                                     </table>
 
                                     <div>
@@ -192,7 +249,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="e in groupingExclude">
+                                        <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]">
                                             <td>
                                                 {{e.name}}
                                                 <span class="glyphicon glyphicon-trash pull-right" data-toggle="tooltip"
@@ -206,6 +263,25 @@
                                             <td class="text-center" style="width: 3%">{{e.basis}}</td>
                                         </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <!-- Top part of the two parts  -->
+                                            <td colspan="6">
+                                                    <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageExclude) == 0 }">
+                                                            <a href="" ng-click="currentPage('Exclude Prev')" >« Prev</a>
+                                                        </li>
+                                                        <li ng-repeat="n in range(pagedItemsExclude.length, currentPageExclude - gap, currentPageExclude + gap + 1) "
+                                                        ng-class="{active: n == currentPageInclude}"
+
+                                                        ng-click="currentPage('Exclude Set')"
+                                                        ><a href="" ng-bind="n + 1" >1</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 }">
+                                                            <a href="" ng-click="currentPage('Exclude Next')">Next »</a>
+                                                        </li>
+                                                </ul>
+                                            </td>
+                                        </tfoot>
                                     </table>
 
                                     <div>
@@ -241,7 +317,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="owner in ownerList">
+                                <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
                                     <td>{{owner.name}}</td>
                                     <td>{{owner.username}}</td>
                                     <td>
@@ -251,6 +327,26 @@
                                     </td>
                                 </tr>
                                 </tbody>
+                                <tfoot>
+                                    <td colspan="6">
+                                            <ul class = "pagination pull-right" >
+                                                <li ng-class="{disabled: (currentPageOwners) == 0 }">
+                                                    <a href="" ng-click="currentPage('Owners Prev')" >« Prev</a>
+                                                </li>
+                                                <li ng-repeat="n in range(pagedItemsOwners.length, currentPageOwners - gap, currentPageOwners + gap + 1) "
+                                                ng-class="{active: n == currentPageOwners}"
+
+                                                ng-click="currentPage('Owners Set')"
+                                                ><a href="" ng-bind="n + 1" >1</a>
+                                                </li>
+                                                <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 }">
+                                                    <a href="" ng-click="currentPage('Owners Next')">Next »</a>
+                                                </li>
+                                        </ul>
+                                    </td>
+                                </tfoot>
+                                <!--
+                            -->
                             </table>
 
                             <div>
