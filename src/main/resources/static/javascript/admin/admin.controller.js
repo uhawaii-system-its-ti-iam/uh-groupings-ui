@@ -9,10 +9,12 @@
      * @param dataDelete   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function AdminJsController($scope, $window, dataProvider, dataUpdater, dataDelete) {
+    function AdminJsController($scope, $filter ,$window, dataProvider, dataUpdater, dataDelete) {
 
         $scope.currentUsername = "";
+        $scope.filteredItems = [];
         $scope.list = [];
+        $scope.basis = [];
         $scope.groupingList = [];
         $scope.groupingsList = [];
         $scope.groupingsBasis = [];
@@ -53,39 +55,123 @@
 
             dataProvider.loadData(function (d) {
                 console.log(d);
-                var tempList = d.basis.members;
+                $scope.list = d.basis.members;
 
-                // Sorts the data by name.
-                tempList.sort(function (a, b) {
-                    var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
-                    if (nameA < nameB) //sort string ascending
-                        return -1;
-                    if (nameA > nameB)
-                        return 1;
-                    return 0
-                });
+                $scope.modify($scope.list);
 
-                var basis = d.basis.members;
-
-                // Default add everyone as not in basis.
-                for (var k = 0; k < tempList.length; k++) {
-                    tempList[k].basis = "\u2716";
-                }
-
-                // Adds whether or not a member is in the basis group or not.
-                for (var l = 0; l < basis.length; l++) {
-                    for (var m = 0; m < tempList.length; m++) {
-                        if (basis[l].name === tempList[m].name) {
-                            tempList[m].basis = "\u2714";
-                        }
-                    }
-                }
-
-                $scope.list = tempList;
                 console.log($scope.list);
                 $scope.groupToPages();
                 $scope.getGroupings();
             }, url);
+        };
+
+        $scope.search = function () {
+            console.log($scope.groupingName);
+            var groupingDataUrl = "api/groupings/" + $scope.groupingName + "/" + $scope.getCurrentUsername() + "/grouping";
+            console.log(groupingDataUrl);
+            dataProvider.loadData(function (d) {
+                if (typeof d.path === 'undefined') {
+                    console.log("Not a valid grouping");
+                    $scope.error = true;
+                    //Empties array
+                    $scope.basis = [];
+                    $scope.groupingsList = [];
+                    $scope.groupingsBasis = [];
+                    $scope.groupingInclude = [];
+                    $scope.groupingExclude = [];
+                    $scope.ownerList = [];
+                } else {
+                    $scope.error = false;
+                    $scope.basis = d.basis.members;
+                    //Gets members in grouping
+                    $scope.groupingsList = d.composite.members;
+                    $scope.modify($scope.groupingsList);
+
+                    //Gets members in the basis group
+                    $scope.groupingsBasis = d.basis.members;
+                    $scope.modify($scope.groupingsBasis);
+
+                    //Gets members in the include group
+                    $scope.groupingInclude = d.include.members;
+                    $scope.modify($scope.groupingInclude);
+
+                    //Gets members in the exclude group
+                    $scope.groupingExclude = d.exclude.members;
+                    $scope.modify($scope.groupingExclude);
+
+                    //Gets owners of the grouping
+                    $scope.ownerList = d.owners.members;
+                    $scope.modify($scope.ownerList);
+
+                    $scope.pref = d.listservOn;
+                    $scope.allowOptIn = d.optInOn;
+                    $scope.allowOptOut = d.optOutOn;
+
+                    if ($scope.pref == true) {
+                        $('#listserv').prop("checked", true);
+                    }
+                    else {
+                        $('#listserv').prop("checked", false);
+                    }
+                    if ($scope.allowOptIn == true) {
+                        $('#optInOption').prop("checked", true);
+                    }
+                    else {
+                        $('#optInOption').prop("checked", false);
+                    }
+                    if ($scope.allowOptOut == true) {
+                        $('#optOutOption').prop("checked", true);
+                    }
+                    else {
+                        $('#optOutOption').prop("checked", false);
+                    }
+                    //Stop loading spinner
+                    $scope.title = $scope.groupingName;
+                    $scope.loading = false;
+                }
+            }, groupingDataUrl);
+        };
+
+
+        /**
+         * Modify the data from the grouping to be sorted, filter out hawaii.edu
+         * and determines if a user is in the basis group or not.
+         *
+         * @param grouping - The name of the grouping of which its data will be modified.
+         *
+         * @returns returns
+         *                1 for ascending
+         *                -1 for descending
+         *                0 for failed attempt
+         */
+        $scope.modify = function (grouping) {
+            //Filter out names with hawaii.edu and adds basis object.
+            for (var i = 0; i < grouping.length; i++) {
+                grouping[i].basis = "\u2716";
+                if (grouping[i].name.includes("hawaii.edu")) {
+                    grouping.splice(i, 1);
+                    i--;
+                }
+            }
+
+            //Determines if member is in the basis or not
+            for (var l = 0; l < $scope.basis.length; l++) {
+                for (var m = 0; m < grouping.length; m++) {
+                    if ($scope.basis[l].uuid === grouping[m].uuid) {
+                        grouping[m].basis = "\u2714";
+                    }
+                }
+            }
+
+            //sorts data in alphabetic order
+            grouping.sort(function (a, b) {
+                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                if (nameA < nameB) //sort string ascending
+                    return -1;
+                if (nameA > nameB)
+                    return 1;
+                return 0
+            });
         };
 
         $scope.getGroupings = function() {
@@ -158,7 +244,7 @@
          *
          * @param size
          * @param start
-         * @param end - all the param are self explanitory
+         * @param end - all the param are self explanatory
          * @return ret
          *     everything within the range of start,
          *       end, and making sure it's that size
@@ -205,73 +291,6 @@
                     $scope.currentPage = page;
                     break;
             }
-        };
-
-
-        $scope.search = function () {
-            console.log($scope.groupingName);
-            var groupingDataUrl = "api/groupings/" + $scope.groupingName + "/" + $scope.getCurrentUsername() + "/grouping";
-            console.log(groupingDataUrl);
-            dataProvider.loadData(function (d) {
-                console.log(d);
-                if (typeof d.path === 'undefined') {
-                    console.log("Not a valid grouping");
-                    alert("Not a valid grouping");
-                    //Empties array
-                    $scope.groupingsList = [];
-                    $scope.groupingsBasis = [];
-                    $scope.groupingInclude = [];
-                    $scope.groupingExclude = [];
-                    $scope.ownerList = [];
-                } else {
-                    console.log(d);
-                    $scope.basis = d.basis.members;
-                    //Gets members in grouping
-                    $scope.groupingsList = d.basisPlusIncludeMinusExclude.members;
-                    //$scope.modify($scope.groupingsList);
-
-                    //Gets members in the basis group
-                    $scope.groupingsBasis = d.basis.members;
-                    //$scope.modify($scope.groupingsBasis);
-
-                    //Gets members in the include group
-                    $scope.groupingInclude = d.include.members;
-                    //$scope.modify($scope.groupingInclude);
-
-                    //Gets members in the exclude group
-                    $scope.groupingExclude = d.exclude.members;
-                    //$scope.modify($scope.groupingExclude);
-
-                    //Gets owners of the grouping
-                    $scope.ownerList = d.owners.members;
-                    //$scope.modify($scope.ownerList);
-
-                    $scope.pref = d.listservOn;
-                    $scope.allowOptIn = d.optInOn;
-                    $scope.allowOptOut = d.optOutOn;
-
-                    if ($scope.pref == true) {
-                        $('#listserv').prop("checked", true);
-                    }
-                    else {
-                        $('#listserv').prop("checked", false);
-                    }
-                    if ($scope.allowOptIn == true) {
-                        $('#optInOption').prop("checked", true);
-                    }
-                    else {
-                        $('#optInOption').prop("checked", false);
-                    }
-                    if ($scope.allowOptOut == true) {
-                        $('#optOutOption').prop("checked", true);
-                    }
-                    else {
-                        $('#optOutOption').prop("checked", false);
-                    }
-                    //Stop loading spinner
-                    $scope.loading = false;
-                }
-            }, groupingDataUrl);
         };
 
         //Makes it so that you have to type at least 3 characters in order for the datalist to autocomplete
