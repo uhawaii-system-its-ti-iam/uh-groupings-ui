@@ -2,6 +2,7 @@ package edu.hawaii.its.api.controller;
 
 import javax.annotation.PostConstruct;
 
+import edu.hawaii.its.api.type.AdminInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -365,15 +366,15 @@ public class TestGroupingsRestController {
 
     @Test
     public void aaronTest() {
-        MyGroupings aaronsGroupings = gs.getMyGroupings("aaronvil");
+        MyGroupings aaronsGroupings = gc.myGroupings("aaronvil").getBody();
         assertNotNull(aaronsGroupings);
     }
 
     @Test
     public void getEmptyGroupingTest() {
 
-        Grouping storeEmpty = gs.getGrouping(GROUPING_STORE_EMPTY, tst[0]);
-        Grouping trueEmpty = gs.getGrouping(GROUPING_TRUE_EMPTY, tst[0]);
+        Grouping storeEmpty = gc.grouping(GROUPING_STORE_EMPTY, tst[0]).getBody();
+        Grouping trueEmpty = gc.grouping(GROUPING_TRUE_EMPTY, tst[0]).getBody();
 
         assertTrue(storeEmpty.getBasis().getMembers().size() == 1);
         assertTrue(storeEmpty.getComposite().getMembers().size() == 0);
@@ -390,9 +391,9 @@ public class TestGroupingsRestController {
     }
 
     @Test
-    public void getAllGroupingsTest() {
-        List<Grouping> groupings = gs.adminInfo(tst[0]);
+    public void getAdminInfoTest() {
+        AdminInfo info = gc.adminInfo(tst[0]).getBody();
 
-        assertNotNull(groupings);
+        assertNotNull(info);
     }
 }
