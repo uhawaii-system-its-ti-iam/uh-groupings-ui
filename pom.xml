@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.hawaii.its.ti.iam</groupId>
@@ -26,7 +26,7 @@
         <h2.version>1.4.192</h2.version>
         <org.jasig.cas.client-version>3.4.1</org.jasig.cas.client-version>
 
-        <jquery-version>3.1.1</jquery-version>
+        <jquery-version>3.2.0</jquery-version>
         <angular-mocks-version>1.5.8</angular-mocks-version>
         <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version>
         <angularjs-version>1.5.8</angularjs-version>
@@ -110,14 +110,14 @@
             <artifactId>spring-security-cas</artifactId>
         </dependency>
         <dependency>
-           <groupId>org.jasig.cas.client</groupId>
-           <artifactId>cas-client-core</artifactId>
-           <version>${org.jasig.cas.client-version}</version>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-core</artifactId>
+            <version>${org.jasig.cas.client-version}</version>
         </dependency>
         <dependency>
-           <groupId>org.jasig.cas.client</groupId>
-           <artifactId>cas-client-support-saml</artifactId>
-           <version>${org.jasig.cas.client-version}</version>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-support-saml</artifactId>
+            <version>${org.jasig.cas.client-version}</version>
         </dependency>
 
         <!-- Test -->
@@ -157,11 +157,6 @@
             <groupId>org.webjars</groupId>
             <artifactId>angularjs</artifactId>
             <version>${angularjs-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars.bower</groupId>
-            <artifactId>angular-ui-grid</artifactId>
-            <version>4.0.6</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
