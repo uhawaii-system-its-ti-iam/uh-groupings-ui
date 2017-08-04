@@ -1,5 +1,7 @@
 package edu.hawaii.its.holiday.access;
 
+import java.lang.Exception;
+import java.lang.System;
 import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
@@ -61,17 +63,24 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     /**
      * Assigns roles to user
      *
-     * @param uhuuid    : The UH uuid of the user.
-     * @param username  : The username of the person to find the user.
-     * @return          : Returns an array list of roles assigned to the user.
+     * @param uhuuid   : The UH uuid of the user.
+     * @param username : The username of the person to find the user.
+     * @return : Returns an array list of roles assigned to the user.
      */
     public RoleHolder fetchRoles(String uhuuid, String username) {
         RoleHolder roleHolder = new RoleHolder();
         roleHolder.add(Role.ANONYMOUS);
         roleHolder.add(Role.UH);
-        if(fetchOwner(username)) {
+
+        //Determines if user is an owner.
+        if (fetchOwner(username)) {
             roleHolder.add(Role.OWNER);
         }
+
+        //Determines if a user is an admin.
+       if (fetchAdmin(username)){
+           System.out.println("this person is an admin");
+       }
 
         List<Role> roles = userMap.get(uhuuid);
         if (roles != null) {
@@ -90,18 +99,32 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      */
     public boolean fetchOwner(String username) {
         try {
-            MyGroupings result = gc.myGroupings(username).getBody();
             System.out.println("//////////////////////////////");
-            if (!result.getGroupingsOwned().isEmpty()) {
+            if (!gc.myGroupings(username).getBody().getGroupingsOwned().isEmpty()) {
                 System.out.println("This person is an owner");
                 return true;
             } else {
                 System.out.println("This person is not owner");
             }
-            System.out.println("//////////////////////////////");
         } catch (Exception e) {
             logger.info("The grouping for this person is " + e.getMessage());
         }
+        return false;
+    }
+
+    public boolean fetchAdmin(String username) {
+        System.out.println("//////////////////////////////");
+        try {
+            if (!gs.adminInfo(username).getAllGroupings().isEmpty()) {
+                System.out.println("this person is an admin");
+                return true;
+            } else {
+                System.out.println("this person is not an admin");
+            }
+        } catch (Exception e) {
+            logger.info("Error in getting admin info. Error message: " + e.getMessage());
+        }
+        System.out.println("//////////////////////////////");
         return false;
     }
 }
