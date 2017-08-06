@@ -126,7 +126,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("$groupings.api.stem}")
     private String STEM;
 
-    private WsStemLookup STEM_LOOKUP = new WsStemLookup(STEM, null);
+    private WsStemLookup STEM_LOOKUP = makeWsStemLookup(STEM, null);
 
     /**
      * gives a user ownership permissions for a Grouping
@@ -151,11 +151,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (isOwner(grouping, username) || isAdmin(username)) {
             WsSubjectLookup user = makeWsSubjectLookup(username);
-            WsAddMemberResults amr = new GcAddMember()
-                    .assignActAsSubject(user)
-                    .addSubjectIdentifier(newOwner)
-                    .assignGroupName(grouping + OWNERS)
-                    .execute();
+            WsAddMemberResults amr = makeWsAddMemberResults(grouping + OWNERS, user, newOwner);
             ownershipResult = makeGroupingsServiceResult(amr, action);
 
             return ownershipResult;
@@ -243,20 +239,18 @@ public class GroupingsServiceImpl implements GroupingsService {
         String action = "remove ownership of " + grouping + " from " + ownerToRemove;
 
         if (isOwner(grouping, username) || isAdmin(username)) {
-
             WsSubjectLookup lookup = makeWsSubjectLookup(username);
-            WsDeleteMemberResults memberResults = new GcDeleteMember()
-                    .assignActAsSubject(lookup)
-                    .addSubjectIdentifier(ownerToRemove)
-                    .assignGroupName(grouping + OWNERS)
-                    .execute();
-
+            WsDeleteMemberResults memberResults = makeWsDeleteMemberResults(
+                    grouping + OWNERS,
+                    lookup,
+                    ownerToRemove);
             ownershipResults = makeGroupingsServiceResult(memberResults, action);
-
             return ownershipResults;
         }
 
-        ownershipResults = new GroupingsServiceResult(FAILURE + ", " + username + " does not own " + grouping, action);
+        ownershipResults = new GroupingsServiceResult(
+                FAILURE + ", " + username + " does not own " + grouping,
+                action);
         return ownershipResults;
     }
 
@@ -562,13 +556,12 @@ public class GroupingsServiceImpl implements GroupingsService {
         }
 
         if (groupsOpted.size() > 0) {
-            GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
-                    .addAttributeDefNameName(TRIO)
-                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
 
-            groupsOpted.forEach(getAttributeAssignments::addOwnerGroupName);
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults = makeWsGetAttributeAssignmentsResults(
+                    ASSIGN_TYPE_GROUP,
+                    TRIO,
+                    groupsOpted);
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = getAttributeAssignments.execute();
             WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
 
             for (WsGroup group : trios) {
@@ -590,10 +583,9 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (isAdmin(username)) {
             List<String> groupPaths = new ArrayList<>();
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = new GcGetAttributeAssignments()
-                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
-                    .addAttributeDefNameName(TRIO)
-                    .execute();
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults = makeWsGetAttributeAssignmentsResults(
+                    ASSIGN_TYPE_GROUP,
+                    TRIO);
 
             List<WsGroup> groups = new ArrayList<>(Arrays.asList(attributeAssignmentsResults.getWsGroups()));
 
@@ -620,14 +612,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> trios = new ArrayList<>();
         List<String> opts = new ArrayList<>();
 
-        GcGetAttributeAssignments attributeAssignmentsResults = new GcGetAttributeAssignments()
-                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
-                .addAttributeDefNameName(TRIO)
-                .addAttributeDefNameName(OPT_OUT);
-
-        groupPaths.forEach(attributeAssignmentsResults::addOwnerGroupName);
-
-        WsGetAttributeAssignmentsResults assignmentsResults = attributeAssignmentsResults.execute();
+        WsGetAttributeAssignmentsResults assignmentsResults = makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP,
+                TRIO,
+                OPT_OUT,
+                groupPaths);
 
         if (assignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign assign : assignmentsResults.getWsAttributeAssigns()) {
@@ -659,11 +647,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> trios = new ArrayList<>();
         List<String> opts = new ArrayList<>();
 
-        WsGetAttributeAssignmentsResults assignmentsResults = new GcGetAttributeAssignments()
-                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
-                .addAttributeDefNameName(TRIO)
-                .addAttributeDefNameName(OPT_IN)
-                .execute();
+        WsGetAttributeAssignmentsResults assignmentsResults = makeWsGetAttributeAssignmentsResults(
+                ASSIGN_TYPE_GROUP,
+                TRIO,
+                OPT_IN);
 
         if (assignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign assign : assignmentsResults.getWsAttributeAssigns()) {
@@ -754,10 +741,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public boolean inGroup(String group, String username) {
         logger.info("inGroup; group: " + group + "; username: " + username + ";");
 
-        WsHasMemberResults memberResults = new GcHasMember()
-                .assignGroupName(group)
-                .addSubjectIdentifier(username)
-                .execute();
+        WsHasMemberResults memberResults = makeWsHasMemberResults(group, username);
 
         WsHasMemberResult[] memberResultArray = memberResults.getResults();
 
@@ -879,44 +863,18 @@ public class GroupingsServiceImpl implements GroupingsService {
     public GroupingsServiceResult updateLastModified(String group) {
         logger.info("updateLastModified; group: " + group + ";");
         String time = wsDateTime();
+        WsAttributeAssignValue dateTimeValue = makeWsAttributeAssignValue(time);
 
-        WsAttributeAssignValue dateTimeValue = new WsAttributeAssignValue();
-        dateTimeValue.setValueSystem(time);
-
-        WsAssignAttributesResults assignAttributesResults = new GcAssignAttributes()
-                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
-                .assignAttributeAssignOperation(OPERATION_ASSIGN_ATTRIBUTE)
-                .addOwnerGroupName(group)
-                .addAttributeDefNameName(YYYYMMDDTHHMM)
-                .assignAttributeAssignValueOperation(OPERATION_REPLACE_VALUES)
-                .addValue(dateTimeValue)
-                .execute();
+        WsAssignAttributesResults assignAttributesResults = makeWsAssignAttributesResults(ASSIGN_TYPE_GROUP,
+                OPERATION_ASSIGN_ATTRIBUTE,
+                group,
+                YYYYMMDDTHHMM,
+                OPERATION_REPLACE_VALUES,
+                dateTimeValue);
 
         return makeGroupingsServiceResult(assignAttributesResults
                 , "update last-modified attribute for " + group + " to time " + time);
 
-    }
-
-    /**
-     * @param username: username of user to be looked up
-     * @return a WsSubjectLookup with username as the subject identifier
-     */
-    WsSubjectLookup makeWsSubjectLookup(String username) {
-        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
-        wsSubjectLookup.setSubjectIdentifier(username);
-
-        return wsSubjectLookup;
-    }
-
-    /**
-     * @param group: group to be looked up
-     * @return a WsGroupLookup with group as the group name
-     */
-    WsGroupLookup makeWsGroupLookup(String group) {
-        WsGroupLookup groupLookup = new WsGroupLookup();
-        groupLookup.setGroupName(group);
-
-        return groupLookup;
     }
 
     /**
@@ -934,12 +892,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + membershipID
                 + ";");
 
-        return new GcAssignAttributes()
-                .assignAttributeAssignType(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP)
-                .assignAttributeAssignOperation(operation)
-                .addAttributeDefNameName(uuid)
-                .addOwnerMembershipId(membershipID)
-                .execute();
+        return makeWsAssignAttributesResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, operation, uuid, membershipID);
     }
 
     /**
@@ -957,15 +910,14 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + membershipID
                 + ";");
 
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
-                .assignAttributeAssignType(assignType)
-                .addAttributeDefNameName(name)
-                .addOwnerMembershipId(membershipID)
-                .execute();
+        WsGetAttributeAssignmentsResults attributeAssignmentsResults = makeWsGetAttributeAssignmentsResultsForMembership(
+                assignType,
+                name,
+                membershipID);
 
-        WsAttributeAssign[] wsAttributes = wsGetAttributeAssignmentsResults.getWsAttributeAssigns();
+        WsAttributeAssign[] wsAttributes = attributeAssignmentsResults.getWsAttributeAssigns();
 
-        return wsAttributes != null ? wsAttributes : new WsAttributeAssign[0];
+        return wsAttributes != null ? wsAttributes : makeEmptyWsAttributeAssignArray();
     }
 
     /**
@@ -973,7 +925,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param attributeOperation: operation to be done with the attribute to the group
      * @param group:              path to the group to have the attribute acted upon
      */
-    private void assignGroupAttributes(String attributeName, String attributeOperation, String group) {
+    private GroupingsServiceResult assignGroupAttributes(String attributeName, String attributeOperation, String group) {
         logger.info("assignGroupAttributes; "
                 + "; attributeName: "
                 + attributeName
@@ -983,12 +935,13 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + group
                 + ";");
 
-        new GcAssignAttributes()
-                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
-                .assignAttributeAssignOperation(attributeOperation)
-                .addOwnerGroupName(group)
-                .addAttributeDefNameName(attributeName)
-                .execute();
+        WsAssignAttributesResults attributesResults = makeWsAssignAttributesResultsForGroup(
+                ASSIGN_TYPE_GROUP,
+                attributeOperation,
+                attributeName,
+                group);
+
+        return makeGroupingsServiceResult(attributesResults, "assign " + attributeName + " attribute to " + group);
     }
 
     /**
@@ -1006,11 +959,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + nameName
                 + ";");
 
-        return new GcGetAttributeAssignments()
-                .assignAttributeAssignType(assignType)
-                .addOwnerGroupName(group)
-                .addAttributeDefNameName(nameName)
-                .execute();
+        return makeWsGetAttributeAssignmentsResultsForGroup(assignType, nameName, group);
     }
 
     /**
@@ -1030,14 +979,15 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
 
-        return new GcGetGrouperPrivilegesLite()
-                .assignGroupName(group)
-                .assignPrivilegeName(privilegeName)
-                .assignSubjectLookup(lookup)
-                .execute();
+        return makeWsGetGrouperPrivilegesLiteResult(group, privilegeName, lookup);
     }
 
-    private GroupingsServiceResult assignGrouperPrivilege(String username, String privilegeName, String group, boolean set) {
+    private GroupingsServiceResult assignGrouperPrivilege(
+            String username,
+            String privilegeName,
+            String group,
+            boolean set) {
+
         logger.info("assignGrouperPrivilege; username: "
                 + username
                 + "; group: "
@@ -1051,12 +1001,12 @@ public class GroupingsServiceImpl implements GroupingsService {
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
         String action = "set " + privilegeName + " " + set + " for " + username + " in " + group;
 
-        WsAssignGrouperPrivilegesLiteResult grouperPrivilegesLiteResult = new GcAssignGrouperPrivilegesLite()
-                .assignGroupName(group)
-                .assignPrivilegeName(privilegeName)
-                .assignSubjectLookup(lookup)
-                .assignAllowed(set)
-                .execute();
+        WsAssignGrouperPrivilegesLiteResult grouperPrivilegesLiteResult = makeWsAssignGrouperPrivilegesLiteResult(
+                group,
+                privilegeName,
+                lookup,
+                set
+        );
 
         return makeGroupingsServiceResult(grouperPrivilegesLiteResult, action);
     }
@@ -1071,10 +1021,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
 
-        return new GcGetMemberships()
-                .addWsSubjectLookup(lookup)
-                .addGroupName(group)
-                .execute();
+        return makeWsGetMembershipsResults(group, lookup);
     }
 
     /**
@@ -1091,23 +1038,18 @@ public class GroupingsServiceImpl implements GroupingsService {
         String action = "add " + userToAdd + " to " + group;
 
         if (group.endsWith(INCLUDE)) {
-            new GcDeleteMember()
-                    .assignActAsSubject(user)
-                    .assignGroupName(group.substring(0, group.length() - INCLUDE.length()) + EXCLUDE)
-                    .addSubjectIdentifier(userToAdd)
-                    .execute();
+            makeWsDeleteMemberResults(
+                    group.substring(0, group.length() - INCLUDE.length()) + EXCLUDE,
+                    user,
+                    userToAdd);
         } else if (group.endsWith(EXCLUDE)) {
-            new GcDeleteMember()
-                    .assignActAsSubject(user)
-                    .assignGroupName(group.substring(0, group.length() - EXCLUDE.length()) + INCLUDE)
-                    .addSubjectIdentifier(userToAdd)
-                    .execute();
+            makeWsDeleteMemberResults(
+                    group.substring(0, group.length() - EXCLUDE.length()) + INCLUDE,
+                    user,
+                    userToAdd
+            );
         }
-        WsAddMemberResults addMemberResults = new GcAddMember()
-                .assignActAsSubject(user)
-                .assignGroupName(group)
-                .addSubjectIdentifier(userToAdd)
-                .execute();
+        WsAddMemberResults addMemberResults = makeWsAddMemberResults(group, user, userToAdd);
 
         updateLastModified(parentGroupingPath(group));
 
@@ -1130,11 +1072,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + ";");
 
         WsSubjectLookup user = makeWsSubjectLookup(username);
-        WsDeleteMemberResults deleteMemberResults = new GcDeleteMember()
-                .assignActAsSubject(user)
-                .assignGroupName(group)
-                .addSubjectIdentifier(userToDelete)
-                .execute();
+        WsDeleteMemberResults deleteMemberResults = makeWsDeleteMemberResults(group, user, userToDelete);
 
         updateLastModified(parentGroupingPath(group));
 
@@ -1149,11 +1087,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     GroupingsServiceResult deleteMember(String group, String userToDelete) {
         logger.info("deleteMember; group: " + group + "; userToDelete: " + userToDelete + ";");
 
-        WsDeleteMemberResults deleteMemberResults = new GcDeleteMember()
-                .assignGroupName(group)
-                .addSubjectIdentifier(userToDelete)
-                .execute();
-
+        WsDeleteMemberResults deleteMemberResults = makeWsDeleteMemberResults(group, userToDelete);
         updateLastModified(group);
         updateLastModified(parentGroupingPath(group));
 
@@ -1171,12 +1105,11 @@ public class GroupingsServiceImpl implements GroupingsService {
         Group groupMembers = new Group();
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
 
-        WsGetMembersResults members = new GcGetMembers()
-                .addSubjectAttributeName(SUBJECT_ATTRIBUTE_NAME_UID)
-                .assignActAsSubject(lookup)
-                .addGroupName(group)
-                .assignIncludeSubjectDetail(true)
-                .execute();
+        WsGetMembersResults members = makeWsGetMembersResults(
+                SUBJECT_ATTRIBUTE_NAME_UID,
+                lookup,
+                group
+        );
 
         if (members.getResults() != null) {
             groupMembers = makeGroup(members
@@ -1196,13 +1129,11 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> groupings = new ArrayList<>();
 
         if (groupPaths.size() > 0) {
-            GcGetAttributeAssignments trioGroups = new GcGetAttributeAssignments()
-                    .addAttributeDefNameName(TRIO)
-                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
 
-            groupPaths.forEach(trioGroups::addOwnerGroupName);
-
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = trioGroups.execute();
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults = makeWsGetAttributeAssignmentsResults(
+                    ASSIGN_TYPE_GROUP,
+                    TRIO,
+                    groupPaths);
 
             WsAttributeAssign[] wsGroups = attributeAssignmentsResults.getWsAttributeAssigns();
 
@@ -1222,39 +1153,16 @@ public class GroupingsServiceImpl implements GroupingsService {
     List<String> getGroupPaths(String username) {
         logger.info("getGroupPaths; username: " + username + ";");
 
-        WsGetGroupsResults wsGetGroupsResults = new GcGetGroups()
-                .addSubjectIdentifier(username)
-                .assignWsStemLookup(STEM_LOOKUP)
-                .assignStemScope(StemScope.ALL_IN_SUBTREE)
-                .execute();
+        WsGetGroupsResults wsGetGroupsResults = makeWsGetGroupsResults(
+                username,
+                STEM_LOOKUP,
+                StemScope.ALL_IN_SUBTREE
+        );
 
         WsGetGroupsResult groupResults = wsGetGroupsResults.getResults()[0];
         List<WsGroup> groups = Arrays.asList(groupResults.getWsGroups());
 
         return extractGroupPaths(groups);
-    }
-
-    /**
-     * @param groupingPaths: list of paths to groups that are Groupings
-     * @return a list of Grouping Objects made from the list of Grouping paths
-     */
-    List<Grouping> makeGroupings(List<String> groupingPaths, boolean getAttributes) {
-        logger.info("makeGroupings; groupingPaths: " + groupingPaths + ";");
-
-        List<Grouping> groupings = new ArrayList<>();
-
-        if (groupingPaths.size() > 0) {
-            groupings = groupingPaths
-                    .stream()
-                    .map(Grouping::new)
-                    .collect(Collectors.toList());
-            if (getAttributes) {
-                for (int i = 0; i < groupings.size(); i++) {
-                    groupings.set(i, setGroupingAttributes(groupings.get(i)));
-                }
-            }
-        }
-        return groupings;
     }
 
     private Grouping setGroupingAttributes(Grouping grouping) {
@@ -1263,10 +1171,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         boolean optInOn = false;
         boolean optOutOn = false;
 
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new GcGetAttributeAssignments()
-                .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
-                .addOwnerGroupName(grouping.getPath())
-                .execute();
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = makeWsGetAttributeAssignmentsResultsForGroup(
+                ASSIGN_TYPE_GROUP,
+                grouping.getPath()
+        );
 
         WsAttributeDefName[] attributeDefNames = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
         for (WsAttributeDefName defName : attributeDefNames) {
@@ -1327,40 +1235,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param subjects: array of WsSubjects to be made into a Group
-     * @return the Group that is made
-     */
-    Group makeGroup(WsSubject[] subjects) {
-        Group group = new Group();
-        if (subjects != null && subjects.length > 0) {
-            for (WsSubject subject : subjects) {
-                if (subject != null) {
-                    group.addMember(makePerson(subject));
-                }
-            }
-        }
-
-        return group;
-    }
-
-    /**
-     * @param person:
-     * @return a person made from the WsSubject
-     */
-    Person makePerson(WsSubject person) {
-        if (person != null) {
-            String username = null;
-            String name = person.getName();
-            String uuid = person.getId();
-            if (person.getAttributeValues() != null) {
-                username = person.getAttributeValue(0);
-            }
-            return new Person(name, uuid, username);
-        }
-        return new Person();
-    }
-
-    /**
      * @param group:         path to group who's attributes will be changed
      * @param username:      username of user preforming action
      * @param attributeName; name of attribute to be changed
@@ -1406,6 +1280,22 @@ public class GroupingsServiceImpl implements GroupingsService {
         return gsr;
     }
 
+
+    /////////////////////////////////////////////////////
+    ////Factory Methods
+    /////////////////////////////////////////////////////
+
+    /**
+     * @param username: username of user to be looked up
+     * @return a WsSubjectLookup with username as the subject identifier
+     */
+    WsSubjectLookup makeWsSubjectLookup(String username) {
+        WsSubjectLookup wsSubjectLookup = new WsSubjectLookup();
+        wsSubjectLookup.setSubjectIdentifier(username);
+
+        return wsSubjectLookup;
+    }
+
     /**
      * @param resultMetadataHolder: ResultMetadataHolder that will be turned into GroupingsServiceResult
      * @param action:               the action being preformed in the resultMetadataHolder
@@ -1419,4 +1309,292 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupingsServiceResult;
     }
 
+    /**
+     * @param group: group to be looked up
+     * @return a WsGroupLookup with group as the group name
+     */
+    WsGroupLookup makeWsGroupLookup(String group) {
+        WsGroupLookup groupLookup = new WsGroupLookup();
+        groupLookup.setGroupName(group);
+
+        return groupLookup;
+    }
+
+    /**
+     * @param groupingPaths: list of paths to groups that are Groupings
+     * @return a list of Grouping Objects made from the list of Grouping paths
+     */
+    List<Grouping> makeGroupings(List<String> groupingPaths, boolean getAttributes) {
+        logger.info("makeGroupings; groupingPaths: " + groupingPaths + ";");
+
+        List<Grouping> groupings = new ArrayList<>();
+
+        if (groupingPaths.size() > 0) {
+            groupings = groupingPaths
+                    .stream()
+                    .map(Grouping::new)
+                    .collect(Collectors.toList());
+            if (getAttributes) {
+                for (int i = 0; i < groupings.size(); i++) {
+                    groupings.set(i, setGroupingAttributes(groupings.get(i)));
+                }
+            }
+        }
+        return groupings;
+    }
+
+    /**
+     * @param subjects: array of WsSubjects to be made into a Group
+     * @return the Group that is made
+     */
+    Group makeGroup(WsSubject[] subjects) {
+        Group group = new Group();
+        if (subjects != null && subjects.length > 0) {
+            for (WsSubject subject : subjects) {
+                if (subject != null) {
+                    group.addMember(makePerson(subject));
+                }
+            }
+        }
+
+        return group;
+    }
+
+    /**
+     * @param person:
+     * @return a person made from the WsSubject
+     */
+    Person makePerson(WsSubject person) {
+        if (person != null) {
+            String username = null;
+            String name = person.getName();
+            String uuid = person.getId();
+            if (person.getAttributeValues() != null) {
+                username = person.getAttributeValue(0);
+            }
+            return new Person(name, uuid, username);
+        }
+        return new Person();
+    }
+
+    private WsStemLookup makeWsStemLookup(String stemName, String stemUuid) {
+        return new WsStemLookup(stemName, stemUuid);
+    }
+
+    private WsAttributeAssignValue makeWsAttributeAssignValue(String time) {
+
+        WsAttributeAssignValue dateTimeValue = new WsAttributeAssignValue();
+        dateTimeValue.setValueSystem(time);
+
+        return  dateTimeValue;
+    }
+
+    private WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, String newMember) {
+        return new GcAddMember()
+                .assignActAsSubject(lookup)
+                .addSubjectIdentifier(newMember)
+                .assignGroupName(group)
+                .execute();
+    }
+
+    private WsDeleteMemberResults makeWsDeleteMemberResults(String group, String memberToDelete) {
+        return new GcDeleteMember()
+                .addSubjectIdentifier(memberToDelete)
+                .assignGroupName(group)
+                .execute();
+    }
+
+    private WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, String memberToDelete) {
+        return new GcDeleteMember()
+                .assignActAsSubject(lookup)
+                .addSubjectIdentifier(memberToDelete)
+                .assignGroupName(group)
+                .execute();
+    }
+
+
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
+                                                                          String attributeDefNameName) {
+        return new GcGetAttributeAssignments()
+                .addAttributeDefNameName(attributeDefNameName)
+                .assignAttributeAssignType(assignType)
+                .execute();
+    }
+
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
+                                                                          String attributeDefNameName0,
+                                                                          String attributeDefNameName1) {
+        return new GcGetAttributeAssignments()
+                .addAttributeDefNameName(attributeDefNameName0)
+                .addAttributeDefNameName(attributeDefNameName1)
+                .assignAttributeAssignType(assignType)
+                .execute();
+    }
+
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
+                                                                          String attributeDefNameName,
+                                                                          List<String> ownerGroupNames) {
+
+        GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
+                .addAttributeDefNameName(attributeDefNameName)
+                .assignAttributeAssignType(assignType);
+
+        ownerGroupNames.forEach(getAttributeAssignments::addOwnerGroupName);
+
+        return getAttributeAssignments.execute();
+    }
+
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
+                                                                          String attributeDefNameName0,
+                                                                          String attributeDefNameName1,
+                                                                          List<String> ownerGroupNames) {
+
+        GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
+                .addAttributeDefNameName(attributeDefNameName0)
+                .addAttributeDefNameName(attributeDefNameName1)
+                .assignAttributeAssignType(assignType);
+
+        ownerGroupNames.forEach(getAttributeAssignments::addOwnerGroupName);
+
+        return getAttributeAssignments.execute();
+    }
+
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForMembership(String assignType,
+                                                                                       String attributeDefNameName,
+                                                                                       String membershipId) {
+        return new GcGetAttributeAssignments()
+                .addAttributeDefNameName(attributeDefNameName)
+                .addOwnerMembershipId(membershipId)
+                .assignAttributeAssignType(assignType)
+                .execute();
+    }
+
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType,
+                                                                                  String group) {
+        return new GcGetAttributeAssignments()
+                .addOwnerGroupName(group)
+                .assignAttributeAssignType(assignType)
+                .execute();
+    }
+
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType,
+                                                                                  String attributeDefNameName,
+                                                                                  String group) {
+        return new GcGetAttributeAssignments()
+                .addAttributeDefNameName(attributeDefNameName)
+                .addOwnerGroupName(group)
+                .assignAttributeAssignType(assignType)
+                .execute();
+    }
+
+    private WsHasMemberResults makeWsHasMemberResults(String group, String username) {
+
+        return new GcHasMember()
+                .assignGroupName(group)
+                .addSubjectIdentifier(username)
+                .execute();
+    }
+
+    private WsAssignAttributesResults makeWsAssignAttributesResults(String attributeAssignType,
+                                                            String attributeAssignOperation,
+                                                            String ownerGroupName,
+                                                            String attributeDefNameName,
+                                                            String attributeAssignValueOperation,
+                                                            WsAttributeAssignValue value) {
+
+        return new GcAssignAttributes()
+                .assignAttributeAssignType(attributeAssignType)
+                .assignAttributeAssignOperation(attributeAssignOperation)
+                .addOwnerGroupName(ownerGroupName)
+                .addAttributeDefNameName(attributeDefNameName)
+                .assignAttributeAssignValueOperation(attributeAssignValueOperation)
+                .addValue(value)
+                .execute();
+    }
+
+    private WsAssignAttributesResults makeWsAssignAttributesResultsForMembership(String attributeAssignType,
+                                                                         String attributeAssignOperation,
+                                                                         String attributeDefNameName,
+                                                                         String ownerMembershipId) {
+
+        return new GcAssignAttributes()
+                .assignAttributeAssignType(attributeAssignType)
+                .assignAttributeAssignOperation(attributeAssignOperation)
+                .addAttributeDefNameName(attributeDefNameName)
+                .addOwnerMembershipId(ownerMembershipId)
+                .execute();
+    }
+
+
+    private WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(String attributeAssingType,
+                                                                    String attributeAssignOperation,
+                                                                    String attributeDefNameName,
+                                                                    String ownerGroupName) {
+        return new GcAssignAttributes()
+                .assignAttributeAssignType(attributeAssingType)
+                .assignAttributeAssignOperation(attributeAssignOperation)
+                .addAttributeDefNameName(attributeDefNameName)
+                .addOwnerGroupName(ownerGroupName)
+                .execute();
+    }
+
+    private WsAssignGrouperPrivilegesLiteResult makeWsAssignGrouperPrivilegesLiteResult(String groupName,
+                                                                                String privilegeName,
+                                                                                WsSubjectLookup lookup,
+                                                                                boolean allowed) {
+
+        return new GcAssignGrouperPrivilegesLite()
+                .assignGroupName(groupName)
+                .assignPrivilegeName(privilegeName)
+                .assignSubjectLookup(lookup)
+                .assignAllowed(allowed)
+                .execute();
+    }
+
+    private WsGetGrouperPrivilegesLiteResult makeWsGetGrouperPrivilegesLiteResult(String groupName,
+                                                                          String privilegeName,
+                                                                          WsSubjectLookup lookup) {
+
+        return new GcGetGrouperPrivilegesLite()
+                .assignGroupName(groupName)
+                .assignPrivilegeName(privilegeName)
+                .assignSubjectLookup(lookup)
+                .execute();
+    }
+
+    private WsGetMembershipsResults makeWsGetMembershipsResults(String groupName,
+                                                        WsSubjectLookup lookup) {
+
+        return new GcGetMemberships()
+                .addGroupName(groupName)
+                .addWsSubjectLookup(lookup)
+                .execute();
+    }
+
+    private WsGetMembersResults makeWsGetMembersResults(String subjectAttributeName,
+                                                WsSubjectLookup lookup,
+                                                String groupName) {
+
+        return new GcGetMembers()
+                .addSubjectAttributeName(subjectAttributeName)
+                .assignActAsSubject(lookup)
+                .addGroupName(groupName)
+                .assignIncludeSubjectDetail(true)
+                .execute();
+    }
+
+    private WsGetGroupsResults makeWsGetGroupsResults(String username,
+                                              WsStemLookup stemLookup,
+                                              StemScope stemScope) {
+
+        return new GcGetGroups()
+                .addSubjectIdentifier(username)
+                .assignWsStemLookup(stemLookup)
+                .assignStemScope(stemScope)
+                .execute();
+    }
+
+    private WsAttributeAssign[] makeEmptyWsAttributeAssignArray() {
+        return new WsAttributeAssign[0];
+    }
 }
