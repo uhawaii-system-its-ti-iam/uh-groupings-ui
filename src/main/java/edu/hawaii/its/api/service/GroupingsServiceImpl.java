@@ -479,8 +479,10 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return true if that attribute exists in that Grouping
      */
     public boolean groupHasAttribute(String grouping, String nameName) {
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
-                attributeAssignmentsResults(ASSIGN_TYPE_GROUP, grouping, nameName);
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = attributeAssignmentsResults(
+                ASSIGN_TYPE_GROUP,
+                grouping, nameName);
+
         if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign attribute : wsGetAttributeAssignmentsResults.getWsAttributeAssigns()) {
                 if (attribute.getAttributeDefNameName().equals(nameName)) {

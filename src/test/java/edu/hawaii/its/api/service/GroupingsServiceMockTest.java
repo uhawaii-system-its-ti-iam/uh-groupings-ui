@@ -184,7 +184,20 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void changeListservStatusTest(){
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
 
+        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING))
+                .willReturn(getAttributeAssignmentsResultsListserv());
+
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, GROUPING))
+                .willReturn(assignAttributesResultsListserv());
+        //TODO finish test
     }
 
     @Test
@@ -496,5 +509,23 @@ public class GroupingsServiceMockTest {
         deleteMemberResults.setResultMetadata(resultMeta);
 
         return deleteMemberResults;
+    }
+
+    private WsGetAttributeAssignmentsResults getAttributeAssignmentsResultsListserv() {
+        WsGetAttributeAssignmentsResults getAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
+        WsAttributeAssign attributeAssign = new WsAttributeAssign();
+        attributeAssign.setAttributeDefNameName(LISTSERV);
+        getAttributeAssignmentsResults.setWsAttributeAssigns(new WsAttributeAssign[] {attributeAssign});
+
+        return getAttributeAssignmentsResults;
+    }
+
+    private WsAssignAttributesResults assignAttributesResultsListserv() {
+        WsAssignAttributesResults assignAttributesResults = new WsAssignAttributesResults();
+        WsResultMeta resultMeta = new WsResultMeta();
+        resultMeta.setResultCode(SUCCESS);
+        assignAttributesResults.setResultMetadata(resultMeta);
+
+        return assignAttributesResults;
     }
 }
