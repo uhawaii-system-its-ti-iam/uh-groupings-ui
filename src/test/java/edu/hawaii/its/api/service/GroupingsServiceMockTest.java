@@ -1,12 +1,7 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.Group;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import edu.internet2.middleware.grouperClient.api.GcAddMember;
-import edu.internet2.middleware.grouperClient.api.GcHasMember;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,16 +12,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
@@ -137,19 +127,17 @@ public class GroupingsServiceMockTest {
     private static final String GROUP = "group";
     private static final String GROUPING = "grouping";
     private static final String GROUPING_PATH = "path_to:" + GROUPING;
-    private static final String GROUPING_OWNERS_PATH = GROUPING_PATH + ":OWNERS";
+    private static final String GROUPING_OWNERS_PATH = GROUPING_PATH + ":owners";
+    private static final String RANDOM_USER = "randomUser";
+    private static final String OWNER_USER = "owner";
+    private static final String ADMIN_USER = "admin";
 
-    WsSubjectLookup[] subjectLookups = new WsSubjectLookup[5];
-    WsHasMemberResults hasMemberResults = new WsHasMemberResults();
-    WsHasMemberResult hasMemberResult = new WsHasMemberResult();
-    WsResultMeta resultMeta = new WsResultMeta();
-    WsAddMemberResults addMemberResults = new WsAddMemberResults();
-
-    @Mock
-    private GcHasMember gcHasMember;
+    private static final WsSubjectLookup RANDOM_USER_LOOKUP = new WsSubjectLookup(null, null, RANDOM_USER);
+    private static final WsSubjectLookup OWNER_LOOKUP = new WsSubjectLookup(null, null, OWNER_USER);
+    private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
 
     @Mock
-    private GcAddMember gcAddMember;
+    private GrouperFactoryService gf;
 
     @InjectMocks
     @Autowired
@@ -159,14 +147,6 @@ public class GroupingsServiceMockTest {
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        for (int i = 0; i < 5; i++) {
-            subjectLookups[i] = new WsSubjectLookup();
-            subjectLookups[i].setSubjectIdentifier(USERNAME[i]);
-        }
-
-        resultMeta.setResultCode("not member");
-        hasMemberResult.setResultMetadata(resultMeta);
-        hasMemberResults.setResults(new WsHasMemberResult[]{hasMemberResult});
     }
 
     @Test
@@ -175,152 +155,377 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
-    public void checkSelfOpted() {
+    public void assignOwnershipTest(){
+
+        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
+        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(OWNER_LOOKUP);
+        given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
+
+        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
+        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, OWNER_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
+        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, ADMIN_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
+
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+
+        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+
+        GroupingsServiceResult randomUserAdds = groupingsService.assignOwnership(GROUPING_PATH, RANDOM_USER, RANDOM_USER);
+        GroupingsServiceResult ownerAdds = groupingsService.assignOwnership(GROUPING_PATH, OWNER_USER, RANDOM_USER);
+        GroupingsServiceResult adminAdds = groupingsService.assignOwnership(GROUPING_PATH, ADMIN_USER, RANDOM_USER);
+
+        assertNotEquals(randomUserAdds.getResultCode(), SUCCESS);
+        assertEquals(ownerAdds.getResultCode(), SUCCESS);
+        assertEquals(adminAdds.getResultCode(), SUCCESS);
+    }
+
+    @Test
+    public void changeListservStatusTest(){
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+
+        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING))
+                .willReturn(getAttributeAssignmentsResultsListserv());
+
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, GROUPING))
+                .willReturn(assignAttributesResultsListserv());
+        //TODO finish test
+    }
+
+    @Test
+    public void changeOptInStatusTest(){
 
     }
 
     @Test
-    public void hasListserv() {
+    public void changeOptOutStatusTest(){
 
     }
 
     @Test
-    public void groupingsIn() {
+    public void removeOwnershipTest(){
+        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
+        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(OWNER_LOOKUP);
+        given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
+
+        given(gf.makeWsDeleteMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+        given(gf.makeWsDeleteMemberResults(GROUPING_OWNERS_PATH, OWNER_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+        given(gf.makeWsDeleteMemberResults(GROUPING_OWNERS_PATH, ADMIN_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+
+        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+
+        GroupingsServiceResult randomUserAdds = groupingsService.removeOwnership(GROUPING_PATH, RANDOM_USER, RANDOM_USER);
+        GroupingsServiceResult ownerAdds = groupingsService.removeOwnership(GROUPING_PATH, OWNER_USER, RANDOM_USER);
+        GroupingsServiceResult adminAdds = groupingsService.removeOwnership(GROUPING_PATH, ADMIN_USER, RANDOM_USER);
+
+        assertNotEquals(randomUserAdds.getResultCode(), SUCCESS);
+        assertEquals(ownerAdds.getResultCode(), SUCCESS);
+        assertEquals(adminAdds.getResultCode(), SUCCESS);
 
     }
 
     @Test
-    public void groupingsOptedInto() {
+    public void getGroupingTest(){
 
     }
 
     @Test
-    public void groupingsOptedOutOf() {
+    public void getMyGroupingsTest(){
 
     }
 
     @Test
-    public void inGroup() {
+    public void optInTest(){
 
     }
 
     @Test
-    public void addMemberAs() {
+    public void optOutTest(){
 
     }
 
     @Test
-    public void deleteMemberAs() {
+    public void optTest(){
 
     }
 
     @Test
-    public void assignOwnership() {
+    public void cancelOptInTest(){
 
     }
 
     @Test
-    public void removeOwnership() {
+    public void cancelOptOutTest(){
 
     }
 
     @Test
-    public void getGrouping() {
+    public void optOutPermissionTest(){
 
     }
 
     @Test
-    public void getMyGroupings() {
+    public void optInPermissionTest(){
 
     }
 
     @Test
-    public void optIn() {
+    public void groupHasAttributeTest(){
 
     }
 
     @Test
-    public void optOut() {
+    public void groupingsInTest(){
 
     }
 
     @Test
-    public void cancelOptIn() {
+    public void hasListservTest(){
 
     }
 
     @Test
-    public void cancelOptOut() {
+    public void groupingsOwnedTest(){
 
     }
 
     @Test
-    public void changeListservStatus() {
+    public void groupingsOptedIntoTest(){
 
     }
 
     @Test
-    public void changeOptInStatus() {
+    public void groupingsOptedOutOfTest(){
 
     }
 
     @Test
-    public void changeOptOutStatus() {
+    public void groupingsOptedTest(){
 
     }
 
     @Test
-    public void findOwners() {
+    public void adminInfoTest(){
 
     }
 
     @Test
-    public void isOwner() {
+    public void groupingsToOptOutOfTest(){
 
     }
 
     @Test
-    public void groupOptInPermission() {
+    public void groupingsToOptIntoTest(){
 
     }
 
     @Test
-    public void addSelfOpted() {
+    public void addSelfOptedTest(){
 
     }
 
     @Test
-    public void removeSelfOpted() {
+    public void checkSelfOptedTest(){
 
     }
 
     @Test
-    public void groupOptOutPermission() {
+    public void inGroupTest(){
 
     }
 
     @Test
-    public void updateLastModified() {
+    public void isOwnerTest(){
 
     }
 
     @Test
-    public void groupHasAttribute() {
+    public void isAdminTest(){
 
     }
 
     @Test
-    public void optOutPermission() {
+    public void removeSelfOptedTest(){
 
     }
 
     @Test
-    public void optInPermission() {
+    public void extractFirstMembershipIDTest(){
 
     }
 
-    private WsAddMemberResults mockAddOwner() {
-        hasMemberResults.getResults()[0].getResultMetadata().setResultCode(IS_MEMBER);
+    @Test
+    public void groupOptOutPermissionTest(){
+
+    }
+
+    @Test
+    public void groupOptInPermissionTest(){
+
+    }
+
+    @Test
+    public void updateLastModifiedTest(){
+
+    }
+
+    @Test
+    public void assignMembershipAttributesTest(){
+
+    }
+
+    @Test
+    public void getMembershipAttributesTest(){
+
+    }
+
+    @Test
+    public void assignGroupAttributesTest(){
+
+    }
+
+    @Test
+    public void attributeAssignmentsResultsTest(){
+
+    }
+
+    @Test
+    public void getGrouperPrivilegeTest(){
+
+    }
+
+    @Test
+    public void assignGrouperPrivilegeTest(){
+
+    }
+
+    @Test
+    public void membershipsResultsTest(){
+
+    }
+
+    @Test
+    public void addMemberAsTest(){
+
+    }
+
+    @Test
+    public void deleteMemberAsTest(){
+
+    }
+
+    @Test
+    public void deleteMemberTest(){
+
+    }
+
+    @Test
+    public void getMembersTest(){
+
+    }
+
+    @Test
+    public void extractGroupingsTest(){
+
+    }
+
+    @Test
+    public void getGroupPathsTest(){
+
+    }
+
+    @Test
+    public void setGroupingAttributesTest(){
+
+    }
+
+    @Test
+    public void parentGroupingPathTest(){
+
+    }
+
+    @Test
+    public void extractGroupPathsTest(){
+
+    }
+
+    @Test
+    public void changeGroupAttributeStatusTest(){
+
+    }
+
+        /////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////
+
+    private WsHasMemberResults isMemberResults() {
+        WsHasMemberResults isMemberResults = new WsHasMemberResults();
+        WsHasMemberResult isMemberResult = new WsHasMemberResult();
+        WsResultMeta isMemberMeta = new WsResultMeta();
+        isMemberMeta.setResultCode(IS_MEMBER);
+        isMemberResult.setResultMetadata(isMemberMeta);
+        isMemberResults.setResults(new WsHasMemberResult[] {isMemberResult});
+
+        return isMemberResults;
+    }
+
+    private WsHasMemberResults notMemberResults() {
+        WsHasMemberResults notMemberResults = new WsHasMemberResults();
+        WsHasMemberResult notMemberResult = new WsHasMemberResult();
+        WsResultMeta notMemberMeta = new WsResultMeta();
+        notMemberMeta.setResultCode("not member");
+        notMemberResult.setResultMetadata(notMemberMeta);
+        notMemberResults.setResults(new WsHasMemberResult[] {notMemberResult});
+
+        return notMemberResults;
+    }
+
+    private WsAddMemberResults addMemberResultsSuccess() {
+        WsAddMemberResults addMemberResults = new WsAddMemberResults();
+        WsResultMeta resultMeta = new WsResultMeta();
+        resultMeta.setResultCode(SUCCESS);
+        addMemberResults.setResultMetadata(resultMeta);
+
         return addMemberResults;
+    }
+
+    private WsDeleteMemberResults deleteMemberResultsSuccess() {
+        WsDeleteMemberResults deleteMemberResults = new WsDeleteMemberResults();
+        WsResultMeta resultMeta = new WsResultMeta();
+        resultMeta.setResultCode(SUCCESS);
+        deleteMemberResults.setResultMetadata(resultMeta);
+
+        return deleteMemberResults;
+    }
+
+    private WsGetAttributeAssignmentsResults getAttributeAssignmentsResultsListserv() {
+        WsGetAttributeAssignmentsResults getAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
+        WsAttributeAssign attributeAssign = new WsAttributeAssign();
+        attributeAssign.setAttributeDefNameName(LISTSERV);
+        getAttributeAssignmentsResults.setWsAttributeAssigns(new WsAttributeAssign[] {attributeAssign});
+
+        return getAttributeAssignmentsResults;
+    }
+
+    private WsAssignAttributesResults assignAttributesResultsListserv() {
+        WsAssignAttributesResults assignAttributesResults = new WsAssignAttributesResults();
+        WsResultMeta resultMeta = new WsResultMeta();
+        resultMeta.setResultCode(SUCCESS);
+        assignAttributesResults.setResultMetadata(resultMeta);
+
+        return assignAttributesResults;
     }
 }
