@@ -178,20 +178,6 @@ public class GroupingsServiceTest {
     }
 
     @Test
-    public void makeWsSubjectLookup() {
-        WsSubjectLookup sl = gs.makeWsSubjectLookup("username");
-
-        assertEquals("username", sl.getSubjectIdentifier());
-    }
-
-    @Test
-    public void makeWsGroupLookup() {
-        WsGroupLookup gl = gs.makeWsGroupLookup(grouping);
-
-        assertEquals(grouping, gl.getGroupName());
-    }
-
-    @Test
     public void makeGroup() {
         WsSubject[] subjects = new WsSubject[0];
         assertNotNull(gs.makeGroup(subjects));

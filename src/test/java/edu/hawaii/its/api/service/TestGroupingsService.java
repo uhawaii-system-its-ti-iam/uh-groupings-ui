@@ -458,19 +458,6 @@ public class TestGroupingsService {
         assertTrue(gs.groupOptInPermission(username[0], GROUPING_EXCLUDE));
     }
 
-
-    @Test
-    public void makeWsSubjectTest() {
-        WsSubjectLookup subjectLookup = gs.makeWsSubjectLookup(username[1]);
-        assertTrue(subjectLookup.getSubjectIdentifier().equals(username[1]));
-    }
-
-    @Test
-    public void makeWsGroupLookupTest() {
-        WsGroupLookup lookup = gs.makeWsGroupLookup(GROUPING_EXCLUDE);
-        assertTrue(lookup.getGroupName().equals(GROUPING_EXCLUDE));
-    }
-
     @Test
     public void addMemberAsTest() {
         assertFalse(gs.inGroup(GROUPING, username[4]));

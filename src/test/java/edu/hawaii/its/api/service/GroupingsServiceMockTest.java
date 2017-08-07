@@ -1,12 +1,11 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.Group;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import edu.hawaii.its.holiday.util.Dates;
 import edu.internet2.middleware.grouperClient.api.GcAddMember;
 import edu.internet2.middleware.grouperClient.api.GcHasMember;
+import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +19,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
@@ -137,7 +139,10 @@ public class GroupingsServiceMockTest {
     private static final String GROUP = "group";
     private static final String GROUPING = "grouping";
     private static final String GROUPING_PATH = "path_to:" + GROUPING;
-    private static final String GROUPING_OWNERS_PATH = GROUPING_PATH + ":OWNERS";
+    private static final String GROUPING_OWNERS_PATH = GROUPING_PATH + ":owners";
+    private static final String RANDOM_USER = "randomUser";
+    private static final String OWNER_USER = "owner";
+    private static final String ADMIN_USER = "admin";
 
     WsSubjectLookup[] subjectLookups = new WsSubjectLookup[5];
     WsHasMemberResults hasMemberResults = new WsHasMemberResults();
@@ -146,10 +151,7 @@ public class GroupingsServiceMockTest {
     WsAddMemberResults addMemberResults = new WsAddMemberResults();
 
     @Mock
-    private GcHasMember gcHasMember;
-
-    @Mock
-    private GcAddMember gcAddMember;
+    private GrouperFactoryService gf;
 
     @InjectMocks
     @Autowired
@@ -175,149 +177,310 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
-    public void checkSelfOpted() {
+    public void assignOwnershipTest(){
+
+        WsSubjectLookup randomUserLookup = new WsSubjectLookup(null, null, RANDOM_USER);
+        WsSubjectLookup ownerLookup = new WsSubjectLookup(null, null, OWNER_USER);
+        WsSubjectLookup adminLookup = new WsSubjectLookup(null, null, ADMIN_USER);
+
+        WsAddMemberResults addMemberResults = new WsAddMemberResults();
+
+        WsResultMeta resultMeta = new WsResultMeta();
+        resultMeta.setResultCode(SUCCESS);
+        addMemberResults.setResultMetadata(resultMeta);
+
+        WsHasMemberResults isMemberResults = new WsHasMemberResults();
+        WsHasMemberResult isMemberResult = new WsHasMemberResult();
+        WsResultMeta isMemberMeta = new WsResultMeta();
+        isMemberMeta.setResultCode(IS_MEMBER);
+        isMemberResult.setResultMetadata(isMemberMeta);
+        isMemberResults.setResults(new WsHasMemberResult[] {isMemberResult});
+
+        WsHasMemberResults notMemberResults = new WsHasMemberResults();
+        WsHasMemberResult notMemberResult = new WsHasMemberResult();
+        WsResultMeta notMemberMeta = new WsResultMeta();
+        notMemberMeta.setResultCode("not member");
+        notMemberResult.setResultMetadata(notMemberMeta);
+        notMemberResults.setResults(new WsHasMemberResult[] {notMemberResult});
+
+        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(randomUserLookup);
+        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(ownerLookup);
+        given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(adminLookup);
+
+        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, randomUserLookup, RANDOM_USER)).willReturn(addMemberResults);
+        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, ownerLookup, RANDOM_USER)).willReturn(addMemberResults);
+        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, adminLookup, RANDOM_USER)).willReturn(addMemberResults);
+
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults);
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults);
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults);
+
+        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults);
+        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults);
+        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults);
+
+
+        GroupingsServiceResult randomUserAdds = groupingsService.assignOwnership(GROUPING_PATH, RANDOM_USER, RANDOM_USER);
+        GroupingsServiceResult ownerAdds = groupingsService.assignOwnership(GROUPING_PATH, OWNER_USER, RANDOM_USER);
+        GroupingsServiceResult adminAdds = groupingsService.assignOwnership(GROUPING_PATH, ADMIN_USER, RANDOM_USER);
+
+        assertNotEquals(randomUserAdds.getResultCode(), SUCCESS);
+        assertEquals(ownerAdds.getResultCode(), SUCCESS);
+        assertEquals(adminAdds.getResultCode(), SUCCESS);
+    }
+
+    @Test
+    public void changeListservStatusTest(){
 
     }
 
     @Test
-    public void hasListserv() {
+    public void changeOptInStatusTest(){
 
     }
 
     @Test
-    public void groupingsIn() {
+    public void changeOptOutStatusTest(){
 
     }
 
     @Test
-    public void groupingsOptedInto() {
+    public void removeOwnershipTest(){
 
     }
 
     @Test
-    public void groupingsOptedOutOf() {
+    public void getGroupingTest(){
 
     }
 
     @Test
-    public void inGroup() {
+    public void getMyGroupingsTest(){
 
     }
 
     @Test
-    public void addMemberAs() {
+    public void optInTest(){
 
     }
 
     @Test
-    public void deleteMemberAs() {
+    public void optOutTest(){
 
     }
 
     @Test
-    public void assignOwnership() {
+    public void optTest(){
 
     }
 
     @Test
-    public void removeOwnership() {
+    public void cancelOptInTest(){
 
     }
 
     @Test
-    public void getGrouping() {
+    public void cancelOptOutTest(){
 
     }
 
     @Test
-    public void getMyGroupings() {
+    public void optOutPermissionTest(){
 
     }
 
     @Test
-    public void optIn() {
+    public void optInPermissionTest(){
 
     }
 
     @Test
-    public void optOut() {
+    public void groupHasAttributeTest(){
 
     }
 
     @Test
-    public void cancelOptIn() {
+    public void groupingsInTest(){
 
     }
 
     @Test
-    public void cancelOptOut() {
+    public void hasListservTest(){
 
     }
 
     @Test
-    public void changeListservStatus() {
+    public void groupingsOwnedTest(){
 
     }
 
     @Test
-    public void changeOptInStatus() {
+    public void groupingsOptedIntoTest(){
 
     }
 
     @Test
-    public void changeOptOutStatus() {
+    public void groupingsOptedOutOfTest(){
 
     }
 
     @Test
-    public void findOwners() {
+    public void groupingsOptedTest(){
 
     }
 
     @Test
-    public void isOwner() {
+    public void adminInfoTest(){
 
     }
 
     @Test
-    public void groupOptInPermission() {
+    public void groupingsToOptOutOfTest(){
 
     }
 
     @Test
-    public void addSelfOpted() {
+    public void groupingsToOptIntoTest(){
 
     }
 
     @Test
-    public void removeSelfOpted() {
+    public void addSelfOptedTest(){
 
     }
 
     @Test
-    public void groupOptOutPermission() {
+    public void checkSelfOptedTest(){
 
     }
 
     @Test
-    public void updateLastModified() {
+    public void inGroupTest(){
 
     }
 
     @Test
-    public void groupHasAttribute() {
+    public void isOwnerTest(){
 
     }
 
     @Test
-    public void optOutPermission() {
+    public void isAdminTest(){
 
     }
 
     @Test
-    public void optInPermission() {
+    public void removeSelfOptedTest(){
 
     }
+
+    @Test
+    public void extractFirstMembershipIDTest(){
+
+    }
+
+    @Test
+    public void groupOptOutPermissionTest(){
+
+    }
+
+    @Test
+    public void groupOptInPermissionTest(){
+
+    }
+
+    @Test
+    public void updateLastModifiedTest(){
+
+    }
+
+    @Test
+    public void assignMembershipAttributesTest(){
+
+    }
+
+    @Test
+    public void getMembershipAttributesTest(){
+
+    }
+
+    @Test
+    public void assignGroupAttributesTest(){
+
+    }
+
+    @Test
+    public void attributeAssignmentsResultsTest(){
+
+    }
+
+    @Test
+    public void getGrouperPrivilegeTest(){
+
+    }
+
+    @Test
+    public void assignGrouperPrivilegeTest(){
+
+    }
+
+    @Test
+    public void membershipsResultsTest(){
+
+    }
+
+    @Test
+    public void addMemberAsTest(){
+
+    }
+
+    @Test
+    public void deleteMemberAsTest(){
+
+    }
+
+    @Test
+    public void deleteMemberTest(){
+
+    }
+
+    @Test
+    public void getMembersTest(){
+
+    }
+
+    @Test
+    public void extractGroupingsTest(){
+
+    }
+
+    @Test
+    public void getGroupPathsTest(){
+
+    }
+
+    @Test
+    public void setGroupingAttributesTest(){
+
+    }
+
+    @Test
+    public void parentGroupingPathTest(){
+
+    }
+
+    @Test
+    public void extractGroupPathsTest(){
+
+    }
+
+    @Test
+    public void changeGroupAttributeStatusTest(){
+
+    }
+
+        /////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////
 
     private WsAddMemberResults mockAddOwner() {
         hasMemberResults.getResults()[0].getResultMetadata().setResultCode(IS_MEMBER);
