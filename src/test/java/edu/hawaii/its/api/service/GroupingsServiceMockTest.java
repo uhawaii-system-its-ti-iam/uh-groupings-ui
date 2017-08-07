@@ -2,10 +2,6 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import edu.hawaii.its.holiday.util.Dates;
-import edu.internet2.middleware.grouperClient.api.GcAddMember;
-import edu.internet2.middleware.grouperClient.api.GcHasMember;
-import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,19 +12,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
@@ -144,11 +132,9 @@ public class GroupingsServiceMockTest {
     private static final String OWNER_USER = "owner";
     private static final String ADMIN_USER = "admin";
 
-    WsSubjectLookup[] subjectLookups = new WsSubjectLookup[5];
-    WsHasMemberResults hasMemberResults = new WsHasMemberResults();
-    WsHasMemberResult hasMemberResult = new WsHasMemberResult();
-    WsResultMeta resultMeta = new WsResultMeta();
-    WsAddMemberResults addMemberResults = new WsAddMemberResults();
+    private static final WsSubjectLookup RANDOM_USER_LOOKUP = new WsSubjectLookup(null, null, RANDOM_USER);
+    private static final WsSubjectLookup OWNER_LOOKUP = new WsSubjectLookup(null, null, OWNER_USER);
+    private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
 
     @Mock
     private GrouperFactoryService gf;
@@ -161,14 +147,6 @@ public class GroupingsServiceMockTest {
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        for (int i = 0; i < 5; i++) {
-            subjectLookups[i] = new WsSubjectLookup();
-            subjectLookups[i].setSubjectIdentifier(USERNAME[i]);
-        }
-
-        resultMeta.setResultCode("not member");
-        hasMemberResult.setResultMetadata(resultMeta);
-        hasMemberResults.setResults(new WsHasMemberResult[]{hasMemberResult});
     }
 
     @Test
@@ -179,46 +157,21 @@ public class GroupingsServiceMockTest {
     @Test
     public void assignOwnershipTest(){
 
-        WsSubjectLookup randomUserLookup = new WsSubjectLookup(null, null, RANDOM_USER);
-        WsSubjectLookup ownerLookup = new WsSubjectLookup(null, null, OWNER_USER);
-        WsSubjectLookup adminLookup = new WsSubjectLookup(null, null, ADMIN_USER);
+        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
+        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(OWNER_LOOKUP);
+        given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
 
-        WsAddMemberResults addMemberResults = new WsAddMemberResults();
+        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
+        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, OWNER_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
+        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, ADMIN_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
 
-        WsResultMeta resultMeta = new WsResultMeta();
-        resultMeta.setResultCode(SUCCESS);
-        addMemberResults.setResultMetadata(resultMeta);
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
 
-        WsHasMemberResults isMemberResults = new WsHasMemberResults();
-        WsHasMemberResult isMemberResult = new WsHasMemberResult();
-        WsResultMeta isMemberMeta = new WsResultMeta();
-        isMemberMeta.setResultCode(IS_MEMBER);
-        isMemberResult.setResultMetadata(isMemberMeta);
-        isMemberResults.setResults(new WsHasMemberResult[] {isMemberResult});
-
-        WsHasMemberResults notMemberResults = new WsHasMemberResults();
-        WsHasMemberResult notMemberResult = new WsHasMemberResult();
-        WsResultMeta notMemberMeta = new WsResultMeta();
-        notMemberMeta.setResultCode("not member");
-        notMemberResult.setResultMetadata(notMemberMeta);
-        notMemberResults.setResults(new WsHasMemberResult[] {notMemberResult});
-
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(randomUserLookup);
-        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(ownerLookup);
-        given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(adminLookup);
-
-        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, randomUserLookup, RANDOM_USER)).willReturn(addMemberResults);
-        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, ownerLookup, RANDOM_USER)).willReturn(addMemberResults);
-        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, adminLookup, RANDOM_USER)).willReturn(addMemberResults);
-
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults);
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults);
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults);
-
-        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults);
-        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults);
-        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults);
-
+        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
 
         GroupingsServiceResult randomUserAdds = groupingsService.assignOwnership(GROUPING_PATH, RANDOM_USER, RANDOM_USER);
         GroupingsServiceResult ownerAdds = groupingsService.assignOwnership(GROUPING_PATH, OWNER_USER, RANDOM_USER);
@@ -246,6 +199,29 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void removeOwnershipTest(){
+        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
+        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(OWNER_LOOKUP);
+        given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
+
+        given(gf.makeWsDeleteMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+        given(gf.makeWsDeleteMemberResults(GROUPING_OWNERS_PATH, OWNER_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+        given(gf.makeWsDeleteMemberResults(GROUPING_OWNERS_PATH, ADMIN_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+
+        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+
+        GroupingsServiceResult randomUserAdds = groupingsService.removeOwnership(GROUPING_PATH, RANDOM_USER, RANDOM_USER);
+        GroupingsServiceResult ownerAdds = groupingsService.removeOwnership(GROUPING_PATH, OWNER_USER, RANDOM_USER);
+        GroupingsServiceResult adminAdds = groupingsService.removeOwnership(GROUPING_PATH, ADMIN_USER, RANDOM_USER);
+
+        assertNotEquals(randomUserAdds.getResultCode(), SUCCESS);
+        assertEquals(ownerAdds.getResultCode(), SUCCESS);
+        assertEquals(adminAdds.getResultCode(), SUCCESS);
 
     }
 
@@ -482,8 +458,43 @@ public class GroupingsServiceMockTest {
         /////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////
 
-    private WsAddMemberResults mockAddOwner() {
-        hasMemberResults.getResults()[0].getResultMetadata().setResultCode(IS_MEMBER);
+    private WsHasMemberResults isMemberResults() {
+        WsHasMemberResults isMemberResults = new WsHasMemberResults();
+        WsHasMemberResult isMemberResult = new WsHasMemberResult();
+        WsResultMeta isMemberMeta = new WsResultMeta();
+        isMemberMeta.setResultCode(IS_MEMBER);
+        isMemberResult.setResultMetadata(isMemberMeta);
+        isMemberResults.setResults(new WsHasMemberResult[] {isMemberResult});
+
+        return isMemberResults;
+    }
+
+    private WsHasMemberResults notMemberResults() {
+        WsHasMemberResults notMemberResults = new WsHasMemberResults();
+        WsHasMemberResult notMemberResult = new WsHasMemberResult();
+        WsResultMeta notMemberMeta = new WsResultMeta();
+        notMemberMeta.setResultCode("not member");
+        notMemberResult.setResultMetadata(notMemberMeta);
+        notMemberResults.setResults(new WsHasMemberResult[] {notMemberResult});
+
+        return notMemberResults;
+    }
+
+    private WsAddMemberResults addMemberResultsSuccess() {
+        WsAddMemberResults addMemberResults = new WsAddMemberResults();
+        WsResultMeta resultMeta = new WsResultMeta();
+        resultMeta.setResultCode(SUCCESS);
+        addMemberResults.setResultMetadata(resultMeta);
+
         return addMemberResults;
+    }
+
+    private WsDeleteMemberResults deleteMemberResultsSuccess() {
+        WsDeleteMemberResults deleteMemberResults = new WsDeleteMemberResults();
+        WsResultMeta resultMeta = new WsResultMeta();
+        resultMeta.setResultCode(SUCCESS);
+        deleteMemberResults.setResultMetadata(resultMeta);
+
+        return deleteMemberResults;
     }
 }
