@@ -131,6 +131,7 @@
                 //Gets members in the include group
                 $scope.groupingInclude = d.include.members;
                 $scope.modify($scope.groupingInclude);
+                $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude, $scope.pagedItemsInclude);
 
                 //Gets members in the exclude group
                 $scope.groupingExclude = d.exclude.members;
@@ -483,7 +484,6 @@
                     $scope.currentPageExclude = $scope.currentPageExclude + 1;
                 }
                 break;
-
             case 'Exclude Set':
                 $scope.currentPageExclude = this.n;
                 break;
@@ -496,7 +496,6 @@
             case 'Exclude First':
                 $scope.currentPageExclude = 0;
                 break;
-
             case 'Exclude Last':
                 if ($scope.currentPageExclude >= 0) {
                     $scope.currentPageExclude = $scope.pagedItemsExclude.length - 1;
@@ -508,23 +507,20 @@
                     $scope.currentPageBasis = $scope.currentPageBasis + 1;
                 }
                 break;
-
             case 'Basis Set':
                 $scope.currentPageBasis = this.n;
                 break;
-
             case 'Basis Prev':
                 if ($scope.currentPageBasis > 0) {
                     $scope.currentPageBasis--;
                 }
                 break;
             case 'Basis First':
-                $scope.currentPageOwners = 0;
+                $scope.currentPageBasis = 0;
                 break;
-
             case 'Basis Last':
-                if ($scope.currentPageOwners >= 0) {
-                    $scope.currentPageOwners = $scope.pagedItemsOwners.length - 1;
+                if ($scope.currentPageBasis >= 0) {
+                    $scope.currentPageBasis = $scope.pagedItemsBasis.length - 1;
                 }
                 break;
                 // Cases for Owners
@@ -533,11 +529,9 @@
                     $scope.currentPageOwners = $scope.currentPageOwners + 1;
                 }
                 break;
-
             case 'Owners Set':
                 $scope.currentPageOwners = this.n;
                 break;
-
             case 'Owners Prev':
                 if ($scope.currentPageOwners > 0) {
                     $scope.currentPageOwners--;
@@ -546,7 +540,6 @@
             case 'Owners First':
                 $scope.currentPageOwners = 0;
                 break;
-
             case 'Owners Last':
                 if ($scope.currentPageOwners >= 0) {
                     $scope.currentPageOwners = $scope.pagedItemsOwners.length - 1;
@@ -558,11 +551,9 @@
                     $scope.currentPageList = $scope.currentPageList + 1;
                 }
                 break;
-
             case 'List Set':
                 $scope.currentPageList = this.n;
                 break;
-
             case 'List Prev':
                 if ($scope.currentPageList > 0) {
                     $scope.currentPageList--;
@@ -571,7 +562,6 @@
             case 'List First':
                 $scope.currentPageList = 0;
                 break;
-
             case 'List Last':
                 if ($scope.currentPageList >= 0) {
                     $scope.currentPageList = $scope.pagedItemsList.length - 1;

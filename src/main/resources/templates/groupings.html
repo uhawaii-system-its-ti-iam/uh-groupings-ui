@@ -202,7 +202,7 @@
                                             <!-- Top part of the two parts  -->
                                             <td colspan="6">
                                                     <ul class = "pagination pull-right" >
-                                                        <li ng-class="{disabled: (currentPageBasis) == 0 }">
+                                                        <li ng-class="{disabled: (currentPageInclude) == 0 }">
                                                             <a href="" ng-click="currentPage('Include Prev')" >« Prev</a>
                                                         </li>
                                                         <li ng-repeat="n in range(pagedItemsInclude.length, currentPageInclude - gap, currentPageInclude + gap + 1) "
