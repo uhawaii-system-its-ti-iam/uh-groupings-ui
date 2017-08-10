@@ -92,11 +92,11 @@
             if($scope.groupingName === ''){
                 $scope.error = true;
                 $scope.basis = [];
-                $scope.groupingsList = [];
-                $scope.groupingsBasis = [];
-                $scope.groupingInclude = [];
-                $scope.groupingExclude = [];
-                $scope.ownerList = [];
+                $scope.pagedItemsList = [];
+                $scope.pagedItemsBasis = [];
+                $scope.pagedItemsInclude = [];
+                $scope.pagedItemsExclude = [];
+                $scope.pagedItemsOwners = [];
                 $scope.loading = false;
             }
             else {
@@ -106,11 +106,11 @@
                         $scope.error = true;
                         //Empties array
                         $scope.basis = [];
-                        $scope.groupingsList = [];
-                        $scope.groupingsBasis = [];
-                        $scope.groupingInclude = [];
-                        $scope.groupingExclude = [];
-                        $scope.ownerList = [];
+                        $scope.pagedItemsList = [];
+                        $scope.pagedItemsBasis = [];
+                        $scope.pagedItemsInclude = [];
+                        $scope.pagedItemsExclude = [];
+                        $scope.pagedItemsOwners = [];
                         $scope.loading = false;
                     } else {
                         $scope.error = false;
@@ -315,7 +315,8 @@
          * @param page - the page moving to.
          */
         $scope.paging = function (page) {
-            switch (page) { case 'Include Next':
+            switch (page) {
+                case 'Include Next':
                 if ($scope.currentPageInclude < $scope.pagedItemsInclude.length - 1) {
                     $scope.currentPageInclude = $scope.currentPageInclude + 1;
                 }
@@ -381,12 +382,12 @@
                     }
                     break;
                 case 'Basis First':
-                    $scope.currentPageOwners = 0;
+                    $scope.currentPageBasis = 0;
                     break;
 
                 case 'Basis Last':
-                    if ($scope.currentPageOwners >= 0) {
-                        $scope.currentPageOwners = $scope.pagedItemsOwners.length - 1;
+                    if ($scope.currentPageBasis >= 0) {
+                        $scope.currentPageBasis = $scope.pagedItemsBasis.length - 1;
                     }
                     break;
                 // Cases for Owners
