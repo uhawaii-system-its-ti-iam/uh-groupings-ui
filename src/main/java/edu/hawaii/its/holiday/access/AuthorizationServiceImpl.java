@@ -79,7 +79,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         //Determines if a user is an admin.
        if (fetchAdmin(username)){
-           System.out.println("this person is an admin");
+           roleHolder.add(Role.ADMIN);
        }
 
         List<Role> roles = userMap.get(uhuuid);
@@ -92,9 +92,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     /**
-     * Determines if a user is a owner of any grouping.
+     * Determines if a user is an owner of any grouping.
      *
-     * @param username the username of the user.
+     * @param username - self-explanitory
      * @return true if the person has groupings that they own, otherwise false.
      */
     public boolean fetchOwner(String username) {
@@ -112,6 +112,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         return false;
     }
 
+    /**
+     * Determines if a user is an admin in grouping admin.
+     *
+     * @param username - self-explanitory
+     * @return true if the person gets pass the grouping admins check by checking if they can get all the groupings.
+     */
     public boolean fetchAdmin(String username) {
         System.out.println("//////////////////////////////");
         try {
