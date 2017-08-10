@@ -185,6 +185,9 @@
                                                 <!-- Top part of the two parts  -->
                                                 <td colspan="6">
                                                     <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageList) == 0}">
+                                                            <a href="" ng-click="paging('List First')">«« First</a>
+                                                        </li>
                                                         <li ng-class="{disabled: (currentPageList) == 0 }">
                                                             <a href="" ng-click="paging('List Prev')" >« Prev</a>
                                                         </li>
@@ -196,6 +199,9 @@
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 }">
                                                             <a href="" ng-click="paging('List Next')">Next »</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 }">
+                                                            <a href="" ng-click="paging('List Last')">Last »»</a>
                                                         </li>
                                                     </ul>
                                                 </td>
@@ -224,6 +230,9 @@
                                                 <td colspan="6">
                                                     <ul class = "pagination pull-right" >
                                                         <li ng-class="{disabled: (currentPageBasis) == 0}">
+                                                            <a href="" ng-click="paging('Basis First')">«« First</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageBasis) == 0}">
                                                             <a href="" ng-click="paging('Basis Prev')" >« Prev</a>
                                                         </li>
                                                         <li ng-repeat="n in range(pagedItemsBasis.length, currentPageBasis - gap, currentPageBasis + gap + 1) "
@@ -234,6 +243,9 @@
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 }">
                                                             <a href="" ng-click="paging('Basis Next')">Next »</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 }">
+                                                            <a href="" ng-click="paging('Basis Last')">Last »»</a>
                                                         </li>
                                                     </ul>
                                                 </td>
@@ -270,7 +282,10 @@
                                                 <!-- Top part of the two parts  -->
                                                 <td colspan="6">
                                                     <ul class = "pagination pull-right" >
-                                                        <li ng-class="{disabled: (currentPageBasis) == 0 }">
+                                                        <li ng-class="{disabled: (currentPageInclude) == 0}">
+                                                            <a href="" ng-click="paging('Include First')">«« First</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageInclude) == 0}">
                                                             <a href="" ng-click="paging('Include Prev')" >« Prev</a>
                                                         </li>
                                                         <li ng-repeat="n in range(pagedItemsInclude.length, currentPageInclude - gap, currentPageInclude + gap + 1) "
@@ -281,6 +296,9 @@
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 }">
                                                             <a href="" ng-click="paging('Include Next')">Next »</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 }">
+                                                            <a href="" ng-click="paging('Include Last')">Last »»</a>
                                                         </li>
                                                     </ul>
                                                 </td>
@@ -333,6 +351,9 @@
                                                 <!-- Top part of the two parts  -->
                                                 <td colspan="6">
                                                     <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageExclude) == 0}">
+                                                            <a href="" ng-click="paging('Exclude First')">«« First</a>
+                                                        </li>
                                                         <li ng-class="{disabled: (currentPageExclude) == 0 }">
                                                             <a href="" ng-click="paging('Exclude Prev')" >« Prev</a>
                                                         </li>
@@ -344,6 +365,9 @@
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 }">
                                                             <a href="" ng-click="paging('Exclude Next')">Next »</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 }">
+                                                            <a href="" ng-click="paging('Exclude Last')">Last »»</a>
                                                         </li>
                                                     </ul>
                                                 </td>
@@ -389,6 +413,9 @@
                                                 <tfoot>
                                                 <td colspan="6">
                                                     <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageOwners) == 0}">
+                                                            <a href="" ng-click="paging('Owners First')">«« First</a>
+                                                        </li>
                                                         <li ng-class="{disabled: (currentPageOwners) == 0 }">
                                                             <a href="" ng-click="paging('Owners Prev')" >« Prev</a>
                                                         </li>
@@ -400,6 +427,9 @@
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 }">
                                                             <a href="" ng-click="paging('Owners Next')">Next »</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 }">
+                                                            <a href="" ng-click="paging('Owners Last')">Last »»</a>
                                                         </li>
                                                     </ul>
                                                 </td>
