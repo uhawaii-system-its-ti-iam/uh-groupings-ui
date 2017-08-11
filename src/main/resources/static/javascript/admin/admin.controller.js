@@ -84,11 +84,10 @@
             }, url);
         };
 
+        /**
+         * Gets the information about a grouping based off the name in the input box.
+         */
         $scope.search = function () {
-            $scope.loading = true;
-            console.log($scope.groupingName);
-            var groupingDataUrl = "api/groupings/" + $scope.groupingName + "/_groupings_api_2/grouping";
-            console.log(groupingDataUrl);
             if($scope.groupingName === ''){
                 $scope.error = true;
                 $scope.basis = [];
@@ -100,6 +99,16 @@
                 $scope.loading = false;
             }
             else {
+                //Finds the path of the grouping based on the name of the grouping.
+                for(var i = 0; i < $scope.groupingList.length; i++){
+                    if($scope.groupingList[i].name === $scope.groupingName){
+                        $scope.groupingPath = $scope.groupingList[i].path;
+                    }
+                }
+                $scope.loading = true;
+                var groupingDataUrl = "api/groupings/" + $scope.groupingPath + "/_groupings_api_2/grouping";
+                console.log(groupingDataUrl);
+
                 dataProvider.loadData(function (d) {
                     if (typeof d.path === 'undefined') {
                         console.log("Not a valid grouping");
@@ -169,7 +178,6 @@
                     }
                 }, groupingDataUrl);
             }
-
         };
 
 

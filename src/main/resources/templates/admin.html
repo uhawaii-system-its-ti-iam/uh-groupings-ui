@@ -117,7 +117,7 @@
                                 <button class="btn btn-default" type="button" ng-click="search()">Search</button>
                             </span>
                             <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
-                                <option ng-repeat="o in groupingList" value="{{o.path}}"></option>
+                                <option ng-repeat="o in groupingList" value="{{o.name}}"></option>
                             </datalist>
                         </div>
                         <div class="alert alert-danger" role="alert" ng-show="error">
