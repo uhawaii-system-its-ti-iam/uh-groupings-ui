@@ -1,24 +1,19 @@
 package edu.hawaii.its.api.service;
 
+import edu.hawaii.its.api.type.*;
+import edu.hawaii.its.holiday.util.Dates;
+import edu.internet2.middleware.grouperClient.ws.StemScope;
+import edu.internet2.middleware.grouperClient.ws.beans.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import edu.hawaii.its.api.type.*;
-import edu.hawaii.its.holiday.util.Dates;
-
-import edu.internet2.middleware.grouperClient.ws.beans.*;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import edu.internet2.middleware.grouperClient.ws.StemScope;
 
 @Service("groupingsService")
 public class GroupingsServiceImpl implements GroupingsService {
@@ -485,7 +480,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign attribute : wsGetAttributeAssignmentsResults.getWsAttributeAssigns()) {
-                if (attribute.getAttributeDefNameName().equals(nameName)) {
+                if (attribute.getAttributeDefNameName() != null && attribute.getAttributeDefNameName().equals(nameName)) {
                     return true;
                 }
             }

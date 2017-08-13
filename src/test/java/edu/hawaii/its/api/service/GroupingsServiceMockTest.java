@@ -127,6 +127,8 @@ public class GroupingsServiceMockTest {
     private static final String GROUP = "group";
     private static final String GROUPING = "grouping";
     private static final String GROUPING_PATH = "path_to:" + GROUPING;
+    private static final String NO_ATTRIBUTE_GROUPING_PATH = "path_to:no_attribute_grouping";
+    private static final String NO_ATTRIBUTE_GROUPING_OWNERS_PATH = NO_ATTRIBUTE_GROUPING_PATH + ":owners";
     private static final String GROUPING_OWNERS_PATH = GROUPING_PATH + ":owners";
     private static final String RANDOM_USER = "randomUser";
     private static final String OWNER_USER = "owner";
@@ -188,16 +190,61 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
         given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
 
+        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+
         given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
         given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
         given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING))
-                .willReturn(getAttributeAssignmentsResultsListserv());
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResults(LISTSERV));
 
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, GROUPING))
-                .willReturn(assignAttributesResultsListserv());
-        //TODO finish test
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, NO_ATTRIBUTE_GROUPING_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResults(null));
+
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, GROUPING_PATH))
+                .willReturn(makeAssignAttributesResults(SUCCESS));
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, LISTSERV, GROUPING_PATH))
+                .willReturn(makeAssignAttributesResults(SUCCESS));
+
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, NO_ATTRIBUTE_GROUPING_PATH))
+                .willReturn(makeAssignAttributesResults(SUCCESS));
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, LISTSERV, NO_ATTRIBUTE_GROUPING_PATH))
+                .willReturn(makeAssignAttributesResults(SUCCESS));
+
+        GroupingsServiceResult turnOnWhenOnRandom = groupingsService.changeListservStatus(GROUPING_PATH, RANDOM_USER, true);
+        GroupingsServiceResult turnOnWhenOnOwner = groupingsService.changeListservStatus(GROUPING_PATH, OWNER_USER, true);
+        GroupingsServiceResult turnOnWhenOnAdmin = groupingsService.changeListservStatus(GROUPING_PATH, ADMIN_USER, true);
+
+        GroupingsServiceResult turnOffWhenOnRandom = groupingsService.changeListservStatus(GROUPING_PATH, RANDOM_USER, false);
+        GroupingsServiceResult turnOffWhenOnOwner = groupingsService.changeListservStatus(GROUPING_PATH, OWNER_USER, false);
+        GroupingsServiceResult turnOffWhenOnAdmin = groupingsService.changeListservStatus(GROUPING_PATH, ADMIN_USER, false);
+
+        GroupingsServiceResult turnOnWhenOffRandom = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, RANDOM_USER, true);
+        GroupingsServiceResult turnOnWhenOffOwner = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, OWNER_USER, true);
+        GroupingsServiceResult turnOnWhenOffAdmin = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, ADMIN_USER, true);
+
+        GroupingsServiceResult turnOffWhenOffRandom = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, RANDOM_USER, false);
+        GroupingsServiceResult turnOffWhenOffOwner = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, OWNER_USER, false);
+        GroupingsServiceResult turnOffWhenOffAdmin = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, ADMIN_USER, false);
+
+        assertTrue(turnOnWhenOnRandom.getResultCode().startsWith(FAILURE));
+        assertTrue(turnOnWhenOnOwner.getResultCode().startsWith(SUCCESS));
+        assertTrue(turnOnWhenOnAdmin.getResultCode().startsWith(SUCCESS));
+
+        assertTrue(turnOffWhenOnRandom.getResultCode().startsWith(FAILURE));
+        assertEquals(turnOffWhenOnOwner.getResultCode(), SUCCESS);
+        assertEquals(turnOffWhenOnAdmin.getResultCode(), SUCCESS);
+
+        assertTrue(turnOnWhenOffRandom.getResultCode().startsWith(FAILURE));
+        assertEquals(turnOnWhenOffOwner.getResultCode(), SUCCESS);
+        assertEquals(turnOnWhenOffAdmin.getResultCode(), SUCCESS);
+
+        assertTrue(turnOffWhenOffRandom.getResultCode().startsWith(FAILURE));
+        assertTrue(turnOffWhenOffOwner.getResultCode().startsWith(SUCCESS));
+        assertTrue(turnOffWhenOffAdmin.getResultCode().startsWith(SUCCESS));
     }
 
     @Test
@@ -511,21 +558,25 @@ public class GroupingsServiceMockTest {
         return deleteMemberResults;
     }
 
-    private WsGetAttributeAssignmentsResults getAttributeAssignmentsResultsListserv() {
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String attribute) {
         WsGetAttributeAssignmentsResults getAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
         WsAttributeAssign attributeAssign = new WsAttributeAssign();
-        attributeAssign.setAttributeDefNameName(LISTSERV);
+        if(attribute != null) {
+            attributeAssign.setAttributeDefNameName(attribute);
+        }
         getAttributeAssignmentsResults.setWsAttributeAssigns(new WsAttributeAssign[] {attributeAssign});
 
         return getAttributeAssignmentsResults;
+
     }
 
-    private WsAssignAttributesResults assignAttributesResultsListserv() {
+    private WsAssignAttributesResults makeAssignAttributesResults(String resultCode) {
         WsAssignAttributesResults assignAttributesResults = new WsAssignAttributesResults();
         WsResultMeta resultMeta = new WsResultMeta();
-        resultMeta.setResultCode(SUCCESS);
+        resultMeta.setResultCode(resultCode);
         assignAttributesResults.setResultMetadata(resultMeta);
 
         return assignAttributesResults;
+
     }
 }
