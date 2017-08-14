@@ -360,6 +360,15 @@ public class GroupingsServiceImpl implements GroupingsService {
             , String outOrrIn
             , String preposition) {
 
+        List<GroupingsServiceResult> results = new ArrayList<>();
+
+        if (groupOptInPermission(username, addGroup)) {
+            results.add(deleteMemberAs(username, deleteGroup, username));
+            results.add(addMemberAs(username, addGroup, username));
+            results.add(addSelfOpted(addGroup, username));
+            return results;
+        }
+
         String action = "opt " + outOrrIn + username + " " + preposition + grouping;
         String failureResult = FAILURE
                 + ", "
@@ -368,17 +377,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + outOrrIn
                 + preposition
                 + grouping;
-        List<GroupingsServiceResult> results = new ArrayList<>();
-
-        if (groupOptInPermission(username, addGroup)) {
-            results.add(deleteMemberAs(username, deleteGroup, username));
-            results.add(addMemberAs(username, addGroup, username));
-            results.add(updateLastModified(deleteGroup));
-            results.add(updateLastModified(addGroup));
-            results.add(updateLastModified(grouping));
-            results.add(addSelfOpted(addGroup, username));
-            return results;
-        }
         results.add(new GroupingsServiceResult(failureResult, action));
         return results;
     }
@@ -871,7 +869,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         String time = wsDateTime();
         WsAttributeAssignValue dateTimeValue = gf.makeWsAttributeAssignValue(time);
 
-        WsAssignAttributesResults assignAttributesResults = gf.makeWsAssignAttributesResults(ASSIGN_TYPE_GROUP,
+        WsAssignAttributesResults assignAttributesResults = gf.makeWsAssignAttributesResults(
+                ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
                 group,
                 YYYYMMDDTHHMM,
@@ -1110,6 +1109,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(group, user, userToAdd);
 
         updateLastModified(parentGroupingPath(group));
+        updateLastModified(group);
 
         return makeGroupingsServiceResult(addMemberResults, action);
     }
@@ -1133,6 +1133,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(group, user, userToDelete);
 
         updateLastModified(parentGroupingPath(group));
+        updateLastModified(group);
 
         return makeGroupingsServiceResult(deleteMemberResults, "delete " + userToDelete + " from " + group);
     }
