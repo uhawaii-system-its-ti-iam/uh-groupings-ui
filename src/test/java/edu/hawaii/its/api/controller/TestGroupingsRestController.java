@@ -3,6 +3,7 @@ package edu.hawaii.its.api.controller;
 import javax.annotation.PostConstruct;
 
 import edu.hawaii.its.api.type.AdminInfo;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,6 +69,12 @@ public class TestGroupingsRestController {
 
     @Value("${groupings.api.test.names}")
     private String[] tstName;
+
+    @Value("${groupings.api.failure}")
+    private String FAILURE;
+
+    @Value("${grouperClient.webService.login}")
+    private String API_ACCOUNT;
 
     @Autowired
     private GroupingsService gs;
@@ -392,8 +399,31 @@ public class TestGroupingsRestController {
 
     @Test
     public void getAdminInfoTest() {
-        AdminInfo info = gc.adminInfo(tst[0]).getBody();
+        AdminInfo infoFail = gc.adminInfo(tst[0]).getBody();
 
-        assertNotNull(info);
+        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
+        assertEquals(infoFail.getAllGroupings().size(), 0);
+
+        AdminInfo infoSuccess = gc.adminInfo(API_ACCOUNT).getBody();
+
+        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(API_ACCOUNT));
+    }
+
+    @Test
+    public void addDeleteAdminTest() {
+
+
+        GroupingsServiceResult addAdminResults = gc.addAdmin(tst[0] , tst[0]).getBody();
+        assertTrue(addAdminResults.getResultCode().startsWith(FAILURE));
+
+        addAdminResults = gc.addAdmin(API_ACCOUNT, tst[0]).getBody();
+        assertNotNull(addAdminResults);
+
+        GroupingsServiceResult deleteAdminResults = gc.deleteAdmin(API_ACCOUNT, tst[0]).getBody();
+        assertNotNull(deleteAdminResults);
+
+        deleteAdminResults = gc.deleteAdmin(tst[0] , tst[0]).getBody();
+        assertTrue(deleteAdminResults.getResultCode().startsWith(FAILURE));
+
     }
 }

@@ -46,6 +46,41 @@ public class GroupingsRestController {
     }
 
     /**
+     * adds a member to the admin group
+     *
+     * @param username:  username of the admin preforming the operation
+     * @param adminToAdd: username of the new admin to add
+     * @return information about the success of the operation
+     */
+    @RequestMapping(value = "/{username}/{adminToAdd}/addAdmin",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GroupingsServiceResult> addAdmin(@PathVariable String username, @PathVariable String adminToAdd) {
+        logger.info("Entered REST addAdmin...");
+        return ResponseEntity
+                .ok()
+                .body(gs.addAdmin(username, adminToAdd));
+    }
+
+    /**
+     * deletes a member from the admin group
+     *
+     * @param username:  username of the admin preforming the operation
+     * @param adminToDelete: username of the admin to be deleted
+     * @return information about the success of the operation
+     */
+    @RequestMapping(value = "/{username}/{adminToDelete}/deleteAdmin",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GroupingsServiceResult> deleteAdmin(@PathVariable String username, @PathVariable String adminToDelete) {
+        logger.info("Entered REST deleteAdmin...");
+        return ResponseEntity
+                .ok()
+                .body(gs.deleteAdmin(username, adminToDelete));
+    }
+
+
+    /**
      * adds a member to the include group of the Grouping who's path is in 'grouping'
      * if that member is in the exclude group, they will be removed from it
      *

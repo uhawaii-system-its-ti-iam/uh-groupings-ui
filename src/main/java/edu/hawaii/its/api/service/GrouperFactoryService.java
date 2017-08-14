@@ -16,6 +16,8 @@ public interface GrouperFactoryService {
 
     public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, String newMember);
 
+    public WsAddMemberResults makeWsAddMemberResults(String group, String newMember);
+
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, String memberToDelete);
 
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, String memberToDelete);

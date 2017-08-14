@@ -127,7 +127,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     public GroupingsServiceImpl(GrouperFactoryService grouperFactory) {
-       gf = grouperFactory;
+        gf = grouperFactory;
     }
 
     private WsStemLookup STEM_LOOKUP = gf.makeWsStemLookup(STEM, null);
@@ -1028,6 +1028,58 @@ public class GroupingsServiceImpl implements GroupingsService {
         WsSubjectLookup lookup = gf.makeWsSubjectLookup(username);
 
         return gf.makeWsGetMembershipsResults(group, lookup);
+    }
+
+    /**
+     * @param username:  username of owner adding member
+     * @param newAdmin: username of user to be added to grup
+     * @return information about success of action
+     */
+    @Override
+    public GroupingsServiceResult addAdmin(String username, String newAdmin) {
+        logger.info("addAdmin; username: " + username + "; newAdmin: " + newAdmin + ";");
+
+        String action = "add " + newAdmin + " to " + ADMINS;
+
+        if(inGroup(ADMINS, username)) {
+            WsSubjectLookup user = gf.makeWsSubjectLookup(username);
+
+            WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(
+                    ADMINS,
+                    newAdmin);
+
+            updateLastModified(ADMINS);
+
+            return makeGroupingsServiceResult(addMemberResults, action);
+        }
+
+        return new GroupingsServiceResult("FAILURE: " + username + " is not an admin", action);
+    }
+
+    /**
+     * @param username:  username of owner adding member
+     * @param adminToDelete: username of user to be added to grup
+     * @return information about success of action
+     */
+    @Override
+    public GroupingsServiceResult deleteAdmin(String username, String adminToDelete) {
+        logger.info("deleteAdmin; username: " + username + "; adminToDelete: " + adminToDelete + ";");
+
+        String action = "delete " + adminToDelete + " from " + ADMINS;
+
+        if(inGroup(ADMINS, username)) {
+            WsSubjectLookup user = gf.makeWsSubjectLookup(username);
+
+            WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(
+                    ADMINS,
+                    user,
+                    adminToDelete);
+
+            updateLastModified(ADMINS);
+
+            return makeGroupingsServiceResult(deleteMemberResults, action);
+        }
+        return new GroupingsServiceResult("FAILURE: " + username + " is not an admin", action);
     }
 
     /**

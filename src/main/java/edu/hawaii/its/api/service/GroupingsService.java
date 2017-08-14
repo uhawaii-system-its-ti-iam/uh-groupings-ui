@@ -18,6 +18,10 @@ public interface GroupingsService {
 
     public boolean checkSelfOpted(String group, String username);
 
+    public GroupingsServiceResult addAdmin(String username, String adminToAdd);
+
+    public GroupingsServiceResult deleteAdmin(String username, String adminToDelete);
+
     public GroupingsServiceResult addMemberAs(String username, String group, String userToAdd);
 
     public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete);
