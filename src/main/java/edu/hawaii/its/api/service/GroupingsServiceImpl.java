@@ -1,24 +1,19 @@
 package edu.hawaii.its.api.service;
 
+import edu.hawaii.its.api.type.*;
+import edu.hawaii.its.holiday.util.Dates;
+import edu.internet2.middleware.grouperClient.ws.StemScope;
+import edu.internet2.middleware.grouperClient.ws.beans.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import edu.hawaii.its.api.type.*;
-import edu.hawaii.its.holiday.util.Dates;
-
-import edu.internet2.middleware.grouperClient.ws.beans.*;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import edu.internet2.middleware.grouperClient.ws.StemScope;
 
 @Service("groupingsService")
 public class GroupingsServiceImpl implements GroupingsService {
@@ -132,7 +127,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     public GroupingsServiceImpl(GrouperFactoryService grouperFactory) {
-       gf = grouperFactory;
+        gf = grouperFactory;
     }
 
     private WsStemLookup STEM_LOOKUP = gf.makeWsStemLookup(STEM, null);
@@ -365,6 +360,15 @@ public class GroupingsServiceImpl implements GroupingsService {
             , String outOrrIn
             , String preposition) {
 
+        List<GroupingsServiceResult> results = new ArrayList<>();
+
+        if (groupOptInPermission(username, addGroup)) {
+            results.add(deleteMemberAs(username, deleteGroup, username));
+            results.add(addMemberAs(username, addGroup, username));
+            results.add(addSelfOpted(addGroup, username));
+            return results;
+        }
+
         String action = "opt " + outOrrIn + username + " " + preposition + grouping;
         String failureResult = FAILURE
                 + ", "
@@ -373,17 +377,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + outOrrIn
                 + preposition
                 + grouping;
-        List<GroupingsServiceResult> results = new ArrayList<>();
-
-        if (groupOptInPermission(username, addGroup)) {
-            results.add(deleteMemberAs(username, deleteGroup, username));
-            results.add(addMemberAs(username, addGroup, username));
-            results.add(updateLastModified(deleteGroup));
-            results.add(updateLastModified(addGroup));
-            results.add(updateLastModified(grouping));
-            results.add(addSelfOpted(addGroup, username));
-            return results;
-        }
         results.add(new GroupingsServiceResult(failureResult, action));
         return results;
     }
@@ -485,7 +478,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign attribute : wsGetAttributeAssignmentsResults.getWsAttributeAssigns()) {
-                if (attribute.getAttributeDefNameName().equals(nameName)) {
+                if (attribute.getAttributeDefNameName() != null && attribute.getAttributeDefNameName().equals(nameName)) {
                     return true;
                 }
             }
@@ -876,7 +869,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         String time = wsDateTime();
         WsAttributeAssignValue dateTimeValue = gf.makeWsAttributeAssignValue(time);
 
-        WsAssignAttributesResults assignAttributesResults = gf.makeWsAssignAttributesResults(ASSIGN_TYPE_GROUP,
+        WsAssignAttributesResults assignAttributesResults = gf.makeWsAssignAttributesResults(
+                ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
                 group,
                 YYYYMMDDTHHMM,
@@ -1037,6 +1031,58 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     /**
      * @param username:  username of owner adding member
+     * @param newAdmin: username of user to be added to grup
+     * @return information about success of action
+     */
+    @Override
+    public GroupingsServiceResult addAdmin(String username, String newAdmin) {
+        logger.info("addAdmin; username: " + username + "; newAdmin: " + newAdmin + ";");
+
+        String action = "add " + newAdmin + " to " + ADMINS;
+
+        if(inGroup(ADMINS, username)) {
+            WsSubjectLookup user = gf.makeWsSubjectLookup(username);
+
+            WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(
+                    ADMINS,
+                    newAdmin);
+
+            updateLastModified(ADMINS);
+
+            return makeGroupingsServiceResult(addMemberResults, action);
+        }
+
+        return new GroupingsServiceResult("FAILURE: " + username + " is not an admin", action);
+    }
+
+    /**
+     * @param username:  username of owner adding member
+     * @param adminToDelete: username of user to be added to grup
+     * @return information about success of action
+     */
+    @Override
+    public GroupingsServiceResult deleteAdmin(String username, String adminToDelete) {
+        logger.info("deleteAdmin; username: " + username + "; adminToDelete: " + adminToDelete + ";");
+
+        String action = "delete " + adminToDelete + " from " + ADMINS;
+
+        if(inGroup(ADMINS, username)) {
+            WsSubjectLookup user = gf.makeWsSubjectLookup(username);
+
+            WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(
+                    ADMINS,
+                    user,
+                    adminToDelete);
+
+            updateLastModified(ADMINS);
+
+            return makeGroupingsServiceResult(deleteMemberResults, action);
+        }
+        return new GroupingsServiceResult("FAILURE: " + username + " is not an admin", action);
+    }
+
+    /**
+     * @param username:  username of owner adding member
      * @param group:     path to group the user to be added will be added to
      * @param userToAdd: username of user to be added to grup
      * @return information about success of action
@@ -1063,6 +1109,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(group, user, userToAdd);
 
         updateLastModified(parentGroupingPath(group));
+        updateLastModified(group);
 
         return makeGroupingsServiceResult(addMemberResults, action);
     }
@@ -1086,6 +1133,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(group, user, userToDelete);
 
         updateLastModified(parentGroupingPath(group));
+        updateLastModified(group);
 
         return makeGroupingsServiceResult(deleteMemberResults, "delete " + userToDelete + " from " + group);
     }
