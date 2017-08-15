@@ -10,7 +10,7 @@
      *@param dataUpdater
      *    Using the CRUD opperators this would be the update of CRUD
      **/
-    function MembershipJsController($scope, $window, dataProvider, dataUpdater) {
+    function MembershipJsController($scope, $window, $filter, dataProvider, dataUpdater) {
 
         $scope.currentUsername = "";
         $scope.membersList = [];
@@ -152,6 +152,65 @@
             }, cancelOutURL);
         };
 
+
+
+        var searchMatch = function (haystack, needle) {
+            //console.log(haystack);
+            if (!needle) {
+                return true;
+            }
+            // console.log(haystack.name.toLowerCase().indexOf(needle.toLowerCase()) !== -1);
+            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+        };
+
+        // init the filtered items
+        $scope.search = function (list, whatList,whatQuery) {
+            var query = "";
+            switch(whatQuery){
+                case 'firstQuery':
+                    query = $scope.query1;
+                    break;
+                case 'secondQuery':
+                    query = $scope.query2;
+                    break;
+                case 'thirdQuery':
+                    query = $scope.query3;
+                    break;
+                case 'fourthQuery':
+                    query = $scope.query4;
+                    break;
+            }
+            $scope.filteredItems = [];
+            $scope.filteredItems = $filter('filter')(list, function (item) {
+                if(searchMatch(item.name, query)){
+                    return true;
+                }
+            });
+            console.log($scope.filteredItems);
+            page = 0;
+            // now group by pages/ still problems
+            /** new idea: Make a switch statement for the 4 of them and then use it
+            **  to seperate each of the pages
+            **/
+            var emptyList = [];
+            switch(whatList){
+                case 'Paged_1':
+                    $scope.pagedItems1 = $scope.groupToPagesChanged(emptyList);
+                    break;
+                case 'Paged_3':
+                    $scope.pagedItems3 = $scope.groupToPagesChanged(emptyList);
+                    break;
+                case 'Paged_4':
+                    $scope.pagedItems4 = $scope.groupToPagesChanged(emptyList);
+                    break;
+
+                case 'Paged_5':
+                    $scope.pagedItems5 = $scope.groupToPagesChanged(emptyList);
+                    break;
+            }
+        };
+
+
         // $scope.disableOptOut = function (index) {
         //     for (var i = 0; i < $scope.optOutList.length; i++) {
         //         if ($scope.membersList[index].name === $scope.optOutList[i].name) {
@@ -180,11 +239,24 @@
         // $scope.tooltipText = function (index) {
         //     return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
         // };
+
+        $scope.groupToPagesChanged = function(pagedList){
+            var pagedList = [];
+            for(var i = 0; i < $scope.filteredItems.length ; i++){
+                if(i % $scope.itemsPerPage === 0){
+                    pagedList[Math.floor(i/$scope.itemsPerPage)] = [ $scope.filteredItems[i]];
+                }else{
+                    pagedList[Math.floor(i/$scope.itemsPerPage)].push( $scope.filteredItems[i]);
+                }
+            }
+            return pagedList;
+        };
+
         /**groups all the items to pages
            have sepperate arrays (hopefully)
            @param
         **/
-        $scope.groupToPages=function(theList , pagedList){
+        $scope.groupToPages = function(theList , pagedList){
             var pagedList = [];
             for(var i = 0; i < theList.length ; i++){
                 if(i % $scope.itemsPerPage === 0){
@@ -195,6 +267,8 @@
             }
             return pagedList;
         };
+
+
 
         /**shows the range between the start and end
          *checks for negative numbers
