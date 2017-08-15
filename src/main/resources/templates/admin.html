@@ -33,7 +33,7 @@
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="list">
                         <div class="panel panel-default">
-                            <div class="panel-heading" style="padding: 2px">
+                            <div class="panel-heading" style="border: 0;padding: 5px;">
                                 <div class="form-group">
                                     <h3 class="col-xs-6 col-md-4" style="margin-top: 5px">Designated Admins</h3>
 
@@ -121,7 +121,8 @@
                             </datalist>
                         </div>
                         <div class="alert alert-danger" role="alert" ng-show="error">
-                            <a href="#" class="alert-link">Not A Valid Grouping</a>
+                            <a class="close" ng-click="dismiss()" >&times;</a>
+                            <strong href="#" class="alert-link">Not A Valid Grouping</strong>
                         </div>
                         <h2 class="text-center" ng-hide="error">{{title}}</h2>
 

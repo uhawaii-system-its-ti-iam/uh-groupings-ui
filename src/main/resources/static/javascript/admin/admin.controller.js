@@ -112,6 +112,7 @@
                 console.log(groupingDataUrl);
 
                 dataProvider.loadData(function (d) {
+                    console.log(d);
                     $scope.error = false;
                     $scope.basis = d.basis.members;
 
@@ -169,6 +170,11 @@
             }
         };
 
+        $scope.dismiss = function(){
+            $scope.title = '';
+            $scope.error = false;
+        };
+
 
         /**
          * Modify the data from the grouping to be sorted, filter out hawaii.edu
@@ -213,13 +219,14 @@
 
         /**
          * Adds function that adds an member to the admin grouping.
-         * Uses dataUpdater service to post the user that is being added.
-         * If user is successfully added, dataProvider will return a Success in result Code.
-         * Else if resultCode is undefined, then user was not successfully added.
-         */
+        * Uses dataUpdater service to post the user that is being added.
+        * If user is successfully added, dataProvider will return a Success in result Code.
+        * Else if resultCode is undefined, then user was not successfully added.
+        */
         $scope.add = function () {
-            var addUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + $scope.getCurrentUsername() + "/" + $scope.username + "/addMemberToIncludeGroup";
+            var addUrl = "api/groupings/_groupings_api_2/" + $scope.username + "/addAdmin";
             $scope.testdata = [];
+            console.log(addUrl);
 
             if (confirm("You are adding " + $scope.username + " to the include list of this grouping")) {
                 /*dataUpdater.updateData(function (d) {
@@ -238,6 +245,8 @@
             }
         };
 
+        // http://localhost:8080/myiam/api/groupings/_groupings_api_2/aaronvil/addAdmin
+
         /**
          * Remove function uses dataDelete Service to remove user from admin grouping.
          * Will not delete admin if there is only one admin in the list.
@@ -246,7 +255,7 @@
          */
         $scope.remove = function (index) {
             var deleteUser = $scope.list[index].username;
-            var deleteUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteMemberFromIncludeGroup";
+            var deleteUrl = "api/groupings/_groupings_api_2/" +  deleteUser + "/deleteAdmin";
             console.log(deleteUrl);
             if ($scope.list.length > 1) {
                 /*dataDelete.deleteData(function (d) {
