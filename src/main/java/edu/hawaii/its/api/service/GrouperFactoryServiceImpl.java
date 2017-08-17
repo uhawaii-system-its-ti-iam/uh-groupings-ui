@@ -61,6 +61,14 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService{
     }
 
     @Override
+    public WsAddMemberResults makeWsAddMemberResults(String group, String newMember) {
+        return new GcAddMember()
+                .addSubjectIdentifier(newMember)
+                .assignGroupName(group)
+                .execute();
+    }
+
+    @Override
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, String memberToDelete) {
         return new GcDeleteMember()
                 .addSubjectIdentifier(memberToDelete)

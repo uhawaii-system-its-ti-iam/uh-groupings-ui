@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.hawaii.its.ti.iam</groupId>
@@ -110,14 +110,14 @@
             <artifactId>spring-security-cas</artifactId>
         </dependency>
         <dependency>
-           <groupId>org.jasig.cas.client</groupId>
-           <artifactId>cas-client-core</artifactId>
-           <version>${org.jasig.cas.client-version}</version>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-core</artifactId>
+            <version>${org.jasig.cas.client-version}</version>
         </dependency>
         <dependency>
-           <groupId>org.jasig.cas.client</groupId>
-           <artifactId>cas-client-support-saml</artifactId>
-           <version>${org.jasig.cas.client-version}</version>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-support-saml</artifactId>
+            <version>${org.jasig.cas.client-version}</version>
         </dependency>
 
         <!-- Test -->

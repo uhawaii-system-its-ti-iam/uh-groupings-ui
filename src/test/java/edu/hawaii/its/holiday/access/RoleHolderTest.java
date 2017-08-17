@@ -18,9 +18,15 @@ public class RoleHolderTest {
         assertThat(roleHolder.size(), equalTo(2));
         roleHolder.add(Role.EMPLOYEE);
         assertThat(roleHolder.size(), equalTo(3));
+        roleHolder.add(Role.OWNER);
+        assertThat(roleHolder.size(), equalTo(4));
+        roleHolder.add(Role.ADMIN);
+        assertThat(roleHolder.size(), equalTo(5));
 
         assertThat(roleHolder.toString(), containsString("ROLE_ANONYMOUS"));
         assertThat(roleHolder.toString(), containsString("ROLE_UH"));
         assertThat(roleHolder.toString(), containsString("ROLE_EMPLOYEE"));
+        assertThat(roleHolder.toString(), containsString("ROLE_OWNER"));
+        assertThat(roleHolder.toString(), containsString("ROLE_ADMIN"));
     }
 }

@@ -5,10 +5,12 @@
     /**Membership controller for the whole memberships page
      *@param $scope
      *    defining what is within the controller
+     *@param  $window
+     *    reference to the browser's window
      *@param dataProvider
      *     given the "loadData" function, it loads all the data to be viewed
      *@param dataUpdater
-     *    Using the CRUD opperators this would be the update of CRUD
+     *    Using the CRUD operators this would be the update of CRUD
      **/
     function MembershipJsController($scope, $window, $filter, dataProvider, dataUpdater) {
 
@@ -42,7 +44,7 @@
             return $scope.currentUsername;
         };
 
-        /**init is something that is ussualy called at the start of something
+        /**init is something that is usually called at the start of something
          * so calling init would be called at the start
          **/
         $scope.init = function () {
@@ -82,7 +84,6 @@
 
                 $scope.loading = false;
             }, groupingURL);
-            console.log("Finish dataProvider");
         };
 
 
@@ -107,10 +108,10 @@
                 }
             }, optOutURL);
         };
-
+8
         /** Adds user to the include group
          * initializes using the init function.
-         *@param grouping
+         *@param index - grouping
          *takes in a grouping so it knows which group it is going into for the path
          **/
         $scope.optIn = function (index) {
@@ -125,7 +126,7 @@
         /** Cancel user opt into a grouping
          *   Calls the URL "cancelOptIn" and gives it the data for the update in the
          *   CRUD operation
-         *   @param grouping
+         *   @param index - grouping
          *   takes in a grouping so it knows which group it is going into for the path
          **/
         $scope.cancelOptIn = function (index) {
@@ -140,7 +141,7 @@
         /** Cancels the opt out
          * Calls the URL "cancelOptOut" and gives it the data for the update in the
          * CRUD operation
-         *@param grouping
+         *@param index - grouping
          *takes in a grouping so it knows which group it is going into for the path
          **/
         $scope.cancelOptOut = function (index) {
@@ -151,8 +152,6 @@
                 $scope.init();
             }, cancelOutURL);
         };
-
-
 
         var searchMatch = function (haystack, needle) {
             //console.log(haystack);
@@ -211,52 +210,40 @@
         };
 
 
-        // $scope.disableOptOut = function (index) {
-        //     for (var i = 0; i < $scope.optOutList.length; i++) {
-        //         if ($scope.membersList[index].name === $scope.optOutList[i].name) {
-        //             console.log($scope.optOutList[i].name);
-        //             return false;
-        //         }
-        //     }
-        //     return true;
-        // };
-        //
-        // //Disables opt in button if there are no groupings to opt into.
-        // $scope.disableOptIn = function (index) {
-        //     for (var i = 0; i < $scope.membersList.length; i++) {
-        //         if ($scope.membersList[i].name === $scope.optInList[index].name) {
-        //             return true;
-        //         }
-        //     }
-        // };
-        //
-        // //Disable button if list is empty
-        // $scope.disableButton = function (type, index) {
-        //     var list = type[index];
-        //     return list.name.includes("NO GROUPINGS TO");
-        // };
-        //
-        // $scope.tooltipText = function (index) {
-        //     return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
-        // };
+         //Disables opt in button if there are no groupings to opt into.
+         $scope.disableOptIn = function (index) {
+             for (var i = 0; i < $scope.membersList.length; i++) {
+                 if ($scope.membersList[i].name === $scope.optInList[index].name) {
+                     return true;
+                 }
+             }
+         };
 
-        $scope.groupToPagesChanged = function(pagedList){
-            var pagedList = [];
-            for(var i = 0; i < $scope.filteredItems.length ; i++){
-                if(i % $scope.itemsPerPage === 0){
-                    pagedList[Math.floor(i/$scope.itemsPerPage)] = [ $scope.filteredItems[i]];
-                }else{
-                    pagedList[Math.floor(i/$scope.itemsPerPage)].push( $scope.filteredItems[i]);
-                }
-            }
-            return pagedList;
-        };
+         //Disable button if list is empty
+         $scope.disableButton = function (type, index) {
+             var list = type[index];
+             return list.name.includes("NO GROUPINGS TO");
+         };
+
+         $scope.tooltipText = function (index) {
+             return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
+         };
+         $scope.disableOptOut = function (index) {
+             for (var i = 0; i < $scope.optOutList.length; i++) {
+                 if ($scope.membersList[index].name === $scope.optOutList[i].name) {
+                    // console.log($scope.optOutList[i].name);
+                     return false;
+                 }
+             }
+             return true;
+         };
 
         /**groups all the items to pages
-           have sepperate arrays (hopefully)
-           @param
-        **/
-        $scope.groupToPages = function(theList , pagedList){
+         have separate arrays (hopefully)
+         @param theList - .
+         @param pagedList - .
+         **/
+        $scope.groupToPages=function(theList , pagedList){
             var pagedList = [];
             for(var i = 0; i < theList.length ; i++){
                 if(i % $scope.itemsPerPage === 0){
@@ -276,7 +263,7 @@
          * @param size
          * @param start
          * @param end
-         *  all the param are self explanitory
+         *  all the param are self explanatory
          * @return ret
          *     everything within the range of start,
          *       end, and making sure it's that size
@@ -356,6 +343,7 @@
                     break;
 
                     //Cases  for Opt out in Pagination
+
                 case 'Page Opt Out Next':
                     if ($scope.currentPageOptOut < $scope.pagedItems1.length - 1) {
                         $scope.currentPageOptOut = $scope.currentPageOptOut + 1;

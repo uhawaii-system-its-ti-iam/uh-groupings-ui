@@ -17,92 +17,460 @@
                     <div class="loader" ng-show="loading"></div>
                 </div>
 
+                <ul class="nav nav-tabs" id="adminTab">
+                    <li role="presentation" class="active">
+                        <a href="#list" data-toggle="tab" role="tab">
+                            <i class="icon ion-android-people" id="icons"></i>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#grouping" data-toggle="tab" role="tab">
+                            <i class="icon ion-android-list size-64" id="icons "></i>
+                        </a>
+                    </li>
+                </ul>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading" style="padding: 2px">
-                        <div class="form-group">
-                            <h3 class="col-xs-6 col-md-4" style="margin-top: 5px">Designated Admins</h3>
-                            <div align="right" style="margin-top: 10px">
-                                <input placeholder="Type to filter text..." type="text" ng-model="searchFor"/>
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="list">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="padding: 2px">
+                                <div class="form-group">
+                                    <h3 class="col-xs-6 col-md-4" style="margin-top: 5px">Designated Admins</h3>
+
+                                    <div align="right" style="margin-top: 10px">
+                                        <input placeholder="Type to filter text..." type="text" ng-model="query"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Table -->
+                            <table class="table table-bordered table-condensed table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>UH ID</th>
+                                    <th>Username</th>
+                                    <th>remove</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="l in data = (pagedItems[currentPage] | filter: query)">
+                                    <td>{{l.name}}</td>
+                                    <td>{{l.uuid}}</td>
+                                    <td>{{l.username}}</td>
+                                    <td>
+                                        <button class="btn btn-default btn-block"
+                                                ng-click="remove($index + (currentPage * itemsPerPage))"><span
+                                                class="glyphicon glyphicon-remove"></span></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <td colspan="6">
+                                    <ul class="pagination pull-right">
+                                        <li ng-class="{disabled: (currentPage) == 0}">
+                                            <a href="" ng-click="paging('first')">«« First</a>
+                                        </li>
+                                        <li ng-class="{disabled: (currentPage) == 0}">
+                                            <a href="" ng-click="paging('prev')">« Prev</a>
+                                        </li>
+                                        <li ng-repeat="n in range(pagedItems.length, currentPage - gap, currentPage + gap + 1) "
+                                            ng-class="{active: n == currentPage}"
+
+                                            ng-click="paging(n)"
+                                                ><a href="" ng-bind="n + 1">1</a>
+                                        </li>
+                                        <li ng-class="{disabled: (currentPage) == pagedItems.length - 1 }">
+                                            <a href="" ng-click="paging('next')">Next »</a>
+                                        </li>
+                                        <li ng-class="{disabled: (currentPage) == pagedItems.length - 1 }">
+                                            <a href="" ng-click="paging('last')">Last »»</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                                </tfoot>
+                            </table>
+
+                            <div class="panel-footer">
+                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#addAdmin"
+                                        aria-expanded="false" aria-controls="addAdmin">
+                                    Add Admin
+                                </button>
+                                <div class="collapse" id="addAdmin">
+                                    <input type="text" ng-model="username"/>
+                                    <button class="btn btn-success" ng-click="add()">Add Admin</button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Table -->
-                    <table class="table table-bordered table-condensed table-hover">
-                        <thead>
-                        <tr>
-                            <th>Basis</th>
-                            <th>Name</th>
-                            <th>UH ID</th>
-                            <th>Username</th>
-                            <th>remove</th>
-                        </tr>
-                        </thead>
-                      <tfoot>
-                      <td colspan="6">
-                        <ul class = "pagination pull-right" >
-                          <li>
-                            <a href="" ng-click="paging('first')">«« First</a>
-                          </li>
-                          <li>
-                            <a href="" ng-click="paging('prev')">« Prev</a>
-                          </li>
-                          <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
-                              ng-class="{active: n == currentPage}"
+                    <div class="tab-pane fade" id="grouping">
+                        <h2 class="text-center">Search For Grouping</h2>
 
-                              ng-click="paging(n)"
-                          ><a href="" ng-bind="n + 1" >1</a>
-                          </li>
-                          <li>
-                            <a href="" ng-click="paging('next')">Next »</a>
-                          </li>
-                          <li>
-                            <a href="" ng-click="paging('last')">Last »»</a>
-                          </li>
-                        </ul>
-                      </td>
-                      </tfoot>
-                        <tbody>
-                        <tr ng-repeat="l in pagedItems[currentPage] | filter:searchFor">
-                            <td class="text-center" style="width: 3%">{{l.basis}}</td>
-                            <td>{{l.name}}</td>
-                            <td>{{l.uuid}}</td>
-                            <td>{{l.username}}</td>
-                            <td>
-                                <button class="btn btn-default btn-block" ng-click="remove($index + (currentPage * itemsPerPage))"><span
-                                        class="glyphicon glyphicon-remove"></span></button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        <div class="input-group">
+                            <input class="form-control" list="testList"
+                                   ng-keyup="$event.keyCode == 13 ? search() : null"
+                                   data-list="testList"
+                                   type="text" ng-model="groupingName"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="search()">Search</button>
+                            </span>
+                            <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
+                                <option ng-repeat="o in groupingList" value="{{o.path}}"></option>
+                            </datalist>
+                        </div>
+                        <div class="alert alert-danger" role="alert" ng-show="error">
+                            <a href="#" class="alert-link">Not A Valid Grouping</a>
+                        </div>
+                        <h2 class="text-center" ng-hide="error">{{title}}</h2>
 
-                    <div class="panel-footer">
-                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addAdmin"
-                                aria-expanded="false" aria-controls="addAdmin">
-                            Add Admin
-                        </button>
-                        <div class="collapse" id="addAdmin">
-                            <input type="text" ng-model="username"/>
-                            <button class="btn btn-success" ng-click="add()">Add Admin</button>
+                        <div id="members" class="tab-pane fade in active">
+                            <div class="panel panel-default">
+                                <div class="panel-body" style="min-height: 350px">
+                                    <div class="col-md-2 col-xs-2" style="top: 55px; width: 80px">
+                                        <ul class="nav nav-tabs nav-stacked">
+                                            <li class="active"><a data-toggle="tab" href="#all"><span
+                                                    class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
+                                            </li>
+                                            <li>
+                                                <a data-toggle="tab" href="#basis">
+                                                    <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a data-toggle="tab" href="#include">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a data-toggle="tab" href="#exclude">
+                                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a data-toggle="tab" href="#owner">
+                                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a data-toggle="tab" href="#options">
+                                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="tab-content col-md-10 col-xs-8">
+                                        <div id="all" class="tab-pane fade in active">
+                                            <h3 class="text-center">List</h3>
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>UH ID</th>
+                                                    <th>Username</th>
+                                                    <th>Basis</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="g in pagedItemsList[currentPageList]">
+                                                    <td>{{g.name}}</td>
+                                                    <td>{{g.uuid}}</td>
+                                                    <td>{{g.username}}</td>
+                                                    <td class="text-center" style="width: 3%">{{g.basis}}</td>
+                                                </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                <!-- Top part of the two parts  -->
+                                                <td colspan="6">
+                                                    <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageList) == 0}">
+                                                            <a href="" ng-click="paging('List First')">«« First</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageList) == 0 }">
+                                                            <a href="" ng-click="paging('List Prev')" >« Prev</a>
+                                                        </li>
+                                                        <li ng-repeat="n in range(pagedItemsList.length, currentPageList - gap, currentPageList + gap + 1) "
+                                                            ng-class="{active: n == currentPageList}"
+
+                                                            ng-click="paging('List Set')"
+                                                                ><a href="" ng-bind="n + 1" >1</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 }">
+                                                            <a href="" ng-click="paging('List Next')">Next »</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 }">
+                                                            <a href="" ng-click="paging('List Last')">Last »»</a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                        <div id="basis" class="tab-pane fade">
+                                            <h3 class="text-center">Basis</h3>
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>UH ID</th>
+                                                    <th>Username</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="b in pagedItemsBasis[currentPageBasis]">
+                                                    <td>{{b.name}}</td>
+                                                    <td>{{b.uuid}}</td>
+                                                    <td>{{b.username}}</td>
+                                                </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                <!-- Top part of the two parts  -->
+                                                <td colspan="6">
+                                                    <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageBasis) == 0}">
+                                                            <a href="" ng-click="paging('Basis First')">«« First</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageBasis) == 0}">
+                                                            <a href="" ng-click="paging('Basis Prev')" >« Prev</a>
+                                                        </li>
+                                                        <li ng-repeat="n in range(pagedItemsBasis.length, currentPageBasis - gap, currentPageBasis + gap + 1) "
+                                                            ng-class="{active: n == currentPageBasis}"
+
+                                                            ng-click="paging('Basis Set')"
+                                                                ><a href="" ng-bind="n + 1" >1</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 }">
+                                                            <a href="" ng-click="paging('Basis Next')">Next »</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 }">
+                                                            <a href="" ng-click="paging('Basis Last')">Last »»</a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                        <div id="include" class="tab-pane fade">
+                                            <h3 class="text-center">Include</h3>
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>UH ID</th>
+                                                    <th>Username</th>
+                                                    <th>Basis</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]">
+                                                    <td>
+                                                        {{i.name}}
+                                                <span class="glyphicon glyphicon-trash pull-right"
+                                                      ng-click="removeMember('Include', $index)" data-toggle="tooltip"
+                                                      data-placement="top" onmouseover="$(this).tooltip('show')"
+                                                      title="Delete member from the include grouping"
+                                                      style="margin-right: 10px"></span>
+                                                    </td>
+                                                    <td>{{i.uuid}}</td>
+                                                    <td>{{i.username}}</td>
+                                                    <td class="text-center" style="width: 3%">{{i.basis}}</td>
+                                                </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                <!-- Top part of the two parts  -->
+                                                <td colspan="6">
+                                                    <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageInclude) == 0}">
+                                                            <a href="" ng-click="paging('Include First')">«« First</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageInclude) == 0}">
+                                                            <a href="" ng-click="paging('Include Prev')" >« Prev</a>
+                                                        </li>
+                                                        <li ng-repeat="n in range(pagedItemsInclude.length, currentPageInclude - gap, currentPageInclude + gap + 1) "
+                                                            ng-class="{active: n == currentPageInclude}"
+
+                                                            ng-click="paging('Include Set')"
+                                                                ><a href="" ng-bind="n + 1" >1</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 }">
+                                                            <a href="" ng-click="paging('Include Next')">Next »</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 }">
+                                                            <a href="" ng-click="paging('Include Last')">Last »»</a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                                </tfoot>
+                                            </table>
+
+                                            <div>
+                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                                        data-target="#addInclude" aria-expanded="false"
+                                                        aria-controls="addOwner">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </button>
+                                                <div class="collapse" id="addInclude">
+                                                    <input type="text" placeholder="Add user to include"
+                                                           ng-model="addUser"/>
+                                                    <button class="btn btn-success" ng-click="addMember('Include')">Add
+                                                        to
+                                                        Included
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="exclude" class="tab-pane fade">
+                                            <h3 class="text-center">Exclude</h3>
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>UH ID</th>
+                                                    <th>Username</th>
+                                                    <th>Basis</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]">
+                                                    <td>
+                                                        {{e.name}}
+                                                <span class="glyphicon glyphicon-trash pull-right" data-toggle="tooltip"
+                                                      data-placement="top" onmouseover="$(this).tooltip('show')"
+                                                      title="Delete member from the exclude group"
+                                                      ng-click="removeMember('Exclude', $index)"
+                                                      style="margin-right: 10px"></span>
+                                                    </td>
+                                                    <td>{{e.uuid}}</td>
+                                                    <td>{{e.username}}</td>
+                                                    <td class="text-center" style="width: 3%">{{e.basis}}</td>
+                                                </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                <!-- Top part of the two parts  -->
+                                                <td colspan="6">
+                                                    <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageExclude) == 0}">
+                                                            <a href="" ng-click="paging('Exclude First')">«« First</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageExclude) == 0 }">
+                                                            <a href="" ng-click="paging('Exclude Prev')" >« Prev</a>
+                                                        </li>
+                                                        <li ng-repeat="n in range(pagedItemsExclude.length, currentPageExclude - gap, currentPageExclude + gap + 1) "
+                                                            ng-class="{active: n == currentPageExclude}"
+
+                                                            ng-click="paging('Exclude Set')"
+                                                                ><a href="" ng-bind="n + 1" >1</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 }">
+                                                            <a href="" ng-click="paging('Exclude Next')">Next »</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 }">
+                                                            <a href="" ng-click="paging('Exclude Last')">Last »»</a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                                </tfoot>
+                                            </table>
+                                            <div>
+                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                                        data-target="#addExclude" aria-expanded="false"
+                                                        aria-controls="addOwner">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </button>
+                                                <div class="collapse" id="addExclude">
+                                                    <input type="text" placeholder="Add user to exclude"
+                                                           ng-model="addUser"/>
+                                                    <button class="btn btn-success" ng-click="addMember('Exclude')">Add
+                                                        to
+                                                        Excluded
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="owner" class="tab-pane fade">
+                                            <h3 class="text-center">Owners</h3>
+                                            <table class="table table-bordered table-condensed table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Username</th>
+                                                    <th>Remove</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
+                                                    <td>{{owner.name}}</td>
+                                                    <td>{{owner.username}}</td>
+                                                    <td>
+                                                        <button class="btn btn-default btn-block" ng-click="removeOwner($index)"><span
+                                                                class="glyphicon glyphicon-remove"></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                <td colspan="6">
+                                                    <ul class = "pagination pull-right" >
+                                                        <li ng-class="{disabled: (currentPageOwners) == 0}">
+                                                            <a href="" ng-click="paging('Owners First')">«« First</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageOwners) == 0 }">
+                                                            <a href="" ng-click="paging('Owners Prev')" >« Prev</a>
+                                                        </li>
+                                                        <li ng-repeat="n in range(pagedItemsOwners.length, currentPageOwners - gap, currentPageOwners + gap + 1) "
+                                                            ng-class="{active: n == currentPageOwners}"
+
+                                                            ng-click="paging('Owners Set')"
+                                                                ><a href="" ng-bind="n + 1" >1</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 }">
+                                                            <a href="" ng-click="paging('Owners Next')">Next »</a>
+                                                        </li>
+                                                        <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 }">
+                                                            <a href="" ng-click="paging('Owners Last')">Last »»</a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                                </tfoot>
+                                            </table>
+                                            <div>
+                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                                        data-target="#addOwner" aria-expanded="false" aria-controls="addOwner">
+                                                    Add Owner
+                                                </button>
+                                                <div class="collapse" id="addOwner">
+                                                    <input type="text" placeholder="Add an user as an owner..." ng-model="ownerUser"/>
+                                                    <button class="btn btn-success" ng-click="addOwner()">Add Owner</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="options" class="tab-pane fade">
+                                            <h3 class="text-center">Preferences</h3>
+                                            <h3>Add/Remove</h3>
+                                            <input id="optInOption" type="checkbox"/> Allow people to add themselves to this group <br/>
+                                            <input id="optOutOption" type="checkbox"/> Allow people to remove themselves to this group
+                                            <br/>
+
+                                            <h3>Publication Destinations</h3>
+                                            <input id="listserv" type="checkbox" ng-init="pref"/> LISTSERV list: {{groupingName.name}}
+                                            <br/>
+
+                                            <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
-            <br/>
-            <!--
-            <div sec:authorize="isAuthenticated()">
-                <h5>Selected Spring Security Information</h5>
-                <p>Logged in user: <span id="name" sec:authentication="name"></span></p>
-                <p>Roles: <span sec:authentication="principal.authorities"></span></p>
-            </div>-->
-
         </div>
     </div>
 </div>
 <!-- / Content container. -->
-
 <div th:substituteby="footer :: copy"></div>
 </body>
 </html>
