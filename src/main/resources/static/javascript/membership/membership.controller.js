@@ -152,17 +152,23 @@
                 $scope.init();
             }, cancelOutURL);
         };
-
+        /**gives you a true or false if it finds the match
+        **@param haystack - the thing to be checked
+        **@param needle - the check against
+        **
+        **/
         var searchMatch = function (haystack, needle) {
-            //console.log(haystack);
             if (!needle) {
                 return true;
             }
-            // console.log(haystack.name.toLowerCase().indexOf(needle.toLowerCase()) !== -1);
             return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
         };
 
-        // init the filtered items
+        /**searches through the array to find matches and then fixes the list
+        **@param list - gives the whole list to sort out
+        **@param whatList - it gives you the list you need to search through
+        **@param whatQuery - it gives the search bar its seperate search function.
+        **/
         $scope.search = function (list, whatList,whatQuery) {
             var query = "";
             switch(whatQuery){
@@ -187,10 +193,7 @@
             });
             console.log($scope.filteredItems);
             page = 0;
-            // now group by pages/ still problems
-            /** new idea: Make a switch statement for the 4 of them and then use it
-            **  to seperate each of the pages
-            **/
+            // now group by pages
             var emptyList = [];
             switch(whatList){
                 case 'Paged_1':
