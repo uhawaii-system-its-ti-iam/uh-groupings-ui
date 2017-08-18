@@ -35,7 +35,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding: 2px">
                             <div class="form-group">
-                                <h3 class="col-md-4" style="margin-top: 5px">You belong to this/these groups</h3>
+                                <h3 class="col-md-6" style="margin-top: 5px">You belong to this/these groups</h3>
 
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
@@ -46,7 +46,7 @@
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th>Groupings</th>
+                                <th ng-click="sort('list')">Groupings {{symbol}}</th>
                                 <th>Opt out</th>
                             </tr>
                             </thead>
@@ -56,7 +56,7 @@
                                 <td colspan="6">
                                         <ul class = "pagination pull-right" >
                                             <li ng-class="{disabled: (currentPageOptOut) == 0}">
-                                                <a href="" ng-click="currentPage('Page Opt Out First')" >« Frist</a>
+                                                <a href="" ng-click="currentPage('Page Opt Out First')" >« First</a>
                                             </li>
                                             <li ng-class="{disabled: (currentPageOptOut) == 0}">
                                                 <a href="" ng-click="currentPage('Page Opt Out Prev')" >« Prev</a>
@@ -81,7 +81,6 @@
                             <tr ng-repeat="l in pagedItems1[currentPageOptOut] ">
                                 <td>{{l.name}}</td>
                                 <td>
-                                    <!-- TODO find a way to update index -->
                                     <button id="optOutButton" class="btn btn-default btn-block"
                                             ng-click="optOut($index + (currentPageOptIn * itemsPerPage))" ng-disabled="disableOptOut($index + (currentPageOptIn * itemsPerPage))"
                                             ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
@@ -96,7 +95,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding: 2px">
                             <div class="form-group">
-                                <h3 class="col-md-4" style="margin-top: 5px">You can opt in to this/these groups</h3>
+                                <h3 class="col-md-6" style="margin-top: 5px">You can opt in to this/these groups</h3>
 
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
@@ -108,7 +107,7 @@
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th>Groupings</th>
+                                <th ng-click="sort('optInList')">Groupings {{symbol}}</th>
                                 <th>Opt in</th>
                             </tr>
                             </thead>
@@ -158,7 +157,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding: 2px">
                             <div class="form-group">
-                                <h3 style="margin-top: 5px">You can cancel your opt out of this/these groups</h3>
+                                <h3 class="col-md-6" style="margin-top: 5px">You can cancel your opt out of this/these groups</h3>
 
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
@@ -216,7 +215,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding: 2px">
                             <div class="form-group">
-                                <h3 style="margin-top: 5px">You can cancel your opt in of this/these groups</h3>
+                                <h3 class="col-md-6" style="margin-top: 5px">You can cancel your opt in of this/these groups</h3>
 
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"

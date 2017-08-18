@@ -21,6 +21,8 @@
         $scope.optedIn = [];
         $scope.optedOut = [];
         $scope.loading = true;
+        $scope.sortBoolean = false;
+        $scope.symbol = '';
 
         //these will be place holders for now
         $scope.pagedItems1=[];
@@ -30,7 +32,7 @@
         $scope.pagedItems5=[];
         $scope.gap=2;
 
-        $scope.itemsPerPage = 25;
+        $scope.itemsPerPage = 5;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
         $scope.currentPageCancelOptIn = 0;
@@ -86,6 +88,74 @@
             }, groupingURL);
         };
 
+        $scope.sort = function(list) {
+            if($scope.sortBoolean == false){
+                $scope.ascend(list);
+                $scope.sortBoolean = true;
+                $scope.symbol = '\u25BC';
+            }
+            else {
+                $scope.descend(list);
+                $scope.sortBoolean = false;
+                $scope.symbol = '\u25B2';
+            }
+        };
+
+        $scope.ascend = function(list) {
+            switch(list)
+            {
+                case 'list' :
+                    $scope.membersList.sort(function (a, b) {
+                        var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                        if (nameA < nameB) //sort string ascending
+                            return -1;
+                        if (nameA > nameB)
+                            return 1;
+                        return 0
+                    });
+                    $scope.pagedItems1 = $scope.groupToPages($scope.membersList,$scope.pagedItems1);
+                    break;
+                case 'optInList':
+                    $scope.optInList.sort(function (a, b) {
+                        var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                        if (nameA < nameB) //sort string ascending
+                            return -1;
+                        if (nameA > nameB)
+                            return 1;
+                        return 0
+                    });
+                    $scope.pagedItems3 = $scope.groupToPages($scope.optInList,$scope.pagedItems3);
+                    break;
+            }
+        };
+
+        $scope.descend = function(list) {
+            switch(list)
+            {
+                case 'list' :
+                    $scope.membersList.sort(function (a, b) {
+                        var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                        if (nameA > nameB) //sort string ascending
+                            return -1;
+                        if (nameA < nameB)
+                            return 1;
+                        return 0
+                    });
+                    $scope.pagedItems1 = $scope.groupToPages($scope.membersList,$scope.pagedItems1);
+                    break;
+                case 'optInList':
+                    $scope.optInList.sort(function (a, b) {
+                        var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                        if (nameA > nameB) //sort string ascending
+                            return -1;
+                        if (nameA < nameB)
+                            return 1;
+                        return 0
+                    });
+                    $scope.pagedItems3 = $scope.groupToPages($scope.optInList,$scope.pagedItems3);
+                    break;
+            }
+        };
 
         /** Adds user to the exclude group.
          * Sends back an alert saying if it failed
@@ -152,23 +222,24 @@
                 $scope.init();
             }, cancelOutURL);
         };
+
         /**gives you a true or false if it finds the match
         **@param haystack - the thing to be checked
         **@param needle - the check against
         **
         **/
-        var searchMatch = function (haystack, needle) {
+        /*var searchMatch = function (haystack, needle) {
             if (!needle) {
                 return true;
             }
             return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
         };
 
-        /**searches through the array to find matches and then fixes the list
+        /!**searches through the array to find matches and then fixes the list
         **@param list - gives the whole list to sort out
         **@param whatList - it gives you the list you need to search through
         **@param whatQuery - it gives the search bar its seperate search function.
-        **/
+        **!/
         $scope.search = function (list, whatList,whatQuery) {
             var query = "";
             switch(whatQuery){
@@ -210,8 +281,7 @@
                     $scope.pagedItems5 = $scope.groupToPagesChanged(emptyList);
                     break;
             }
-        };
-
+        };*/
 
          //Disables opt in button if there are no groupings to opt into.
          $scope.disableOptIn = function (index) {
@@ -362,7 +432,7 @@
                         $scope.currentPageOptOut--;
                     }
                     break;
-                case 'Page Opt In First':
+                case 'Page Opt Out First':
                     if ($scope.currentPageOptOut > 0) {
                         $scope.currentPageOptOut = 0;
                     }
