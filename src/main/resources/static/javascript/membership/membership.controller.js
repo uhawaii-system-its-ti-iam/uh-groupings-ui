@@ -12,7 +12,7 @@
      *@param dataUpdater
      *    Using the CRUD operators this would be the update of CRUD
      **/
-    function MembershipJsController($scope, $window, dataProvider, dataUpdater) {
+    function MembershipJsController($scope, $window, $filter, dataProvider, dataUpdater) {
 
         $scope.currentUsername = "";
         $scope.membersList = [];
@@ -152,16 +152,66 @@
                 $scope.init();
             }, cancelOutURL);
         };
+        /**gives you a true or false if it finds the match
+        **@param haystack - the thing to be checked
+        **@param needle - the check against
+        **
+        **/
+        var searchMatch = function (haystack, needle) {
+            if (!needle) {
+                return true;
+            }
+            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+        };
 
-         $scope.disableOptOut = function (index) {
-             for (var i = 0; i < $scope.optOutList.length; i++) {
-                 if ($scope.membersList[index].name === $scope.optOutList[i].name) {
-                    // console.log($scope.optOutList[i].name);
-                     return false;
-                 }
-             }
-             return true;
-         };
+        /**searches through the array to find matches and then fixes the list
+        **@param list - gives the whole list to sort out
+        **@param whatList - it gives you the list you need to search through
+        **@param whatQuery - it gives the search bar its seperate search function.
+        **/
+        $scope.search = function (list, whatList,whatQuery) {
+            var query = "";
+            switch(whatQuery){
+                case 'firstQuery':
+                    query = $scope.query1;
+                    break;
+                case 'secondQuery':
+                    query = $scope.query2;
+                    break;
+                case 'thirdQuery':
+                    query = $scope.query3;
+                    break;
+                case 'fourthQuery':
+                    query = $scope.query4;
+                    break;
+            }
+            $scope.filteredItems = [];
+            $scope.filteredItems = $filter('filter')(list, function (item) {
+                if(searchMatch(item.name, query)){
+                    return true;
+                }
+            });
+            console.log($scope.filteredItems);
+            page = 0;
+            // now group by pages
+            var emptyList = [];
+            switch(whatList){
+                case 'Paged_1':
+                    $scope.pagedItems1 = $scope.groupToPagesChanged(emptyList);
+                    break;
+                case 'Paged_3':
+                    $scope.pagedItems3 = $scope.groupToPagesChanged(emptyList);
+                    break;
+                case 'Paged_4':
+                    $scope.pagedItems4 = $scope.groupToPagesChanged(emptyList);
+                    break;
+
+                case 'Paged_5':
+                    $scope.pagedItems5 = $scope.groupToPagesChanged(emptyList);
+                    break;
+            }
+        };
+
 
          //Disables opt in button if there are no groupings to opt into.
          $scope.disableOptIn = function (index) {
@@ -181,6 +231,16 @@
          $scope.tooltipText = function (index) {
              return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
          };
+         $scope.disableOptOut = function (index) {
+             for (var i = 0; i < $scope.optOutList.length; i++) {
+                 if ($scope.membersList[index].name === $scope.optOutList[i].name) {
+                    // console.log($scope.optOutList[i].name);
+                     return false;
+                 }
+             }
+             return true;
+         };
+
         /**groups all the items to pages
          have separate arrays (hopefully)
          @param theList - .
@@ -197,6 +257,8 @@
             }
             return pagedList;
         };
+
+
 
         /**shows the range between the start and end
          *checks for negative numbers
