@@ -71,11 +71,11 @@
                 console.log(d);
                 //Assigns grouping name, folder directories and url used for api call.
                 for (var i = 0; i < d.groupingsOwned.length; i++) {
-                    temp[i] = d.groupingsOwned[i].path.substr(18).split(':');
+                    temp[i] = d.groupingsOwned[i].path.split(':');
                     var folder = '';
                     for (var j = 0; j < temp[i].length - 1; j++) {
                         folder += temp[i][j];
-                        if (j != temp[i].length - 2) {
+                        if (j != temp[i].length - 1) {
                             folder += "/";
                         }
                     }
