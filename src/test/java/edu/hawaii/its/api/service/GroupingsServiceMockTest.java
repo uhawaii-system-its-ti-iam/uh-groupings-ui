@@ -857,11 +857,46 @@ public class GroupingsServiceMockTest {
     @Test
     public void optOutPermissionTest() {
 
+        List<String> attributes = new ArrayList<>();
+
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, GROUPING_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+
+        boolean permission = groupingsService.optOutPermission(GROUPING_PATH);
+
+        assertEquals(permission, false);
+
+        attributes.add(OPT_OUT);
+
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, GROUPING_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+
+        permission = groupingsService.optOutPermission(GROUPING_PATH);
+
+        assertEquals(permission, true);
+
     }
 
     @Test
     public void optInPermissionTest() {
 
+        List<String> attributes = new ArrayList<>();
+
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, GROUPING_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+
+        boolean permission = groupingsService.optInPermission(GROUPING_PATH);
+
+        assertEquals(permission, false);
+
+        attributes.add(OPT_IN);
+
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, GROUPING_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+
+        permission = groupingsService.optInPermission(GROUPING_PATH);
+
+        assertEquals(permission, true);
     }
 
     @Test
@@ -1169,10 +1204,9 @@ public class GroupingsServiceMockTest {
 
         WsGetGrouperPrivilegesLiteResult gplr = new WsGetGrouperPrivilegesLiteResult();
         WsResultMeta resultMetadata = new WsResultMeta();
-        if(success) {
+        if (success) {
             resultMetadata.setResultCode(SUCCESS_ALLOWED);
-        }
-        else {
+        } else {
             resultMetadata.setResultCode(FAILURE);
         }
         gplr.setResultMetadata(resultMetadata);
@@ -1184,7 +1218,7 @@ public class GroupingsServiceMockTest {
         WsGetMembershipsResults membershipsResults = new WsGetMembershipsResults();
         WsMembership membership = new WsMembership();
         membership.setMembershipId("1234");
-        WsMembership[] memberships = new WsMembership[] {membership};
+        WsMembership[] memberships = new WsMembership[]{membership};
         membershipsResults.setWsMemberships(memberships);
 
         return membershipsResults;
