@@ -901,12 +901,49 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void groupHasAttributeTest() {
+        List<String> attributes = new ArrayList<>();
+        String attribute = "an attribute";
+
+        //group does not have the attribute
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, attribute, GROUPING_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+
+        boolean hasAttribute = groupingsService.groupHasAttribute(GROUPING_PATH, attribute);
+
+        assertFalse(hasAttribute);
+
+        //group has the attribute
+        attributes.add(attribute);
+
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, attribute, GROUPING_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+
+        hasAttribute = groupingsService.groupHasAttribute(GROUPING_PATH, attribute);
+
+        assertTrue(hasAttribute);
 
     }
 
     @Test
     public void groupingsInTest() {
 
+        List<String> attributes = new ArrayList<>();
+
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+
+        boolean groupingHasListserv = groupingsService.hasListserv(GROUPING_PATH);
+
+        assertEquals(groupingHasListserv, false);
+
+        attributes.add(LISTSERV);
+
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+
+        groupingHasListserv = groupingsService.hasListserv(GROUPING_PATH);
+
+        assertEquals(groupingHasListserv, true);
     }
 
     @Test
