@@ -926,6 +926,10 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void groupingsInTest() {
+    }
+
+    @Test
+    public void hasListservTest() {
 
         List<String> attributes = new ArrayList<>();
 
@@ -944,11 +948,6 @@ public class GroupingsServiceMockTest {
         groupingHasListserv = groupingsService.hasListserv(GROUPING_PATH);
 
         assertEquals(groupingHasListserv, true);
-    }
-
-    @Test
-    public void hasListservTest() {
-
     }
 
     @Test
@@ -994,6 +993,31 @@ public class GroupingsServiceMockTest {
     @Test
     public void checkSelfOptedTest() {
 
+        //user is not in group
+        given(gf.makeWsHasMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER)).willReturn(notMemberResults());
+
+        boolean selfOpted = groupingsService.checkSelfOpted(GROUPING_INCLUDE_PATH, RANDOM_USER);
+        assertFalse(selfOpted);
+
+        //user has not self opted
+        List<String> attributes = new ArrayList<>();
+
+        given(gf.makeWsHasMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER)).willReturn(isMemberResults());
+        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
+        given(gf.makeWsGetMembershipsResults(GROUPING_INCLUDE_PATH, RANDOM_USER_LOOKUP)).willReturn(makeWsGetMembershipsResults());
+        given(gf.makeWsGetAttributeAssignmentsResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, "1234"))
+                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+
+        selfOpted = groupingsService.checkSelfOpted(GROUPING_INCLUDE_PATH, RANDOM_USER);
+        assertFalse(selfOpted);
+
+        //user has self opted
+        attributes.add(SELF_OPTED);
+        given(gf.makeWsGetAttributeAssignmentsResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, "1234"))
+                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+
+        selfOpted = groupingsService.checkSelfOpted(GROUPING_INCLUDE_PATH, RANDOM_USER);
+        assertTrue(selfOpted);
     }
 
     @Test
