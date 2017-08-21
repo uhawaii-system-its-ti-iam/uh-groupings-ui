@@ -24,9 +24,10 @@
                         <div class="panel-heading" style="border: 0;padding: 5px;">
                             <div class="form-group">
                                 <h3 class="col-md-4" style="margin-top: 5px">Groupings</h3>
-
+                                <!--HERE-->
                                 <div align="right" style="margin-top: 10px">
-                                    <input type="text" ng-model="searchFor" placeholder="Search Groupings..."/>
+                                    <input placeholder="Type to filter Groupings..." type="text"
+                                    ng-model="query1" ng-change= "search(membersList, 'Paged_1', 'firstQuery')" id = "members"/>
                                 </div>
                             </div>
                         </div>
@@ -39,7 +40,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="l in ownedList | filter:searchFor">
+                            <tr ng-repeat="l in ownedList ">
 
                                 <th>
                                     {{l.name}} <span ng-click="showData($index)"
