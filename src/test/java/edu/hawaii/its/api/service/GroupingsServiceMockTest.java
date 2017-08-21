@@ -2,13 +2,16 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+
 import edu.internet2.middleware.grouperClient.ws.beans.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -127,6 +130,12 @@ public class GroupingsServiceMockTest {
     @Value("$groupings.api.stem}")
     private String STEM;
 
+    @Value("${groupings.api.test.usernames}")
+    private String[] USERNAMES;
+
+    @Value("${groupings.api.test.names}")
+    private String[] NAMES;
+
     private static final String GROUPING = "grouping";
     private static final String GROUPING_PATH = "path_to:" + GROUPING;
     private static final String GROUPING_INCLUDE_PATH = GROUPING_PATH + ":include";
@@ -145,8 +154,7 @@ public class GroupingsServiceMockTest {
     private final WsSubjectLookup EVERY_ENTITY_LOOKUP = new WsSubjectLookup(null, null, EVERY_ENTITY);
 
     private MockGrouperDatabase database;
-
-//    private MockGrouperDatabase database = makeGrouperDatabase();
+    private Person[] users = new Person[6];
 
     @Mock
     private GrouperFactoryService gf;
@@ -158,6 +166,10 @@ public class GroupingsServiceMockTest {
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
+
+        for(int i = 0; i < users.length; i ++) {
+            users[i] = new Person(NAMES[i], "uuid", USERNAMES[i]);
+        }
 
         database = makeGrouperDatabase();
     }
@@ -1307,14 +1319,32 @@ public class GroupingsServiceMockTest {
     private MockGrouperDatabase makeGrouperDatabase() {
         MockGrouperDatabase database = new MockGrouperDatabase();
         Group[] groups = new Group[5];
-        for (int i = 0; i < groups.length; i ++) {
+        for (int i = 0; i < groups.length; i++) {
             groups[i] = new Group();
         }
         Person randomPerson = new Person("Random Person", "uuid", RANDOM_USER);
         Person ownerPerson = new Person("Owner Person", "uuid", OWNER_USER);
 
         groups[0].addMember(randomPerson);
+        groups[0].addMember(users[0]);
+        groups[0].addMember(users[1]);
+
+        groups[1].addMember(users[2]);
+        groups[1].addMember(users[3]);
+
+        groups[2].addMember(users[2]);
+        groups[2].addMember(users[3]);
+        groups[2].addMember(users[4]);
+        groups[2].addMember(users[5]);
+
+        groups[3].addMember(randomPerson);
+        groups[3].addMember(users[0]);
+        groups[3].addMember(users[1]);
+        groups[3].addMember(users[4]);
+        groups[3].addMember(users[5]);
+
         groups[4].addMember(ownerPerson);
+        groups[4].addMember(users[0]);
 
         Grouping grouping = new Grouping(GROUPING_PATH);
         grouping.setInclude(groups[0]);
