@@ -1060,11 +1060,6 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
-    public void extractFirstMembershipIDTest() {
-
-    }
-
-    @Test
     public void groupOptOutPermissionTest() {
 
     }
