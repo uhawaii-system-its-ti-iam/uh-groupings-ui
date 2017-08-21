@@ -767,7 +767,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         return inGroup(grouping + OWNERS, username);
     }
 
-    private boolean isAdmin(String username) {
+    @Override
+    public boolean isAdmin(String username) {
         return inGroup(ADMINS, username);
     }
 

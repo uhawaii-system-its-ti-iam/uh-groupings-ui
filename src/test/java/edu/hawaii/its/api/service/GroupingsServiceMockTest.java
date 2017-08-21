@@ -21,6 +21,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.booleanThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
@@ -1023,16 +1024,34 @@ public class GroupingsServiceMockTest {
     @Test
     public void inGroupTest() {
 
+        //user is not in group
+        given(gf.makeWsHasMemberResults(GROUPING_PATH, RANDOM_USER)).willReturn(notMemberResults());
+
+        assertFalse(groupingsService.inGroup(GROUPING_PATH, RANDOM_USER));
+
+        //user is in group
+        given(gf.makeWsHasMemberResults(GROUPING_PATH, RANDOM_USER)).willReturn(isMemberResults());
+
+        assertTrue(groupingsService.inGroup(GROUPING_PATH, RANDOM_USER));
     }
 
     @Test
     public void isOwnerTest() {
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
+
+        assertFalse(groupingsService.isOwner(GROUPING_PATH, RANDOM_USER));
+        assertTrue(groupingsService.isOwner(GROUPING_PATH, OWNER_USER));
 
     }
 
     @Test
     public void isAdminTest() {
+        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
 
+        assertFalse(groupingsService.isAdmin(RANDOM_USER));
+        assertTrue(groupingsService.isAdmin(ADMIN_USER));
     }
 
     @Test
