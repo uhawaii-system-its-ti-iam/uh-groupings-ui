@@ -1,7 +1,6 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
@@ -145,6 +144,8 @@ public class GroupingsServiceMockTest {
     private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
     private final WsSubjectLookup EVERY_ENTITY_LOOKUP = new WsSubjectLookup(null, null, EVERY_ENTITY);
 
+    private MockGrouperDatabase database;
+
     @Mock
     private GrouperFactoryService gf;
 
@@ -155,6 +156,8 @@ public class GroupingsServiceMockTest {
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
+
+        database = makeGrouperDatabase();
 
     }
 
@@ -1297,6 +1300,37 @@ public class GroupingsServiceMockTest {
         membershipsResults.setWsMemberships(memberships);
 
         return membershipsResults;
+
+    }
+
+    private MockGrouperDatabase makeGrouperDatabase() {
+        MockGrouperDatabase database = new MockGrouperDatabase();
+        Group[] groups = new Group[5];
+        Person randomPerson = new Person("Random Person", "uuid", RANDOM_USER);
+        Person ownerPerson = new Person("Owner Person", "uuid", OWNER_USER);
+
+        groups[0].addMember(randomPerson);
+        groups[4].addMember(ownerPerson);
+
+        Grouping grouping = new Grouping(GROUPING_PATH);
+        grouping.setInclude(groups[0]);
+        grouping.setExclude(groups[1]);
+        grouping.setBasis(groups[2]);
+        grouping.setComposite(groups[3]);
+        grouping.setOwners(groups[4]);
+        grouping.setListservOn(true);
+        grouping.setOptInOn(true);
+        grouping.setOptOutOn(true);
+
+        Grouping admin = new Grouping(ADMINS);
+        Group adminComposite = new Group();
+        Person adminPerson = new Person("Admin Person", "uuid", ADMIN_USER);
+        adminComposite.addMember(adminPerson);
+
+        database.addGrouping(grouping);
+        database.addGrouping(admin);
+
+        return database;
     }
 
 }
