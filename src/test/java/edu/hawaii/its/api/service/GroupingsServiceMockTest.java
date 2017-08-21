@@ -146,6 +146,8 @@ public class GroupingsServiceMockTest {
 
     private MockGrouperDatabase database;
 
+//    private MockGrouperDatabase database = makeGrouperDatabase();
+
     @Mock
     private GrouperFactoryService gf;
 
@@ -158,7 +160,6 @@ public class GroupingsServiceMockTest {
         MockitoAnnotations.initMocks(this);
 
         database = makeGrouperDatabase();
-
     }
 
     @Test
@@ -1306,6 +1307,9 @@ public class GroupingsServiceMockTest {
     private MockGrouperDatabase makeGrouperDatabase() {
         MockGrouperDatabase database = new MockGrouperDatabase();
         Group[] groups = new Group[5];
+        for (int i = 0; i < groups.length; i ++) {
+            groups[i] = new Group();
+        }
         Person randomPerson = new Person("Random Person", "uuid", RANDOM_USER);
         Person ownerPerson = new Person("Owner Person", "uuid", OWNER_USER);
 
