@@ -2,7 +2,7 @@ package edu.hawaii.its.api.type;
 
 import java.util.List;
 
-public class MyGroupings {
+public class GroupingAssignment {
     List<Grouping> groupingsIn;
     List<Grouping> groupingsOwned;
     List<Grouping> groupingsOptedOutOf;

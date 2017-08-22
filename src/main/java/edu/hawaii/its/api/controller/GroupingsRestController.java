@@ -2,7 +2,7 @@ package edu.hawaii.its.api.controller;
 
 import javax.annotation.PostConstruct;
 
-import edu.hawaii.its.api.type.AdminInfo;
+import edu.hawaii.its.api.type.AdminListsHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,7 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import edu.hawaii.its.api.service.GroupingsService;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.MyGroupings;
+import edu.hawaii.its.api.type.GroupingAssignment;
 
 import java.util.List;
 
@@ -230,7 +230,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{username}/myGroupings",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username) {
+    public ResponseEntity<GroupingAssignment> myGroupings(@PathVariable String username) {
         logger.info("Entered REST myGroupings...");
         return ResponseEntity
                 .ok()
@@ -374,7 +374,7 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{username}/adminInfo",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AdminInfo> adminInfo(@PathVariable String username) {
+    public ResponseEntity<AdminListsHolder> adminInfo(@PathVariable String username) {
         logger.info("Entered REST adminInfo...");
         return ResponseEntity
                 .ok()

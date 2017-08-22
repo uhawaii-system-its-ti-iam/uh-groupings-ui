@@ -32,7 +32,7 @@ public interface GroupingsService {
 
     public Grouping getGrouping(String grouping, String username);
 
-    public MyGroupings getMyGroupings(String username);
+    public GroupingAssignment getMyGroupings(String username);
 
     public List<GroupingsServiceResult> optIn(String username, String grouping);
 
@@ -68,7 +68,7 @@ public interface GroupingsService {
 
     public boolean optInPermission(String grouping);
 
-    public AdminInfo adminInfo(String username);
+    public AdminListsHolder adminInfo(String username);
 
     public String parentGroupingPath(String group);
 

@@ -153,7 +153,6 @@ public class GroupingsServiceMockTest {
     private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
     private final WsSubjectLookup EVERY_ENTITY_LOOKUP = new WsSubjectLookup(null, null, EVERY_ENTITY);
 
-    private MockGrouperDatabase database;
     private Person[] users = new Person[6];
 
     @Mock
@@ -171,7 +170,6 @@ public class GroupingsServiceMockTest {
             users[i] = new Person(NAMES[i], "uuid", USERNAMES[i]);
         }
 
-        database = makeGrouperDatabase();
     }
 
     @Test
@@ -1176,10 +1174,6 @@ public class GroupingsServiceMockTest {
     }
 
     /////////////////////////////////////////////////////
-    //test pieces
-    //////////////////////////////////////////////////////////
-
-    /////////////////////////////////////////////////////
     //factory methods
     //////////////////////////////////////////////////////////
 
@@ -1315,56 +1309,4 @@ public class GroupingsServiceMockTest {
         return membershipsResults;
 
     }
-
-    private MockGrouperDatabase makeGrouperDatabase() {
-        MockGrouperDatabase database = new MockGrouperDatabase();
-        Group[] groups = new Group[5];
-        for (int i = 0; i < groups.length; i++) {
-            groups[i] = new Group();
-        }
-        Person randomPerson = new Person("Random Person", "uuid", RANDOM_USER);
-        Person ownerPerson = new Person("Owner Person", "uuid", OWNER_USER);
-
-        groups[0].addMember(randomPerson);
-        groups[0].addMember(users[0]);
-        groups[0].addMember(users[1]);
-
-        groups[1].addMember(users[2]);
-        groups[1].addMember(users[3]);
-
-        groups[2].addMember(users[2]);
-        groups[2].addMember(users[3]);
-        groups[2].addMember(users[4]);
-        groups[2].addMember(users[5]);
-
-        groups[3].addMember(randomPerson);
-        groups[3].addMember(users[0]);
-        groups[3].addMember(users[1]);
-        groups[3].addMember(users[4]);
-        groups[3].addMember(users[5]);
-
-        groups[4].addMember(ownerPerson);
-        groups[4].addMember(users[0]);
-
-        Grouping grouping = new Grouping(GROUPING_PATH);
-        grouping.setInclude(groups[0]);
-        grouping.setExclude(groups[1]);
-        grouping.setBasis(groups[2]);
-        grouping.setComposite(groups[3]);
-        grouping.setOwners(groups[4]);
-        grouping.setListservOn(true);
-        grouping.setOptInOn(true);
-        grouping.setOptOutOn(true);
-
-        Grouping admin = new Grouping(ADMINS);
-        Group adminComposite = new Group();
-        Person adminPerson = new Person("Admin Person", "uuid", ADMIN_USER);
-        adminComposite.addMember(adminPerson);
-
-        database.addGrouping(grouping);
-        database.addGrouping(admin);
-
-        return database;
-    }
-
 }

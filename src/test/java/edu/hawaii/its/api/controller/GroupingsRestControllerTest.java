@@ -130,8 +130,8 @@ public class GroupingsRestControllerTest {
     }
 
     //Test data.
-    private MyGroupings myGroupings() {
-        MyGroupings mg = new MyGroupings();
+    private GroupingAssignment myGroupings() {
+        GroupingAssignment mg = new GroupingAssignment();
         List<Grouping> groupings = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
@@ -260,7 +260,7 @@ public class GroupingsRestControllerTest {
                 .getResponse()
                 .getContentAsString();
 
-        MyGroupings mg = om.readValue(mvcResult, MyGroupings.class);
+        GroupingAssignment mg = om.readValue(mvcResult, GroupingAssignment.class);
 
         Assert.assertTrue(mg.getGroupingsIn().get(0).getName().equals(groupings.get(0).getName()));
         Assert.assertTrue(mg.getGroupingsIn().get(0).getPath().equals(groupings.get(0).getPath()));

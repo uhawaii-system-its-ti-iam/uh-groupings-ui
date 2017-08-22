@@ -202,7 +202,7 @@ public class TestGroupingsService {
 
     @Test
     public void adminInfoTest() {
-        AdminInfo info = gs.adminInfo(username[0]);
+        AdminListsHolder info = gs.adminInfo(username[0]);
         assertNotNull(info);
         assertEquals(info.getAllGroupings().size(), 0);
         assertEquals(info.getAdminGroup().getMembers().size(), 0);
@@ -347,10 +347,10 @@ public class TestGroupingsService {
 
     @Test
     public void groupingsInTest() {
-        MyGroupings myGroupings = gs.getMyGroupings(username[0]);
+        GroupingAssignment groupingAssignment = gs.getMyGroupings(username[0]);
         boolean inGrouping = false;
 
-        for (Grouping grouping : myGroupings.getGroupingsIn()) {
+        for (Grouping grouping : groupingAssignment.getGroupingsIn()) {
             if (grouping.getPath().contains(GROUPING)) {
                 inGrouping = true;
                 break;
@@ -359,8 +359,8 @@ public class TestGroupingsService {
         assertTrue(inGrouping);
 
         inGrouping = false;
-        myGroupings = gs.getMyGroupings(username[4]);
-        for (Grouping grouping : myGroupings.getGroupingsIn()) {
+        groupingAssignment = gs.getMyGroupings(username[4]);
+        for (Grouping grouping : groupingAssignment.getGroupingsIn()) {
             if (grouping.getPath().contains(GROUPING)) {
                 inGrouping = true;
                 break;
@@ -371,10 +371,10 @@ public class TestGroupingsService {
 
     @Test
     public void groupingsOwnedTest() {
-        MyGroupings myGroupings = gs.getMyGroupings(username[0]);
+        GroupingAssignment groupingAssignment = gs.getMyGroupings(username[0]);
         boolean ownsGrouping = false;
 
-        for (Grouping grouping : myGroupings.getGroupingsOwned()) {
+        for (Grouping grouping : groupingAssignment.getGroupingsOwned()) {
             if (grouping.getPath().contains(GROUPING)) {
                 ownsGrouping = true;
                 break;
@@ -383,8 +383,8 @@ public class TestGroupingsService {
         assertTrue(ownsGrouping);
 
         ownsGrouping = false;
-        myGroupings = gs.getMyGroupings(username[4]);
-        for (Grouping grouping : myGroupings.getGroupingsOwned()) {
+        groupingAssignment = gs.getMyGroupings(username[4]);
+        for (Grouping grouping : groupingAssignment.getGroupingsOwned()) {
             if (grouping.getPath().contains(GROUPING)) {
                 ownsGrouping = true;
                 break;
@@ -395,10 +395,10 @@ public class TestGroupingsService {
 
     @Test
     public void groupingsToOptTest() {
-        MyGroupings myGroupings = gs.getMyGroupings(username[0]);
+        GroupingAssignment groupingAssignment = gs.getMyGroupings(username[0]);
 
         boolean canOptIn = false;
-        for (Grouping grouping : myGroupings.getGroupingsToOptInTo()) {
+        for (Grouping grouping : groupingAssignment.getGroupingsToOptInTo()) {
             if (grouping.getPath().contains(GROUPING)) {
                 canOptIn = true;
                 break;
@@ -407,7 +407,7 @@ public class TestGroupingsService {
         assertFalse(canOptIn);
 
         boolean canOptOut = false;
-        for (Grouping grouping : myGroupings.getGroupingsToOptOutOf()) {
+        for (Grouping grouping : groupingAssignment.getGroupingsToOptOutOf()) {
             if (grouping.getPath().contains(GROUPING)) {
                 canOptOut = true;
                 break;

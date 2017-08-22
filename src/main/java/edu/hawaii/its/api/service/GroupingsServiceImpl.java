@@ -301,18 +301,18 @@ public class GroupingsServiceImpl implements GroupingsService {
      * has opted out of
      */
     @Override
-    public MyGroupings getMyGroupings(String username) {
-        MyGroupings myGroupings = new MyGroupings();
+    public GroupingAssignment getMyGroupings(String username) {
+        GroupingAssignment groupingAssignment = new GroupingAssignment();
         List<String> groupPaths = getGroupPaths(username);
 
-        myGroupings.setGroupingsIn(groupingsIn(username, groupPaths));
-        myGroupings.setGroupingsOwned(groupingsOwned(groupPaths));
-        myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
-        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username, groupPaths));
-        myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username, groupPaths));
-        myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username, groupPaths));
+        groupingAssignment.setGroupingsIn(groupingsIn(username, groupPaths));
+        groupingAssignment.setGroupingsOwned(groupingsOwned(groupPaths));
+        groupingAssignment.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
+        groupingAssignment.setGroupingsToOptOutOf(groupingsToOptOutOf(username, groupPaths));
+        groupingAssignment.setGroupingsOptedOutOf(groupingsOptedOutOf(username, groupPaths));
+        groupingAssignment.setGroupingsOptedInTo(groupingsOptedInto(username, groupPaths));
 
-        return myGroupings;
+        return groupingAssignment;
     }
 
     /**
@@ -580,8 +580,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the groupings in the database
      */
     @Override
-    public AdminInfo adminInfo(String username) {
-        AdminInfo info = new AdminInfo();
+    public AdminListsHolder adminInfo(String username) {
+        AdminListsHolder info = new AdminListsHolder();
         List<Grouping> groupings;
 
         if (isAdmin(username)) {
