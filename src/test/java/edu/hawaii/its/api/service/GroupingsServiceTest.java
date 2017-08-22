@@ -265,4 +265,41 @@ public class GroupingsServiceTest {
         assertEquals(action, gsr.getAction());
         assertEquals(resultCode, gsr.getResultCode());
     }
+
+    @Test
+    public void extractFirstMembershipIDTest() {
+        WsGetMembershipsResults membershipsResults = null;
+        String firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "");
+
+        membershipsResults = new WsGetMembershipsResults();
+        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "");
+
+
+        WsMembership[] memberships = null;
+        membershipsResults.setWsMemberships(memberships);
+        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "");
+
+
+        memberships = new WsMembership[] {null};
+        membershipsResults.setWsMemberships(memberships);
+        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "");
+
+        WsMembership membership = new WsMembership();
+        memberships = new WsMembership[] {membership};
+        membershipsResults.setWsMemberships(memberships);
+        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "");
+
+        membership.setMembershipId("1234");
+        memberships = new WsMembership[] {membership};
+        membershipsResults.setWsMemberships(memberships);
+        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "1234");
+
+
+    }
 }
