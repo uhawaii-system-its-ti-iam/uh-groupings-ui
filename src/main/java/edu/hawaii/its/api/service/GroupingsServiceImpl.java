@@ -301,7 +301,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * has opted out of
      */
     @Override
-    public GroupingAssignment getMyGroupings(String username) {
+    public GroupingAssignment getGroupingAssignment(String username) {
         GroupingAssignment groupingAssignment = new GroupingAssignment();
         List<String> groupPaths = getGroupPaths(username);
 

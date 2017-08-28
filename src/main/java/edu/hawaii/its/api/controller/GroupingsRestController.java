@@ -227,14 +227,14 @@ public class GroupingsRestController {
      * Groupings that the user can opt into
      * Groupings that the user can opt out of
      */
-    @RequestMapping(value = "/{username}/myGroupings",
+    @RequestMapping(value = "/{username}/groupingAssignment",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingAssignment> myGroupings(@PathVariable String username) {
-        logger.info("Entered REST myGroupings...");
+    public ResponseEntity<GroupingAssignment> groupingAssignment(@PathVariable String username) {
+        logger.info("Entered REST GroupingAssingment...");
         return ResponseEntity
                 .ok()
-                .body(gs.getMyGroupings(username));
+                .body(gs.getGroupingAssignment(username));
     }
 
     /**

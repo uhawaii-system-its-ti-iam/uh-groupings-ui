@@ -204,8 +204,8 @@ public class TestGroupingsRestController {
     }
 
     @Test
-    public void myGroupingsTest() {
-        GroupingAssignment groupings = gc.myGroupings(tst[0]).getBody();
+    public void groupingAssignmentTest() {
+        GroupingAssignment groupings = gc.groupingAssignment(tst[0]).getBody();
 
         boolean inGrouping = false;
         for (Grouping grouping : groupings.getGroupingsIn()) {
@@ -247,7 +247,7 @@ public class TestGroupingsRestController {
 
     @Test
     public void myGroupingsTest2() {
-        GroupingAssignment groupings = gc.myGroupings(tst[4]).getBody();
+        GroupingAssignment groupings = gc.groupingAssignment(tst[4]).getBody();
 
         boolean inGrouping = false;
         for (Grouping grouping : groupings.getGroupingsIn()) {
@@ -273,10 +273,10 @@ public class TestGroupingsRestController {
         boolean optedIn = false;
         boolean optedOut = false;
 
-        GroupingAssignment tst4Groupings = gc.myGroupings(tst[4]).getBody();
+        GroupingAssignment tst4Groupings = gc.groupingAssignment(tst[4]).getBody();
         assertEquals(tst4Groupings.getGroupingsOptedInTo().size(), 0);
         gc.optIn(GROUPING, tst[4]);
-        tst4Groupings = gc.myGroupings(tst[4]).getBody();
+        tst4Groupings = gc.groupingAssignment(tst[4]).getBody();
         for (Grouping grouping : tst4Groupings.getGroupingsOptedInTo()) {
             if (grouping.getPath().contains(this.GROUPING)) {
                 optedIn = true;
@@ -284,10 +284,10 @@ public class TestGroupingsRestController {
         }
         assertTrue(optedIn);
 
-        GroupingAssignment tst5Groupings = gc.myGroupings(tst[5]).getBody();
+        GroupingAssignment tst5Groupings = gc.groupingAssignment(tst[5]).getBody();
         assertEquals(tst5Groupings.getGroupingsOptedOutOf().size(), 0);
         gc.optOut(GROUPING, tst[5]);
-        tst5Groupings = gc.myGroupings(tst[5]).getBody();
+        tst5Groupings = gc.groupingAssignment(tst[5]).getBody();
         for (Grouping grouping : tst5Groupings.getGroupingsOptedOutOf()) {
             if (grouping.getPath().contains(this.GROUPING)) {
                 optedOut = true;
@@ -374,7 +374,7 @@ public class TestGroupingsRestController {
 
     @Test
     public void aaronTest() {
-        GroupingAssignment aaronsGroupings = gc.myGroupings(STUDENT_TEST_USERNAME).getBody();
+        GroupingAssignment aaronsGroupings = gc.groupingAssignment(STUDENT_TEST_USERNAME).getBody();
         assertNotNull(aaronsGroupings);
     }
 
@@ -398,17 +398,18 @@ public class TestGroupingsRestController {
 
     }
 
-    @Test
-    public void getAdminInfoTest() {
-        AdminListsHolder infoFail = gc.adminInfo(tst[0]).getBody();
-
-        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
-        assertEquals(infoFail.getAllGroupings().size(), 0);
-
-        AdminListsHolder infoSuccess = gc.adminInfo(API_ACCOUNT).getBody();
-
-        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(API_ACCOUNT));
-    }
+    //todo update for Grouper reconfiguration
+//    @Test
+//    public void getAdminInfoTest() {
+//        AdminListsHolder infoFail = gc.adminInfo(tst[0]).getBody();
+//
+//        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
+//        assertEquals(infoFail.getAllGroupings().size(), 0);
+//
+//        AdminListsHolder infoSuccess = gc.adminInfo(API_ACCOUNT).getBody();
+//
+//        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(API_ACCOUNT));
+//    }
 
     @Test
     public void addDeleteAdminTest() {

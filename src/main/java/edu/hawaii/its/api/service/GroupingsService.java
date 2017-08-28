@@ -32,7 +32,7 @@ public interface GroupingsService {
 
     public Grouping getGrouping(String grouping, String username);
 
-    public GroupingAssignment getMyGroupings(String username);
+    public GroupingAssignment getGroupingAssignment(String username);
 
     public List<GroupingsServiceResult> optIn(String username, String grouping);
 

@@ -347,7 +347,7 @@ public class TestGroupingsService {
 
     @Test
     public void groupingsInTest() {
-        GroupingAssignment groupingAssignment = gs.getMyGroupings(username[0]);
+        GroupingAssignment groupingAssignment = gs.getGroupingAssignment(username[0]);
         boolean inGrouping = false;
 
         for (Grouping grouping : groupingAssignment.getGroupingsIn()) {
@@ -359,7 +359,7 @@ public class TestGroupingsService {
         assertTrue(inGrouping);
 
         inGrouping = false;
-        groupingAssignment = gs.getMyGroupings(username[4]);
+        groupingAssignment = gs.getGroupingAssignment(username[4]);
         for (Grouping grouping : groupingAssignment.getGroupingsIn()) {
             if (grouping.getPath().contains(GROUPING)) {
                 inGrouping = true;
@@ -371,7 +371,7 @@ public class TestGroupingsService {
 
     @Test
     public void groupingsOwnedTest() {
-        GroupingAssignment groupingAssignment = gs.getMyGroupings(username[0]);
+        GroupingAssignment groupingAssignment = gs.getGroupingAssignment(username[0]);
         boolean ownsGrouping = false;
 
         for (Grouping grouping : groupingAssignment.getGroupingsOwned()) {
@@ -383,7 +383,7 @@ public class TestGroupingsService {
         assertTrue(ownsGrouping);
 
         ownsGrouping = false;
-        groupingAssignment = gs.getMyGroupings(username[4]);
+        groupingAssignment = gs.getGroupingAssignment(username[4]);
         for (Grouping grouping : groupingAssignment.getGroupingsOwned()) {
             if (grouping.getPath().contains(GROUPING)) {
                 ownsGrouping = true;
@@ -395,7 +395,7 @@ public class TestGroupingsService {
 
     @Test
     public void groupingsToOptTest() {
-        GroupingAssignment groupingAssignment = gs.getMyGroupings(username[0]);
+        GroupingAssignment groupingAssignment = gs.getGroupingAssignment(username[0]);
 
         boolean canOptIn = false;
         for (Grouping grouping : groupingAssignment.getGroupingsToOptInTo()) {

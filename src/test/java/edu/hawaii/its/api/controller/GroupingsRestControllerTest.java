@@ -251,10 +251,10 @@ public class GroupingsRestControllerTest {
             groupings.get(i).setPath("grouping" + i);
         }
 
-        given(groupingsService.getMyGroupings(username))
+        given(groupingsService.getGroupingAssignment(username))
                 .willReturn(myGroupings());
 
-        String mvcResult = mockMvc.perform(get("/api/groupings/username/myGroupings"))
+        String mvcResult = mockMvc.perform(get("/api/groupings/username/groupingAssignment"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
