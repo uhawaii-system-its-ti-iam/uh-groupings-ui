@@ -41,6 +41,9 @@
         $scope.gap=2;
         $scope.itemsPerPage = 25;
         //figure out how much pages to paginate. so far lets do one
+        $scope.pagedItemsOwned = [];
+        $scope.currentPageOwned = 0;
+
         $scope.pagedItemsInclude = [];
         $scope.currentPageInclude = 0;
 
@@ -85,6 +88,7 @@
                         'url': d.groupingsOwned[i].path
                     });
                 }
+                $scope.pagedItemsOwned = $scope.groupToPages($scope.ownedList, $scope.pagedItemsOwned);
                 $scope.loading = false;
             }, groupingsOwned);
         };
@@ -454,6 +458,28 @@
 
     $scope.currentPage = function(pages){
         switch(pages){
+            case 'Owned Next':
+                if ($scope.currentPageOwned < $scope.pagedItemsOwned.length - 1) {
+                    $scope.currentPageOwned = $scope.currentPageOwned + 1;
+                }
+                break;
+            case 'Owned Set':
+                $scope.currentPageOwned = this.n;
+                break;
+            case 'Owned Prev':
+                console.log("Go back");
+                if ( $scope.currentPageOwned > 0) {
+                    $scope.currentPageOwned--;
+                }
+                break;
+            case 'Owned First':
+                $scope.currentPageOwned = 0;
+                break;
+            case 'Owned Last':
+                if ($scope.currentPageOwned>=0) {
+                    $scope.currentPageOwned = $scope.pagedItemsOwned.length - 1;
+                }
+                break;
             case 'Include Next':
                 if ($scope.currentPageInclude < $scope.pagedItemsInclude.length - 1) {
                     $scope.currentPageInclude = $scope.currentPageInclude + 1;

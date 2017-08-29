@@ -11,7 +11,8 @@
         <div class='col-xs-offset-1 col-xs-10'>
 
 
-            <h1 class="text-center">Groupings</h1>
+            <h1 class="text-center">Groupings Owned</h1>
+            <h4 class="text-center">Owner can modify the groupings that they own.</h4>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
                 <div ng-show="!showGrouping">
@@ -39,7 +40,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="l in ownedList | filter:searchFor">
+                            <tr ng-repeat="l in pagedItemsOwned[currentPageOwned]">
 
                                 <th>
                                     {{l.name}} <span ng-click="showData($index)"
@@ -48,6 +49,25 @@
                                 <th>{{l.folder}}</th>
                             </tr>
                             </tbody>
+                            <tfoot>
+                            <!-- Top part of the two parts  -->
+                            <td colspan="6">
+                                <ul class = "pagination pull-right" >
+                                    <li ng-class="{disabled: (currentPageOwned) == 0 }">
+                                        <a href="" ng-click="currentPage('Owned Prev')" >« Prev</a>
+                                    </li>
+                                    <li ng-repeat="n in range(pagedItemsOwned.length, currentPageOwned - gap, currentPageOwned + gap + 1)"
+                                        ng-class="{active: n == currentPageOwned}"
+
+                                        ng-click="currentPage('Owned Set')"
+                                            ><a href="" ng-bind="n + 1" >1</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageOwned) == pagedItemsOwned.length - 1 }">
+                                        <a href="" ng-click="currentPage('Owned Next')">Next »</a>
+                                    </li>
+                                </ul>
+                            </td>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
