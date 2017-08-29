@@ -400,24 +400,7 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView addGrouping() {
         return new RedirectView(requestForm);
-        /**
-         * TODO for Grouper update
-         * create Grouping
-         * create Grouping:basis
-         * create Grouping:include
-         * create Grouping:exclude
-         * create Grouping:basis+include  // this should be the complement of Grouping:exclude
-         * create Grouping:owners
-         *
-         * add all owners to Grouping:owners
-         * add Grouping:owners to uh-settings:groupingOwners
-         *
-         * assign privileges to Grouping:owners
-         *
-         * assign privileges to uh-settings:groupingAdmins
-         *
-         * set last-modified:yyyymmddThhmm on Grouping
-         */
+        //todo change to real method when it is ready for testing
     }
 
     /**
@@ -435,4 +418,5 @@ public class GroupingsRestController {
     public RedirectView deleteGrouping() {
         return new RedirectView(requestForm);
     }
+    //todo change to real method when it is ready for testing
 }

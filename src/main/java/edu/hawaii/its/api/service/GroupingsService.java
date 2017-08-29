@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface GroupingsService {
 
+    public List<GroupingsServiceResult> addGrouping(String username, String path, Group basis, Group include, Group exclude, Group owners);
+
+    public List<GroupingsServiceResult> deleteGrouping(String username, String groupingPath);
+
     public boolean hasListserv(String grouping);
 
     public List<Grouping> groupingsIn(String username, List<String> groupPaths);

@@ -2,10 +2,13 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.util.Dates;
+
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +54,9 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     @Value("${groupings.api.trio}")
     private String TRIO;
+
+    @Value("${groupings.api.purge_grouping}")
+    private String PURGE_GROUPING;
 
     @Value("${groupings.api.self_opted}")
     private String SELF_OPTED;
@@ -131,6 +137,58 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     private WsStemLookup STEM_LOOKUP = gf.makeWsStemLookup(STEM, null);
+
+    @Override
+    public List<GroupingsServiceResult> addGrouping(String username, String path, Group basis, Group include, Group exclude, Group owners) {
+        List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
+
+
+
+        //todo create Grouping skelleton
+        /**
+         * create Grouping
+         * create Grouping:basis
+         * create Grouping:include
+         * create Grouping:exclude
+         * create Grouping:basis+include  // this should be the complement of Grouping:exclude
+         * create Grouping:owners
+         *
+         * add all owners to Grouping:owners
+         * add Grouping:owners to uh-settings:groupingOwners
+         *
+         * assign privileges to Grouping:owners
+         *
+         * assign privileges to uh-settings:groupingAdmins
+         *
+         * set last-modified:yyyymmddThhmm on Grouping
+         */
+
+        return addGroupingResults;
+    }
+
+    public GroupingsServiceResult addGroup(Group group) {
+        GroupingsServiceResult addGroupResult = new GroupingsServiceResult();
+        //todo push grouping to database/server
+        return addGroupResult;
+    }
+
+    @Override
+    public List<GroupingsServiceResult> deleteGrouping(String username, String groupingPath) {
+        List<GroupingsServiceResult> deleteGroupingResults = new ArrayList<>();
+
+        if(isAdmin(username)) {
+            deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
+            deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
+        }
+        else {
+            GroupingsServiceResult failureResult = new GroupingsServiceResult();
+            failureResult.setAction("delete grouping" + groupingPath);
+            failureResult.setResultCode(FAILURE);
+
+            deleteGroupingResults.add(failureResult);
+        }
+        return deleteGroupingResults;
+    }
 
     /**
      * gives a user ownership permissions for a Grouping
