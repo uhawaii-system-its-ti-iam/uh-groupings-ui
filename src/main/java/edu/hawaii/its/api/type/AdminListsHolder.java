@@ -3,15 +3,15 @@ package edu.hawaii.its.api.type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminInfo {
+public class AdminListsHolder {
     List<Grouping> allGroupings = new ArrayList<>();
     Group adminGroup = new EmptyGroup();
 
-    public AdminInfo() {
+    public AdminListsHolder() {
         //empty
     }
 
-    public AdminInfo(List<Grouping> allGroupings, Group adminGroup) {
+    public AdminListsHolder(List<Grouping> allGroupings, Group adminGroup) {
         this.allGroupings = allGroupings;
         this.adminGroup = adminGroup;
     }

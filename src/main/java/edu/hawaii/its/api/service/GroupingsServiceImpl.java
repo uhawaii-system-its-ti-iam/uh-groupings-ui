@@ -301,18 +301,18 @@ public class GroupingsServiceImpl implements GroupingsService {
      * has opted out of
      */
     @Override
-    public MyGroupings getMyGroupings(String username) {
-        MyGroupings myGroupings = new MyGroupings();
+    public GroupingAssignment getGroupingAssignment(String username) {
+        GroupingAssignment groupingAssignment = new GroupingAssignment();
         List<String> groupPaths = getGroupPaths(username);
 
-        myGroupings.setGroupingsIn(groupingsIn(username, groupPaths));
-        myGroupings.setGroupingsOwned(groupingsOwned(groupPaths));
-        myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
-        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username, groupPaths));
-        myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username, groupPaths));
-        myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username, groupPaths));
+        groupingAssignment.setGroupingsIn(groupingsIn(username, groupPaths));
+        groupingAssignment.setGroupingsOwned(groupingsOwned(groupPaths));
+        groupingAssignment.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
+        groupingAssignment.setGroupingsToOptOutOf(groupingsToOptOutOf(username, groupPaths));
+        groupingAssignment.setGroupingsOptedOutOf(groupingsOptedOutOf(username, groupPaths));
+        groupingAssignment.setGroupingsOptedInTo(groupingsOptedInto(username, groupPaths));
 
-        return myGroupings;
+        return groupingAssignment;
     }
 
     /**
@@ -580,8 +580,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the groupings in the database
      */
     @Override
-    public AdminInfo adminInfo(String username) {
-        AdminInfo info = new AdminInfo();
+    public AdminListsHolder adminInfo(String username) {
+        AdminListsHolder info = new AdminListsHolder();
         List<Grouping> groupings;
 
         if (isAdmin(username)) {
@@ -767,7 +767,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         return inGroup(grouping + OWNERS, username);
     }
 
-    private boolean isAdmin(String username) {
+    @Override
+    public boolean isAdmin(String username) {
         return inGroup(ADMINS, username);
     }
 
@@ -805,9 +806,16 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return the membership id of the first membership
      */
     String extractFirstMembershipID(WsGetMembershipsResults wsGetMembershipsResults) {
-        return wsGetMembershipsResults
-                .getWsMemberships()[0]
-                .getMembershipId();
+        if (wsGetMembershipsResults != null
+                && wsGetMembershipsResults.getWsMemberships() != null
+                && wsGetMembershipsResults.getWsMemberships()[0] != null
+                && wsGetMembershipsResults.getWsMemberships()[0].getMembershipId() != null) {
+
+            return wsGetMembershipsResults
+                    .getWsMemberships()[0]
+                    .getMembershipId();
+        }
+        return "";
     }
 
     /*
@@ -1030,7 +1038,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param username:  username of owner adding member
+     * @param username: username of owner adding member
      * @param newAdmin: username of user to be added to grup
      * @return information about success of action
      */
@@ -1040,7 +1048,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         String action = "add " + newAdmin + " to " + ADMINS;
 
-        if(inGroup(ADMINS, username)) {
+        if (inGroup(ADMINS, username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
 
             WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(
@@ -1056,7 +1064,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param username:  username of owner adding member
+     * @param username:      username of owner adding member
      * @param adminToDelete: username of user to be added to grup
      * @return information about success of action
      */
@@ -1066,7 +1074,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         String action = "delete " + adminToDelete + " from " + ADMINS;
 
-        if(inGroup(ADMINS, username)) {
+        if (inGroup(ADMINS, username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
 
             WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(

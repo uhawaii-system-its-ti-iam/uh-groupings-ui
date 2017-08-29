@@ -32,7 +32,7 @@ public interface GroupingsService {
 
     public Grouping getGrouping(String grouping, String username);
 
-    public MyGroupings getMyGroupings(String username);
+    public GroupingAssignment getGroupingAssignment(String username);
 
     public List<GroupingsServiceResult> optIn(String username, String grouping);
 
@@ -50,6 +50,8 @@ public interface GroupingsService {
 
     public boolean isOwner(String grouping, String username);
 
+    public boolean isAdmin(String username);
+
     public boolean groupOptInPermission(String username, String group);
 
     public GroupingsServiceResult addSelfOpted(String group, String username);
@@ -66,7 +68,7 @@ public interface GroupingsService {
 
     public boolean optInPermission(String grouping);
 
-    public AdminInfo adminInfo(String username);
+    public AdminListsHolder adminInfo(String username);
 
     public String parentGroupingPath(String group);
 
