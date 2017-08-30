@@ -23,7 +23,6 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.booleanThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
@@ -31,8 +30,17 @@ public class GroupingsServiceMockTest {
     @Value("${groupings.api.settings}")
     private String SETTINGS;
 
-    @Value("${groupings.api.admins}")
-    private String ADMINS;
+    @Value("${groupings.api.grouping_admins}")
+    private String GROUPING_ADMINS;
+
+    @Value("${groupings.api.grouping_apps}")
+    private String GROUPING_APPS;
+
+    @Value("${groupings.api.grouping_owners}")
+    private String GROUPING_OWNERS;
+
+    @Value("${groupings.api.grouping_superusers}")
+    private String GROUPING_SUPERUSERS;
 
     @Value("${groupings.api.attributes}")
     private String ATTRIBUTES;
@@ -192,9 +200,9 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
         given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
 
-        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
 
         GroupingsServiceResult randomUserAdds = groupingsService.assignOwnership(GROUPING_PATH, RANDOM_USER, RANDOM_USER);
         GroupingsServiceResult ownerAdds = groupingsService.assignOwnership(GROUPING_PATH, OWNER_USER, RANDOM_USER);
@@ -218,9 +226,9 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
         given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
 
-        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
 
         given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
@@ -284,9 +292,9 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
         given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
 
-        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
 
         given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, GROUPING_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
@@ -389,9 +397,9 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
         given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
 
-        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
 
         given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, GROUPING_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
@@ -495,9 +503,9 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
         given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
 
-        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
 
         GroupingsServiceResult randomUserAdds = groupingsService.removeOwnership(GROUPING_PATH, RANDOM_USER, RANDOM_USER);
         GroupingsServiceResult ownerAdds = groupingsService.removeOwnership(GROUPING_PATH, OWNER_USER, RANDOM_USER);
@@ -524,9 +532,9 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
         given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
 
-        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
 
 
         given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, GROUPING_PATH))
@@ -1061,8 +1069,8 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void isAdminTest() {
-        given(gf.makeWsHasMemberResults(ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
 
         assertFalse(groupingsService.isAdmin(RANDOM_USER));
         assertTrue(groupingsService.isAdmin(ADMIN_USER));

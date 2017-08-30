@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
+    private List<Person> members = new ArrayList<>();
+    private String path;
 
     public Group(){
         //empty
@@ -13,10 +15,29 @@ public class Group {
         this.members = members;
     }
 
-    private List<Person> members = new ArrayList<>();
+    public Group(String path) {
+        this.path = path;
+    }
+
+    public Group(String path, List<Person> members) {
+        this.members = members;
+        this.path = path;
+    }
 
     public List<Person> getMembers() {
         return members;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setMembers(List<Person> members) {
+        this.members = members;
     }
 
     public void addMember(Person person) {

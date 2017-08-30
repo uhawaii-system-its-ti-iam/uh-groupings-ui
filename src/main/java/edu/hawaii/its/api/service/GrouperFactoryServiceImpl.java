@@ -1,5 +1,7 @@
 package edu.hawaii.its.api.service;
 
+import edu.hawaii.its.api.type.Person;
+
 import edu.internet2.middleware.grouperClient.api.*;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
@@ -11,6 +13,12 @@ import java.util.List;
 public class GrouperFactoryServiceImpl implements GrouperFactoryService{
     public GrouperFactoryServiceImpl() {
         //empty
+    }
+
+    @Override
+    public WsGroupSaveResults addGroup (String path, List<Person> members) {
+        //todo
+        return null;
     }
 
     /**

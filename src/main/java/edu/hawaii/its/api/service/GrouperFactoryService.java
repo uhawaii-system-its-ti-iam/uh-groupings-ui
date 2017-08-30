@@ -1,11 +1,15 @@
 package edu.hawaii.its.api.service;
 
+import edu.hawaii.its.api.type.Person;
+
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 
 import java.util.List;
 
 public interface GrouperFactoryService {
+    public WsGroupSaveResults addGroup(String path, List<Person> members);
+
     public WsSubjectLookup makeWsSubjectLookup(String username);
 
     public WsGroupLookup makeWsGroupLookup(String group);

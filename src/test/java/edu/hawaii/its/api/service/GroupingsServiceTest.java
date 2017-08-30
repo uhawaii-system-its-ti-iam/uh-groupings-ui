@@ -26,8 +26,17 @@ public class GroupingsServiceTest {
     @Value("${groupings.api.settings}")
     private String SETTINGS;
 
-    @Value("${groupings.api.admins}")
-    private String ADMINS;
+    @Value("${groupings.api.grouping_admins}")
+    private String GROUPING_ADMINS;
+
+    @Value("${groupings.api.grouping_apps}")
+    private String GROUPING_APPS;
+
+    @Value("${groupings.api.grouping_owners}")
+    private String GROUPING_OWNERS;
+
+    @Value("${groupings.api.grouping_superusers}")
+    private String GROUPING_SUPERUSERS;
 
     @Value("${groupings.api.attributes}")
     private String ATTRIBUTES;
