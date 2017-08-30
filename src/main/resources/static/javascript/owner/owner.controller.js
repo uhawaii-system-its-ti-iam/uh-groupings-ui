@@ -204,16 +204,29 @@
                     }
                 }
             }
+        };
 
-            //sorts data in alphabetic order
-            grouping.sort(function (a, b) {
-                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
-                if (nameA < nameB) //sort string ascending
-                    return -1;
-                if (nameA > nameB)
-                    return 1;
-                return 0
-            });
+        /**
+         *  Sorts the data in the table in ascending or descending order based on
+         *  the list and column being sorted.
+         *
+         * @param list - The data list to which will be sorted
+         * @param col - The object to name to determine how it will be sorted by.
+         * @param listPaged - The paged data list to which the sorted list will go into.
+         * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
+         */
+        $scope.sort = function (list, col, listPaged, symbol) {
+            if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
+                list = _.sortBy(list, col);
+                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
+                $scope[symbol] = '\u25BC';
+            }
+            else {
+                list = _.sortBy(list, col).reverse();
+                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
+                $scope[symbol] = '\u25B2';
+
+            }
         };
 
         /**
