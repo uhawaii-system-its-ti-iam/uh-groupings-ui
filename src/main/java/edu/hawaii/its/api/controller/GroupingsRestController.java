@@ -375,10 +375,10 @@ public class GroupingsRestController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdminListsHolder> adminInfo(@PathVariable String username) {
-        logger.info("Entered REST adminInfo...");
+        logger.info("Entered REST adminLists...");
         return ResponseEntity
                 .ok()
-                .body(gs.adminInfo(username));
+                .body(gs.adminLists(username));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -202,7 +202,7 @@ public class TestGroupingsService {
 
     @Test
     public void adminInfoTest() {
-        AdminListsHolder info = gs.adminInfo(username[0]);
+        AdminListsHolder info = gs.adminLists(username[0]);
         assertNotNull(info);
         assertEquals(info.getAllGroupings().size(), 0);
         assertEquals(info.getAdminGroup().getMembers().size(), 0);

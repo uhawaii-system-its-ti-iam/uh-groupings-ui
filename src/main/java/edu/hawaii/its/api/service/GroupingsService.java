@@ -72,7 +72,7 @@ public interface GroupingsService {
 
     public boolean optInPermission(String grouping);
 
-    public AdminListsHolder adminInfo(String username);
+    public AdminListsHolder adminLists(String username);
 
     public String parentGroupingPath(String group);
 

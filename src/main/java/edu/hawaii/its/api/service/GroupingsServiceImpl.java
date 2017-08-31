@@ -651,7 +651,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the groupings in the database
      */
     @Override
-    public AdminListsHolder adminInfo(String username) {
+    public AdminListsHolder adminLists(String username) {
         AdminListsHolder info = new AdminListsHolder();
         List<Grouping> groupings;
 
