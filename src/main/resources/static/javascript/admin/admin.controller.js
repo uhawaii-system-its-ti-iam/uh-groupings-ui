@@ -47,16 +47,6 @@
         $scope.currentPage = 0;
         $scope.currentPageOptOut = 0;
 
-        var url = "api/groupings/_groupings_api_2/adminInfo";
-
-        $scope.initCurrentUsername = function () {
-            $scope.currentUsername = $window.document.getElementById("name").innerHTML;
-        };
-
-        $scope.getCurrentUsername = function () {
-            return $scope.currentUsername;
-        };
-
         /**
          * Initializing function for the admin page.
          * Calls dataProvider service to retrieve a list of admins.
@@ -66,11 +56,12 @@
          *                0 for failed attempt
          */
         $scope.init = function () {
-
             // Adds the loading spinner.
             $scope.loading = true;
 
             $scope.initCurrentUsername();
+
+            var url = "api/groupings/" + $scope.getCurrentUsername() + "/adminInfo";
 
             dataProvider.loadData(function (d) {
                 $scope.list = d.adminGroup.members;
@@ -82,6 +73,14 @@
                 $scope.pagedItems = $scope.groupToPages($scope.list, $scope.pagedItems);
                 $scope.loading = false;
             }, url);
+        };
+
+        $scope.initCurrentUsername = function () {
+            $scope.currentUsername = $window.document.getElementById("name").innerHTML;
+        };
+
+        $scope.getCurrentUsername = function () {
+            return $scope.currentUsername;
         };
 
         /**
