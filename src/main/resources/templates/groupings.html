@@ -34,8 +34,8 @@
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th>Groupings</th>
-                                <th>Folder</th>
+                                <th ng-click="sort(ownedList, 'name', 'pagedItemsOwned', 'symbolMember1')">Groupings {{symbolMember1}}</th>
+                                <th ng-click="sort(ownedList, 'folder', 'pagedItemsOwned', 'symbolMember2')">Folder {{symbolMember2}}</th>
 
                             </tr>
                             </thead>
@@ -113,7 +113,7 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Name</th>
+                                            <th ng-click="sort(groupingsList, 'name', 'pagedItemsList', 'symbolList1')">Name {{symbolList1}}</th>
                                             <th>UH ID</th>
                                             <th>Username</th>
                                             <th>Basis</th>
@@ -156,7 +156,7 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Name</th>
+                                            <th ng-click="sort(groupingsBasis, 'name', 'pagedItemsBasis', 'symbolBasis1')">Name {{symbolBasis1}}</th>
                                             <th>UH ID</th>
                                             <th>Username</th>
                                         </tr>
@@ -197,7 +197,7 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Name</th>
+                                            <th ng-click="sort(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude1')">Name {{symbolInclude1}}</th>
                                             <th>UH ID</th>
                                             <th>Username</th>
                                             <th>Basis</th>
@@ -262,7 +262,7 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Name</th>
+                                            <th ng-click="sort(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude1')">Name {{symbolExclude1}}</th>
                                             <th>UH ID</th>
                                             <th>Username</th>
                                             <th>Basis</th>
@@ -331,7 +331,7 @@
                             <table class="table table-bordered table-condensed table-hover">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th ng-click="sort(ownerList, 'name', 'pagedItemsOwners', 'symbolOwners1')">Name {{symbolOwners1}}</th>
                                     <th>Username</th>
                                     <th>Remove</th>
                                 </tr>

@@ -225,7 +225,6 @@
                 list = _.sortBy(list, col).reverse();
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = '\u25B2';
-
             }
         };
 
