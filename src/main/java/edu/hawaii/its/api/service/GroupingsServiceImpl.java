@@ -1119,7 +1119,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         String action = "add " + newAdmin + " to " + GROUPING_ADMINS;
 
-        if (inGroup(GROUPING_ADMINS, username)) {
+        if (inGroup(GROUPING_ADMINS, username) || inGroup(GROUPING_APPS, username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
 
             WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(
@@ -1145,7 +1145,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         String action = "delete " + adminToDelete + " from " + GROUPING_ADMINS;
 
-        if (inGroup(GROUPING_ADMINS, username)) {
+        if (inGroup(GROUPING_ADMINS, username) || inGroup(GROUPING_APPS, username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
 
             WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(
