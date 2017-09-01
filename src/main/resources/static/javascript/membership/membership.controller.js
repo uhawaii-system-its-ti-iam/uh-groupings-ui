@@ -49,7 +49,7 @@
          **/
         $scope.init = function () {
             $scope.initCurrentUsername();
-            var groupingURL = "api/groupings/" + $scope.getCurrentUsername() + "/myGroupings";
+            var groupingURL = "api/groupings/" + $scope.getCurrentUsername() + "/groupingAssignment";
             /**Loads Data into a membersList
              *                  optOutList
              *                  optInList
