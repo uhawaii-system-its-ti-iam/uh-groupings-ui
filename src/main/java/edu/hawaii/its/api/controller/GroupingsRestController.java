@@ -2,7 +2,7 @@ package edu.hawaii.its.api.controller;
 
 import javax.annotation.PostConstruct;
 
-import edu.hawaii.its.api.type.AdminInfo;
+import edu.hawaii.its.api.type.AdminListsHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,7 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import edu.hawaii.its.api.service.GroupingsService;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.MyGroupings;
+import edu.hawaii.its.api.type.GroupingAssignment;
 
 import java.util.List;
 
@@ -227,14 +227,14 @@ public class GroupingsRestController {
      * Groupings that the user can opt into
      * Groupings that the user can opt out of
      */
-    @RequestMapping(value = "/{username}/myGroupings",
+    @RequestMapping(value = "/{username}/groupingAssignment",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MyGroupings> myGroupings(@PathVariable String username) {
-        logger.info("Entered REST myGroupings...");
+    public ResponseEntity<GroupingAssignment> groupingAssignment(@PathVariable String username) {
+        logger.info("Entered REST GroupingAssingment...");
         return ResponseEntity
                 .ok()
-                .body(gs.getMyGroupings(username));
+                .body(gs.getGroupingAssignment(username));
     }
 
     /**
@@ -374,11 +374,11 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{username}/adminInfo",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AdminInfo> adminInfo(@PathVariable String username) {
-        logger.info("Entered REST adminInfo...");
+    public ResponseEntity<AdminListsHolder> adminInfo(@PathVariable String username) {
+        logger.info("Entered REST adminLists...");
         return ResponseEntity
                 .ok()
-                .body(gs.adminInfo(username));
+                .body(gs.adminLists(username));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -400,24 +400,7 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView addGrouping() {
         return new RedirectView(requestForm);
-        /**
-         * TODO for Grouper update
-         * create Grouping
-         * create Grouping:basis
-         * create Grouping:include
-         * create Grouping:exclude
-         * create Grouping:basis+include  // this should be the complement of Grouping:exclude
-         * create Grouping:owners
-         *
-         * add all owners to Grouping:owners
-         * add Grouping:owners to uh-settings:groupingOwners
-         *
-         * assign privileges to Grouping:owners
-         *
-         * assign privileges to uh-settings:groupingAdmins
-         *
-         * set last-modified:yyyymmddThhmm on Grouping
-         */
+        //todo change to real method when it is ready for testing
     }
 
     /**
@@ -435,4 +418,5 @@ public class GroupingsRestController {
     public RedirectView deleteGrouping() {
         return new RedirectView(requestForm);
     }
+    //todo change to real method when it is ready for testing
 }

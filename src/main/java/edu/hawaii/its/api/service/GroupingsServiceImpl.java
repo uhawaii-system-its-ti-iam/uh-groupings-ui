@@ -2,17 +2,19 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.util.Dates;
+
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("groupingsService")
@@ -22,8 +24,17 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("${groupings.api.settings}")
     private String SETTINGS;
 
-    @Value("${groupings.api.admins}")
-    private String ADMINS;
+    @Value("${groupings.api.grouping_admins}")
+    private String GROUPING_ADMINS;
+
+    @Value("${groupings.api.grouping_apps}")
+    private String GROUPING_APPS;
+
+    @Value("${groupings.api.grouping_owners}")
+    private String GROUPING_OWNERS;
+
+    @Value("${groupings.api.grouping_superusers}")
+    private String GROUPING_SUPERUSERS;
 
     @Value("${groupings.api.attributes}")
     private String ATTRIBUTES;
@@ -51,6 +62,9 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     @Value("${groupings.api.trio}")
     private String TRIO;
+
+    @Value("${groupings.api.purge_grouping}")
+    private String PURGE_GROUPING;
 
     @Value("${groupings.api.self_opted}")
     private String SELF_OPTED;
@@ -131,6 +145,63 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     private WsStemLookup STEM_LOOKUP = gf.makeWsStemLookup(STEM, null);
+
+    @Override
+    public List<GroupingsServiceResult> addGrouping(String username, String path, List<String> basis, List<String> include, List<String> exclude, List<String> owners) {
+        throw new NotImplementedException();
+
+//        String[] pathExtensions = new String[] {"", ":basis", ":include", ":basis+include", ":exclude", ":owners"};
+//        List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
+//        List<Group> groups = new ArrayList<>();
+//        List<List<String>> memberLists = new ArrayList<>();
+//
+//        //remove duplicates
+//        List<String> basisAndInclude = new ArrayList<>();
+//        Set<String> s = new TreeSet<>();
+//        s.addAll(basisAndInclude);
+//        List<String> basisPlusInclude = Arrays.asList(s.toArray(new String[s.size()]));
+//
+//        memberLists.add(new ArrayList<>());
+//        memberLists.add(basis);
+//        memberLists.add(include);
+//        memberLists.add(basisPlusInclude);
+//        memberLists.add(exclude);
+//        memberLists.add(owners);
+//
+//
+//        //todo check about making folders
+//        for (int i = 0; i < memberLists.size(); i ++) {
+//            groups.add(makeGroup(path + pathExtensions[i], memberLists.get(i)));
+//        }
+//
+//        for(Group group : groups) {
+//            addGroupingResults.add(gf.addGroup(group, username));
+//        }
+//
+//         //todo add Grouping:owners to uh-settings:groupingOwners
+//
+//        addGroupingResults.add(updateLastModified(path));
+//
+//        return addGroupingResults;
+    }
+
+    @Override
+    public List<GroupingsServiceResult> deleteGrouping(String username, String groupingPath) {
+        List<GroupingsServiceResult> deleteGroupingResults = new ArrayList<>();
+
+        if(isAdmin(username)) {
+            deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
+            deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
+        }
+        else {
+            GroupingsServiceResult failureResult = new GroupingsServiceResult();
+            failureResult.setAction("delete grouping" + groupingPath);
+            failureResult.setResultCode(FAILURE);
+
+            deleteGroupingResults.add(failureResult);
+        }
+        return deleteGroupingResults;
+    }
 
     /**
      * gives a user ownership permissions for a Grouping
@@ -301,18 +372,18 @@ public class GroupingsServiceImpl implements GroupingsService {
      * has opted out of
      */
     @Override
-    public MyGroupings getMyGroupings(String username) {
-        MyGroupings myGroupings = new MyGroupings();
+    public GroupingAssignment getGroupingAssignment(String username) {
+        GroupingAssignment groupingAssignment = new GroupingAssignment();
         List<String> groupPaths = getGroupPaths(username);
 
-        myGroupings.setGroupingsIn(groupingsIn(username, groupPaths));
-        myGroupings.setGroupingsOwned(groupingsOwned(groupPaths));
-        myGroupings.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
-        myGroupings.setGroupingsToOptOutOf(groupingsToOptOutOf(username, groupPaths));
-        myGroupings.setGroupingsOptedOutOf(groupingsOptedOutOf(username, groupPaths));
-        myGroupings.setGroupingsOptedInTo(groupingsOptedInto(username, groupPaths));
+        groupingAssignment.setGroupingsIn(groupingsIn(username, groupPaths));
+        groupingAssignment.setGroupingsOwned(groupingsOwned(groupPaths));
+        groupingAssignment.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
+        groupingAssignment.setGroupingsToOptOutOf(groupingsToOptOutOf(username, groupPaths));
+        groupingAssignment.setGroupingsOptedOutOf(groupingsOptedOutOf(username, groupPaths));
+        groupingAssignment.setGroupingsOptedInTo(groupingsOptedInto(username, groupPaths));
 
-        return myGroupings;
+        return groupingAssignment;
     }
 
     /**
@@ -580,8 +651,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a list of all of the groupings in the database
      */
     @Override
-    public AdminInfo adminInfo(String username) {
-        AdminInfo info = new AdminInfo();
+    public AdminListsHolder adminLists(String username) {
+        AdminListsHolder info = new AdminListsHolder();
         List<Grouping> groupings;
 
         if (isAdmin(username)) {
@@ -597,7 +668,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 groupPaths.add(group.getName());
             }
 
-            Group admin = getMembers(username, ADMINS);
+            Group admin = getMembers(username, GROUPING_ADMINS);
             groupings = makeGroupings(groupPaths, true);
             info.setAdminGroup(admin);
             info.setAllGroupings(groupings);
@@ -769,7 +840,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     @Override
     public boolean isAdmin(String username) {
-        return inGroup(ADMINS, username);
+        return inGroup(GROUPING_ADMINS, username);
     }
 
     /**
@@ -1046,16 +1117,16 @@ public class GroupingsServiceImpl implements GroupingsService {
     public GroupingsServiceResult addAdmin(String username, String newAdmin) {
         logger.info("addAdmin; username: " + username + "; newAdmin: " + newAdmin + ";");
 
-        String action = "add " + newAdmin + " to " + ADMINS;
+        String action = "add " + newAdmin + " to " + GROUPING_ADMINS;
 
-        if (inGroup(ADMINS, username)) {
+        if (inGroup(GROUPING_ADMINS, username) || inGroup(GROUPING_APPS, username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
 
             WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(
-                    ADMINS,
+                    GROUPING_ADMINS,
                     newAdmin);
 
-            updateLastModified(ADMINS);
+            updateLastModified(GROUPING_ADMINS);
 
             return makeGroupingsServiceResult(addMemberResults, action);
         }
@@ -1072,17 +1143,17 @@ public class GroupingsServiceImpl implements GroupingsService {
     public GroupingsServiceResult deleteAdmin(String username, String adminToDelete) {
         logger.info("deleteAdmin; username: " + username + "; adminToDelete: " + adminToDelete + ";");
 
-        String action = "delete " + adminToDelete + " from " + ADMINS;
+        String action = "delete " + adminToDelete + " from " + GROUPING_ADMINS;
 
-        if (inGroup(ADMINS, username)) {
+        if (inGroup(GROUPING_ADMINS, username) || inGroup(GROUPING_APPS, username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
 
             WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(
-                    ADMINS,
+                    GROUPING_ADMINS,
                     user,
                     adminToDelete);
 
-            updateLastModified(ADMINS);
+            updateLastModified(GROUPING_ADMINS);
 
             return makeGroupingsServiceResult(deleteMemberResults, action);
         }
@@ -1404,6 +1475,19 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         return group;
     }
+
+    private Group makeGroup(String path, List<String> usernames) {
+        List<Person> members = new ArrayList<>();
+
+        for(String username : usernames) {
+            WsSubject subject = new WsSubject();
+            subject.setAttributeValues(new String[] {username});
+            members.add(makePerson(subject));
+        }
+
+        return new Group(path, members);
+    }
+
 
     /**
      * @param person:

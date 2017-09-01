@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface GroupingsService {
 
+    public List<GroupingsServiceResult> addGrouping(String username, String path, List<String> basis, List<String> include, List<String> exclude, List<String> owners);
+
+    public List<GroupingsServiceResult> deleteGrouping(String username, String groupingPath);
+
     public boolean hasListserv(String grouping);
 
     public List<Grouping> groupingsIn(String username, List<String> groupPaths);
@@ -32,7 +36,7 @@ public interface GroupingsService {
 
     public Grouping getGrouping(String grouping, String username);
 
-    public MyGroupings getMyGroupings(String username);
+    public GroupingAssignment getGroupingAssignment(String username);
 
     public List<GroupingsServiceResult> optIn(String username, String grouping);
 
@@ -68,7 +72,7 @@ public interface GroupingsService {
 
     public boolean optInPermission(String grouping);
 
-    public AdminInfo adminInfo(String username);
+    public AdminListsHolder adminLists(String username);
 
     public String parentGroupingPath(String group);
 

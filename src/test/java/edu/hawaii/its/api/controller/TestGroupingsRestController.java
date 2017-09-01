@@ -2,7 +2,7 @@ package edu.hawaii.its.api.controller;
 
 import javax.annotation.PostConstruct;
 
-import edu.hawaii.its.api.type.AdminInfo;
+import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,16 +17,17 @@ import org.springframework.util.Assert;
 
 import edu.hawaii.its.api.service.GroupingsService;
 import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.MyGroupings;
+import edu.hawaii.its.api.type.GroupingAssignment;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-
-import java.util.List;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsRestController {
+
+    @Value("${groupings.api.test.student_test_username}")
+    private String STUDENT_TEST_USERNAME;
 
     @Value("${groupings.api.test.grouping_many}")
     private String GROUPING;
@@ -203,8 +204,8 @@ public class TestGroupingsRestController {
     }
 
     @Test
-    public void myGroupingsTest() {
-        MyGroupings groupings = gc.myGroupings(tst[0]).getBody();
+    public void groupingAssignmentTest() {
+        GroupingAssignment groupings = gc.groupingAssignment(tst[0]).getBody();
 
         boolean inGrouping = false;
         for (Grouping grouping : groupings.getGroupingsIn()) {
@@ -246,7 +247,7 @@ public class TestGroupingsRestController {
 
     @Test
     public void myGroupingsTest2() {
-        MyGroupings groupings = gc.myGroupings(tst[4]).getBody();
+        GroupingAssignment groupings = gc.groupingAssignment(tst[4]).getBody();
 
         boolean inGrouping = false;
         for (Grouping grouping : groupings.getGroupingsIn()) {
@@ -272,10 +273,10 @@ public class TestGroupingsRestController {
         boolean optedIn = false;
         boolean optedOut = false;
 
-        MyGroupings tst4Groupings = gc.myGroupings(tst[4]).getBody();
+        GroupingAssignment tst4Groupings = gc.groupingAssignment(tst[4]).getBody();
         assertEquals(tst4Groupings.getGroupingsOptedInTo().size(), 0);
         gc.optIn(GROUPING, tst[4]);
-        tst4Groupings = gc.myGroupings(tst[4]).getBody();
+        tst4Groupings = gc.groupingAssignment(tst[4]).getBody();
         for (Grouping grouping : tst4Groupings.getGroupingsOptedInTo()) {
             if (grouping.getPath().contains(this.GROUPING)) {
                 optedIn = true;
@@ -283,10 +284,10 @@ public class TestGroupingsRestController {
         }
         assertTrue(optedIn);
 
-        MyGroupings tst5Groupings = gc.myGroupings(tst[5]).getBody();
+        GroupingAssignment tst5Groupings = gc.groupingAssignment(tst[5]).getBody();
         assertEquals(tst5Groupings.getGroupingsOptedOutOf().size(), 0);
         gc.optOut(GROUPING, tst[5]);
-        tst5Groupings = gc.myGroupings(tst[5]).getBody();
+        tst5Groupings = gc.groupingAssignment(tst[5]).getBody();
         for (Grouping grouping : tst5Groupings.getGroupingsOptedOutOf()) {
             if (grouping.getPath().contains(this.GROUPING)) {
                 optedOut = true;
@@ -373,7 +374,7 @@ public class TestGroupingsRestController {
 
     @Test
     public void aaronTest() {
-        MyGroupings aaronsGroupings = gc.myGroupings("aaronvil").getBody();
+        GroupingAssignment aaronsGroupings = gc.groupingAssignment(STUDENT_TEST_USERNAME).getBody();
         assertNotNull(aaronsGroupings);
     }
 
@@ -397,17 +398,17 @@ public class TestGroupingsRestController {
 
     }
 
-    @Test
-    public void getAdminInfoTest() {
-        AdminInfo infoFail = gc.adminInfo(tst[0]).getBody();
-
-        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
-        assertEquals(infoFail.getAllGroupings().size(), 0);
-
-        AdminInfo infoSuccess = gc.adminInfo(API_ACCOUNT).getBody();
-
-        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(API_ACCOUNT));
-    }
+//    @Test
+//    public void getAdminInfoTest() {
+//        AdminListsHolder infoFail = gc.adminInfo(tst[0]).getBody();
+//
+//        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
+//        assertEquals(infoFail.getAllGroupings().size(), 0);
+//
+//        AdminListsHolder infoSuccess = gc.adminInfo(API_ACCOUNT).getBody();
+//
+//        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(API_ACCOUNT));
+//    }
 
     @Test
     public void addDeleteAdminTest() {

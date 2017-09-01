@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import edu.hawaii.its.api.controller.*;
 import edu.hawaii.its.api.service.*;
-import edu.hawaii.its.api.type.*;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
@@ -100,7 +99,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public boolean fetchOwner(String username) {
         try {
             System.out.println("//////////////////////////////");
-            if (!gc.myGroupings(username).getBody().getGroupingsOwned().isEmpty()) {
+            if (!gc.groupingAssignment(username).getBody().getGroupingsOwned().isEmpty()) {
                 System.out.println("This person is an owner");
                 return true;
             } else {
@@ -121,7 +120,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public boolean fetchAdmin(String username) {
         System.out.println("//////////////////////////////");
         try {
-            if (!gs.adminInfo(username).getAllGroupings().isEmpty()) {
+            if (!gs.adminLists(username).getAllGroupings().isEmpty()) {
                 System.out.println("this person is an admin");
                 return true;
             } else {
