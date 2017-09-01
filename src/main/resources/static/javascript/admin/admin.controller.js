@@ -223,7 +223,7 @@
         * Else if resultCode is undefined, then user was not successfully added.
         */
         $scope.add = function () {
-            var addUrl = "api/groupings/_groupings_api_2/" + $scope.username + "/addAdmin";
+            var addUrl = "api/groupings/" + $scope.getCurrentUsername()  + "/" + $scope.username + "/addAdmin";
             $scope.testdata = [];
             console.log(addUrl);
 
@@ -254,7 +254,7 @@
          */
         $scope.remove = function (index) {
             var deleteUser = $scope.list[index].username;
-            var deleteUrl = "api/groupings/_groupings_api_2/" +  deleteUser + "/deleteAdmin";
+            var deleteUrl = "api/groupings/" + $scope.getCurrentUsername()  + "/" +  deleteUser + "/deleteAdmin";
             console.log(deleteUrl);
             if ($scope.list.length > 1) {
                 /*dataDelete.deleteData(function (d) {
