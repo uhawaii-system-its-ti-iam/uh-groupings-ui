@@ -107,7 +107,7 @@
                 $scope.loading = false;
             } else {
                 $scope.loading = true;
-                var groupingDataUrl = "api/groupings/" + $scope.groupingPath + "/_groupings_api_2/grouping";
+                var groupingDataUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/grouping";
                 console.log(groupingDataUrl);
 
                 dataProvider.loadData(function (d) {
@@ -228,7 +228,7 @@
             console.log(addUrl);
 
             if (confirm("You are adding " + $scope.username + " to the include list of this grouping")) {
-                /*dataUpdater.updateData(function (d) {
+                dataUpdater.updateData(function (d) {
                  console.log(d);
                  if (d.resultCode === 'SUCCESS') {
                  console.log("Success In Adding");
@@ -240,7 +240,7 @@
                  if (typeof d.resultCode === 'undefined') {
                  console.log("Failure In Adding");
                  }
-                 }, addUrl);*/
+                 }, addUrl);
             }
         };
 
@@ -257,10 +257,10 @@
             var deleteUrl = "api/groupings/" + $scope.getCurrentUsername()  + "/" +  deleteUser + "/deleteAdmin";
             console.log(deleteUrl);
             if ($scope.list.length > 1) {
-                /*dataDelete.deleteData(function (d) {
+                dataDelete.deleteData(function (d) {
                  $scope.list.splice(index, 1);
                  $scope.init();
-                 }, deleteUrl);*/
+                 }, deleteUrl);
             }
         };
 
