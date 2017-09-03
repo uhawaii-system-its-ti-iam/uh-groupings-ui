@@ -56,6 +56,10 @@ public interface GroupingsService {
 
     public boolean isAdmin(String username);
 
+    public boolean isApp(String username);
+
+    public boolean isSuperuser(String username);
+
     public boolean groupOptInPermission(String username, String group);
 
     public GroupingsServiceResult addSelfOpted(String group, String username);

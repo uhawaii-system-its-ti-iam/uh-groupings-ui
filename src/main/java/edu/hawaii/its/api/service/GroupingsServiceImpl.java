@@ -189,7 +189,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<GroupingsServiceResult> deleteGrouping(String username, String groupingPath) {
         List<GroupingsServiceResult> deleteGroupingResults = new ArrayList<>();
 
-        if(isAdmin(username)) {
+        if(isSuperuser(username)) {
             deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
             deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
         }
@@ -655,7 +655,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         AdminListsHolder info = new AdminListsHolder();
         List<Grouping> groupings;
 
-        if (isAdmin(username)) {
+        if (isSuperuser(username)) {
             List<String> groupPaths = new ArrayList<>();
 
             WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResults(
@@ -843,13 +843,23 @@ public class GroupingsServiceImpl implements GroupingsService {
         return inGroup(GROUPING_ADMINS, username);
     }
 
-    /**
-     * removes the self-opted attribute from a membership (combination of a group and a subject)
-     *
-     * @param group:    the group in the membership
-     * @param username: the subject in the membership
-     * @return the response from grouper web service or empty WsAssignAttributesResults object
-     */
+    @Override
+    public boolean isApp(String username) {
+        return inGroup(GROUPING_APPS, username);
+    }
+
+    @Override
+    public boolean isSuperuser(String username) {
+        return isAdmin(username) || isApp(username);
+    }
+
+        /**
+         * removes the self-opted attribute from a membership (combination of a group and a subject)
+         *
+         * @param group:    the group in the membership
+         * @param username: the subject in the membership
+         * @return the response from grouper web service or empty WsAssignAttributesResults object
+         */
     @Override
     public GroupingsServiceResult removeSelfOpted(String group, String username) {
         logger.info("removeSelfOpted; group: " + group + "; username: " + username + ";");
@@ -1119,7 +1129,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         String action = "add " + newAdmin + " to " + GROUPING_ADMINS;
 
-        if (inGroup(GROUPING_ADMINS, username) || inGroup(GROUPING_APPS, username)) {
+        if (isSuperuser(username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
 
             WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(
@@ -1145,7 +1155,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         String action = "delete " + adminToDelete + " from " + GROUPING_ADMINS;
 
-        if (inGroup(GROUPING_ADMINS, username) || inGroup(GROUPING_APPS, username)) {
+        if (isSuperuser(username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
 
             WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(
