@@ -231,6 +231,21 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService{
     }
 
     @Override
+    public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(WsSubjectLookup lookup,
+                                                                           String attributeAssingType,
+                                                                           String attributeAssignOperation,
+                                                                           String attributeDefNameName,
+                                                                           String ownerGroupName) {
+        return new GcAssignAttributes()
+                .assignActAsSubject(lookup)
+                .assignAttributeAssignType(attributeAssingType)
+                .assignAttributeAssignOperation(attributeAssignOperation)
+                .addAttributeDefNameName(attributeDefNameName)
+                .addOwnerGroupName(ownerGroupName)
+                .execute();
+    }
+
+    @Override
     public WsAssignGrouperPrivilegesLiteResult makeWsAssignGrouperPrivilegesLiteResult(String groupName,
                                                                                         String privilegeName,
                                                                                         WsSubjectLookup lookup,

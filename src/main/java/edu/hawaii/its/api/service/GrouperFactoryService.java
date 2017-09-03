@@ -74,6 +74,12 @@ public interface GrouperFactoryService {
                                                                             String attributeDefNameName,
                                                                             String ownerGroupName);
 
+    public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(WsSubjectLookup lookup,
+                                                                           String attributeAssingType,
+                                                                           String attributeAssignOperation,
+                                                                           String attributeDefNameName,
+                                                                           String ownerGroupName);
+
     public WsAssignGrouperPrivilegesLiteResult makeWsAssignGrouperPrivilegesLiteResult(String groupName,
                                                                                         String privilegeName,
                                                                                         WsSubjectLookup lookup,

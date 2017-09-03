@@ -188,11 +188,16 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public List<GroupingsServiceResult> deleteGrouping(String username, String groupingPath) {
         List<GroupingsServiceResult> deleteGroupingResults = new ArrayList<>();
+        if(isAdmin(username)) {
+            deleteGroupingResults.add(assignGroupAttributes(username, PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
+            deleteGroupingResults.add(assignGroupAttributes(username, TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
+        }
 
-        if(isSuperuser(username)) {
+        else if(isApp(username)) {
             deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
             deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
         }
+
         else {
             GroupingsServiceResult failureResult = new GroupingsServiceResult();
             failureResult.setAction("delete grouping" + groupingPath);
@@ -1030,6 +1035,34 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + ";");
 
         WsAssignAttributesResults attributesResults = gf.makeWsAssignAttributesResultsForGroup(
+                ASSIGN_TYPE_GROUP,
+                attributeOperation,
+                attributeName,
+                group);
+
+        return makeGroupingsServiceResult(attributesResults, "assign " + attributeName + " attribute to " + group);
+    }
+
+    /**
+     * @param attributeName:      name of attribute to be assigned
+     * @param attributeOperation: operation to be done with the attribute to the group
+     * @param group:              path to the group to have the attribute acted upon
+     * @param username:           username of user assigning attribute
+     */
+    private GroupingsServiceResult assignGroupAttributes(String username, String attributeName, String attributeOperation, String group) {
+        logger.info("assignGroupAttributes; "
+                + "; username: "
+                + username
+                + "; attributeName: "
+                + attributeName
+                + "; attributeOperation: "
+                + attributeOperation
+                + "; group: "
+                + group
+                + ";");
+
+        WsAssignAttributesResults attributesResults = gf.makeWsAssignAttributesResultsForGroup(
+                gf.makeWsSubjectLookup(username),
                 ASSIGN_TYPE_GROUP,
                 attributeOperation,
                 attributeName,
