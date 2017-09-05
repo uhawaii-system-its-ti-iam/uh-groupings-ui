@@ -49,7 +49,7 @@
          **/
         $scope.init = function () {
             $scope.initCurrentUsername();
-            var groupingURL = "api/groupings/" + $scope.getCurrentUsername() + "/myGroupings";
+            var groupingURL = "api/groupings/" + $scope.getCurrentUsername() + "/groupingAssignment";
             /**Loads Data into a membersList
              *                  optOutList
              *                  optInList
@@ -108,7 +108,7 @@
                 }
             }, optOutURL);
         };
-8
+
         /** Adds user to the include group
          * initializes using the init function.
          *@param index - grouping

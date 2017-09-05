@@ -65,7 +65,7 @@
         $scope.init = function () {
             $scope.initCurrentUsername();
 
-            groupingsOwned = "api/groupings/" + $scope.getCurrentUsername() + "/myGroupings";
+            groupingsOwned = "api/groupings/" + $scope.getCurrentUsername() + "/groupingAssignment";
             dataProvider.loadData(function (d) {
                 var temp = [];
                 console.log(d);
