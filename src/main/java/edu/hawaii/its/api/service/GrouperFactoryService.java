@@ -8,13 +8,15 @@ import edu.internet2.middleware.grouperClient.ws.beans.*;
 import java.util.List;
 
 public interface GrouperFactoryService {
-    public WsGroupSaveResults addGroup(String path, List<Person> members);
+    public WsGroupSaveResults addEmptyGroup(String username, String path);
 
     public WsSubjectLookup makeWsSubjectLookup(String username);
 
     public WsGroupLookup makeWsGroupLookup(String group);
 
     public WsStemLookup makeWsStemLookup(String stemName, String stemUuid);
+
+    public WsStemSaveResults makeWsStemSaveResults(String username, String stemPath);
 
     public WsAttributeAssignValue makeWsAttributeAssignValue(String time);
 

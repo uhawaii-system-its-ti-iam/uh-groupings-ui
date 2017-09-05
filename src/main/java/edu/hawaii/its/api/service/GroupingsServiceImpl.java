@@ -148,76 +148,90 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     @Override
     public List<GroupingsServiceResult> addGrouping(String username, String path, List<String> basis, List<String> include, List<String> exclude, List<String> owners) {
-        List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
-        String action = username + "is adding a Grouping located at path " + path;
 
-        if (isSuperuser(username)) {
+        //This method will not work until Grouper is updated
 
-            List<String> pathExtensions = new ArrayList<>();
-            pathExtensions.add("");
-            pathExtensions.add(BASIS);
-            pathExtensions.add(INCLUDE);
-            pathExtensions.add(BASIS_PLUS_INCLUDE);
-            pathExtensions.add(EXCLUDE);
-            pathExtensions.add(OWNERS);
-
-            List<Group> groups = new ArrayList<>();
-            List<List<String>> memberLists = new ArrayList<>();
-
-            List<String> basisPlusInclude = unionMemberLists(basis, include);
-
-            //todo change to map
-            memberLists.add(new ArrayList<>());
-            memberLists.add(basis);
-            memberLists.add(include);
-            memberLists.add(basisPlusInclude);
-            memberLists.add(exclude);
-            memberLists.add(owners);
-
-
-            //todo check about making folders
-            for (int i = 0; i < memberLists.size(); i++) {
-                groups.add(makeGroup(path + pathExtensions.get(i), memberLists.get(i)));
-            }
-
-            for (Group group : groups) {
-                GroupingsServiceResult result = makeGroupingsServiceResult(
-                        gf.addGroup(group.getPath(), group.getMembers()),
-                        action);
-                addGroupingResults.add(result);
-            }
-            addGroupingResults.add(updateLastModified(path));
-
-            for(String userToAdd : memberLists.get(5)) {
-                addMemberAs(username, GROUPING_OWNERS, userToAdd);
-            }
-            addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
-
-        } else {
-            GroupingsServiceResult gsr = new GroupingsServiceResult(FAILURE, action);
-            addGroupingResults.add(gsr);
-        }
-
-        return addGroupingResults;
+//        List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
+//        String action = username + "is adding a Grouping located at path " + path;
+//
+//        //todo consider changing this to isAdmin. Will an app account ever need to make a Grouping?
+//        if (isSuperuser(username)) {
+//
+//            List<Group> groups = new ArrayList<>();
+//
+//            List<String> basisPlusInclude = unionMemberLists(basis, include);
+//
+//            Map<String, List<String>> memberLists = new HashMap<>();
+//            memberLists.put("", new ArrayList<>());
+//            memberLists.put(BASIS, basis);
+//            memberLists.put(INCLUDE, include);
+//            memberLists.put(BASIS_PLUS_INCLUDE, basisPlusInclude);
+//            memberLists.put(EXCLUDE, exclude);
+//            memberLists.put(OWNERS, owners);
+//
+//
+//            //todo check about making folders
+//            //todo is a folder the same as a stem?
+//            gf.makeWsStemSaveResults(username, path);
+//
+//            //todo always create a basis folder?
+//            gf.makeWsStemSaveResults(username, path + BASIS);
+//
+//            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
+//                Group group = makeGroup(path + entry.getKey(), entry.getValue());
+//                groups.add(group);
+//            }
+//
+//            for (Group group : groups) {
+//                GroupingsServiceResult result = makeGroupingsServiceResult(
+//                        gf.addEmptyGroup(username, group.getPath()),
+//                        action);
+//                addGroupingResults.add(result);
+//            }
+//            addGroupingResults.add(updateLastModified(path));
+//
+//            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
+//                for(String member : entry.getValue()){
+//                    addMemberAs(username, path + entry.getKey(), member);
+//                }
+//            }
+//
+//
+//            for (String userToAdd : memberLists.get(OWNERS)) {
+//                addGroupingResults.add(addMemberAs(username, GROUPING_OWNERS, userToAdd));
+//            }
+//            addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
+//
+//        } else {
+//            GroupingsServiceResult gsr = new GroupingsServiceResult(FAILURE, action);
+//            addGroupingResults.add(gsr);
+//        }
+//
+//        return addGroupingResults;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<GroupingsServiceResult> deleteGrouping(String username, String groupingPath) {
-        List<GroupingsServiceResult> deleteGroupingResults = new ArrayList<>();
-        if (isAdmin(username)) {
-            deleteGroupingResults.add(assignGroupAttributes(username, PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
-            deleteGroupingResults.add(assignGroupAttributes(username, TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
-        } else if (isApp(username)) {
-            deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
-            deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
-        } else {
-            GroupingsServiceResult failureResult = new GroupingsServiceResult();
-            failureResult.setAction("delete grouping" + groupingPath);
-            failureResult.setResultCode(FAILURE);
 
-            deleteGroupingResults.add(failureResult);
-        }
-        return deleteGroupingResults;
+        //this method will not work until Grouper is updated
+
+//        List<GroupingsServiceResult> deleteGroupingResults = new ArrayList<>();
+//        if (isAdmin(username)) {
+//            deleteGroupingResults.add(assignGroupAttributes(username, PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
+//            deleteGroupingResults.add(assignGroupAttributes(username, TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
+//        } else if (isApp(username)) {
+//            deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
+//            deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
+//        } else {
+//            GroupingsServiceResult failureResult = new GroupingsServiceResult();
+//            failureResult.setAction("delete grouping" + groupingPath);
+//            failureResult.setResultCode(FAILURE);
+//
+//            deleteGroupingResults.add(failureResult);
+//        }
+//        return deleteGroupingResults;
+        throw new NotImplementedException();
     }
 
     /**
@@ -1218,7 +1232,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @param username:  username of owner adding member
      * @param group:     path to group the user to be added will be added to
-     * @param userToAdd: username of user to be added to grup
+     * @param userToAdd: username of user to be added to group
      * @return information about success of action
      */
     @Override
@@ -1246,6 +1260,40 @@ public class GroupingsServiceImpl implements GroupingsService {
         updateLastModified(group);
 
         return makeGroupingsServiceResult(addMemberResults, action);
+    }
+
+    /**
+     * @param username:  username of owner adding member
+     * @param group:     path to group the user to be added will be added to
+     * @param usersToAdd: list of usernames to be added to group
+     * @return information about success of action
+     */
+    @Override
+    public GroupingsServiceResult addMemberAs(String username, String group, List<String> usersToAdd) {
+//        logger.info("addMemberAs; user: " + username + "; group: " + group + "; usersToAdd: " + usersToAdd + ";");
+//
+//        WsSubjectLookup user = gf.makeWsSubjectLookup(username);
+//        String action = "add users to " + group;
+//
+//        if (group.endsWith(INCLUDE)) {
+//            gf.makeWsDeleteMemberResults(
+//                    group.substring(0, group.length() - INCLUDE.length()) + EXCLUDE,
+//                    user,
+//                    userToAdd);
+//        } else if (group.endsWith(EXCLUDE)) {
+//            gf.makeWsDeleteMemberResults(
+//                    group.substring(0, group.length() - EXCLUDE.length()) + INCLUDE,
+//                    user,
+//                    userToAdd
+//            );
+//        }
+//        WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(group, user, usersToAdd);
+//
+//        updateLastModified(parentGroupingPath(group));
+//        updateLastModified(group);
+//
+//        return makeGroupingsServiceResult(addMemberResults, action);
+        return null;
     }
 
     /**
