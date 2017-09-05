@@ -48,7 +48,7 @@ public class GroupingsRestController {
     /**
      * adds a member to the admin group
      *
-     * @param username:  username of the admin preforming the operation
+     * @param username:   username of the admin preforming the operation
      * @param adminToAdd: username of the new admin to add
      * @return information about the success of the operation
      */
@@ -65,7 +65,7 @@ public class GroupingsRestController {
     /**
      * deletes a member from the admin group
      *
-     * @param username:  username of the admin preforming the operation
+     * @param username:      username of the admin preforming the operation
      * @param adminToDelete: username of the admin to be deleted
      * @return information about the success of the operation
      */
@@ -375,49 +375,24 @@ public class GroupingsRestController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdminListsHolder> adminInfo(@PathVariable String username) {
-        logger.info("Entered REST adminInfo...");
+        logger.info("Entered REST adminLists...");
         return ResponseEntity
                 .ok()
-                .body(gs.adminInfo(username));
+                .body(gs.adminLists(username));
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
-     * eventually this is intended to give the user the ability to add a Grouping in one of the Groupings that they own,
-     * for now it will bring the user to the web page where they can submit a request to the UHGrouper staff
      * //@param grouping:    String containing the path of the parent Grouping
      * //@param newGrouping: String containing the name of the Grouping to be created
      *
      * @return information about the new Grouping and its success
      */
-    //currently this method is not to be implemented because responsibility to create a new
-    //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
-    //${app.iam.request.form}
     @RequestMapping(value = "/addGrouping",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView addGrouping() {
         return new RedirectView(requestForm);
-        /**
-         * TODO for Grouper update
-         * create Grouping
-         * create Grouping:basis
-         * create Grouping:include
-         * create Grouping:exclude
-         * create Grouping:basis+include  // this should be the complement of Grouping:exclude
-         * create Grouping:owners
-         *
-         * add all owners to Grouping:owners
-         * add Grouping:owners to uh-settings:groupingOwners
-         *
-         * assign privileges to Grouping:owners
-         *
-         * assign privileges to uh-settings:groupingAdmins
-         *
-         * set last-modified:yyyymmddThhmm on Grouping
-         */
+        //todo change to real method when it is ready for testing
     }
 
     /**
@@ -425,14 +400,11 @@ public class GroupingsRestController {
      *
      * @return information about the deleted Grouping and its success
      */
-    //currently this method is not to be implemented because responsibility to create a new
-    //grouping is still going to go through the UH Grouper staff, so the individual should be sent to this address
-    //${app.iam.request.form}
-    // email its-iam-help@hawaii.edu for help in deleting a Grouping
     @RequestMapping(value = "/deleteGrouping",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public RedirectView deleteGrouping() {
         return new RedirectView(requestForm);
     }
+    //todo change to real method when it is ready for testing
 }

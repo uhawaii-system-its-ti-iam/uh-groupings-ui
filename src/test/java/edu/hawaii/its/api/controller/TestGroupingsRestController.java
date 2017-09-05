@@ -398,7 +398,6 @@ public class TestGroupingsRestController {
 
     }
 
-    //todo update for Grouper reconfiguration
 //    @Test
 //    public void getAdminInfoTest() {
 //        AdminListsHolder infoFail = gc.adminInfo(tst[0]).getBody();

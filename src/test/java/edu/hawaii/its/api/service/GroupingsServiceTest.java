@@ -26,8 +26,17 @@ public class GroupingsServiceTest {
     @Value("${groupings.api.settings}")
     private String SETTINGS;
 
-    @Value("${groupings.api.admins}")
-    private String ADMINS;
+    @Value("${groupings.api.grouping_admins}")
+    private String GROUPING_ADMINS;
+
+    @Value("${groupings.api.grouping_apps}")
+    private String GROUPING_APPS;
+
+    @Value("${groupings.api.grouping_owners}")
+    private String GROUPING_OWNERS;
+
+    @Value("${groupings.api.grouping_superusers}")
+    private String GROUPING_SUPERUSERS;
 
     @Value("${groupings.api.attributes}")
     private String ATTRIBUTES;
@@ -216,16 +225,16 @@ public class GroupingsServiceTest {
     public void makeGroupingsNoAttributes() {
         List<String> groupPaths = new ArrayList<>();
 
-        for(int i = 0; i < 5; i ++) {
+        for (int i = 0; i < 5; i++) {
             groupPaths.add("grouping_" + i);
         }
-        for(int i = 0; i < 5; i ++) {
+        for (int i = 0; i < 5; i++) {
             groupPaths.add("path:grouping_" + (i + 5));
         }
 
         List<Grouping> groupings = gs.makeGroupings(groupPaths, false);
 
-        for(int i = 5; i < 10; i ++) {
+        for (int i = 5; i < 10; i++) {
             assertEquals("path:grouping_" + i, groupings.get(i).getPath());
             assertEquals("grouping_" + i, groupings.get(i).getName());
         }
@@ -283,23 +292,43 @@ public class GroupingsServiceTest {
         assertEquals(firstMembershipId, "");
 
 
-        memberships = new WsMembership[] {null};
+        memberships = new WsMembership[]{null};
         membershipsResults.setWsMemberships(memberships);
         firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "");
 
         WsMembership membership = new WsMembership();
-        memberships = new WsMembership[] {membership};
+        memberships = new WsMembership[]{membership};
         membershipsResults.setWsMemberships(memberships);
         firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "");
 
         membership.setMembershipId("1234");
-        memberships = new WsMembership[] {membership};
+        memberships = new WsMembership[]{membership};
         membershipsResults.setWsMemberships(memberships);
         firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "1234");
 
 
+    }
+
+    @Test
+    public void unionMemberListsTest() {
+        List<String> stringsOneThroughTen = new ArrayList<>();
+        List<String> stringsSixThroughFifteen = new ArrayList<>();
+
+        for(Integer i = 1; i < 11; i ++) {
+            Integer k = i + 5;
+            stringsOneThroughTen.add(i.toString());
+            stringsSixThroughFifteen.add(k.toString());
+        }
+
+        List<String> noDuplicates = gs.unionMemberLists(stringsOneThroughTen, stringsSixThroughFifteen);
+
+        for(Integer i = 1; i < 16; i ++) {
+            assertTrue(noDuplicates.contains(i.toString()));
+        }
+
+        assertEquals(noDuplicates.size(), 15);
     }
 }

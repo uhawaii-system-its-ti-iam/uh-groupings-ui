@@ -120,7 +120,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public boolean fetchAdmin(String username) {
         System.out.println("//////////////////////////////");
         try {
-            if (!gs.adminInfo(username).getAllGroupings().isEmpty()) {
+            if (!gs.adminLists(username).getAllGroupings().isEmpty()) {
                 System.out.println("this person is an admin");
                 return true;
             } else {
