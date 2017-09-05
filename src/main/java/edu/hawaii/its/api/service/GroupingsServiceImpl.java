@@ -1604,12 +1604,11 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new Person();
     }
 
-    private List<String> unionMemberLists(List<String> list1, List<String> list2) {
+    public List<String> unionMemberLists(List<String> list1, List<String> list2) {
         List<String> list = new ArrayList<>();
         list.addAll(list1);
         list.addAll(list2);
 
-        //todo test if it really removes duplicates
         //remove duplicates
         Set<String> s = new TreeSet<>();
         s.addAll(list);

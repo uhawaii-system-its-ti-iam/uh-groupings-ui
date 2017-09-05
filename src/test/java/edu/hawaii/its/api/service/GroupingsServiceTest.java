@@ -311,4 +311,24 @@ public class GroupingsServiceTest {
 
 
     }
+
+    @Test
+    public void unionMemberListsTest() {
+        List<String> stringsOneThroughTen = new ArrayList<>();
+        List<String> stringsSixThroughFifteen = new ArrayList<>();
+
+        for(Integer i = 1; i < 11; i ++) {
+            Integer k = i + 5;
+            stringsOneThroughTen.add(i.toString());
+            stringsSixThroughFifteen.add(k.toString());
+        }
+
+        List<String> noDuplicates = gs.unionMemberLists(stringsOneThroughTen, stringsSixThroughFifteen);
+
+        for(Integer i = 1; i < 16; i ++) {
+            assertTrue(noDuplicates.contains(i.toString()));
+        }
+
+        assertEquals(noDuplicates.size(), 15);
+    }
 }
