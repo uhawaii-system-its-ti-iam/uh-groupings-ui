@@ -135,7 +135,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("$groupings.api.stem}")
     private String STEM;
 
-    GrouperFactoryService gf = new GrouperFactoryServiceImpl();
+    private GrouperFactoryService gf = new GrouperFactoryServiceImpl();
 
     public GroupingsServiceImpl() {
     }
@@ -148,59 +148,87 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     @Override
     public List<GroupingsServiceResult> addGrouping(String username, String path, List<String> basis, List<String> include, List<String> exclude, List<String> owners) {
-        throw new NotImplementedException();
 
-//        String[] pathExtensions = new String[] {"", ":basis", ":include", ":basis+include", ":exclude", ":owners"};
+        //This method will not work until Grouper is updated
+
 //        List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
-//        List<Group> groups = new ArrayList<>();
-//        List<List<String>> memberLists = new ArrayList<>();
+//        String action = username + "is adding a Grouping located at path " + path;
 //
-//        //remove duplicates
-//        List<String> basisAndInclude = new ArrayList<>();
-//        Set<String> s = new TreeSet<>();
-//        s.addAll(basisAndInclude);
-//        List<String> basisPlusInclude = Arrays.asList(s.toArray(new String[s.size()]));
+//        //todo consider changing this to isAdmin. Will an app account ever need to make a Grouping?
+//        if (isSuperuser(username)) {
 //
-//        memberLists.add(new ArrayList<>());
-//        memberLists.add(basis);
-//        memberLists.add(include);
-//        memberLists.add(basisPlusInclude);
-//        memberLists.add(exclude);
-//        memberLists.add(owners);
+//            List<Group> groups = new ArrayList<>();
+//
+//            List<String> basisPlusInclude = unionMemberLists(basis, include);
+//
+//            Map<String, List<String>> memberLists = new HashMap<>();
+//            memberLists.put("", new ArrayList<>());
+//            memberLists.put(BASIS, basis);
+//            memberLists.put(INCLUDE, include);
+//            memberLists.put(BASIS_PLUS_INCLUDE, basisPlusInclude);
+//            memberLists.put(EXCLUDE, exclude);
+//            memberLists.put(OWNERS, owners);
 //
 //
-//        //todo check about making folders
-//        for (int i = 0; i < memberLists.size(); i ++) {
-//            groups.add(makeGroup(path + pathExtensions[i], memberLists.get(i)));
+//            //todo check about making folders
+//            //todo is a folder the same as a stem?
+//            gf.makeWsStemSaveResults(username, path);
+//
+//            //todo always create a basis folder?
+//            gf.makeWsStemSaveResults(username, path + BASIS);
+//
+//            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
+//                Group group = makeGroup(path + entry.getKey(), entry.getValue());
+//                groups.add(group);
+//            }
+//
+//            for (Group group : groups) {
+//                GroupingsServiceResult result = makeGroupingsServiceResult(
+//                        gf.addEmptyGroup(username, group.getPath()),
+//                        action);
+//                addGroupingResults.add(result);
+//            }
+//            addGroupingResults.add(updateLastModified(path));
+//
+//            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
+//                addGroupingResults.add(addMemberAs(username, path + entry.getKey(), entry.getValue()));
+//                addGroupingResults.add(updateLastModified(path + entry.getKey()));
+//            }
+//            //todo add isTrio to Grouping
+//
+//            addGroupingResults.add(addMemberAs(username, GROUPING_OWNERS, memberLists.get(OWNERS)));
+//            addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
+//
+//        } else {
+//            GroupingsServiceResult gsr = new GroupingsServiceResult(FAILURE, action);
+//            addGroupingResults.add(gsr);
 //        }
-//
-//        for(Group group : groups) {
-//            addGroupingResults.add(gf.addGroup(group, username));
-//        }
-//
-//         //todo add Grouping:owners to uh-settings:groupingOwners
-//
-//        addGroupingResults.add(updateLastModified(path));
 //
 //        return addGroupingResults;
+        throw new NotImplementedException();
     }
 
     @Override
     public List<GroupingsServiceResult> deleteGrouping(String username, String groupingPath) {
-        List<GroupingsServiceResult> deleteGroupingResults = new ArrayList<>();
 
-        if(isSuperuser(username)) {
-            deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
-            deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
-        }
-        else {
-            GroupingsServiceResult failureResult = new GroupingsServiceResult();
-            failureResult.setAction("delete grouping" + groupingPath);
-            failureResult.setResultCode(FAILURE);
+        //this method will not work until Grouper is updated
 
-            deleteGroupingResults.add(failureResult);
-        }
-        return deleteGroupingResults;
+//        List<GroupingsServiceResult> deleteGroupingResults = new ArrayList<>();
+//        if (isAdmin(username)) {
+//            deleteGroupingResults.add(assignGroupAttributes(username, PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
+//            deleteGroupingResults.add(assignGroupAttributes(username, TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
+//        } else if (isApp(username)) {
+//            deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
+//            deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
+//        } else {
+//            GroupingsServiceResult failureResult = new GroupingsServiceResult();
+//            failureResult.setAction("delete grouping" + groupingPath);
+//            failureResult.setResultCode(FAILURE);
+//
+//            deleteGroupingResults.add(failureResult);
+//        }
+//        return deleteGroupingResults;
+        throw new NotImplementedException();
     }
 
     /**
@@ -853,13 +881,13 @@ public class GroupingsServiceImpl implements GroupingsService {
         return isAdmin(username) || isApp(username);
     }
 
-        /**
-         * removes the self-opted attribute from a membership (combination of a group and a subject)
-         *
-         * @param group:    the group in the membership
-         * @param username: the subject in the membership
-         * @return the response from grouper web service or empty WsAssignAttributesResults object
-         */
+    /**
+     * removes the self-opted attribute from a membership (combination of a group and a subject)
+     *
+     * @param group:    the group in the membership
+     * @param username: the subject in the membership
+     * @return the response from grouper web service or empty WsAssignAttributesResults object
+     */
     @Override
     public GroupingsServiceResult removeSelfOpted(String group, String username) {
         logger.info("removeSelfOpted; group: " + group + "; username: " + username + ";");
@@ -1039,6 +1067,34 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
+     * @param attributeName:      name of attribute to be assigned
+     * @param attributeOperation: operation to be done with the attribute to the group
+     * @param group:              path to the group to have the attribute acted upon
+     * @param username:           username of user assigning attribute
+     */
+    private GroupingsServiceResult assignGroupAttributes(String username, String attributeName, String attributeOperation, String group) {
+        logger.info("assignGroupAttributes; "
+                + "; username: "
+                + username
+                + "; attributeName: "
+                + attributeName
+                + "; attributeOperation: "
+                + attributeOperation
+                + "; group: "
+                + group
+                + ";");
+
+        WsAssignAttributesResults attributesResults = gf.makeWsAssignAttributesResultsForGroup(
+                gf.makeWsSubjectLookup(username),
+                ASSIGN_TYPE_GROUP,
+                attributeOperation,
+                attributeName,
+                group);
+
+        return makeGroupingsServiceResult(attributesResults, "assign " + attributeName + " attribute to " + group);
+    }
+
+    /**
      * @param assignType: assign type of the attribute
      * @param group:      path to the group to have attributes searched
      * @param nameName:   name of the attribute to be looked up
@@ -1130,8 +1186,6 @@ public class GroupingsServiceImpl implements GroupingsService {
         String action = "add " + newAdmin + " to " + GROUPING_ADMINS;
 
         if (isSuperuser(username)) {
-            WsSubjectLookup user = gf.makeWsSubjectLookup(username);
-
             WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(
                     GROUPING_ADMINS,
                     newAdmin);
@@ -1173,7 +1227,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @param username:  username of owner adding member
      * @param group:     path to group the user to be added will be added to
-     * @param userToAdd: username of user to be added to grup
+     * @param userToAdd: username of user to be added to group
      * @return information about success of action
      */
     @Override
@@ -1196,6 +1250,39 @@ public class GroupingsServiceImpl implements GroupingsService {
             );
         }
         WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(group, user, userToAdd);
+
+        updateLastModified(parentGroupingPath(group));
+        updateLastModified(group);
+
+        return makeGroupingsServiceResult(addMemberResults, action);
+    }
+
+    /**
+     * @param username:   username of owner adding member
+     * @param group:      path to group the user to be added will be added to
+     * @param usersToAdd: list of usernames to be added to group
+     * @return information about success of action
+     */
+    @Override
+    public GroupingsServiceResult addMemberAs(String username, String group, List<String> usersToAdd) {
+        logger.info("addMemberAs; user: " + username + "; group: " + group + "; usersToAdd: " + usersToAdd + ";");
+
+        WsSubjectLookup user = gf.makeWsSubjectLookup(username);
+        String action = "add users to " + group;
+
+        if (group.endsWith(INCLUDE)) {
+            gf.makeWsDeleteMemberResults(
+                    group.substring(0, group.length() - INCLUDE.length()) + EXCLUDE,
+                    user,
+                    usersToAdd);
+        } else if (group.endsWith(EXCLUDE)) {
+            gf.makeWsDeleteMemberResults(
+                    group.substring(0, group.length() - EXCLUDE.length()) + INCLUDE,
+                    user,
+                    usersToAdd
+            );
+        }
+        WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(group, user, usersToAdd);
 
         updateLastModified(parentGroupingPath(group));
         updateLastModified(group);
@@ -1489,9 +1576,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     private Group makeGroup(String path, List<String> usernames) {
         List<Person> members = new ArrayList<>();
 
-        for(String username : usernames) {
+        for (String username : usernames) {
             WsSubject subject = new WsSubject();
-            subject.setAttributeValues(new String[] {username});
+            subject.setAttributeValues(new String[]{username});
             members.add(makePerson(subject));
         }
 
@@ -1514,6 +1601,17 @@ public class GroupingsServiceImpl implements GroupingsService {
             return new Person(name, uuid, username);
         }
         return new Person();
+    }
+
+    List<String> unionMemberLists(List<String> list1, List<String> list2) {
+        List<String> list = new ArrayList<>();
+        list.addAll(list1);
+        list.addAll(list2);
+
+        //remove duplicates
+        Set<String> s = new TreeSet<>();
+        s.addAll(list);
+        return Arrays.asList(s.toArray(new String[s.size()]));
     }
 
 }

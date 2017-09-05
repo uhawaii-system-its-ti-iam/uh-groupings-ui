@@ -28,6 +28,8 @@ public interface GroupingsService {
 
     public GroupingsServiceResult addMemberAs(String username, String group, String userToAdd);
 
+    public GroupingsServiceResult addMemberAs(String username, String group, List<String> usersToAdd);
+
     public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete);
 
     public GroupingsServiceResult assignOwnership(String grouping, String username, String newOwner);
