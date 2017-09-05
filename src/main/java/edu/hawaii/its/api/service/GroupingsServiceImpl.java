@@ -135,7 +135,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("$groupings.api.stem}")
     private String STEM;
 
-    GrouperFactoryService gf = new GrouperFactoryServiceImpl();
+    private GrouperFactoryService gf = new GrouperFactoryServiceImpl();
 
     public GroupingsServiceImpl() {
     }
@@ -194,6 +194,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 //                addGroupingResults.add(addMemberAs(username, path + entry.getKey(), entry.getValue()));
 //                addGroupingResults.add(updateLastModified(path + entry.getKey()));
 //            }
+//            //todo add isTrio to Grouping
 //
 //            addGroupingResults.add(addMemberAs(username, GROUPING_OWNERS, memberLists.get(OWNERS)));
 //            addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
@@ -1185,8 +1186,6 @@ public class GroupingsServiceImpl implements GroupingsService {
         String action = "add " + newAdmin + " to " + GROUPING_ADMINS;
 
         if (isSuperuser(username)) {
-            WsSubjectLookup user = gf.makeWsSubjectLookup(username);
-
             WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(
                     GROUPING_ADMINS,
                     newAdmin);
@@ -1259,8 +1258,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param username:  username of owner adding member
-     * @param group:     path to group the user to be added will be added to
+     * @param username:   username of owner adding member
+     * @param group:      path to group the user to be added will be added to
      * @param usersToAdd: list of usernames to be added to group
      * @return information about success of action
      */
@@ -1604,7 +1603,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new Person();
     }
 
-    public List<String> unionMemberLists(List<String> list1, List<String> list2) {
+    List<String> unionMemberLists(List<String> list1, List<String> list2) {
         List<String> list = new ArrayList<>();
         list.addAll(list1);
         list.addAll(list2);
