@@ -85,6 +85,19 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     }
 
     @Override
+    public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, List<String> newMembers) {
+        GcAddMember addMember = new GcAddMember();
+        addMember.assignActAsSubject(lookup);
+        addMember.assignGroupName(group);
+
+        for(String name : newMembers) {
+            addMember.addSubjectIdentifier(name);
+        }
+
+        return addMember.execute();
+    }
+
+    @Override
     public WsAddMemberResults makeWsAddMemberResults(String group, String newMember) {
         return new GcAddMember()
                 .addSubjectIdentifier(newMember)
@@ -107,6 +120,19 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
                 .addSubjectIdentifier(memberToDelete)
                 .assignGroupName(group)
                 .execute();
+    }
+
+    @Override
+    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, List<String> membersToDelete) {
+        GcDeleteMember deleteMember = new GcDeleteMember();
+        deleteMember.assignActAsSubject(lookup);
+        deleteMember.assignGroupName(group);
+
+        for(String name : membersToDelete) {
+            deleteMember.addSubjectIdentifier(name);
+        }
+
+        return deleteMember.execute();
     }
 
 

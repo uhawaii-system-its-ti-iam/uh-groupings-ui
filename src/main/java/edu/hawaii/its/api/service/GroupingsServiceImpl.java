@@ -191,15 +191,11 @@ public class GroupingsServiceImpl implements GroupingsService {
 //            addGroupingResults.add(updateLastModified(path));
 //
 //            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
-//                for(String member : entry.getValue()){
-//                    addMemberAs(username, path + entry.getKey(), member);
-//                }
+//                addGroupingResults.add(addMemberAs(username, path + entry.getKey(), entry.getValue()));
+//                addGroupingResults.add(updateLastModified(path + entry.getKey()));
 //            }
 //
-//
-//            for (String userToAdd : memberLists.get(OWNERS)) {
-//                addGroupingResults.add(addMemberAs(username, GROUPING_OWNERS, userToAdd));
-//            }
+//            addGroupingResults.add(addMemberAs(username, GROUPING_OWNERS, memberLists.get(OWNERS)));
 //            addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
 //
 //        } else {
@@ -1270,30 +1266,29 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult addMemberAs(String username, String group, List<String> usersToAdd) {
-//        logger.info("addMemberAs; user: " + username + "; group: " + group + "; usersToAdd: " + usersToAdd + ";");
-//
-//        WsSubjectLookup user = gf.makeWsSubjectLookup(username);
-//        String action = "add users to " + group;
-//
-//        if (group.endsWith(INCLUDE)) {
-//            gf.makeWsDeleteMemberResults(
-//                    group.substring(0, group.length() - INCLUDE.length()) + EXCLUDE,
-//                    user,
-//                    userToAdd);
-//        } else if (group.endsWith(EXCLUDE)) {
-//            gf.makeWsDeleteMemberResults(
-//                    group.substring(0, group.length() - EXCLUDE.length()) + INCLUDE,
-//                    user,
-//                    userToAdd
-//            );
-//        }
-//        WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(group, user, usersToAdd);
-//
-//        updateLastModified(parentGroupingPath(group));
-//        updateLastModified(group);
-//
-//        return makeGroupingsServiceResult(addMemberResults, action);
-        return null;
+        logger.info("addMemberAs; user: " + username + "; group: " + group + "; usersToAdd: " + usersToAdd + ";");
+
+        WsSubjectLookup user = gf.makeWsSubjectLookup(username);
+        String action = "add users to " + group;
+
+        if (group.endsWith(INCLUDE)) {
+            gf.makeWsDeleteMemberResults(
+                    group.substring(0, group.length() - INCLUDE.length()) + EXCLUDE,
+                    user,
+                    usersToAdd);
+        } else if (group.endsWith(EXCLUDE)) {
+            gf.makeWsDeleteMemberResults(
+                    group.substring(0, group.length() - EXCLUDE.length()) + INCLUDE,
+                    user,
+                    usersToAdd
+            );
+        }
+        WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(group, user, usersToAdd);
+
+        updateLastModified(parentGroupingPath(group));
+        updateLastModified(group);
+
+        return makeGroupingsServiceResult(addMemberResults, action);
     }
 
     /**
