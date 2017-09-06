@@ -71,7 +71,7 @@ public class DatabaseConfig {
 
         em.setPersistenceUnitName("holidayPersistenceUnit");
         em.setPersistenceProviderClass(HibernatePersistenceProvider.class);
-        em.setPackagesToScan("edu.hawaii.its.holiday.type", "edu.hawaii.its.groupings.type");
+        em.setPackagesToScan("edu.hawaii.its.holiday.type", "edu.hawaii.its.groupings.type", "edu.hawaii.its.api.type");
 
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaProperties(jpaProperties());
