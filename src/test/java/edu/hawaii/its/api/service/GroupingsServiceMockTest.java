@@ -174,7 +174,7 @@ public class GroupingsServiceMockTest {
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        for(int i = 0; i < users.length; i ++) {
+        for (int i = 0; i < users.length; i++) {
             users[i] = new Person(NAMES[i], "uuid", USERNAMES[i]);
         }
 
