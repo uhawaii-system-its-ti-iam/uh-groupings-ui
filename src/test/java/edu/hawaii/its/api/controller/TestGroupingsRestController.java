@@ -398,17 +398,18 @@ public class TestGroupingsRestController {
 
     }
 
-//    @Test
-//    public void getAdminInfoTest() {
-//        AdminListsHolder infoFail = gc.adminInfo(tst[0]).getBody();
-//
-//        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
-//        assertEquals(infoFail.getAllGroupings().size(), 0);
-//
-//        AdminListsHolder infoSuccess = gc.adminInfo(API_ACCOUNT).getBody();
-//
-//        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(API_ACCOUNT));
-//    }
+    @Test
+    public void adminListsTest() {
+        AdminListsHolder infoFail = gc.adminLists(tst[0]).getBody();
+
+        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
+        assertEquals(infoFail.getAllGroupings().size(), 0);
+
+        AdminListsHolder infoSuccess = gc.adminLists(API_ACCOUNT).getBody();
+
+        //STUDENT_TEST_USERNAME can be replaced with any account that has admin access
+        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(STUDENT_TEST_USERNAME));
+    }
 
     @Test
     public void addDeleteAdminTest() {

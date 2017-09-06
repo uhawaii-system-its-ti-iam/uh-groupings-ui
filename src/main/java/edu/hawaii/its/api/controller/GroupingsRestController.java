@@ -371,11 +371,11 @@ public class GroupingsRestController {
                 .body(gs.changeOptOutStatus(grouping, username, optOutOn));
     }
 
-    @RequestMapping(value = "/{username}/adminInfo",
+    @RequestMapping(value = "/{username}/adminLists",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AdminListsHolder> adminInfo(@PathVariable String username) {
-        logger.info("Entered REST adminLists...");
+    public ResponseEntity<AdminListsHolder> adminLists(@PathVariable String username) {
+        logger.info("Entered REST adminListHolder...");
         return ResponseEntity
                 .ok()
                 .body(gs.adminLists(username));
