@@ -54,8 +54,6 @@ public class GroupingsRestControllerTest {
         mockMvc = webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
-
-
     }
 
     @Test
