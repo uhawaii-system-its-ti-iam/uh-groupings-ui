@@ -216,15 +216,29 @@
          * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
          */
         $scope.sort = function (list, col, listPaged, symbol) {
+          console.log(col);
+          var order;
+          $scope[symbol].name = [];
+          $scope[symbol].folder = [];
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
                 list = _.sortBy(list, col);
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = '\u25BC';
+                order = '\u25BC';
             }
             else {
                 list = _.sortBy(list, col).reverse();
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = '\u25B2';
+                order = '\u25B2';
+            }
+            switch (col){
+              case 'name':
+                $scope[symbol].name = order;
+                $scope[symbol] = order;
+                break;
+              case 'foldder':
+                $scope[symbol].folder = order;
+                $scope[symbol] = order;
+                break;
             }
         };
 
