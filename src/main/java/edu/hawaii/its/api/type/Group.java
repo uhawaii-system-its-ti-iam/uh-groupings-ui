@@ -5,15 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "groups")
 public class Group {
-    @Column
-    @ElementCollection(targetClass = Person.class)
+//    @ElementCollection(targetClass = Person.class)
+    @Transient
     private List<Person> members = new ArrayList<>();
+
     @Id
-    @Column
+    @Column(name = "path")
     private String path = "";
 
-    public Group(){
+    public Group() {
         //empty
     }
 

@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertNotNull;
 
+import edu.hawaii.its.api.service.GroupRepositoryService;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import edu.hawaii.its.holiday.service.HolidayService;
 import edu.hawaii.its.holiday.type.Holiday;
@@ -24,11 +25,20 @@ public class GroupRepositoryTest {
     @Autowired
     private HolidayService holidayService;
 
+    @Autowired
+    private GroupRepositoryService groupRepositoryService;
 
     @Test
     public void hibernateTest() {
         List<Holiday> holidays = holidayService.findHolidays();
 
         assertNotNull(holidays);
+    }
+
+    @Test
+    public void hibernateTest2() {
+        List<Group> groups = groupRepositoryService.findGroups();
+
+        assertNotNull(groups);
     }
 }

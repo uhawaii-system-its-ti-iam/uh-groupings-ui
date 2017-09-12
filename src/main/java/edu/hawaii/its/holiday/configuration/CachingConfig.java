@@ -20,6 +20,7 @@ public class CachingConfig {
                 new ConcurrentMapCache("default"),
                 new ConcurrentMapCache("campuses"),
                 new ConcurrentMapCache("campusesById"),
+                new ConcurrentMapCache("groups"),
                 new ConcurrentMapCache("holidays"),
                 new ConcurrentMapCache("holidaysById"),
                 new ConcurrentMapCache("holidaysByYear"),
