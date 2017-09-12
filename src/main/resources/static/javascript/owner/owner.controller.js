@@ -402,8 +402,74 @@
             }
             return str;
         };
-
     //Pagination code
+
+
+    /**gives you a true or false if it finds the match
+    **@param haystack - the thing to be checked
+    **@param needle - the check against
+    **
+    **/
+    var searchMatch = function (haystack, needle) {
+        if (!needle) {
+            return true;
+        }
+        return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+    };
+
+    /**searches through the array to find matches and then fixes the list
+    **@param list - gives the whole list to sort out
+    **@param whatList - it gives you the list you need to search through
+    **@param whatQuery - it gives the search bar its seperate search function.
+    **/
+    $scope.search = function (list, whatList,whatQuery) {
+        var query = "";
+        //TODO change this to the $scope[whatQuery]
+        switch(whatQuery){
+            case 'firstQuery':
+                query = $scope.queryMembers;
+                break;
+            case 'secondQuery':
+                query = $scope.queryOptIn;
+                break;
+            case 'thirdQuery':
+                query = $scope.queryOptedOut;
+                break;
+            case 'fourthQuery':
+                query = $scope.queryOptedIn;
+                break;
+        }
+        $scope.filteredItems = [];
+        $scope.filteredItems = $filter('filter')(list, function (item) {
+            if(searchMatch(item.name, query)){
+                return true;
+            }
+        });
+        console.log($scope.filteredItems);
+        page = 0;
+        // now group by pages
+        var emptyList = [];
+        //TODO change this to the $scope[whatList]
+        switch(whatList){
+            case 'Paged_1':
+                $scope.pagedItemsMembersList = $scope.groupToPagesChanged(emptyList);
+                break;
+            case 'Paged_3':
+                $scope.pagedItemsOptInList = $scope.groupToPagesChanged(emptyList);
+                break;
+            case 'Paged_4':
+                $scope.pagedItemsOptedInList = $scope.groupToPagesChanged(emptyList);
+                break;
+
+            case 'Paged_5':
+                $scope.pagedItemsOptedOutList = $scope.groupToPagesChanged(emptyList);
+                break;
+        }
+    };
+
+
+
+
     /**groups all the items to pages
        have sepperate arrays (hopefully)
        @param
@@ -454,6 +520,7 @@
 
     $scope.currentPage = function(pages){
         switch(pages){
+            //TODO we need  [next, first, prev, last, set], the $scope[whatList], $scope[whatPage]
             case 'Include Next':
                 if ($scope.currentPageInclude < $scope.pagedItemsInclude.length - 1) {
                     $scope.currentPageInclude = $scope.currentPageInclude + 1;
