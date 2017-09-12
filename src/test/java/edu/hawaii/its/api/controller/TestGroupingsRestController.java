@@ -1,27 +1,28 @@
 package edu.hawaii.its.api.controller;
 
-import javax.annotation.PostConstruct;
-
-import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.type.AdminListsHolder;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.api.service.GroupingsService;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingAssignment;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import javax.annotation.PostConstruct;
 
 import static org.junit.Assert.*;
 
+@ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsRestController {
