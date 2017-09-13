@@ -9,7 +9,7 @@
      * @param dataDeleter    : service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function OwnerJsController($scope, $window, dataProvider, dataUpdater, dataDeleter) {
+    function OwnerJsController($scope, $window,$filter, dataProvider, dataUpdater, dataDeleter) {
         $scope.currentUsername = "";
         $scope.initCurrentUsername = function() {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -424,50 +424,33 @@
     **/
     $scope.search = function (list, whatList,whatQuery) {
         var query = "";
-        //TODO change this to the $scope[whatQuery]
-        switch(whatQuery){
-            case 'firstQuery':
-                query = $scope.queryMembers;
-                break;
-            case 'secondQuery':
-                query = $scope.queryOptIn;
-                break;
-            case 'thirdQuery':
-                query = $scope.queryOptedOut;
-                break;
-            case 'fourthQuery':
-                query = $scope.queryOptedIn;
-                break;
-        }
+        query = $scope[whatQuery];
+        console.log(query);
+        //console.log($scope[whatList]);
         $scope.filteredItems = [];
         $scope.filteredItems = $filter('filter')(list, function (item) {
             if(searchMatch(item.name, query)){
                 return true;
             }
         });
-        console.log($scope.filteredItems);
+        // console.log($scope.filteredItems);
         page = 0;
         // now group by pages
         var emptyList = [];
-        //TODO change this to the $scope[whatList]
-        switch(whatList){
-            case 'Paged_1':
-                $scope.pagedItemsMembersList = $scope.groupToPagesChanged(emptyList);
-                break;
-            case 'Paged_3':
-                $scope.pagedItemsOptInList = $scope.groupToPagesChanged(emptyList);
-                break;
-            case 'Paged_4':
-                $scope.pagedItemsOptedInList = $scope.groupToPagesChanged(emptyList);
-                break;
-
-            case 'Paged_5':
-                $scope.pagedItemsOptedOutList = $scope.groupToPagesChanged(emptyList);
-                break;
-        }
+        $scope[whatList] = $scope.groupToPagesChanged(emptyList);
     };
 
-
+    $scope.groupToPagesChanged = function(pagedList){
+        var pagedList = [];
+        for(var i = 0; i < $scope.filteredItems.length ; i++){
+            if(i % $scope.itemsPerPage === 0){
+                pagedList[Math.floor(i/$scope.itemsPerPage)] = [ $scope.filteredItems[i]];
+            }else{
+                pagedList[Math.floor(i/$scope.itemsPerPage)].push( $scope.filteredItems[i]);
+            }
+        }
+        return pagedList;
+    };
 
 
     /**groups all the items to pages

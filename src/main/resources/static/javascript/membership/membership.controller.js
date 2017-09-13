@@ -171,6 +171,7 @@
         $scope.search = function (list, whatList,whatQuery) {
             var query = "";
             query = $scope[whatQuery];
+            console.log(query);
             $scope.filteredItems = [];
             $scope.filteredItems = $filter('filter')(list, function (item) {
                 if(searchMatch(item.name, query)){

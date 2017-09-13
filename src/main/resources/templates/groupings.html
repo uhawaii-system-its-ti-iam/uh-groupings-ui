@@ -25,10 +25,10 @@
                             <div class="form-group">
                                 <h3 class="col-md-4" style="margin-top: 5px">Groupings</h3>
                                 <!--HERE-->
-                                <div align="right" style="margin-top: 10px">
+                                <!-- <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
-                                    ng-model="query1" ng-change= "search(membersList, 'Paged_1', 'firstQuery')" id = "members"/>
-                                </div>
+                                    ng-model="query1" ng-change= "search(ownedList, 'Paged_1', 'firstQuery')" id = "members"/>
+                                </div> -->
                             </div>
                         </div>
                         <table class="table table-bordered table-condensed table-hover">
@@ -69,6 +69,7 @@
 
                     <div class="tab-content">
                         <!-- List of the members in the grouping -->
+
                         <div id="members" class="tab-pane fade in active">
                             <h2 class="text-center">Members</h2>
 
@@ -91,6 +92,10 @@
                             <div class="tab-content col-md-10 col-xs-8">
                                 <div id="all" class="tab-pane fade in active">
                                     <h3 class="text-center">List</h3>
+                                    <div align="right" style="margin-top: 10px">
+                                        <input placeholder="Type to filter Include Groups..." type="text"
+                                        ng-model="ListQuery" ng-change= "search(groupingsList, 'pagedItemsList', 'ListQuery')" id = "members"/>
+                                    </div>
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
@@ -136,10 +141,10 @@
                                     <h3 class="text-center">Basis</h3>
 
                                     <!-- must put search bar here.. -->
-                                    <!-- <div align="right" style="margin-top: 10px">
+                                    <div align="right" style="margin-top: 10px">
                                         <input placeholder="Type to filter Groupings..." type="text"
-                                        ng-model="queryMembers" ng-change= "search(membersList, 'Paged_1', 'firstQuery')" id = "members"/>
-                                    </div> -->
+                                        ng-model="basisQuery" ng-change= "search(groupingsBasis, 'pagedItemsBasis', 'basisQuery')" id = "members"/>
+                                    </div>
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
@@ -182,10 +187,10 @@
                                 <div id="include" class="tab-pane fade">
                                     <h3 class="text-center">Include</h3>
                                     <!--  must put search bar here...-->
-                                    <!-- <div align="right" style="margin-top: 10px">
-                                        <input placeholder="Type to filter Groupings..." type="text"
-                                        ng-model="queryMembers" ng-change= "search(membersList, 'Paged_1', 'firstQuery')" id = "members"/>
-                                    </div> -->
+                                    <div align="right" style="margin-top: 10px">
+                                        <input placeholder="Type to filter Include Groups..." type="text"
+                                        ng-model="includeQuery" ng-change= "search(groupingInclude, 'pagedItemsInclude', 'includeQuery')" id = "members"/>
+                                    </div>
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
@@ -253,10 +258,10 @@
                                     <h3 class="text-center">Exclude</h3>
 
                                     <!-- must put search bar here... -->
-                                    <!-- <div align="right" style="margin-top: 10px">
+                                    <div align="right" style="margin-top: 10px">
                                         <input placeholder="Type to filter Groupings..." type="text"
-                                        ng-model="queryMembers" ng-change= "search(membersList, 'Paged_1', 'firstQuery')" id = "members"/>
-                                    </div> -->
+                                        ng-model="excludeQuery" ng-change= "search(groupingExclude, 'pagedItemsExclude', 'excludeQuery')" />
+                                    </div>
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
@@ -328,10 +333,10 @@
                             <h2>Owners</h2>
 
                             <!-- must put search bar here -->
-                            <!-- <div align="right" style="margin-top: 10px">
+                            <div align="right" style="margin-top: 10px">
                                 <input placeholder="Type to filter Groupings..." type="text"
-                                ng-model="queryMembers" ng-change= "search(membersList, 'Paged_1', 'firstQuery')" id = "members"/>
-                            </div> -->
+                                ng-model="ownersQuery" ng-change= "search(ownerList, 'pagedItemsOwners', 'ownersQuery')" id = "members"/>
+                            </div>
                             <table class="table table-bordered table-condensed table-hover">
                                 <thead>
                                 <tr>
