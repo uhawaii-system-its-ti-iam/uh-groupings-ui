@@ -60,7 +60,7 @@
                                     <td>{{l.username}}</td>
                                     <td>
                                         <button class="btn btn-default btn-block"
-                                                ng-click="remove($index + (currentPage * itemsPerPage))"><span
+                                                ng-click="removeAdmin($index + (currentPage * itemsPerPage))"><span
                                                 class="glyphicon glyphicon-remove"></span></button>
                                     </td>
                                 </tr>
@@ -99,7 +99,7 @@
                                 </button>
                                 <div class="collapse" id="addAdmin">
                                     <input type="text" ng-model="username"/>
-                                    <button class="btn btn-success" ng-click="add()">Add Admin</button>
+                                    <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
                                 </div>
                             </div>
                         </div>
@@ -450,12 +450,13 @@
                                         <div id="options" class="tab-pane fade">
                                             <h3 class="text-center">Preferences</h3>
                                             <h3>Add/Remove</h3>
-                                            <input id="optInOption" type="checkbox"/> Allow people to add themselves to this group <br/>
-                                            <input id="optOutOption" type="checkbox"/> Allow people to remove themselves to this group
+
+                                            <input type="checkbox" ng-model="preference.optIn"/> Allow people to add themselves to this group <br/>
+                                            <input type="checkbox" ng-model="preference.optOut"/> Allow people to remove themselves to this group
                                             <br/>
 
                                             <h3>Publication Destinations</h3>
-                                            <input id="listserv" type="checkbox" ng-init="pref"/> LISTSERV list: {{groupingName.name}}
+                                            <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/> LISTSERV list: {{groupingName.name}}
                                             <br/>
 
                                             <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save
