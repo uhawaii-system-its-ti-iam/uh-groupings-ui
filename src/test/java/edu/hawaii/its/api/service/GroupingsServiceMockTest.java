@@ -1,20 +1,22 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.*;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-
-import edu.internet2.middleware.grouperClient.ws.beans.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+
+import edu.internet2.middleware.grouperClient.ws.beans.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
 
+@ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class GroupingsServiceMockTest {

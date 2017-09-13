@@ -1,22 +1,16 @@
 package edu.hawaii.its.api.type;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-@Entity
 public class Grouping {
-
-    @Id
     private String path;
     private String name;
-
     private Group basis;
     private Group exclude;
     private Group include;
     private Group composite;
     private Group owners;
-
-    private boolean listservOn, optInOn, optOutOn = false;
+    private boolean listservOn = false;
+    private boolean optInOn = false;
+    private boolean optOutOn = false;
 
     // Constructor.
     public Grouping() {

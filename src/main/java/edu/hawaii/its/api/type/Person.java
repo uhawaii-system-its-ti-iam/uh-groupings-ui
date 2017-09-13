@@ -1,10 +1,12 @@
 package edu.hawaii.its.api.type;
 
-/**
- * Created by zknoebel on 3/30/2017.
- */
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Person {
     private String name;
+    @Id
     private String uuid;
     private String username;
 

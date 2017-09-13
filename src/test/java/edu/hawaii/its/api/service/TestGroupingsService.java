@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
@@ -24,6 +25,7 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 import static org.junit.Assert.*;
 
+@ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsService {
