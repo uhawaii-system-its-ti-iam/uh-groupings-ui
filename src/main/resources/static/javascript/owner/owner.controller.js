@@ -9,7 +9,7 @@
      * @param dataDeleter   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function OwnerJsController($scope, $window, dataProvider, dataUpdater, dataDeleter) {
+    function OwnerJsController($scope, $window,$filter, dataProvider, dataUpdater, dataDeleter) {
         $scope.currentUsername = "";
         $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -451,24 +451,111 @@
             }
             return str;
         };
+    //Pagination code
 
-        //Pagination code
-        /**groups all the items to pages
-         have separate arrays (hopefully)
 
-         **/
-        $scope.groupToPages = function (theList, pagedList) {
-            var pagedList = [];
-            if (theList == null) {
-                console.log("I AM NULL ... WHY?!");
+    /**gives you a true or false if it finds the match
+    **@param haystack - the thing to be checked
+    **@param needle - the check against
+    **
+    **/
+    var searchMatch = function (haystack, needle) {
+        if (!needle) {
+            return true;
+        }
+        return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+    };
+
+    /**searches through the array to find matches and then fixes the list
+    **@param list - gives the whole list to sort out
+    **@param whatList - it gives you the list you need to search through
+    **@param whatQuery - it gives the search bar its seperate search function.
+    **/
+    $scope.search = function (list, whatList,whatQuery) {
+        var query = "";
+        query = $scope[whatQuery];
+        console.log(query);
+        //console.log($scope[whatList]);
+        $scope.filteredItems = [];
+        $scope.filteredItems = $filter('filter')(list, function (item) {
+            if(searchMatch(item.name, query)){
+                return true;
             }
-            if (theList != null) {
-                for (var i = 0; i < theList.length; i++) {
-                    if (i % $scope.itemsPerPage === 0) {
-                        pagedList[Math.floor(i / $scope.itemsPerPage)] = [theList[i]];
-                    } else {
-                        pagedList[Math.floor(i / $scope.itemsPerPage)].push(theList[i]);
-                    }
+        });
+        // console.log($scope.filteredItems);
+        page = 0;
+        // now group by pages
+        var emptyList = [];
+        $scope[whatList] = $scope.groupToPagesChanged(emptyList);
+    };
+
+    $scope.groupToPagesChanged = function(pagedList){
+        var pagedList = [];
+        for(var i = 0; i < $scope.filteredItems.length ; i++){
+            if(i % $scope.itemsPerPage === 0){
+                pagedList[Math.floor(i/$scope.itemsPerPage)] = [ $scope.filteredItems[i]];
+            }else{
+                pagedList[Math.floor(i/$scope.itemsPerPage)].push( $scope.filteredItems[i]);
+            }
+        }
+        return pagedList;
+    };
+
+
+    /**groups all the items to pages
+       have sepperate arrays (hopefully)
+       @param
+    **/
+    $scope.groupToPages=function(theList , pagedList){
+        var pagedList = [];
+        if(theList == null){
+            console.log("I AM NULL ... WHY?!");
+        }
+        if(theList != null){
+        for(var i = 0; i < theList.length ; i++){
+            if(i % $scope.itemsPerPage === 0){
+                pagedList[Math.floor(i/$scope.itemsPerPage)] = [ theList[i]];
+            }else{
+                pagedList[Math.floor(i/$scope.itemsPerPage)].push( theList[i]);
+            }
+        }
+        }
+        return pagedList;
+    };
+
+    /**shows the range between the start and end
+     *checks for negative numbers
+     *
+     * @param size
+     * @param start
+     * @param end
+     *  all the param are self explanitory
+     * @return ret
+     *     everything within the range of start,
+     *       end, and making sure it's that size
+     **/
+    $scope.range = function (size, start, end) {
+        var ret = [];
+
+        if (size < end) {
+            end = size;
+            // start = size - $scope.gap;
+        }
+        if (start < 0) {
+            start = 0;
+        }
+        for (var i = start; i < end; i++) {
+            ret.push(i);
+        }
+        return ret;
+    };
+
+    $scope.currentPage = function(pages){
+        switch(pages){
+            //TODO we need  [next, first, prev, last, set], the $scope[whatList], $scope[whatPage]
+            case 'Include Next':
+                if ($scope.currentPageInclude < $scope.pagedItemsInclude.length - 1) {
+                    $scope.currentPageInclude = $scope.currentPageInclude + 1;
                 }
             }
             return pagedList;

@@ -1,11 +1,17 @@
 package edu.hawaii.its.api.type;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Group {
+    @Column
+    @ElementCollection(targetClass = Person.class)
     private List<Person> members = new ArrayList<>();
-    private String path;
+    @Id
+    @Column
+    private String path = "";
 
     public Group(){
         //empty

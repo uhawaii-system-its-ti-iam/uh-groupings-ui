@@ -1,27 +1,28 @@
 package edu.hawaii.its.api.controller;
 
-import javax.annotation.PostConstruct;
-
-import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.type.AdminListsHolder;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.api.service.GroupingsService;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingAssignment;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import javax.annotation.PostConstruct;
 
 import static org.junit.Assert.*;
 
+@ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsRestController {
@@ -398,17 +399,18 @@ public class TestGroupingsRestController {
 
     }
 
-//    @Test
-//    public void getAdminInfoTest() {
-//        AdminListsHolder infoFail = gc.adminInfo(tst[0]).getBody();
-//
-//        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
-//        assertEquals(infoFail.getAllGroupings().size(), 0);
-//
-//        AdminListsHolder infoSuccess = gc.adminInfo(API_ACCOUNT).getBody();
-//
-//        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(API_ACCOUNT));
-//    }
+    @Test
+    public void adminListsTest() {
+        AdminListsHolder infoFail = gc.adminLists(tst[0]).getBody();
+
+        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
+        assertEquals(infoFail.getAllGroupings().size(), 0);
+
+        AdminListsHolder infoSuccess = gc.adminLists(API_ACCOUNT).getBody();
+
+        //STUDENT_TEST_USERNAME can be replaced with any account that has admin access
+        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(STUDENT_TEST_USERNAME));
+    }
 
     @Test
     public void addDeleteAdminTest() {

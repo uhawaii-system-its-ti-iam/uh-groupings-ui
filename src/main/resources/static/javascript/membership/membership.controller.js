@@ -23,12 +23,11 @@
         $scope.loading = true;
 
         //these will be place holders for now
-        $scope.pagedItems1 = [];
-        $scope.pagedItems2 = [];
-        $scope.pagedItems3 = [];
-        $scope.pagedItems4 = [];
-        $scope.pagedItems5 = [];
-        $scope.gap = 2;
+        $scope.pagedItemsMembersList=[];
+        $scope.pagedItemsOptInList=[];
+        $scope.pagedItemsOptedInList=[];
+        $scope.pagedItemsOptedOutList=[];
+        $scope.gap=2;
 
         $scope.itemsPerPage = 5;
         $scope.currentPageOptIn = 0;
@@ -65,11 +64,11 @@
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
 
-                $scope.pagedItems1 = $scope.groupToPages($scope.membersList, $scope.pagedItems1);
+                $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList,$scope.pagedItemsMembersList);
                 // $scope.pagedItems2 = $scope.groupToPages($scope.optOutList);
-                $scope.pagedItems3 = $scope.groupToPages($scope.optInList, $scope.pagedItems3);
-                $scope.pagedItems4 = $scope.groupToPages($scope.optedIn, $scope.pagedItems4);
-                $scope.pagedItems5 = $scope.groupToPages($scope.optedOut, $scope.pagedItems5);
+                $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
+                $scope.pagedItemsOptedInList = $scope.groupToPages($scope.optedIn,$scope.pagedItemsOptedInList);
+                $scope.pagedItemsOptedOutList = $scope.groupToPages($scope.optedOut,$scope.pagedItemsOptedOutList);
 
                 if ($scope.optedIn.length === 0) {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
@@ -185,87 +184,60 @@
             }, cancelOutURL);
         };
 
-        /**gives you a true or false if it finds the match
-         **@param haystack - the thing to be checked
-         **@param needle - the check against
-         **
-         **/
-        /*var searchMatch = function (haystack, needle) {
-         if (!needle) {
-         return true;
-         }
-         return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
-         };
-
-         /!**searches through the array to find matches and then fixes the list
-         **@param list - gives the whole list to sort out
-         **@param whatList - it gives you the list you need to search through
-         **@param whatQuery - it gives the search bar its seperate search function.
-         **!/
-         $scope.search = function (list, whatList,whatQuery) {
-         var query = "";
-         switch(whatQuery){
-         case 'firstQuery':
-         query = $scope.query1;
-         break;
-         case 'secondQuery':
-         query = $scope.query2;
-         break;
-         case 'thirdQuery':
-         query = $scope.query3;
-         break;
-         case 'fourthQuery':
-         query = $scope.query4;
-         break;
-         }
-         $scope.filteredItems = [];
-         $scope.filteredItems = $filter('filter')(list, function (item) {
-         if(searchMatch(item.name, query)){
-         return true;
-         }
-         });
-         console.log($scope.filteredItems);
-         page = 0;
-         // now group by pages
-         var emptyList = [];
-         switch(whatList){
-         case 'Paged_1':
-         $scope.pagedItems1 = $scope.groupToPagesChanged(emptyList);
-         break;
-         case 'Paged_3':
-         $scope.pagedItems3 = $scope.groupToPagesChanged(emptyList);
-         break;
-         case 'Paged_4':
-         $scope.pagedItems4 = $scope.groupToPagesChanged(emptyList);
-         break;
-
-         case 'Paged_5':
-         $scope.pagedItems5 = $scope.groupToPagesChanged(emptyList);
-         break;
-         }
-         };*/
-
-        //Disables opt in button if there are no groupings to opt into.
-        $scope.disableOptIn = function (index) {
-            for (var i = 0; i < $scope.membersList.length; i++) {
-                if ($scope.membersList[i].name === $scope.optInList[index].name) {
+        /**searches through the array to find matches and then fixes the list
+        **@param list - gives the whole list to sort out
+        **@param whatList - it gives you the list you need to search through
+        **@param whatQuery - it gives the search bar its seperate search function.
+        **/
+        $scope.search = function (list, whatList,whatQuery) {
+            var query = "";
+            query = $scope[whatQuery];
+            console.log(query);
+            $scope.filteredItems = [];
+            $scope.filteredItems = $filter('filter')(list, function (item) {
+                if(searchMatch(item.name, query)){
                     return true;
                 }
+            });
+            page = 0;
+            // now group by pages
+            var emptyList = [];
+            $scope[whatList] = $scope.groupToPagesChanged(emptyList);
+        };
+
+
+        $scope.groupToPagesChanged = function(pagedList){
+            var pagedList = [];
+            for(var i = 0; i < $scope.filteredItems.length ; i++){
+                if(i % $scope.itemsPerPage === 0){
+                    pagedList[Math.floor(i/$scope.itemsPerPage)] = [ $scope.filteredItems[i]];
+                }else{
+                    pagedList[Math.floor(i/$scope.itemsPerPage)].push( $scope.filteredItems[i]);
+                }
             }
+            return pagedList;
         };
+         //Disables opt in button if there are no groupings to opt into.
+         $scope.disableOptIn = function (index) {
+             for (var i = 0; i < $scope.membersList.length; i++) {
+                 if ($scope.membersList[i].name === $scope.optInList[index].name) {
+                     return true;
+                 }
+             }
+         };
 
-        //Disable button if list is empty
-        $scope.disableButton = function (type, index) {
-            var list = type[index];
-            return list.name.includes("NO GROUPINGS TO");
-        };
+         //Disable button if list is empty
+         $scope.disableButton = function (type, index) {
+             var list = type[index];
+             return list.name.includes("NO GROUPINGS TO");
+         };
 
-        $scope.tooltipText = function (index) {
-            return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
-        };
-        $scope.disableOptOut = function (index) {
-            for (var i = 0; i < $scope.optOutList.length; i++) {
-                if ($scope.membersList[index].name === $scope.optOutList[i].name) {
+         $scope.tooltipText = function (index) {
+             return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
+         };
+         $scope.disableOptOut = function (index) {
+             for (var i = 0; i < $scope.optOutList.length; i++) {
+                 if ($scope.membersList[index].name === $scope.optOutList[i].name) {
                     // console.log($scope.optOutList[i].name);
                     return false;
                 }
@@ -320,117 +292,33 @@
 
 
         //might make this into my one function
-        $scope.currentPage = function (pages) {
-            switch (pages) {
-                // Cases for Cancel Opt In Pagination
-                case 'Cancel Opt In Next':
-                    if ($scope.currentPageCancelOptIn < $scope.pagedItems4.length - 1) {
-                        $scope.currentPageCancelOptIn = $scope.currentPageCancelOptIn + 1;
+        $scope.currentPage = function(pages, whatList, whatPage){
+            switch(pages){
+                case 'Next':
+                    if ($scope[whatPage] < $scope[whatList].length - 1) {
+                        $scope[whatPage] = $scope[whatPage] + 1;
                     }
                     break;
 
-                case 'Cancel Opt In Set':
-                    $scope.currentPageCancelOptIn = this.n;
+                case 'Set':
+                    $scope[whatPage] = this.n;
                     break;
 
-                case 'Cancel Opt In Prev':
-                    if ($scope.currentPageCancelOptIn > 0) {
-                        $scope.currentPageCancelOptIn--;
+                case 'Prev':
+                    if ($scope[whatPage] > 0) {
+                        $scope[whatPage]--;
                     }
                     break;
-                case 'Cancel Opt In First':
-                    if ($scope.currentPageCancelOptIn > 0) {
-                        $scope.currentPageCancelOptIn = 0;
+                case 'First':
+                    if ($scope[whatPage] > 0) {
+                        $scope[whatPage] = 0;
                     }
                     break;
-                case 'Cancel Opt In Last':
-                    if ($scope.currentPageCancelOptIn > 0) {
-                        $scope.currentPageCancelOptIn = $scope.pagedItems4.length - 1;
+                case 'Last':
+                    if ($scope[whatPage] >= 0) {
+                        $scope[whatPage] = $scope[whatList].length -1;
                     }
                     break;
-
-                //Cases for Cancel Opt Out Pagination
-                case 'Cancel Opt Out Next':
-                    if ($scope.currentPageCancelOptOut < $scope.pagedItems5.length - 1) {
-                        $scope.currentPageCancelOptOut = $scope.currentPageCancelOptOut + 1;
-                    }
-                    break;
-
-                case 'Cancel Opt Out Set':
-                    $scope.currentPageCancelOptOut = this.n;
-                    break;
-
-                case 'Cancel Opt Out Prev':
-                    if ($scope.currentPageCancelOptOut > 0) {
-                        $scope.currentPageCancelOptOut--;
-                    }
-                    break;
-                case 'Cancel Opt Out First':
-                    if ($scope.currentPageCancelOptOut > 0) {
-                        $scope.currentPageCancelOptOut = 0;
-                    }
-                    break;
-                case 'Cancel Opt Out Last':
-                    if ($scope.currentPageCancelOptOut >= 0) {
-                        $scope.currentPageCancelOptOut = $scope.pagedItems5.length - 1;
-                    }
-                    break;
-
-                //Cases  for Opt out in Pagination
-
-                case 'Page Opt Out Next':
-                    if ($scope.currentPageOptOut < $scope.pagedItems1.length - 1) {
-                        $scope.currentPageOptOut = $scope.currentPageOptOut + 1;
-                    }
-                    break;
-
-                case 'Page Opt Out Set':
-                    $scope.currentPageOptOut = this.n;
-                    break;
-
-                case 'Page Opt Out Prev':
-                    if ($scope.currentPageOptOut > 0) {
-                        $scope.currentPageOptOut--;
-                    }
-                    break;
-                case 'Page Opt Out First':
-                    if ($scope.currentPageOptOut > 0) {
-                        $scope.currentPageOptOut = 0;
-                    }
-                    break;
-                case 'Page Opt Out Last':
-                    if ($scope.currentPageOptOut >= 0) {
-                        $scope.currentPageOptOut = $scope.pagedItems1.length - 1;
-                    }
-                    break;
-
-                // Cases for Opt in Pagination
-                case 'Page Opt In Next':
-                    if ($scope.currentPageOptIn < $scope.pagedItems3.length - 1) {
-                        $scope.currentPageOptIn = $scope.currentPageOptIn + 1;
-                    }
-                    break;
-
-                case 'Page Opt In Set':
-                    $scope.currentPageOptIn = this.n;
-                    break;
-
-                case 'Page Opt In Prev':
-                    if ($scope.currentPageOptIn > 0) {
-                        $scope.currentPageOptIn--;
-                    }
-                    break;
-                case 'Page Opt In First':
-                    if ($scope.currentPageOptIn > 0) {
-                        $scope.currentPageOptIn = 0;
-                    }
-                    break;
-                case 'Page Opt In Last':
-                    if ($scope.currentPageOptIn >= 0) {
-                        $scope.currentPageOptIn = $scope.pagedItems3.length - 1;
-                    }
-                    break;
-
             }
         };
 
