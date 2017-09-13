@@ -34,9 +34,8 @@
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th ng-click="sort(ownedList, 'name', 'pagedItemsOwned', 'symbolMember')">Groupings {{symbolMember.name}}</th>
-                                <th ng-click="sort(ownedList, 'folder', 'pagedItemsOwned', 'symbolMember')">Folder {{symbolMember.folder}}</th>
-
+                                <th ng-click="sortCol(ownedList, 'name', 'pagedItemsOwned', 'symbolMember')">Groupings {{symbol.name}}</th>
+                                <th ng-click="sortCol(ownedList, 'folder', 'pagedItemsOwned', 'symbolMember')">Folder {{symbol.folder}}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -113,9 +112,9 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th ng-click="sort(groupingsList, 'name', 'pagedItemsList', 'symbolList1')">Name {{symbolList1}}</th>
-                                            <th>UH ID</th>
-                                            <th>Username</th>
+                                            <th ng-click="sortCol(groupingsList, 'name', 'pagedItemsList', 'symbolList')">Name {{symbol.name}}</th>
+                                            <th ng-click="sortCol(groupingsList, 'uuid', 'pagedItemsList', 'symbolList')">UH ID {{symbol.uuid}}</th>
+                                            <th ng-click="sortCol(groupingsList, 'username', 'pagedItemsList', 'symbolList')">Username {{symbol.username}}</th>
                                             <th>Basis</th>
                                         </tr>
                                         </thead>
@@ -158,9 +157,9 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th ng-click="sort(groupingsBasis, 'name', 'pagedItemsBasis', 'symbolBasis1')">Name {{symbolBasis1}}</th>
-                                            <th>UH ID</th>
-                                            <th>Username</th>
+                                            <th ng-click="sortCol(groupingsBasis, 'name', 'pagedItemsBasis', 'symbolBasis')">Name {{symbol.name}}</th>
+                                            <th ng-click="sortCol(groupingsBasis, 'uuid', 'pagedItemsBasis', 'symbolBasis')">UH ID {{symbol.uuid}}</th>
+                                            <th ng-click="sortCol(groupingsBasis, 'username', 'pagedItemsBasis', 'symbolBasis')">Username {{symbol.username}}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -200,9 +199,9 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th ng-click="sort(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude1')">Name {{symbolInclude1}}</th>
-                                            <th>UH ID</th>
-                                            <th>Username</th>
+                                            <th ng-click="sortCol(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude')">Name {{symbol.name}}</th>
+                                            <th ng-click="sortCol(groupingInclude, 'uuid', 'pagedItemsInclude', 'symbolInclude')">UH ID {{symbol.uuid}}</th>
+                                            <th ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')">Username {{symbol.username}}</th>
                                             <th>Basis</th>
                                         </tr>
                                         </thead>
@@ -267,9 +266,9 @@
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th ng-click="sort(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude1')">Name {{symbolExclude1}}</th>
-                                            <th>UH ID</th>
-                                            <th>Username</th>
+                                            <th ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')">Name {{symbol.name}}</th>
+                                            <th ng-click="sortCol(groupingExclude, 'uuid', 'pagedItemsExclude', 'symbolExclude')">UH ID {{symbol.uuid}}</th>
+                                            <th ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')">Username {{symbol.username}}</th>
                                             <th>Basis</th>
                                         </tr>
                                         </thead>
@@ -338,8 +337,8 @@
                             <table class="table table-bordered table-condensed table-hover">
                                 <thead>
                                 <tr>
-                                    <th ng-click="sort(ownerList, 'name', 'pagedItemsOwners', 'symbolOwners1')">Name {{symbolOwners1}}</th>
-                                    <th>Username</th>
+                                    <th ng-click="sortCol(ownerList, 'name', 'pagedItemsOwners', 'symbolOwners')">Name {{symbol.name}}</th>
+                                    <th ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwners')">Username {{symbol.username}}</th>
                                     <th>Remove</th>
                                 </tr>
                                 </thead>
@@ -362,7 +361,6 @@
                                                 </li>
                                                 <li ng-repeat="n in range(pagedItemsOwners.length, currentPageOwners - gap, currentPageOwners + gap + 1) "
                                                 ng-class="{active: n == currentPageOwners}"
-
                                                 ng-click="currentPage('Owners Set')"
                                                 ><a href="" ng-bind="n + 1" >1</a>
                                                 </li>
