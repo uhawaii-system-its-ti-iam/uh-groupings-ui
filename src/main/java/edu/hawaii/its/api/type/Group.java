@@ -8,11 +8,8 @@ import java.util.List;
 @Table(name = "groups")
 public class Group {
 //    @ElementCollection(targetClass = Person.class)
-    @Transient
     private List<Person> members = new ArrayList<>();
 
-    @Id
-    @Column(name = "path")
     private String path = "";
 
     public Group() {
@@ -32,6 +29,7 @@ public class Group {
         this.path = path;
     }
 
+    @Transient
     public List<Person> getMembers() {
         return members;
     }
@@ -40,6 +38,8 @@ public class Group {
         this.path = path;
     }
 
+    @Id
+    @Column(name = "path")
     public String getPath() {
         return path;
     }
@@ -52,6 +52,7 @@ public class Group {
         members.add(person);
     }
 
+    @Transient
     public List<String> getNames() {
         List<String> names = new ArrayList<>();
         for (Person person : members) {
@@ -60,6 +61,7 @@ public class Group {
         return names;
     }
 
+    @Transient
     public List<String> getUuids() {
         List<String> uuids = new ArrayList<>();
         for (Person person : members) {
@@ -68,6 +70,7 @@ public class Group {
         return uuids;
     }
 
+    @Transient
     public List<String> getUsernames() {
         List<String> usernames = new ArrayList<>();
         for (Person person : members) {
@@ -76,6 +79,7 @@ public class Group {
         return usernames;
     }
 
+    @Transient
     @Override
     public String toString() {
         return "Group [members=" + members + "]";

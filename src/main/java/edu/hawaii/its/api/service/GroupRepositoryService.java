@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository("groupRepositoryService")
@@ -32,9 +33,14 @@ public class GroupRepositoryService {
 //    }
 
 //    @Cacheable(value = "groups")
+//    @Transactional(readOnly = true)
     public List<Group> findGroups() {
-        String qlString = "select a from groups a";
-        return em.createQuery(qlString, Group.class).getResultList();
+        String qlString = "SELECT path FROM Groups";
+        List<Group> groups;
+        Query query;
+        query = em.createQuery(qlString, Group.class);
+        groups = query.getResultList();
+        return groups;
     }
 
 //    @Transactional(readOnly = true)

@@ -428,4 +428,7 @@ insert into holiday_type(type_id, holiday_id) values(1,101);
 insert into holiday_type(type_id, holiday_id) values(2,101);
 insert into holiday_type(type_id, holiday_id) values(3,101);
 
-insert into groups(path) values('path:to:group');
+insert into groups(path) values('path:to:group0');
+insert into groups(path) values('path:to:group1');
+insert into groups(path) values('path:to:group2');
+insert into groups(path) values('path:to:group3');
