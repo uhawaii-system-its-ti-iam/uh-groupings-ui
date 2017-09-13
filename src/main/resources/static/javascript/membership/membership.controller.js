@@ -96,15 +96,27 @@
          */
         $scope.sort = function (list, col, listPaged, symbol) {
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
-                list = _.sortBy(list, col);
+                list = $scope.sortOrder(list,col);
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = '\u25BC';
             }
             else {
-                list = _.sortBy(list, col).reverse();
+                list = $scope.sortOrder(list,col).reverse();
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = '\u25B2';
             }
+            $scope.symbolMember = '\u21c5'
+        };
+
+        /**
+         * Function that calls the underscore library function sortBy.
+         * Standalone function in order to call fake for testing purposes.
+         * @param list - The data list to which will be sorted
+         * @param col - The object to name to determine how it will be sorted by.
+         * @returns the list sorted.
+         */
+        $scope.sortOrder = function(list, col){
+            return _.sortBy(list,col);
         };
 
         /** Adds user to the exclude group.
