@@ -61,7 +61,7 @@
 
             $scope.initCurrentUsername();
 
-            var url = "api/groupings/" + $scope.getCurrentUsername() + "/adminInfo";
+            var url = "api/groupings/" + $scope.getCurrentUsername() + "/adminLists";
 
             dataProvider.loadData(function (d) {
                 $scope.list = d.adminGroup.members;
