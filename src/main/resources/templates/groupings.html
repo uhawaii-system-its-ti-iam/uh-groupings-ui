@@ -40,7 +40,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="l in ownedList ">
+                            <tr ng-repeat="l in pagedItemsOwned[currentPageOwned] ">
                                 <th>
                                     {{l.name}} <span ng-click="showData($index)"
                                                      class="glyphicon glyphicon-edit"></span>
