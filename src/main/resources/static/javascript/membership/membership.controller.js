@@ -65,7 +65,6 @@
                 $scope.optedOut = d.groupingsOptedOutOf;
 
                 $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList,$scope.pagedItemsMembersList);
-                // $scope.pagedItems2 = $scope.groupToPages($scope.optOutList);
                 $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
                 $scope.pagedItemsOptedInList = $scope.groupToPages($scope.optedIn,$scope.pagedItemsOptedInList);
                 $scope.pagedItemsOptedOutList = $scope.groupToPages($scope.optedOut,$scope.pagedItemsOptedOutList);
@@ -94,6 +93,7 @@
          * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
          */
         $scope.sort = function (list, col, listPaged, symbol) {
+            $scope.symbol = {'member': '','optIn' : '', 'cancelOut':'','cancelIn':''};
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
                 list = $scope.sortOrder(list,col);
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
@@ -104,7 +104,20 @@
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = '\u25B2';
             }
-            $scope.symbolMember = '\u21c5'
+            switch(listPaged){
+                case 'pagedItemsMembersList' :
+                    $scope.symbol.member = '\u21c5';
+                    break;
+                case 'pagedItemsOptInList' :
+                    $scope.symbol.optIn = '\u21c5';
+                    break;
+                case 'pagedItemsOptedInList' :
+                    $scope.symbol.cancelIn = '\u21c5';
+                    break;
+                case 'pagedItemsOptedOutList' :
+                    $scope.symbol.cancelOut = '\u21c5';
+                    break;
+            }
         };
 
         /**
