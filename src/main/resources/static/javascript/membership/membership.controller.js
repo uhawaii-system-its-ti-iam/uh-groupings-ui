@@ -35,11 +35,11 @@
         $scope.currentPageCancelOptIn = 0;
         $scope.currentPageCancelOptOut = 0;
 
-        $scope.initCurrentUsername = function() {
+        $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
         };
 
-        $scope.getCurrentUsername = function() {
+        $scope.getCurrentUsername = function () {
             return $scope.currentUsername;
         };
 
@@ -65,13 +65,11 @@
                 $scope.optedOut = d.groupingsOptedOutOf;
 
                 $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList,$scope.pagedItemsMembersList);
-                // $scope.pagedItems2 = $scope.groupToPages($scope.optOutList);
                 $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
                 $scope.pagedItemsOptedInList = $scope.groupToPages($scope.optedIn,$scope.pagedItemsOptedInList);
                 $scope.pagedItemsOptedOutList = $scope.groupToPages($scope.optedOut,$scope.pagedItemsOptedOutList);
 
-                if($scope.optedIn.length === 0)
-                {
+                if ($scope.optedIn.length === 0) {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
                 }
                 if ($scope.optedOut.length === 0) {
@@ -85,6 +83,53 @@
             }, groupingURL);
         };
 
+        /**
+         *  Sorts the data in the table in ascending or descending order based on
+         *  the list and column being sorted.
+         *
+         * @param list - The data list to which will be sorted
+         * @param col - The object to name to determine how it will be sorted by.
+         * @param listPaged - The paged data list to which the sorted list will go into.
+         * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
+         */
+        $scope.sort = function (list, col, listPaged, symbol) {
+            $scope.symbol = {'member': '','optIn' : '', 'cancelOut':'','cancelIn':''};
+            if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
+                list = $scope.sortOrder(list,col);
+                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
+                $scope[symbol] = '\u25BC';
+            }
+            else {
+                list = $scope.sortOrder(list,col).reverse();
+                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
+                $scope[symbol] = '\u25B2';
+            }
+            switch(listPaged){
+                case 'pagedItemsMembersList' :
+                    $scope.symbol.member = '\u21c5';
+                    break;
+                case 'pagedItemsOptInList' :
+                    $scope.symbol.optIn = '\u21c5';
+                    break;
+                case 'pagedItemsOptedInList' :
+                    $scope.symbol.cancelIn = '\u21c5';
+                    break;
+                case 'pagedItemsOptedOutList' :
+                    $scope.symbol.cancelOut = '\u21c5';
+                    break;
+            }
+        };
+
+        /**
+         * Function that calls the underscore library function sortBy.
+         * Standalone function in order to call fake for testing purposes.
+         * @param list - The data list to which will be sorted
+         * @param col - The object to name to determine how it will be sorted by.
+         * @returns the list sorted.
+         */
+        $scope.sortOrder = function(list, col){
+            return _.sortBy(list,col);
+        };
 
         /** Adds user to the exclude group.
          * Sends back an alert saying if it failed
@@ -151,17 +196,6 @@
                 $scope.init();
             }, cancelOutURL);
         };
-        /**gives you a true or false if it finds the match
-        **@param haystack - the thing to be checked
-        **@param needle - the check against
-        **
-        **/
-        var searchMatch = function (haystack, needle) {
-            if (!needle) {
-                return true;
-            }
-            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
-        };
 
         /**searches through the array to find matches and then fixes the list
         **@param list - gives the whole list to sort out
@@ -196,7 +230,6 @@
             }
             return pagedList;
         };
-
          //Disables opt in button if there are no groupings to opt into.
          $scope.disableOptIn = function (index) {
              for (var i = 0; i < $scope.membersList.length; i++) {
@@ -219,29 +252,28 @@
              for (var i = 0; i < $scope.optOutList.length; i++) {
                  if ($scope.membersList[index].name === $scope.optOutList[i].name) {
                     // console.log($scope.optOutList[i].name);
-                     return false;
-                 }
-             }
-             return true;
-         };
+                    return false;
+                }
+            }
+            return true;
+        };
 
         /**groups all the items to pages
          have separate arrays (hopefully)
          @param theList - .
          @param pagedList - .
          **/
-        $scope.groupToPages=function(theList , pagedList){
+        $scope.groupToPages = function (theList, pagedList) {
             var pagedList = [];
-            for(var i = 0; i < theList.length ; i++){
-                if(i % $scope.itemsPerPage === 0){
-                    pagedList[Math.floor(i/$scope.itemsPerPage)] = [ theList[i]];
-                }else{
-                    pagedList[Math.floor(i/$scope.itemsPerPage)].push( theList[i]);
+            for (var i = 0; i < theList.length; i++) {
+                if (i % $scope.itemsPerPage === 0) {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [theList[i]];
+                } else {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)].push(theList[i]);
                 }
             }
             return pagedList;
         };
-
 
 
         /**shows the range between the start and end

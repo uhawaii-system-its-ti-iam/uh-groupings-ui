@@ -33,7 +33,7 @@
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="list">
                         <div class="panel panel-default">
-                            <div class="panel-heading" style="padding: 2px">
+                            <div class="panel-heading" style="border: 0;padding: 5px;">
                                 <div class="form-group">
                                     <h3 class="col-xs-6 col-md-4" style="margin-top: 5px">Designated Admins</h3>
 
@@ -60,7 +60,7 @@
                                     <td>{{l.username}}</td>
                                     <td>
                                         <button class="btn btn-default btn-block"
-                                                ng-click="remove($index + (currentPage * itemsPerPage))"><span
+                                                ng-click="removeAdmin($index + (currentPage * itemsPerPage))"><span
                                                 class="glyphicon glyphicon-remove"></span></button>
                                     </td>
                                 </tr>
@@ -99,7 +99,7 @@
                                 </button>
                                 <div class="collapse" id="addAdmin">
                                     <input type="text" ng-model="username"/>
-                                    <button class="btn btn-success" ng-click="add()">Add Admin</button>
+                                    <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
                                 </div>
                             </div>
                         </div>
@@ -117,11 +117,12 @@
                                 <button class="btn btn-default" type="button" ng-click="search()">Search</button>
                             </span>
                             <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
-                                <option ng-repeat="o in groupingList" value="{{o.path}}"></option>
+                                <option ng-repeat="o in groupingList" value="{{o.name}}"></option>
                             </datalist>
                         </div>
                         <div class="alert alert-danger" role="alert" ng-show="error">
-                            <a href="#" class="alert-link">Not A Valid Grouping</a>
+                            <a class="close" ng-click="dismiss()" >&times;</a>
+                            <strong href="#" class="alert-link">Not A Valid Grouping</strong>
                         </div>
                         <h2 class="text-center" ng-hide="error">{{title}}</h2>
 
@@ -449,12 +450,13 @@
                                         <div id="options" class="tab-pane fade">
                                             <h3 class="text-center">Preferences</h3>
                                             <h3>Add/Remove</h3>
-                                            <input id="optInOption" type="checkbox"/> Allow people to add themselves to this group <br/>
-                                            <input id="optOutOption" type="checkbox"/> Allow people to remove themselves to this group
+
+                                            <input type="checkbox" ng-model="preference.optIn"/> Allow people to add themselves to this group <br/>
+                                            <input type="checkbox" ng-model="preference.optOut"/> Allow people to remove themselves to this group
                                             <br/>
 
                                             <h3>Publication Destinations</h3>
-                                            <input id="listserv" type="checkbox" ng-init="pref"/> LISTSERV list: {{groupingName.name}}
+                                            <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/> LISTSERV list: {{groupingName.name}}
                                             <br/>
 
                                             <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save
