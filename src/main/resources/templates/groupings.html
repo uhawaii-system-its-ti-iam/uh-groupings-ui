@@ -11,7 +11,8 @@
         <div class='col-xs-offset-1 col-xs-10'>
 
 
-            <h1 class="text-center">Groupings</h1>
+            <h1 class="text-center">Groupings Owned</h1>
+            <h4 class="text-center">Owner can modify the groupings that they own.</h4>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
                 <div ng-show="!showGrouping">
@@ -24,23 +25,22 @@
                         <div class="panel-heading" style="border: 0;padding: 5px;">
                             <div class="form-group">
                                 <h3 class="col-md-4" style="margin-top: 5px">Groupings</h3>
-
-                                <div align="right" style="margin-top: 10px">
-                                    <input type="text" ng-model="searchFor" placeholder="Search Groupings..."/>
-                                </div>
+                                <!--HERE-->
+                                <!-- <div align="right" style="margin-top: 10px">
+                                    <input placeholder="Type to filter Groupings..." type="text"
+                                    ng-model="query1" ng-change= "search(ownedList, 'Paged_1', 'firstQuery')" id = "members"/>
+                                </div> -->
                             </div>
                         </div>
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th>Groupings</th>
-                                <th>Folder</th>
-
+                                <th ng-click="sortCol(ownedList, 'name', 'pagedItemsOwned', 'symbolMember')">Groupings {{symbol.name}}</th>
+                                <th ng-click="sortCol(ownedList, 'folder', 'pagedItemsOwned', 'symbolMember')">Folder {{symbol.folder}}</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="l in ownedList | filter:searchFor">
-
+                            <tr ng-repeat="l in pagedItemsOwned[currentPageOwned] ">
                                 <th>
                                     {{l.name}} <span ng-click="showData($index)"
                                                      class="glyphicon glyphicon-edit"></span>
@@ -48,6 +48,25 @@
                                 <th>{{l.folder}}</th>
                             </tr>
                             </tbody>
+                            <tfoot>
+                            <!-- Top part of the two parts  -->
+                            <td colspan="6">
+                                <ul class = "pagination pull-right" >
+                                    <li ng-class="{disabled: (currentPageOwned) == 0 }">
+                                        <a href="" ng-click="currentPage('Owned Prev')" >« Prev</a>
+                                    </li>
+                                    <li ng-repeat="n in range(pagedItemsOwned.length, currentPageOwned - gap, currentPageOwned + gap + 1)"
+                                        ng-class="{active: n == currentPageOwned}"
+
+                                        ng-click="currentPage('Owned Set')"
+                                            ><a href="" ng-bind="n + 1" >1</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageOwned) == pagedItemsOwned.length - 1 }">
+                                        <a href="" ng-click="currentPage('Owned Next')">Next »</a>
+                                    </li>
+                                </ul>
+                            </td>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -68,6 +87,7 @@
 
                     <div class="tab-content">
                         <!-- List of the members in the grouping -->
+
                         <div id="members" class="tab-pane fade in active">
                             <h2 class="text-center">Members</h2>
 
@@ -90,12 +110,16 @@
                             <div class="tab-content col-md-10 col-xs-8">
                                 <div id="all" class="tab-pane fade in active">
                                     <h3 class="text-center">List</h3>
+                                    <div align="right" style="margin-top: 10px">
+                                        <input placeholder="Type to filter Include Groups..." type="text"
+                                        ng-model="ListQuery" ng-change= "search(groupingsList, 'pagedItemsList', 'ListQuery')" id = "members"/>
+                                    </div>
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>UH ID</th>
-                                            <th>Username</th>
+                                            <th ng-click="sortCol(groupingsList, 'name', 'pagedItemsList', 'symbolList')">Name {{symbol.name}}</th>
+                                            <th ng-click="sortCol(groupingsList, 'uuid', 'pagedItemsList', 'symbolList')">UH ID {{symbol.uuid}}</th>
+                                            <th ng-click="sortCol(groupingsList, 'username', 'pagedItemsList', 'symbolList')">Username {{symbol.username}}</th>
                                             <th>Basis</th>
                                         </tr>
                                         </thead>
@@ -135,12 +159,16 @@
                                     <h3 class="text-center">Basis</h3>
 
                                     <!-- must put search bar here.. -->
+                                    <div align="right" style="margin-top: 10px">
+                                        <input placeholder="Type to filter Groupings..." type="text"
+                                        ng-model="basisQuery" ng-change= "search(groupingsBasis, 'pagedItemsBasis', 'basisQuery')" id = "members"/>
+                                    </div>
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>UH ID</th>
-                                            <th>Username</th>
+                                            <th ng-click="sortCol(groupingsBasis, 'name', 'pagedItemsBasis', 'symbolBasis')">Name {{symbol.name}}</th>
+                                            <th ng-click="sortCol(groupingsBasis, 'uuid', 'pagedItemsBasis', 'symbolBasis')">UH ID {{symbol.uuid}}</th>
+                                            <th ng-click="sortCol(groupingsBasis, 'username', 'pagedItemsBasis', 'symbolBasis')">Username {{symbol.username}}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -177,12 +205,16 @@
                                 <div id="include" class="tab-pane fade">
                                     <h3 class="text-center">Include</h3>
                                     <!--  must put search bar here...-->
+                                    <div align="right" style="margin-top: 10px">
+                                        <input placeholder="Type to filter Include Groups..." type="text"
+                                        ng-model="includeQuery" ng-change= "search(groupingInclude, 'pagedItemsInclude', 'includeQuery')" id = "members"/>
+                                    </div>
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>UH ID</th>
-                                            <th>Username</th>
+                                            <th ng-click="sortCol(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude')">Name {{symbol.name}}</th>
+                                            <th ng-click="sortCol(groupingInclude, 'uuid', 'pagedItemsInclude', 'symbolInclude')">UH ID {{symbol.uuid}}</th>
+                                            <th ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')">Username {{symbol.username}}</th>
                                             <th>Basis</th>
                                         </tr>
                                         </thead>
@@ -244,12 +276,16 @@
                                     <h3 class="text-center">Exclude</h3>
 
                                     <!-- must put search bar here... -->
+                                    <div align="right" style="margin-top: 10px">
+                                        <input placeholder="Type to filter Groupings..." type="text"
+                                        ng-model="excludeQuery" ng-change= "search(groupingExclude, 'pagedItemsExclude', 'excludeQuery')" />
+                                    </div>
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>UH ID</th>
-                                            <th>Username</th>
+                                            <th ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')">Name {{symbol.name}}</th>
+                                            <th ng-click="sortCol(groupingExclude, 'uuid', 'pagedItemsExclude', 'symbolExclude')">UH ID {{symbol.uuid}}</th>
+                                            <th ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')">Username {{symbol.username}}</th>
                                             <th>Basis</th>
                                         </tr>
                                         </thead>
@@ -315,11 +351,15 @@
                             <h2>Owners</h2>
 
                             <!-- must put search bar here -->
+                            <div align="right" style="margin-top: 10px">
+                                <input placeholder="Type to filter Groupings..." type="text"
+                                ng-model="ownersQuery" ng-change= "search(ownerList, 'pagedItemsOwners', 'ownersQuery')" id = "members"/>
+                            </div>
                             <table class="table table-bordered table-condensed table-hover">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Username</th>
+                                    <th ng-click="sortCol(ownerList, 'name', 'pagedItemsOwners', 'symbolOwners')">Name {{symbol.name}}</th>
+                                    <th ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwners')">Username {{symbol.username}}</th>
                                     <th>Remove</th>
                                 </tr>
                                 </thead>
@@ -342,7 +382,6 @@
                                                 </li>
                                                 <li ng-repeat="n in range(pagedItemsOwners.length, currentPageOwners - gap, currentPageOwners + gap + 1) "
                                                 ng-class="{active: n == currentPageOwners}"
-
                                                 ng-click="currentPage('Owners Set')"
                                                 ><a href="" ng-bind="n + 1" >1</a>
                                                 </li>

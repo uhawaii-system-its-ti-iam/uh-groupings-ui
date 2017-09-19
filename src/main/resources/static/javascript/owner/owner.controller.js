@@ -3,19 +3,19 @@
     /**
      * Owner controller for the groupings page
      *
-     * @param $scope        : A Binding variable between controller and html page.
-     * @param dataProvider  : service function that acts as the AJAX get.
-     * @param dataUpdater   : service function that acts as AJAX post, used mainly for adding or updating
-     * @param dataDeleter    : service function that acts as AJAX psst, use function mainly for delete function.
+     * @param $scope        - A Binding variable between controller and html page.
+     * @param dataProvider  - service function that acts as the AJAX get.
+     * @param dataUpdater   - service function that acts as AJAX post, used mainly for adding or updating
+     * @param dataDeleter   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function OwnerJsController($scope, $window, dataProvider, dataUpdater, dataDeleter) {
+    function OwnerJsController($scope, $window,$filter, dataProvider, dataUpdater, dataDeleter) {
         $scope.currentUsername = "";
-        $scope.initCurrentUsername = function() {
+        $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
         };
 
-        $scope.getCurrentUsername = function() {
+        $scope.getCurrentUsername = function () {
             return $scope.currentUsername;
         };
 
@@ -36,11 +36,14 @@
         $scope.groupingName = '';
 
         /*
-        *pagination variables
-        */
-        $scope.gap=2;
+         *pagination variables
+         */
+        $scope.gap = 2;
         $scope.itemsPerPage = 25;
         //figure out how much pages to paginate. so far lets do one
+        $scope.pagedItemsOwned = [];
+        $scope.currentPageOwned = 0;
+
         $scope.pagedItemsInclude = [];
         $scope.currentPageInclude = 0;
 
@@ -65,17 +68,17 @@
         $scope.init = function () {
             $scope.initCurrentUsername();
 
-            groupingsOwned = "api/groupings/" + $scope.getCurrentUsername() + "/myGroupings";
+            groupingsOwned = "api/groupings/" + $scope.getCurrentUsername() + "/groupingAssignment";
             dataProvider.loadData(function (d) {
                 var temp = [];
                 console.log(d);
                 //Assigns grouping name, folder directories and url used for api call.
                 for (var i = 0; i < d.groupingsOwned.length; i++) {
-                    temp[i] = d.groupingsOwned[i].path.substr(18).split(':');
+                    temp[i] = d.groupingsOwned[i].path.split(':');
                     var folder = '';
                     for (var j = 0; j < temp[i].length - 1; j++) {
                         folder += temp[i][j];
-                        if (j != temp[i].length - 2) {
+                        if (j != temp[i].length - 1) {
                             folder += "/";
                         }
                     }
@@ -85,6 +88,7 @@
                         'url': d.groupingsOwned[i].path
                     });
                 }
+                $scope.pagedItemsOwned = $scope.groupToPages($scope.ownedList, $scope.pagedItemsOwned);
                 $scope.loading = false;
             }, groupingsOwned);
         };
@@ -92,7 +96,7 @@
         /**
          * Switches from showing that data of the grouping you own to the information about the grouping selected.
          *
-         * @param row : row of the grouping with relation to the table.
+         * @param row - row of the grouping with relation to the table.
          */
         $scope.showData = function (row) {
             $scope.groupingName = $scope.ownedList[row];
@@ -121,12 +125,12 @@
                 //Gets members in grouping
                 $scope.groupingsList = d.composite.members;
                 $scope.modify($scope.groupingsList);
-                $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList,$scope.pagedItemsList);
+                $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsList);
 
                 //Gets members in the basis group
                 $scope.groupingsBasis = d.basis.members;
                 $scope.modify($scope.groupingsBasis);
-                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingsBasis,$scope.pagedItemsBasis);
+                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingsBasis, $scope.pagedItemsBasis);
 
                 //Gets members in the include group
                 $scope.groupingInclude = d.include.members;
@@ -136,13 +140,14 @@
                 //Gets members in the exclude group
                 $scope.groupingExclude = d.exclude.members;
                 $scope.modify($scope.groupingExclude);
-                $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude,$scope.pagedItemsExclude);
+                $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
 
                 //Gets owners of the grouping
                 $scope.ownerList = d.owners.members;
                 $scope.modify($scope.ownerList);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
 
+                // TODO: Update to reflect how admin controller does it.
                 $scope.pref = d.listservOn;
                 $scope.allowOptIn = d.optInOn;
                 $scope.allowOptOut = d.optOutOn;
@@ -175,7 +180,7 @@
          * Modify the data from the grouping to be sorted, filter out hawaii.edu
          * and determines if a user is in the basis group or not.
          *
-         * @param grouping : The name of the grouping of which its data will be modified.
+         * @param grouping - The name of the grouping of which its data will be modified.
          *
          * @returns returns
          *                1 for ascending
@@ -200,16 +205,49 @@
                     }
                 }
             }
+        };
 
-            //sorts data in alphabetic order
-            grouping.sort(function (a, b) {
-                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
-                if (nameA < nameB) //sort string ascending
-                    return -1;
-                if (nameA > nameB)
-                    return 1;
-                return 0
-            });
+        /**
+         *  Sorts the data in the table in ascending or descending order based on
+         *  the list and column being sorted.
+         *
+         * @param list - The data list to which will be sorted
+         * @param col - The object to name to determine how it will be sorted by.
+         * @param listPaged - The paged data list to which the sorted list will go into.
+         * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
+         */
+        $scope.sortCol = function (list, col, listPaged, symbol) {
+            $scope.symbol = {'name': '', 'folder': '', 'uuid': '', 'username':'','symbol':'0'};
+            console.log($scope.symbol.symbol);
+            if(_.find($scope.symbol, function(name){ return typeof name === '0'}))
+            {
+                console.log("Pi");
+            }
+
+            if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
+                list = _.sortBy(list, col);
+                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
+                $scope[symbol] = '\u25BC';
+            }
+            else {
+                list = _.sortBy(list, col).reverse();
+                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
+                $scope[symbol] = '\u25B2';
+            }
+            switch (col) {
+                case 'name':
+                    $scope.symbol.name = '\u21c5';
+                    break;
+                case 'folder':
+                    $scope.symbol.folder = '\u21c5';
+                    break;
+                case 'uuid':
+                    $scope.symbol.uuid = '\u21c5';
+                    break;
+                case 'username':
+                    $scope.symbol.username = '\u21c5';
+                    break;
+            }
         };
 
         /**
@@ -231,12 +269,13 @@
             }
         };
 
+        // TODO: Make add and remove for members and owners into a more singular function for add and remove.
         /**
          * Adds member to the include or exclude group.
          * If user is successful in adding, then alerts success.
          * Otherwise alert that the user does not exist
          *
-         * @param type : the type of group that the user is being added into. Include or exclude.
+         * @param type - the type of group that the user is being added into. Include or exclude.
          */
         $scope.addMember = function (type) {
             var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
@@ -257,8 +296,8 @@
         /**
          * Removes member from the include group or exclude groups. Completely removes them from the group.
          *
-         * @param type : type of group that the user is being added into. Include or exclude.
-         * @param row  : index of the user in the respected group array.
+         * @param type - type of group that the user is being added into. Include or exclude.
+         * @param row  - index of the user in the respected group array.
          */
         $scope.removeMember = function (type, row) {
             var user;
@@ -279,7 +318,7 @@
         /**
          * Removes ownership of a grouping from an user
          *
-         * @param index : The index of the member in the ownerList array.
+         * @param index - The index of the member in the ownerList array.
          */
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.ownerList[index].username;
@@ -312,6 +351,7 @@
             $scope.ownerUser = '';
         };
 
+        // TODO: Update the savePref function to be similar to the one in the admin controller.
         /**
          * Saves changes made to grouping privileges
          */
@@ -336,9 +376,18 @@
                 else {
                     $scope.pref = false;
                 }
-                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.pref + "/setListserv", "name" : "Listserv"});
-                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn", "name" : "optInOption"});
-                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut", "name" : "optOutOption"});
+                prefUrls.push({
+                    "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.pref + "/setListserv",
+                    "name": "Listserv"
+                });
+                prefUrls.push({
+                    "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn",
+                    "name": "optInOption"
+                });
+                prefUrls.push({
+                    "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut",
+                    "name": "optOutOption"
+                });
 
                 for (var i = 0; i < prefUrls.length; i++) {
                     dataUpdater.addData(function (d) {
@@ -360,8 +409,8 @@
         /**
          * Export data in table to a CSV file
          *
-         * @param type : type of group being exported
-         * @param name : name of the group. i.e. include or exclude
+         * @param type - type of group being exported
+         * @param name - name of the group. i.e. include or exclude
          */
         $scope.export = function (type, name) {
             var data, filename, link;
@@ -385,7 +434,7 @@
         /**
          * Converts the data in the table into data that is usable for a csv file.
          *
-         * @param type : type of group to retrieve data.
+         * @param type - type of group to retrieve data.
          * @returns a string of converted array to be usable for the csv file.
          */
         $scope.convertArrayOfObjectsToCSV = function (type) {
@@ -402,8 +451,57 @@
             }
             return str;
         };
-
     //Pagination code
+
+
+    /**gives you a true or false if it finds the match
+    **@param haystack - the thing to be checked
+    **@param needle - the check against
+    **
+    **/
+    var searchMatch = function (haystack, needle) {
+        if (!needle) {
+            return true;
+        }
+        return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+    };
+
+    /**searches through the array to find matches and then fixes the list
+    **@param list - gives the whole list to sort out
+    **@param whatList - it gives you the list you need to search through
+    **@param whatQuery - it gives the search bar its seperate search function.
+    **/
+    $scope.search = function (list, whatList,whatQuery) {
+        var query = "";
+        query = $scope[whatQuery];
+        console.log(query);
+        //console.log($scope[whatList]);
+        $scope.filteredItems = [];
+        $scope.filteredItems = $filter('filter')(list, function (item) {
+            if(searchMatch(item.name, query)){
+                return true;
+            }
+        });
+        // console.log($scope.filteredItems);
+        page = 0;
+        // now group by pages
+        var emptyList = [];
+        $scope[whatList] = $scope.groupToPagesChanged(emptyList);
+    };
+
+    $scope.groupToPagesChanged = function(pagedList){
+        var pagedList = [];
+        for(var i = 0; i < $scope.filteredItems.length ; i++){
+            if(i % $scope.itemsPerPage === 0){
+                pagedList[Math.floor(i/$scope.itemsPerPage)] = [ $scope.filteredItems[i]];
+            }else{
+                pagedList[Math.floor(i/$scope.itemsPerPage)].push( $scope.filteredItems[i]);
+            }
+        }
+        return pagedList;
+    };
+
+
     /**groups all the items to pages
        have sepperate arrays (hopefully)
        @param
@@ -454,123 +552,183 @@
 
     $scope.currentPage = function(pages){
         switch(pages){
+            //TODO we need  [next, first, prev, last, set], the $scope[whatList], $scope[whatPage]
             case 'Include Next':
                 if ($scope.currentPageInclude < $scope.pagedItemsInclude.length - 1) {
                     $scope.currentPageInclude = $scope.currentPageInclude + 1;
                 }
-                break;
+            }
+            return pagedList;
+        };
 
-            case 'Include Set':
-                $scope.currentPageInclude = this.n;
-                break;
+        /**shows the range between the start and end
+         *checks for negative numbers
+         *
+         * @param size
+         * @param start
+         * @param end
+         *  all the param are self explanitory
+         * @return ret
+         *     everything within the range of start,
+         *       end, and making sure it's that size
+         **/
+        $scope.range = function (size, start, end) {
+            var ret = [];
 
-            case 'Include Prev':
-                if ($scope.currentPageInclude > 0) {
-                    $scope.currentPageInclude--;
-                }
-                break;
-            case 'Include First':
-                $scope.currentPageInclude = 0;
-                break;
+            if (size < end) {
+                end = size;
+                // start = size - $scope.gap;
+            }
+            if (start < 0) {
+                start = 0;
+            }
+            for (var i = start; i < end; i++) {
+                ret.push(i);
+            }
+            return ret;
+        };
 
-            case 'Include Last':
-                if ($scope.currentPageInclude >= 0) {
-                    $scope.currentPageInclude = $scope.pagedItemsInclude.length - 1;
-                }
-                break;
+        $scope.currentPage = function (pages) {
+            switch (pages) {
+                case 'Owned Next':
+                    if ($scope.currentPageOwned < $scope.pagedItemsOwned.length - 1) {
+                        $scope.currentPageOwned = $scope.currentPageOwned + 1;
+                    }
+                    break;
+                case 'Owned Set':
+                    $scope.currentPageOwned = this.n;
+                    break;
+                case 'Owned Prev':
+                    console.log("Go back");
+                    if ($scope.currentPageOwned > 0) {
+                        $scope.currentPageOwned--;
+                    }
+                    break;
+                case 'Owned First':
+                    $scope.currentPageOwned = 0;
+                    break;
+                case 'Owned Last':
+                    if ($scope.currentPageOwned >= 0) {
+                        $scope.currentPageOwned = $scope.pagedItemsOwned.length - 1;
+                    }
+                    break;
+                case 'Include Next':
+                    if ($scope.currentPageInclude < $scope.pagedItemsInclude.length - 1) {
+                        $scope.currentPageInclude = $scope.currentPageInclude + 1;
+                    }
+                    break;
+
+                case 'Include Set':
+                    $scope.currentPageInclude = this.n;
+                    break;
+
+                case 'Include Prev':
+                    if ($scope.currentPageInclude > 0) {
+                        $scope.currentPageInclude--;
+                    }
+                    break;
+                case 'Include First':
+                    $scope.currentPageInclude = 0;
+                    break;
+
+                case 'Include Last':
+                    if ($scope.currentPageInclude >= 0) {
+                        $scope.currentPageInclude = $scope.pagedItemsInclude.length - 1;
+                    }
+                    break;
                 // Split for the exclude
-            case 'Exclude Next':
-                if ($scope.currentPageExclude < $scope.pagedItemsExclude.length - 1) {
-                    $scope.currentPageExclude = $scope.currentPageExclude + 1;
-                }
-                break;
-            case 'Exclude Set':
-                $scope.currentPageExclude = this.n;
-                break;
+                case 'Exclude Next':
+                    if ($scope.currentPageExclude < $scope.pagedItemsExclude.length - 1) {
+                        $scope.currentPageExclude = $scope.currentPageExclude + 1;
+                    }
+                    break;
+                case 'Exclude Set':
+                    $scope.currentPageExclude = this.n;
+                    break;
 
-            case 'Exclude Prev':
-                if ($scope.currentPageExclude > 0) {
-                    $scope.currentPageExclude--;
-                }
-                break;
-            case 'Exclude First':
-                $scope.currentPageExclude = 0;
-                break;
-            case 'Exclude Last':
-                if ($scope.currentPageExclude >= 0) {
-                    $scope.currentPageExclude = $scope.pagedItemsExclude.length - 1;
-                }
-                break;
+                case 'Exclude Prev':
+                    if ($scope.currentPageExclude > 0) {
+                        $scope.currentPageExclude--;
+                    }
+                    break;
+                case 'Exclude First':
+                    $scope.currentPageExclude = 0;
+                    break;
+                case 'Exclude Last':
+                    if ($scope.currentPageExclude >= 0) {
+                        $scope.currentPageExclude = $scope.pagedItemsExclude.length - 1;
+                    }
+                    break;
                 // Cases for the basis
-            case 'Basis Next':
-                if ($scope.currentPageBasis < $scope.pagedItemsBasis.length - 1) {
-                    $scope.currentPageBasis = $scope.currentPageBasis + 1;
-                }
-                break;
-            case 'Basis Set':
-                $scope.currentPageBasis = this.n;
-                break;
-            case 'Basis Prev':
-                if ($scope.currentPageBasis > 0) {
-                    $scope.currentPageBasis--;
-                }
-                break;
-            case 'Basis First':
-                $scope.currentPageBasis = 0;
-                break;
-            case 'Basis Last':
-                if ($scope.currentPageBasis >= 0) {
-                    $scope.currentPageBasis = $scope.pagedItemsBasis.length - 1;
-                }
-                break;
+                case 'Basis Next':
+                    if ($scope.currentPageBasis < $scope.pagedItemsBasis.length - 1) {
+                        $scope.currentPageBasis = $scope.currentPageBasis + 1;
+                    }
+                    break;
+                case 'Basis Set':
+                    $scope.currentPageBasis = this.n;
+                    break;
+                case 'Basis Prev':
+                    if ($scope.currentPageBasis > 0) {
+                        $scope.currentPageBasis--;
+                    }
+                    break;
+                case 'Basis First':
+                    $scope.currentPageBasis = 0;
+                    break;
+                case 'Basis Last':
+                    if ($scope.currentPageBasis >= 0) {
+                        $scope.currentPageBasis = $scope.pagedItemsBasis.length - 1;
+                    }
+                    break;
                 // Cases for Owners
-            case 'Owners Next':
-                if ($scope.currentPageOwners < $scope.pagedItemsOwners.length - 1) {
-                    $scope.currentPageOwners = $scope.currentPageOwners + 1;
-                }
-                break;
-            case 'Owners Set':
-                $scope.currentPageOwners = this.n;
-                break;
-            case 'Owners Prev':
-                if ($scope.currentPageOwners > 0) {
-                    $scope.currentPageOwners--;
-                }
-                break;
-            case 'Owners First':
-                $scope.currentPageOwners = 0;
-                break;
-            case 'Owners Last':
-                if ($scope.currentPageOwners >= 0) {
-                    $scope.currentPageOwners = $scope.pagedItemsOwners.length - 1;
-                }
-                break;
+                case 'Owners Next':
+                    if ($scope.currentPageOwners < $scope.pagedItemsOwners.length - 1) {
+                        $scope.currentPageOwners = $scope.currentPageOwners + 1;
+                    }
+                    break;
+                case 'Owners Set':
+                    $scope.currentPageOwners = this.n;
+                    break;
+                case 'Owners Prev':
+                    if ($scope.currentPageOwners > 0) {
+                        $scope.currentPageOwners--;
+                    }
+                    break;
+                case 'Owners First':
+                    $scope.currentPageOwners = 0;
+                    break;
+                case 'Owners Last':
+                    if ($scope.currentPageOwners >= 0) {
+                        $scope.currentPageOwners = $scope.pagedItemsOwners.length - 1;
+                    }
+                    break;
                 // Cases for List
-            case 'List Next':
-                if ($scope.currentPageList < $scope.pagedItemsList.length - 1) {
-                    $scope.currentPageList = $scope.currentPageList + 1;
-                }
-                break;
-            case 'List Set':
-                $scope.currentPageList = this.n;
-                break;
-            case 'List Prev':
-                if ($scope.currentPageList > 0) {
-                    $scope.currentPageList--;
-                }
-                break;
-            case 'List First':
-                $scope.currentPageList = 0;
-                break;
-            case 'List Last':
-                if ($scope.currentPageList >= 0) {
-                    $scope.currentPageList = $scope.pagedItemsList.length - 1;
-                }
-                break;
-        }
-    };
+                case 'List Next':
+                    if ($scope.currentPageList < $scope.pagedItemsList.length - 1) {
+                        $scope.currentPageList = $scope.currentPageList + 1;
+                    }
+                    break;
+                case 'List Set':
+                    $scope.currentPageList = this.n;
+                    break;
+                case 'List Prev':
+                    if ($scope.currentPageList > 0) {
+                        $scope.currentPageList--;
+                    }
+                    break;
+                case 'List First':
+                    $scope.currentPageList = 0;
+                    break;
+                case 'List Last':
+                    if ($scope.currentPageList >= 0) {
+                        $scope.currentPageList = $scope.pagedItemsList.length - 1;
+                    }
+                    break;
+            }
+        };
 
-}
+    }
 
     ownerApp.controller("OwnerJsController", OwnerJsController);
 })();

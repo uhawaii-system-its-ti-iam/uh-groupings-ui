@@ -39,46 +39,46 @@
 
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
-                                    ng-model="query1" ng-change= "search(membersList, 'Paged_1', 'firstQuery')" id = "members"/>
+                                           ng-model="queryMembers" ng-change= "search(membersList, 'pagedItemsMembersList', 'queryMembers')" id = "members"/>
                                 </div>
                             </div>
                         </div>
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th>Groupings</th>
+                                <th ng-click="sort(membersList, 'name', 'pagedItemsMembersList', 'symbolList')">Groupings {{symbol.member}}</th>
                                 <th>Opt out</th>
                             </tr>
                             </thead>
                             <tfoot>
 
-                                <!-- Top part of the two parts  -->
-                                <td colspan="6">
-                                        <ul class = "pagination pull-right" >
-                                            <li ng-class="{disabled: (currentPageOptOut) == 0}">
-                                                <a href="" ng-click="currentPage('Page Opt Out First')" >« Frist</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageOptOut) == 0}">
-                                                <a href="" ng-click="currentPage('Page Opt Out Prev')" >« Prev</a>
-                                            </li>
-                                            <li ng-repeat="n in range(pagedItems1.length, currentPageOptOut - gap, currentPageOptOut + gap + 1) "
-                                            ng-class="{active: n == currentPageOptOut}"
+                            <!-- Top part of the two parts  -->
+                            <td colspan="6">
+                                <ul class = "pagination pull-right" >
+                                    <li ng-class="{disabled: (currentPageOptOut) == 0}">
+                                        <a href="" ng-click="currentPage('First','pagedItemsMembersList','currentPageOptOut')" >« Frist</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageOptOut) == 0}">
+                                        <a href="" ng-click="currentPage('Prev','pagedItemsMembersList','currentPageOptOut')" >« Prev</a>
+                                    </li>
+                                    <li ng-repeat="n in range(pagedItemsMembersList.length, currentPageOptOut - gap, currentPageOptOut + gap + 1) "
+                                        ng-class="{active: n == currentPageOptOut}"
 
-                                            ng-click="currentPage('Page Opt Out Set')"
+                                        ng-click="currentPage('Set','pagedItemsMembersList','currentPageOptOut')"
                                             ><a href="" ng-bind="n + 1" >1</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageOptOut) == pagedItems1.length - 1 }">
-                                                <a href="" ng-click="currentPage('Page Opt Out Next')">Next »</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageOptOut) == pagedItems1.length - 1 }">
-                                                <a href="" ng-click="currentPage('Page Opt Out Last')">Last »</a>
-                                            </li>
-                                    </ul>
-                                </td>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageOptOut) == pagedItemsMembersList.length - 1 }">
+                                        <a href="" ng-click="currentPage('Next','pagedItemsMembersList','currentPageOptOut')">Next »</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageOptOut) == pagedItemsMembersList.length - 1 }">
+                                        <a href="" ng-click="currentPage('Last','pagedItemsMembersList','currentPageOptOut')">Last »</a>
+                                    </li>
+                                </ul>
+                            </td>
                             </tfoot>
                             <tbody>
-                                <!-- | filter:searchFor1 -->
-                            <tr ng-repeat="l in pagedItems1[currentPageOptOut] ">
+                            <!-- | filter:searchFor1 -->
+                            <tr ng-repeat="l in pagedItemsMembersList[currentPageOptOut] ">
                                 <td>{{l.name}}</td>
                                 <td>
                                     <!-- TODO find a way to update index -->
@@ -100,7 +100,7 @@
 
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
-                                    ng-model="query2" ng-change= "search(optInList, 'Paged_3', 'secondQuery')" id = "optIn"/>
+                                           ng-model="queryOptIn" ng-change= "search(optInList, 'pagedItemsOptInList', 'queryOptIn')" id = "optIn"/>
                                 </div>
                             </div>
                         </div>
@@ -108,12 +108,12 @@
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th>Groupings</th>
+                                <th ng-click="sort(optInList, 'name', 'pagedItemsOptInList', 'symbolOptIn')">Groupings {{symbol.optIn}}</th>
                                 <th>Opt in</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="o in pagedItems3[currentPageOptIn] ">
+                            <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn] ">
                                 <td>{{o.name}}</td>
                                 <td>
                                     <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-default btn-block"
@@ -123,28 +123,28 @@
                             </tr>
                             </tbody>
                             <tfoot>
-                                <td colspan="6">
-                                      <ul class = "pagination pull-right" >
-                                          <li ng-class="{disabled: (currentPageOptIn) == 0 }">
-                                              <a href="" ng-click="currentPage('Page Opt In First')" >« First</a>
-                                          </li>
-                                          <li ng-class="{disabled: (currentPageOptIn) == 0}">
-                                              <a href="" ng-click="currentPage('Page Opt In Prev')" >« Prev</a>
-                                          </li>
-                                          <li ng-repeat="n in range(pagedItems3.length, currentPageOptIn - gap, currentPageOptIn + gap + 1) "
-                                          ng-class="{active: n == currentPageOptIn}"
+                            <td colspan="6">
+                                <ul class = "pagination pull-right" >
+                                    <li ng-class="{disabled: (currentPageOptIn) == 0 }">
+                                        <a href="" ng-click="currentPage('First','pagedItemsOptInList','currentPageOptIn')" >« First</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageOptIn) == 0}">
+                                        <a href="" ng-click="currentPage('Prev','pagedItemsOptInList','currentPageOptIn')" >« Prev</a>
+                                    </li>
+                                    <li ng-repeat="n in range(pagedItemsOptInList.length, currentPageOptIn - gap, currentPageOptIn + gap + 1) "
+                                        ng-class="{active: n == currentPageOptIn}"
 
-                                          ng-click="currentPage('Page Opt In Set')"
-                                          ><a href="" ng-bind="n + 1" >1</a>
-                                          </li>
-                                          <li ng-class="{disabled: (currentPageOptIn) == pagedItems3.length - 1 }">
-                                              <a href="" ng-click="currentPage('Page Opt In Next')">Next »</a>
-                                          </li>
-                                          <li ng-class="{disabled: (currentPageOptIn) == pagedItems3.length - 1 }">
-                                               <a href="" ng-click="currentPage('Page Opt In Last')">Last »</a>
-                                           </li>
-                                  </ul>
-                              </td>
+                                        ng-click="currentPage('Page Opt In Set')"
+                                            ><a href="" ng-bind="n + 1" >1</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageOptIn) == pagedItemsOptInList.length - 1 }">
+                                        <a href="" ng-click="currentPage('Next','pagedItemsOptInList','currentPageOptIn')">Next »</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageOptIn) == pagedItemsOptInList.length - 1 }">
+                                        <a href="" ng-click="currentPage('Last','pagedItemsOptInList','currentPageOptIn')">Last »</a>
+                                    </li>
+                                </ul>
+                            </td>
                             </tfoot>
                         </table>
                     </div>
@@ -162,7 +162,7 @@
 
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
-                                    ng-model="query3" ng-change= "search(optedOut, 'Paged_5', 'thirdQuery')"/>
+                                           ng-model="queryOptedOut" ng-change= "search(optedOut, 'pagedItemsOptedOutList', 'queryOptedOut')"/>
                                 </div>
                             </div>
                         </div>
@@ -171,12 +171,12 @@
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th>Groupings</th>
+                                <th ng-click="sort(optedOut, 'name', 'pagedItemsOptedOutList', 'symbolCancelOut')">Groupings {{symbol.cancelOut}}</th>
                                 <th>Cancel Opt out</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="out in pagedItems5[currentPageCancelOptOut] ">
+                            <tr ng-repeat="out in pagedItemsOptedOutList[currentPageCancelOptOut] ">
                                 <td>{{out.name}}</td>
                                 <td>
                                     <button class="btn btn-default btn-block" ng-disabled="disableButton(optedOut, $index + (currentPageCancelOptOut * itemsPerPage))"
@@ -187,28 +187,28 @@
                             </tr>
                             </tbody>
                             <tfoot>
-                                <td colspan="6">
-                                        <ul class = "pagination pull-right" >
-                                            <li ng-class="{disabled: (currentPageCancelOptOut) == 0 }">
-                                                <a href="" ng-click="currentPage('Cancel Opt Out First')" >« First</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageCancelOptOut) == 0 }">
-                                                <a href="" ng-click="currentPage('Cancel Opt Out Prev')" >« Prev</a>
-                                            </li>
-                                            <li ng-repeat="n in range(pagedItems5.length, currentPageCancelOptOut - gap, currentPageCancelOptOut + gap + 1) "
-                                            ng-class="{active: n == currentPageCancelOptOut}"
+                            <td colspan="6">
+                                <ul class = "pagination pull-right" >
+                                    <li ng-class="{disabled: (currentPageCancelOptOut) == 0 }">
+                                        <a href="" ng-click="currentPage('First','pagedItemsOptedOutList','currentPageCancelOptOut')" >« First</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageCancelOptOut) == 0 }">
+                                        <a href="" ng-click="currentPage('Prev','pagedItemsOptedOutList','currentPageCancelOptOut')" >« Prev</a>
+                                    </li>
+                                    <li ng-repeat="n in range(pagedItemsOptedOutList.length, currentPageCancelOptOut - gap, currentPageCancelOptOut + gap + 1) "
+                                        ng-class="{active: n == currentPageCancelOptOut}"
 
-                                            ng-click="currentPage('Cancel Opt Out Set')"
+                                        ng-click="currentPage('Set','pagedItemsOptedOutList','currentPageCancelOptOut')"
                                             ><a href="" ng-bind="n + 1" >1</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageCancelOptOut) == pagedItems5.length - 1 }">
-                                                <a href="" ng-click="currentPage('Cancel Opt Out Next')">Next »</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageCancelOptOut) == pagedItems5.length - 1 }">
-                                                <a href="" ng-click="currentPage('Cancel Opt Out Last')">Last »</a>
-                                            </li>
-                                    </ul>
-                                </td>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageCancelOptOut) == pagedItemsOptedOutList.length - 1 }">
+                                        <a href="" ng-click="currentPage('Next','pagedItemsOptedOutList','currentPageCancelOptOut')">Next »</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageCancelOptOut) == pagedItemsOptedOutList.length - 1 }">
+                                        <a href="" ng-click="currentPage('Last','pagedItemsOptedOutList','currentPageCancelOptOut')">Last »</a>
+                                    </li>
+                                </ul>
+                            </td>
                             </tfoot>
                         </table>
                     </div>
@@ -220,19 +220,19 @@
 
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
-                                    ng-model="query4" ng-change= "search(optedIn, 'Paged_4', fourthQuery)" id = "optedIn"/>
+                                           ng-model="queryOptedIn" ng-change= "search(optedIn, 'pagedItemsOptedInList, 'queryOptedIn')" id = "optedIn"/>
                                 </div>
                             </div>
                         </div>
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th>Groupings</th>
+                                <th ng-click="sort(optedIn, 'name', 'pagedItemsOptedInList', 'symbolCancelIn')">Groupings {{symbol.cancelIn}}</th>
                                 <th>Cancel Opt in</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="in in pagedItems4[currentPageCancelOptIn] ">
+                            <tr ng-repeat="in in pagedItemsOptedInList[currentPageCancelOptIn] ">
                                 <td>{{in.name}}</td>
                                 <td>
                                     <button class="btn btn-default btn-block" ng-disabled="disableButton(optedIn, $index + (currentPageCancelOptIn * itemsPerPage))"
@@ -243,28 +243,28 @@
                             </tr>
                             </tbody>
                             <tfoot>
-                                <td colspan="6">
-                                        <ul class = "pagination pull-right" >
-                                            <li ng-class="{disabled: (currentPageCancelOptIn) == 0 }">
-                                                <a href="" ng-click="currentPage('Cancel Opt In First')" >« First</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageCancelOptIn) == 0 }">
-                                                <a href="" ng-click="currentPage('Cancel Opt In Prev')" >« Prev</a>
-                                            </li>
-                                            <li ng-repeat="n in range(pagedItems4.length, currentPageCancelOptIn - gap, currentPageCancelOptIn + gap + 1) "
-                                            ng-class="{active: n == currentPageCancelOptIn}"
+                            <td colspan="6">
+                                <ul class = "pagination pull-right" >
+                                    <li ng-class="{disabled: (currentPageCancelOptIn) == 0 }">
+                                        <a href="" ng-click="currentPage('First','pagedItemsOptedInList','currentPageCancelOptIn')" >« First</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageCancelOptIn) == 0 }">
+                                        <a href="" ng-click="currentPage('Prev','pagedItemsOptedInList','currentPageCancelOptIn')" >« Prev</a>
+                                    </li>
+                                    <li ng-repeat="n in range(pagedItemsOptedInList.length, currentPageCancelOptIn - gap, currentPageCancelOptIn + gap + 1) "
+                                        ng-class="{active: n == currentPageCancelOptIn}"
 
-                                            ng-click="currentPage('Cancel Opt In Set')"
+                                        ng-click="currentPage('Set','pagedItemsOptedInList','currentPageCancelOptIn')"
                                             ><a href="" ng-bind="n + 1" >1</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageCancelOptIn) == pagedItems4.length - 1 }">
-                                                <a href="" ng-click="currentPage('Cancel Opt In Next')">Next »</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageCancelOptIn) == pagedItems4.length - 1 }">
-                                                <a href="" ng-click="currentPage('Cancel Opt In Last')">Last »</a>
-                                            </li>
-                                    </ul>
-                                </td>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageCancelOptIn) == pagedItemsOptedInList.length - 1 }">
+                                        <a href="" ng-click="currentPage('Next','pagedItemsOptedInList','currentPageCancelOptIn')">Next »</a>
+                                    </li>
+                                    <li ng-class="{disabled: (currentPageCancelOptIn) == pagedItemsOptedInList.length - 1 }">
+                                        <a href="" ng-click="currentPage('Last','pagedItemsOptedInList','currentPageCancelOptIn')">Last »</a>
+                                    </li>
+                                </ul>
+                            </td>
                             </tfoot>
                         </table>
                     </div>
