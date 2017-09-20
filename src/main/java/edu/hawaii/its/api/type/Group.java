@@ -7,7 +7,6 @@ import java.util.List;
 @Entity
 @Table(name = "groups")
 public class Group {
-//    @ElementCollection(targetClass = Person.class)
     private List<Person> members = new ArrayList<>();
 
     private String path = "";
@@ -29,7 +28,8 @@ public class Group {
         this.path = path;
     }
 
-    @Transient
+//    @ElementCollection(targetClass = Person.class)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "uuid")
     public List<Person> getMembers() {
         return members;
     }

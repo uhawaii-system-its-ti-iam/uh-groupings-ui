@@ -428,7 +428,20 @@ insert into holiday_type(type_id, holiday_id) values(1,101);
 insert into holiday_type(type_id, holiday_id) values(2,101);
 insert into holiday_type(type_id, holiday_id) values(3,101);
 
-insert into groups(path) values('path:to:group0');
-insert into groups(path) values('path:to:group1');
-insert into groups(path) values('path:to:group2');
-insert into groups(path) values('path:to:group3');
+INSERT INTO groups(path, members) VALUES ('path:to:group0', [NULL] );
+INSERT INTO groups(path, members) VALUES ('path:to:group1', [NULL] );
+INSERT INTO groups(path, members) VALUES ('path:to:group2', [NULL] );
+INSERT INTO groups(path, members) VALUES ('path:to:group3', [NULL] );
+INSERT INTO groups(path, members) VALUES ('path:to:group4', [NULL] );
+
+
+INSERT INTO person(FullName, uuid, username) VALUES ('Fred', '1234', 'userFred');
+INSERT INTO person(FullName, uuid, username) VALUES ('Ted', '4567', 'userTed');
+INSERT INTO person(FullName, uuid, username) VALUES ('Ned', '7890', 'userNed');
+
+-- INSERT INTO groups(path) VALUES ('path:to:group0');
+-- INSERT INTO groups(path) VALUES ('path:to:group1' );
+-- INSERT INTO groups(path) VALUES ('path:to:group2' );
+-- INSERT INTO groups(path) VALUES ('path:to:group3' );
+-- INSERT INTO groups(path) VALUES ('path:to:group4' );
+
