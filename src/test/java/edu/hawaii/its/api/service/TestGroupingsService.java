@@ -1,17 +1,14 @@
 package edu.hawaii.its.api.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
-import edu.hawaii.its.api.type.*;
-import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
-import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import edu.hawaii.its.api.type.*;
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+
+import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +18,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -428,7 +428,7 @@ public class TestGroupingsService {
         gs.addSelfOpted(GROUPING_EXCLUDE, username[4]);
         assertTrue(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
         int numberOptedInAfter = gs.groupingsOptedOutOf(username[4], groupsIn).size();
-        assertEquals(numberOptedInBefore, numberOptedInAfter -1);
+        assertEquals(numberOptedInBefore, numberOptedInAfter - 1);
         gs.addSelfOpted(GROUPING_EXCLUDE, username[4]);
         assertTrue(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
 

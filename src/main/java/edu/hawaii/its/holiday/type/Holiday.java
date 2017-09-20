@@ -1,28 +1,15 @@
 package edu.hawaii.its.holiday.type;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import edu.hawaii.its.holiday.util.Dates;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import edu.hawaii.its.holiday.util.Dates;
 
 @Entity
 @Table(name = "holiday")
@@ -55,8 +42,8 @@ public class Holiday implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "holiday_type",
-               joinColumns = @JoinColumn(name = "holiday_id", unique = false),
-               inverseJoinColumns = @JoinColumn(name = "type_id", unique = false))
+            joinColumns = @JoinColumn(name = "holiday_id", unique = false),
+            inverseJoinColumns = @JoinColumn(name = "type_id", unique = false))
     @OrderBy(value = "id")
     private List<Type> holidayTypes = new ArrayList<Type>(0);
 

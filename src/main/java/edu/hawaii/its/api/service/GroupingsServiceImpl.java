@@ -1,14 +1,13 @@
 package edu.hawaii.its.api.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.util.Dates;
 
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,5 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.Person;
-
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 
@@ -34,51 +32,51 @@ public interface GrouperFactoryService {
 
 
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
-                                                                                  String attributeDefNameName);
+                                                                                 String attributeDefNameName);
 
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
-                                                                                  String attributeDefNameName0,
-                                                                                  String attributeDefNameName1);
+                                                                                 String attributeDefNameName0,
+                                                                                 String attributeDefNameName1);
 
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
-                                                                                  String attributeDefNameName,
-                                                                                  List<String> ownerGroupNames);
+                                                                                 String attributeDefNameName,
+                                                                                 List<String> ownerGroupNames);
 
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
-                                                                                  String attributeDefNameName0,
-                                                                                  String attributeDefNameName1,
-                                                                                  List<String> ownerGroupNames);
+                                                                                 String attributeDefNameName0,
+                                                                                 String attributeDefNameName1,
+                                                                                 List<String> ownerGroupNames);
 
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForMembership(String assignType,
-                                                                                               String attributeDefNameName,
-                                                                                               String membershipId);
+                                                                                              String attributeDefNameName,
+                                                                                              String membershipId);
 
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType,
-                                                                                          String group);
+                                                                                         String group);
 
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType,
-                                                                                          String attributeDefNameName,
-                                                                                          String group);
+                                                                                         String attributeDefNameName,
+                                                                                         String group);
 
     public WsHasMemberResults makeWsHasMemberResults(String group, String username);
 
     public WsAssignAttributesResults makeWsAssignAttributesResults(String attributeAssignType,
-                                                                    String attributeAssignOperation,
-                                                                    String ownerGroupName,
-                                                                    String attributeDefNameName,
-                                                                    String attributeAssignValueOperation,
-                                                                    WsAttributeAssignValue value);
+                                                                   String attributeAssignOperation,
+                                                                   String ownerGroupName,
+                                                                   String attributeDefNameName,
+                                                                   String attributeAssignValueOperation,
+                                                                   WsAttributeAssignValue value);
 
     public WsAssignAttributesResults makeWsAssignAttributesResultsForMembership(String attributeAssignType,
-                                                                                 String attributeAssignOperation,
-                                                                                 String attributeDefNameName,
-                                                                                 String ownerMembershipId);
+                                                                                String attributeAssignOperation,
+                                                                                String attributeDefNameName,
+                                                                                String ownerMembershipId);
 
 
     public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(String attributeAssingType,
-                                                                            String attributeAssignOperation,
-                                                                            String attributeDefNameName,
-                                                                            String ownerGroupName);
+                                                                           String attributeAssignOperation,
+                                                                           String attributeDefNameName,
+                                                                           String ownerGroupName);
 
     public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(WsSubjectLookup lookup,
                                                                            String attributeAssingType,
@@ -87,13 +85,13 @@ public interface GrouperFactoryService {
                                                                            String ownerGroupName);
 
     public WsAssignGrouperPrivilegesLiteResult makeWsAssignGrouperPrivilegesLiteResult(String groupName,
-                                                                                        String privilegeName,
-                                                                                        WsSubjectLookup lookup,
-                                                                                        boolean allowed);
+                                                                                       String privilegeName,
+                                                                                       WsSubjectLookup lookup,
+                                                                                       boolean allowed);
 
     public WsGetGrouperPrivilegesLiteResult makeWsGetGrouperPrivilegesLiteResult(String groupName,
-                                                                                  String privilegeName,
-                                                                                  WsSubjectLookup lookup);
+                                                                                 String privilegeName,
+                                                                                 WsSubjectLookup lookup);
 
     public WsGetMembershipsResults makeWsGetMembershipsResults(String groupName, WsSubjectLookup lookup);
 

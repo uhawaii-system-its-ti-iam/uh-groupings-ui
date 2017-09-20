@@ -1,12 +1,12 @@
 package edu.hawaii.its.holiday.configuration;
 
-import javax.annotation.PostConstruct;
+import edu.internet2.middleware.grouperClient.util.GrouperClientConfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-import edu.internet2.middleware.grouperClient.util.GrouperClientConfig;
+import javax.annotation.PostConstruct;
 
 @Configuration
 public class GrouperPropertyConfigurer {

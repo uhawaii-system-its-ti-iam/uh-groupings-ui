@@ -1,11 +1,11 @@
 package edu.hawaii.its.holiday.type;
 
+import edu.hawaii.its.holiday.util.Dates;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
-
-import edu.hawaii.its.holiday.util.Dates;
 
 public class YearHolidayHolder {
 

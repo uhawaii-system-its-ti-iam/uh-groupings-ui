@@ -1,11 +1,11 @@
 package edu.hawaii.its.holiday.access;
 
-import java.util.Date;
-import java.util.Map;
-
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.authentication.AttributePrincipalImpl;
 import org.jasig.cas.client.validation.Assertion;
+
+import java.util.Date;
+import java.util.Map;
 
 public class AssertionDummy implements Assertion {
 

@@ -1,20 +1,21 @@
 package edu.hawaii.its.holiday.configuration;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import edu.internet2.middleware.grouperClient.util.GrouperClientConfig;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.internet2.middleware.grouperClient.util.GrouperClientConfig;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SpringBootWebApplication.class })
+@SpringBootTest(classes = {SpringBootWebApplication.class})
 public class GrouperPropertyConfigurerTest {
 
     @Autowired

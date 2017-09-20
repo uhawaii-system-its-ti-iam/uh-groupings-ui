@@ -5,7 +5,6 @@ import org.hibernate.annotations.Proxy;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Transient;
 
 @Entity
 @Proxy(lazy = false)
@@ -20,9 +19,10 @@ public class Person {
     @Column
     private String uuid;
 
-    public Person(){
+    public Person() {
         //empty
     }
+
     // Constructor.
     public Person(String name, String uuid, String username) {
         this.name = name;
