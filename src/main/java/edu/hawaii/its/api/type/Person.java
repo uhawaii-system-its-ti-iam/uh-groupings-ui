@@ -10,15 +10,15 @@ import javax.persistence.Transient;
 @Entity
 @Proxy(lazy = false)
 public class Person {
+    @Id
+    @Column
+    private String username;
+
     @Column(name = "FullName")
     private String name;
 
-    @Id
     @Column
     private String uuid;
-
-    @Column
-    private String username;
 
     public Person(){
         //empty

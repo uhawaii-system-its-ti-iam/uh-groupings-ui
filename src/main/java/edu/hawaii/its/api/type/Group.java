@@ -29,7 +29,7 @@ public class Group {
     }
 
 //    @ElementCollection(targetClass = Person.class)
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "uuid")
+    @ManyToMany(fetch = FetchType.EAGER)
     public List<Person> getMembers() {
         return members;
     }
