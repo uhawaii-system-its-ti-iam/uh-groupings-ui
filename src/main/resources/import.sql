@@ -427,3 +427,4 @@ insert into holiday_type(type_id, holiday_id) values(3,100);
 insert into holiday_type(type_id, holiday_id) values(1,101);
 insert into holiday_type(type_id, holiday_id) values(2,101);
 insert into holiday_type(type_id, holiday_id) values(3,101);
+

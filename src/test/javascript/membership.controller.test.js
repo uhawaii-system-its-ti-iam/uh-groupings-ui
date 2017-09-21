@@ -183,4 +183,43 @@ describe("MembershipJsController", function () {
         expect(testingRange[0]).toEqual(16);
     });
 
+    it("testing Sort", function () {
+      spyOn(scope, "init").and.callFake(function () {
+        scope.membersList.push({
+          "name": "ksanidad-test"
+        });
+        scope.membersList.push({
+          "name": "zknobel-test"
+        });
+        scope.membersList.push({
+          "name": "aaronvil-test"
+        });
+      });
+
+      spyOn(_, 'sortBy').and.callFake(function () {
+        scope.membersList.push({
+          "name": "ksanidad-test"
+        });
+      });
+
+      expect(controller).toBeDefined();
+      expect(scope.membersList).toBeDefined();
+      expect(scope.membersList.length).toEqual(0);
+
+      // What we are testing
+      scope.init();
+
+      expect(scope.init).toHaveBeenCalled();
+      expect(scope.membersList).toBeDefined();
+      expect(scope.membersList.length).toEqual(3);
+
+      expect(scope.membersList[0].name).toEqual("ksanidad-test");
+
+      var list = scope.membersList;
+
+      scope.sort(list, 'name', 'pagedItems1', 'symbol');
+
+      expect(scope.sort).toHaveBeenCalled();
+    })
+
 });

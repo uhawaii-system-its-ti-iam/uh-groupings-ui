@@ -1,9 +1,11 @@
 package edu.hawaii.its.holiday.controller;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import edu.hawaii.its.holiday.service.HolidayService;
+import edu.hawaii.its.holiday.type.Holiday;
+import edu.hawaii.its.holiday.type.Type;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.hawaii.its.holiday.service.HolidayService;
-import edu.hawaii.its.holiday.type.Holiday;
-import edu.hawaii.its.holiday.type.Type;
+import java.util.List;
 
 @RestController
 public class HolidayRestController {
@@ -25,8 +25,8 @@ public class HolidayRestController {
     private HolidayService holidayService;
 
     @RequestMapping(value = "/api/holidays",
-                    method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonData<List<Holiday>>> holidays() {
         logger.info("Entered REST holidays...");
         JsonData<List<Holiday>> data = new JsonData<>(holidayService.findHolidays());
@@ -36,8 +36,8 @@ public class HolidayRestController {
     }
 
     @RequestMapping(value = "/api/holidays/{id}",
-                    method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonData<Holiday>> holiday(@PathVariable Integer id) {
         logger.info("Entered REST holiday(" + id + ") ...");
         JsonData<Holiday> data = new JsonData<>(holidayService.findHoliday(id));
@@ -47,8 +47,8 @@ public class HolidayRestController {
     }
 
     @RequestMapping(value = "/api/types",
-                    method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonData<List<Type>>> types() {
         logger.info("Entered REST types...");
         List<Type> types = holidayService.findTypes();

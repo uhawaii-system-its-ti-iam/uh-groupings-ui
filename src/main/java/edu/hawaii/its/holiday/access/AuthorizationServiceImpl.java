@@ -1,24 +1,20 @@
 package edu.hawaii.its.holiday.access;
 
-import java.lang.Exception;
-import java.lang.System;
-import java.util.ArrayList;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
+import edu.hawaii.its.api.controller.GroupingsRestController;
+import edu.hawaii.its.api.service.GroupingsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import edu.hawaii.its.api.controller.*;
-import edu.hawaii.its.api.service.*;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
@@ -77,9 +73,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         }
 
         //Determines if a user is an admin.
-       if (fetchAdmin(username)){
-           roleHolder.add(Role.ADMIN);
-       }
+        if (fetchAdmin(username)) {
+            roleHolder.add(Role.ADMIN);
+        }
 
         List<Role> roles = userMap.get(uhuuid);
         if (roles != null) {

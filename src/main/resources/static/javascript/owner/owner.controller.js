@@ -3,19 +3,19 @@
     /**
      * Owner controller for the groupings page
      *
-     * @param $scope        : A Binding variable between controller and html page.
-     * @param dataProvider  : service function that acts as the AJAX get.
-     * @param dataUpdater   : service function that acts as AJAX post, used mainly for adding or updating
-     * @param dataDeleter    : service function that acts as AJAX psst, use function mainly for delete function.
+     * @param $scope        - A Binding variable between controller and html page.
+     * @param dataProvider  - service function that acts as the AJAX get.
+     * @param dataUpdater   - service function that acts as AJAX post, used mainly for adding or updating
+     * @param dataDeleter   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
     function OwnerJsController($scope, $window,$filter, dataProvider, dataUpdater, dataDeleter) {
         $scope.currentUsername = "";
-        $scope.initCurrentUsername = function() {
+        $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
         };
 
-        $scope.getCurrentUsername = function() {
+        $scope.getCurrentUsername = function () {
             return $scope.currentUsername;
         };
 
@@ -36,11 +36,14 @@
         $scope.groupingName = '';
 
         /*
-        *pagination variables
-        */
-        $scope.gap=2;
-        $scope.itemsPerPage = 2;
+         *pagination variables
+         */
+        $scope.gap = 2;
+        $scope.itemsPerPage = 25;
         //figure out how much pages to paginate. so far lets do one
+        $scope.pagedItemsOwned = [];
+        $scope.currentPageOwned = 0;
+
         $scope.pagedItemsInclude = [];
         $scope.currentPageInclude = 0;
 
@@ -71,11 +74,11 @@
                 console.log(d);
                 //Assigns grouping name, folder directories and url used for api call.
                 for (var i = 0; i < d.groupingsOwned.length; i++) {
-                    temp[i] = d.groupingsOwned[i].path.substr(18).split(':');
+                    temp[i] = d.groupingsOwned[i].path.split(':');
                     var folder = '';
                     for (var j = 0; j < temp[i].length - 1; j++) {
                         folder += temp[i][j];
-                        if (j != temp[i].length - 2) {
+                        if (j != temp[i].length - 1) {
                             folder += "/";
                         }
                     }
@@ -85,6 +88,7 @@
                         'url': d.groupingsOwned[i].path
                     });
                 }
+                $scope.pagedItemsOwned = $scope.groupToPages($scope.ownedList, $scope.pagedItemsOwned);
                 $scope.loading = false;
             }, groupingsOwned);
         };
@@ -92,7 +96,7 @@
         /**
          * Switches from showing that data of the grouping you own to the information about the grouping selected.
          *
-         * @param row : row of the grouping with relation to the table.
+         * @param row - row of the grouping with relation to the table.
          */
         $scope.showData = function (row) {
             $scope.groupingName = $scope.ownedList[row];
@@ -121,12 +125,12 @@
                 //Gets members in grouping
                 $scope.groupingsList = d.composite.members;
                 $scope.modify($scope.groupingsList);
-                $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList,$scope.pagedItemsList);
+                $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsList);
 
                 //Gets members in the basis group
                 $scope.groupingsBasis = d.basis.members;
                 $scope.modify($scope.groupingsBasis);
-                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingsBasis,$scope.pagedItemsBasis);
+                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingsBasis, $scope.pagedItemsBasis);
 
                 //Gets members in the include group
                 $scope.groupingInclude = d.include.members;
@@ -136,13 +140,14 @@
                 //Gets members in the exclude group
                 $scope.groupingExclude = d.exclude.members;
                 $scope.modify($scope.groupingExclude);
-                $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude,$scope.pagedItemsExclude);
+                $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
 
                 //Gets owners of the grouping
                 $scope.ownerList = d.owners.members;
                 $scope.modify($scope.ownerList);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
 
+                // TODO: Update to reflect how admin controller does it.
                 $scope.pref = d.listservOn;
                 $scope.allowOptIn = d.optInOn;
                 $scope.allowOptOut = d.optOutOn;
@@ -175,7 +180,7 @@
          * Modify the data from the grouping to be sorted, filter out hawaii.edu
          * and determines if a user is in the basis group or not.
          *
-         * @param grouping : The name of the grouping of which its data will be modified.
+         * @param grouping - The name of the grouping of which its data will be modified.
          *
          * @returns returns
          *                1 for ascending
@@ -200,16 +205,49 @@
                     }
                 }
             }
+        };
 
-            //sorts data in alphabetic order
-            grouping.sort(function (a, b) {
-                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
-                if (nameA < nameB) //sort string ascending
-                    return -1;
-                if (nameA > nameB)
-                    return 1;
-                return 0
-            });
+        /**
+         *  Sorts the data in the table in ascending or descending order based on
+         *  the list and column being sorted.
+         *
+         * @param list - The data list to which will be sorted
+         * @param col - The object to name to determine how it will be sorted by.
+         * @param listPaged - The paged data list to which the sorted list will go into.
+         * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
+         */
+        $scope.sortCol = function (list, col, listPaged, symbol) {
+            $scope.symbol = {'name': '', 'folder': '', 'uuid': '', 'username':'','symbol':'0'};
+            console.log($scope.symbol.symbol);
+            if(_.find($scope.symbol, function(name){ return typeof name === '0'}))
+            {
+                console.log("Pi");
+            }
+
+            if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
+                list = _.sortBy(list, col);
+                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
+                $scope[symbol] = '\u25BC';
+            }
+            else {
+                list = _.sortBy(list, col).reverse();
+                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
+                $scope[symbol] = '\u25B2';
+            }
+            switch (col) {
+                case 'name':
+                    $scope.symbol.name = '\u21c5';
+                    break;
+                case 'folder':
+                    $scope.symbol.folder = '\u21c5';
+                    break;
+                case 'uuid':
+                    $scope.symbol.uuid = '\u21c5';
+                    break;
+                case 'username':
+                    $scope.symbol.username = '\u21c5';
+                    break;
+            }
         };
 
         /**
@@ -231,12 +269,13 @@
             }
         };
 
+        // TODO: Make add and remove for members and owners into a more singular function for add and remove.
         /**
          * Adds member to the include or exclude group.
          * If user is successful in adding, then alerts success.
          * Otherwise alert that the user does not exist
          *
-         * @param type : the type of group that the user is being added into. Include or exclude.
+         * @param type - the type of group that the user is being added into. Include or exclude.
          */
         $scope.addMember = function (type) {
             var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
@@ -257,8 +296,8 @@
         /**
          * Removes member from the include group or exclude groups. Completely removes them from the group.
          *
-         * @param type : type of group that the user is being added into. Include or exclude.
-         * @param row  : index of the user in the respected group array.
+         * @param type - type of group that the user is being added into. Include or exclude.
+         * @param row  - index of the user in the respected group array.
          */
         $scope.removeMember = function (type, row) {
             var user;
@@ -279,7 +318,7 @@
         /**
          * Removes ownership of a grouping from an user
          *
-         * @param index : The index of the member in the ownerList array.
+         * @param index - The index of the member in the ownerList array.
          */
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.ownerList[index].username;
@@ -312,6 +351,7 @@
             $scope.ownerUser = '';
         };
 
+        // TODO: Update the savePref function to be similar to the one in the admin controller.
         /**
          * Saves changes made to grouping privileges
          */
@@ -336,9 +376,18 @@
                 else {
                     $scope.pref = false;
                 }
-                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.pref + "/setListserv", "name" : "Listserv"});
-                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn", "name" : "optInOption"});
-                prefUrls.push({"url" : "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut", "name" : "optOutOption"});
+                prefUrls.push({
+                    "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.pref + "/setListserv",
+                    "name": "Listserv"
+                });
+                prefUrls.push({
+                    "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn",
+                    "name": "optInOption"
+                });
+                prefUrls.push({
+                    "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut",
+                    "name": "optOutOption"
+                });
 
                 for (var i = 0; i < prefUrls.length; i++) {
                     dataUpdater.addData(function (d) {
@@ -360,8 +409,8 @@
         /**
          * Export data in table to a CSV file
          *
-         * @param type : type of group being exported
-         * @param name : name of the group. i.e. include or exclude
+         * @param type - type of group being exported
+         * @param name - name of the group. i.e. include or exclude
          */
         $scope.export = function (type, name) {
             var data, filename, link;
@@ -385,7 +434,7 @@
         /**
          * Converts the data in the table into data that is usable for a csv file.
          *
-         * @param type : type of group to retrieve data.
+         * @param type - type of group to retrieve data.
          * @returns a string of converted array to be usable for the csv file.
          */
         $scope.convertArrayOfObjectsToCSV = function (type) {
@@ -527,7 +576,7 @@
         }
     };
 
-}
+    }
 
     ownerApp.controller("OwnerJsController", OwnerJsController);
 })();

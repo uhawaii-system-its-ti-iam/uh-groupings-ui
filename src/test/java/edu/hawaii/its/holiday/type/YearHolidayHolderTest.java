@@ -1,10 +1,8 @@
 package edu.hawaii.its.holiday.type;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import edu.hawaii.its.holiday.util.Dates;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -13,10 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import edu.hawaii.its.holiday.util.Dates;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.*;
 
 public class YearHolidayHolderTest {
 

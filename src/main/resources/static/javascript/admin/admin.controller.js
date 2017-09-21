@@ -9,7 +9,7 @@
      * @param dataDelete   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function AdminJsController($scope, $filter ,$window, dataProvider, dataUpdater, dataDelete) {
+    function AdminJsController($scope, $filter, $window, dataProvider, dataUpdater, dataDelete) {
 
         $scope.currentUsername = "";
         $scope.filteredItems = [];
@@ -47,7 +47,33 @@
         $scope.currentPage = 0;
         $scope.currentPageOptOut = 0;
 
-        var url = "api/groupings/_groupings_api_2/adminInfo";
+        /**
+         * Initializing function for the admin page.
+         * Calls dataProvider service to retrieve a list of admins.
+         * @returns returns
+         *                1 for ascending
+         *                -1 for descending
+         *                0 for failed attempt
+         */
+        $scope.init = function () {
+            // Adds the loading spinner.
+            $scope.loading = true;
+
+            $scope.initCurrentUsername();
+
+            var url = "api/groupings/" + $scope.getCurrentUsername() + "/adminLists";
+
+            dataProvider.loadData(function (d) {
+                $scope.list = d.adminGroup.members;
+                $scope.groupingList = d.allGroupings;
+
+                $scope.modify($scope.list);
+
+                console.log($scope.list);
+                $scope.pagedItems = $scope.groupToPages($scope.list, $scope.pagedItems);
+                $scope.loading = false;
+            }, url);
+        };
 
         $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -58,39 +84,21 @@
         };
 
         /**
-         * Initializing function for the admin page.
-         * Calls dataProvider service to retrieve a list of admins.
-         * @returns returns
-         *                1 for ascending
-         *                -1 for descending
-         *                0 for failed attempt
+         * Gets the information about a grouping based off the name in the input box.
          */
-        $scope.init = function () {
-
-            // Adds the loading spinner.
-            $scope.loading = true;
-
-            $scope.initCurrentUsername();
-
-            dataProvider.loadData(function (d) {
-                $scope.list = d.adminGroup.members;
-                $scope.groupingList = d.allGroupings;
-
-                $scope.modify($scope.list);
-
-                console.log($scope.list);
-                $scope.pagedItems= $scope.groupToPages($scope.list, $scope.pagedItems);
-                $scope.loading = false;
-            }, url);
-        };
-
         $scope.search = function () {
-            $scope.loading = true;
-            console.log($scope.groupingName);
-            var groupingDataUrl = "api/groupings/" + $scope.groupingName + "/_groupings_api_2/grouping";
-            console.log(groupingDataUrl);
-            if($scope.groupingName === ''){
+            $scope.groupingPath = '';
+            $scope.groupingURL = '';
+            //Finds the path of the grouping based on the name of the grouping.
+            for (var i = 0; i < $scope.groupingList.length; i++) {
+                if ($scope.groupingList[i].name === $scope.groupingName) {
+                    $scope.groupingPath = $scope.groupingList[i].path;
+                }
+            }
+            if ($scope.groupingPath === '') {
+                console.log("Not a valid grouping");
                 $scope.error = true;
+                //Empties array
                 $scope.basis = [];
                 $scope.pagedItemsList = [];
                 $scope.pagedItemsBasis = [];
@@ -98,78 +106,65 @@
                 $scope.pagedItemsExclude = [];
                 $scope.pagedItemsOwners = [];
                 $scope.loading = false;
+            } else {
+                $scope.getData($scope.groupingPath);
             }
-            else {
-                dataProvider.loadData(function (d) {
-                    if (typeof d.path === 'undefined') {
-                        console.log("Not a valid grouping");
-                        $scope.error = true;
-                        //Empties array
-                        $scope.basis = [];
-                        $scope.pagedItemsList = [];
-                        $scope.pagedItemsBasis = [];
-                        $scope.pagedItemsInclude = [];
-                        $scope.pagedItemsExclude = [];
-                        $scope.pagedItemsOwners = [];
-                        $scope.loading = false;
-                    } else {
-                        $scope.error = false;
-                        $scope.basis = d.basis.members;
+        };
 
-                        //Gets members in grouping
-                        $scope.groupingsList = d.composite.members;
-                        $scope.modify($scope.groupingsList);
-                        $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList,$scope.pagedItemsList);
+        $scope.getData = function (path) {
+            $scope.loading = true;
+            var groupingDataUrl = "api/groupings/" + path + "/" + $scope.getCurrentUsername() + "/grouping";
+            console.log(groupingDataUrl);
 
-                        //Gets members in the basis group
-                        $scope.groupingsBasis = d.basis.members;
-                        $scope.modify($scope.groupingsBasis);
-                        $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingsBasis,$scope.pagedItemsBasis);
+            dataProvider.loadData(function (d) {
+                console.log(d);
+                $scope.error = false;
+                $scope.basis = d.basis.members;
 
-                        //Gets members in the include group
-                        $scope.groupingInclude = d.include.members;
-                        $scope.modify($scope.groupingInclude);
-                        $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude, $scope.pagedItemsInclude);
+                //Gets members in grouping
+                $scope.groupingsList = d.composite.members;
+                $scope.modify($scope.groupingsList);
+                $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsList);
 
-                        //Gets members in the exclude group
-                        $scope.groupingExclude = d.exclude.members;
-                        $scope.modify($scope.groupingExclude);
-                        $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude,$scope.pagedItemsExclude);
+                //Gets members in the basis group
+                $scope.groupingsBasis = d.basis.members;
+                $scope.modify($scope.groupingsBasis);
+                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingsBasis, $scope.pagedItemsBasis);
 
-                        //Gets owners of the grouping
-                        $scope.ownerList = d.owners.members;
-                        $scope.modify($scope.ownerList);
-                        $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
+                //Gets members in the include group
+                $scope.groupingInclude = d.include.members;
+                $scope.modify($scope.groupingInclude);
+                $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude, $scope.pagedItemsInclude);
 
-                        $scope.pref = d.listservOn;
-                        $scope.allowOptIn = d.optInOn;
-                        $scope.allowOptOut = d.optOutOn;
+                //Gets members in the exclude group
+                $scope.groupingExclude = d.exclude.members;
+                $scope.modify($scope.groupingExclude);
+                $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
 
-                        if ($scope.pref == true) {
-                            $('#listserv').prop("checked", true);
-                        }
-                        else {
-                            $('#listserv').prop("checked", false);
-                        }
-                        if ($scope.allowOptIn == true) {
-                            $('#optInOption').prop("checked", true);
-                        }
-                        else {
-                            $('#optInOption').prop("checked", false);
-                        }
-                        if ($scope.allowOptOut == true) {
-                            $('#optOutOption').prop("checked", true);
-                        }
-                        else {
-                            $('#optOutOption').prop("checked", false);
-                        }
-                        //Stop loading spinner
-                        $scope.title = $scope.groupingName;
-                        $scope.loading = false;
-                    }
-                }, groupingDataUrl);
-            }
+                //Gets owners of the grouping
+                $scope.ownerList = d.owners.members;
+                $scope.modify($scope.ownerList);
+                $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
 
+                /*$scope.pref = d.listservOn;
+                $scope.allowOptIn = d.optInOn;
+                $scope.allowOptOut = d.optOutOn;*/
+
+                $scope.preference = {
+                    optIn : d.optInOn,
+                    optOut: d.optOutOn,
+                    listserv: d.listservOn
+                };
+
+                //Stop loading spinner
+                $scope.title = $scope.groupingName;
+                $scope.loading = false;
+            }, groupingDataUrl);
+        };
+
+        $scope.dismiss = function () {
+            $scope.title = '';
+            $scope.error = false;
         };
 
 
@@ -214,18 +209,21 @@
             });
         };
 
+        // TODO: Find a way to make the 3 adds into a more singular function.
+
         /**
          * Adds function that adds an member to the admin grouping.
          * Uses dataUpdater service to post the user that is being added.
          * If user is successfully added, dataProvider will return a Success in result Code.
          * Else if resultCode is undefined, then user was not successfully added.
          */
-        $scope.add = function () {
-            var addUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + $scope.getCurrentUsername() + "/" + $scope.username + "/addMemberToIncludeGroup";
+        $scope.addAdmin = function () {
+            var addUrl = "api/groupings/" + $scope.getCurrentUsername() + "/" + $scope.username + "/addAdmin";
             $scope.testdata = [];
+            console.log(addUrl);
 
             if (confirm("You are adding " + $scope.username + " to the include list of this grouping")) {
-                /*dataUpdater.updateData(function (d) {
+                dataUpdater.updateData(function (d) {
                     console.log(d);
                     if (d.resultCode === 'SUCCESS') {
                         console.log("Success In Adding");
@@ -233,13 +231,48 @@
                         $scope.loading = true;
                         $scope.init();
                     }
-                    else
-                    if (typeof d.resultCode === 'undefined') {
+                    else if (typeof d.resultCode === 'undefined') {
                         console.log("Failure In Adding");
                     }
-                }, addUrl);*/
+                }, addUrl);
             }
         };
+
+        $scope.addMember = function (type) {
+            var addUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
+            dataUpdater.updateData(function (d) {
+                if (d.resultCode === "SUCCESS") {
+                    console.log("success in adding " + $scope.addUser);
+                    alert("SUCCESS IN ADDING " + $scope.addUser);
+                    $scope.getData($scope.groupingPath);
+                }
+                else if (typeof d.resultsCode === 'undefined') {
+                    console.log($scope.addUser + " this user does not exist.");
+                    alert($scope.addUser + " this user does not exist.");
+                }
+            }, addUrl);
+            $scope.addUser = '';
+        };
+
+        $scope.addOwner = function () {
+            var addOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.ownerUser + "/assignOwnership";
+            dataUpdater.updateData(function (d) {
+                console.log(d);
+                if (d.resultCode === "SUCCESS") {
+                    console.log("Assigned " + $scope.ownerUser + " as an owner");
+                    alert("Assigned " + $scope.ownerUser + " as an owner");
+                    $scope.getData($scope.groupingPath);
+                }
+                else if (typeof d.resultsCode === 'undefined') {
+                    console.log($scope.ownerUser + " this user does not exist.");
+                    alert($scope.ownerUser + " this user does not exist.");
+                }
+            }, addOwnerUrl);
+            $scope.ownerUser = '';
+        };
+
+
+        // TODO: Find a way to make the 3 removes into a more singular function.
 
         /**
          * Remove function uses dataDelete Service to remove user from admin grouping.
@@ -247,41 +280,107 @@
          *
          * @param index - the index of the user based on the html table.
          */
-        $scope.remove = function (index) {
+        $scope.removeAdmin = function (index) {
             var deleteUser = $scope.list[index].username;
-            var deleteUrl = "api/groupings/hawaii.edu:custom:test:aaronvil:aaronvil-test/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteMemberFromIncludeGroup";
+            var deleteUrl = "api/groupings/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteAdmin";
             console.log(deleteUrl);
             if ($scope.list.length > 1) {
-                /*dataDelete.deleteData(function (d) {
+                dataDelete.deleteData(function (d) {
                     $scope.list.splice(index, 1);
                     $scope.init();
-                }, deleteUrl);*/
+                }, deleteUrl);
             }
         };
 
-        $scope.groupToPages=function(list, pagedList){
+        $scope.removeMember = function (type, row) {
+            var user;
+            if (type === 'Include') {
+                user = $scope.groupingInclude[row].username;
+            }
+            if (type === 'Exclude') {
+                user = $scope.groupingExclude[row].username;
+            }
+
+            var URL = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
+            console.log(URL);
+            dataDelete.deleteData(function (d) {
+                console.log(d);
+                $scope.getData($scope.groupingPath);
+            }, URL);
+        };
+
+        $scope.removeOwner = function (index) {
+            var removeOwner = $scope.ownerList[index].username;
+            var removeOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
+            console.log(removeOwnerUrl);
+            if ($scope.ownerList.length > 1) {
+                dataDelete.deleteData(function (d) {
+                    $scope.getData($scope.groupingPath);
+                }, removeOwnerUrl);
+            }
+        };
+
+        $scope.savePref = function () {
+            var prefUrls = [];
+            console.log($scope.preference.optIn);
+            console.log($scope.preference.optOut);
+            console.log($scope.preference.listserv);
+
+            prefUrls.push({
+                "url": "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.listserv + "/setListserv",
+                "name": "Listserv"
+            });
+            prefUrls.push({
+                "url": "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.optIn + "/setOptIn",
+                "name": "optInOption"
+            });
+            prefUrls.push({
+                "url": "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.optOut + "/setOptOut",
+                "name": "optOutOption"
+            });
+
+            // TODO: Fix the check that determines if it was a succes or not.
+            for (var i = 0; i < prefUrls.length; i++) {
+                dataUpdater.updateData(function (d) {
+                    console.log(d);
+                    if (d.resultCode === "SUCCESS") {
+                        console.log("preference successfully updated");
+                        alert("preference successfully updated");
+                        $scope.getData($scope.groupingPath);
+                    }
+                    else if (typeof d.resultsCode === 'undefined') {
+                        console.log("preference did not change");
+                        alert("preference did not change");
+                    }
+                }, prefUrls[i].url);
+            }
+
+
+        };
+
+        $scope.groupToPages = function (list, pagedList) {
             var pagedList = [];
-            if(list == null){
+            if (list == null) {
                 console.log("I AM NULL ... WHY?!");
             }
-            if(list != null){
-                for(var i = 0; i < list.length ; i++){
-                    if(i % $scope.itemsPerPage === 0){
-                        pagedList[Math.floor(i/$scope.itemsPerPage)] = [ list[i]];
-                    }else{
-                        pagedList[Math.floor(i/$scope.itemsPerPage)].push( list[i]);
+            if (list != null) {
+                for (var i = 0; i < list.length; i++) {
+                    if (i % $scope.itemsPerPage === 0) {
+                        pagedList[Math.floor(i / $scope.itemsPerPage)] = [list[i]];
+                    } else {
+                        pagedList[Math.floor(i / $scope.itemsPerPage)].push(list[i]);
                     }
                 }
             }
             return pagedList;
             /*$scope.pagedItems=[];
-            for(var i = 0; i < $scope.list.length ; i++){
-                if(i % $scope.itemsPerPage === 0){
-                    $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)] = [ $scope.list[i]];
-                }else{
-                    $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)].push( $scope.list[i]);
-                }
-            }*/
+             for(var i = 0; i < $scope.list.length ; i++){
+             if(i % $scope.itemsPerPage === 0){
+             $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)] = [ $scope.list[i]];
+             }else{
+             $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)].push( $scope.list[i]);
+             }
+             }*/
         };
 
         /**shows the range between the start and end
@@ -294,13 +393,13 @@
          *     everything within the range of start,
          *       end, and making sure it's that size
          **/
-        $scope.range = function (size,start, end) {
+        $scope.range = function (size, start, end) {
             var ret = [];
             if (size < end) {
                 end = size;
                 //start = size-$scope.gap;
             }
-            if(start < 0 ){
+            if (start < 0) {
                 start = 0;
             }
             for (var i = start; i < end; i++) {
@@ -317,10 +416,10 @@
         $scope.paging = function (page) {
             switch (page) {
                 case 'Include Next':
-                if ($scope.currentPageInclude < $scope.pagedItemsInclude.length - 1) {
-                    $scope.currentPageInclude = $scope.currentPageInclude + 1;
-                }
-                break;
+                    if ($scope.currentPageInclude < $scope.pagedItemsInclude.length - 1) {
+                        $scope.currentPageInclude = $scope.currentPageInclude + 1;
+                    }
+                    break;
 
                 case 'Include Set':
                     $scope.currentPageInclude = this.n;
@@ -450,7 +549,7 @@
                     break;
                 case "next" :
                     if ($scope.currentPage < $scope.pagedItems.length - 1) {
-                        $scope.currentPage = $scope.currentPage +1;
+                        $scope.currentPage = $scope.currentPage + 1;
                     }
                     break;
                 case "last" :
@@ -463,11 +562,11 @@
         };
 
         //Makes it so that you have to type at least 3 characters in order for the datalist to autocomplete
-        $('input[list]').on('input', function(e) {
+        $('input[list]').on('input', function (e) {
             var input = $(e.target),
                 datalist = input.attr('data-list');
 
-            if(input.val().length < 3) {
+            if (input.val().length < 3) {
                 input.attr('list', '');
             } else {
                 input.attr('list', datalist);

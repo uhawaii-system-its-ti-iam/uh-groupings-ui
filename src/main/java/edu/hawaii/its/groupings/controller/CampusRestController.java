@@ -1,17 +1,17 @@
 package edu.hawaii.its.groupings.controller;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import edu.hawaii.its.groupings.service.CampusService;
+import edu.hawaii.its.groupings.type.Campus;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.hawaii.its.groupings.service.CampusService;
-import edu.hawaii.its.groupings.type.Campus;
+import java.util.List;
 
 @RestController
 public class CampusRestController {
@@ -22,7 +22,7 @@ public class CampusRestController {
     private CampusService campusService;
 
     @GetMapping(value = "/api/campuses",
-                produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Campus>> campuses() {
         logger.info("Entered REST campuses...");
         List<Campus> data = campusService.findActualAll();

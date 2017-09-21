@@ -1,10 +1,10 @@
 package edu.hawaii.its.holiday.access;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class RoleHolder {
 

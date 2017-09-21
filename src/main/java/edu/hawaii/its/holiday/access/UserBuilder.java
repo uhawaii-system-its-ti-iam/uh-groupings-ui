@@ -1,14 +1,14 @@
 package edu.hawaii.its.holiday.access;
 
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import edu.hawaii.its.holiday.util.Strings;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import edu.hawaii.its.holiday.util.Strings;
+import java.util.Map;
 
 @Service
 public final class UserBuilder {
