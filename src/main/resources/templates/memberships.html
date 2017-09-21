@@ -16,12 +16,14 @@
             <ul class="nav nav-tabs " id="memTab">
                 <li role="presentation" class="active">
                     <a href="#belong" data-toggle="tab" role="tab">
-                        <i class="icon ion-android-people" id="icons"></i>
+                        <i class="fa fa-users fa-3x" aria-hidden="true"></i>
+
                     </a>
                 </li>
                 <li role="presentation">
                     <a href="#optOut" data-toggle="tab" role="tab">
-                        <i class="icon ion-android-person size-64" id="icons "></i>
+                        <i class="fa fa-user-times fa-3x" aria-hidden="true"></i>
+
                     </a>
                 </li>
             </ul>
@@ -36,7 +38,6 @@
                         <div class="panel-heading" style="padding: 2px">
                             <div class="form-group">
                                 <h3 class="col-md-4" style="margin-top: 5px">You belong to this/these groups</h3>
-
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
                                     ng-model="queryMembers" ng-change= "search(membersList, 'pagedItemsMembersList', 'queryMembers')" id = "members"/>
@@ -96,8 +97,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding: 2px">
                             <div class="form-group">
-                                <h3 class="col-md-4" style="margin-top: 5px">You can opt in to this/these groups</h3>
-
+                                <h3 class="col-md-4"  id = "headingOptIn">You can opt in to this/these groups</h3>
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
                                     ng-model="queryOptIn" ng-change= "search(optInList, 'pagedItemsOptInList', 'queryOptIn')" id = "optIn"/>
@@ -156,10 +156,9 @@
                 <!-- Divide between the tabs  -->
                 <div class="tab-pane fade" id="optOut">
                     <div class="panel panel-default">
-                        <div class="panel-heading" style="padding: 2px">
-                            <div class="form-group">
-                                <h3 style="margin-top: 5px">You can cancel your opt out of this/these groups</h3>
-
+                        <div class="panel-heading" >
+                            <div class="form-group" id = "heading">
+                                <h3 >You can cancel your opt out of this/these groups</h3>
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
                                     ng-model="queryOptedOut" ng-change= "search(optedOut, 'pagedItemsOptedOutList', 'queryOptedOut')"/>
@@ -214,10 +213,9 @@
                     </div>
 
                     <div class="panel panel-default">
-                        <div class="panel-heading" style="padding: 2px">
-                            <div class="form-group">
-                                <h3 style="margin-top: 5px">You can cancel your opt in of this/these groups</h3>
-
+                        <div class="panel-heading">
+                            <div class="form-group" id = "heading">
+                                <h3 >You can cancel your opt in of this/these groups</h3>
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
                                     ng-model="queryOptedIn" ng-change= "search(optedIn, 'pagedItemsOptedInList, 'queryOptedIn')" id = "optedIn"/>
