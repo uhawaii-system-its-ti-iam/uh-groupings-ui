@@ -36,8 +36,8 @@
                 <div class="tab-pane fade in active" id="belong">
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding: 2px">
-                            <div class="form-group">
-                                <h3 class="col-md-4" style="margin-top: 5px">You belong to this/these groups</h3>
+                            <div class="form-group" >
+                                <h3 class="col-md-4" id = "headingOptIn">You belong to this/these groups</h3>
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
                                            ng-model="queryMembers" ng-change= "search(membersList, 'pagedItemsMembersList', 'queryMembers')" id = "members"/>
@@ -200,10 +200,10 @@
                                         ng-click="currentPage('Set','pagedItemsOptedOutList','currentPageCancelOptOut')"
                                             ><a href="" ng-bind="n + 1" >1</a>
                                     </li>
-                                    <li ng-class="{disabled: (currentPageCancelOptOut) == pagedItemsOptedOutList.length - 1 }">
+                                    <li ng-class="{disabled: ((currentPageCancelOptOut) == pagedItemsOptedOutList.length - 1) || ((currentPageCancelOptOut) == 0)}">
                                         <a href="" ng-click="currentPage('Next','pagedItemsOptedOutList','currentPageCancelOptOut')">Next »</a>
                                     </li>
-                                    <li ng-class="{disabled: (currentPageCancelOptOut) == pagedItemsOptedOutList.length - 1 }">
+                                    <li ng-class="{disabled: ((currentPageCancelOptOut) == pagedItemsOptedOutList.length - 1) || ((currentPageCancelOptOut) == 0)}">
                                         <a href="" ng-click="currentPage('Last','pagedItemsOptedOutList','currentPageCancelOptOut')">Last »</a>
                                     </li>
                                 </ul>
@@ -255,10 +255,10 @@
                                         ng-click="currentPage('Set','pagedItemsOptedInList','currentPageCancelOptIn')"
                                             ><a href="" ng-bind="n + 1" >1</a>
                                     </li>
-                                    <li ng-class="{disabled: (currentPageCancelOptIn) == pagedItemsOptedInList.length - 1 }">
+                                    <li ng-class="{disabled: ((currentPageCancelOptIn) == pagedItemsOptedInList.length - 1) || ((currentPageCancelOptIn) == 0) }">
                                         <a href="" ng-click="currentPage('Next','pagedItemsOptedInList','currentPageCancelOptIn')">Next »</a>
                                     </li>
-                                    <li ng-class="{disabled: (currentPageCancelOptIn) == pagedItemsOptedInList.length - 1 }">
+                                    <li ng-class="{disabled: ((currentPageCancelOptIn) == pagedItemsOptedInList.length - 1) || ((currentPageCancelOptIn) == 0) }">
                                         <a href="" ng-click="currentPage('Last','pagedItemsOptedInList','currentPageCancelOptIn')">Last »</a>
                                     </li>
                                 </ul>

@@ -142,7 +142,7 @@ td.uh-pre {
 }
 
 
-    #headingOptIn{
+    #heading{
         position:relative;
         border-spacing: 10px;
     }
@@ -152,6 +152,10 @@ td.uh-pre {
         white-space: nowrap;
         margin-top: 5px;
         height:  15px;
+    }
+
+    #filters{
+        padding: 10px;
     }
 
 @media(min-width:768px) {
