@@ -1,16 +1,10 @@
 package edu.hawaii.its.holiday.controller;
 
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,10 +13,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SpringBootWebApplication.class })
+@SpringBootTest(classes = {SpringBootWebApplication.class})
 public class HomeControllerTest {
 
     @Value("${cas.login.url}")
@@ -94,7 +92,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUhUser(username = "admin", roles = { "ROLE_UH", "ROLE_ADMIN" })
+    @WithMockUhUser(username = "admin", roles = {"ROLE_UH", "ROLE_ADMIN"})
     public void admin() throws Exception {
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
@@ -119,7 +117,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUhUser(username = "admin", roles = { "ROLE_UH", "ROLE_ADMIN" })
+    @WithMockUhUser(username = "admin", roles = {"ROLE_UH", "ROLE_ADMIN"})
     public void groupings() throws Exception {
         mockMvc.perform(get("/groupings"))
                 .andExpect(status().isOk())
@@ -127,7 +125,7 @@ public class HomeControllerTest {
     }
 
     @Test
-    @WithMockUhUser(username = "owner", roles = { "ROLE_UH", "ROLE_OWNER" })
+    @WithMockUhUser(username = "owner", roles = {"ROLE_UH", "ROLE_OWNER"})
     public void groupingsViaOwner() throws Exception {
         mockMvc.perform(get("/groupings"))
                 .andExpect(status().isOk())

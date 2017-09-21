@@ -1,18 +1,28 @@
 package edu.hawaii.its.api.type;
 
+import org.hibernate.annotations.Proxy;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
+@Proxy(lazy = false)
 public class Person {
-    private String name;
     @Id
-    private String uuid;
+    @Column
     private String username;
 
-    public Person(){
+    @Column(name = "FullName")
+    private String name;
+
+    @Column
+    private String uuid;
+
+    public Person() {
         //empty
     }
+
     // Constructor.
     public Person(String name, String uuid, String username) {
         this.name = name;

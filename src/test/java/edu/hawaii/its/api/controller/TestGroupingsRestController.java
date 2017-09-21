@@ -416,7 +416,7 @@ public class TestGroupingsRestController {
     public void addDeleteAdminTest() {
 
 
-        GroupingsServiceResult addAdminResults = gc.addAdmin(tst[0] , tst[0]).getBody();
+        GroupingsServiceResult addAdminResults = gc.addAdmin(tst[0], tst[0]).getBody();
         assertTrue(addAdminResults.getResultCode().startsWith(FAILURE));
 
         addAdminResults = gc.addAdmin(API_ACCOUNT, tst[0]).getBody();
@@ -425,7 +425,7 @@ public class TestGroupingsRestController {
         GroupingsServiceResult deleteAdminResults = gc.deleteAdmin(API_ACCOUNT, tst[0]).getBody();
         assertNotNull(deleteAdminResults);
 
-        deleteAdminResults = gc.deleteAdmin(tst[0] , tst[0]).getBody();
+        deleteAdminResults = gc.deleteAdmin(tst[0], tst[0]).getBody();
         assertTrue(deleteAdminResults.getResultCode().startsWith(FAILURE));
 
     }

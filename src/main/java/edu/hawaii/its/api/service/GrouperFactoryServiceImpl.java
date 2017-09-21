@@ -1,10 +1,9 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.Person;
-
 import edu.internet2.middleware.grouperClient.api.*;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -90,7 +89,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         addMember.assignActAsSubject(lookup);
         addMember.assignGroupName(group);
 
-        for(String name : newMembers) {
+        for (String name : newMembers) {
             addMember.addSubjectIdentifier(name);
         }
 
@@ -128,7 +127,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         deleteMember.assignActAsSubject(lookup);
         deleteMember.assignGroupName(group);
 
-        for(String name : membersToDelete) {
+        for (String name : membersToDelete) {
             deleteMember.addSubjectIdentifier(name);
         }
 

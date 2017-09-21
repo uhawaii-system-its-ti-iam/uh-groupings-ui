@@ -1,18 +1,17 @@
 package edu.hawaii.its.holiday.service;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import edu.hawaii.its.holiday.type.Holiday;
+import edu.hawaii.its.holiday.type.Type;
+import edu.hawaii.its.holiday.type.UserRole;
+import edu.hawaii.its.holiday.util.Dates;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.hawaii.its.holiday.type.Holiday;
-import edu.hawaii.its.holiday.type.Type;
-import edu.hawaii.its.holiday.type.UserRole;
-import edu.hawaii.its.holiday.util.Dates;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository("holidayService")
 public class HolidayService {

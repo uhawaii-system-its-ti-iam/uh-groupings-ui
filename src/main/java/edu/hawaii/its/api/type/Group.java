@@ -5,15 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "groups")
 public class Group {
-    @Column
-    @ElementCollection(targetClass = Person.class)
     private List<Person> members = new ArrayList<>();
-    @Id
-    @Column
+
     private String path = "";
 
-    public Group(){
+    public Group() {
         //empty
     }
 
@@ -30,6 +28,8 @@ public class Group {
         this.path = path;
     }
 
+    //    @ElementCollection(targetClass = Person.class)
+    @ManyToMany(fetch = FetchType.EAGER)
     public List<Person> getMembers() {
         return members;
     }
@@ -38,6 +38,8 @@ public class Group {
         this.path = path;
     }
 
+    @Id
+    @Column(name = "path")
     public String getPath() {
         return path;
     }
@@ -50,6 +52,7 @@ public class Group {
         members.add(person);
     }
 
+    @Transient
     public List<String> getNames() {
         List<String> names = new ArrayList<>();
         for (Person person : members) {
@@ -58,6 +61,7 @@ public class Group {
         return names;
     }
 
+    @Transient
     public List<String> getUuids() {
         List<String> uuids = new ArrayList<>();
         for (Person person : members) {
@@ -66,6 +70,7 @@ public class Group {
         return uuids;
     }
 
+    @Transient
     public List<String> getUsernames() {
         List<String> usernames = new ArrayList<>();
         for (Person person : members) {
@@ -74,6 +79,7 @@ public class Group {
         return usernames;
     }
 
+    @Transient
     @Override
     public String toString() {
         return "Group [members=" + members + "]";

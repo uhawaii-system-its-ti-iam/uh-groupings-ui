@@ -1,11 +1,12 @@
 package edu.hawaii.its.holiday.configuration;
 
-import javax.annotation.PostConstruct;
-
 import org.jasig.cas.client.proxy.ProxyGrantingTicketStorage;
 import org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Saml11TicketValidator;
+import edu.hawaii.its.holiday.access.UserBuilder;
+import edu.hawaii.its.holiday.access.UserDetailsServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -29,8 +30,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.holiday.access.UserBuilder;
-import edu.hawaii.its.holiday.access.UserDetailsServiceImpl;
+import javax.annotation.PostConstruct;
 
 @ComponentScan(basePackages = "edu.hawaii.its")
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)

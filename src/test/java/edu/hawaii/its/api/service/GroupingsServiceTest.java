@@ -1,13 +1,15 @@
 package edu.hawaii.its.api.service;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+
 import edu.internet2.middleware.grouperClient.ws.beans.*;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,9 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
@@ -317,7 +317,7 @@ public class GroupingsServiceTest {
         List<String> stringsOneThroughTen = new ArrayList<>();
         List<String> stringsSixThroughFifteen = new ArrayList<>();
 
-        for(Integer i = 1; i < 11; i ++) {
+        for (Integer i = 1; i < 11; i++) {
             Integer k = i + 5;
             stringsOneThroughTen.add(i.toString());
             stringsSixThroughFifteen.add(k.toString());
@@ -325,7 +325,7 @@ public class GroupingsServiceTest {
 
         List<String> noDuplicates = gs.unionMemberLists(stringsOneThroughTen, stringsSixThroughFifteen);
 
-        for(Integer i = 1; i < 16; i ++) {
+        for (Integer i = 1; i < 16; i++) {
             assertTrue(noDuplicates.contains(i.toString()));
         }
 
