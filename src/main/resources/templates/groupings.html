@@ -53,16 +53,16 @@
                             <td colspan="6">
                                 <ul class = "pagination pull-right" >
                                     <li ng-class="{disabled: (currentPageOwned) == 0 }">
-                                        <a href="" ng-click="currentPage('Owned Prev')" >« Prev</a>
+                                        <a href="" ng-click="currentPage('Prev','currentPageOwned','pagedItemsOwned')" >« Prev</a>
                                     </li>
                                     <li ng-repeat="n in range(pagedItemsOwned.length, currentPageOwned - gap, currentPageOwned + gap + 1)"
                                         ng-class="{active: n == currentPageOwned}"
 
-                                        ng-click="currentPage('Owned Set')"
+                                        ng-click="currentPage('Set','currentPageOwned','pagedItemsOwned')"
                                             ><a href="" ng-bind="n + 1" >1</a>
                                     </li>
                                     <li ng-class="{disabled: (currentPageOwned) == pagedItemsOwned.length - 1 }">
-                                        <a href="" ng-click="currentPage('Owned Next')">Next »</a>
+                                        <a href="" ng-click="currentPage('Next','currentPageOwned','pagedItemsOwned')">Next »</a>
                                     </li>
                                 </ul>
                             </td>
