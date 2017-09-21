@@ -23,20 +23,15 @@
                     <!-- This will allow you to search for specific groups -->
                     <div class="panel panel-default">
                         <div class="panel-heading" style="border: 0;padding: 5px;">
-                            <div class="form-group">
+                            <div class="form-group ">
                                 <h3 class="col-md-4" style="margin-top: 5px">Groupings</h3>
-                                <!--HERE-->
-                                <!-- <div align="right" style="margin-top: 10px">
-                                    <input placeholder="Type to filter Groupings..." type="text"
-                                    ng-model="query1" ng-change= "search(ownedList, 'Paged_1', 'firstQuery')" id = "members"/>
-                                </div> -->
                             </div>
                         </div>
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th ng-click="sortCol(ownedList, 'name', 'pagedItemsOwned', 'symbolMember')">Groupings {{symbol.name}}</th>
-                                <th ng-click="sortCol(ownedList, 'folder', 'pagedItemsOwned', 'symbolMember')">Folder {{symbol.folder}}</th>
+                                <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(ownedList, 'name', 'pagedItemsOwned', 'symbolMember')"><b>Grouping {{symbol.name}}</b></a></th>
+                                <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(ownedList, 'folder', 'pagedItemsOwned', 'symbolMember')"><b>Folder {{symbol.folder}}</b></a></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,7 +76,7 @@
                         <li><a data-toggle="tab" href="#owners">Owners</a></li>
                         <li><a data-toggle="tab" href="#preference">Preferences</a></li>
                         <li class="pull-right">
-                            <button ng-click="showGroups()" class="btn btn-default">Go Back</button>
+                            <button ng-click="showGroups()" class="btn btn-primary">Go Back</button>
                         </li>
                     </ul>
 
@@ -368,7 +363,7 @@
                                     <td>{{owner.name}}</td>
                                     <td>{{owner.username}}</td>
                                     <td>
-                                        <button class="btn btn-default btn-block" ng-click="removeOwner($index)"><span
+                                        <button class="btn btn-danger btn-block" ng-click="removeOwner($index)"><span
                                                 class="glyphicon glyphicon-remove"></span>
                                         </button>
                                     </td>
@@ -412,7 +407,7 @@
                         <div id="preference" class="tab-pane fade">
                             <h2>Preferences</h2>
 
-                            <h3>Add/Remove</h3>
+                            <h3>Membership Options</h3>
                             <input id="optInOption" type="checkbox"/> Allow people to add themselves to this group <br/>
                             <input id="optOutOption" type="checkbox"/> Allow people to remove themselves to this group
                             <br/>
@@ -421,7 +416,7 @@
                             <input id="listserv" type="checkbox" ng-init="pref"/> LISTSERV list: {{groupingName.name}}
                             <br/>
 
-                            <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save
+                            <button class="btn btn-default btn-primary" style="margin-top: 20px" type="submit" ng-click="savePref()"> Update Preferences
                             </button>
                         </div>
                     </div>
