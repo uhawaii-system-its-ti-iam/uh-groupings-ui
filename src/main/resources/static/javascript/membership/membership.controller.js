@@ -23,11 +23,11 @@
         $scope.loading = true;
 
         //these will be place holders for now
-        $scope.pagedItemsMembersList=[];
-        $scope.pagedItemsOptInList=[];
-        $scope.pagedItemsOptedInList=[];
-        $scope.pagedItemsOptedOutList=[];
-        $scope.gap=2;
+        $scope.pagedItemsMembersList = [];
+        $scope.pagedItemsOptInList = [];
+        $scope.pagedItemsOptedInList = [];
+        $scope.pagedItemsOptedOutList = [];
+        $scope.gap = 2;
 
         $scope.itemsPerPage = 5;
         $scope.currentPageOptIn = 0;
@@ -64,10 +64,10 @@
                 $scope.optedIn = d.groupingsOptedInTo;
                 $scope.optedOut = d.groupingsOptedOutOf;
 
-                $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList,$scope.pagedItemsMembersList);
+                $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList, $scope.pagedItemsMembersList);
                 $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
-                $scope.pagedItemsOptedInList = $scope.groupToPages($scope.optedIn,$scope.pagedItemsOptedInList);
-                $scope.pagedItemsOptedOutList = $scope.groupToPages($scope.optedOut,$scope.pagedItemsOptedOutList);
+                $scope.pagedItemsOptedInList = $scope.groupToPages($scope.optedIn, $scope.pagedItemsOptedInList);
+                $scope.pagedItemsOptedOutList = $scope.groupToPages($scope.optedOut, $scope.pagedItemsOptedOutList);
 
                 if ($scope.optedIn.length === 0) {
                     $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
@@ -93,18 +93,18 @@
          * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
          */
         $scope.sort = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'member': '','optIn' : '', 'cancelOut':'','cancelIn':''};
+            $scope.symbol = {'member': '', 'optIn': '', 'cancelOut': '', 'cancelIn': ''};
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
-                list = $scope.sortOrder(list,col);
+                list = $scope.sortOrder(list, col);
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = '\u25BC';
             }
             else {
-                list = $scope.sortOrder(list,col).reverse();
+                list = $scope.sortOrder(list, col).reverse();
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = '\u25B2';
             }
-            switch(listPaged){
+            switch (listPaged) {
                 case 'pagedItemsMembersList' :
                     $scope.symbol.member = '\u21c5';
                     break;
@@ -127,8 +127,8 @@
          * @param col - The object to name to determine how it will be sorted by.
          * @returns the list sorted.
          */
-        $scope.sortOrder = function(list, col){
-            return _.sortBy(list,col);
+        $scope.sortOrder = function (list, col) {
+            return _.sortBy(list, col);
         };
 
         /** Adds user to the exclude group.
@@ -198,17 +198,17 @@
         };
 
         /**searches through the array to find matches and then fixes the list
-        **@param list - gives the whole list to sort out
-        **@param whatList - it gives you the list you need to search through
-        **@param whatQuery - it gives the search bar its seperate search function.
-        **/
-        $scope.search = function (list, whatList,whatQuery) {
+         **@param list - gives the whole list to sort out
+         **@param whatList - it gives you the list you need to search through
+         **@param whatQuery - it gives the search bar its seperate search function.
+         **/
+        $scope.search = function (list, whatList, whatQuery) {
             var query = "";
             query = $scope[whatQuery];
             console.log(query);
             $scope.filteredItems = [];
             $scope.filteredItems = $filter('filter')(list, function (item) {
-                if(searchMatch(item.name, query)){
+                if (searchMatch(item.name, query)) {
                     return true;
                 }
             });
@@ -219,41 +219,47 @@
         };
 
 
-        $scope.groupToPagesChanged = function(pagedList){
+        $scope.groupToPagesChanged = function (pagedList) {
             var pagedList = [];
-            for(var i = 0; i < $scope.filteredItems.length ; i++){
-                if(i % $scope.itemsPerPage === 0){
-                    pagedList[Math.floor(i/$scope.itemsPerPage)] = [ $scope.filteredItems[i]];
-                }else{
-                    pagedList[Math.floor(i/$scope.itemsPerPage)].push( $scope.filteredItems[i]);
+            for (var i = 0; i < $scope.filteredItems.length; i++) {
+                if (i % $scope.itemsPerPage === 0) {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                } else {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
                 }
             }
             return pagedList;
         };
-         //Disables opt in button if there are no groupings to opt into.
-         $scope.disableOptIn = function (index) {
-             for (var i = 0; i < $scope.membersList.length; i++) {
-                 if ($scope.membersList[i].name === $scope.optInList[index].name) {
-                     return true;
-                 }
-             }
-         };
+        //Disables opt in button if there are no groupings to opt into.
+        $scope.disableOptIn = function (index) {
+            for (var i = 0; i < $scope.membersList.length; i++) {
+                if ($scope.membersList[i].name === $scope.optInList[index].name) {
+                    return true;
+                }
+            }
+        };
 
-         //Disable button if list is empty
-         $scope.disableButton = function (type, index) {
-             var list = type[index];
-             return list.name.includes("NO GROUPINGS TO");
-         };
+        //Disable button if list is empty
+        $scope.disableButton = function (type, index) {
+            var list = type[index];
+            return list.name.includes("NO GROUPINGS TO");
+        };
 
-         $scope.tooltipText = function (index) {
-             return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
-         };
-         $scope.disableOptOut = function (index) {
-             for (var i = 0; i < $scope.optOutList.length; i++) {
-                 if ($scope.membersList[index].name === $scope.optOutList[i].name) {
-                    // console.log($scope.optOutList[i].name);
+        $scope.tooltipText = function (index) {
+            return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
+        };
+
+        /**
+         * Disables the button for the index on the Groupings In list
+         * @param index - table row
+         * @returns {boolean} - if there is a match then return false inorder to disable button.
+         */
+        $scope.disableOptOut = function (index) {
+            for (var i = 0; i < $scope.optOutList.length; i++) {
+                if ($scope.pagedItemsMembersList[$scope.currentPageOptOut][index].name === $scope.optOutList[i].name) {
                     return false;
                 }
+
             }
             return true;
         };
@@ -305,8 +311,8 @@
 
 
         //might make this into my one function
-        $scope.currentPage = function(pages, whatList, whatPage){
-            switch(pages){
+        $scope.currentPage = function (pages, whatList, whatPage) {
+            switch (pages) {
                 case 'Next':
                     if ($scope[whatPage] < $scope[whatList].length - 1) {
                         $scope[whatPage] = $scope[whatPage] + 1;
@@ -329,11 +335,15 @@
                     break;
                 case 'Last':
                     if ($scope[whatPage] >= 0) {
-                        $scope[whatPage] = $scope[whatList].length -1;
+                        $scope[whatPage] = $scope[whatList].length - 1;
                     }
                     break;
             }
         };
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
 
     }
 
