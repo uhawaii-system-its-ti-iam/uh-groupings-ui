@@ -217,12 +217,7 @@
          * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
          */
         $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'folder': '', 'uuid': '', 'username':'','symbol':'0'};
-            console.log($scope.symbol.symbol);
-            if(_.find($scope.symbol, function(name){ return typeof name === '0'}))
-            {
-                console.log("Pi");
-            }
+            $scope.symbol = {'name': '', 'folder': '', 'uuid': '', 'username':''};
 
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
                 list = _.sortBy(list, col);
