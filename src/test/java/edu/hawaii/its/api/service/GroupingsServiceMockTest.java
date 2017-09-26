@@ -33,8 +33,6 @@ import static org.mockito.Matchers.anyString;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 @WebAppConfiguration
-//todo adding dirties context breaks one of the tests in CampusServiceTest
-//todo Make new database to fix this?
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GroupingsServiceMockTest {
     @Value("${groupings.api.settings}")
@@ -171,11 +169,9 @@ public class GroupingsServiceMockTest {
     private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
     private final WsSubjectLookup EVERY_ENTITY_LOOKUP = new WsSubjectLookup(null, null, EVERY_ENTITY);
 
-    private Person[] users = new Person[6];
+    private DatabaseFactory databaseFactory;
 
-    Person[] persons = new Person[10];
-    Group[] groups = new Group[5];
-    List<List<Person>> memberLists = new ArrayList<>();
+    private Person[] users = new Person[6];
 
     @Mock
     private GrouperFactoryService gf;
@@ -199,42 +195,7 @@ public class GroupingsServiceMockTest {
             users[i] = new Person(NAMES[i], "uuid", USERNAMES[i]);
         }
 
-        for (int i = 0; i < 10; i++) {
-            persons[i] = new Person("name" + i, "uuid" + i, "username" + i);
-            personRepository.save(persons[i]);
-        }
-
-        for (int i = 0; i < 5; i++) {
-            memberLists.add(new ArrayList<>());
-        }
-
-        memberLists.get(1).add(persons[0]);
-        memberLists.get(1).add(persons[1]);
-
-        memberLists.get(2).add(persons[2]);
-        memberLists.get(2).add(persons[3]);
-        memberLists.get(2).add(persons[4]);
-
-        memberLists.get(3).add(persons[5]);
-        memberLists.get(3).add(persons[6]);
-        memberLists.get(3).add(persons[7]);
-        memberLists.get(3).add(persons[8]);
-
-        memberLists.get(4).add(persons[0]);
-        memberLists.get(4).add(persons[1]);
-        memberLists.get(4).add(persons[2]);
-        memberLists.get(4).add(persons[3]);
-        memberLists.get(4).add(persons[4]);
-        memberLists.get(4).add(persons[5]);
-        memberLists.get(4).add(persons[6]);
-        memberLists.get(4).add(persons[7]);
-        memberLists.get(4).add(persons[8]);
-        memberLists.get(4).add(persons[9]);
-
-        for (int i = 0; i < 5; i++) {
-            groups[i] = new Group("path:to:group" + i, memberLists.get(i));
-            groupRepository.save(groups[i]);
-        }
+        databaseFactory = new DatabaseFactory(personRepository, groupRepository);
     }
 
     @Test
