@@ -83,6 +83,32 @@
             return $scope.currentUsername;
         };
 
+        $scope.sortCol = function (list, col, listPaged, symbol) {
+            $scope.symbol = {'name': '', 'uuid': '', 'username':''};
+
+            if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
+                list = _.sortBy(list, col);
+                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
+                $scope[symbol] = '\u25BC';
+            }
+            else {
+                list = _.sortBy(list, col).reverse();
+                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
+                $scope[symbol] = '\u25B2';
+            }
+            switch (col) {
+                case 'name':
+                    $scope.symbol.name = '\u21c5';
+                    break;
+                case 'uuid':
+                    $scope.symbol.uuid = '\u21c5';
+                    break;
+                case 'username':
+                    $scope.symbol.username = '\u21c5';
+                    break;
+            }
+        };
+
         /**
          * Gets the information about a grouping based off the name in the input box.
          */
@@ -339,23 +365,32 @@
                 "name": "optOutOption"
             });
 
-            // TODO: Fix the check that determines if it was a succes or not.
             for (var i = 0; i < prefUrls.length; i++) {
                 dataUpdater.updateData(function (d) {
+                    var success = 0;
                     console.log(d);
                     if (d.resultCode === "SUCCESS") {
-                        console.log("preference successfully updated");
-                        alert("preference successfully updated");
-                        $scope.getData($scope.groupingPath);
+                        console.log("LISTSERV preference successfully updated");
+                        alert("LISTSERV preference successfully updated");
+                        success = 1;
                     }
                     else if (typeof d.resultsCode === 'undefined') {
-                        console.log("preference did not change");
-                        alert("preference did not change");
+                        if(typeof d[0] != 'undefined' && (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED" )) {
+                            console.log("OptIn/OptOut preference successfully updated");
+                            alert("OptIn/OptOut preference successfully updated");
+                            success = 1;
+                        }
+                        else {
+                            console.log("Preference did not change");
+                            alert("Preference did not change");
+                        }
+                    }
+                    if(success == 1)
+                    {
+                        $scope.getData($scope.groupingPath);
                     }
                 }, prefUrls[i].url);
             }
-
-
         };
 
         $scope.groupToPages = function (list, pagedList) {

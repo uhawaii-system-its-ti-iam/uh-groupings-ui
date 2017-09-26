@@ -37,6 +37,17 @@
                                 <div class="form-group">
                                     <h3 class="col-xs-6 col-md-4" style="margin-top: 5px">Designated Admins</h3>
 
+                                    <div align="right">
+                                        <button class="icon ion-person-add" data-toggle="collapse"
+                                                data-target="#addAdmin" style="height: 30px; width: 40px; font-size: 25px"
+                                                aria-expanded="false" aria-controls="addAdmin">
+                                        </button>
+                                        <div class="collapse" id="addAdmin" style="float: right;">
+                                            <input type="text" ng-model="username"/>
+                                            <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
+                                        </div>
+                                    </div>
+
                                     <div align="right" style="margin-top: 10px">
                                         <input placeholder="Type to filter text..." type="text" ng-model="query"/>
                                     </div>
@@ -47,9 +58,9 @@
                             <table class="table table-bordered table-condensed table-hover">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>UH ID</th>
-                                    <th>Username</th>
+                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(list, 'name', 'pagedItems', 'symbolAdmin')"><b>Name {{symbol.name}}</b></a></th>
+                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(list, 'uuid', 'pagedItems', 'symbolAdmin')"><b>UH ID {{symbol.uuid}}</b></a></th>
+                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(list, 'username', 'pagedItems', 'symbolAdmin')"><b>Username {{symbol.username}}</b></a></th>
                                     <th>remove</th>
                                 </tr>
                                 </thead>
@@ -59,7 +70,7 @@
                                     <td>{{l.uuid}}</td>
                                     <td>{{l.username}}</td>
                                     <td>
-                                        <button class="btn btn-default btn-block"
+                                        <button class="btn btn-danger btn-block"
                                                 ng-click="removeAdmin($index + (currentPage * itemsPerPage))"><span
                                                 class="glyphicon glyphicon-remove"></span></button>
                                     </td>
@@ -92,7 +103,7 @@
                             </table>
 
                             <div class="panel-footer">
-                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                <!--<button class="btn btn-primary" type="button" data-toggle="collapse"
                                         data-target="#addAdmin"
                                         aria-expanded="false" aria-controls="addAdmin">
                                     Add Admin
@@ -100,7 +111,7 @@
                                 <div class="collapse" id="addAdmin">
                                     <input type="text" ng-model="username"/>
                                     <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -168,9 +179,9 @@
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>Name</th>
-                                                    <th>UH ID</th>
-                                                    <th>Username</th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingsList, 'name', 'pagedItemsList', 'symbolList')"><b>Name {{symbol.name}}</b></a></th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingsList, 'uuid', 'pagedItemsList', 'symbolList')"><b>UH ID {{symbol.uuid}}</b></a></th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingsList, 'username', 'pagedItemsList', 'symbolList')"><b>Username {{symbol.username}}</b></a></th>
                                                     <th>Basis</th>
                                                 </tr>
                                                 </thead>
@@ -214,9 +225,9 @@
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>Name</th>
-                                                    <th>UH ID</th>
-                                                    <th>Username</th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingsBasis, 'name', 'pagedItemsBasis', 'symbolBasis')"><b>Name {{symbol.name}}</b></a></th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingsBasis, 'uuid', 'pagedItemsBasis', 'symbolBasis')"><b>UH ID {{symbol.uuid}}</b></a></th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingsBasis, 'username', 'pagedItemsBasis', 'symbolBasis')"><b>Username {{symbol.username}}</b></a></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -258,9 +269,9 @@
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>Name</th>
-                                                    <th>UH ID</th>
-                                                    <th>Username</th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude')"><b>Name {{symbol.name}}</b></a></th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingInclude, 'uuid', 'pagedItemsInclude', 'symbolInclude')"><b>UH ID {{symbol.uuid}}</b></a></th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')"><b>Username {{symbol.username}}</b></a></th>
                                                     <th>Basis</th>
                                                 </tr>
                                                 </thead>
@@ -327,9 +338,9 @@
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>Name</th>
-                                                    <th>UH ID</th>
-                                                    <th>Username</th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')"><b>Name {{symbol.name}}</b></a></th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingExclude, 'uuid', 'pagedItemsExclude', 'symbolExclude')"><b>UH ID {{symbol.uuid}}</b></a></th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')"><b>Username {{symbol.username}}</b></a></th>
                                                     <th>Basis</th>
                                                 </tr>
                                                 </thead>
@@ -395,8 +406,8 @@
                                             <table class="table table-bordered table-condensed table-hover">
                                                 <thead>
                                                 <tr>
-                                                    <th>Name</th>
-                                                    <th>Username</th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(ownerList, 'name', 'pagedItemsOwners', 'symbolOwner')"><b>Name {{symbol.name}}</b></a></th>
+                                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwner')"><b>Username {{symbol.username}}</b></a></th>
                                                     <th>Remove</th>
                                                 </tr>
                                                 </thead>
@@ -459,8 +470,7 @@
                                             <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/> LISTSERV list: {{groupingName.name}}
                                             <br/>
 
-                                            <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save
-                                            </button>
+                                            <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save</button>
                                         </div>
                                     </div>
                                 </div>
@@ -476,6 +486,3 @@
 <div th:substituteby="footer :: copy"></div>
 </body>
 </html>
-
-
-

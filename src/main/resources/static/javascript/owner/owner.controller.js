@@ -217,12 +217,7 @@
          * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
          */
         $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'folder': '', 'uuid': '', 'username':'','symbol':'0'};
-            console.log($scope.symbol.symbol);
-            if(_.find($scope.symbol, function(name){ return typeof name === '0'}))
-            {
-                console.log("Pi");
-            }
+            $scope.symbol = {'name': '', 'folder': '', 'uuid': '', 'username':''};
 
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
                 list = _.sortBy(list, col);
@@ -550,183 +545,31 @@
         return ret;
     };
 
-    $scope.currentPage = function(pages){
+    $scope.currentPage = function(pages, whatPage, whatList){
         switch(pages){
-            //TODO we need  [next, first, prev, last, set], the $scope[whatList], $scope[whatPage]
-            case 'Include Next':
-                if ($scope.currentPageInclude < $scope.pagedItemsInclude.length - 1) {
-                    $scope.currentPageInclude = $scope.currentPageInclude + 1;
+            case 'Next':
+                if ($scope[whatPage] < $scope[whatList].length - 1) {
+                    $scope[whatPage] = $scope[whatPage] + 1;
                 }
-            }
-            return pagedList;
-        };
-
-        /**shows the range between the start and end
-         *checks for negative numbers
-         *
-         * @param size
-         * @param start
-         * @param end
-         *  all the param are self explanitory
-         * @return ret
-         *     everything within the range of start,
-         *       end, and making sure it's that size
-         **/
-        $scope.range = function (size, start, end) {
-            var ret = [];
-
-            if (size < end) {
-                end = size;
-                // start = size - $scope.gap;
-            }
-            if (start < 0) {
-                start = 0;
-            }
-            for (var i = start; i < end; i++) {
-                ret.push(i);
-            }
-            return ret;
-        };
-
-        $scope.currentPage = function (pages) {
-            switch (pages) {
-                case 'Owned Next':
-                    if ($scope.currentPageOwned < $scope.pagedItemsOwned.length - 1) {
-                        $scope.currentPageOwned = $scope.currentPageOwned + 1;
-                    }
-                    break;
-                case 'Owned Set':
-                    $scope.currentPageOwned = this.n;
-                    break;
-                case 'Owned Prev':
-                    console.log("Go back");
-                    if ($scope.currentPageOwned > 0) {
-                        $scope.currentPageOwned--;
-                    }
-                    break;
-                case 'Owned First':
-                    $scope.currentPageOwned = 0;
-                    break;
-                case 'Owned Last':
-                    if ($scope.currentPageOwned >= 0) {
-                        $scope.currentPageOwned = $scope.pagedItemsOwned.length - 1;
-                    }
-                    break;
-                case 'Include Next':
-                    if ($scope.currentPageInclude < $scope.pagedItemsInclude.length - 1) {
-                        $scope.currentPageInclude = $scope.currentPageInclude + 1;
-                    }
-                    break;
-
-                case 'Include Set':
-                    $scope.currentPageInclude = this.n;
-                    break;
-
-                case 'Include Prev':
-                    if ($scope.currentPageInclude > 0) {
-                        $scope.currentPageInclude--;
-                    }
-                    break;
-                case 'Include First':
-                    $scope.currentPageInclude = 0;
-                    break;
-
-                case 'Include Last':
-                    if ($scope.currentPageInclude >= 0) {
-                        $scope.currentPageInclude = $scope.pagedItemsInclude.length - 1;
-                    }
-                    break;
-                // Split for the exclude
-                case 'Exclude Next':
-                    if ($scope.currentPageExclude < $scope.pagedItemsExclude.length - 1) {
-                        $scope.currentPageExclude = $scope.currentPageExclude + 1;
-                    }
-                    break;
-                case 'Exclude Set':
-                    $scope.currentPageExclude = this.n;
-                    break;
-
-                case 'Exclude Prev':
-                    if ($scope.currentPageExclude > 0) {
-                        $scope.currentPageExclude--;
-                    }
-                    break;
-                case 'Exclude First':
-                    $scope.currentPageExclude = 0;
-                    break;
-                case 'Exclude Last':
-                    if ($scope.currentPageExclude >= 0) {
-                        $scope.currentPageExclude = $scope.pagedItemsExclude.length - 1;
-                    }
-                    break;
-                // Cases for the basis
-                case 'Basis Next':
-                    if ($scope.currentPageBasis < $scope.pagedItemsBasis.length - 1) {
-                        $scope.currentPageBasis = $scope.currentPageBasis + 1;
-                    }
-                    break;
-                case 'Basis Set':
-                    $scope.currentPageBasis = this.n;
-                    break;
-                case 'Basis Prev':
-                    if ($scope.currentPageBasis > 0) {
-                        $scope.currentPageBasis--;
-                    }
-                    break;
-                case 'Basis First':
-                    $scope.currentPageBasis = 0;
-                    break;
-                case 'Basis Last':
-                    if ($scope.currentPageBasis >= 0) {
-                        $scope.currentPageBasis = $scope.pagedItemsBasis.length - 1;
-                    }
-                    break;
-                // Cases for Owners
-                case 'Owners Next':
-                    if ($scope.currentPageOwners < $scope.pagedItemsOwners.length - 1) {
-                        $scope.currentPageOwners = $scope.currentPageOwners + 1;
-                    }
-                    break;
-                case 'Owners Set':
-                    $scope.currentPageOwners = this.n;
-                    break;
-                case 'Owners Prev':
-                    if ($scope.currentPageOwners > 0) {
-                        $scope.currentPageOwners--;
-                    }
-                    break;
-                case 'Owners First':
-                    $scope.currentPageOwners = 0;
-                    break;
-                case 'Owners Last':
-                    if ($scope.currentPageOwners >= 0) {
-                        $scope.currentPageOwners = $scope.pagedItemsOwners.length - 1;
-                    }
-                    break;
-                // Cases for List
-                case 'List Next':
-                    if ($scope.currentPageList < $scope.pagedItemsList.length - 1) {
-                        $scope.currentPageList = $scope.currentPageList + 1;
-                    }
-                    break;
-                case 'List Set':
-                    $scope.currentPageList = this.n;
-                    break;
-                case 'List Prev':
-                    if ($scope.currentPageList > 0) {
-                        $scope.currentPageList--;
-                    }
-                    break;
-                case 'List First':
-                    $scope.currentPageList = 0;
-                    break;
-                case 'List Last':
-                    if ($scope.currentPageList >= 0) {
-                        $scope.currentPageList = $scope.pagedItemsList.length - 1;
-                    }
-                    break;
-            }
-        };
+                break;
+            case 'Set':
+                $scope[whatPage] = this.n;
+                break;
+            case 'Prev':
+                if ($scope[whatPage] > 0) {
+                    $scope[whatPage]--;
+                }
+                break;
+            case 'First':
+                $scope[whatPage] = 0;
+                break;
+            case 'Last':
+                if ($scope[whatPage] >= 0) {
+                    $scope[whatPage] = $scope[whatPage].length - 1;
+                }
+                break;
+        }
+    };
 
     }
 

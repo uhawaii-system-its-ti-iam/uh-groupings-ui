@@ -11,32 +11,28 @@
         <div class='col-xs-offset-1 col-xs-10'>
 
 
-            <h1 class="text-center">Groupings Owned</h1>
-            <h4 class="text-center">Owner can modify the groupings that they own.</h4>
+            <h2 class="text-center">Groupings Owned</h2>
+            <p class="text-center">Owner can modify the groupings that they own.</p>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
                 <div ng-show="!showGrouping">
                     <div id="overlay" ng-show="loading">
                         <div class="loader" ng-show="loading"></div>
                     </div>
+                    <br/>
 
                     <!-- This will allow you to search for specific groups -->
                     <div class="panel panel-default">
                         <div class="panel-heading" style="border: 0;padding: 5px;">
-                            <div class="form-group">
+                            <div class="form-group ">
                                 <h3 class="col-md-4" style="margin-top: 5px">Groupings</h3>
-                                <!--HERE-->
-                                <!-- <div align="right" style="margin-top: 10px">
-                                    <input placeholder="Type to filter Groupings..." type="text"
-                                    ng-model="query1" ng-change= "search(ownedList, 'Paged_1', 'firstQuery')" id = "members"/>
-                                </div> -->
                             </div>
                         </div>
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th ng-click="sortCol(ownedList, 'name', 'pagedItemsOwned', 'symbolMember')">Groupings {{symbol.name}}</th>
-                                <th ng-click="sortCol(ownedList, 'folder', 'pagedItemsOwned', 'symbolMember')">Folder {{symbol.folder}}</th>
+                                <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(ownedList, 'name', 'pagedItemsOwned', 'symbolMember')"><b>Grouping {{symbol.name}}</b></a></th>
+                                <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(ownedList, 'folder', 'pagedItemsOwned', 'symbolMember')"><b>Folder {{symbol.folder}}</b></a></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -53,16 +49,16 @@
                             <td colspan="6">
                                 <ul class = "pagination pull-right" >
                                     <li ng-class="{disabled: (currentPageOwned) == 0 }">
-                                        <a href="" ng-click="currentPage('Owned Prev')" >« Prev</a>
+                                        <a href="" ng-click="currentPage('Prev','currentPageOwned','pagedItemsOwned')" >« Prev</a>
                                     </li>
                                     <li ng-repeat="n in range(pagedItemsOwned.length, currentPageOwned - gap, currentPageOwned + gap + 1)"
                                         ng-class="{active: n == currentPageOwned}"
 
-                                        ng-click="currentPage('Owned Set')"
+                                        ng-click="currentPage('Set','currentPageOwned','pagedItemsOwned')"
                                             ><a href="" ng-bind="n + 1" >1</a>
                                     </li>
                                     <li ng-class="{disabled: (currentPageOwned) == pagedItemsOwned.length - 1 }">
-                                        <a href="" ng-click="currentPage('Owned Next')">Next »</a>
+                                        <a href="" ng-click="currentPage('Next','currentPageOwned','pagedItemsOwned')">Next »</a>
                                     </li>
                                 </ul>
                             </td>
@@ -81,7 +77,7 @@
                         <li><a data-toggle="tab" href="#owners">Owners</a></li>
                         <li><a data-toggle="tab" href="#preference">Preferences</a></li>
                         <li class="pull-right">
-                            <button ng-click="showGroups()" class="btn btn-default">Go Back</button>
+                            <button ng-click="showGroups()" class="btn btn-primary">Go Back</button>
                         </li>
                     </ul>
 
@@ -89,7 +85,7 @@
                         <!-- List of the members in the grouping -->
 
                         <div id="members" class="tab-pane fade in active">
-                            <h2 class="text-center">Members</h2>
+                            <h2>Members</h2>
 
                             <div class="col-md-2 col-xs-2" style="top: 55px; width: 80px">
                                 <ul class="nav nav-tabs nav-stacked">
@@ -109,9 +105,9 @@
 
                             <div class="tab-content col-md-10 col-xs-8">
                                 <div id="all" class="tab-pane fade in active">
-                                    <h3 class="text-center">List</h3>
-                                    <div align="right" style="margin-top: 10px">
-                                        <input placeholder="Type to filter Include Groups..." type="text"
+                                    <h3 class="text-center">All Members</h3>
+                                    <div align="right" style="margin-top: 10px" id = "filters">
+                                        <input placeholder="Filter" type="text"
                                         ng-model="ListQuery" ng-change= "search(groupingsList, 'pagedItemsList', 'ListQuery')" id = "members"/>
                                     </div>
                                     <table class="table table-bordered table-hover">
@@ -136,16 +132,16 @@
                                             <td colspan="6">
                                                     <ul class = "pagination pull-right" >
                                                         <li ng-class="{disabled: (currentPageList) == 0 }">
-                                                            <a href="" ng-click="currentPage('List Prev')" >« Prev</a>
+                                                            <a href="" ng-click="currentPage('Prev','currentPageList','pagedItemsList')" >« Prev</a>
                                                         </li>
                                                         <li ng-repeat="n in range(pagedItemsList.length, currentPageList - gap, currentPageList + gap + 1) "
                                                         ng-class="{active: n == currentPageList}"
 
-                                                        ng-click="currentPage('List Set')"
+                                                        ng-click="currentPage('Set','currentPageList','pagedItemsList')"
                                                         ><a href="" ng-bind="n + 1" >1</a>
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 }">
-                                                            <a href="" ng-click="currentPage('List Next')">Next »</a>
+                                                            <a href="" ng-click="currentPage('Next','currentPageList','pagedItemsList')">Next »</a>
                                                         </li>
                                                 </ul>
                                             </td>
@@ -159,8 +155,8 @@
                                     <h3 class="text-center">Basis</h3>
 
                                     <!-- must put search bar here.. -->
-                                    <div align="right" style="margin-top: 10px">
-                                        <input placeholder="Type to filter Groupings..." type="text"
+                                    <div align="right" style="margin-top: 10px" id = "filters">
+                                        <input placeholder="Filter" type="text"
                                         ng-model="basisQuery" ng-change= "search(groupingsBasis, 'pagedItemsBasis', 'basisQuery')" id = "members"/>
                                     </div>
                                     <table class="table table-bordered table-hover">
@@ -183,16 +179,16 @@
                                             <td colspan="6">
                                                     <ul class = "pagination pull-right" >
                                                         <li ng-class="{disabled: (currentPageBasis) == 0}">
-                                                            <a href="" ng-click="currentPage('Basis Prev')" >« Prev</a>
+                                                            <a href="" ng-click="currentPage('Prev','currentPageBasis','pagedItemsBasis')" >« Prev</a>
                                                         </li>
                                                         <li ng-repeat="n in range(pagedItemsBasis.length, currentPageBasis - gap, currentPageBasis + gap + 1) "
                                                         ng-class="{active: n == currentPageBasis}"
 
-                                                        ng-click="currentPage('Basis Set')"
+                                                        ng-click="currentPage('Set','currentPageBasis','pagedItemsBasis')"
                                                         ><a href="" ng-bind="n + 1" >1</a>
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 }">
-                                                            <a href="" ng-click="currentPage('Basis Next')">Next »</a>
+                                                            <a href="" ng-click="currentPage('Next','currentPageBasis','pagedItemsBasis')">Next »</a>
                                                         </li>
                                                 </ul>
                                             </td>
@@ -205,8 +201,8 @@
                                 <div id="include" class="tab-pane fade">
                                     <h3 class="text-center">Include</h3>
                                     <!--  must put search bar here...-->
-                                    <div align="right" style="margin-top: 10px">
-                                        <input placeholder="Type to filter Include Groups..." type="text"
+                                    <div align="right" style="margin-top: 10px" id = "filters">
+                                        <input placeholder="Filter" type="text"
                                         ng-model="includeQuery" ng-change= "search(groupingInclude, 'pagedItemsInclude', 'includeQuery')" id = "members"/>
                                     </div>
                                     <table class="table table-bordered table-hover">
@@ -238,16 +234,16 @@
                                             <td colspan="6">
                                                     <ul class = "pagination pull-right" >
                                                         <li ng-class="{disabled: (currentPageInclude) == 0 }">
-                                                            <a href="" ng-click="currentPage('Include Prev')" >« Prev</a>
+                                                            <a href="" ng-click="currentPage('Prev','currentPageInclude','pagedItemsInclude')" >« Prev</a>
                                                         </li>
                                                         <li ng-repeat="n in range(pagedItemsInclude.length, currentPageInclude - gap, currentPageInclude + gap + 1) "
                                                         ng-class="{active: n == currentPageInclude}"
 
-                                                        ng-click="currentPage('Include Set')"
+                                                        ng-click="currentPage('Set','currentPageInclude','pagedItemsInclude')"
                                                         ><a href="" ng-bind="n + 1" >1</a>
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 }">
-                                                            <a href="" ng-click="currentPage('Include Next')">Next »</a>
+                                                            <a href="" ng-click="currentPage('Next','currentPageInclude','pagedItemsInclude')">Next »</a>
                                                         </li>
                                                 </ul>
                                             </td>
@@ -276,8 +272,8 @@
                                     <h3 class="text-center">Exclude</h3>
 
                                     <!-- must put search bar here... -->
-                                    <div align="right" style="margin-top: 10px">
-                                        <input placeholder="Type to filter Groupings..." type="text"
+                                    <div align="right" style="margin-top: 10px" id = "filters">
+                                        <input placeholder="Filter" type="text"
                                         ng-model="excludeQuery" ng-change= "search(groupingExclude, 'pagedItemsExclude', 'excludeQuery')" />
                                     </div>
                                     <table class="table table-bordered table-hover">
@@ -309,16 +305,16 @@
                                             <td colspan="6">
                                                     <ul class = "pagination pull-right" >
                                                         <li ng-class="{disabled: (currentPageExclude) == 0 }">
-                                                            <a href="" ng-click="currentPage('Exclude Prev')" >« Prev</a>
+                                                            <a href="" ng-click="currentPage('Prev','currentPageExclude','pagedItemsExclude')" >« Prev</a>
                                                         </li>
                                                         <li ng-repeat="n in range(pagedItemsExclude.length, currentPageExclude - gap, currentPageExclude + gap + 1) "
-                                                        ng-class="{active: n == currentPageInclude}"
+                                                        ng-class="{active: n == currentPageExclude}"
 
-                                                        ng-click="currentPage('Exclude Set')"
+                                                        ng-click="currentPage('Set','currentPageExclude','pagedItemsExclude')"
                                                         ><a href="" ng-bind="n + 1" >1</a>
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 }">
-                                                            <a href="" ng-click="currentPage('Exclude Next')">Next »</a>
+                                                            <a href="" ng-click="currentPage('Next','currentPageExclude','pagedItemsExclude')">Next »</a>
                                                         </li>
                                                 </ul>
                                             </td>
@@ -351,8 +347,8 @@
                             <h2>Owners</h2>
 
                             <!-- must put search bar here -->
-                            <div align="right" style="margin-top: 10px">
-                                <input placeholder="Type to filter Groupings..." type="text"
+                            <div align="right" style="margin-top: 10px" id = "filters">
+                                <input placeholder="Filter" type="text"
                                 ng-model="ownersQuery" ng-change= "search(ownerList, 'pagedItemsOwners', 'ownersQuery')" id = "members"/>
                             </div>
                             <table class="table table-bordered table-condensed table-hover">
@@ -368,7 +364,7 @@
                                     <td>{{owner.name}}</td>
                                     <td>{{owner.username}}</td>
                                     <td>
-                                        <button class="btn btn-default btn-block" ng-click="removeOwner($index)"><span
+                                        <button class="btn btn-danger btn-block" ng-click="removeOwner($index)"><span
                                                 class="glyphicon glyphicon-remove"></span>
                                         </button>
                                     </td>
@@ -378,15 +374,16 @@
                                     <td colspan="6">
                                             <ul class = "pagination pull-right" >
                                                 <li ng-class="{disabled: (currentPageOwners) == 0 }">
-                                                    <a href="" ng-click="currentPage('Owners Prev')" >« Prev</a>
+                                                    <a href="" ng-click="currentPage('Prev','currentPageOwners','pagedItemsOwners')" >« Prev</a>
                                                 </li>
                                                 <li ng-repeat="n in range(pagedItemsOwners.length, currentPageOwners - gap, currentPageOwners + gap + 1) "
                                                 ng-class="{active: n == currentPageOwners}"
-                                                ng-click="currentPage('Owners Set')"
+
+                                                ng-click="currentPage('Set','currentPageOwners','pagedItemsOwners')"
                                                 ><a href="" ng-bind="n + 1" >1</a>
                                                 </li>
                                                 <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 }">
-                                                    <a href="" ng-click="currentPage('Owners Next')">Next »</a>
+                                                    <a href="" ng-click="currentPage('Next','currentPageOwners','pagedItemsOwners')">Next »</a>
                                                 </li>
                                         </ul>
                                     </td>
@@ -412,7 +409,7 @@
                         <div id="preference" class="tab-pane fade">
                             <h2>Preferences</h2>
 
-                            <h3>Add/Remove</h3>
+                            <h3>Membership Options</h3>
                             <input id="optInOption" type="checkbox"/> Allow people to add themselves to this group <br/>
                             <input id="optOutOption" type="checkbox"/> Allow people to remove themselves to this group
                             <br/>
@@ -421,7 +418,7 @@
                             <input id="listserv" type="checkbox" ng-init="pref"/> LISTSERV list: {{groupingName.name}}
                             <br/>
 
-                            <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save
+                            <button class="btn btn-default btn-primary" style="margin-top: 20px" type="submit" ng-click="savePref()"> Update Preferences
                             </button>
                         </div>
                     </div>
