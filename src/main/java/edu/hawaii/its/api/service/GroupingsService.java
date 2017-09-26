@@ -17,6 +17,8 @@ public interface GroupingsService {
 
     public List<Grouping> groupingsIn(String username, List<String> groupPaths);
 
+    public List<Grouping> groupingsOwned(List<String> groupPaths);
+
     public List<Grouping> groupingsOptedInto(String username, List<String> groupPaths);
 
     public List<Grouping> groupingsOptedOutOf(String username, List<String> groupPaths);

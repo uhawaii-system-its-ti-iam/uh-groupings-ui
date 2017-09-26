@@ -1,5 +1,6 @@
 package edu.hawaii.its.api.service;
 
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,9 +25,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 
 @ActiveProfiles("localTest")
@@ -201,6 +205,12 @@ public class GroupingsServiceMockTest {
     @Test
     public void construction() {
         assertNotNull(groupingsService);
+    }
+
+    @Test
+    public void databaseTest() {
+        Iterable<Group> groups = groupRepository.findAll();
+        assertNotNull(groups);
     }
 
     @Test
@@ -602,6 +612,7 @@ public class GroupingsServiceMockTest {
     @Test
     public void getMyGroupingsTest() {
 
+        //todo
     }
 
     @Test
@@ -967,6 +978,7 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void groupingsInTest() {
+        //todo
     }
 
     @Test
@@ -993,42 +1005,70 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void groupingsOwnedTest() {
+        String ownerUsername = "username0";
+        Iterable<Group> groupsIn = groupRepository.findByMembersUsername(ownerUsername);
+        List<String> attributes = new ArrayList<>();
+        List<String> groupPaths = new ArrayList<>();
 
+        for (Group group : groupsIn) {
+            groupPaths.add(group.getPath());
+        }
+
+        List<String> ownerGroups = groupPaths
+                .stream()
+                .filter(groupPath -> groupPath.endsWith(OWNERS))
+                .map(groupPath -> groupPath.substring(0, groupPath.length() - OWNERS.length()))
+                .collect(Collectors.toList());
+
+        given(gf.makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP, TRIO, ownerGroups))
+                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios(groupPaths));
+
+        for(String groups : ownerGroups) {
+            given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, groups))
+                    .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+        }
+
+        List<Grouping> groupingsOwned = groupingsService.groupingsOwned(groupPaths);
+
+        for(int i = 0; i < groupingsOwned.size(); i ++) {
+            assertTrue(groupingsOwned.get(i).getPath().equals("path:to:grouping" + i));
+        }
     }
 
     @Test
     public void groupingsOptedIntoTest() {
-
+//todo
     }
 
     @Test
     public void groupingsOptedOutOfTest() {
-
+//todo
     }
 
     @Test
     public void groupingsOptedTest() {
-
+//todo
     }
 
     @Test
     public void adminInfoTest() {
-
+//todo
     }
 
     @Test
     public void groupingsToOptOutOfTest() {
 
+//todo
     }
 
     @Test
     public void groupingsToOptIntoTest() {
-
+//todo
     }
 
     @Test
     public void addSelfOptedTest() {
-
+//todo
     }
 
     @Test
@@ -1097,106 +1137,127 @@ public class GroupingsServiceMockTest {
     @Test
     public void removeSelfOptedTest() {
 
+//todo
     }
 
     @Test
     public void groupOptOutPermissionTest() {
 
+//todo
     }
 
     @Test
     public void groupOptInPermissionTest() {
 
+//todo
     }
 
     @Test
     public void updateLastModifiedTest() {
 
+//todo
     }
 
     @Test
     public void assignMembershipAttributesTest() {
 
+//todo
     }
 
     @Test
     public void getMembershipAttributesTest() {
 
+//todo
     }
 
     @Test
     public void assignGroupAttributesTest() {
 
+//todo
     }
 
     @Test
     public void attributeAssignmentsResultsTest() {
 
+//todo
     }
 
     @Test
     public void getGrouperPrivilegeTest() {
 
+//todo
     }
 
     @Test
     public void assignGrouperPrivilegeTest() {
 
+//todo
     }
 
     @Test
     public void membershipsResultsTest() {
 
+//todo
     }
 
     @Test
     public void addMemberAsTest() {
 
+//todo
     }
 
     @Test
     public void deleteMemberAsTest() {
 
+//todo
     }
 
     @Test
     public void deleteMemberTest() {
 
+//todo
     }
 
     @Test
     public void getMembersTest() {
 
+//todo
     }
 
     @Test
     public void extractGroupingsTest() {
 
+//todo
     }
 
     @Test
     public void getGroupPathsTest() {
 
+//todo
     }
 
     @Test
     public void setGroupingAttributesTest() {
 
+//todo
     }
 
     @Test
     public void parentGroupingPathTest() {
 
+//todo
     }
 
     @Test
     public void extractGroupPathsTest() {
 
+//todo
     }
 
     @Test
     public void changeGroupAttributeStatusTest() {
 
+//todo
     }
 
     /////////////////////////////////////////////////////
@@ -1263,6 +1324,41 @@ public class GroupingsServiceMockTest {
         }
         return getAttributeAssignmentsResults;
 
+    }
+
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForTrios(List<String> groupPaths) {
+        WsGetAttributeAssignmentsResults getAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
+        List<WsAttributeDefName> attributeDefNames = new ArrayList<>();
+        List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
+        List<String> groupingPaths = new ArrayList<>();
+        List<String> ownedGroupingPaths = new ArrayList<>();
+
+        groupingPaths.add("path:to:grouping0");
+        groupingPaths.add("path:to:grouping1");
+        groupingPaths.add("path:to:grouping2");
+        groupingPaths.add("path:to:grouping3");
+        groupingPaths.add("path:to:grouping4");
+
+        for (String group : groupPaths) {
+            if (groupingPaths.contains(group)) {
+               ownedGroupingPaths.add(group);
+            }
+        }
+
+        for (String group : ownedGroupingPaths) {
+            WsAttributeDefName attributeDefName = new WsAttributeDefName();
+            attributeDefName.setName(TRIO);
+            attributeDefNames.add(attributeDefName);
+
+            WsAttributeAssign attributeAssign = new WsAttributeAssign();
+            attributeAssign.setAttributeDefNameName(TRIO);
+            attributeAssign.setOwnerGroupName(group);
+            attributeAssigns.add(attributeAssign);
+        }
+        getAttributeAssignmentsResults.setWsAttributeDefNames(attributeDefNames.toArray(new WsAttributeDefName[attributeDefNames.size()]));
+        getAttributeAssignmentsResults.setWsAttributeAssigns(attributeAssigns.toArray(new WsAttributeAssign[attributeDefNames.size()]));
+
+        return getAttributeAssignmentsResults;
     }
 
     private WsAssignAttributesResults makeWsAssignAttributesResults(String resultCode) {

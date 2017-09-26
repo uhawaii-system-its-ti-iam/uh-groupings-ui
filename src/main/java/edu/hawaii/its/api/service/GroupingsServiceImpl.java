@@ -607,7 +607,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @return a list of all of the Groupings that the user owns
      */
-    private List<Grouping> groupingsOwned(List<String> groupPaths) {
+    @Override
+    public List<Grouping> groupingsOwned(List<String> groupPaths) {
         List<String> ownerGroups = groupPaths
                 .stream()
                 .filter(groupPath -> groupPath.endsWith(OWNERS))
