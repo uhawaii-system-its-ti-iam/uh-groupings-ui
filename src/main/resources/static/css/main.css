@@ -154,6 +154,21 @@ td.uh-pre {
     text-align: center;
 }
 
+
+
+    #headingOptIn{
+        position: relative;
+        vertical-align: 50%;
+        white-space: nowrap;
+        margin-top: 5px;
+        /*height:  15px;*/
+
+    }
+
+    #filters{
+        padding: 10px;
+    }
+
 @media(min-width:768px) {
     body {
         padding-top: 100px; /* Required padding for .navbar-fixed-top. Change if height of navigation changes. */
@@ -194,6 +209,9 @@ td.uh-pre {
     }
 
     #topRow{
+      text-align: left;
+    }
+    #tops{
       text-align: center;
     }
 

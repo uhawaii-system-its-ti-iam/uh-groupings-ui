@@ -1,14 +1,13 @@
 package edu.hawaii.its.api.service;
 
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 import edu.internet2.middleware.grouperClient.ws.beans.*;
@@ -16,11 +15,14 @@ import edu.internet2.middleware.grouperClient.ws.beans.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
@@ -29,6 +31,8 @@ import static org.mockito.Matchers.anyString;
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {SpringBootWebApplication.class})
+@WebAppConfiguration
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GroupingsServiceMockTest {
     @Value("${groupings.api.settings}")
     private String SETTINGS;
@@ -164,6 +168,14 @@ public class GroupingsServiceMockTest {
     private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
     private final WsSubjectLookup EVERY_ENTITY_LOOKUP = new WsSubjectLookup(null, null, EVERY_ENTITY);
 
+    private static final Person ADMIN_PERSON = new Person(ADMIN_USER, ADMIN_USER, ADMIN_USER);
+
+    private List<Person> admins = new ArrayList<>();
+
+    private Group adminGroup;
+
+    private DatabaseFactory databaseFactory;
+
     private Person[] users = new Person[6];
 
     @Mock
@@ -173,19 +185,39 @@ public class GroupingsServiceMockTest {
     @Autowired
     private GroupingsService groupingsService;
 
+
+    @Autowired
+    private GroupRepository groupRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
+
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
+
+        admins.add(ADMIN_PERSON);
+        adminGroup = new Group(GROUPING_ADMINS, admins);
+
+        personRepository.save(ADMIN_PERSON);
+        groupRepository.save(adminGroup);
 
         for (int i = 0; i < users.length; i++) {
             users[i] = new Person(NAMES[i], "uuid", USERNAMES[i]);
         }
 
+        databaseFactory = new DatabaseFactory(personRepository, groupRepository);
     }
 
     @Test
     public void construction() {
         assertNotNull(groupingsService);
+    }
+
+    @Test
+    public void databaseTest() {
+        Iterable<Group> groups = groupRepository.findAll();
+        assertNotNull(groups);
     }
 
     @Test
@@ -587,6 +619,7 @@ public class GroupingsServiceMockTest {
     @Test
     public void getMyGroupingsTest() {
 
+        //todo
     }
 
     @Test
@@ -952,6 +985,22 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void groupingsInTest() {
+        String username = "username2";
+        Iterable<Group> groupsIn = groupRepository.findByMembersUsername(username);
+        List<String> groupPaths = new ArrayList<>();
+
+        for (Group group : groupsIn) {
+            groupPaths.add(group.getPath());
+        }
+
+        given(gf.makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP, TRIO, groupPaths))
+                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios(groupPaths));
+
+        List<Grouping> groupingsIn = groupingsService.groupingsIn(groupPaths);
+
+        for(int i = 0; i < groupingsIn.size(); i ++) {
+            assertTrue(groupingsIn.get(i).getPath().equals("path:to:grouping" + i));
+        }
     }
 
     @Test
@@ -978,42 +1027,104 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void groupingsOwnedTest() {
+        String ownerUsername = "username0";
+        Iterable<Group> groupsIn = groupRepository.findByMembersUsername(ownerUsername);
+        List<String> attributes = new ArrayList<>();
+        List<String> groupPaths = new ArrayList<>();
 
+        for (Group group : groupsIn) {
+            groupPaths.add(group.getPath());
+        }
+
+        List<String> ownerGroups = groupPaths
+                .stream()
+                .filter(groupPath -> groupPath.endsWith(OWNERS))
+                .map(groupPath -> groupPath.substring(0, groupPath.length() - OWNERS.length()))
+                .collect(Collectors.toList());
+
+        given(gf.makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP, TRIO, ownerGroups))
+                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios(groupPaths));
+
+        for(String groups : ownerGroups) {
+            given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, groups))
+                    .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+        }
+
+        List<Grouping> groupingsOwned = groupingsService.groupingsOwned(groupPaths);
+
+        for(int i = 0; i < groupingsOwned.size(); i ++) {
+            assertTrue(groupingsOwned.get(i).getPath().equals("path:to:grouping" + i));
+        }
     }
 
     @Test
     public void groupingsOptedIntoTest() {
-
+//todo
     }
 
     @Test
     public void groupingsOptedOutOfTest() {
-
+//todo
     }
 
     @Test
     public void groupingsOptedTest() {
-
+//todo
     }
 
     @Test
-    public void adminInfoTest() {
+    public void adminListsTest() {
+        List<String> groupingPaths = new ArrayList<>();
+        List<String> attributes = new ArrayList<>();
+        groupingPaths.add("path:to:grouping0");
+        groupingPaths.add("path:to:grouping1");
+        groupingPaths.add("path:to:grouping2");
+        groupingPaths.add("path:to:grouping3");
+        groupingPaths.add("path:to:grouping4");
 
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_APPS, ADMIN_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_APPS, RANDOM_USER)).willReturn(notMemberResults());
+
+        given(gf.makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP, TRIO))
+                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios(groupingPaths));
+
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_ADMINS))
+                .willReturn(makeWsGetMembersResultsDB(GROUPING_ADMINS));
+
+        given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
+
+        for(String groupingPath : groupingPaths ) {
+            given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, groupingPath))
+                    .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+        }
+
+        AdminListsHolder adminListsHolder = groupingsService.adminLists(ADMIN_USER);
+        AdminListsHolder emptyAdminListHolder = groupingsService.adminLists(RANDOM_USER);
+
+
+        assertEquals(adminListsHolder.getAllGroupings().size(), 5);
+        assertEquals(adminListsHolder.getAdminGroup().getMembers().size(), 1);
+
+        assertEquals(emptyAdminListHolder.getAllGroupings().size(), 0);
+        assertEquals(emptyAdminListHolder.getAdminGroup().getMembers().size(), 0);
     }
 
     @Test
     public void groupingsToOptOutOfTest() {
 
+//todo
     }
 
     @Test
     public void groupingsToOptIntoTest() {
-
+//todo
     }
 
     @Test
     public void addSelfOptedTest() {
-
+//todo
     }
 
     @Test
@@ -1082,106 +1193,127 @@ public class GroupingsServiceMockTest {
     @Test
     public void removeSelfOptedTest() {
 
+//todo
     }
 
     @Test
     public void groupOptOutPermissionTest() {
 
+//todo
     }
 
     @Test
     public void groupOptInPermissionTest() {
 
+//todo
     }
 
     @Test
     public void updateLastModifiedTest() {
 
+//todo
     }
 
     @Test
     public void assignMembershipAttributesTest() {
 
+//todo
     }
 
     @Test
     public void getMembershipAttributesTest() {
 
+//todo
     }
 
     @Test
     public void assignGroupAttributesTest() {
 
+//todo
     }
 
     @Test
     public void attributeAssignmentsResultsTest() {
 
+//todo
     }
 
     @Test
     public void getGrouperPrivilegeTest() {
 
+//todo
     }
 
     @Test
     public void assignGrouperPrivilegeTest() {
 
+//todo
     }
 
     @Test
     public void membershipsResultsTest() {
 
+//todo
     }
 
     @Test
     public void addMemberAsTest() {
 
+//todo
     }
 
     @Test
     public void deleteMemberAsTest() {
 
+//todo
     }
 
     @Test
     public void deleteMemberTest() {
 
+//todo
     }
 
     @Test
     public void getMembersTest() {
 
+//todo
     }
 
     @Test
     public void extractGroupingsTest() {
 
+//todo
     }
 
     @Test
     public void getGroupPathsTest() {
 
+//todo
     }
 
     @Test
     public void setGroupingAttributesTest() {
 
+//todo
     }
 
     @Test
     public void parentGroupingPathTest() {
 
+//todo
     }
 
     @Test
     public void extractGroupPathsTest() {
 
+//todo
     }
 
     @Test
     public void changeGroupAttributeStatusTest() {
 
+//todo
     }
 
     /////////////////////////////////////////////////////
@@ -1250,6 +1382,46 @@ public class GroupingsServiceMockTest {
 
     }
 
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForTrios(List<String> groupPaths) {
+        WsGetAttributeAssignmentsResults getAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
+        List<WsAttributeDefName> attributeDefNames = new ArrayList<>();
+        List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
+        List<String> groupingPaths = new ArrayList<>();
+        List<String> ownedGroupingPaths = new ArrayList<>();
+
+        groupingPaths.add("path:to:grouping0");
+        groupingPaths.add("path:to:grouping1");
+        groupingPaths.add("path:to:grouping2");
+        groupingPaths.add("path:to:grouping3");
+        groupingPaths.add("path:to:grouping4");
+
+        WsGroup[] groups = new WsGroup[groupPaths.size()];
+
+        for (int i = 0; i < groupPaths.size(); i ++) {
+            if (groupingPaths.contains(groupPaths.get(i))) {
+               ownedGroupingPaths.add(groupPaths.get(i));
+                groups[i] = new WsGroup();
+                groups[i].setName(groupPaths.get(i));
+            }
+        }
+
+        for (String group : ownedGroupingPaths) {
+            WsAttributeDefName attributeDefName = new WsAttributeDefName();
+            attributeDefName.setName(TRIO);
+            attributeDefNames.add(attributeDefName);
+
+            WsAttributeAssign attributeAssign = new WsAttributeAssign();
+            attributeAssign.setAttributeDefNameName(TRIO);
+            attributeAssign.setOwnerGroupName(group);
+            attributeAssigns.add(attributeAssign);
+        }
+        getAttributeAssignmentsResults.setWsAttributeDefNames(attributeDefNames.toArray(new WsAttributeDefName[attributeDefNames.size()]));
+        getAttributeAssignmentsResults.setWsAttributeAssigns(attributeAssigns.toArray(new WsAttributeAssign[attributeDefNames.size()]));
+        getAttributeAssignmentsResults.setWsGroups(groups);
+
+        return getAttributeAssignmentsResults;
+    }
+
     private WsAssignAttributesResults makeWsAssignAttributesResults(String resultCode) {
         WsAssignAttributesResults assignAttributesResults = new WsAssignAttributesResults();
         WsResultMeta resultMeta = new WsResultMeta();
@@ -1277,6 +1449,34 @@ public class GroupingsServiceMockTest {
             subject.setAttributeValues(new String[]{"username" + i});
 
             subjects.add(subject);
+        }
+
+        WsGetMembersResults getMembersResults = new WsGetMembersResults();
+        WsGetMembersResult getMembersResult = new WsGetMembersResult();
+        getMembersResult.setWsSubjects(subjects.toArray(new WsSubject[subjects.size()]));
+
+        WsGetMembersResult[] membersResults = new WsGetMembersResult[]{getMembersResult};
+        getMembersResults.setResults(membersResults);
+
+
+        return getMembersResults;
+    }
+
+    private WsGetMembersResults makeWsGetMembersResultsDB(String groupPath) {
+        List<WsSubject> subjects = new ArrayList<>();
+        Iterable<Group> groups = groupRepository.findByPath(groupPath);
+
+        for(Group group : groups) {
+            List<Person> members = group.getMembers();
+            for(Person member : members) {
+                WsSubject subject = new WsSubject();
+                subject.setName(member.getName());
+                subject.setId(member.getUuid());
+                subject.setAttributeValues(new String[]{member.getUsername()});
+
+                subjects.add(subject);
+            }
+
         }
 
         WsGetMembersResults getMembersResults = new WsGetMembersResults();

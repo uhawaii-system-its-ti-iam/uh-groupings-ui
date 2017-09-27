@@ -15,7 +15,9 @@ public interface GroupingsService {
 
     public boolean hasListserv(String grouping);
 
-    public List<Grouping> groupingsIn(String username, List<String> groupPaths);
+    public List<Grouping> groupingsIn(List<String> groupPaths);
+
+    public List<Grouping> groupingsOwned(List<String> groupPaths);
 
     public List<Grouping> groupingsOptedInto(String username, List<String> groupPaths);
 
