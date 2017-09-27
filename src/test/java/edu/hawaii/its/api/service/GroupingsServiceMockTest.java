@@ -7,10 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import edu.hawaii.its.api.type.Group;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 import edu.internet2.middleware.grouperClient.ws.beans.*;
@@ -29,8 +26,6 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 
 @ActiveProfiles("localTest")
@@ -173,6 +168,12 @@ public class GroupingsServiceMockTest {
     private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
     private final WsSubjectLookup EVERY_ENTITY_LOOKUP = new WsSubjectLookup(null, null, EVERY_ENTITY);
 
+    private static final Person ADMIN_PERSON = new Person(ADMIN_USER, ADMIN_USER, ADMIN_USER);
+
+    private List<Person> admins = new ArrayList<>();
+
+    private Group adminGroup;
+
     private DatabaseFactory databaseFactory;
 
     private Person[] users = new Person[6];
@@ -194,6 +195,12 @@ public class GroupingsServiceMockTest {
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
+
+        admins.add(ADMIN_PERSON);
+        adminGroup = new Group(GROUPING_ADMINS, admins);
+
+        personRepository.save(ADMIN_PERSON);
+        groupRepository.save(adminGroup);
 
         for (int i = 0; i < users.length; i++) {
             users[i] = new Person(NAMES[i], "uuid", USERNAMES[i]);
@@ -978,7 +985,22 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void groupingsInTest() {
-        //todo
+        String username = "username2";
+        Iterable<Group> groupsIn = groupRepository.findByMembersUsername(username);
+        List<String> groupPaths = new ArrayList<>();
+
+        for (Group group : groupsIn) {
+            groupPaths.add(group.getPath());
+        }
+
+        given(gf.makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP, TRIO, groupPaths))
+                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios(groupPaths));
+
+        List<Grouping> groupingsIn = groupingsService.groupingsIn(groupPaths);
+
+        for(int i = 0; i < groupingsIn.size(); i ++) {
+            assertTrue(groupingsIn.get(i).getPath().equals("path:to:grouping" + i));
+        }
     }
 
     @Test
@@ -1051,8 +1073,42 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
-    public void adminInfoTest() {
-//todo
+    public void adminListsTest() {
+        List<String> groupingPaths = new ArrayList<>();
+        List<String> attributes = new ArrayList<>();
+        groupingPaths.add("path:to:grouping0");
+        groupingPaths.add("path:to:grouping1");
+        groupingPaths.add("path:to:grouping2");
+        groupingPaths.add("path:to:grouping3");
+        groupingPaths.add("path:to:grouping4");
+
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_APPS, ADMIN_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_APPS, RANDOM_USER)).willReturn(notMemberResults());
+
+        given(gf.makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP, TRIO))
+                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios(groupingPaths));
+
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_ADMINS))
+                .willReturn(makeWsGetMembersResultsDB(GROUPING_ADMINS));
+
+        given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
+
+        for(String groupingPath : groupingPaths ) {
+            given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, groupingPath))
+                    .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+        }
+
+        AdminListsHolder adminListsHolder = groupingsService.adminLists(ADMIN_USER);
+        AdminListsHolder emptyAdminListHolder = groupingsService.adminLists(RANDOM_USER);
+
+
+        assertEquals(adminListsHolder.getAllGroupings().size(), 5);
+        assertEquals(adminListsHolder.getAdminGroup().getMembers().size(), 1);
+
+        assertEquals(emptyAdminListHolder.getAllGroupings().size(), 0);
+        assertEquals(emptyAdminListHolder.getAdminGroup().getMembers().size(), 0);
     }
 
     @Test
@@ -1339,9 +1395,13 @@ public class GroupingsServiceMockTest {
         groupingPaths.add("path:to:grouping3");
         groupingPaths.add("path:to:grouping4");
 
-        for (String group : groupPaths) {
-            if (groupingPaths.contains(group)) {
-               ownedGroupingPaths.add(group);
+        WsGroup[] groups = new WsGroup[groupingPaths.size()];
+
+        for (int i = 0; i < groupPaths.size(); i ++) {
+            if (groupingPaths.contains(groupPaths.get(i))) {
+               ownedGroupingPaths.add(groupPaths.get(i));
+                groups[i] = new WsGroup();
+                groups[i].setName(groupPaths.get(i));
             }
         }
 
@@ -1357,6 +1417,7 @@ public class GroupingsServiceMockTest {
         }
         getAttributeAssignmentsResults.setWsAttributeDefNames(attributeDefNames.toArray(new WsAttributeDefName[attributeDefNames.size()]));
         getAttributeAssignmentsResults.setWsAttributeAssigns(attributeAssigns.toArray(new WsAttributeAssign[attributeDefNames.size()]));
+        getAttributeAssignmentsResults.setWsGroups(groups);
 
         return getAttributeAssignmentsResults;
     }
@@ -1388,6 +1449,34 @@ public class GroupingsServiceMockTest {
             subject.setAttributeValues(new String[]{"username" + i});
 
             subjects.add(subject);
+        }
+
+        WsGetMembersResults getMembersResults = new WsGetMembersResults();
+        WsGetMembersResult getMembersResult = new WsGetMembersResult();
+        getMembersResult.setWsSubjects(subjects.toArray(new WsSubject[subjects.size()]));
+
+        WsGetMembersResult[] membersResults = new WsGetMembersResult[]{getMembersResult};
+        getMembersResults.setResults(membersResults);
+
+
+        return getMembersResults;
+    }
+
+    private WsGetMembersResults makeWsGetMembersResultsDB(String groupPath) {
+        List<WsSubject> subjects = new ArrayList<>();
+        Iterable<Group> groups = groupRepository.findByPath(groupPath);
+
+        for(Group group : groups) {
+            List<Person> members = group.getMembers();
+            for(Person member : members) {
+                WsSubject subject = new WsSubject();
+                subject.setName(member.getName());
+                subject.setId(member.getUuid());
+                subject.setAttributeValues(new String[]{member.getUsername()});
+
+                subjects.add(subject);
+            }
+
         }
 
         WsGetMembersResults getMembersResults = new WsGetMembersResults();
