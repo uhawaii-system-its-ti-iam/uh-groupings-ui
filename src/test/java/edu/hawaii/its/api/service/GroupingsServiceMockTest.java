@@ -1395,7 +1395,7 @@ public class GroupingsServiceMockTest {
         groupingPaths.add("path:to:grouping3");
         groupingPaths.add("path:to:grouping4");
 
-        WsGroup[] groups = new WsGroup[groupingPaths.size()];
+        WsGroup[] groups = new WsGroup[groupPaths.size()];
 
         for (int i = 0; i < groupPaths.size(); i ++) {
             if (groupingPaths.contains(groupPaths.get(i))) {
