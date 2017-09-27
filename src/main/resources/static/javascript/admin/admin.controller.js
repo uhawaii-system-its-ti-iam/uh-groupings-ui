@@ -607,6 +607,11 @@
                 input.attr('list', datalist);
             }
         });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+
     }
 
     adminApp.controller("AdminJsController", AdminJsController);

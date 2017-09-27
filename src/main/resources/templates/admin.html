@@ -18,12 +18,12 @@
                 </div>
 
                 <ul class="nav nav-tabs" id="adminTab">
-                    <li role="presentation" class="active">
+                    <li role="presentation" class="active" data-toggle="tooltip" data-placement="top" title="Admin List">
                         <a href="#list" data-toggle="tab" role="tab">
                             <i class="icon ion-android-people" id="icons"></i>
                         </a>
                     </li>
-                    <li role="presentation">
+                    <li role="presentation" data-toggle="tooltip" data-placement="top" title="Grouping Search">
                         <a href="#grouping" data-toggle="tab" role="tab">
                             <i class="icon ion-android-list size-64" id="icons "></i>
                         </a>
@@ -38,14 +38,14 @@
                                     <h3 class="col-xs-6 col-md-4" style="margin-top: 5px">Designated Admins</h3>
 
                                     <div align="right">
-                                        <button class="icon ion-person-add" data-toggle="collapse"
-                                                data-target="#addAdmin" style="height: 30px; width: 40px; font-size: 25px"
-                                                aria-expanded="false" aria-controls="addAdmin">
-                                        </button>
-                                        <div class="collapse" id="addAdmin" style="float: right;">
-                                            <input type="text" ng-model="username"/>
-                                            <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
-                                        </div>
+                                                <button class="btn btn-primary" data-toggle="collapse"
+                                                        data-target="#addAdmin" aria-expanded="false" aria-controls="addAdmin">
+                                                    <i class="icon ion-person-add" style="height: 25px; width: 40px; font-size: 20px"></i>
+                                                </button>
+                                                <div class="collapse" id="addAdmin" style="float: right;">
+                                                    <input type="text" ng-model="username"/>
+                                                    <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
+                                                </div>
                                     </div>
 
                                     <div align="right" style="margin-top: 10px">
@@ -58,9 +58,9 @@
                             <table class="table table-bordered table-condensed table-hover">
                                 <thead>
                                 <tr>
-                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(list, 'name', 'pagedItems', 'symbolAdmin')"><b>Name {{symbol.name}}</b></a></th>
-                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(list, 'uuid', 'pagedItems', 'symbolAdmin')"><b>UH ID {{symbol.uuid}}</b></a></th>
-                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0px; text-align: left; width: 100%; border: none" ng-click="sortCol(list, 'username', 'pagedItems', 'symbolAdmin')"><b>Username {{symbol.username}}</b></a></th>
+                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0; text-align: left; width: 100%; border: none" ng-click="sortCol(list, 'name', 'pagedItems', 'symbolAdmin')"><b>Name {{symbol.name}}</b></a></th>
+                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0; text-align: left; width: 100%; border: none" ng-click="sortCol(list, 'uuid', 'pagedItems', 'symbolAdmin')"><b>UH ID {{symbol.uuid}}</b></a></th>
+                                    <th><a type="button" class="btn btn-default btn-block" style="padding-left: 0; text-align: left; width: 100%; border: none" ng-click="sortCol(list, 'username', 'pagedItems', 'symbolAdmin')"><b>Username {{symbol.username}}</b></a></th>
                                     <th>remove</th>
                                 </tr>
                                 </thead>
@@ -101,18 +101,6 @@
                                 </td>
                                 </tfoot>
                             </table>
-
-                            <div class="panel-footer">
-                                <!--<button class="btn btn-primary" type="button" data-toggle="collapse"
-                                        data-target="#addAdmin"
-                                        aria-expanded="false" aria-controls="addAdmin">
-                                    Add Admin
-                                </button>
-                                <div class="collapse" id="addAdmin">
-                                    <input type="text" ng-model="username"/>
-                                    <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
-                                </div>-->
-                            </div>
                         </div>
                     </div>
 
@@ -142,30 +130,31 @@
                                 <div class="panel-body" style="min-height: 350px">
                                     <div class="col-md-2 col-xs-2" style="top: 55px; width: 80px">
                                         <ul class="nav nav-tabs nav-stacked">
-                                            <li class="active"><a data-toggle="tab" href="#all"><span
+                                            <li class="active" data-toggle="tooltip" data-placement="right" title="Members of the Grouping">
+                                                <a data-toggle="tab" href="#all"><span
                                                     class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
                                             </li>
-                                            <li>
+                                            <li data-toggle="tooltip" data-placement="right" title="Basis members of Grouping">
                                                 <a data-toggle="tab" href="#basis">
                                                     <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
                                                 </a>
                                             </li>
-                                            <li>
+                                            <li data-toggle="tooltip" data-placement="right" title="Include members of Grouping">
                                                 <a data-toggle="tab" href="#include">
                                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                                 </a>
                                             </li>
-                                            <li>
+                                            <li data-toggle="tooltip" data-placement="right" title="Exclude members of Grouping">
                                                 <a data-toggle="tab" href="#exclude">
                                                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                                                 </a>
                                             </li>
-                                            <li>
+                                            <li data-toggle="tooltip" data-placement="right" title="Owners of Grouping">
                                                 <a data-toggle="tab" href="#owner">
                                                     <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                                                 </a>
                                             </li>
-                                            <li>
+                                            <li data-toggle="tooltip" data-placement="right" title="Preferences">
                                                 <a data-toggle="tab" href="#options">
                                                     <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                                                 </a>
@@ -175,7 +164,7 @@
 
                                     <div class="tab-content col-md-10 col-xs-8">
                                         <div id="all" class="tab-pane fade in active">
-                                            <h3 class="text-center">List</h3>
+                                            <h3 class="text-center">Members</h3>
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
@@ -470,7 +459,7 @@
                                             <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/> LISTSERV list: {{groupingName.name}}
                                             <br/>
 
-                                            <button class="btn btn-default btn-success" type="submit" ng-click="savePref()">Save</button>
+                                            <button class="btn btn-default btn-primary" style="margin-top: 20px" type="submit" ng-click="savePref()">Update Preferences</button>
                                         </div>
                                     </div>
                                 </div>
