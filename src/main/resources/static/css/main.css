@@ -142,16 +142,14 @@ td.uh-pre {
 }
 
 
-    #heading{
-        position:relative;
-        border-spacing: 10px;
-    }
+
     #headingOptIn{
         position: relative;
         vertical-align: 50%;
         white-space: nowrap;
         margin-top: 5px;
-        height:  15px;
+        /*height:  15px;*/
+
     }
 
     #filters{

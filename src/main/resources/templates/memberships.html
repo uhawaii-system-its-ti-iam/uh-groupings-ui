@@ -37,7 +37,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding: 2px">
                             <div class="form-group" >
-                                <h3 class="col-md-4" id = "headingOptIn">You belong to this/these groups</h3>
+                                <h3 class="col-md-4" id = "headingOptIn">You belong to these group(s)</h3>
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
                                            ng-model="queryMembers" ng-change= "search(membersList, 'pagedItemsMembersList', 'queryMembers')" id = "members"/>
@@ -78,11 +78,9 @@
                             </td>
                             </tfoot>
                             <tbody>
-                            <!-- | filter:searchFor1 -->
                             <tr ng-repeat="l in pagedItemsMembersList[currentPageOptOut] ">
                                 <td>{{l.name}}</td>
-                                <td>
-                                    <!-- TODO find a way to update index -->
+                                <td class = "col-lg-3 ">
                                     <button id="optOutButton" class="btn btn-default btn-block"
                                             ng-click="optOut($index + (currentPageOptIn * itemsPerPage))" ng-disabled="disableOptOut($index + (currentPageOptIn * itemsPerPage))"
                                             ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
@@ -97,7 +95,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" style="padding: 2px">
                             <div class="form-group">
-                                <h3 class="col-md-4"  id = "headingOptIn">You can opt in to this/these groups</h3>
+                                <h3 class="col-md-4"  id = "headingOptIn">You can opt in to these group(s)</h3>
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
                                            ng-model="queryOptIn" ng-change= "search(optInList, 'pagedItemsOptInList', 'queryOptIn')" id = "optIn"/>
@@ -115,7 +113,7 @@
                             <tbody>
                             <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn] ">
                                 <td>{{o.name}}</td>
-                                <td>
+                                <td class = "col-lg-3 ">
                                     <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-default btn-block"
                                             ng-click="optIn($index + (currentPageOptOut * itemsPerPage))">OPT IN
                                     </button>
@@ -158,10 +156,12 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" >
                             <div class="form-group" id = "heading">
-                                <h3 >You can cancel your opt out of this/these groups</h3>
-                                <div align="right" style="margin-top: 10px">
+                                <h3 class="col-md-4" id = "headingOptIn">You can cancel your opt out of these group(s)</h3>
+                                <div align="right">
                                     <input placeholder="Type to filter Groupings..." type="text"
                                            ng-model="queryOptedOut" ng-change= "search(optedOut, 'pagedItemsOptedOutList', 'queryOptedOut')"/>
+                                           <!--
+                                       -->
                                 </div>
                             </div>
                         </div>
@@ -177,7 +177,7 @@
                             <tbody>
                             <tr ng-repeat="out in pagedItemsOptedOutList[currentPageCancelOptOut] ">
                                 <td>{{out.name}}</td>
-                                <td>
+                                <td class="col-lg-3">
                                     <button class="btn btn-default btn-block" ng-disabled="disableButton(optedOut, $index + (currentPageCancelOptOut * itemsPerPage))"
                                             ng-click="cancelOptOut($index + (currentPageCancelOptOut * itemsPerPage))">
                                         CANCEL OPT OUT
@@ -215,7 +215,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="form-group" id = "heading">
-                                <h3 >You can cancel your opt in of this/these groups</h3>
+                                <h3 class="col-md-4" id = "headingOptIn">You can cancel your opt in of these group(s)</h3>
                                 <div align="right" style="margin-top: 10px">
                                     <input placeholder="Type to filter Groupings..." type="text"
                                            ng-model="queryOptedIn" ng-change= "search(optedIn, 'pagedItemsOptedInList, 'queryOptedIn')" id = "optedIn"/>
@@ -232,7 +232,7 @@
                             <tbody>
                             <tr ng-repeat="in in pagedItemsOptedInList[currentPageCancelOptIn] ">
                                 <td>{{in.name}}</td>
-                                <td>
+                                <td class="col-lg-3">
                                     <button class="btn btn-default btn-block" ng-disabled="disableButton(optedIn, $index + (currentPageCancelOptIn * itemsPerPage))"
                                             ng-click="cancelOptIn($index + (currentPageCancelOptIn * itemsPerPage))">
                                         CANCEL OPT IN
