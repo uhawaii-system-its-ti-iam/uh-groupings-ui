@@ -142,6 +142,9 @@ td.uh-pre {
 }
 
 
+#groupHeader{
+    height: 55px;
+}
 
     #headingOptIn{
         position: relative;
