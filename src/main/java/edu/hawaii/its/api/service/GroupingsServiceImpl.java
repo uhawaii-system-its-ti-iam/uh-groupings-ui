@@ -403,7 +403,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         GroupingAssignment groupingAssignment = new GroupingAssignment();
         List<String> groupPaths = getGroupPaths(username);
 
-        groupingAssignment.setGroupingsIn(groupingsIn(username, groupPaths));
+        groupingAssignment.setGroupingsIn(groupingsIn(groupPaths));
         groupingAssignment.setGroupingsOwned(groupingsOwned(groupPaths));
         groupingAssignment.setGroupingsToOptInTo(groupingsToOptInto(username, groupPaths));
         groupingAssignment.setGroupingsToOptOutOf(groupingsToOptOutOf(username, groupPaths));
@@ -585,11 +585,10 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param username: username of the user who's groupings will be looked for
      * @return a list of all of the Groupings that the user is in
      */
     @Override
-    public List<Grouping> groupingsIn(String username, List<String> groupPaths) {
+    public List<Grouping> groupingsIn(List<String> groupPaths) {
         List<String> groupingsIn = extractGroupings(groupPaths);
 
         return makeGroupings(groupingsIn, false);
@@ -607,7 +606,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     /**
      * @return a list of all of the Groupings that the user owns
      */
-    private List<Grouping> groupingsOwned(List<String> groupPaths) {
+    @Override
+    public List<Grouping> groupingsOwned(List<String> groupPaths) {
         List<String> ownerGroups = groupPaths
                 .stream()
                 .filter(groupPath -> groupPath.endsWith(OWNERS))

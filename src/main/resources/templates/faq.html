@@ -9,9 +9,31 @@
     <div class='container-fluid'>
         <div class='row'>
             <div class='col-xs-offset-1 col-xs-10'>
-                <h3>Frequently Asked Questions</h3>
+                <h2>Frequently Asked Questions</h2>
+
+                <h3>Contact Us</h3>
                 <table class='table table-bordered'>
                     <tbody>
+                    <tr>
+                        <td align="left" valign="top">Q: How do I request a new Grouping?</td>
+                        <td align="left" valign="top">Request forms can be filled <a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form">here</a> </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">Q: Exactly what is a Grouping?</td>
+                        <td align="left" valign="top">General information about Groupings can be found <a href="https://www.hawaii.edu/bwiki/display/UHIAM/Presentation+Slides">here</a></td>
+
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">For General Help/How-To Questions</td>
+                        <td align="left" valign="top">Send email: <a href="mailto:its-iam-help@lists.hawaii.edu">its-iam-help@lists.hawaii.edu</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <h3>Technical Information</h3>
+                    <table class='table table-bordered'>
+                        <tbody>
                         <tr>
                             <td colspan="2" align="left" valign="top"><b>General Questions</b></td>
                         </tr>
@@ -66,26 +88,9 @@
                                 </ul>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-
-                <h3>Contact Us</h3>
-                <table class='table table-bordered'>
-                    <tbody>
-                    <tr>
-                        <td align="left" valign="top">For General Help/How-To Questions</td>
-                        <td align="left" valign="top">Send email: <a href="mailto:its-iam-web-app-devs@lists.hawaii.edu">its-iam-web-app-devs@lists.hawaii.edu</a></td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top">Reporting Technical Issues/Problems</td>
-                        <td align="left" valign="top">Send email: <a href="mailto:its-iam-web-app-devs@lists.hawaii.edu">its-iam-web-app-devs@lists.hawaii.edu</a></td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top">Information Technology Services</td>
-                        <td align="left" valign="top">See: <a href="http://www.hawaii.edu/its/" target="_its_office">www.hawaii.edu/its</a></td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

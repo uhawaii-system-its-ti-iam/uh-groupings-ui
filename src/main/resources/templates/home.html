@@ -34,6 +34,15 @@
           applications so that enterprise deprovisioning becomes simpler.</p>
         </div>
 
+        <div id="uh-login" sec:authorize="!isAuthenticated()">
+            <fieldset>
+                <legend>UH Users</legend>
+                <p style="padding-top: 1.2em">
+                    <a th:href="@{/login}" class="btn btn-lg btn-success btn-block">Login In Here</a>
+                </p>
+            </fieldset>
+        </div>
+
     </div>
     <!-- / Content container. -->
 

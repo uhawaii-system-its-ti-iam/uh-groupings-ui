@@ -35,6 +35,19 @@ h1, h2, h3, h4 {
     top: 45%;
 }
 
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    font-weight: bold;
+}
+::-moz-placeholder { /* Firefox 19+ */
+    font-weight: bold;
+}
+:-ms-input-placeholder { /* IE 10+ */
+    font-weight: bold;
+}
+:-moz-placeholder { /* Firefox 18- */
+    font-weight: bold;
+}
+
 #overlay {
     position: fixed;
     top: 0;
@@ -203,6 +216,23 @@ td.uh-pre {
     }
     #tops{
       text-align: center;
+    }
+
+    #uh-login fieldset{
+        border: 1px solid #4cae4c;
+        text-align: left;
+        width: 25%;
+        height: 16em;
+        padding-left: 1.3em;
+        padding-right: 1.3em;
+    }
+
+    fieldset legend {
+        font-size: 1em;
+        width: auto;
+        padding: 0.3em 0.5em 0 1.5em;
+        margin-bottom: 0;
+        background-color: white;
     }
 
 }

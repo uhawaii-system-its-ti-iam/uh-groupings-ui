@@ -8,7 +8,7 @@ import javax.persistence.Id;
 
 @Entity
 @Proxy(lazy = false)
-public class Person {
+public class Person implements Comparable<Person> {
     @Id
     @Column
     private String username;
@@ -57,5 +57,16 @@ public class Person {
     @Override
     public String toString() {
         return "Person [name=" + name + ", uuid=" + uuid + ", username=" + username + "]";
+    }
+
+    @Override
+    public int compareTo(Person person) {
+
+        if (this.getName().compareTo(person.getName()) == 0
+                && this.getUsername().compareTo(person.getUsername()) == 0
+                && this.getName().compareTo(person.getName()) == 0) {
+            return 0;
+        }
+        return this.getUsername().compareTo(person.getUsername());
     }
 }

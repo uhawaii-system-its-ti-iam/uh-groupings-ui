@@ -37,9 +37,9 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="l in pagedItemsOwned[currentPageOwned] ">
-                                <th>
-                                    {{l.name}} <span ng-click="showData($index)"
-                                                     class="glyphicon glyphicon-edit"></span>
+                                <th ng-click="showData($index)">
+                                    {{l.name}}
+                                    <span class="glyphicon glyphicon-edit"></span>
                                 </th>
                                 <th>{{l.folder}}</th>
                             </tr>
@@ -73,9 +73,9 @@
                     </div>
                     <h2 class="text-center">{{groupingName.name}}</h2>
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#members">Members</a></li>
-                        <li><a data-toggle="tab" href="#owners">Owners</a></li>
-                        <li><a data-toggle="tab" href="#preference">Preferences</a></li>
+                        <li class="active" data-toggle="tooltip" data-placement="top" title="Members of Groupings"><a data-toggle="tab" href="#members">Members</a></li>
+                        <li data-toggle="tooltip" data-placement="top" title="Owners of Groupings"><a data-toggle="tab" href="#owners">Owners</a></li>
+                        <li data-toggle="tooltip" data-placement="top" title="Preferences of Groupings"><a data-toggle="tab" href="#preference">Preferences</a></li>
                         <li class="pull-right">
                             <button ng-click="showGroups()" class="btn btn-primary">Go Back</button>
                         </li>
@@ -89,14 +89,14 @@
 
                             <div class="col-md-2 col-xs-2" style="top: 55px; width: 80px">
                                 <ul class="nav nav-tabs nav-stacked">
-                                    <li class="active"><a data-toggle="tab" href="#all"><span
+                                    <li class="active" data-toggle="tooltip" data-placement="right" title="All Members of Groupings"><a data-toggle="tab" href="#all"><span
                                             class="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
-                                    <li><a data-toggle="tab" href="#basis"><span class="glyphicon glyphicon-lock"
+                                    <li data-toggle="tooltip" data-placement="right" title="Basis Members of Groupings"><a data-toggle="tab" href="#basis"><span class="glyphicon glyphicon-lock"
                                                                                  aria-hidden="true"></span></a></li>
-                                    <li><a data-toggle="tab" href="#include"><span class="glyphicon glyphicon-plus"
+                                    <li data-toggle="tooltip" data-placement="right" title="Include Members of Groupings"><a data-toggle="tab" href="#include"><span class="glyphicon glyphicon-plus"
                                                                                    aria-hidden="true"></span></a>
                                     </li>
-                                    <li><a data-toggle="tab" href="#exclude"><span class="glyphicon glyphicon-minus"
+                                    <li data-toggle="tooltip" data-placement="right" title="Exclude Members of Groupings"><a data-toggle="tab" href="#exclude"><span class="glyphicon glyphicon-minus"
                                                                                    aria-hidden="true"></span></a>
                                     </li>
                                 </ul>
@@ -116,15 +116,15 @@
                                             <th ng-click="sortCol(groupingsList, 'name', 'pagedItemsList', 'symbolList')">Name {{symbol.name}}</th>
                                             <th ng-click="sortCol(groupingsList, 'uuid', 'pagedItemsList', 'symbolList')">UH ID {{symbol.uuid}}</th>
                                             <th ng-click="sortCol(groupingsList, 'username', 'pagedItemsList', 'symbolList')">Username {{symbol.username}}</th>
-                                            <th>Basis</th>
+                                            <th>In Basis?</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr ng-repeat="g in pagedItemsList[currentPageList]">
                                             <td>{{g.name}}</td>
-                                            <td>{{g.uuid}}</td>
+                                            <td width="25px">{{g.uuid}}</td>
                                             <td>{{g.username}}</td>
-                                            <td class="text-center" style="width: 3%">{{g.basis}}</td>
+                                            <td class="text-center" style="width: 9%">{{g.basis}}</td>
                                         </tr>
                                         </tbody>
                                         <tfoot>
@@ -147,12 +147,12 @@
                                             </td>
                                         </tfoot>
                                     </table>
-                                    <button class="btn btn-default" ng-click="export(groupingsList, 'members')">Export
+                                    <button class="btn btn-primary" ng-click="export(groupingsList, 'members')">Export
                                         To CSV
                                     </button>
                                 </div>
                                 <div id="basis" class="tab-pane fade">
-                                    <h3 class="text-center">Basis</h3>
+                                    <h3>Basis</h3>
 
                                     <!-- must put search bar here.. -->
                                     <div align="right" style="margin-top: 10px" id = "filters">
@@ -194,12 +194,12 @@
                                             </td>
                                         </tfoot>
                                     </table>
-                                    <button class="btn btn-default" ng-click="export(groupingsBasis, 'basis')">Export To
+                                    <button class="btn btn-primary" ng-click="export(groupingsBasis, 'basis')">Export To
                                         CSV
                                     </button>
                                 </div>
                                 <div id="include" class="tab-pane fade">
-                                    <h3 class="text-center">Include</h3>
+                                    <h3>Include</h3>
                                     <!--  must put search bar here...-->
                                     <div align="right" style="margin-top: 10px" id = "filters">
                                         <input placeholder="Filter" type="text"
@@ -211,7 +211,7 @@
                                             <th ng-click="sortCol(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude')">Name {{symbol.name}}</th>
                                             <th ng-click="sortCol(groupingInclude, 'uuid', 'pagedItemsInclude', 'symbolInclude')">UH ID {{symbol.uuid}}</th>
                                             <th ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')">Username {{symbol.username}}</th>
-                                            <th>Basis</th>
+                                            <th>In Basis?</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -251,10 +251,9 @@
                                     </table>
 
                                     <div>
-                                        <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                                data-target="#addInclude" aria-expanded="false"
+                                        <button class="btn btn-primary fa fa-user-plus fa-lg" type="button" data-toggle="collapse"
+                                                data-target="#addInclude" aria-expanded="false" style="font-size: 26px;"
                                                 aria-controls="addOwner">
-                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                         </button>
                                         <div class="collapse" id="addInclude">
                                             <input type="text" placeholder="Add user to include"
@@ -263,13 +262,13 @@
                                                 Included
                                             </button>
                                         </div>
-                                        <button class="btn btn-default" ng-click="export(groupingInclude, 'include')">
+                                        <button type="button" class="btn btn-primary" ng-click="export(groupingInclude, 'include')">
                                             Export To CSV
                                         </button>
                                     </div>
                                 </div>
                                 <div id="exclude" class="tab-pane fade">
-                                    <h3 class="text-center">Exclude</h3>
+                                    <h3>Exclude</h3>
 
                                     <!-- must put search bar here... -->
                                     <div align="right" style="margin-top: 10px" id = "filters">
@@ -282,7 +281,7 @@
                                             <th ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')">Name {{symbol.name}}</th>
                                             <th ng-click="sortCol(groupingExclude, 'uuid', 'pagedItemsExclude', 'symbolExclude')">UH ID {{symbol.uuid}}</th>
                                             <th ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')">Username {{symbol.username}}</th>
-                                            <th>Basis</th>
+                                            <th>In Basis?</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -322,10 +321,9 @@
                                     </table>
 
                                     <div>
-                                        <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                        <button class="btn btn-primary fa fa-user-plus fa-lg" type="button" data-toggle="collapse"
                                                 data-target="#addExclude" aria-expanded="false"
                                                 aria-controls="addOwner">
-                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                         </button>
                                         <div class="collapse" id="addExclude">
                                             <input type="text" placeholder="Add user to exclude"
@@ -334,7 +332,7 @@
                                                 Excluded
                                             </button>
                                         </div>
-                                        <button class="btn btn-default" ng-click="export(groupingExclude, 'exclude')">
+                                        <button class="btn btn-primary" ng-click="export(groupingExclude, 'exclude')">
                                             Export To CSV
                                         </button>
                                     </div>
@@ -393,13 +391,12 @@
                             </table>
 
                             <div>
-                                <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                <button class="btn btn-primary fa fa-user-plus fa-lg" type="button" data-toggle="collapse"
                                         data-target="#addOwner" aria-expanded="false" aria-controls="addOwner">
-                                    Add Owner
                                 </button>
                                 <div class="collapse" id="addOwner">
                                     <input type="text" placeholder="Add an user as an owner..." ng-model="ownerUser"/>
-                                    <button class="btn btn-success" ng-click="addOwner()">Add Owner</button>
+                                    <button class="btn btn-success " ng-click="addOwner()">Add Owner</button>
                                 </div>
                             </div>
 
