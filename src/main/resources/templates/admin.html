@@ -10,8 +10,8 @@
         <div class='col-xs-offset-1 col-xs-10'>
 
             <div ng-app="adminApp" ng-controller="AdminJsController" data-ng-init="init()">
-                <h1 class="text-center"><b>Designate Admins</b></h1>
-                <h4 class="text-center">Manage the list of Admins</h4>
+                <h2 class="text-center">Designate Admins</h2>
+                <p class="text-center">Manage the list of Admins</p>
 
                 <div id="overlay" ng-show="loading">
                     <div class="loader" ng-show="loading"></div>
@@ -38,14 +38,18 @@
                                     <h3 class="col-xs-6 col-md-4" style="margin-top: 5px">Designated Admins</h3>
 
                                     <div align="right">
-                                                <button class="btn btn-primary" data-toggle="collapse"
-                                                        data-target="#addAdmin" aria-expanded="false" aria-controls="addAdmin">
-                                                    <i class="icon ion-person-add" style="height: 25px; width: 40px; font-size: 20px"></i>
-                                                </button>
-                                                <div class="collapse" id="addAdmin" style="float: right;">
-                                                    <input type="text" ng-model="username"/>
-                                                    <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
-                                                </div>
+                                        <ul data-toggle="tooltip" data-placement="right" title="Add Member to Admin List">
+                                            <button class="btn btn-primary" data-toggle="collapse"
+                                                    data-target="#addAdmin" aria-expanded="false" aria-controls="addAdmin">
+                                                <i class="icon ion-person-add" style="height: 25px; width: 40px; font-size: 20px"></i>
+                                            </button>
+                                        </ul>
+                                        <ul style="margin-bottom: 55px">
+                                            <div class="collapse" id="addAdmin" style="float: right;">
+                                                <input type="text" ng-model="username"/>
+                                                <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
+                                            </div>
+                                        </ul>
                                     </div>
 
                                     <div align="right" style="margin-top: 10px">
