@@ -28,7 +28,6 @@ public class Group {
         this.path = path;
     }
 
-    //    @ElementCollection(targetClass = Person.class)
     @ManyToMany(fetch = FetchType.EAGER)
     public List<Person> getMembers() {
         return members;
