@@ -3,14 +3,14 @@
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/myiam/" th:href="@{/}">
-                <img src="images/seal.jpg" alt=""></img>
+                <img class="img-responsive" th:src="@{/images/seal.jpg}" src="images/seal.jpg" alt=""></img>
             </a>
             <a class="navbar-brand uh-nav-app-name" href="/myiam/" th:href="@{/}">
                 UH Groupings
@@ -27,7 +27,7 @@
                 <li><a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a></li>
                 <li class="app-logout">
                     <form sec:authorize="isAuthenticated()" action="/logout" th:action="@{/logout}" method="post" id="logout_form">
-                        <button class="btn btn-link" type="submit" style="text-decoration: none;">Logout(<span id="name" sec:authentication="name"></span>)</button>
+                        <button class="btn btn-link" type="submit" style="text-decoration: none;">Logout (<span id="name" sec:authentication="name"></span>)</button>
                     </form>
                 </li>
             </ul>
