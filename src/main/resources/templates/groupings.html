@@ -35,7 +35,7 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="l in pagedItemsOwned[currentPageOwned] ">
-                                <th ng-click="showData($index)">
+                                <th ng-click="showData($index)" style="cursor: pointer">
                                     {{l.name}}
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </th>
@@ -85,8 +85,8 @@
                         <div id="members" class="tab-pane fade in active">
                             <h2>Members</h2>
 
-                            <div class="col-md-2 col-xs-2" style="top: 55px; width: 80px">
-                                <ul class="nav nav-tabs nav-stacked">
+                            <div class="col-md-2 col-xs-2" style="top: 100px; width: 80px">
+                                <ul class="nav nav-pills nav-stacked">
                                     <li class="active" data-toggle="tooltip" data-placement="right" title="All Members of Groupings"><a data-toggle="tab" href="#all"><span
                                             class="glyphicon glyphicon-user" aria-hidden="true"></span></a></li>
                                     <li data-toggle="tooltip" data-placement="right" title="Basis Members of Groupings"><a data-toggle="tab" href="#basis"><span class="glyphicon glyphicon-lock"
@@ -249,8 +249,8 @@
                                     </table>
 
                                     <div style="float: left" data-toggle="tooltip" data-placement="left" title="Add User to Include Group">
-                                        <button class="btn btn-primary fa fa-user-plus fa-lg" type="button" data-toggle="collapse"
-                                                data-target="#addInclude" aria-expanded="false" style="font-size: 26px;"
+                                        <button class="btn btn-primary icon ion-person-add" type="button" data-toggle="collapse"
+                                                data-target="#addInclude" aria-expanded="false" style="font-size: 14px;"
                                                 aria-controls="addOwner">
                                         </button>
                                         <div class="collapse" id="addInclude">
@@ -319,8 +319,8 @@
                                     </table>
 
                                     <div style="float: left" data-toggle="tooltip" data-placement="left" title="Add User to Exclude Group">
-                                        <button class="btn btn-primary fa fa-user-plus fa-lg" type="button" data-toggle="collapse"
-                                                data-target="#addExclude" aria-expanded="false"
+                                        <button class="btn btn-primary icon ion-person-add" type="button" data-toggle="collapse"
+                                                data-target="#addExclude" aria-expanded="false" style="font-size: 14px;"
                                                 aria-controls="addOwner">
                                         </button>
                                         <div class="collapse" id="addExclude">
@@ -389,7 +389,7 @@
                             </table>
 
                             <div style="float: left" data-toggle="tooltip" data-placement="top" title="Add Owner to Grouping">
-                                <button class="btn btn-primary fa fa-user-plus fa-lg" type="button" data-toggle="collapse"
+                                <button class="btn btn-primary icon ion-person-add" type="button" data-toggle="collapse"
                                         data-target="#addOwner" aria-expanded="false" aria-controls="addOwner">
                                 </button>
                                 <div class="collapse" id="addOwner">
