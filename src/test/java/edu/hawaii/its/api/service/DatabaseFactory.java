@@ -12,6 +12,8 @@ import java.util.*;
 public class DatabaseFactory {
     private int numberOfPersons = 100;
 
+    String pathRoot = "path:to:grouping";
+
     private static String BASIS = ":basis";
     private static String EXCLUDE = ":exclude";
     private static String INCLUDE = ":include";
@@ -25,39 +27,42 @@ public class DatabaseFactory {
     private List<Group> groups = new ArrayList<>();
     private List<Grouping> groupings = new ArrayList<>();
 
-    private List<List<Person>> memberLists = new ArrayList<>();
-
     public DatabaseFactory(PersonRepository personRepository, GroupRepository groupRepository, GroupingRepository groupingRepository) {
         this.personRepository = personRepository;
         this.groupRepository = groupRepository;
         this.groupingRepository = groupingRepository;
 
         fillDatabase();
-
     }
 
     private void fillDatabase() {
-        setUpPersons();
 
-//        fillPersonRepository();
-//        fillGroupRepository();
+
+        fillPersonRepository();
+        fillGroupRepository();
         fillGroupingRepository();
 
     }
 
     private void fillPersonRepository() {
-        for(Person person : persons) {
+        setUpPersons();
+
+        for (Person person : persons) {
             personRepository.save(person);
         }
     }
 
     private void fillGroupRepository() {
+        setUpGroups();
+
         for (Group group : groups) {
             groupRepository.save(group);
         }
     }
 
     private void fillGroupingRepository() {
+        setUpGroupings();
+
         for (Grouping grouping : groupings) {
             groupingRepository.save(grouping);
         }
@@ -85,82 +90,161 @@ public class DatabaseFactory {
                             List<Person> basisMembers,
                             List<Person> excludeMembers,
                             List<Person> includeMembers,
-                            List<Person> ownerMembers){
+                            List<Person> ownerMembers) {
 
-        Group basis = new Group();
-        basis.setPath("path:to:grouping" + i + BASIS);
-        basis.setMembers(basisMembers);
 
-        Group exclude = new Group();
-        exclude.setPath("path:to:grouping" + i + EXCLUDE);
-        exclude.setMembers(excludeMembers);
+        makeGroup(basisMembers, pathRoot + i + BASIS);
+        makeGroup(excludeMembers, pathRoot + i + EXCLUDE);
+        makeGroup(includeMembers, pathRoot + i + INCLUDE);
+        makeGroup(ownerMembers, pathRoot + i + OWNERS);
 
-        Group include = new Group();
-        include.setPath("path:to:grouping" + i + INCLUDE);
-        include.setMembers(includeMembers);
-
-        Group owners = new Group();
-        owners.setPath("path:to:grouping" + i + OWNERS);
-        owners.setMembers(ownerMembers);
-
-        groups.add(basis);
-        groups.add(exclude);
-        groups.add(include);
-        groups.add(owners);
     }
 
-    private void setUpGroup0 () {
+    private void setUpGroup0() {
         List<Person> basisMembers = new ArrayList<>();
         List<Person> excludeMembers = new ArrayList<>();
         List<Person> includeMembers = new ArrayList<>();
         List<Person> ownerMembers = new ArrayList<>();
-        //TODO add people to the lists
+
+        basisMembers.add(persons.get(0));
+        basisMembers.add(persons.get(1));
+        basisMembers.add(persons.get(2));
+        basisMembers.add(persons.get(3));
+        basisMembers.add(persons.get(4));
+
+        excludeMembers.add(persons.get(2));
+        excludeMembers.add(persons.get(3));
+        excludeMembers.add(persons.get(4));
+
+        includeMembers.add(persons.get(5));
+        includeMembers.add(persons.get(6));
+        includeMembers.add(persons.get(7));
+        includeMembers.add(persons.get(8));
+        includeMembers.add(persons.get(9));
+
+        ownerMembers.add(persons.get(0));
 
         setUpGroup(0, basisMembers, excludeMembers, includeMembers, ownerMembers);
     }
 
-    private void setUpGroup1 () {
+    private void setUpGroup1() {
         List<Person> basisMembers = new ArrayList<>();
         List<Person> excludeMembers = new ArrayList<>();
         List<Person> includeMembers = new ArrayList<>();
         List<Person> ownerMembers = new ArrayList<>();
-        //TODO add people to the lists
+
+        //todo change member lists
+        basisMembers.add(persons.get(0));
+        basisMembers.add(persons.get(1));
+        basisMembers.add(persons.get(2));
+        basisMembers.add(persons.get(3));
+        basisMembers.add(persons.get(4));
+
+        excludeMembers.add(persons.get(2));
+        excludeMembers.add(persons.get(3));
+        excludeMembers.add(persons.get(4));
+
+        includeMembers.add(persons.get(5));
+        includeMembers.add(persons.get(6));
+        includeMembers.add(persons.get(7));
+        includeMembers.add(persons.get(8));
+        includeMembers.add(persons.get(9));
+
+        ownerMembers.add(persons.get(0));
 
         setUpGroup(1, basisMembers, excludeMembers, includeMembers, ownerMembers);
     }
 
-    private void setUpGroup2 () {
+    private void setUpGroup2() {
         List<Person> basisMembers = new ArrayList<>();
         List<Person> excludeMembers = new ArrayList<>();
         List<Person> includeMembers = new ArrayList<>();
         List<Person> ownerMembers = new ArrayList<>();
-        //TODO add people to the lists
+
+        //todo change member lists
+        basisMembers.add(persons.get(0));
+        basisMembers.add(persons.get(1));
+        basisMembers.add(persons.get(2));
+        basisMembers.add(persons.get(3));
+        basisMembers.add(persons.get(4));
+
+        excludeMembers.add(persons.get(2));
+        excludeMembers.add(persons.get(3));
+        excludeMembers.add(persons.get(4));
+
+        includeMembers.add(persons.get(5));
+        includeMembers.add(persons.get(6));
+        includeMembers.add(persons.get(7));
+        includeMembers.add(persons.get(8));
+        includeMembers.add(persons.get(9));
+
+        ownerMembers.add(persons.get(0));
 
         setUpGroup(2, basisMembers, excludeMembers, includeMembers, ownerMembers);
     }
 
-    private void setUpGroup3 () {
+    private void setUpGroup3() {
         List<Person> basisMembers = new ArrayList<>();
         List<Person> excludeMembers = new ArrayList<>();
         List<Person> includeMembers = new ArrayList<>();
         List<Person> ownerMembers = new ArrayList<>();
-        //TODO add people to the lists
+
+        //todo change member lists
+        basisMembers.add(persons.get(0));
+        basisMembers.add(persons.get(1));
+        basisMembers.add(persons.get(2));
+        basisMembers.add(persons.get(3));
+        basisMembers.add(persons.get(4));
+
+        excludeMembers.add(persons.get(2));
+        excludeMembers.add(persons.get(3));
+        excludeMembers.add(persons.get(4));
+
+        includeMembers.add(persons.get(5));
+        includeMembers.add(persons.get(6));
+        includeMembers.add(persons.get(7));
+        includeMembers.add(persons.get(8));
+        includeMembers.add(persons.get(9));
+
+        ownerMembers.add(persons.get(0));
 
         setUpGroup(3, basisMembers, excludeMembers, includeMembers, ownerMembers);
     }
 
-    private void setUpGroup4 () {
+    private void setUpGroup4() {
         List<Person> basisMembers = new ArrayList<>();
         List<Person> excludeMembers = new ArrayList<>();
         List<Person> includeMembers = new ArrayList<>();
         List<Person> ownerMembers = new ArrayList<>();
-        //TODO add people to the lists
+
+        //todo change member lists
+        basisMembers.add(persons.get(0));
+        basisMembers.add(persons.get(1));
+        basisMembers.add(persons.get(2));
+        basisMembers.add(persons.get(3));
+        basisMembers.add(persons.get(4));
+
+        excludeMembers.add(persons.get(2));
+        excludeMembers.add(persons.get(3));
+        excludeMembers.add(persons.get(4));
+
+        includeMembers.add(persons.get(5));
+        includeMembers.add(persons.get(6));
+        includeMembers.add(persons.get(7));
+        includeMembers.add(persons.get(8));
+        includeMembers.add(persons.get(9));
+
+        ownerMembers.add(persons.get(0));
 
         setUpGroup(4, basisMembers, excludeMembers, includeMembers, ownerMembers);
     }
 
     private void setUpGroupings() {
-
+        makeGrouping(pathRoot + 0, groups.get(0), groups.get(1), groups.get(2), groups.get(3), false, false, false);
+        makeGrouping(pathRoot + 1, groups.get(4), groups.get(5), groups.get(6), groups.get(7), false, true, true);
+        makeGrouping(pathRoot + 2, groups.get(8), groups.get(9), groups.get(10), groups.get(11), true, false, false);
+        makeGrouping(pathRoot + 3, groups.get(12), groups.get(13), groups.get(14), groups.get(15), true, true, true);
+        makeGrouping(pathRoot + 4, groups.get(16), groups.get(17), groups.get(18), groups.get(19), false, true, false);
     }
 
     ///////////////////////////////////////////////////////////
@@ -188,6 +272,7 @@ public class DatabaseFactory {
 
         Grouping grouping = new Grouping(path);
         Group composite = buildComposite(include, exclude, basis, path);
+        groupRepository.save(composite);
 
         grouping.setBasis(basis);
         grouping.setExclude(exclude);
