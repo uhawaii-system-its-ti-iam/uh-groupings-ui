@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 
 @ActiveProfiles("localTest")
@@ -168,7 +169,12 @@ public class GroupingsServiceMockTest {
     private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
     private final WsSubjectLookup EVERY_ENTITY_LOOKUP = new WsSubjectLookup(null, null, EVERY_ENTITY);
 
+
     private static final Person ADMIN_PERSON = new Person(ADMIN_USER, ADMIN_USER, ADMIN_USER);
+
+    private String pathRoot = "path:to:grouping";
+
+    private WsSubjectLookup user0Lookup;
 
     private List<Person> admins = new ArrayList<>();
 
@@ -209,6 +215,8 @@ public class GroupingsServiceMockTest {
         for (int i = 0; i < users.length; i++) {
             users[i] = new Person(NAMES[i], "uuid", USERNAMES[i]);
         }
+
+        user0Lookup = new WsSubjectLookup(null, null, "username0");
     }
 
     @Test
@@ -1005,7 +1013,7 @@ public class GroupingsServiceMockTest {
         List<Grouping> groupingsIn = groupingsService.groupingsIn(groupPaths);
 
         for(int i = 0; i < groupingsIn.size(); i ++) {
-            assertTrue(groupingsIn.get(i).getPath().equals("path:to:grouping" + i));
+            assertTrue(groupingsIn.get(i).getPath().equals(pathRoot + i));
         }
     }
 
@@ -1059,7 +1067,7 @@ public class GroupingsServiceMockTest {
         List<Grouping> groupingsOwned = groupingsService.groupingsOwned(groupPaths);
 
         for(int i = 0; i < groupingsOwned.size(); i ++) {
-            assertTrue(groupingsOwned.get(i).getPath().equals("path:to:grouping" + i));
+            assertTrue(groupingsOwned.get(i).getPath().equals(pathRoot + i));
         }
     }
 
@@ -1082,11 +1090,11 @@ public class GroupingsServiceMockTest {
     public void adminListsTest() {
         List<String> groupingPaths = new ArrayList<>();
         List<String> attributes = new ArrayList<>();
-        groupingPaths.add("path:to:grouping0");
-        groupingPaths.add("path:to:grouping1");
-        groupingPaths.add("path:to:grouping2");
-        groupingPaths.add("path:to:grouping3");
-        groupingPaths.add("path:to:grouping4");
+        groupingPaths.add(pathRoot + 0);
+        groupingPaths.add(pathRoot + 1);
+        groupingPaths.add(pathRoot + 2);
+        groupingPaths.add(pathRoot + 3);
+        groupingPaths.add(pathRoot + 4);
 
         given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
         given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
@@ -1264,8 +1272,32 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void addMemberAsTest() {
+        List<String> attributes = new ArrayList<>();
 
-//todo
+        given(gf.makeWsDeleteMemberResults(pathRoot + 1 + EXCLUDE, user0Lookup, USERNAMES[3])).willReturn(deleteMemberResultsSuccess());
+        given(gf.makeWsAddMemberResults(pathRoot + 1 + INCLUDE, user0Lookup, USERNAMES[3])).willReturn(addMemberResultsSuccess());
+//        given(gf.makeWsAssignAttributesResults(ASSIGN_TYPE_GROUP,
+//                OPERATION_ASSIGN_ATTRIBUTE,
+//                pathRoot + 1, YYYYMMDDTHHMM,
+//                OPERATION_REPLACE_VALUES,
+//                any(WsAttributeAssignValue.class)))
+//                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+//        given(gf.makeWsAssignAttributesResults(ASSIGN_TYPE_GROUP,
+//                OPERATION_ASSIGN_ATTRIBUTE,
+//                pathRoot + 1 + INCLUDE, YYYYMMDDTHHMM,
+//                OPERATION_REPLACE_VALUES,
+//                any(WsAttributeAssignValue.class)))
+//                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+
+
+
+        Grouping grouping = groupingRepository.findByPath(pathRoot + 1).get(0);
+        assertFalse(grouping.getComposite().getMembers().contains(users[3]));
+
+        groupingsService.addMemberAs("username0", pathRoot + 1 + INCLUDE, USERNAMES[3]);
+
+        grouping = groupingRepository.findByPath(pathRoot + 1).get(0);
+        assertTrue(grouping.getComposite().getMembers().contains(users[3]));
     }
 
     @Test
@@ -1358,6 +1390,7 @@ public class GroupingsServiceMockTest {
     }
 
     private WsDeleteMemberResults deleteMemberResultsSuccess() {
+        groupRepository.
         WsDeleteMemberResults deleteMemberResults = new WsDeleteMemberResults();
         WsResultMeta resultMeta = new WsResultMeta();
         resultMeta.setResultCode(SUCCESS);
@@ -1395,11 +1428,11 @@ public class GroupingsServiceMockTest {
         List<String> groupingPaths = new ArrayList<>();
         List<String> ownedGroupingPaths = new ArrayList<>();
 
-        groupingPaths.add("path:to:grouping0");
-        groupingPaths.add("path:to:grouping1");
-        groupingPaths.add("path:to:grouping2");
-        groupingPaths.add("path:to:grouping3");
-        groupingPaths.add("path:to:grouping4");
+        groupingPaths.add(pathRoot + 0);
+        groupingPaths.add(pathRoot + 1);
+        groupingPaths.add(pathRoot + 2);
+        groupingPaths.add(pathRoot + 3);
+        groupingPaths.add(pathRoot + 4);
 
         WsGroup[] groups = new WsGroup[groupPaths.size()];
 
