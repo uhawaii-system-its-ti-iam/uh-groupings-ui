@@ -6,11 +6,9 @@
 <nav th:substituteby="menubar :: copy"></nav>
 
 <!--  Content container -->
-<div class="container-fluid">
+<div class="container">
     <div class='row'>
-        <div class='col-xs-offset-1 col-xs-10'>
-
-
+        <div class='container-fluid'>
             <h2 class="text-center">Groupings Owned</h2>
             <p class="text-center">Owner can modify the groupings that they own.</p>
 
@@ -250,7 +248,7 @@
                                         </tfoot>
                                     </table>
 
-                                    <div>
+                                    <div style="float: left" data-toggle="tooltip" data-placement="left" title="Add User to Include Group">
                                         <button class="btn btn-primary fa fa-user-plus fa-lg" type="button" data-toggle="collapse"
                                                 data-target="#addInclude" aria-expanded="false" style="font-size: 26px;"
                                                 aria-controls="addOwner">
@@ -320,7 +318,7 @@
                                         </tfoot>
                                     </table>
 
-                                    <div>
+                                    <div style="float: left" data-toggle="tooltip" data-placement="left" title="Add User to Exclude Group">
                                         <button class="btn btn-primary fa fa-user-plus fa-lg" type="button" data-toggle="collapse"
                                                 data-target="#addExclude" aria-expanded="false"
                                                 aria-controls="addOwner">
@@ -329,7 +327,7 @@
                                             <input type="text" placeholder="Add user to exclude"
                                                    ng-model="addUser"/>
                                             <button class="btn btn-success" ng-click="addMember('Exclude')">Add to
-                                                Excluded
+                                                Exclude
                                             </button>
                                         </div>
                                         <button class="btn btn-primary" ng-click="export(groupingExclude, 'exclude')">
@@ -390,7 +388,7 @@
                             -->
                             </table>
 
-                            <div>
+                            <div style="float: left" data-toggle="tooltip" data-placement="top" title="Add Owner to Grouping">
                                 <button class="btn btn-primary fa fa-user-plus fa-lg" type="button" data-toggle="collapse"
                                         data-target="#addOwner" aria-expanded="false" aria-controls="addOwner">
                                 </button>

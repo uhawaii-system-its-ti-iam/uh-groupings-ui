@@ -3,49 +3,41 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="header :: copy"></head>
 <body ng-app="holidayApp">
-    <nav th:replace="menubar :: copy"></nav>
+<nav th:replace="menubar :: copy"></nav>
 
-    <!--  Content container -->
-    <div class="container-fluid" ng-controller="HolidayJsController" data-ng-init="init()">
+<!--  Content container -->
+<div class="container" ng-controller="HolidayJsController" data-ng-init="init()">
 
-        <div class="panel panel-default">
-             <div class="panel-heading">
-               <div id = "tops">
-                 <h2> Welcome to UH Groupings</h2>
-               </div>
-             </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div id="tops">
+                <h2> Welcome to UH Groupings</h2>
+            </div>
         </div>
-
-        <div id = "topRow">
-          <p>UH Groupings is an online service for managing groupings of people.
-          Groupings can be based on an assortment of explicit and implicit UH groups
-          (students, faculty staff; any of the above grouped by campus, by EAC; etc).
-          Additionally, custom groupings can be created from scratch.</p>
-
-          <p>As an example, a grouping can be a campus faculty discussion list.
-          Maintaining the email list with a UH Grouping ensures,
-          without the need for manual intervention, that the associated email
-          list is kept updated as new faculty are hired, and as current faculty depart.
-          Additionally, the owner of the grouping can also allow faculty to opt themselves out of the discussion list.</p>
-
-          <p>UH Groupings will initially integrate with LISTSERV email lists.
-          In the future UH Groupings will be expanded to integrate with other resources.
-          UH Groupings are envisioned to provision permissions for access to web
-          applications so that enterprise deprovisioning becomes simpler.</p>
-        </div>
-
-        <div id="uh-login" sec:authorize="!isAuthenticated()">
-            <fieldset>
-                <legend>UH Users</legend>
-                <p style="padding-top: 1.2em">
-                    <a th:href="@{/login}" class="btn btn-lg btn-success btn-block">Login In Here</a>
-                </p>
-            </fieldset>
-        </div>
-
     </div>
-    <!-- / Content container. -->
 
-    <div th:replace="footer :: copy"></div>
+    <div id="topRow">
+        <p>Manage your groups in one place, use them in many places.</p>
+
+        <p>If you manage lists of people so that you send them email, or provide them privileges or permissions,
+            or for other purposes, you can use UH Groupings to manage your lists in one place.
+            Additionally, you can make use of groups that already existing in our Group Store.</p>
+
+        <p>For more information on UH Groupings and the Group Store, visit &lt;<a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings</a>&gt;</p>
+    </div>
+
+    <div id="uh-login" sec:authorize="!isAuthenticated()">
+        <fieldset>
+            <legend>UH Users</legend>
+            <p style="padding-top: 1.2em">
+                <a th:href="@{/login}" class="btn btn-lg btn-success btn-block">Login In Here</a>
+            </p>
+        </fieldset>
+    </div>
+
+</div>
+<!-- / Content container. -->
+
+<div th:replace="footer :: copy"></div>
 </body>
 </html>
