@@ -185,6 +185,8 @@ public class GroupingsServiceMockTest {
     @Autowired
     private GroupingsService groupingsService;
 
+    @Autowired
+    private GroupingRepository groupingRepository;
 
     @Autowired
     private GroupRepository groupRepository;
@@ -196,6 +198,8 @@ public class GroupingsServiceMockTest {
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
 
+        databaseFactory = new DatabaseFactory(personRepository, groupRepository, groupingRepository);
+
         admins.add(ADMIN_PERSON);
         adminGroup = new Group(GROUPING_ADMINS, admins);
 
@@ -205,8 +209,6 @@ public class GroupingsServiceMockTest {
         for (int i = 0; i < users.length; i++) {
             users[i] = new Person(NAMES[i], "uuid", USERNAMES[i]);
         }
-
-        databaseFactory = new DatabaseFactory(personRepository, groupRepository);
     }
 
     @Test
@@ -216,8 +218,12 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void databaseTest() {
+        Iterable<Person> persons = personRepository.findAll();
         Iterable<Group> groups = groupRepository.findAll();
+        Iterable<Grouping> groupings = groupingRepository.findAll();
+        assertNotNull(persons);
         assertNotNull(groups);
+        assertNotNull(groupings);
     }
 
     @Test

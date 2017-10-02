@@ -1,6 +1,7 @@
 package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.Person;
 
 import org.springframework.test.context.ActiveProfiles;
@@ -9,6 +10,9 @@ import java.util.*;
 
 @ActiveProfiles("localTest")
 public class DatabaseFactory {
+    private int numberOfPersons = 100;
+
+    String pathRoot = "path:to:grouping";
 
     private static String BASIS = ":basis";
     private static String EXCLUDE = ":exclude";
@@ -17,240 +21,309 @@ public class DatabaseFactory {
 
     private PersonRepository personRepository;
     private GroupRepository groupRepository;
-    private Person[] persons = new Person[100];
-    private Group[] groups = new Group[25];
-    private List<List<Person>> memberLists = new ArrayList<>();
+    private GroupingRepository groupingRepository;
 
-    public DatabaseFactory(PersonRepository personRepository, GroupRepository groupRepository) {
+    private List<Person> persons = new ArrayList<>();
+    private List<Group> groups = new ArrayList<>();
+    private List<Grouping> groupings = new ArrayList<>();
+
+    public DatabaseFactory(PersonRepository personRepository, GroupRepository groupRepository, GroupingRepository groupingRepository) {
         this.personRepository = personRepository;
         this.groupRepository = groupRepository;
+        this.groupingRepository = groupingRepository;
 
         fillDatabase();
-
     }
 
     private void fillDatabase() {
-        for (int i = 0; i < groups.length; i++) {
-            memberLists.add(new ArrayList<>());
+
+
+        fillPersonRepository();
+        fillGroupRepository();
+        fillGroupingRepository();
+
+    }
+
+    private void fillPersonRepository() {
+        setUpPersons();
+
+        for (Person person : persons) {
+            personRepository.save(person);
         }
-
-        fillPersonDatabase();
-        fillGroupDatabase();
-
     }
 
-    private void fillPersonDatabase() {
+    private void fillGroupRepository() {
+        setUpGroups();
 
-        for (int i = 0; i < persons.length; i++) {
-            persons[i] = new Person("name" + i, "uuid" + i, "username" + i);
-            personRepository.save(persons[i]);
+        for (Group group : groups) {
+            groupRepository.save(group);
         }
     }
 
-    private void fillGroupDatabase() {
-        addGrouping0();
-        addGrouping1();
-        addGrouping2();
-        addGrouping3();
-        addGrouping4();
+    private void fillGroupingRepository() {
+        setUpGroupings();
+
+        for (Grouping grouping : groupings) {
+            groupingRepository.save(grouping);
+        }
     }
 
-    private void addGrouping0() {
-        int i = 0;
-        int k = i * 5;
+    /////////////////////////////////////////////////////
+    // setup methods
+    /////////////////////////////////////////////////////
 
-        memberLists.get(k + 1).add(persons[0]);
-        memberLists.get(k + 1).add(persons[1]);
-        memberLists.get(k + 1).add(persons[2]);
-
-        memberLists.get(k + 2).add(persons[5]);
-        memberLists.get(k + 2).add(persons[6]);
-        memberLists.get(k + 2).add(persons[7]);
-        memberLists.get(k + 2).add(persons[8]);
-        memberLists.get(k + 2).add(persons[9]);
-
-        memberLists.get(k + 3).add(persons[3]);
-        memberLists.get(k + 3).add(persons[4]);
-        memberLists.get(k + 3).add(persons[5]);
-        memberLists.get(k + 3).add(persons[6]);
-        memberLists.get(k + 3).add(persons[7]);
-        memberLists.get(k + 3).add(persons[8]);
-        memberLists.get(k + 3).add(persons[9]);
-
-        memberLists.get(k + 4).add(persons[0]);
-
-        memberLists.get(k).addAll(makeComposite(
-                memberLists.get(k + 1),
-                memberLists.get(k + 2),
-                memberLists.get(k +  3)));
-
-        saveGrouping(i);
+    private void setUpPersons() {
+        for (int i = 0; i < numberOfPersons; i++) {
+            makePerson("name" + i, "uuid" + i, "username" + i);
+        }
     }
 
-    private void addGrouping1() {
-        int i = 1;
-        int k = i * 5;
-
-        memberLists.get(k + 1).add(persons[0]);
-        memberLists.get(k + 1).add(persons[1]);
-        memberLists.get(k + 1).add(persons[2]);
-
-        memberLists.get(k + 2).add(persons[5]);
-        memberLists.get(k + 2).add(persons[6]);
-        memberLists.get(k + 2).add(persons[7]);
-        memberLists.get(k + 2).add(persons[8]);
-        memberLists.get(k + 2).add(persons[9]);
-
-        memberLists.get(k + 3).add(persons[3]);
-        memberLists.get(k + 3).add(persons[4]);
-        memberLists.get(k + 3).add(persons[5]);
-        memberLists.get(k + 3).add(persons[6]);
-        memberLists.get(k + 3).add(persons[7]);
-        memberLists.get(k + 3).add(persons[8]);
-        memberLists.get(k + 3).add(persons[9]);
-
-        memberLists.get(k + 4).add(persons[0]);
-
-        memberLists.get(k).addAll(makeComposite(
-                memberLists.get(k + 1),
-                memberLists.get(k + 2),
-                memberLists.get(k +  3)));
-
-        saveGrouping(i);
+    private void setUpGroups() {
+        setUpGroup0();
+        setUpGroup1();
+        setUpGroup2();
+        setUpGroup3();
+        setUpGroup4();
     }
 
-    private void addGrouping2() {
-        int i = 2;
-        int k = i * 5;
+    private void setUpGroup(int i,
+                            List<Person> basisMembers,
+                            List<Person> excludeMembers,
+                            List<Person> includeMembers,
+                            List<Person> ownerMembers) {
 
-        memberLists.get(k + 1).add(persons[0]);
-        memberLists.get(k + 1).add(persons[1]);
-        memberLists.get(k + 1).add(persons[2]);
 
-        memberLists.get(k + 2).add(persons[5]);
-        memberLists.get(k + 2).add(persons[6]);
-        memberLists.get(k + 2).add(persons[7]);
-        memberLists.get(k + 2).add(persons[8]);
-        memberLists.get(k + 2).add(persons[9]);
-
-        memberLists.get(k + 3).add(persons[3]);
-        memberLists.get(k + 3).add(persons[4]);
-        memberLists.get(k + 3).add(persons[5]);
-        memberLists.get(k + 3).add(persons[6]);
-        memberLists.get(k + 3).add(persons[7]);
-        memberLists.get(k + 3).add(persons[8]);
-        memberLists.get(k + 3).add(persons[9]);
-
-        memberLists.get(k + 4).add(persons[0]);
-
-        memberLists.get(k).addAll(makeComposite(
-                memberLists.get(k + 1),
-                memberLists.get(k + 2),
-                memberLists.get(k +  3)));
-
-        saveGrouping(i);
-    }
-
-    private void addGrouping3() {
-        int i = 3;
-        int k = i * 5;
-
-        memberLists.get(k + 1).add(persons[0]);
-        memberLists.get(k + 1).add(persons[1]);
-        memberLists.get(k + 1).add(persons[2]);
-
-        memberLists.get(k + 2).add(persons[5]);
-        memberLists.get(k + 2).add(persons[6]);
-        memberLists.get(k + 2).add(persons[7]);
-        memberLists.get(k + 2).add(persons[8]);
-        memberLists.get(k + 2).add(persons[9]);
-
-        memberLists.get(k + 3).add(persons[3]);
-        memberLists.get(k + 3).add(persons[4]);
-        memberLists.get(k + 3).add(persons[5]);
-        memberLists.get(k + 3).add(persons[6]);
-        memberLists.get(k + 3).add(persons[7]);
-        memberLists.get(k + 3).add(persons[8]);
-        memberLists.get(k + 3).add(persons[9]);
-
-        memberLists.get(k + 4).add(persons[0]);
-
-        memberLists.get(k).addAll(makeComposite(
-                memberLists.get(k + 1),
-                memberLists.get(k + 2),
-                memberLists.get(k +  3)));
-
-        saveGrouping(i);
-    }
-
-    private void addGrouping4() {
-        int i = 4;
-        int k = i * 5;
-
-        memberLists.get(k + 1).add(persons[0]);
-        memberLists.get(k + 1).add(persons[1]);
-        memberLists.get(k + 1).add(persons[2]);
-
-        memberLists.get(k + 2).add(persons[5]);
-        memberLists.get(k + 2).add(persons[6]);
-        memberLists.get(k + 2).add(persons[7]);
-        memberLists.get(k + 2).add(persons[8]);
-        memberLists.get(k + 2).add(persons[9]);
-
-        memberLists.get(k + 3).add(persons[3]);
-        memberLists.get(k + 3).add(persons[4]);
-        memberLists.get(k + 3).add(persons[5]);
-        memberLists.get(k + 3).add(persons[6]);
-        memberLists.get(k + 3).add(persons[7]);
-        memberLists.get(k + 3).add(persons[8]);
-        memberLists.get(k + 3).add(persons[9]);
-
-        memberLists.get(k + 4).add(persons[0]);
-
-        memberLists.get(k).addAll(makeComposite(
-                memberLists.get(k + 1),
-                memberLists.get(k + 2),
-                memberLists.get(k +  3)));
-
-        saveGrouping(i);
-    }
-
-    private void saveGrouping(int i) {
-        groups[(i * 5)] = new Group("path:to:grouping" + (i), memberLists.get(i * 5));
-        groups[(i * 5) + 1] = new Group("path:to:grouping" + (i) + INCLUDE, memberLists.get((i * 5) + 1));
-        groups[(i * 5) + 2] = new Group("path:to:grouping" + (i) + EXCLUDE, memberLists.get((i * 5) + 2));
-        groups[(i * 5) + 3] = new Group("path:to:grouping" + (i) + BASIS, memberLists.get((i * 5) + 3));
-        groups[(i * 5) + 4] = new Group("path:to:grouping" + (i) + OWNERS, memberLists.get((i * 5) + 4));
-        groupRepository.save(groups[(i * 5)]);
-        groupRepository.save(groups[(i * 5) + 1]);
-        groupRepository.save(groups[(i * 5) + 2]);
-        groupRepository.save(groups[(i * 5) + 3]);
-        groupRepository.save(groups[(i * 5) + 4]);
+        makeGroup(basisMembers, pathRoot + i + BASIS);
+        makeGroup(excludeMembers, pathRoot + i + EXCLUDE);
+        makeGroup(includeMembers, pathRoot + i + INCLUDE);
+        makeGroup(ownerMembers, pathRoot + i + OWNERS);
 
     }
 
-    private List<Person> makeComposite(List<Person> include, List<Person> exclude, List<Person> basis) {
-        List<Person> basisPlusInclude = unionMemberLists(include, basis);
-        return removeExcludedPersons(basisPlusInclude, exclude);
+    private void setUpGroup0() {
+        List<Person> basisMembers = new ArrayList<>();
+        List<Person> excludeMembers = new ArrayList<>();
+        List<Person> includeMembers = new ArrayList<>();
+        List<Person> ownerMembers = new ArrayList<>();
+
+        basisMembers.add(persons.get(0));
+        basisMembers.add(persons.get(1));
+        basisMembers.add(persons.get(2));
+        basisMembers.add(persons.get(3));
+        basisMembers.add(persons.get(4));
+
+        excludeMembers.add(persons.get(2));
+        excludeMembers.add(persons.get(3));
+        excludeMembers.add(persons.get(4));
+
+        includeMembers.add(persons.get(5));
+        includeMembers.add(persons.get(6));
+        includeMembers.add(persons.get(7));
+        includeMembers.add(persons.get(8));
+        includeMembers.add(persons.get(9));
+
+        ownerMembers.add(persons.get(0));
+
+        setUpGroup(0, basisMembers, excludeMembers, includeMembers, ownerMembers);
     }
 
-    private List<Person> unionMemberLists(List<Person> include, List<Person> basis) {
+    private void setUpGroup1() {
+        List<Person> basisMembers = new ArrayList<>();
+        List<Person> excludeMembers = new ArrayList<>();
+        List<Person> includeMembers = new ArrayList<>();
+        List<Person> ownerMembers = new ArrayList<>();
+
+        //todo change member lists
+        basisMembers.add(persons.get(0));
+        basisMembers.add(persons.get(1));
+        basisMembers.add(persons.get(2));
+        basisMembers.add(persons.get(3));
+        basisMembers.add(persons.get(4));
+
+        excludeMembers.add(persons.get(2));
+        excludeMembers.add(persons.get(3));
+        excludeMembers.add(persons.get(4));
+
+        includeMembers.add(persons.get(5));
+        includeMembers.add(persons.get(6));
+        includeMembers.add(persons.get(7));
+        includeMembers.add(persons.get(8));
+        includeMembers.add(persons.get(9));
+
+        ownerMembers.add(persons.get(0));
+
+        setUpGroup(1, basisMembers, excludeMembers, includeMembers, ownerMembers);
+    }
+
+    private void setUpGroup2() {
+        List<Person> basisMembers = new ArrayList<>();
+        List<Person> excludeMembers = new ArrayList<>();
+        List<Person> includeMembers = new ArrayList<>();
+        List<Person> ownerMembers = new ArrayList<>();
+
+        //todo change member lists
+        basisMembers.add(persons.get(0));
+        basisMembers.add(persons.get(1));
+        basisMembers.add(persons.get(2));
+        basisMembers.add(persons.get(3));
+        basisMembers.add(persons.get(4));
+
+        excludeMembers.add(persons.get(2));
+        excludeMembers.add(persons.get(3));
+        excludeMembers.add(persons.get(4));
+
+        includeMembers.add(persons.get(5));
+        includeMembers.add(persons.get(6));
+        includeMembers.add(persons.get(7));
+        includeMembers.add(persons.get(8));
+        includeMembers.add(persons.get(9));
+
+        ownerMembers.add(persons.get(0));
+
+        setUpGroup(2, basisMembers, excludeMembers, includeMembers, ownerMembers);
+    }
+
+    private void setUpGroup3() {
+        List<Person> basisMembers = new ArrayList<>();
+        List<Person> excludeMembers = new ArrayList<>();
+        List<Person> includeMembers = new ArrayList<>();
+        List<Person> ownerMembers = new ArrayList<>();
+
+        //todo change member lists
+        basisMembers.add(persons.get(0));
+        basisMembers.add(persons.get(1));
+        basisMembers.add(persons.get(2));
+        basisMembers.add(persons.get(3));
+        basisMembers.add(persons.get(4));
+
+        excludeMembers.add(persons.get(2));
+        excludeMembers.add(persons.get(3));
+        excludeMembers.add(persons.get(4));
+
+        includeMembers.add(persons.get(5));
+        includeMembers.add(persons.get(6));
+        includeMembers.add(persons.get(7));
+        includeMembers.add(persons.get(8));
+        includeMembers.add(persons.get(9));
+
+        ownerMembers.add(persons.get(0));
+
+        setUpGroup(3, basisMembers, excludeMembers, includeMembers, ownerMembers);
+    }
+
+    private void setUpGroup4() {
+        List<Person> basisMembers = new ArrayList<>();
+        List<Person> excludeMembers = new ArrayList<>();
+        List<Person> includeMembers = new ArrayList<>();
+        List<Person> ownerMembers = new ArrayList<>();
+
+        //todo change member lists
+        basisMembers.add(persons.get(0));
+        basisMembers.add(persons.get(1));
+        basisMembers.add(persons.get(2));
+        basisMembers.add(persons.get(3));
+        basisMembers.add(persons.get(4));
+
+        excludeMembers.add(persons.get(2));
+        excludeMembers.add(persons.get(3));
+        excludeMembers.add(persons.get(4));
+
+        includeMembers.add(persons.get(5));
+        includeMembers.add(persons.get(6));
+        includeMembers.add(persons.get(7));
+        includeMembers.add(persons.get(8));
+        includeMembers.add(persons.get(9));
+
+        ownerMembers.add(persons.get(0));
+
+        setUpGroup(4, basisMembers, excludeMembers, includeMembers, ownerMembers);
+    }
+
+    private void setUpGroupings() {
+        makeGrouping(pathRoot + 0, groups.get(0), groups.get(1), groups.get(2), groups.get(3), false, false, false);
+        makeGrouping(pathRoot + 1, groups.get(4), groups.get(5), groups.get(6), groups.get(7), false, true, true);
+        makeGrouping(pathRoot + 2, groups.get(8), groups.get(9), groups.get(10), groups.get(11), true, false, false);
+        makeGrouping(pathRoot + 3, groups.get(12), groups.get(13), groups.get(14), groups.get(15), true, true, true);
+        makeGrouping(pathRoot + 4, groups.get(16), groups.get(17), groups.get(18), groups.get(19), false, true, false);
+    }
+
+    ///////////////////////////////////////////////////////////
+    // factory methods
+    ///////////////////////////////////////////////////////////
+
+    private void makePerson(String name, String uuid, String username) {
+        Person person = new Person(name, uuid, username);
+        persons.add(person);
+    }
+
+    private void makeGroup(List<Person> members, String path) {
+        Group group = new Group(path, members);
+        groups.add(group);
+    }
+
+    private void makeGrouping(String path,
+                              Group basis,
+                              Group exclude,
+                              Group include,
+                              Group owners,
+                              boolean listServeOn,
+                              boolean optInOn,
+                              boolean optOutOn) {
+
+        Grouping grouping = new Grouping(path);
+        Group composite = buildComposite(include, exclude, basis, path);
+        groupRepository.save(composite);
+
+        grouping.setBasis(basis);
+        grouping.setExclude(exclude);
+        grouping.setInclude(include);
+        grouping.setOwners(owners);
+        grouping.setComposite(composite);
+
+        grouping.setListservOn(listServeOn);
+        grouping.setOptInOn(optInOn);
+        grouping.setOptOutOn(optOutOn);
+
+        groupings.add(grouping);
+    }
+
+
+    ///////////////////////////////////////////////////////////
+    // helper methods
+    ///////////////////////////////////////////////////////////
+
+    private Group buildComposite(Group include, Group exclude, Group basis, String path) {
+        Group basisPlusInclude = addIncludedMembers(include, basis);
+        Group compositeGroup = removeExcludedMembers(basisPlusInclude, exclude);
+        compositeGroup.setPath(path);
+
+        return compositeGroup;
+    }
+
+    private Group addIncludedMembers(Group include, Group basis) {
+        Group unionGroup = new Group();
         List<Person> unionList = new ArrayList<>();
-        unionList.addAll(include);
-        unionList.addAll(basis);
+        unionList.addAll(include.getMembers());
+        unionList.addAll(basis.getMembers());
 
         //remove duplicates
         Set<Person> s = new TreeSet<>();
         s.addAll(unionList);
-        return Arrays.asList(s.toArray(new Person[s.size()]));
+        unionGroup.setMembers(Arrays.asList(s.toArray(new Person[s.size()])));
+
+        return unionGroup;
     }
 
-    private List<Person> removeExcludedPersons(List<Person> basisPlusInclude, List<Person> exclude) {
+    private Group removeExcludedMembers(Group basisPlusInclude, Group exclude) {
+        Group basisPlusIncludeMinusExcludeGroup = new Group();
         ArrayList<Person> newBasisPlusInclude = new ArrayList<>();
-        newBasisPlusInclude.addAll(basisPlusInclude);
-       for(Person person : exclude) {
-           newBasisPlusInclude.remove(person);
-       }
-        return newBasisPlusInclude;
+        newBasisPlusInclude.addAll(basisPlusInclude.getMembers());
+
+        for (Person person : exclude.getMembers()) {
+            newBasisPlusInclude.remove(person);
+        }
+        basisPlusIncludeMinusExcludeGroup.setMembers(newBasisPlusInclude);
+
+        return basisPlusIncludeMinusExcludeGroup;
     }
 }
