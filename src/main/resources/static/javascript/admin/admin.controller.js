@@ -84,7 +84,7 @@
         };
 
         $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'uuid': '', 'username':''};
+            $scope.symbol = {'name': '', 'uuid': '', 'username': ''};
 
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
                 list = _.sortBy(list, col);
@@ -172,12 +172,8 @@
                 $scope.modify($scope.ownerList);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
 
-                /*$scope.pref = d.listservOn;
-                $scope.allowOptIn = d.optInOn;
-                $scope.allowOptOut = d.optOutOn;*/
-
                 $scope.preference = {
-                    optIn : d.optInOn,
+                    optIn: d.optInOn,
                     optOut: d.optOutOn,
                     listserv: d.listservOn
                 };
@@ -348,9 +344,6 @@
 
         $scope.savePref = function () {
             var prefUrls = [];
-            console.log($scope.preference.optIn);
-            console.log($scope.preference.optOut);
-            console.log($scope.preference.listserv);
 
             prefUrls.push({
                 "url": "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.listserv + "/setListserv",
@@ -375,7 +368,7 @@
                         success = 1;
                     }
                     else if (typeof d.resultsCode === 'undefined') {
-                        if(typeof d[0] != 'undefined' && (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED" )) {
+                        if (typeof d[0] != 'undefined' && (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED" )) {
                             console.log("OptIn/OptOut preference successfully updated");
                             alert("OptIn/OptOut preference successfully updated");
                             success = 1;
@@ -385,8 +378,7 @@
                             alert("Preference did not change");
                         }
                     }
-                    if(success == 1)
-                    {
+                    if (success == 1) {
                         $scope.getData($scope.groupingPath);
                     }
                 }, prefUrls[i].url);

@@ -10,7 +10,7 @@
         <div class="container-fluid">
 
             <div ng-app="adminApp" ng-controller="AdminJsController" data-ng-init="init()">
-                <h2 class="text-center">Designate Admins</h2>
+                <h1 class="text-center">Designate Admins</h1>
 
                 <p class="text-center">Manage the list of Admins</p>
 
@@ -40,30 +40,30 @@
                                     <div class="row">
                                         <div style="padding-left: 20px">
                                             <h3 style="margin-top: 5px">Designated Admins</h3>
-                                                <div style="float: left;  margin-right: 10px;"
-                                                     data-toggle="tooltip" data-placement="left" title="Add Admin">
-                                                    <button class="btn btn-primary" data-toggle="collapse"
-                                                            data-target="#addAdmin" aria-expanded="false"
-                                                            aria-controls="addAdmin">
-                                                        <i class="icon ion-person-add"
-                                                           style="font-size: 15px"></i>
+
+                                            <div style="float: left;  margin-right: 10px;"
+                                                 data-toggle="tooltip" data-placement="left" title="Add Admin">
+                                                <button class="btn btn-primary" data-toggle="collapse"
+                                                        data-target="#addAdmin" aria-expanded="false"
+                                                        aria-controls="addAdmin">
+                                                    <i class="icon ion-person-add"
+                                                       style="font-size: 15px"></i>
+                                                </button>
+                                            </div>
+                                            <div style="float: left;">
+                                                <div class="collapse" id="addAdmin">
+                                                    <input type="text" ng-model="username"/>
+                                                    <button class="btn btn-success" ng-click="addAdmin()">Add
+                                                        Admin
                                                     </button>
                                                 </div>
-                                                <div style="float: left;">
-                                                    <div class="collapse" id="addAdmin">
-                                                        <input type="text" ng-model="username"/>
-                                                        <button class="btn btn-success" ng-click="addAdmin()">Add
-                                                            Admin
-                                                        </button>
-                                                    </div>
+                                            </div>
+                                            <div align="right">
+                                                <div align="right" style="margin-top: 5px; margin-right: 25px">
+                                                    <input placeholder="Type to filter text..." type="text"
+                                                           ng-model="query"/>
                                                 </div>
-                                                <div align="right">
-                                                    <div align="right" style="margin-top: 5px; margin-right: 25px">
-                                                        <input placeholder="Type to filter text..." type="text"
-                                                               ng-model="query"/>
-                                                    </div>
-                                                </div>
-
+                                            </div>
                                         </div>
                                     </div>
 
@@ -116,10 +116,10 @@
                                             ng-click="paging(n)"
                                                 ><a href="" ng-bind="n + 1">1</a>
                                         </li>
-                                        <li ng-class="{disabled: (currentPage) == pagedItems.length - 1 }">
+                                        <li ng-class="{disabled: ((currentPage) == pagedItems.length - 1) || pagedItems.length == 0 }">
                                             <a href="" ng-click="paging('next')">Next »</a>
                                         </li>
-                                        <li ng-class="{disabled: (currentPage) == pagedItems.length - 1 }">
+                                        <li ng-class="{disabled: ((currentPage) == pagedItems.length - 1) || pagedItems.length == 0 }">
                                             <a href="" ng-click="paging('last')">Last »»</a>
                                         </li>
                                     </ul>
@@ -237,10 +237,10 @@
                                                             ng-click="paging('List Set')"
                                                                 ><a href="" ng-bind="n + 1">1</a>
                                                         </li>
-                                                        <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 }">
+                                                        <li ng-class="{disabled: ((currentPageList) == pagedItemsList.length - 1) || pagedItemsList.length == 0}">
                                                             <a href="" ng-click="paging('List Next')">Next »</a>
                                                         </li>
-                                                        <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 }">
+                                                        <li ng-class="{disabled: ((currentPageList) == pagedItemsList.length - 1) || pagedItemsList.length == 0}">
                                                             <a href="" ng-click="paging('List Last')">Last »»</a>
                                                         </li>
                                                     </ul>
@@ -290,10 +290,10 @@
                                                             ng-click="paging('Basis Set')"
                                                                 ><a href="" ng-bind="n + 1">1</a>
                                                         </li>
-                                                        <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 }">
+                                                        <li ng-class="{disabled: ((currentPageBasis) == pagedItemsBasis.length - 1) ||pagedItemsBasis.length == 0}">
                                                             <a href="" ng-click="paging('Basis Next')">Next »</a>
                                                         </li>
-                                                        <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 }">
+                                                        <li ng-class="{disabled: ((currentPageBasis) == pagedItemsBasis.length - 1) ||pagedItemsBasis.length == 0}">
                                                             <a href="" ng-click="paging('Basis Last')">Last »»</a>
                                                         </li>
                                                     </ul>
@@ -352,10 +352,10 @@
                                                             ng-click="paging('Include Set')"
                                                                 ><a href="" ng-bind="n + 1">1</a>
                                                         </li>
-                                                        <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 }">
+                                                        <li ng-class="{disabled: ((currentPageInclude) == pagedItemsInclude.length - 1) || pagedItemsInclude.length == 0}">
                                                             <a href="" ng-click="paging('Include Next')">Next »</a>
                                                         </li>
-                                                        <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 }">
+                                                        <li ng-class="{disabled: ((currentPageInclude) == pagedItemsInclude.length - 1) || pagedItemsInclude.length == 0}">
                                                             <a href="" ng-click="paging('Include Last')">Last »»</a>
                                                         </li>
                                                     </ul>
@@ -430,10 +430,10 @@
                                                             ng-click="paging('Exclude Set')"
                                                                 ><a href="" ng-bind="n + 1">1</a>
                                                         </li>
-                                                        <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 }">
+                                                        <li ng-class="{disabled: ((currentPageExclude) == pagedItemsExclude.length - 1) || pagedItemsExclude.length == 0}">
                                                             <a href="" ng-click="paging('Exclude Next')">Next »</a>
                                                         </li>
-                                                        <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 }">
+                                                        <li ng-class="{disabled: ((currentPageExclude) == pagedItemsExclude.length - 1) || pagedItemsExclude.length == 0}">
                                                             <a href="" ng-click="paging('Exclude Last')">Last »»</a>
                                                         </li>
                                                     </ul>
@@ -499,10 +499,10 @@
                                                             ng-click="paging('Owners Set')"
                                                                 ><a href="" ng-bind="n + 1">1</a>
                                                         </li>
-                                                        <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 }">
+                                                        <li ng-class="{disabled: ((currentPageOwners) == pagedItemsOwners.length - 1) || pagedItemsOwners.length == 0}">
                                                             <a href="" ng-click="paging('Owners Next')">Next »</a>
                                                         </li>
-                                                        <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 }">
+                                                        <li ng-class="{disabled: ((currentPageOwners) == pagedItemsOwners.length - 1) || pagedItemsOwners.length == 0}">
                                                             <a href="" ng-click="paging('Owners Last')">Last »»</a>
                                                         </li>
                                                     </ul>
