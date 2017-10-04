@@ -266,7 +266,7 @@ public class DatabaseFactory {
                               Group exclude,
                               Group include,
                               Group owners,
-                              boolean listServeOn,
+                              boolean listserveOn,
                               boolean optInOn,
                               boolean optOutOn) {
 
@@ -280,7 +280,7 @@ public class DatabaseFactory {
         grouping.setOwners(owners);
         grouping.setComposite(composite);
 
-        grouping.setListservOn(listServeOn);
+        grouping.setListservOn(listserveOn);
         grouping.setOptInOn(optInOn);
         grouping.setOptOutOn(optOutOn);
 
