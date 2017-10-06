@@ -572,7 +572,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     public boolean groupHasAttribute(String grouping, String nameName) {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = attributeAssignmentsResults(
                 ASSIGN_TYPE_GROUP,
-                grouping, nameName);
+                grouping,
+                nameName);
 
         if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign attribute : wsGetAttributeAssignmentsResults.getWsAttributeAssigns()) {
