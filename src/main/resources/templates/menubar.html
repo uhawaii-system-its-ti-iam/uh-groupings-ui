@@ -22,8 +22,8 @@
                 <li><a href="/myiam/" th:href="@{/}">Home</a></li>
                 <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/admin}">Admin</a></li>
                 <li sec:authorize="hasRole('ROLE_UH')"><a th:href="@{/memberships}">Memberships</a></li>
-                <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"><a th:href="@{/groupings}">Groupings I Own</a></li>
-                <li><a th:href="@{/faq}">Faq</a></li>
+                <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"><a th:href="@{/groupings}">Groupings</a></li>
+                <li><a th:href="@{/info}">Info</a></li>
                 <li><a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a></li>
                 <li class="app-logout">
                     <form sec:authorize="isAuthenticated()" action="/logout" th:action="@{/logout}" method="post" id="logout_form">

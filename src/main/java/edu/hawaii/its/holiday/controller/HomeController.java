@@ -31,10 +31,10 @@ public class HomeController {
         return "campus";
     }
 
-    @RequestMapping(value = "/faq", method = RequestMethod.GET)
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
     public String faq(Locale locale, Model model) {
         logger.info("User at faq.");
-        return "faq";
+        return "info";
     }
 
     @RequestMapping(value = "/404", method = RequestMethod.GET)
