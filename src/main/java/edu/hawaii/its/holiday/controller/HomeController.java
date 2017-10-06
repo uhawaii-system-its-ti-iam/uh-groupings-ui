@@ -32,8 +32,8 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.GET)
-    public String faq(Locale locale, Model model) {
-        logger.info("User at faq.");
+    public String info(Locale locale, Model model) {
+        logger.info("User at info.");
         return "info";
     }
 
