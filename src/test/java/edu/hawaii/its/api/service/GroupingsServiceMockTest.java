@@ -1544,21 +1544,9 @@ public class GroupingsServiceMockTest {
         List<String> groupingPaths = new ArrayList<>();
         List<String> ownedGroupingPaths = new ArrayList<>();
 
-        groupingPaths.add(GROUPING_0_PATH);
-        groupingPaths.add(GROUPING_1_PATH);
-        groupingPaths.add(GROUPING_2_PATH);
-        groupingPaths.add(GROUPING_3_PATH);
-        groupingPaths.add(GROUPING_4_PATH);
-
-        WsGroup[] groups = new WsGroup[groupPaths.size()];
-
-        for (int i = 0; i < groupPaths.size(); i++) {
-            if (groupingPaths.contains(groupPaths.get(i))) {
-                ownedGroupingPaths.add(groupPaths.get(i));
-                groups[i] = new WsGroup();
-                groups[i].setName(groupPaths.get(i));
-            }
-        }
+        Iterable<Grouping> groupings = groupingRepository.findAll();
+//find all groupings owned and put the paths into WsGroups, then add TRIO attribute
+        WsGroup[] groups = new WsGroup[ groupings.size()];
 
         for (String group : ownedGroupingPaths) {
             WsAttributeDefName attributeDefName = new WsAttributeDefName();
