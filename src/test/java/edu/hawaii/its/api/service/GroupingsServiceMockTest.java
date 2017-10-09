@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
@@ -24,7 +23,8 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.when;
 
 @ActiveProfiles("localTest")
@@ -156,35 +156,35 @@ public class GroupingsServiceMockTest {
     private static final String PATH_ROOT = "path:to:grouping";
 
     private static final String GROUPING_0_PATH = PATH_ROOT + 0;
-    private static final String GROUPING_1_PATH = PATH_ROOT + 0;
-    private static final String GROUPING_2_PATH = PATH_ROOT + 0;
-    private static final String GROUPING_3_PATH = PATH_ROOT + 0;
-    private static final String GROUPING_4_PATH = PATH_ROOT + 0;
+    private static final String GROUPING_1_PATH = PATH_ROOT + 1;
+    private static final String GROUPING_2_PATH = PATH_ROOT + 2;
+    private static final String GROUPING_3_PATH = PATH_ROOT + 3;
+    private static final String GROUPING_4_PATH = PATH_ROOT + 4;
 
     private static final String GROUPING_0_INCLUDE_PATH = GROUPING_0_PATH + ":include";
     private static final String GROUPING_0_EXCLUDE_PATH = GROUPING_0_PATH + ":exclude";
     private static final String GROUPING_0_BASIS_PATH = GROUPING_0_PATH + ":basis";
     private static final String GROUPING_0_OWNERS_PATH = GROUPING_0_PATH + ":owners";
 
-    private static final String GROUPING_1_INCLUDE_PATH = GROUPING_0_PATH + ":include";
-    private static final String GROUPING_1_EXCLUDE_PATH = GROUPING_0_PATH + ":exclude";
-    private static final String GROUPING_1_BASIS_PATH = GROUPING_0_PATH + ":basis";
-    private static final String GROUPING_1_OWNERS_PATH = GROUPING_0_PATH + ":owners";
+    private static final String GROUPING_1_INCLUDE_PATH = GROUPING_1_PATH + ":include";
+    private static final String GROUPING_1_EXCLUDE_PATH = GROUPING_1_PATH + ":exclude";
+    private static final String GROUPING_1_BASIS_PATH = GROUPING_1_PATH + ":basis";
+    private static final String GROUPING_1_OWNERS_PATH = GROUPING_1_PATH + ":owners";
 
-    private static final String GROUPING_2_INCLUDE_PATH = GROUPING_0_PATH + ":include";
-    private static final String GROUPING_2_EXCLUDE_PATH = GROUPING_0_PATH + ":exclude";
-    private static final String GROUPING_2_BASIS_PATH = GROUPING_0_PATH + ":basis";
-    private static final String GROUPING_2_OWNERS_PATH = GROUPING_0_PATH + ":owners";
+    private static final String GROUPING_2_INCLUDE_PATH = GROUPING_2_PATH + ":include";
+    private static final String GROUPING_2_EXCLUDE_PATH = GROUPING_2_PATH + ":exclude";
+    private static final String GROUPING_2_BASIS_PATH = GROUPING_2_PATH + ":basis";
+    private static final String GROUPING_2_OWNERS_PATH = GROUPING_2_PATH + ":owners";
 
-    private static final String GROUPING_3_INCLUDE_PATH = GROUPING_0_PATH + ":include";
-    private static final String GROUPING_3_EXCLUDE_PATH = GROUPING_0_PATH + ":exclude";
-    private static final String GROUPING_3_BASIS_PATH = GROUPING_0_PATH + ":basis";
-    private static final String GROUPING_3_OWNERS_PATH = GROUPING_0_PATH + ":owners";
+    private static final String GROUPING_3_INCLUDE_PATH = GROUPING_3_PATH + ":include";
+    private static final String GROUPING_3_EXCLUDE_PATH = GROUPING_3_PATH + ":exclude";
+    private static final String GROUPING_3_BASIS_PATH = GROUPING_3_PATH + ":basis";
+    private static final String GROUPING_3_OWNERS_PATH = GROUPING_3_PATH + ":owners";
 
-    private static final String GROUPING_4_INCLUDE_PATH = GROUPING_0_PATH + ":include";
-    private static final String GROUPING_4_EXCLUDE_PATH = GROUPING_0_PATH + ":exclude";
-    private static final String GROUPING_4_BASIS_PATH = GROUPING_0_PATH + ":basis";
-    private static final String GROUPING_4_OWNERS_PATH = GROUPING_0_PATH + ":owners";
+    private static final String GROUPING_4_INCLUDE_PATH = GROUPING_4_PATH + ":include";
+    private static final String GROUPING_4_EXCLUDE_PATH = GROUPING_4_PATH + ":exclude";
+    private static final String GROUPING_4_BASIS_PATH = GROUPING_4_PATH + ":basis";
+    private static final String GROUPING_4_OWNERS_PATH = GROUPING_4_PATH + ":owners";
 
     private final WsSubjectLookup EVERY_ENTITY_LOOKUP = new WsSubjectLookup(null, null, EVERY_ENTITY);
 
@@ -1243,7 +1243,7 @@ public class GroupingsServiceMockTest {
         assertTrue(groupingsService.isAdmin(ADMIN_USER));
     }
 
-//    @Test
+    //    @Test
 //    public void removeSelfOptedTest() {
 //
 ////todo
@@ -1309,34 +1309,39 @@ public class GroupingsServiceMockTest {
 ////todo
 //    }
 //
-//    //    @Test
-//    public void addMemberAsTest() {
-//        List<String> attributes = new ArrayList<>();
-//
-//        given(gf.makeWsDeleteMemberResults(GROUPING_1_PATH + EXCLUDE, lookups.get(0), users.get(3).getUsername())).willReturn(deleteMemberResultsSuccess(GROUPING_1_PATH + EXCLUDE, users.get(3).getUsername()));
-//        given(gf.makeWsAddMemberResults(GROUPING_1_PATH + INCLUDE, lookups.get(0), users.get(3).getUsername())).willReturn(addMemberResults());
-////        given(gf.makeWsAssignAttributesResults(ASSIGN_TYPE_GROUP,
-////                OPERATION_ASSIGN_ATTRIBUTE,
-////                GROUPING_1_PATH, YYYYMMDDTHHMM,
-////                OPERATION_REPLACE_VALUES,
-////                any(WsAttributeAssignValue.class)))
-////                .willReturn(makeWsAssignAttributesResults(SUCCESS));
-////        given(gf.makeWsAssignAttributesResults(ASSIGN_TYPE_GROUP,
-////                OPERATION_ASSIGN_ATTRIBUTE,
-////                GROUPING_1_PATH + INCLUDE, YYYYMMDDTHHMM,
-////                OPERATION_REPLACE_VALUES,
-////                any(WsAttributeAssignValue.class)))
-////                .willReturn(makeWsAssignAttributesResults(SUCCESS));
-//
-//
-//        Grouping grouping = groupingRepository.findByPath(GROUPING_1_PATH).get(0);
-//        assertFalse(grouping.getComposite().getMembers().contains(users.get(3)));
-//
-//        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_1_PATH + INCLUDE, users.get(3).getUsername());
-//
-//        grouping = groupingRepository.findByPath(GROUPING_1_PATH).get(0);
-//        assertTrue(grouping.getComposite().getMembers().contains(users.get(3)));
-//    }
+    @Test
+    public void addMemberAsTest() {
+        Grouping grouping = groupingRepository.findByPath(GROUPING_1_PATH).get(0);
+        assertFalse(grouping.getComposite().getMembers().contains(users.get(3)));
+
+        given(gf.makeWsSubjectLookup(users.get(0).getUsername())).willReturn(lookups.get(0));
+
+        given(gf.makeWsDeleteMemberResults(GROUPING_1_PATH + EXCLUDE, lookups.get(0), users.get(3).getUsername())).willReturn(deleteMemberResultsSuccess(GROUPING_1_EXCLUDE_PATH, users.get(3).getUsername()));
+        given(gf.makeWsAddMemberResults(GROUPING_1_PATH + INCLUDE, lookups.get(0), users.get(3).getUsername())).willReturn(addMemberResults(GROUPING_1_INCLUDE_PATH, users.get(3).getUsername()));
+        given(gf.makeWsAssignAttributesResults(
+                eq(ASSIGN_TYPE_GROUP),
+                eq(OPERATION_ASSIGN_ATTRIBUTE),
+                eq(GROUPING_1_PATH),
+                eq(YYYYMMDDTHHMM),
+                eq(OPERATION_REPLACE_VALUES),
+                eq(null)))
+//                (WsAttributeAssignValue) notNull()))
+                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+        given(gf.makeWsAssignAttributesResults(
+                eq(ASSIGN_TYPE_GROUP),
+                eq(OPERATION_ASSIGN_ATTRIBUTE),
+                eq(GROUPING_1_PATH + INCLUDE),
+                eq(YYYYMMDDTHHMM),
+                eq(OPERATION_REPLACE_VALUES),
+                eq(null)))
+//                (WsAttributeAssignValue) notNull()))
+                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+
+        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_1_PATH + INCLUDE, users.get(3).getUsername());
+
+        grouping = groupingRepository.findByPath(GROUPING_1_PATH).get(0);
+        assertTrue(grouping.getComposite().getMembers().contains(users.get(3)));
+    }
 //
 //    @Test
 //    public void deleteMemberAsTest() {
@@ -1442,21 +1447,33 @@ public class GroupingsServiceMockTest {
         WsAddMemberResults addMemberResults = new WsAddMemberResults();
         WsResultMeta resultMeta = new WsResultMeta();
 
-        try{
+        try {
+            Grouping grouping = groupingRepository.findByIncludePathOrExcludePathOrCompositePathOrOwnersPath(groupPath, groupPath, groupPath, groupPath);
+
             Person person = personRepository.findByUsername(username);
 
             Group group = groupRepository.findByPath(groupPath);
 
-            List<Person> people = group.getMembers();
-            if(!people.contains(person)) {
-                people.add(person);
+            if (!group.getMembers().contains(person)) {
+                group.getMembers().add(person);
 
                 groupRepository.save(group);
+
+                Grouping newGrouping = databaseFactory.makeGrouping(
+                        grouping.getPath(),
+                        grouping.getBasis(),
+                        grouping.getExclude(),
+                        grouping.getInclude(),
+                        grouping.getOwners(),
+                        grouping.isListservOn(),
+                        grouping.isOptInOn(),
+                        grouping.isOptOutOn());
+
+                groupingRepository.save(newGrouping);
             }
 
             resultMeta.setResultCode(SUCCESS);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
             resultMeta.setResultCode(FAILURE);
         }
@@ -1467,14 +1484,30 @@ public class GroupingsServiceMockTest {
     }
 
     private WsDeleteMemberResults deleteMemberResultsSuccess(String groupPath, String username) {
-        //todo update for database
         WsDeleteMemberResults deleteMemberResults = new WsDeleteMemberResults();
         WsResultMeta resultMeta = new WsResultMeta();
         resultMeta.setResultCode(SUCCESS);
         deleteMemberResults.setResultMetadata(resultMeta);
+        Grouping grouping = groupingRepository.findByIncludePathOrExcludePathOrCompositePathOrOwnersPath(groupPath, groupPath, groupPath, groupPath);
 
-        //todo actually delete mermber
-//        Group group = groupRepository.findByPath(groupPath);
+        Person person = personRepository.findByUsername(username);
+
+        Group group = groupRepository.findByPath(groupPath);
+        group.getMembers().remove(person);
+
+        groupRepository.save(group);
+
+        Grouping newGrouping = databaseFactory.makeGrouping(
+                grouping.getPath(),
+                grouping.getBasis(),
+                grouping.getExclude(),
+                grouping.getInclude(),
+                grouping.getOwners(),
+                grouping.isListservOn(),
+                grouping.isOptInOn(),
+                grouping.isOptOutOn());
+
+        groupingRepository.save(newGrouping);
 
         return deleteMemberResults;
     }

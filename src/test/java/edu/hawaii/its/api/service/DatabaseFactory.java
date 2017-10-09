@@ -261,7 +261,7 @@ public class DatabaseFactory {
         groups.add(group);
     }
 
-    private void makeGrouping(String path,
+    public Grouping makeGrouping(String path,
                               Group basis,
                               Group exclude,
                               Group include,
@@ -285,6 +285,7 @@ public class DatabaseFactory {
         grouping.setOptOutOn(optOutOn);
 
         groupings.add(grouping);
+        return grouping;
     }
 
 
