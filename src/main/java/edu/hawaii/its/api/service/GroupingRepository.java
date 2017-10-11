@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface GroupingRepository extends CrudRepository<Grouping, String> {
-    List<Grouping> findByPath(String path);
+    Grouping findByPath(String path);
     Grouping findByIncludePathOrExcludePathOrCompositePathOrOwnersPath(String path0, String path1, String path2, String path3);
     List<Grouping> findByOwnersMembersUsername(String username);
 }

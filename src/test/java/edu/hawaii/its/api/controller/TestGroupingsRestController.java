@@ -113,6 +113,8 @@ public class TestGroupingsRestController {
 
         gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[4]);
         gs.deleteMemberAs(tst[0], GROUPING_INCLUDE, tst[4]);
+
+        gc.removeOwnership(GROUPING, tst[0], tst[5]);
     }
 
     @Test
