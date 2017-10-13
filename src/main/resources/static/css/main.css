@@ -8,6 +8,11 @@
     src: url(/myiam/fonts/CormorantUpright-Regular.ttf);
 }
 
+@font-face {
+    font-family: alegreyasans-regular;
+    src: url(/myiam/fonts/AlegreyaSans-Regular.ttf);
+}
+
 html {
     position: relative;
     min-height: 100%;
@@ -143,6 +148,10 @@ td.uh-pre {
     width: auto;
     padding-top: 20px;
     background-color: transparent;
+
+    font-family: alegreyasans-regular, opensans-regular, serif;
+    font-weight: normal;
+    font-size: 25px;
 }
 
 .navbar-default .navbar-nav > .open > a,
