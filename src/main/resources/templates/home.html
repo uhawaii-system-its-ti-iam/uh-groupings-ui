@@ -8,19 +8,21 @@
 <!--  Content container -->
 <div class="container" ng-controller="HolidayJsController" data-ng-init="init()">
 
-    <div class="jumbotron text-center">
-        <h1 class="dropshadow">UH Groupings</h1>
+    <div class="jumbotron">
+        <h1 class="dropshadow text-center">UH Groupings</h1>
         <p>
             Manage your groups in one place, use them in many places. If you manage lists of people to send them emails,
             or provide them privileges or permissions, you can use this to manage your lists.
         </p>
-        <div sec:authorize="!isAuthenticated()">
-            <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
-        </div>
-        <div sec:authorize="isAuthenticated()">
-            <form sec:authorize="isAuthenticated()" action="/logout" th:action="@{/logout}" method="post" id="logout_form">
-                <a class="btn btn-lg btn-default" type="submit">Logout</a>
-            </form>
+        <div class="text-center">
+            <div sec:authorize="!isAuthenticated()">
+                <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <form sec:authorize="isAuthenticated()" action="/logout" th:action="@{/logout}" method="post" id="logout_form">
+                    <a class="btn btn-lg btn-default" type="submit">Logout</a>
+                </form>
+            </div>
         </div>
     </div>
     <div class="row" sec:authorize="isAuthenticated()">
