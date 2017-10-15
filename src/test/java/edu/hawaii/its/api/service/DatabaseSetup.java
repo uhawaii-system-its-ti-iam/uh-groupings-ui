@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.*;
 
 @ActiveProfiles("localTest")
-public class DatabaseFactory {
+public class DatabaseSetup {
     private int numberOfPersons = 100;
 
     String pathRoot = "path:to:grouping";
@@ -27,7 +27,7 @@ public class DatabaseFactory {
     private List<Group> groups = new ArrayList<>();
     private List<Grouping> groupings = new ArrayList<>();
 
-    public DatabaseFactory(PersonRepository personRepository, GroupRepository groupRepository, GroupingRepository groupingRepository) {
+    public DatabaseSetup(PersonRepository personRepository, GroupRepository groupRepository, GroupingRepository groupingRepository) {
         this.personRepository = personRepository;
         this.groupRepository = groupRepository;
         this.groupingRepository = groupingRepository;
