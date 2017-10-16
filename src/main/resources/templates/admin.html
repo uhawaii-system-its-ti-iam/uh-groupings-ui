@@ -19,131 +19,30 @@
                 </div>
 
                 <ul class="nav nav-tabs" id="adminTab">
-                    <li role="presentation" class="active" data-toggle="tooltip" data-placement="top"
-                        title="Admin List">
-                        <a href="#list" data-toggle="tab" role="tab">
-                            <i class="icon ion-android-people" id="icons"></i>
+                    <li role="presentation" class="active" data-toggle="tooltip" data-placement="top" title="Grouping Search">
+                        <a href="#grouping" data-toggle="tab" role="tab">
+                            Grouping Search
                         </a>
                     </li>
-                    <li role="presentation" data-toggle="tooltip" data-placement="top" title="Grouping Search">
-                        <a href="#grouping" data-toggle="tab" role="tab">
-                            <i class="icon ion-android-list size-64" id="icons "></i>
+                    <li role="presentation" data-toggle="tooltip" data-placement="top"
+                        title="Admin List">
+                        <a href="#list" data-toggle="tab" role="tab">
+                            Admin List
                         </a>
                     </li>
                 </ul>
 
                 <div class="tab-content">
-                    <div class="tab-pane fade in active" id="list">
-                        <div class="panel panel-default">
-                            <div class="panel-heading" style="border: 0;padding: 5px;">
-                                <div class="row">
-                                    <div style="padding-left: 20px">
-                                        <table width="97%">
-                                            <th>
-                                                <h3 style="margin-top: 5px; width: 10em">Designated Admins</h3>
-                                            </th>
-                                            <th style="text-align: right">
-                                                <div>
-<<<<<<< Updated upstream
-                                                    <input type="text" ng-model="username"/>
-                                                    <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
-=======
-                                                    <!--<input type="text" ng-model="username"/>
-                                                    <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>-->
-                                                    <input placeholder="Type to filter text..." type="text" ng-model="query"
-                                                           style="float: right"/>
->>>>>>> Stashed changes
-                                                </div>
-                                            </th>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Table -->
-                            <table class="table table-bordered table-condensed table-hover">
-                                <thead>
-                                <tr>
-<<<<<<< Updated upstream
-                                    <th style="width: 30em;"><a type="button" class="btn btn-default btn-block"
-                                                                style="padding-left: 0; text-align: left; float: left; width: 15em; border: none"
-                                                                ng-click="sortCol(list, 'name', 'pagedItems', 'symbolAdmin')"><b>Name
-                                        {{symbol.name}}</b></a>
-                                        <input placeholder="Type to filter text..." type="text" ng-model="query"
-                                               style="float: right"/>
-
-                                    </th>
-                                    <th><a type="button" class="btn btn-default btn-block"
-=======
-                                    <th style="width: 25em;"><a type="button" class="btn btn-default btn-block"
-                                                                style="padding-left: 0; text-align: left; float: left; width: 15em; border: none"
-                                                                ng-click="sortCol(list, 'name', 'pagedItems', 'symbolAdmin')"><b>Name
-                                        {{symbol.name}}</b></a>
-                                        <input type="text" ng-model="username" size="15"/>
-                                        <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
-                                    </th>
-                                    <th style="width: 10em"><a type="button" class="btn btn-default btn-block"
->>>>>>> Stashed changes
-                                           style="padding-left: 0; text-align: left; width: 100%; border: none"
-                                           ng-click="sortCol(list, 'uuid', 'pagedItems', 'symbolAdmin')"><b>UH ID
-                                        {{symbol.uuid}}</b></a></th>
-                                    <th style="width: 15em"><a type="button" class="btn btn-default btn-block"
-                                           style="padding-left: 0; text-align: left; width: 100%; border: none"
-                                           ng-click="sortCol(list, 'username', 'pagedItems', 'symbolAdmin')"><b>Username
-                                        {{symbol.username}}</b></a></th>
-                                    <th style="width: 10em">remove</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="l in data = (pagedItems[currentPage] | filter: query)">
-                                    <td>{{l.name}}</td>
-                                    <td>{{l.uuid}}</td>
-                                    <td>{{l.username}}</td>
-                                    <td>
-                                        <button class="btn btn-danger btn-block"
-                                                ng-click="removeAdmin($index + (currentPage * itemsPerPage))"><span
-                                                class="glyphicon glyphicon-remove"></span></button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                                <tfoot>
-                                <td colspan="6">
-                                    <ul class="pagination pull-right">
-                                        <li ng-class="{disabled: (currentPage) == 0}">
-                                            <a href="" ng-click="paging('first')">«« First</a>
-                                        </li>
-                                        <li ng-class="{disabled: (currentPage) == 0}">
-                                            <a href="" ng-click="paging('prev')">« Prev</a>
-                                        </li>
-                                        <li ng-repeat="n in range(pagedItems.length, currentPage - gap, currentPage + gap + 1) "
-                                            ng-class="{active: n == currentPage}"
-
-                                            ng-click="paging(n)"
-                                        ><a href="" ng-bind="n + 1">1</a>
-                                        </li>
-                                        <li ng-class="{disabled: ((currentPage) == pagedItems.length - 1) || pagedItems.length == 0 }">
-                                            <a href="" ng-click="paging('next')">Next »</a>
-                                        </li>
-                                        <li ng-class="{disabled: ((currentPage) == pagedItems.length - 1) || pagedItems.length == 0 }">
-                                            <a href="" ng-click="paging('last')">Last »»</a>
-                                        </li>
-                                    </ul>
-                                </td>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="grouping">
+                    <div class="tab-pane fade in active" id="grouping">
                         <h2 class="text-center">Search For Grouping</h2>
 
                         <div class="input-group">
-                            <input class="form-control" list="testList"
+                            <input class="form-control" style="width: 75em" list="testList"
                                    ng-keyup="$event.keyCode == 13 ? search() : null"
                                    data-list="testList"
                                    type="text" ng-model="groupingName"/>
                             <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" ng-click="search()">Search</button>
+                                <button class="btn btn-primary" type="button" ng-click="search()">Search</button>
                             </span>
                             <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
                                 <option ng-repeat="o in groupingList" value="{{o.name}}"></option>
@@ -553,6 +452,88 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="list">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="border: 0;padding: 5px;">
+                                <div class="row">
+                                    <div style="padding-left: 20px">
+                                        <table width="97%">
+                                            <th>
+                                                <h3 style="margin-top: 5px; width: 10em">Designated Admins</h3>
+                                            </th>
+                                            <th style="text-align: right">
+                                                <div>
+                                                    <input placeholder="Type to filter text..." type="text" ng-model="query"
+                                                           style="float: right"/>
+                                                </div>
+                                            </th>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Table -->
+                            <table class="table table-bordered table-condensed table-hover">
+                                <thead>
+                                <tr>
+                                    <th style="width: 25em;"><a type="button" class="btn btn-default btn-block"
+                                                                style="padding-left: 0; text-align: left; float: left; width: 15em; border: none"
+                                                                ng-click="sortCol(list, 'name', 'pagedItems', 'symbolAdmin')"><b>Name
+                                        {{symbol.name}}</b></a>
+                                        <input type="text" ng-model="username" size="15"/>
+                                        <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
+                                    </th>
+                                    <th style="width: 10em"><a type="button" class="btn btn-default btn-block"
+                                                               style="padding-left: 0; text-align: left; width: 100%; border: none"
+                                                               ng-click="sortCol(list, 'uuid', 'pagedItems', 'symbolAdmin')"><b>UH ID
+                                        {{symbol.uuid}}</b></a></th>
+                                    <th style="width: 15em"><a type="button" class="btn btn-default btn-block"
+                                                               style="padding-left: 0; text-align: left; width: 100%; border: none"
+                                                               ng-click="sortCol(list, 'username', 'pagedItems', 'symbolAdmin')"><b>Username
+                                        {{symbol.username}}</b></a></th>
+                                    <th style="width: 10em">remove</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="l in data = (pagedItems[currentPage] | filter: query)">
+                                    <td>{{l.name}}</td>
+                                    <td>{{l.uuid}}</td>
+                                    <td>{{l.username}}</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-block"
+                                                ng-click="removeAdmin($index + (currentPage * itemsPerPage))"><span
+                                                class="glyphicon glyphicon-remove"></span></button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <td colspan="6">
+                                    <ul class="pagination pull-right">
+                                        <li ng-class="{disabled: (currentPage) == 0}">
+                                            <a href="" ng-click="paging('first')">«« First</a>
+                                        </li>
+                                        <li ng-class="{disabled: (currentPage) == 0}">
+                                            <a href="" ng-click="paging('prev')">« Prev</a>
+                                        </li>
+                                        <li ng-repeat="n in range(pagedItems.length, currentPage - gap, currentPage + gap + 1) "
+                                            ng-class="{active: n == currentPage}"
+
+                                            ng-click="paging(n)"
+                                        ><a href="" ng-bind="n + 1">1</a>
+                                        </li>
+                                        <li ng-class="{disabled: ((currentPage) == pagedItems.length - 1) || pagedItems.length == 0 }">
+                                            <a href="" ng-click="paging('next')">Next »</a>
+                                        </li>
+                                        <li ng-class="{disabled: ((currentPage) == pagedItems.length - 1) || pagedItems.length == 0 }">
+                                            <a href="" ng-click="paging('last')">Last »»</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
                 </div>
