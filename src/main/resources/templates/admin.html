@@ -44,8 +44,15 @@
                                             </th>
                                             <th style="text-align: right">
                                                 <div>
+<<<<<<< Updated upstream
                                                     <input type="text" ng-model="username"/>
                                                     <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
+=======
+                                                    <!--<input type="text" ng-model="username"/>
+                                                    <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>-->
+                                                    <input placeholder="Type to filter text..." type="text" ng-model="query"
+                                                           style="float: right"/>
+>>>>>>> Stashed changes
                                                 </div>
                                             </th>
                                         </table>
@@ -57,6 +64,7 @@
                             <table class="table table-bordered table-condensed table-hover">
                                 <thead>
                                 <tr>
+<<<<<<< Updated upstream
                                     <th style="width: 30em;"><a type="button" class="btn btn-default btn-block"
                                                                 style="padding-left: 0; text-align: left; float: left; width: 15em; border: none"
                                                                 ng-click="sortCol(list, 'name', 'pagedItems', 'symbolAdmin')"><b>Name
@@ -66,14 +74,24 @@
 
                                     </th>
                                     <th><a type="button" class="btn btn-default btn-block"
+=======
+                                    <th style="width: 25em;"><a type="button" class="btn btn-default btn-block"
+                                                                style="padding-left: 0; text-align: left; float: left; width: 15em; border: none"
+                                                                ng-click="sortCol(list, 'name', 'pagedItems', 'symbolAdmin')"><b>Name
+                                        {{symbol.name}}</b></a>
+                                        <input type="text" ng-model="username" size="15"/>
+                                        <button class="btn btn-success" ng-click="addAdmin()">Add Admin</button>
+                                    </th>
+                                    <th style="width: 10em"><a type="button" class="btn btn-default btn-block"
+>>>>>>> Stashed changes
                                            style="padding-left: 0; text-align: left; width: 100%; border: none"
                                            ng-click="sortCol(list, 'uuid', 'pagedItems', 'symbolAdmin')"><b>UH ID
                                         {{symbol.uuid}}</b></a></th>
-                                    <th><a type="button" class="btn btn-default btn-block"
+                                    <th style="width: 15em"><a type="button" class="btn btn-default btn-block"
                                            style="padding-left: 0; text-align: left; width: 100%; border: none"
                                            ng-click="sortCol(list, 'username', 'pagedItems', 'symbolAdmin')"><b>Username
                                         {{symbol.username}}</b></a></th>
-                                    <th>remove</th>
+                                    <th style="width: 10em">remove</th>
                                 </tr>
                                 </thead>
                                 <tbody>
