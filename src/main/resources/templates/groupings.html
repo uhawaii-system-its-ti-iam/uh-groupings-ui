@@ -477,17 +477,20 @@
                                     <th ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwners')">
                                         Username {{symbol.username}}
                                     </th>
-                                    <th>Remove</th>
+                                    <th class = "col-lg-1">Remove</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
                                     <td>{{owner.name}}</td>
                                     <td>{{owner.username}}</td>
-                                    <td>
-                                        <button class="btn btn-danger btn-block" ng-click="removeOwner($index)"><span
-                                                class="glyphicon glyphicon-remove"></span>
+                                    <td >
+                                        <button class="btn btn-danger btn-block" ng-click="removeOwner($index)">
+                                            <i class="fa fa-minus" aria-hidden="true"></i>
                                         </button>
+                                        <!-- <button class="btn btn-warning btn-block" ng-click="removeOwner($index)">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button> -->
                                     </td>
                                 </tr>
                                 </tbody>
