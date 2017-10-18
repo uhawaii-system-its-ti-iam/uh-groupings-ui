@@ -348,10 +348,6 @@
             }
         };
 
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-
     }
 
     membershipApp.controller("MembershipJsController", MembershipJsController);

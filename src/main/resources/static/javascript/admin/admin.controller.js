@@ -600,10 +600,6 @@
             }
         });
 
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-
     }
 
     adminApp.controller("AdminJsController", AdminJsController);
