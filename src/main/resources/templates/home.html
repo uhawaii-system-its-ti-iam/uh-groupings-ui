@@ -43,21 +43,21 @@
         <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
             <p class="h4">View Admin Page</p>
             <p>
-                Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+                Manage the list of Administrators for this service.  Search for and manage any Grouping on behalf of the owner.
             </p>
             <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">View</a></p>
         </div>
         <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
             <p class="h4">View Memberships</p>
             <p>
-                Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+                View and manage my memberships.  Search for new Groupings to join as a member.
             </p>
             <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">View</a></p>
         </div>
         <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
             <p class="h4">View Groupings Owned</p>
             <p>
-                Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+                View and manage Groupings I own.  Configure Grouping options and integration destinations.
             </p>
             <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">View</a></p>
         </div>
