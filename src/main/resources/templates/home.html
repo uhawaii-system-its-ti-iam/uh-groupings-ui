@@ -17,8 +17,8 @@
                 <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
             </div>
             <div sec:authorize="isAuthenticated()">
-                <form sec:authorize="isAuthenticated()" action="/logout" th:action="@{/logout}" method="post">
-                    <a class="btn btn-lg btn-default" type="submit">Logout</a>
+                <form action="/logout" th:action="@{/logout}" method="post">
+                    <button class="btn btn-lg btn-default" type="submit">Logout</button>
                 </form>
             </div>
         </div>
