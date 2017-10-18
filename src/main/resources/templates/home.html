@@ -7,35 +7,58 @@
 
 <!--  Content container -->
 <div class="container" ng-controller="HolidayJsController" data-ng-init="init()">
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div id="tops">
-                <h2 class="text-left"> Welcome to UH Groupings</h2>
+    <div class="jumbotron">
+        <h1 class="dropshadow">Welcome to UH Groupings</h1>
+        <p class="lead">
+            Manage your groups in one place, use them in many places.
+        </p>
+        <div>
+            <div sec:authorize="!isAuthenticated()">
+                <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <form action="/logout" th:action="@{/logout}" method="post">
+                    <button class="btn btn-lg btn-default" type="submit">Logout</button>
+                </form>
             </div>
         </div>
     </div>
-
-    <div id="topRow">
-        <p>Manage your groups in one place, use them in many places.</p>
-
-        <p>UH Groupings allows you to create groups, manage group memberships, control members' self-service options, and more.  
-           Groups can be utilized as one or more of the following: email lists, permissions and privilege assignments for access control via CAS, etc.  
-           Additionally, UH Groupings allows you to leverage existing, automatically created and updated, groups, which can substantially reduce the manual overhead of group management.  
+    <div class="row" style="margin-left: inherit; margin-right: inherit">
+        <span class="h4">What is UH Groupings?</span>
+        <p>
+            UH Groupings allows you to create groups, manage group memberships, control members' self-service options,
+            and more. Groups can be utilized as one or more of the following: email lists, permissions and privilege
+            assignments for access control via CAS, etc. Additionally, UH Groupings allows you to leverage existing,
+            automatically created and updated, groups, which can substantially reduce the manual overhead of group
+            management.
         </p>
-
-        <p>For more information, visit &lt;<a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings</a>&gt;</p>
+        <p>
+            For more information, visit &lt;<a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings</a>&gt;
+        </p>
     </div>
-
-    <div id="uh-login" sec:authorize="!isAuthenticated()">
-        <fieldset>
-            <legend>UH Users</legend>
-            <p style="padding-top: 1.2em">
-                <a th:href="@{/login}" class="btn btn-lg btn-success btn-block">Login In Here</a>
+    <div class="row" sec:authorize="isAuthenticated()">
+        <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+            <p class="h4">View Admin Page</p>
+            <p>
+                Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
             </p>
-        </fieldset>
+            <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">View</a></p>
+        </div>
+        <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
+            <p class="h4">View Memberships</p>
+            <p>
+                Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+            </p>
+            <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">View</a></p>
+        </div>
+        <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
+            <p class="h4">View Groupings Owned</p>
+            <p>
+                Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+            </p>
+            <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">View</a></p>
+        </div>
     </div>
-
 </div>
 <!-- / Content container. -->
 
