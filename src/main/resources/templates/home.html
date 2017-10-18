@@ -37,21 +37,21 @@
         </p>
     </div>
     <div class="row" sec:authorize="isAuthenticated()">
-        <div class="col-md-3" sec:authorize="hasRole('ROLE_ADMIN')">
+        <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
             <p class="h4">View Admin Page</p>
             <p>
                 Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
             </p>
             <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">View</a></p>
         </div>
-        <div class="col-md-3" sec:authorize="hasRole('ROLE_UH')">
+        <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
             <p class="h4">View Memberships</p>
             <p>
                 Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
             </p>
             <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">View</a></p>
         </div>
-        <div class="col-md-3" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
+        <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
             <p class="h4">View Groupings Owned</p>
             <p>
                 Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
