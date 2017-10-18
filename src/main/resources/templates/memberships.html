@@ -63,7 +63,7 @@
                                     <li ng-class="{disabled: (currentPageOptOut) == 0}">
                                         <a href=""
                                            ng-click="currentPage('First','pagedItemsMembersList','currentPageOptOut')">«
-                                            Frist</a>
+                                            First</a>
                                     </li>
                                     <li ng-class="{disabled: (currentPageOptOut) == 0}">
                                         <a href=""
@@ -72,7 +72,6 @@
                                     </li>
                                     <li ng-repeat="n in range(pagedItemsMembersList.length, currentPageOptOut - gap, currentPageOptOut + gap + 1) "
                                         ng-class="{active: n == currentPageOptOut}"
-
                                         ng-click="currentPage('Set','pagedItemsMembersList','currentPageOptOut')"
                                             ><a href="" ng-bind="n + 1">1</a>
                                     </li>
