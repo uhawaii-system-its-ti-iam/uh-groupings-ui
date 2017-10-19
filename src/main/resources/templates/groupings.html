@@ -9,9 +9,9 @@
 <div class="container">
     <div class='row'>
         <div class='container-fluid'>
-            <h1 class="text-left">Groupings Owned</h1>
+            <h1 class="text-center">Groupings Owned</h1>
 
-            <p class="text-left">Owner can modify the groupings that they own.</p>
+            <p class="text-center">Owner can modify the groupings that they own.</p>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
                 <div ng-show="!showGrouping">
@@ -95,7 +95,7 @@
                         <li data-toggle="tooltip" data-placement="top" title="Preferences of Groupings"><a
                                 data-toggle="tab" href="#preference">Preferences</a></li>
                         <li class="pull-right">
-                            <button ng-click="showGroups()" class="btn btn-primary">Go Back</button>
+                            <button ng-click="showGroups()" class="btn btn-primary">Return to groupings</button>
                         </li>
                     </ul>
 
@@ -477,20 +477,17 @@
                                     <th ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwners')">
                                         Username {{symbol.username}}
                                     </th>
-                                    <th class = "col-lg-1">Remove</th>
+                                    <th>Remove</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
                                     <td>{{owner.name}}</td>
                                     <td>{{owner.username}}</td>
-                                    <td >
-                                        <button class="btn btn-danger btn-block" ng-click="removeOwner($index)">
-                                            <i class="fa fa-minus" aria-hidden="true"></i>
+                                    <td>
+                                        <button class="btn btn-warning btn-block" ng-click="removeOwner($index)"><span
+                                                class="glyphicon glyphicon-remove"></span>
                                         </button>
-                                        <!-- <button class="btn btn-warning btn-block" ng-click="removeOwner($index)">
-                                            <span class="glyphicon glyphicon-remove"></span>
-                                        </button> -->
                                     </td>
                                 </tr>
                                 </tbody>
