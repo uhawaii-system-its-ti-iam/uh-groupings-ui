@@ -9,7 +9,7 @@
      * @param dataDelete   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function AdminJsController($scope, $filter, $window, dataProvider, dataUpdater, dataDelete) {
+    function AdminJsController($scope, $window, $uibModal, dataProvider, dataUpdater, dataDelete) {
 
         $scope.currentUsername = "";
         $scope.filteredItems = [];
@@ -306,13 +306,37 @@
             var deleteUser = $scope.list[index].username;
             var deleteUrl = "api/groupings/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteAdmin";
             console.log(deleteUrl);
-            if ($scope.list.length > 1) {
-                dataDelete.deleteData(function (d) {
-                    $scope.list.splice(index, 1);
-                    $scope.init();
-                }, deleteUrl);
-            }
+
+            var message = "Are you sure you want to delete " + deleteUser;
+            var modalHtml = '<div class="modal-body">' + message + '</div>';
+            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()">Cancel</button></div>';
+
+
+            var modalInstance = $uibModal.open({
+                template: modalHtml,
+                controller: AdminJsController
+            });
+
+            /*modalInstance.result.then(function() {
+                console.log("hello");
+            });*/
+            /*if ($scope.list.length > 1) {
+             dataDelete.deleteData(function (d) {
+             $scope.list.splice(index, 1);
+             $scope.init();
+             }, deleteUrl);
+             }*/
         };
+
+        $scope.ok = function () {
+            modalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            console.log("Trying to cancel");
+            modalInstance.dismiss('cancel');
+        };
+
 
         $scope.removeMember = function (type, row) {
             var user;
@@ -600,7 +624,15 @@
             }
         });
 
-    }
+        /*$(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });*/
 
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').focus()
+        });
+
+    }
     adminApp.controller("AdminJsController", AdminJsController);
-})();
+})
+();
