@@ -69,6 +69,9 @@ h1, h2, h3, h4 {
     background: rgba(0, 0, 0, 0.5);
 }
 
+#searchAdmin{
+    margin-top: 10px;
+}
 @keyframes spin {
     0% {
         transform: rotate(0deg);

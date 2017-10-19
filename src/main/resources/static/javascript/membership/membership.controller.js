@@ -93,7 +93,7 @@
          * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
          */
         $scope.sort = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'member': '', 'optIn': '', 'cancelOut': '', 'cancelIn': ''};
+            $scope.symbol = {'member': '', 'optInName': '', 'optInPath': ''};
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
                 list = $scope.sortOrder(list, col);
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
@@ -109,13 +109,8 @@
                     $scope.symbol.member = '\u21c5';
                     break;
                 case 'pagedItemsOptInList' :
-                    $scope.symbol.optIn = '\u21c5';
-                    break;
-                case 'pagedItemsOptedInList' :
-                    $scope.symbol.cancelIn = '\u21c5';
-                    break;
-                case 'pagedItemsOptedOutList' :
-                    $scope.symbol.cancelOut = '\u21c5';
+                    if(col == "name") $scope.symbol.optInName = '\u21c5';
+                    else $scope.symbol.optInPath = '\u21c5';
                     break;
             }
         };
