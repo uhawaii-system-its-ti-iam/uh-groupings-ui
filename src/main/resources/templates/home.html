@@ -7,34 +7,61 @@
 
 <!--  Content container -->
 <div class="container" ng-controller="HolidayJsController" data-ng-init="init()">
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div id="tops">
-                <h2> Welcome to UH Groupings</h2>
+    <div class="jumbotron">
+        <h1 class="dropshadow">Welcome to UH Groupings</h1>
+        <p class="lead">
+            Manage your Groupings in one place, use them in many places.
+        </p>
+        <div>
+            <div sec:authorize="!isAuthenticated()">
+                <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <form action="/logout" th:action="@{/logout}" method="post">
+                    <button class="btn btn-lg btn-default" type="submit">Logout</button>
+                </form>
             </div>
         </div>
     </div>
-
-    <div id="topRow">
-        <p>Manage your groups in one place, use them in many places.</p>
-
-        <p>If you manage lists of people so that you send them email, or provide them privileges or permissions,
-            or for other purposes, you can use UH Groupings to manage your lists in one place.
-            Additionally, you can make use of groups that already existing in our Group Store.</p>
-
-        <p>For more information on UH Groupings and the Group Store, visit &lt;<a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings</a>&gt;</p>
+    <div class="row" style="margin-left: inherit; margin-right: inherit">
+        <span class="h4">What is UH Groupings?</span>
+        <p>
+            A "Grouping" is a collection of members.  UH Groupings allows you to create Groupings, manage Grouping memberships, 
+            control members' self-service options, designate Grouping integrations, and more.
+        </p>
+        <p>
+            Groupings can be integrated with one or more of the following: email LISTSERV lists, permissions and privilege 
+            assignments for access control via CAS, etc.  Additionally, UH Groupings allows you to leverage existing, 
+            automatically created and updated, membership collections, which can substantially reduce the manual overhead of 
+            membership management.  
+        </p>
+        <p>
+            For more information, visit &lt;<a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings</a>&gt;
+        </p>
     </div>
-
-    <div id="uh-login" sec:authorize="!isAuthenticated()">
-        <fieldset>
-            <legend>UH Users</legend>
-            <p style="padding-top: 1.2em">
-                <a th:href="@{/login}" class="btn btn-lg btn-success btn-block">Login In Here</a>
+    <div class="row" sec:authorize="isAuthenticated()">
+        <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+            <p class="h4">View Admin Page</p>
+            <p>
+                Manage the list of Administrators for this service.  Search for and manage any Grouping on behalf of the owner.
             </p>
-        </fieldset>
+            <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">View</a></p>
+        </div>
+        <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
+            <p class="h4">View Memberships</p>
+            <p>
+                View and manage my memberships.  Search for new Groupings to join as a member.
+            </p>
+            <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">View</a></p>
+        </div>
+        <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
+            <p class="h4">View Groupings Owned</p>
+            <p>
+                View and manage Groupings I own.  Manage members, configure Grouping options and integration destinations.
+            </p>
+            <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">View</a></p>
+        </div>
     </div>
-
 </div>
 <!-- / Content container. -->
 

@@ -544,10 +544,6 @@
             }
         };
 
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
-
     }
 
     ownerApp.controller("OwnerJsController", OwnerJsController);
