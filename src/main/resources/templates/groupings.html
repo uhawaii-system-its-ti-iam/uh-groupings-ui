@@ -9,9 +9,15 @@
 <div class="container">
     <div class='row'>
         <div class='container-fluid'>
+<<<<<<< HEAD
             <h1 class="text-left">Manage My Groupings</h1>
 
             <p class="text-left">View and manage Groupings I own.  Manage members, configure Grouping options and integration destinations.</p>
+=======
+            <h1 class="text-center">Groupings Owned</h1>
+
+            <p class="text-center">Owner can modify the groupings that they own.</p>
+>>>>>>> 2fe1c1cd9e78b0f57b7748dc39c5fed7b881d3f7
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
                 <div ng-show="!showGrouping">
@@ -95,7 +101,7 @@
                         <li data-toggle="tooltip" data-placement="top" title="Preferences of Groupings"><a
                                 data-toggle="tab" href="#preference">Preferences</a></li>
                         <li class="pull-right">
-                            <button ng-click="showGroups()" class="btn btn-primary">Go Back</button>
+                            <button ng-click="showGroups()" class="btn btn-primary">Return to groupings</button>
                         </li>
                     </ul>
 
