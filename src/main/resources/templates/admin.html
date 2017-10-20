@@ -36,38 +36,20 @@
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="list">
                         <div class="panel panel-default">
-                            <div class="panel-heading" style="border: 0;padding: 5px;">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div style="padding-left: 20px">
-                                            <h3 style="margin-top: 5px">Designated Admins</h3>
-
-                                            <div style="float: left;  margin-right: 10px;"
-                                                 data-toggle="tooltip" data-placement="left" title="Add Admin">
-                                                <button class="btn btn-primary" data-toggle="collapse"
-                                                        data-target="#addAdmin" aria-expanded="false"
-                                                        aria-controls="addAdmin">
-                                                    <i class="icon ion-person-add"
-                                                       style="font-size: 15px"></i>
-                                                </button>
-                                            </div>
-                                            <div style="float: left;">
-                                                <div class="collapse" id="addAdmin">
-                                                    <input type="text" ng-model="username"/>
-                                                    <button class="btn btn-success" ng-click="addAdmin()">Add
-                                                        Admin
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div align="right">
-                                                <div align="right" style="margin-top: 5px; margin-right: 25px">
-                                                    <input placeholder="Type to filter text..." type="text"
-                                                           ng-model="query"/>
-                                                </div>
+                            <div class="panel-heading">
+                                <h3 style="margin-top: 0px;">Designated Admins</h3>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="pull-left col-md-3 input-group" style="padding-left: 15px; padding-right: 15px;">
+                                            <input style="margin-top: 5px;" type="text" class="form-control" placeholder="Enter an admin to add..." ng-model="username"/>
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-success" style="margin-top: 5px;" ng-click="addAdmin()">Add</button>
                                             </div>
                                         </div>
+                                        <div class="pull-right input-group col-md-2" style="padding-right: 15px;">
+                                            <input class="form-control" style="margin-top: 5px;" placeholder="Type to filter text..." type="text" ng-model="query"/>
+                                        </div>
                                     </div>
-
                                 </div>
                             </div>
 
