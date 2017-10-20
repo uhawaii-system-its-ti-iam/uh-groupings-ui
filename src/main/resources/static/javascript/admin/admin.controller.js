@@ -305,38 +305,40 @@
         $scope.removeAdmin = function (index) {
             var deleteUser = $scope.list[index].username;
             var deleteUrl = "api/groupings/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteAdmin";
-            console.log(deleteUrl);
 
             var message = "Are you sure you want to delete " + deleteUser;
             var modalHtml = '<div class="modal-body">' + message + '</div>';
-            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()">Cancel</button></div>';
+            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
 
-
-            var modalInstance = $uibModal.open({
+            $scope.modalInstance = $uibModal.open({
                 template: modalHtml,
-                controller: AdminJsController
+                scope: $scope
             });
 
-            /*modalInstance.result.then(function() {
-                console.log("hello");
-            });*/
-            /*if ($scope.list.length > 1) {
-             dataDelete.deleteData(function (d) {
-             $scope.list.splice(index, 1);
-             $scope.init();
-             }, deleteUrl);
-             }*/
+            $scope.modalInstance.result.then(function () {
+                console.log(deleteUrl);
+                if ($scope.list.length > 1) {
+                    dataDelete.deleteData(function (d) {
+                        $scope.list.splice(index, 1);
+                        $scope.init();
+                    }, deleteUrl);
+                }
+            });
         };
 
+        /**
+         * Function that closes modal and proceeds with the modal result.
+         */
         $scope.ok = function () {
-            modalInstance.close();
+            $scope.modalInstance.close();
         };
 
+        /**
+         * Function that closes modal.
+         */
         $scope.cancel = function () {
-            console.log("Trying to cancel");
-            modalInstance.dismiss('cancel');
+            $scope.modalInstance.dismiss();
         };
-
 
         $scope.removeMember = function (type, row) {
             var user;
@@ -424,14 +426,6 @@
                 }
             }
             return pagedList;
-            /*$scope.pagedItems=[];
-             for(var i = 0; i < $scope.list.length ; i++){
-             if(i % $scope.itemsPerPage === 0){
-             $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)] = [ $scope.list[i]];
-             }else{
-             $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)].push( $scope.list[i]);
-             }
-             }*/
         };
 
         /**shows the range between the start and end
@@ -624,15 +618,13 @@
             }
         });
 
-        /*$(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });*/
 
         $('#myModal').on('shown.bs.modal', function () {
             $('#myInput').focus()
         });
 
     }
+
     adminApp.controller("AdminJsController", AdminJsController);
 })
 ();
