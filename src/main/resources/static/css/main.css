@@ -201,6 +201,12 @@ td.uh-pre {
     text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
 }
 
+.panel.panel-square-corners {
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+}
+
 @media (min-width: 768px) {
     body {
         padding-top: 100px; /* Required padding for .navbar-fixed-top. Change if height of navigation changes. */
