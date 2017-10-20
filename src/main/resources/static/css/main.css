@@ -180,6 +180,10 @@ td.uh-pre {
     text-align: center;
 }
 
+#headingHeight{
+    height: 80px;
+}
+
 #groupHeader {
     height: 55px;
 }
@@ -190,7 +194,7 @@ td.uh-pre {
 
 #headingOptIn {
     position: relative;
-    vertical-align: 50%;
+    /*vertical-align: 50%;*/
     white-space: nowrap;
     margin-top: 5px;
     /*height:  15px;*/
