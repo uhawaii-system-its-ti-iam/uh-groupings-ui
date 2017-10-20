@@ -1,6 +1,8 @@
 package edu.hawaii.its.api.type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "grouping")

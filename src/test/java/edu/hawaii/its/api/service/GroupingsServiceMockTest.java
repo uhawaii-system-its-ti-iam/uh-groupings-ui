@@ -1,12 +1,10 @@
 package edu.hawaii.its.api.service;
 
-import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
@@ -20,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import javax.validation.constraints.AssertFalse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +26,9 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -145,38 +147,66 @@ public class GroupingsServiceMockTest {
     @Value("$groupings.api.stem}")
     private String STEM;
 
-    @Value("${groupings.api.test.usernames}")
-    private String[] USERNAMES;
+    @Value("${groupings.api.test.username}")
+    private String USERNAME;
 
-    @Value("${groupings.api.test.names}")
-    private String[] NAMES;
+    @Value("${groupings.api.test.name}")
+    private String NAME;
 
-    private static final String GROUPING = "grouping";
-    private static final String GROUPING_PATH = "path_to:" + GROUPING;
-    private static final String GROUPING_INCLUDE_PATH = GROUPING_PATH + ":include";
-    private static final String GROUPING_EXCLUDE_PATH = GROUPING_PATH + ":exclude";
-    private static final String GROUPING_BASIS_PATH = GROUPING_PATH + ":basis";
-    private static final String GROUPING_OWNERS_PATH = GROUPING_PATH + ":owners";
-    private static final String NO_ATTRIBUTE_GROUPING_PATH = "path_to:no_attribute_grouping";
-    private static final String NO_ATTRIBUTE_GROUPING_OWNERS_PATH = NO_ATTRIBUTE_GROUPING_PATH + ":owners";
-    private static final String RANDOM_USER = "randomUser";
-    private static final String OWNER_USER = "owner";
-    private static final String ADMIN_USER = "admin";
+    @Value("${groupings.api.test.uuid}")
+    private String UUID;
 
-    private static final WsSubjectLookup RANDOM_USER_LOOKUP = new WsSubjectLookup(null, null, RANDOM_USER);
-    private static final WsSubjectLookup OWNER_LOOKUP = new WsSubjectLookup(null, null, OWNER_USER);
-    private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
+    private static final String PATH_ROOT = "path:to:grouping";
+
+    private static final String GROUPING_0_PATH = PATH_ROOT + 0;
+    private static final String GROUPING_1_PATH = PATH_ROOT + 1;
+    private static final String GROUPING_2_PATH = PATH_ROOT + 2;
+    private static final String GROUPING_3_PATH = PATH_ROOT + 3;
+    private static final String GROUPING_4_PATH = PATH_ROOT + 4;
+
+    private static final String GROUPING_0_INCLUDE_PATH = GROUPING_0_PATH + ":include";
+    private static final String GROUPING_0_EXCLUDE_PATH = GROUPING_0_PATH + ":exclude";
+    private static final String GROUPING_0_BASIS_PATH = GROUPING_0_PATH + ":basis";
+    private static final String GROUPING_0_OWNERS_PATH = GROUPING_0_PATH + ":owners";
+
+    private static final String GROUPING_1_INCLUDE_PATH = GROUPING_1_PATH + ":include";
+    private static final String GROUPING_1_EXCLUDE_PATH = GROUPING_1_PATH + ":exclude";
+    private static final String GROUPING_1_BASIS_PATH = GROUPING_1_PATH + ":basis";
+    private static final String GROUPING_1_OWNERS_PATH = GROUPING_1_PATH + ":owners";
+
+    private static final String GROUPING_2_INCLUDE_PATH = GROUPING_2_PATH + ":include";
+    private static final String GROUPING_2_EXCLUDE_PATH = GROUPING_2_PATH + ":exclude";
+    private static final String GROUPING_2_BASIS_PATH = GROUPING_2_PATH + ":basis";
+    private static final String GROUPING_2_OWNERS_PATH = GROUPING_2_PATH + ":owners";
+
+    private static final String GROUPING_3_INCLUDE_PATH = GROUPING_3_PATH + ":include";
+    private static final String GROUPING_3_EXCLUDE_PATH = GROUPING_3_PATH + ":exclude";
+    private static final String GROUPING_3_BASIS_PATH = GROUPING_3_PATH + ":basis";
+    private static final String GROUPING_3_OWNERS_PATH = GROUPING_3_PATH + ":owners";
+
+    private static final String GROUPING_4_INCLUDE_PATH = GROUPING_4_PATH + ":include";
+    private static final String GROUPING_4_EXCLUDE_PATH = GROUPING_4_PATH + ":exclude";
+    private static final String GROUPING_4_BASIS_PATH = GROUPING_4_PATH + ":basis";
+    private static final String GROUPING_4_OWNERS_PATH = GROUPING_4_PATH + ":owners";
+
     private final WsSubjectLookup EVERY_ENTITY_LOOKUP = new WsSubjectLookup(null, null, EVERY_ENTITY);
 
+    private static final String ADMIN_USER = "admin";
+    private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
     private static final Person ADMIN_PERSON = new Person(ADMIN_USER, ADMIN_USER, ADMIN_USER);
-
     private List<Person> admins = new ArrayList<>();
-
     private Group adminGroup;
 
-    private DatabaseFactory databaseFactory;
+    private static final String APP_USER = "app";
+    private static final WsSubjectLookup APP_LOOKUP = new WsSubjectLookup(null, null, APP_USER);
+    private static final Person APP_PERSON = new Person(APP_USER, APP_USER, APP_USER);
+    private List<Person> apps = new ArrayList<>();
+    private Group appGroup;
 
-    private Person[] users = new Person[6];
+    private DatabaseSetup databaseSetup;
+
+    private List<Person> users = new ArrayList<>();
+    private List<WsSubjectLookup> lookups = new ArrayList<>();
 
     @Mock
     private GrouperFactoryService gf;
@@ -196,18 +226,28 @@ public class GroupingsServiceMockTest {
 
     @Before
     public void setup() throws Exception {
-        MockitoAnnotations.initMocks(this);
-
-        databaseFactory = new DatabaseFactory(personRepository, groupRepository, groupingRepository);
+        databaseSetup = new DatabaseSetup(personRepository, groupRepository, groupingRepository);
 
         admins.add(ADMIN_PERSON);
         adminGroup = new Group(GROUPING_ADMINS, admins);
-
         personRepository.save(ADMIN_PERSON);
         groupRepository.save(adminGroup);
 
-        for (int i = 0; i < users.length; i++) {
-            users[i] = new Person(NAMES[i], "uuid", USERNAMES[i]);
+        admins.add(APP_PERSON);
+        appGroup = new Group(GROUPING_APPS, apps);
+        personRepository.save(APP_PERSON);
+        groupRepository.save(appGroup);
+
+        for (int i = 0; i < 100; i++) {
+            String name = NAME + i;
+            String uuid = UUID + i;
+            String username = USERNAME + i;
+
+            Person person = new Person(name, uuid, username);
+            users.add(person);
+
+            WsSubjectLookup lookup = new WsSubjectLookup(null, null, username);
+            lookups.add(lookup);
         }
     }
 
@@ -229,91 +269,120 @@ public class GroupingsServiceMockTest {
     @Test
     public void assignOwnershipTest() {
 
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
-        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(OWNER_LOOKUP);
+        given(gf.makeWsSubjectLookup(users.get(1).getUsername())).willReturn(lookups.get(1));
+        given(gf.makeWsSubjectLookup(users.get(0).getUsername())).willReturn(lookups.get(0));
         given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
 
-        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
-        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, OWNER_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
-        given(gf.makeWsAddMemberResults(GROUPING_OWNERS_PATH, ADMIN_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
+        when(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername())).thenReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        when(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(1).getUsername())).thenReturn(hasMemberResults(GROUPING_ADMINS, users.get(1).getUsername()));
 
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+        when(gf.makeWsAddMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_LOOKUP, users.get(1).getUsername())).thenReturn(addMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        when(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_USER)).thenReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_USER));
+        when(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).thenReturn(hasMemberResults(GROUPING_ADMINS, ADMIN_USER));
 
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        when(gf.makeWsAddMemberResults(GROUPING_0_OWNERS_PATH, lookups.get(0), users.get(1).getUsername())).thenReturn(addMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        when(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername())).thenReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername()));
+        when(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(0).getUsername())).thenReturn(hasMemberResults(GROUPING_ADMINS, users.get(0).getUsername()));
 
-        GroupingsServiceResult randomUserAdds = groupingsService.assignOwnership(GROUPING_PATH, RANDOM_USER, RANDOM_USER);
-        GroupingsServiceResult ownerAdds = groupingsService.assignOwnership(GROUPING_PATH, OWNER_USER, RANDOM_USER);
-        GroupingsServiceResult adminAdds = groupingsService.assignOwnership(GROUPING_PATH, ADMIN_USER, RANDOM_USER);
+        GroupingsServiceResult randomUserAdds = groupingsService.assignOwnership(GROUPING_0_PATH, users.get(1).getUsername(), users.get(1).getUsername());
+
+        GroupingsServiceResult ownerAdds = groupingsService.assignOwnership(GROUPING_0_PATH, users.get(0).getUsername(), users.get(1).getUsername());
+
+        GroupingsServiceResult adminAdds = groupingsService.assignOwnership(GROUPING_0_PATH, ADMIN_USER, users.get(1).getUsername());
 
         assertNotEquals(randomUserAdds.getResultCode(), SUCCESS);
         assertEquals(ownerAdds.getResultCode(), SUCCESS);
         assertEquals(adminAdds.getResultCode(), SUCCESS);
     }
 
+
     @Test
     public void changeListservStatusTest() {
         List<String> attributes = new ArrayList<>();
         attributes.add(LISTSERV);
 
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_4_OWNERS_PATH, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_4_OWNERS_PATH, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_4_OWNERS_PATH, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_4_OWNERS_PATH, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_4_OWNERS_PATH, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_4_OWNERS_PATH, ADMIN_USER));
 
-        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
-        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_ADMINS, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_ADMINS, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_ADMINS, ADMIN_USER));
 
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING_4_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResultsForGrouping(GROUPING_4_PATH));
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING_PATH))
-                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+        Grouping grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertFalse(grouping.isListservOn());
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, NO_ATTRIBUTE_GROUPING_PATH))
-                .willReturn(makeWsGetAttributeAssignmentsResults(null));
+        GroupingsServiceResult turnOnWhenOffRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), true);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertFalse(grouping.isListservOn());
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResultsForGrouping(GROUPING_4_PATH, LISTSERV, true));
+        GroupingsServiceResult turnOnWhenOffOwner = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(0).getUsername(), true);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertTrue(grouping.isListservOn());
 
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, GROUPING_PATH))
-                .willReturn(makeWsAssignAttributesResults(SUCCESS));
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, LISTSERV, GROUPING_PATH))
-                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+        GroupingsServiceResult turnOnWhenOnRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), true);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertTrue(grouping.isListservOn());
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResultsForGrouping(GROUPING_4_PATH, LISTSERV, true));
+        GroupingsServiceResult turnOnWhenOnOwner = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(0).getUsername(), true);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertTrue(grouping.isListservOn());
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResultsForGrouping(GROUPING_4_PATH, LISTSERV, true));
+        GroupingsServiceResult turnOnWhenOnAdmin = groupingsService.changeListservStatus(GROUPING_4_PATH, ADMIN_USER, true);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertTrue(grouping.isListservOn());
 
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, NO_ATTRIBUTE_GROUPING_PATH))
-                .willReturn(makeWsAssignAttributesResults(SUCCESS));
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, LISTSERV, NO_ATTRIBUTE_GROUPING_PATH))
-                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+        GroupingsServiceResult turnOffWhenOnRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), false);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertTrue(grouping.isListservOn());
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, LISTSERV, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResultsForGrouping(GROUPING_4_PATH, LISTSERV, false));
+        GroupingsServiceResult turnOffWhenOnOwner = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(0).getUsername(), false);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertFalse(grouping.isListservOn());
 
-        GroupingsServiceResult turnOnWhenOnRandom = groupingsService.changeListservStatus(GROUPING_PATH, RANDOM_USER, true);
-        GroupingsServiceResult turnOnWhenOnOwner = groupingsService.changeListservStatus(GROUPING_PATH, OWNER_USER, true);
-        GroupingsServiceResult turnOnWhenOnAdmin = groupingsService.changeListservStatus(GROUPING_PATH, ADMIN_USER, true);
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, LISTSERV, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResultsForGrouping(GROUPING_4_PATH, LISTSERV, true));
+        GroupingsServiceResult turnOnWhenOffAdmin = groupingsService.changeListservStatus(GROUPING_4_PATH, ADMIN_USER, true);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertTrue(grouping.isListservOn());
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, LISTSERV, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResultsForGrouping(GROUPING_4_PATH, LISTSERV, false));
+        GroupingsServiceResult turnOffWhenOnAdmin = groupingsService.changeListservStatus(GROUPING_4_PATH, ADMIN_USER, false);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertFalse(grouping.isListservOn());
 
-        GroupingsServiceResult turnOffWhenOnRandom = groupingsService.changeListservStatus(GROUPING_PATH, RANDOM_USER, false);
-        GroupingsServiceResult turnOffWhenOnOwner = groupingsService.changeListservStatus(GROUPING_PATH, OWNER_USER, false);
-        GroupingsServiceResult turnOffWhenOnAdmin = groupingsService.changeListservStatus(GROUPING_PATH, ADMIN_USER, false);
-
-        GroupingsServiceResult turnOnWhenOffRandom = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, RANDOM_USER, true);
-        GroupingsServiceResult turnOnWhenOffOwner = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, OWNER_USER, true);
-        GroupingsServiceResult turnOnWhenOffAdmin = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, ADMIN_USER, true);
-
-        GroupingsServiceResult turnOffWhenOffRandom = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, RANDOM_USER, false);
-        GroupingsServiceResult turnOffWhenOffOwner = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, OWNER_USER, false);
-        GroupingsServiceResult turnOffWhenOffAdmin = groupingsService.changeListservStatus(NO_ATTRIBUTE_GROUPING_PATH, ADMIN_USER, false);
+        GroupingsServiceResult turnOffWhenOffRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), false);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertFalse(grouping.isListservOn());
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, LISTSERV, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResultsForGrouping(GROUPING_4_PATH, LISTSERV, false));
+        GroupingsServiceResult turnOffWhenOffOwner = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(0).getUsername(), false);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertFalse(grouping.isListservOn());
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, LISTSERV, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResultsForGrouping(GROUPING_4_PATH, LISTSERV, false));
+        GroupingsServiceResult turnOffWhenOffAdmin = groupingsService.changeListservStatus(GROUPING_4_PATH, ADMIN_USER, false);
+        grouping = groupingRepository.findByPath(GROUPING_4_PATH);
+        assertFalse(grouping.isListservOn());
 
         assertTrue(turnOnWhenOnRandom.getResultCode().startsWith(FAILURE));
         assertTrue(turnOnWhenOnOwner.getResultCode().startsWith(SUCCESS));
         assertTrue(turnOnWhenOnAdmin.getResultCode().startsWith(SUCCESS));
 
         assertTrue(turnOffWhenOnRandom.getResultCode().startsWith(FAILURE));
-        assertEquals(turnOffWhenOnOwner.getResultCode(), SUCCESS);
-        assertEquals(turnOffWhenOnAdmin.getResultCode(), SUCCESS);
+        assertTrue(turnOffWhenOnOwner.getResultCode().startsWith(SUCCESS));
+        assertTrue(turnOffWhenOnAdmin.getResultCode().startsWith(SUCCESS));
 
         assertTrue(turnOnWhenOffRandom.getResultCode().startsWith(FAILURE));
-        assertEquals(turnOnWhenOffOwner.getResultCode(), SUCCESS);
-        assertEquals(turnOnWhenOffAdmin.getResultCode(), SUCCESS);
+        assertTrue(turnOnWhenOffOwner.getResultCode().startsWith(SUCCESS));
+        assertTrue(turnOnWhenOffAdmin.getResultCode().startsWith(SUCCESS));
 
         assertTrue(turnOffWhenOffRandom.getResultCode().startsWith(FAILURE));
         assertTrue(turnOffWhenOffOwner.getResultCode().startsWith(SUCCESS));
@@ -325,72 +394,72 @@ public class GroupingsServiceMockTest {
         List<String> attributes = new ArrayList<>();
         attributes.add(OPT_IN);
 
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_USER));
 
-        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
-        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_4_OWNERS_PATH, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_4_OWNERS_PATH, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_4_OWNERS_PATH, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_4_OWNERS_PATH, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_4_OWNERS_PATH, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_4_OWNERS_PATH, ADMIN_USER));
 
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_ADMINS, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_ADMINS, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_ADMINS, ADMIN_USER));
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, GROUPING_PATH))
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, GROUPING_0_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, NO_ATTRIBUTE_GROUPING_PATH))
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, GROUPING_4_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(null));
 
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, OPT_IN, GROUPING_PATH))
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, OPT_IN, GROUPING_0_PATH))
                 .willReturn(makeWsAssignAttributesResults(SUCCESS));
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, OPT_IN, GROUPING_PATH))
-                .willReturn(makeWsAssignAttributesResults(SUCCESS));
-
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, OPT_IN, NO_ATTRIBUTE_GROUPING_PATH))
-                .willReturn(makeWsAssignAttributesResults(SUCCESS));
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, OPT_IN, NO_ATTRIBUTE_GROUPING_PATH))
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, OPT_IN, GROUPING_0_PATH))
                 .willReturn(makeWsAssignAttributesResults(SUCCESS));
 
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
-        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(OWNER_LOOKUP);
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, OPT_IN, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, OPT_IN, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+
+        given(gf.makeWsSubjectLookup(users.get(1).getUsername())).willReturn(lookups.get(1));
+        given(gf.makeWsSubjectLookup(users.get(0).getUsername())).willReturn(lookups.get(0));
         given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
         given(gf.makeWsSubjectLookup(EVERY_ENTITY)).willReturn(EVERY_ENTITY_LOOKUP);
 
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_PATH + INCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, true))
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_0_PATH + INCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, true))
                 .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_PATH + INCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, false))
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_0_PATH + INCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, false))
                 .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_PATH + EXCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, true))
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_0_PATH + EXCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, true))
                 .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_PATH + EXCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, false))
-                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(NO_ATTRIBUTE_GROUPING_PATH + INCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, true))
-                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(NO_ATTRIBUTE_GROUPING_PATH + INCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, false))
-                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(NO_ATTRIBUTE_GROUPING_PATH + EXCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, true))
-                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(NO_ATTRIBUTE_GROUPING_PATH + EXCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, false))
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_0_PATH + EXCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, false))
                 .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
 
-        List<GroupingsServiceResult> turnOnWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_PATH, RANDOM_USER, true);
-        List<GroupingsServiceResult> turnOnWhenOnOwner = groupingsService.changeOptInStatus(GROUPING_PATH, OWNER_USER, true);
-        List<GroupingsServiceResult> turnOnWhenOnAdmin = groupingsService.changeOptInStatus(GROUPING_PATH, ADMIN_USER, true);
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_4_PATH + INCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, true))
+                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_4_PATH + INCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, false))
+                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_4_PATH + EXCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, true))
+                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_4_PATH + EXCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, false))
+                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
 
-        List<GroupingsServiceResult> turnOffWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_PATH, RANDOM_USER, false);
-        List<GroupingsServiceResult> turnOffWhenOnOwner = groupingsService.changeOptInStatus(GROUPING_PATH, OWNER_USER, false);
-        List<GroupingsServiceResult> turnOffWhenOnAdmin = groupingsService.changeOptInStatus(GROUPING_PATH, ADMIN_USER, false);
+        List<GroupingsServiceResult> turnOnWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), true);
+        List<GroupingsServiceResult> turnOnWhenOnOwner = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(0).getUsername(), true);
+        List<GroupingsServiceResult> turnOnWhenOnAdmin = groupingsService.changeOptInStatus(GROUPING_0_PATH, ADMIN_USER, true);
 
-        List<GroupingsServiceResult> turnOnWhenOffRandom = groupingsService.changeOptInStatus(NO_ATTRIBUTE_GROUPING_PATH, RANDOM_USER, true);
-        List<GroupingsServiceResult> turnOnWhenOffOwner = groupingsService.changeOptInStatus(NO_ATTRIBUTE_GROUPING_PATH, OWNER_USER, true);
-        List<GroupingsServiceResult> turnOnWhenOffAdmin = groupingsService.changeOptInStatus(NO_ATTRIBUTE_GROUPING_PATH, ADMIN_USER, true);
+        List<GroupingsServiceResult> turnOffWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), false);
+        List<GroupingsServiceResult> turnOffWhenOnOwner = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(0).getUsername(), false);
+        List<GroupingsServiceResult> turnOffWhenOnAdmin = groupingsService.changeOptInStatus(GROUPING_0_PATH, ADMIN_USER, false);
 
-        List<GroupingsServiceResult> turnOffWhenOffRandom = groupingsService.changeOptInStatus(NO_ATTRIBUTE_GROUPING_PATH, RANDOM_USER, false);
-        List<GroupingsServiceResult> turnOffWhenOffOwner = groupingsService.changeOptInStatus(NO_ATTRIBUTE_GROUPING_PATH, OWNER_USER, false);
-        List<GroupingsServiceResult> turnOffWhenOffAdmin = groupingsService.changeOptInStatus(NO_ATTRIBUTE_GROUPING_PATH, ADMIN_USER, false);
+        List<GroupingsServiceResult> turnOnWhenOffRandom = groupingsService.changeOptInStatus(GROUPING_4_PATH, users.get(1).getUsername(), true);
+        List<GroupingsServiceResult> turnOnWhenOffOwner = groupingsService.changeOptInStatus(GROUPING_4_PATH, users.get(0).getUsername(), true);
+        List<GroupingsServiceResult> turnOnWhenOffAdmin = groupingsService.changeOptInStatus(GROUPING_4_PATH, ADMIN_USER, true);
+
+        List<GroupingsServiceResult> turnOffWhenOffRandom = groupingsService.changeOptInStatus(GROUPING_4_PATH, users.get(1).getUsername(), false);
+        List<GroupingsServiceResult> turnOffWhenOffOwner = groupingsService.changeOptInStatus(GROUPING_4_PATH, users.get(0).getUsername(), false);
+        List<GroupingsServiceResult> turnOffWhenOffAdmin = groupingsService.changeOptInStatus(GROUPING_4_PATH, ADMIN_USER, false);
 
         assertTrue(turnOnWhenOnRandom.get(0).getResultCode().startsWith(FAILURE));
         assertTrue(turnOnWhenOnOwner.get(0).getResultCode().startsWith(SUCCESS));
@@ -430,72 +499,73 @@ public class GroupingsServiceMockTest {
         List<String> attributes = new ArrayList<>();
         attributes.add(OPT_OUT);
 
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_ADMINS, ADMIN_USER));
 
-        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
-        given(gf.makeWsHasMemberResults(NO_ATTRIBUTE_GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_4_OWNERS_PATH, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_4_OWNERS_PATH, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_4_OWNERS_PATH, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_ADMINS, ADMIN_USER));
 
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_ADMINS, ADMIN_USER));
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, GROUPING_PATH))
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, GROUPING_0_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, NO_ATTRIBUTE_GROUPING_PATH))
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, GROUPING_4_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(null));
 
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, OPT_OUT, GROUPING_PATH))
-                .willReturn(makeWsAssignAttributesResults(SUCCESS));
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, OPT_OUT, GROUPING_PATH))
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, OPT_OUT, GROUPING_0_PATH))
                 .willReturn(makeWsAssignAttributesResults(SUCCESS));
 
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, OPT_OUT, NO_ATTRIBUTE_GROUPING_PATH))
-                .willReturn(makeWsAssignAttributesResults(SUCCESS));
-        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, OPT_OUT, NO_ATTRIBUTE_GROUPING_PATH))
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, OPT_OUT, GROUPING_0_PATH))
                 .willReturn(makeWsAssignAttributesResults(SUCCESS));
 
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
-        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(OWNER_LOOKUP);
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_ASSIGN_ATTRIBUTE, OPT_OUT, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+        given(gf.makeWsAssignAttributesResultsForGroup(ASSIGN_TYPE_GROUP, OPERATION_REMOVE_ATTRIBUTE, OPT_OUT, GROUPING_4_PATH))
+                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+
+        given(gf.makeWsSubjectLookup(users.get(1).getUsername())).willReturn(lookups.get(1));
+        given(gf.makeWsSubjectLookup(users.get(0).getUsername())).willReturn(lookups.get(0));
         given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
         given(gf.makeWsSubjectLookup(EVERY_ENTITY)).willReturn(EVERY_ENTITY_LOOKUP);
 
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_PATH + INCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, true))
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_0_PATH + INCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, true))
                 .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_PATH + INCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, false))
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_0_PATH + INCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, false))
                 .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_PATH + EXCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, true))
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_0_PATH + EXCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, true))
                 .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_PATH + EXCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, false))
-                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(NO_ATTRIBUTE_GROUPING_PATH + INCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, true))
-                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(NO_ATTRIBUTE_GROUPING_PATH + INCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, false))
-                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(NO_ATTRIBUTE_GROUPING_PATH + EXCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, true))
-                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
-        given(gf.makeWsAssignGrouperPrivilegesLiteResult(NO_ATTRIBUTE_GROUPING_PATH + EXCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, false))
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_0_PATH + EXCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, false))
                 .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
 
-        List<GroupingsServiceResult> turnOnWhenOnRandom = groupingsService.changeOptOutStatus(GROUPING_PATH, RANDOM_USER, true);
-        List<GroupingsServiceResult> turnOnWhenOnOwner = groupingsService.changeOptOutStatus(GROUPING_PATH, OWNER_USER, true);
-        List<GroupingsServiceResult> turnOnWhenOnAdmin = groupingsService.changeOptOutStatus(GROUPING_PATH, ADMIN_USER, true);
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_4_PATH + INCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, true))
+                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_4_PATH + INCLUDE, PRIVILEGE_OPT_OUT, EVERY_ENTITY_LOOKUP, false))
+                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_4_PATH + EXCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, true))
+                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
+        given(gf.makeWsAssignGrouperPrivilegesLiteResult(GROUPING_4_PATH + EXCLUDE, PRIVILEGE_OPT_IN, EVERY_ENTITY_LOOKUP, false))
+                .willReturn(makeWsAssignGrouperPrivilegesLiteResult(SUCCESS));
 
-        List<GroupingsServiceResult> turnOffWhenOnRandom = groupingsService.changeOptOutStatus(GROUPING_PATH, RANDOM_USER, false);
-        List<GroupingsServiceResult> turnOffWhenOnOwner = groupingsService.changeOptOutStatus(GROUPING_PATH, OWNER_USER, false);
-        List<GroupingsServiceResult> turnOffWhenOnAdmin = groupingsService.changeOptOutStatus(GROUPING_PATH, ADMIN_USER, false);
+        List<GroupingsServiceResult> turnOnWhenOnRandom = groupingsService.changeOptOutStatus(GROUPING_0_PATH, users.get(1).getUsername(), true);
+        List<GroupingsServiceResult> turnOnWhenOnOwner = groupingsService.changeOptOutStatus(GROUPING_0_PATH, users.get(0).getUsername(), true);
+        List<GroupingsServiceResult> turnOnWhenOnAdmin = groupingsService.changeOptOutStatus(GROUPING_0_PATH, ADMIN_USER, true);
 
-        List<GroupingsServiceResult> turnOnWhenOffRandom = groupingsService.changeOptOutStatus(NO_ATTRIBUTE_GROUPING_PATH, RANDOM_USER, true);
-        List<GroupingsServiceResult> turnOnWhenOffOwner = groupingsService.changeOptOutStatus(NO_ATTRIBUTE_GROUPING_PATH, OWNER_USER, true);
-        List<GroupingsServiceResult> turnOnWhenOffAdmin = groupingsService.changeOptOutStatus(NO_ATTRIBUTE_GROUPING_PATH, ADMIN_USER, true);
+        List<GroupingsServiceResult> turnOffWhenOnRandom = groupingsService.changeOptOutStatus(GROUPING_0_PATH, users.get(1).getUsername(), false);
+        List<GroupingsServiceResult> turnOffWhenOnOwner = groupingsService.changeOptOutStatus(GROUPING_0_PATH, users.get(0).getUsername(), false);
+        List<GroupingsServiceResult> turnOffWhenOnAdmin = groupingsService.changeOptOutStatus(GROUPING_0_PATH, ADMIN_USER, false);
 
-        List<GroupingsServiceResult> turnOffWhenOffRandom = groupingsService.changeOptOutStatus(NO_ATTRIBUTE_GROUPING_PATH, RANDOM_USER, false);
-        List<GroupingsServiceResult> turnOffWhenOffOwner = groupingsService.changeOptOutStatus(NO_ATTRIBUTE_GROUPING_PATH, OWNER_USER, false);
-        List<GroupingsServiceResult> turnOffWhenOffAdmin = groupingsService.changeOptOutStatus(NO_ATTRIBUTE_GROUPING_PATH, ADMIN_USER, false);
+        List<GroupingsServiceResult> turnOnWhenOffRandom = groupingsService.changeOptOutStatus(GROUPING_4_PATH, users.get(1).getUsername(), true);
+        List<GroupingsServiceResult> turnOnWhenOffOwner = groupingsService.changeOptOutStatus(GROUPING_4_PATH, users.get(0).getUsername(), true);
+        List<GroupingsServiceResult> turnOnWhenOffAdmin = groupingsService.changeOptOutStatus(GROUPING_4_PATH, ADMIN_USER, true);
+
+        List<GroupingsServiceResult> turnOffWhenOffRandom = groupingsService.changeOptOutStatus(GROUPING_4_PATH, users.get(1).getUsername(), false);
+        List<GroupingsServiceResult> turnOffWhenOffOwner = groupingsService.changeOptOutStatus(GROUPING_4_PATH, users.get(0).getUsername(), false);
+        List<GroupingsServiceResult> turnOffWhenOffAdmin = groupingsService.changeOptOutStatus(GROUPING_4_PATH, ADMIN_USER, false);
 
         assertTrue(turnOnWhenOnRandom.get(0).getResultCode().startsWith(FAILURE));
         assertTrue(turnOnWhenOnOwner.get(0).getResultCode().startsWith(SUCCESS));
@@ -532,124 +602,117 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void removeOwnershipTest() {
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
-        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(OWNER_LOOKUP);
+        given(gf.makeWsSubjectLookup(users.get(1).getUsername())).willReturn(lookups.get(1));
+        given(gf.makeWsSubjectLookup(users.get(0).getUsername())).willReturn(lookups.get(0));
         given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
 
-        given(gf.makeWsDeleteMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
-        given(gf.makeWsDeleteMemberResults(GROUPING_OWNERS_PATH, OWNER_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
-        given(gf.makeWsDeleteMemberResults(GROUPING_OWNERS_PATH, ADMIN_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_USER));
 
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_ADMINS, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_ADMINS, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_ADMINS, ADMIN_USER));
 
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        GroupingsServiceResult randomUserRemoves = groupingsService.removeOwnership(GROUPING_0_PATH, users.get(1).getUsername(), users.get(1).getUsername());
 
-        GroupingsServiceResult randomUserAdds = groupingsService.removeOwnership(GROUPING_PATH, RANDOM_USER, RANDOM_USER);
-        GroupingsServiceResult ownerAdds = groupingsService.removeOwnership(GROUPING_PATH, OWNER_USER, RANDOM_USER);
-        GroupingsServiceResult adminAdds = groupingsService.removeOwnership(GROUPING_PATH, ADMIN_USER, RANDOM_USER);
+        //add owner for testing
+        addMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername());
+        given(gf.makeWsDeleteMemberResults(GROUPING_0_OWNERS_PATH, lookups.get(0), users.get(1).getUsername()))
+                .willReturn(deleteMemberResultsSuccess(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        GroupingsServiceResult ownerRemoves = groupingsService.removeOwnership(GROUPING_0_PATH, users.get(0).getUsername(), users.get(1).getUsername());
 
-        assertNotEquals(randomUserAdds.getResultCode(), SUCCESS);
-        assertEquals(ownerAdds.getResultCode(), SUCCESS);
-        assertEquals(adminAdds.getResultCode(), SUCCESS);
+        //add owner for testing
+        addMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername());
+        given(gf.makeWsDeleteMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_LOOKUP, users.get(1).getUsername()))
+                .willReturn(deleteMemberResultsSuccess(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+
+        GroupingsServiceResult adminRemoves = groupingsService.removeOwnership(GROUPING_0_PATH, ADMIN_USER, users.get(1).getUsername());
+
+        assertNotEquals(randomUserRemoves.getResultCode(), SUCCESS);
+        assertEquals(ownerRemoves.getResultCode(), SUCCESS);
+        assertEquals(adminRemoves.getResultCode(), SUCCESS);
 
     }
 
     @Test
     public void getGroupingTest() {
-        List<String> attributes = new ArrayList<>();
-        attributes.add(LISTSERV);
-        attributes.add(OPT_IN);
-        attributes.add(OPT_OUT);
-
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
-        given(gf.makeWsSubjectLookup(OWNER_USER)).willReturn(OWNER_LOOKUP);
+        given(gf.makeWsSubjectLookup(users.get(1).getUsername())).willReturn(lookups.get(1));
+        given(gf.makeWsSubjectLookup(users.get(0).getUsername())).willReturn(lookups.get(0));
         given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
 
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, ADMIN_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, ADMIN_USER));
 
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, OWNER_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_ADMINS, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_ADMINS, users.get(0).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_ADMINS, ADMIN_USER));
 
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, GROUPING_0_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResultsForGrouping(GROUPING_0_PATH));
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, GROUPING_PATH))
-                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, lookups.get(1), GROUPING_0_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, lookups.get(0), GROUPING_0_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_0_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, lookups.get(1), GROUPING_0_OWNERS_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_OWNERS_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, lookups.get(0), GROUPING_0_OWNERS_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_OWNERS_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_0_OWNERS_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_OWNERS_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, lookups.get(1), GROUPING_0_INCLUDE_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_INCLUDE_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, lookups.get(0), GROUPING_0_INCLUDE_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_INCLUDE_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_0_INCLUDE_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_INCLUDE_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, lookups.get(1), GROUPING_0_EXCLUDE_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_EXCLUDE_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, lookups.get(0), GROUPING_0_EXCLUDE_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_EXCLUDE_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_0_EXCLUDE_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_EXCLUDE_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, lookups.get(1), GROUPING_0_BASIS_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_BASIS_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, lookups.get(0), GROUPING_0_BASIS_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_BASIS_PATH));
+        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_0_BASIS_PATH)).willReturn(makeWsGetMembersResults(GROUPING_0_BASIS_PATH));
 
-
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, NO_ATTRIBUTE_GROUPING_PATH))
-                .willReturn(makeWsGetAttributeAssignmentsResults(null));
-
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, RANDOM_USER_LOOKUP, GROUPING_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, OWNER_LOOKUP, GROUPING_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, RANDOM_USER_LOOKUP, GROUPING_OWNERS_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, OWNER_LOOKUP, GROUPING_OWNERS_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_OWNERS_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, RANDOM_USER_LOOKUP, GROUPING_INCLUDE_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, OWNER_LOOKUP, GROUPING_INCLUDE_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_INCLUDE_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, RANDOM_USER_LOOKUP, GROUPING_EXCLUDE_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, OWNER_LOOKUP, GROUPING_EXCLUDE_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_EXCLUDE_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, RANDOM_USER_LOOKUP, GROUPING_BASIS_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, OWNER_LOOKUP, GROUPING_BASIS_PATH)).willReturn(makeWsGetMembersResults());
-        given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_BASIS_PATH)).willReturn(makeWsGetMembersResults());
-
-        Grouping groupingRandom = groupingsService.getGrouping(GROUPING_PATH, RANDOM_USER);
-        Grouping groupingOwner = groupingsService.getGrouping(GROUPING_PATH, OWNER_USER);
-        Grouping groupingAdmin = groupingsService.getGrouping(GROUPING_PATH, ADMIN_USER);
+        Grouping groupingRandom = groupingsService.getGrouping(GROUPING_0_PATH, users.get(1).getUsername());
+        Grouping groupingOwner = groupingsService.getGrouping(GROUPING_0_PATH, users.get(0).getUsername());
+        Grouping groupingAdmin = groupingsService.getGrouping(GROUPING_0_PATH, ADMIN_USER);
 
         assertEquals(groupingRandom.getComposite().getMembers().size(), 0);
         assertEquals(groupingRandom.getInclude().getMembers().size(), 0);
         assertEquals(groupingRandom.getExclude().getMembers().size(), 0);
         assertEquals(groupingRandom.getBasis().getMembers().size(), 0);
         assertEquals(groupingRandom.getOwners().getMembers().size(), 0);
-        assertTrue(groupingOwner.getComposite().getNames().contains("name0"));
-        assertTrue(groupingOwner.getInclude().getNames().contains("name0"));
-        assertTrue(groupingOwner.getExclude().getNames().contains("name0"));
-        assertTrue(groupingOwner.getBasis().getNames().contains("name0"));
-        assertTrue(groupingOwner.getOwners().getNames().contains("name0"));
-        assertTrue(groupingAdmin.getComposite().getNames().contains("name0"));
-        assertTrue(groupingAdmin.getInclude().getNames().contains("name0"));
-        assertTrue(groupingAdmin.getExclude().getNames().contains("name0"));
-        assertTrue(groupingAdmin.getBasis().getNames().contains("name0"));
-        assertTrue(groupingAdmin.getOwners().getNames().contains("name0"));
-    }
 
-    @Test
-    public void getMyGroupingsTest() {
+        assertTrue(groupingOwner.getComposite().getNames().contains(users.get(0).getName()));
+        assertTrue(groupingOwner.getInclude().getNames().contains(users.get(5).getName()));
+        assertTrue(groupingOwner.getExclude().getNames().contains(users.get(2).getName()));
+        assertTrue(groupingOwner.getBasis().getNames().contains(users.get(4).getName()));
+        assertTrue(groupingOwner.getOwners().getNames().contains(users.get(0).getName()));
 
-        //todo
+        assertTrue(groupingAdmin.getComposite().getNames().contains(users.get(0).getName()));
+        assertTrue(groupingAdmin.getInclude().getNames().contains(users.get(5).getName()));
+        assertTrue(groupingAdmin.getExclude().getNames().contains(users.get(2).getName()));
+        assertTrue(groupingAdmin.getBasis().getNames().contains(users.get(4).getName()));
+        assertTrue(groupingAdmin.getOwners().getNames().contains(users.get(0).getName()));
     }
 
     @Test
     public void optInTest() {
 
         //all
-
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
+        given(gf.makeWsSubjectLookup(users.get(1).getUsername())).willReturn(lookups.get(1));
 
         //opt in Permission for include group false
-        given(gf.makeWsGetGrouperPrivilegesLiteResult(GROUPING_INCLUDE_PATH, PRIVILEGE_OPT_IN, RANDOM_USER_LOOKUP)).willReturn(makeWsGetGrouperPrivilegesLiteResult(false));
+        given(gf.makeWsGetGrouperPrivilegesLiteResult(GROUPING_0_INCLUDE_PATH, PRIVILEGE_OPT_IN, lookups.get(1))).willReturn(makeWsGetGrouperPrivilegesLiteResult(false));
 
-        List<GroupingsServiceResult> optInResults = groupingsService.optIn(RANDOM_USER, GROUPING_PATH);
+        List<GroupingsServiceResult> optInResults = groupingsService.optIn(users.get(1).getUsername(), GROUPING_0_PATH);
 
         assertTrue(optInResults.get(0).getResultCode().startsWith(FAILURE));
 
         //opt in Permission for include group true
-        given(gf.makeWsGetGrouperPrivilegesLiteResult(GROUPING_INCLUDE_PATH, PRIVILEGE_OPT_IN, RANDOM_USER_LOOKUP)).willReturn(makeWsGetGrouperPrivilegesLiteResult(true));
+        given(gf.makeWsGetGrouperPrivilegesLiteResult(GROUPING_0_INCLUDE_PATH, PRIVILEGE_OPT_IN, lookups.get(1))).willReturn(makeWsGetGrouperPrivilegesLiteResult(true));
 
-        given(gf.makeWsDeleteMemberResults(GROUPING_EXCLUDE_PATH, RANDOM_USER_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+        given(gf.makeWsDeleteMemberResults(GROUPING_0_EXCLUDE_PATH, lookups.get(1), users.get(1).getUsername()))
+                .willReturn(deleteMemberResultsSuccess(GROUPING_0_EXCLUDE_PATH, users.get(1).getUsername()));
 
-        given(gf.makeWsAddMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
+        given(gf.makeWsAddMemberResults(GROUPING_0_INCLUDE_PATH, lookups.get(1), users.get(1).getUsername())).willReturn(addMemberResults(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername()));
 
-        WsAttributeAssignValue dateTime = makeWsAttributeAssignValue();
+        WsAttributeAssignValue dateTime = makeWsAttributeAssignValueTime();
 
         List<String> attributes = new ArrayList<>();
 
@@ -658,7 +721,7 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
-                GROUPING_PATH,
+                GROUPING_0_PATH,
                 YYYYMMDDTHHMM,
                 OPERATION_REPLACE_VALUES,
                 dateTime
@@ -667,7 +730,7 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
-                GROUPING_INCLUDE_PATH,
+                GROUPING_0_INCLUDE_PATH,
                 YYYYMMDDTHHMM,
                 OPERATION_REPLACE_VALUES,
                 dateTime
@@ -676,64 +739,51 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
-                GROUPING_EXCLUDE_PATH,
+                GROUPING_0_EXCLUDE_PATH,
                 YYYYMMDDTHHMM,
                 OPERATION_REPLACE_VALUES,
                 dateTime
         )).willReturn(makeWsAssignAttributesResults(SUCCESS));
 
-        given(gf.makeWsHasMemberResults(GROUPING_EXCLUDE_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_0_EXCLUDE_PATH, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_0_EXCLUDE_PATH, users.get(1).getUsername()));
 
         //in include group not self opted
-        given(gf.makeWsHasMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER)).willReturn(isMemberResults());
-        given(gf.makeWsGetMembershipsResults(GROUPING_INCLUDE_PATH, RANDOM_USER_LOOKUP)).willReturn(makeWsGetMembershipsResults());
+        given(gf.makeWsHasMemberResults(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_0_EXCLUDE_PATH, users.get(1).getUsername()));
+        given(gf.makeWsGetMembershipsResults(GROUPING_0_INCLUDE_PATH, lookups.get(1))).willReturn(makeWsGetMembershipsResults());
         given(gf.makeWsGetAttributeAssignmentsResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, "1234"))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
         given(gf.makeWsAssignAttributesResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, OPERATION_ASSIGN_ATTRIBUTE, SELF_OPTED, "1234"))
                 .willReturn(makeWsAssignAttributesResults(SUCCESS));
 
-        optInResults = groupingsService.optIn(RANDOM_USER, GROUPING_PATH);
+        optInResults = groupingsService.optIn(users.get(1).getUsername(), GROUPING_0_PATH);
 
         assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
         assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(optInResults.get(2).getResultCode().startsWith(SUCCESS));
-
-        //TODO make a mock database
-        //not in include group
-//        given(gf.makeWsHasMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER)).willReturn(notMemberResults());
-//
-//        optInResults = groupingsService.optIn(RANDOM_USER, GROUPING_PATH);
-//
-//        assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
-//        assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-//        assertTrue(optInResults.get(2).getResultCode().startsWith(SUCCESS));
-
-
     }
 
     @Test
     public void optOutTest() {
 
         //all
-
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
+        given(gf.makeWsSubjectLookup(users.get(5).getUsername())).willReturn(lookups.get(5));
 
         //opt in Permission for include group false
-        given(gf.makeWsGetGrouperPrivilegesLiteResult(GROUPING_EXCLUDE_PATH, PRIVILEGE_OPT_IN, RANDOM_USER_LOOKUP)).willReturn(makeWsGetGrouperPrivilegesLiteResult(false));
+        given(gf.makeWsGetGrouperPrivilegesLiteResult(GROUPING_1_EXCLUDE_PATH, PRIVILEGE_OPT_IN, lookups.get(5))).willReturn(makeWsGetGrouperPrivilegesLiteResult(false));
 
-        List<GroupingsServiceResult> optInResults = groupingsService.optOut(RANDOM_USER, GROUPING_PATH);
+        List<GroupingsServiceResult> optInResults = groupingsService.optOut(users.get(5).getUsername(), GROUPING_1_PATH);
 
         assertTrue(optInResults.get(0).getResultCode().startsWith(FAILURE));
 
         //opt in Permission for include group true
-        given(gf.makeWsGetGrouperPrivilegesLiteResult(GROUPING_EXCLUDE_PATH, PRIVILEGE_OPT_IN, RANDOM_USER_LOOKUP)).willReturn(makeWsGetGrouperPrivilegesLiteResult(true));
+        given(gf.makeWsGetGrouperPrivilegesLiteResult(GROUPING_1_EXCLUDE_PATH, PRIVILEGE_OPT_IN, lookups.get(5))).willReturn(makeWsGetGrouperPrivilegesLiteResult(true));
 
-        given(gf.makeWsDeleteMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER_LOOKUP, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+        given(gf.makeWsDeleteMemberResults(GROUPING_1_INCLUDE_PATH, lookups.get(5), users.get(5).getUsername()))
+                .willReturn(deleteMemberResultsSuccess(GROUPING_1_INCLUDE_PATH, users.get(5).getUsername()));
 
-        given(gf.makeWsAddMemberResults(GROUPING_EXCLUDE_PATH, RANDOM_USER_LOOKUP, RANDOM_USER)).willReturn(addMemberResultsSuccess());
+        given(gf.makeWsAddMemberResults(GROUPING_1_EXCLUDE_PATH, lookups.get(5), users.get(5).getUsername())).willReturn(addMemberResults(GROUPING_1_EXCLUDE_PATH, users.get(5).getUsername()));
 
-        WsAttributeAssignValue dateTime = makeWsAttributeAssignValue();
+        WsAttributeAssignValue dateTime = makeWsAttributeAssignValueTime();
 
         List<String> attributes = new ArrayList<>();
 
@@ -742,7 +792,7 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
-                GROUPING_PATH,
+                GROUPING_1_PATH,
                 YYYYMMDDTHHMM,
                 OPERATION_REPLACE_VALUES,
                 dateTime
@@ -751,7 +801,7 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
-                GROUPING_EXCLUDE_PATH,
+                GROUPING_1_EXCLUDE_PATH,
                 YYYYMMDDTHHMM,
                 OPERATION_REPLACE_VALUES,
                 dateTime
@@ -760,54 +810,44 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
-                GROUPING_INCLUDE_PATH,
+                GROUPING_1_INCLUDE_PATH,
                 YYYYMMDDTHHMM,
                 OPERATION_REPLACE_VALUES,
                 dateTime
         )).willReturn(makeWsAssignAttributesResults(SUCCESS));
 
-        given(gf.makeWsHasMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_1_INCLUDE_PATH, users.get(5).getUsername())).willReturn(hasMemberResults(GROUPING_1_INCLUDE_PATH, users.get(5).getUsername()));
 
         //in include group not self opted
-        given(gf.makeWsHasMemberResults(GROUPING_EXCLUDE_PATH, RANDOM_USER)).willReturn(isMemberResults());
-        given(gf.makeWsGetMembershipsResults(GROUPING_EXCLUDE_PATH, RANDOM_USER_LOOKUP)).willReturn(makeWsGetMembershipsResults());
+        given(gf.makeWsHasMemberResults(GROUPING_1_EXCLUDE_PATH, users.get(5).getUsername())).willReturn(hasMemberResults(GROUPING_1_EXCLUDE_PATH, users.get(5).getUsername()));
+        given(gf.makeWsGetMembershipsResults(GROUPING_1_EXCLUDE_PATH, lookups.get(5))).willReturn(makeWsGetMembershipsResults());
         given(gf.makeWsGetAttributeAssignmentsResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, "1234"))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
         given(gf.makeWsAssignAttributesResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, OPERATION_ASSIGN_ATTRIBUTE, SELF_OPTED, "1234"))
                 .willReturn(makeWsAssignAttributesResults(SUCCESS));
 
-        optInResults = groupingsService.optOut(RANDOM_USER, GROUPING_PATH);
+        optInResults = groupingsService.optOut(users.get(5).getUsername(), GROUPING_1_PATH);
 
         assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
         assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
         assertTrue(optInResults.get(2).getResultCode().startsWith(SUCCESS));
-
-        //TODO make a mock database
-        //not in include group
-//        given(gf.makeWsHasMemberResults(GROUPING_EXCLUDE_PATH, RANDOM_USER)).willReturn(notMemberResults());
-//
-//        optInResults = groupingsService.optOut(RANDOM_USER, GROUPING_PATH);
-//
-//        assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
-//        assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-//        assertTrue(optInResults.get(2).getResultCode().startsWith(SUCCESS));
 
     }
 
     @Test
     public void cancelOptInTest() {
         //not in group
-        given(gf.makeWsHasMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        List<GroupingsServiceResult> cancelOptInResults = groupingsService.cancelOptIn(GROUPING_PATH, RANDOM_USER);
+        given(gf.makeWsHasMemberResults(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername())).willReturn(notMemberResults());
+        List<GroupingsServiceResult> cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(1).getUsername());
         assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(SUCCESS));
 
         //in group but not self opted
         List<String> attributes = new ArrayList<>();
 
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
-        given(gf.makeWsHasMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER)).willReturn(isMemberResults());
-        given(gf.makeWsGetMembershipsResults(GROUPING_INCLUDE_PATH, RANDOM_USER_LOOKUP)).willReturn(makeWsGetMembershipsResults());
+        given(gf.makeWsSubjectLookup(users.get(1).getUsername())).willReturn(lookups.get(1));
+        given(gf.makeWsHasMemberResults(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername())).willReturn(isMemberResults());
+        given(gf.makeWsGetMembershipsResults(GROUPING_0_INCLUDE_PATH, lookups.get(1))).willReturn(makeWsGetMembershipsResults());
         given(gf.makeWsGetAttributeAssignmentsResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, "1234"))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
@@ -815,7 +855,7 @@ public class GroupingsServiceMockTest {
                 .willReturn(makeWsAssignAttributesResults(SUCCESS));
 
 
-        cancelOptInResults = groupingsService.cancelOptIn(GROUPING_PATH, RANDOM_USER);
+        cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(1).getUsername());
 
         assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(FAILURE));
 
@@ -825,16 +865,17 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsGetAttributeAssignmentsResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, "1234"))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        given(gf.makeWsDeleteMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+        given(gf.makeWsDeleteMemberResults(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername()))
+                .willReturn(deleteMemberResultsSuccess(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername()));
 
-        WsAttributeAssignValue dateTime = makeWsAttributeAssignValue();
+        WsAttributeAssignValue dateTime = makeWsAttributeAssignValueTime();
 
         given(gf.makeWsAttributeAssignValue(anyString())).willReturn(dateTime);
 
         given(gf.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
-                GROUPING_PATH,
+                GROUPING_0_PATH,
                 YYYYMMDDTHHMM,
                 OPERATION_REPLACE_VALUES,
                 dateTime
@@ -843,13 +884,13 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
-                GROUPING_INCLUDE_PATH,
+                GROUPING_0_INCLUDE_PATH,
                 YYYYMMDDTHHMM,
                 OPERATION_REPLACE_VALUES,
                 dateTime
         )).willReturn(makeWsAssignAttributesResults(SUCCESS));
 
-        cancelOptInResults = groupingsService.cancelOptIn(GROUPING_PATH, RANDOM_USER);
+        cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(1).getUsername());
 
         assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(SUCCESS));
         assertTrue(cancelOptInResults.get(1).getResultCode().startsWith(SUCCESS));
@@ -860,16 +901,16 @@ public class GroupingsServiceMockTest {
     @Test
     public void cancelOptOutTest() {
         //not in group
-        given(gf.makeWsHasMemberResults(GROUPING_EXCLUDE_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        List<GroupingsServiceResult> cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_PATH, RANDOM_USER);
+        given(gf.makeWsHasMemberResults(GROUPING_0_EXCLUDE_PATH, users.get(1).getUsername())).willReturn(notMemberResults());
+        List<GroupingsServiceResult> cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_0_PATH, users.get(1).getUsername());
         assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(SUCCESS));
 
         //in group but not self opted
         List<String> attributes = new ArrayList<>();
 
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
-        given(gf.makeWsHasMemberResults(GROUPING_EXCLUDE_PATH, RANDOM_USER)).willReturn(isMemberResults());
-        given(gf.makeWsGetMembershipsResults(GROUPING_EXCLUDE_PATH, RANDOM_USER_LOOKUP)).willReturn(makeWsGetMembershipsResults());
+        given(gf.makeWsSubjectLookup(users.get(1).getUsername())).willReturn(lookups.get(1));
+        given(gf.makeWsHasMemberResults(GROUPING_0_EXCLUDE_PATH, users.get(1).getUsername())).willReturn(isMemberResults());
+        given(gf.makeWsGetMembershipsResults(GROUPING_0_EXCLUDE_PATH, lookups.get(1))).willReturn(makeWsGetMembershipsResults());
         given(gf.makeWsGetAttributeAssignmentsResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, "1234"))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
@@ -877,7 +918,7 @@ public class GroupingsServiceMockTest {
                 .willReturn(makeWsAssignAttributesResults(SUCCESS));
 
 
-        cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_PATH, RANDOM_USER);
+        cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_0_PATH, users.get(1).getUsername());
 
         assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(FAILURE));
 
@@ -887,16 +928,16 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsGetAttributeAssignmentsResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, "1234"))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        given(gf.makeWsDeleteMemberResults(GROUPING_EXCLUDE_PATH, RANDOM_USER)).willReturn(deleteMemberResultsSuccess());
+        given(gf.makeWsDeleteMemberResults(GROUPING_0_EXCLUDE_PATH, users.get(1).getUsername())).willReturn(deleteMemberResultsSuccess(GROUPING_0_EXCLUDE_PATH, users.get(1).getUsername()));
 
-        WsAttributeAssignValue dateTime = makeWsAttributeAssignValue();
+        WsAttributeAssignValue dateTime = makeWsAttributeAssignValueTime();
 
         given(gf.makeWsAttributeAssignValue(anyString())).willReturn(dateTime);
 
         given(gf.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
-                GROUPING_PATH,
+                GROUPING_0_PATH,
                 YYYYMMDDTHHMM,
                 OPERATION_REPLACE_VALUES,
                 dateTime
@@ -905,13 +946,13 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
-                GROUPING_EXCLUDE_PATH,
+                GROUPING_0_EXCLUDE_PATH,
                 YYYYMMDDTHHMM,
                 OPERATION_REPLACE_VALUES,
                 dateTime
         )).willReturn(makeWsAssignAttributesResults(SUCCESS));
 
-        cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_PATH, RANDOM_USER);
+        cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_0_PATH, users.get(1).getUsername());
 
         assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(SUCCESS));
         assertTrue(cancelOptOutResults.get(1).getResultCode().startsWith(SUCCESS));
@@ -924,19 +965,19 @@ public class GroupingsServiceMockTest {
 
         List<String> attributes = new ArrayList<>();
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, GROUPING_PATH))
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, GROUPING_0_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        boolean permission = groupingsService.optOutPermission(GROUPING_PATH);
+        boolean permission = groupingsService.optOutPermission(GROUPING_0_PATH);
 
         assertEquals(permission, false);
 
         attributes.add(OPT_OUT);
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, GROUPING_PATH))
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_OUT, GROUPING_0_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        permission = groupingsService.optOutPermission(GROUPING_PATH);
+        permission = groupingsService.optOutPermission(GROUPING_0_PATH);
 
         assertEquals(permission, true);
 
@@ -947,19 +988,19 @@ public class GroupingsServiceMockTest {
 
         List<String> attributes = new ArrayList<>();
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, GROUPING_PATH))
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, GROUPING_0_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        boolean permission = groupingsService.optInPermission(GROUPING_PATH);
+        boolean permission = groupingsService.optInPermission(GROUPING_0_PATH);
 
         assertEquals(permission, false);
 
         attributes.add(OPT_IN);
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, GROUPING_PATH))
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, OPT_IN, GROUPING_0_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        permission = groupingsService.optInPermission(GROUPING_PATH);
+        permission = groupingsService.optInPermission(GROUPING_0_PATH);
 
         assertEquals(permission, true);
     }
@@ -970,20 +1011,20 @@ public class GroupingsServiceMockTest {
         String attribute = "an attribute";
 
         //group does not have the attribute
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, attribute, GROUPING_PATH))
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, attribute, GROUPING_0_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        boolean hasAttribute = groupingsService.groupHasAttribute(GROUPING_PATH, attribute);
+        boolean hasAttribute = groupingsService.groupHasAttribute(GROUPING_0_PATH, attribute);
 
         assertFalse(hasAttribute);
 
         //group has the attribute
         attributes.add(attribute);
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, attribute, GROUPING_PATH))
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, attribute, GROUPING_0_PATH))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        hasAttribute = groupingsService.groupHasAttribute(GROUPING_PATH, attribute);
+        hasAttribute = groupingsService.groupHasAttribute(GROUPING_0_PATH, attribute);
 
         assertTrue(hasAttribute);
 
@@ -1000,41 +1041,36 @@ public class GroupingsServiceMockTest {
         }
 
         given(gf.makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP, TRIO, groupPaths))
-                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios(groupPaths));
+                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios());
 
         List<Grouping> groupingsIn = groupingsService.groupingsIn(groupPaths);
 
-        for(int i = 0; i < groupingsIn.size(); i ++) {
-            assertTrue(groupingsIn.get(i).getPath().equals("path:to:grouping" + i));
+        for (int i = 0; i < groupingsIn.size(); i++) {
+            assertTrue(groupingsIn.get(i).getPath().equals(PATH_ROOT + i));
         }
     }
 
     @Test
     public void hasListservTest() {
 
-        List<String> attributes = new ArrayList<>();
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING_0_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResultsForGrouping(GROUPING_0_PATH));
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING_PATH))
-                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
-
-        boolean groupingHasListserv = groupingsService.hasListserv(GROUPING_PATH);
+        boolean groupingHasListserv = groupingsService.hasListserv(GROUPING_0_PATH);
 
         assertEquals(groupingHasListserv, false);
 
-        attributes.add(LISTSERV);
+        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING_3_PATH))
+                .willReturn(makeWsGetAttributeAssignmentsResultsForGrouping(GROUPING_3_PATH));
 
-        given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, LISTSERV, GROUPING_PATH))
-                .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
-
-        groupingHasListserv = groupingsService.hasListserv(GROUPING_PATH);
+        groupingHasListserv = groupingsService.hasListserv(GROUPING_3_PATH);
 
         assertEquals(groupingHasListserv, true);
     }
 
     @Test
     public void groupingsOwnedTest() {
-        String ownerUsername = "username0";
-        Iterable<Group> groupsIn = groupRepository.findByMembersUsername(ownerUsername);
+        Iterable<Group> groupsIn = groupRepository.findByMembersUsername(users.get(0).getUsername());
         List<String> attributes = new ArrayList<>();
         List<String> groupPaths = new ArrayList<>();
 
@@ -1049,65 +1085,49 @@ public class GroupingsServiceMockTest {
                 .collect(Collectors.toList());
 
         given(gf.makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP, TRIO, ownerGroups))
-                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios(groupPaths));
+                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios());
 
-        for(String groups : ownerGroups) {
+        for (String groups : ownerGroups) {
             given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, groups))
                     .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
         }
 
         List<Grouping> groupingsOwned = groupingsService.groupingsOwned(groupPaths);
 
-        for(int i = 0; i < groupingsOwned.size(); i ++) {
-            assertTrue(groupingsOwned.get(i).getPath().equals("path:to:grouping" + i));
+        for (int i = 0; i < groupingsOwned.size(); i++) {
+            assertTrue(groupingsOwned.get(i).getPath().equals(PATH_ROOT + i));
         }
     }
 
     @Test
-    public void groupingsOptedIntoTest() {
-//todo
-    }
-
-    @Test
-    public void groupingsOptedOutOfTest() {
-//todo
-    }
-
-    @Test
-    public void groupingsOptedTest() {
-//todo
-    }
-
-    @Test
     public void adminListsTest() {
+        Iterable<Grouping> groupings = groupingRepository.findAll();
         List<String> groupingPaths = new ArrayList<>();
+        for (Grouping grouping : groupings) {
+            groupingPaths.add(grouping.getPath());
+        }
         List<String> attributes = new ArrayList<>();
-        groupingPaths.add("path:to:grouping0");
-        groupingPaths.add("path:to:grouping1");
-        groupingPaths.add("path:to:grouping2");
-        groupingPaths.add("path:to:grouping3");
-        groupingPaths.add("path:to:grouping4");
 
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_APPS, ADMIN_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_APPS, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_ADMINS, ADMIN_USER));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_ADMINS, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_APPS, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_APPS, ADMIN_USER));
+        given(gf.makeWsHasMemberResults(GROUPING_APPS, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_APPS, users.get(1).getUsername()));
 
         given(gf.makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP, TRIO))
-                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios(groupingPaths));
+                .willReturn(makeWsGetAttributeAssignmentsResultsForTrios());
 
         given(gf.makeWsGetMembersResults(SUBJECT_ATTRIBUTE_NAME_UID, ADMIN_LOOKUP, GROUPING_ADMINS))
                 .willReturn(makeWsGetMembersResultsDB(GROUPING_ADMINS));
 
         given(gf.makeWsSubjectLookup(ADMIN_USER)).willReturn(ADMIN_LOOKUP);
 
-        for(String groupingPath : groupingPaths ) {
+        for (String groupingPath : groupingPaths) {
             given(gf.makeWsGetAttributeAssignmentsResultsForGroup(ASSIGN_TYPE_GROUP, groupingPath))
                     .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
         }
 
         AdminListsHolder adminListsHolder = groupingsService.adminLists(ADMIN_USER);
-        AdminListsHolder emptyAdminListHolder = groupingsService.adminLists(RANDOM_USER);
+        AdminListsHolder emptyAdminListHolder = groupingsService.adminLists(users.get(1).getUsername());
 
 
         assertEquals(adminListsHolder.getAllGroupings().size(), 5);
@@ -1118,40 +1138,24 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
-    public void groupingsToOptOutOfTest() {
-
-//todo
-    }
-
-    @Test
-    public void groupingsToOptIntoTest() {
-//todo
-    }
-
-    @Test
-    public void addSelfOptedTest() {
-//todo
-    }
-
-    @Test
     public void checkSelfOptedTest() {
 
         //user is not in group
-        given(gf.makeWsHasMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername())).willReturn(notMemberResults());
 
-        boolean selfOpted = groupingsService.checkSelfOpted(GROUPING_INCLUDE_PATH, RANDOM_USER);
+        boolean selfOpted = groupingsService.checkSelfOpted(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername());
         assertFalse(selfOpted);
 
         //user has not self opted
         List<String> attributes = new ArrayList<>();
 
-        given(gf.makeWsHasMemberResults(GROUPING_INCLUDE_PATH, RANDOM_USER)).willReturn(isMemberResults());
-        given(gf.makeWsSubjectLookup(RANDOM_USER)).willReturn(RANDOM_USER_LOOKUP);
-        given(gf.makeWsGetMembershipsResults(GROUPING_INCLUDE_PATH, RANDOM_USER_LOOKUP)).willReturn(makeWsGetMembershipsResults());
+        given(gf.makeWsHasMemberResults(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername())).willReturn(isMemberResults());
+        given(gf.makeWsSubjectLookup(users.get(1).getUsername())).willReturn(lookups.get(1));
+        given(gf.makeWsGetMembershipsResults(GROUPING_0_INCLUDE_PATH, lookups.get(1))).willReturn(makeWsGetMembershipsResults());
         given(gf.makeWsGetAttributeAssignmentsResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, "1234"))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        selfOpted = groupingsService.checkSelfOpted(GROUPING_INCLUDE_PATH, RANDOM_USER);
+        selfOpted = groupingsService.checkSelfOpted(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername());
         assertFalse(selfOpted);
 
         //user has self opted
@@ -1159,7 +1163,7 @@ public class GroupingsServiceMockTest {
         given(gf.makeWsGetAttributeAssignmentsResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, "1234"))
                 .willReturn(makeWsGetAttributeAssignmentsResults(attributes));
 
-        selfOpted = groupingsService.checkSelfOpted(GROUPING_INCLUDE_PATH, RANDOM_USER);
+        selfOpted = groupingsService.checkSelfOpted(GROUPING_0_INCLUDE_PATH, users.get(1).getUsername());
         assertTrue(selfOpted);
     }
 
@@ -1167,165 +1171,91 @@ public class GroupingsServiceMockTest {
     public void inGroupTest() {
 
         //user is not in group
-        given(gf.makeWsHasMemberResults(GROUPING_PATH, RANDOM_USER)).willReturn(notMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_0_PATH, users.get(2).getUsername())).willReturn(hasMemberResults(GROUPING_0_PATH, users.get(2).getUsername()));
 
-        assertFalse(groupingsService.inGroup(GROUPING_PATH, RANDOM_USER));
+        assertFalse(groupingsService.inGroup(GROUPING_0_PATH, users.get(2).getUsername()));
 
         //user is in group
-        given(gf.makeWsHasMemberResults(GROUPING_PATH, RANDOM_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_0_PATH, users.get(5).getUsername())).willReturn(hasMemberResults(GROUPING_0_PATH, users.get(5).getUsername()));
 
-        assertTrue(groupingsService.inGroup(GROUPING_PATH, RANDOM_USER));
+        assertTrue(groupingsService.inGroup(GROUPING_0_PATH, users.get(5).getUsername()));
     }
 
     @Test
     public void isOwnerTest() {
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_OWNERS_PATH, OWNER_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername())).willReturn(hasMemberResults(GROUPING_0_OWNERS_PATH, users.get(0).getUsername()));
 
-        assertFalse(groupingsService.isOwner(GROUPING_PATH, RANDOM_USER));
-        assertTrue(groupingsService.isOwner(GROUPING_PATH, OWNER_USER));
+        assertFalse(groupingsService.isOwner(GROUPING_0_PATH, users.get(1).getUsername()));
+        assertTrue(groupingsService.isOwner(GROUPING_0_PATH, users.get(0).getUsername()));
 
     }
 
     @Test
     public void isAdminTest() {
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, RANDOM_USER)).willReturn(notMemberResults());
-        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(isMemberResults());
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, users.get(1).getUsername())).willReturn(hasMemberResults(GROUPING_ADMINS, users.get(1).getUsername()));
+        given(gf.makeWsHasMemberResults(GROUPING_ADMINS, ADMIN_USER)).willReturn(hasMemberResults(GROUPING_ADMINS, ADMIN_USER));
 
-        assertFalse(groupingsService.isAdmin(RANDOM_USER));
+        assertFalse(groupingsService.isAdmin(users.get(1).getUsername()));
         assertTrue(groupingsService.isAdmin(ADMIN_USER));
     }
 
     @Test
-    public void removeSelfOptedTest() {
-
-//todo
-    }
-
-    @Test
-    public void groupOptOutPermissionTest() {
-
-//todo
-    }
-
-    @Test
-    public void groupOptInPermissionTest() {
-
-//todo
-    }
-
-    @Test
-    public void updateLastModifiedTest() {
-
-//todo
-    }
-
-    @Test
-    public void assignMembershipAttributesTest() {
-
-//todo
-    }
-
-    @Test
-    public void getMembershipAttributesTest() {
-
-//todo
-    }
-
-    @Test
-    public void assignGroupAttributesTest() {
-
-//todo
-    }
-
-    @Test
-    public void attributeAssignmentsResultsTest() {
-
-//todo
-    }
-
-    @Test
-    public void getGrouperPrivilegeTest() {
-
-//todo
-    }
-
-    @Test
-    public void assignGrouperPrivilegeTest() {
-
-//todo
-    }
-
-    @Test
-    public void membershipsResultsTest() {
-
-//todo
-    }
-
-    @Test
     public void addMemberAsTest() {
+        Grouping grouping = groupingRepository.findByPath(GROUPING_1_PATH);
+        assertFalse(grouping.getComposite().getMembers().contains(users.get(3)));
 
-//todo
-    }
+        given(gf.makeWsSubjectLookup(users.get(0).getUsername())).willReturn(lookups.get(0));
 
-    @Test
-    public void deleteMemberAsTest() {
+        given(gf.makeWsDeleteMemberResults(GROUPING_1_PATH + EXCLUDE, lookups.get(0), users.get(3).getUsername())).willReturn(deleteMemberResultsSuccess(GROUPING_1_EXCLUDE_PATH, users.get(3).getUsername()));
+        given(gf.makeWsAddMemberResults(GROUPING_1_PATH + INCLUDE, lookups.get(0), users.get(3).getUsername())).willReturn(addMemberResults(GROUPING_1_INCLUDE_PATH, users.get(3).getUsername()));
+        given(gf.makeWsAssignAttributesResults(
+                eq(ASSIGN_TYPE_GROUP),
+                eq(OPERATION_ASSIGN_ATTRIBUTE),
+                eq(GROUPING_1_PATH),
+                eq(YYYYMMDDTHHMM),
+                eq(OPERATION_REPLACE_VALUES),
+                eq(null)))
+                .willReturn(makeWsAssignAttributesResults(SUCCESS));
+        given(gf.makeWsAssignAttributesResults(
+                eq(ASSIGN_TYPE_GROUP),
+                eq(OPERATION_ASSIGN_ATTRIBUTE),
+                eq(GROUPING_1_PATH + INCLUDE),
+                eq(YYYYMMDDTHHMM),
+                eq(OPERATION_REPLACE_VALUES),
+                eq(null)))
+                .willReturn(makeWsAssignAttributesResults(SUCCESS));
 
-//todo
-    }
+        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_1_PATH + INCLUDE, users.get(3).getUsername());
 
-    @Test
-    public void deleteMemberTest() {
-
-//todo
-    }
-
-    @Test
-    public void getMembersTest() {
-
-//todo
-    }
-
-    @Test
-    public void extractGroupingsTest() {
-
-//todo
-    }
-
-    @Test
-    public void getGroupPathsTest() {
-
-//todo
-    }
-
-    @Test
-    public void setGroupingAttributesTest() {
-
-//todo
-    }
-
-    @Test
-    public void parentGroupingPathTest() {
-
-//todo
-    }
-
-    @Test
-    public void extractGroupPathsTest() {
-
-//todo
-    }
-
-    @Test
-    public void changeGroupAttributeStatusTest() {
-
-//todo
+        grouping = groupingRepository.findByPath(GROUPING_1_PATH);
+        assertTrue(grouping.getComposite().getMembers().contains(users.get(3)));
     }
 
     /////////////////////////////////////////////////////
     //factory methods
     //////////////////////////////////////////////////////////
 
+
+    private WsHasMemberResults hasMemberResults(String groupPath, String username) {
+        WsHasMemberResults isMemberResults = new WsHasMemberResults();
+        WsHasMemberResult isMemberResult = new WsHasMemberResult();
+        WsResultMeta isMemberMeta = new WsResultMeta();
+
+        Group group = groupRepository.findByPath(groupPath);
+
+        if (group.getUsernames().contains(username)) {
+            isMemberMeta.setResultCode(IS_MEMBER);
+        } else {
+            isMemberMeta.setResultCode("not member");
+        }
+
+        isMemberResult.setResultMetadata(isMemberMeta);
+        isMemberResults.setResults(new WsHasMemberResult[]{isMemberResult});
+
+        return isMemberResults;
+
+    }
     private WsHasMemberResults isMemberResults() {
         WsHasMemberResults isMemberResults = new WsHasMemberResults();
         WsHasMemberResult isMemberResult = new WsHasMemberResult();
@@ -1348,28 +1278,119 @@ public class GroupingsServiceMockTest {
         return notMemberResults;
     }
 
-    private WsAddMemberResults addMemberResultsSuccess() {
+    private WsAddMemberResults addMemberResults(String groupPath, String username) {
         WsAddMemberResults addMemberResults = new WsAddMemberResults();
         WsResultMeta resultMeta = new WsResultMeta();
-        resultMeta.setResultCode(SUCCESS);
+
+        try {
+            Grouping grouping = groupingRepository.findByIncludePathOrExcludePathOrCompositePathOrOwnersPath(groupPath, groupPath, groupPath, groupPath);
+
+            Person person = personRepository.findByUsername(username);
+
+            Group group = groupRepository.findByPath(groupPath);
+
+            if (!group.getMembers().contains(person)) {
+                group.getMembers().add(person);
+
+                groupRepository.save(group);
+
+                Grouping newGrouping = databaseSetup.makeGrouping(
+                        grouping.getPath(),
+                        grouping.getBasis(),
+                        grouping.getExclude(),
+                        grouping.getInclude(),
+                        grouping.getOwners(),
+                        grouping.isListservOn(),
+                        grouping.isOptInOn(),
+                        grouping.isOptOutOn());
+
+                groupingRepository.save(newGrouping);
+            }
+
+            resultMeta.setResultCode(SUCCESS);
+        } catch (Exception e) {
+
+            resultMeta.setResultCode(FAILURE);
+        }
+
         addMemberResults.setResultMetadata(resultMeta);
 
         return addMemberResults;
     }
 
-    private WsDeleteMemberResults deleteMemberResultsSuccess() {
+    private WsDeleteMemberResults deleteMemberResultsSuccess(String groupPath, String username) {
         WsDeleteMemberResults deleteMemberResults = new WsDeleteMemberResults();
         WsResultMeta resultMeta = new WsResultMeta();
         resultMeta.setResultCode(SUCCESS);
         deleteMemberResults.setResultMetadata(resultMeta);
 
+        Person person = personRepository.findByUsername(username);
+
+        Group group = groupRepository.findByPath(groupPath);
+        group.getMembers().remove(person);
+
+        groupRepository.save(group);
+
+        Grouping grouping = groupingRepository.findByIncludePathOrExcludePathOrCompositePathOrOwnersPath(groupPath, groupPath, groupPath, groupPath);
+
+        //makes sure composite is updated
+        Grouping newGrouping = databaseSetup.makeGrouping(
+                grouping.getPath(),
+                grouping.getBasis(),
+                grouping.getExclude(),
+                grouping.getInclude(),
+                grouping.getOwners(),
+                grouping.isListservOn(),
+                grouping.isOptInOn(),
+                grouping.isOptOutOn());
+
+        groupingRepository.save(newGrouping);
+
         return deleteMemberResults;
     }
 
-    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(List<String> attributes) {
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGrouping(String groupingPath) {
         WsGetAttributeAssignmentsResults getAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
         List<WsAttributeDefName> attributeDefNames = new ArrayList<>();
         List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
+        List<String> attributes = new ArrayList<>();
+
+        Grouping grouping = groupingRepository.findByPath(groupingPath);
+
+        if (grouping.isListservOn()) {
+            attributes.add(LISTSERV);
+        }
+        if (grouping.isOptInOn()) {
+            attributes.add(OPT_IN);
+        }
+        if (grouping.isOptOutOn()) {
+            attributes.add(OPT_OUT);
+        }
+
+        if (attributes.size() > 0) {
+            for (String attribute : attributes) {
+                WsAttributeDefName attributeDefName = new WsAttributeDefName();
+                attributeDefName.setName(attribute);
+                attributeDefNames.add(attributeDefName);
+
+                WsAttributeAssign attributeAssign = new WsAttributeAssign();
+                attributeAssign.setAttributeDefNameName(attribute);
+                attributeAssigns.add(attributeAssign);
+            }
+            getAttributeAssignmentsResults.setWsAttributeDefNames(attributeDefNames.toArray(new WsAttributeDefName[attributeDefNames.size()]));
+            getAttributeAssignmentsResults.setWsAttributeAssigns(attributeAssigns.toArray(new WsAttributeAssign[attributeDefNames.size()]));
+
+        }
+        return getAttributeAssignmentsResults;
+
+    }
+
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(List<String> attributes) {
+        //todo update for database
+        WsGetAttributeAssignmentsResults getAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
+        List<WsAttributeDefName> attributeDefNames = new ArrayList<>();
+        List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
+
         if (attributes != null) {
             for (String attribute : attributes) {
                 WsAttributeDefName attributeDefName = new WsAttributeDefName();
@@ -1388,41 +1409,38 @@ public class GroupingsServiceMockTest {
 
     }
 
-    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForTrios(List<String> groupPaths) {
+    private WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForTrios() {
+        //todo change other methods to get trios for grouptings owned
         WsGetAttributeAssignmentsResults getAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
-        List<WsAttributeDefName> attributeDefNames = new ArrayList<>();
+
+        WsAttributeDefName attributeDefName = new WsAttributeDefName();
+        attributeDefName.setName(TRIO);
+
         List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
+
+        Iterable<Grouping> groupings = groupingRepository.findAll();
         List<String> groupingPaths = new ArrayList<>();
-        List<String> ownedGroupingPaths = new ArrayList<>();
-
-        groupingPaths.add("path:to:grouping0");
-        groupingPaths.add("path:to:grouping1");
-        groupingPaths.add("path:to:grouping2");
-        groupingPaths.add("path:to:grouping3");
-        groupingPaths.add("path:to:grouping4");
-
-        WsGroup[] groups = new WsGroup[groupPaths.size()];
-
-        for (int i = 0; i < groupPaths.size(); i ++) {
-            if (groupingPaths.contains(groupPaths.get(i))) {
-               ownedGroupingPaths.add(groupPaths.get(i));
-                groups[i] = new WsGroup();
-                groups[i].setName(groupPaths.get(i));
-            }
+        for (Grouping grouping : groupings) {
+            groupingPaths.add(grouping.getPath());
+        }
+        List<WsGroup> groupsList = new ArrayList<>();
+        for (String groupPath : groupingPaths) {
+            WsGroup group = new WsGroup();
+            group.setName(groupPath);
+            groupsList.add(group);
         }
 
-        for (String group : ownedGroupingPaths) {
-            WsAttributeDefName attributeDefName = new WsAttributeDefName();
-            attributeDefName.setName(TRIO);
-            attributeDefNames.add(attributeDefName);
+        WsGroup[] groups = groupsList.toArray(new WsGroup[groupsList.size()]);
+
+        for (String group : groupingPaths) {
 
             WsAttributeAssign attributeAssign = new WsAttributeAssign();
             attributeAssign.setAttributeDefNameName(TRIO);
             attributeAssign.setOwnerGroupName(group);
             attributeAssigns.add(attributeAssign);
         }
-        getAttributeAssignmentsResults.setWsAttributeDefNames(attributeDefNames.toArray(new WsAttributeDefName[attributeDefNames.size()]));
-        getAttributeAssignmentsResults.setWsAttributeAssigns(attributeAssigns.toArray(new WsAttributeAssign[attributeDefNames.size()]));
+        getAttributeAssignmentsResults.setWsAttributeDefNames(new WsAttributeDefName[]{attributeDefName});
+        getAttributeAssignmentsResults.setWsAttributeAssigns(attributeAssigns.toArray(new WsAttributeAssign[attributeAssigns.size()]));
         getAttributeAssignmentsResults.setWsGroups(groups);
 
         return getAttributeAssignmentsResults;
@@ -1437,7 +1455,30 @@ public class GroupingsServiceMockTest {
         return assignAttributesResults;
     }
 
+    private WsAssignAttributesResults makeWsAssignAttributesResultsForGrouping(String groupingPath, String attribute, boolean isOn) {
+        WsAssignAttributesResults assignAttributesResults = new WsAssignAttributesResults();
+        WsResultMeta resultMeta = new WsResultMeta();
+        resultMeta.setResultCode(SUCCESS);
+        assignAttributesResults.setResultMetadata(resultMeta);
+
+        Grouping grouping = groupingRepository.findByPath(groupingPath);
+
+        if (attribute.equals(LISTSERV)) {
+            grouping.setListservOn(isOn);
+        } else if (attribute.equals(OPT_IN)) {
+            grouping.setOptInOn(isOn);
+        } else if (attribute.equals(OPT_OUT)) {
+            grouping.setOptOutOn(isOn);
+        }
+
+        groupingRepository.save(grouping);
+
+        return assignAttributesResults;
+    }
+
+
     private WsAssignGrouperPrivilegesLiteResult makeWsAssignGrouperPrivilegesLiteResult(String resultCode) {
+        //todo update for database
         WsAssignGrouperPrivilegesLiteResult agplr = new WsAssignGrouperPrivilegesLiteResult();
         WsResultMeta resultMeta = new WsResultMeta();
         resultMeta.setResultCode(resultCode);
@@ -1446,15 +1487,18 @@ public class GroupingsServiceMockTest {
         return agplr;
     }
 
-    private WsGetMembersResults makeWsGetMembersResults() {
+    private WsGetMembersResults makeWsGetMembersResults(String groupPath) {
+        //todo update for database
         List<WsSubject> subjects = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        List<Person> persons = groupRepository.findByPath(groupPath).getMembers();
+        for (Person person : persons) {
             WsSubject subject = new WsSubject();
-            subject.setName("name" + i);
-            subject.setId("ID" + i);
-            subject.setAttributeValues(new String[]{"username" + i});
+            subject.setName(person.getName());
+            subject.setId(person.getUuid());
+            subject.setAttributeValues(new String[]{person.getUsername()});
 
             subjects.add(subject);
+
         }
 
         WsGetMembersResults getMembersResults = new WsGetMembersResults();
@@ -1470,19 +1514,16 @@ public class GroupingsServiceMockTest {
 
     private WsGetMembersResults makeWsGetMembersResultsDB(String groupPath) {
         List<WsSubject> subjects = new ArrayList<>();
-        Iterable<Group> groups = groupRepository.findByPath(groupPath);
+        Group group = groupRepository.findByPath(groupPath);
 
-        for(Group group : groups) {
-            List<Person> members = group.getMembers();
-            for(Person member : members) {
-                WsSubject subject = new WsSubject();
-                subject.setName(member.getName());
-                subject.setId(member.getUuid());
-                subject.setAttributeValues(new String[]{member.getUsername()});
+        List<Person> members = group.getMembers();
+        for (Person member : members) {
+            WsSubject subject = new WsSubject();
+            subject.setName(member.getName());
+            subject.setId(member.getUuid());
+            subject.setAttributeValues(new String[]{member.getUsername()});
 
-                subjects.add(subject);
-            }
-
+            subjects.add(subject);
         }
 
         WsGetMembersResults getMembersResults = new WsGetMembersResults();
@@ -1492,17 +1533,17 @@ public class GroupingsServiceMockTest {
         WsGetMembersResult[] membersResults = new WsGetMembersResult[]{getMembersResult};
         getMembersResults.setResults(membersResults);
 
-
         return getMembersResults;
     }
 
-    private WsAttributeAssignValue makeWsAttributeAssignValue() {
+    private WsAttributeAssignValue makeWsAttributeAssignValueTime() {
         WsAttributeAssignValue attributeAssignValue = new WsAttributeAssignValue();
         attributeAssignValue.setValueSystem("time");
         return attributeAssignValue;
     }
 
     private WsGetGrouperPrivilegesLiteResult makeWsGetGrouperPrivilegesLiteResult(boolean success) {
+        //todo update for database
 
         WsGetGrouperPrivilegesLiteResult gplr = new WsGetGrouperPrivilegesLiteResult();
         WsResultMeta resultMetadata = new WsResultMeta();
@@ -1517,6 +1558,7 @@ public class GroupingsServiceMockTest {
     }
 
     private WsGetMembershipsResults makeWsGetMembershipsResults() {
+        //todo update for database
         WsGetMembershipsResults membershipsResults = new WsGetMembershipsResults();
         WsMembership membership = new WsMembership();
         membership.setMembershipId("1234");
