@@ -65,10 +65,10 @@ public class HomeControllerTest {
     }
 
     @Test
-    public void requestFaq() throws Exception {
-        mockMvc.perform(get("/faq"))
+    public void requestInfo() throws Exception {
+        mockMvc.perform(get("/info"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("faq"));
+                .andExpect(view().name("info"));
     }
 
     @Test

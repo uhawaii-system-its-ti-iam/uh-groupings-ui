@@ -25,6 +25,14 @@
         }
     });
 
+    adminApp.factory('modalFactory', function($uiModal) {
+        return {
+            open: function(size) {
+                return $uibModal.open({});
+            }
+        }
+    });
+
     /**
      * Service function that makes a AJAX post call from an api url
      *

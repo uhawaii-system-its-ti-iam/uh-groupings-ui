@@ -8,6 +8,11 @@
     src: url(/myiam/fonts/CormorantUpright-Regular.ttf);
 }
 
+@font-face {
+    font-family: alegreyasans-regular;
+    src: url(/myiam/fonts/AlegreyaSans-Regular.ttf);
+}
+
 html {
     position: relative;
     min-height: 100%;
@@ -20,10 +25,10 @@ body {
 }
 
 h1, h2, h3, h4 {
-   color: #BD9319;
+    color: #BD9319;
 }
 
-.loader{
+.loader {
     border: 16px solid white; /* Black */
     border-top: 16px solid black; /* Blue */
     border-radius: 50%;
@@ -35,16 +40,23 @@ h1, h2, h3, h4 {
     top: 45%;
 }
 
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+::-webkit-input-placeholder {
+    /* Chrome/Opera/Safari */
     font-weight: bold;
 }
-::-moz-placeholder { /* Firefox 19+ */
+
+::-moz-placeholder {
+    /* Firefox 19+ */
     font-weight: bold;
 }
-:-ms-input-placeholder { /* IE 10+ */
+
+:-ms-input-placeholder {
+    /* IE 10+ */
     font-weight: bold;
 }
-:-moz-placeholder { /* Firefox 18- */
+
+:-moz-placeholder {
+    /* Firefox 18- */
     font-weight: bold;
 }
 
@@ -55,11 +67,19 @@ h1, h2, h3, h4 {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
 }
 
+#searchAdmin{
+    margin-top: 10px;
+}
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 a {
@@ -73,13 +93,13 @@ a:hover {
 }
 
 td.uh-pre {
-    white-space: pre;           /* CSS 2.0 */
-    white-space: pre-wrap;      /* CSS 2.1 */
-    white-space: pre-line;      /* CSS 3.0 */
-    white-space: -pre-wrap;     /* Opera 4-6 */
-    white-space: -o-pre-wrap;   /* Opera 7 */
+    white-space: pre; /* CSS 2.0 */
+    white-space: pre-wrap; /* CSS 2.1 */
+    white-space: pre-line; /* CSS 3.0 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
     white-space: -moz-pre-wrap; /* Mozilla */
-    white-space: -hp-pre-wrap;  /* HP Printers */
+    white-space: -hp-pre-wrap; /* HP Printers */
     display: inline-block;
     word-wrap: break-word;
     word-break: break-all;
@@ -92,6 +112,7 @@ td.uh-pre {
     letter-spacing: 2.2px;
     color: #777;
 }
+
 .uh-branding-two {
     font-family: cormorant-upright-regular, cursive;
     font-size: 0.8em;
@@ -102,6 +123,7 @@ td.uh-pre {
 .navbar {
     background-color: white;
 }
+
 .navbar-fixed-top .nav {
     padding-top: 40px;
     padding-bottom: 0px;
@@ -109,6 +131,7 @@ td.uh-pre {
     padding-right: 0px;
     background-color: white;
 }
+
 .navbar-fixed-top .navbar-brand {
     padding-left: 20px;
     padding-right: 0px;
@@ -117,16 +140,22 @@ td.uh-pre {
     min-height: 50px;
     min-width: 50px;
 }
+
 .navbar-fixed-top .navbar-brand > img {
     height: 50px;
     width: 50px;
     background-color: transparent;
 }
+
 .navbar-brand.uh-nav-app-name {
     height: 50px;
     width: auto;
     padding-top: 20px;
     background-color: transparent;
+
+    font-family: alegreyasans-regular, opensans-regular, serif;
+    font-weight: normal;
+    font-size: 25px;
 }
 
 .navbar-default .navbar-nav > .open > a,
@@ -154,25 +183,28 @@ td.uh-pre {
     text-align: center;
 }
 
-
-#groupHeader{
+#groupHeader {
     height: 55px;
 }
 
-    #headingOptIn{
-        position: relative;
-        vertical-align: 50%;
-        white-space: nowrap;
-        margin-top: 5px;
-        /*height:  15px;*/
+#headingOptIn {
+    position: relative;
+    vertical-align: 50%;
+    white-space: nowrap;
+    margin-top: 5px;
+    /*height:  15px;*/
 
-    }
+}
 
-    #filters{
-        padding: 10px;
-    }
+#filters {
+    padding: 10px;
+}
 
-@media(min-width:768px) {
+.dropshadow {
+    text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
+}
+
+@media (min-width: 768px) {
     body {
         padding-top: 100px; /* Required padding for .navbar-fixed-top. Change if height of navigation changes. */
         padding-bottom: 50px;
@@ -181,6 +213,7 @@ td.uh-pre {
     .navbar {
         background-color: white;
     }
+
     .navbar-fixed-top .nav {
         padding-top: 40px;
         padding-bottom: 0px;
@@ -188,16 +221,19 @@ td.uh-pre {
         padding-right: 20px;
         background-color: white;
     }
+
     .navbar-fixed-top .navbar-brand {
         padding: 0 0 0 0;
         min-height: 50px;
         min-width: 50px;
     }
+
     .navbar-fixed-top .navbar-brand > img {
         height: 90px;
         width: 90px;
         background-color: transparent;
     }
+
     .navbar-brand.uh-nav-app-name {
         height: 90px;
         width: auto;
@@ -218,6 +254,7 @@ td.uh-pre {
         letter-spacing: 2.2px;
         color: #777;
     }
+
     .uh-branding-two {
         font-family: cormorant-upright-regular, cursive;
         font-size: 0.8em;
@@ -225,18 +262,19 @@ td.uh-pre {
         color: #777;
     }
 
-    i{
-      font-size: 45px;
+    i {
+        font-size: 45px;
     }
 
-    #topRow{
-      text-align: left;
-    }
-    #tops{
-      text-align: center;
+    #topRow {
+        text-align: left;
     }
 
-    #uh-login fieldset{
+    #tops {
+        text-align: center;
+    }
+
+    #uh-login fieldset {
         border: 1px solid #4cae4c;
         text-align: left;
         width: 25%;

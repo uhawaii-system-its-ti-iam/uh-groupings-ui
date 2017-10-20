@@ -9,7 +9,7 @@
      * @param dataDeleter   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function OwnerJsController($scope, $window,$filter, dataProvider, dataUpdater, dataDeleter) {
+    function OwnerJsController($scope, $window, $filter, dataProvider, dataUpdater, dataDeleter) {
         $scope.currentUsername = "";
         $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -147,29 +147,12 @@
                 $scope.modify($scope.ownerList);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
 
-                // TODO: Update to reflect how admin controller does it.
-                $scope.pref = d.listservOn;
-                $scope.allowOptIn = d.optInOn;
-                $scope.allowOptOut = d.optOutOn;
+                $scope.preference = {
+                    optIn: d.optInOn,
+                    optOut: d.optOutOn,
+                    listserv: d.listservOn
+                };
 
-                if ($scope.pref == true) {
-                    $('#listserv').prop("checked", true);
-                }
-                else {
-                    $('#listserv').prop("checked", false);
-                }
-                if ($scope.allowOptIn == true) {
-                    $('#optInOption').prop("checked", true);
-                }
-                else {
-                    $('#optInOption').prop("checked", false);
-                }
-                if ($scope.allowOptOut == true) {
-                    $('#optOutOption').prop("checked", true);
-                }
-                else {
-                    $('#optOutOption').prop("checked", false);
-                }
 
                 //Stop loading spinner
                 $scope.loading = false;
@@ -217,7 +200,7 @@
          * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
          */
         $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'folder': '', 'uuid': '', 'username':''};
+            $scope.symbol = {'name': '', 'folder': '', 'uuid': '', 'username': ''};
 
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
                 list = _.sortBy(list, col);
@@ -346,58 +329,49 @@
             $scope.ownerUser = '';
         };
 
-        // TODO: Update the savePref function to be similar to the one in the admin controller.
         /**
          * Saves changes made to grouping privileges
          */
         $scope.savePref = function () {
             var prefUrls = [];
-            if (confirm("Are you sure you want to save")) {
-                if ($('#optInOption').is(':checked')) {
-                    $scope.allowOptIn = true;
-                }
-                else {
-                    $scope.allowOptIn = false;
-                }
-                if ($('#optOutOption').is(':checked')) {
-                    $scope.allowOptOut = true;
-                }
-                else {
-                    $scope.allowOptOut = false;
-                }
-                if ($('#listserv').is(':checked')) {
-                    $scope.pref = true;
-                }
-                else {
-                    $scope.pref = false;
-                }
-                prefUrls.push({
-                    "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.pref + "/setListserv",
-                    "name": "Listserv"
-                });
-                prefUrls.push({
-                    "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn",
-                    "name": "optInOption"
-                });
-                prefUrls.push({
-                    "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut",
-                    "name": "optOutOption"
-                });
 
-                for (var i = 0; i < prefUrls.length; i++) {
-                    dataUpdater.addData(function (d) {
-                        console.log(d);
-                        if (d.resultCode === "SUCCESS") {
-                            console.log("preference successfully updated");
-                            alert("preference successfully updated");
-                            $scope.getData();
+            prefUrls.push({
+                "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.listserv + "/setListserv",
+                "name": "Listserv"
+            });
+            prefUrls.push({
+                "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.optIn + "/setOptIn",
+                "name": "optInOption"
+            });
+            prefUrls.push({
+                "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.optOut + "/setOptOut",
+                "name": "optOutOption"
+            });
+
+            for (var i = 0; i < prefUrls.length; i++) {
+                dataUpdater.addData(function (d) {
+                    var success = 0;
+                    console.log(d);
+                    if (d.resultCode === "SUCCESS") {
+                        console.log("LISTSERV preference successfully updated");
+                        alert("LISTSERV preference successfully updated");
+                        success = 1;
+                    }
+                    else if (typeof d.resultsCode === 'undefined') {
+                        if (typeof d[0] != 'undefined' && (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED" )) {
+                            console.log("OptIn/OptOut preference successfully updated");
+                            alert("OptIn/OptOut preference successfully updated");
+                            success = 1;
                         }
-                        else if (typeof d.resultsCode === 'undefined') {
-                            console.log("preference did not change");
-                            alert("preference did not change");
+                        else {
+                            console.log("Preference did not change");
+                            alert("Preference did not change");
                         }
-                    }, prefUrls[i].url);
-                }
+                    }
+                    if (success == 1) {
+                        $scope.getData($scope.groupingPath);
+                    }
+                }, prefUrls[i].url);
             }
         };
 
@@ -446,134 +420,129 @@
             }
             return str;
         };
-    //Pagination code
+        //Pagination code
 
 
-    /**gives you a true or false if it finds the match
-    **@param haystack - the thing to be checked
-    **@param needle - the check against
-    **
-    **/
-    var searchMatch = function (haystack, needle) {
-        if (!needle) {
-            return true;
-        }
-        return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
-    };
-
-    /**searches through the array to find matches and then fixes the list
-    **@param list - gives the whole list to sort out
-    **@param whatList - it gives you the list you need to search through
-    **@param whatQuery - it gives the search bar its seperate search function.
-    **/
-    $scope.search = function (list, whatList,whatQuery) {
-        var query = "";
-        query = $scope[whatQuery];
-        console.log(query);
-        //console.log($scope[whatList]);
-        $scope.filteredItems = [];
-        $scope.filteredItems = $filter('filter')(list, function (item) {
-            if(searchMatch(item.name, query)){
+        /**gives you a true or false if it finds the match
+         **@param haystack - the thing to be checked
+         **@param needle - the check against
+         **
+         **/
+        var searchMatch = function (haystack, needle) {
+            if (!needle) {
                 return true;
             }
-        });
-        // console.log($scope.filteredItems);
-        page = 0;
-        // now group by pages
-        var emptyList = [];
-        $scope[whatList] = $scope.groupToPagesChanged(emptyList);
-    };
+            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+        };
 
-    $scope.groupToPagesChanged = function(pagedList){
-        var pagedList = [];
-        for(var i = 0; i < $scope.filteredItems.length ; i++){
-            if(i % $scope.itemsPerPage === 0){
-                pagedList[Math.floor(i/$scope.itemsPerPage)] = [ $scope.filteredItems[i]];
-            }else{
-                pagedList[Math.floor(i/$scope.itemsPerPage)].push( $scope.filteredItems[i]);
+        /**searches through the array to find matches and then fixes the list
+         **@param list - gives the whole list to sort out
+         **@param whatList - it gives you the list you need to search through
+         **@param whatQuery - it gives the search bar its seperate search function.
+         **/
+        $scope.search = function (list, whatList, whatQuery) {
+            var query = "";
+            query = $scope[whatQuery];
+            console.log(query);
+            //console.log($scope[whatList]);
+            $scope.filteredItems = [];
+            $scope.filteredItems = $filter('filter')(list, function (item) {
+                if (searchMatch(item.name, query)) {
+                    return true;
+                }
+            });
+            // console.log($scope.filteredItems);
+            page = 0;
+            // now group by pages
+            var emptyList = [];
+            $scope[whatList] = $scope.groupToPagesChanged(emptyList);
+        };
+
+        $scope.groupToPagesChanged = function (pagedList) {
+            var pagedList = [];
+            for (var i = 0; i < $scope.filteredItems.length; i++) {
+                if (i % $scope.itemsPerPage === 0) {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                } else {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                }
             }
-        }
-        return pagedList;
-    };
+            return pagedList;
+        };
 
 
-    /**groups all the items to pages
-       have sepperate arrays (hopefully)
-       @param
-    **/
-    $scope.groupToPages=function(theList , pagedList){
-        var pagedList = [];
-        if(theList == null){
-            console.log("I AM NULL ... WHY?!");
-        }
-        if(theList != null){
-        for(var i = 0; i < theList.length ; i++){
-            if(i % $scope.itemsPerPage === 0){
-                pagedList[Math.floor(i/$scope.itemsPerPage)] = [ theList[i]];
-            }else{
-                pagedList[Math.floor(i/$scope.itemsPerPage)].push( theList[i]);
+        /**groups all the items to pages
+         have separate arrays
+         **/
+        $scope.groupToPages = function (theList, pagedList) {
+            var pagedList = [];
+            if (theList == null) {
+                console.log("I AM NULL ... WHY?!");
             }
-        }
-        }
-        return pagedList;
-    };
-
-    /**shows the range between the start and end
-     *checks for negative numbers
-     *
-     * @param size
-     * @param start
-     * @param end
-     *  all the param are self explanitory
-     * @return ret
-     *     everything within the range of start,
-     *       end, and making sure it's that size
-     **/
-    $scope.range = function (size, start, end) {
-        var ret = [];
-
-        if (size < end) {
-            end = size;
-            // start = size - $scope.gap;
-        }
-        if (start < 0) {
-            start = 0;
-        }
-        for (var i = start; i < end; i++) {
-            ret.push(i);
-        }
-        return ret;
-    };
-
-    $scope.currentPage = function(pages, whatPage, whatList){
-        switch(pages){
-            case 'Next':
-                if ($scope[whatPage] < $scope[whatList].length - 1) {
-                    $scope[whatPage] = $scope[whatPage] + 1;
+            if (theList != null) {
+                for (var i = 0; i < theList.length; i++) {
+                    if (i % $scope.itemsPerPage === 0) {
+                        pagedList[Math.floor(i / $scope.itemsPerPage)] = [theList[i]];
+                    } else {
+                        pagedList[Math.floor(i / $scope.itemsPerPage)].push(theList[i]);
+                    }
                 }
-                break;
-            case 'Set':
-                $scope[whatPage] = this.n;
-                break;
-            case 'Prev':
-                if ($scope[whatPage] > 0) {
-                    $scope[whatPage]--;
-                }
-                break;
-            case 'First':
-                $scope[whatPage] = 0;
-                break;
-            case 'Last':
-                if ($scope[whatPage] >= 0) {
-                    $scope[whatPage] = $scope[whatPage].length - 1;
-                }
-                break;
-        }
-    };
+            }
+            return pagedList;
+        };
 
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
+        /**shows the range between the start and end
+         *checks for negative numbers
+         *
+         * @param size
+         * @param start
+         * @param end
+         *  all the param are self explanitory
+         * @return ret
+         *     everything within the range of start,
+         *       end, and making sure it's that size
+         **/
+        $scope.range = function (size, start, end) {
+            var ret = [];
+
+            if (size < end) {
+                end = size;
+                // start = size - $scope.gap;
+            }
+            if (start < 0) {
+                start = 0;
+            }
+            for (var i = start; i < end; i++) {
+                ret.push(i);
+            }
+            return ret;
+        };
+
+        $scope.currentPage = function (pages, whatPage, whatList) {
+            switch (pages) {
+                case 'Next':
+                    if ($scope[whatPage] < $scope[whatList].length - 1) {
+                        $scope[whatPage] = $scope[whatPage] + 1;
+                    }
+                    break;
+                case 'Set':
+                    $scope[whatPage] = this.n;
+                    break;
+                case 'Prev':
+                    if ($scope[whatPage] > 0) {
+                        $scope[whatPage]--;
+                    }
+                    break;
+                case 'First':
+                    $scope[whatPage] = 0;
+                    break;
+                case 'Last':
+                    if ($scope[whatPage] >= 0) {
+                        $scope[whatPage] = $scope[whatList].length - 1;
+                    }
+                    break;
+            }
+        };
 
     }
 

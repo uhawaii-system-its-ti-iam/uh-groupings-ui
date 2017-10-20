@@ -9,7 +9,7 @@
      * @param dataDelete   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function AdminJsController($scope, $filter, $window, dataProvider, dataUpdater, dataDelete) {
+    function AdminJsController($scope, $window, $uibModal, dataProvider, dataUpdater, dataDelete) {
 
         $scope.currentUsername = "";
         $scope.filteredItems = [];
@@ -84,7 +84,7 @@
         };
 
         $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'uuid': '', 'username':''};
+            $scope.symbol = {'name': '', 'uuid': '', 'username': ''};
 
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
                 list = _.sortBy(list, col);
@@ -172,12 +172,8 @@
                 $scope.modify($scope.ownerList);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
 
-                /*$scope.pref = d.listservOn;
-                $scope.allowOptIn = d.optInOn;
-                $scope.allowOptOut = d.optOutOn;*/
-
                 $scope.preference = {
-                    optIn : d.optInOn,
+                    optIn: d.optInOn,
                     optOut: d.optOutOn,
                     listserv: d.listservOn
                 };
@@ -310,13 +306,37 @@
             var deleteUser = $scope.list[index].username;
             var deleteUrl = "api/groupings/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteAdmin";
             console.log(deleteUrl);
-            if ($scope.list.length > 1) {
-                dataDelete.deleteData(function (d) {
-                    $scope.list.splice(index, 1);
-                    $scope.init();
-                }, deleteUrl);
-            }
+
+            var message = "Are you sure you want to delete " + deleteUser;
+            var modalHtml = '<div class="modal-body">' + message + '</div>';
+            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()">Cancel</button></div>';
+
+
+            var modalInstance = $uibModal.open({
+                template: modalHtml,
+                controller: AdminJsController
+            });
+
+            /*modalInstance.result.then(function() {
+                console.log("hello");
+            });*/
+            /*if ($scope.list.length > 1) {
+             dataDelete.deleteData(function (d) {
+             $scope.list.splice(index, 1);
+             $scope.init();
+             }, deleteUrl);
+             }*/
         };
+
+        $scope.ok = function () {
+            modalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            console.log("Trying to cancel");
+            modalInstance.dismiss('cancel');
+        };
+
 
         $scope.removeMember = function (type, row) {
             var user;
@@ -348,9 +368,6 @@
 
         $scope.savePref = function () {
             var prefUrls = [];
-            console.log($scope.preference.optIn);
-            console.log($scope.preference.optOut);
-            console.log($scope.preference.listserv);
 
             prefUrls.push({
                 "url": "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.listserv + "/setListserv",
@@ -375,7 +392,7 @@
                         success = 1;
                     }
                     else if (typeof d.resultsCode === 'undefined') {
-                        if(typeof d[0] != 'undefined' && (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED" )) {
+                        if (typeof d[0] != 'undefined' && (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED" )) {
                             console.log("OptIn/OptOut preference successfully updated");
                             alert("OptIn/OptOut preference successfully updated");
                             success = 1;
@@ -385,8 +402,7 @@
                             alert("Preference did not change");
                         }
                     }
-                    if(success == 1)
-                    {
+                    if (success == 1) {
                         $scope.getData($scope.groupingPath);
                     }
                 }, prefUrls[i].url);
@@ -608,11 +624,15 @@
             }
         });
 
-        $(function () {
+        /*$(function () {
             $('[data-toggle="tooltip"]').tooltip();
-        })
+        });*/
+
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').focus()
+        });
 
     }
-
     adminApp.controller("AdminJsController", AdminJsController);
-})();
+})
+();
