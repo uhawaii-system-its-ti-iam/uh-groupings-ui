@@ -70,9 +70,6 @@ h1, h2, h3, h4 {
     z-index: 9999;
 }
 
-#searchAdmin{
-    margin-top: 10px;
-}
 @keyframes spin {
     0% {
         transform: rotate(0deg);
@@ -214,6 +211,12 @@ td.uh-pre {
 
 .dropshadow {
     text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
+}
+
+.panel.panel-tab-content {
+    border-radius: 0px 0px 3px 3px;
+    -webkit-border-radius: 0px 0px 3px 3px;
+    -moz-border-radius: 0px 0px 3px 3px;
 }
 
 @media (min-width: 768px) {

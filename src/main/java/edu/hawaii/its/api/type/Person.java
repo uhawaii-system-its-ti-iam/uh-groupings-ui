@@ -60,6 +60,11 @@ public class Person implements Comparable<Person> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        return compareTo((Person)o) == 0;
+    }
+
+    @Override
     public int compareTo(Person person) {
 
         if (this.getName().compareTo(person.getName()) == 0

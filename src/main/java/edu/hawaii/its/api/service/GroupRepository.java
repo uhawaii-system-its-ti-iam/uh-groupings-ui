@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface GroupRepository extends CrudRepository<Group, String> {
-    List<Group> findByPath(String path);
+    Group findByPath(String path);
     List<Group> findByMembersUsername(String username);
 }
