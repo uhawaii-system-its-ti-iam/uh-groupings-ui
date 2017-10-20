@@ -439,22 +439,28 @@
                                                 <table width="100%">
                                                     <th>
                                                         <h3>Add/Remove</h3>
-                                                        <label>
-                                                            <input type="checkbox" ng-model="preference.optIn"/> Allow people to add
-                                                            themselves to this group
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox" ng-model="preference.optOut"/> Allow people to remove
-                                                            themselves to this group
-                                                        </label>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" ng-model="preference.optIn"/> Allow people to add
+                                                                themselves to this group
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" ng-model="preference.optOut"/> Allow people to remove
+                                                                themselves to this group
+                                                            </label>
+                                                        </div>
 
                                                     </th>
                                                     <th>
                                                         <h3>Publication Destinations</h3>
-                                                        <label>
-                                                            <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/>
-                                                            LISTSERV list: {{groupingName.name}}
-                                                        </label>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/>
+                                                                LISTSERV list: {{groupingName.name}}
+                                                            </label>
+                                                        </div>
                                                     </th>
                                                 </table>
 
