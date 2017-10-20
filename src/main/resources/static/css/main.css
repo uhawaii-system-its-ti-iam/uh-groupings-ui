@@ -186,6 +186,10 @@ td.uh-pre {
 #groupHeader {
     height: 55px;
 }
+#prefrences{
+    display: flex;
+    justify-content: flex-end;
+}
 
 #headingOptIn {
     position: relative;
@@ -196,6 +200,14 @@ td.uh-pre {
 
 }
 
+#headingOptInExplained {
+    /*position: relative;*/
+    /*vertical-align: 50%;*/
+    /*white-space: nowrap;*/
+    /*margin-top: 5px;*/
+    /*height:  15px;*/
+
+}
 #filters {
     padding: 10px;
 }

@@ -488,8 +488,11 @@
                                     <td>{{owner.name}}</td>
                                     <td>{{owner.username}}</td>
                                     <td>
-                                        <button class="btn btn-warning btn-block" ng-click="removeOwner($index)"><span
+                                        <!-- <button class="btn btn-warning btn-block" ng-click="removeOwner($index)"><span
                                                 class="glyphicon glyphicon-remove"></span>
+                                        </button> -->
+                                        <button class="btn btn-danger btn-block" ng-click="removeOwner($index)"><span
+                                                class="glyphicon glyphicon-trash"></span>
                                         </button>
                                     </td>
                                 </tr>
@@ -559,10 +562,12 @@
                             <input ng-model="preference.listserv" type="checkbox" ng-init="pref"/>
                             LISTSERV list: {{groupingName.name}}
                             <br/>
+                            <div id = "prefrences">
+                                <button class="btn btn-default btn-primary" style="margin-top: 20px"
+                                    type="submit" ng-click="savePref()" id = "prefrences"> Update Preferences
+                                </button>
+                            </div>
 
-                            <button class="btn btn-default btn-primary" style="margin-top: 20px"
-                                    type="submit" ng-click="savePref()"> Update Preferences
-                            </button>
                         </div>
                     </div>
                 </div>

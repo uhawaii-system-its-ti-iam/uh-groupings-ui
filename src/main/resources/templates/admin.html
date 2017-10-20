@@ -35,7 +35,6 @@
 
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="grouping">
-                        <!-- <h2 class="text-center">Search For Grouping</h2> -->
 
                         <div class="input-group">
                             <input class="form-control" style="width: 75em" list="testList"
@@ -445,10 +444,11 @@
                                             <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/>
                                             LISTSERV list: {{groupingName.name}}
                                             <br/>
-
-                                            <button class="btn btn-default btn-primary" style="margin-top: 20px"
-                                                    type="submit" ng-click="savePref()">Update Preferences
-                                            </button>
+                                            <div id = "prefrences">
+                                                <button class="btn btn-default btn-primary" style="margin-top: 20px"
+                                                    type="submit" ng-click="savePref()" >Update Preferences
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -501,7 +501,7 @@
                                     <td>
                                         <button class="btn btn-danger btn-block"
                                                 ng-click="removeAdmin($index + (currentPage * itemsPerPage))"><span
-                                                class="glyphicon glyphicon-remove"></span></button>
+                                                class="glyphicon glyphicon-trash"></span></button>
                                     </td>
                                 </tr>
                                 </tbody>
