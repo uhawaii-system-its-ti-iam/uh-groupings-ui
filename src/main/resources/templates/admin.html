@@ -433,22 +433,34 @@
                                         <div id="options" class="tab-pane fade">
                                             <h3 class="text-center">Preferences</h3>
 
-                                            <h3>Add/Remove</h3>
+                                            <div class="well">
 
-                                            <input type="checkbox" ng-model="preference.optIn"/> Allow people to add
-                                            themselves to this group <br/>
-                                            <input type="checkbox" ng-model="preference.optOut"/> Allow people to remove
-                                            themselves to this group
-                                            <br/>
+                                                <table width="100%">
+                                                    <th>
+                                                        <h3>Add/Remove</h3>
+                                                        <label>
+                                                            <input type="checkbox" ng-model="preference.optIn"/> Allow people to add
+                                                            themselves to this group
+                                                        </label>
+                                                        <label>
+                                                            <input type="checkbox" ng-model="preference.optOut"/> Allow people to remove
+                                                            themselves to this group
+                                                        </label>
 
-                                            <h3>Publication Destinations</h3>
-                                            <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/>
-                                            LISTSERV list: {{groupingName.name}}
-                                            <br/>
+                                                    </th>
+                                                    <th>
+                                                        <h3>Publication Destinations</h3>
+                                                        <label>
+                                                            <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/>
+                                                            LISTSERV list: {{groupingName.name}}
+                                                        </label>
+                                                    </th>
+                                                </table>
 
-                                            <button class="btn btn-default btn-primary" style="margin-top: 20px"
-                                                    type="submit" ng-click="savePref()">Update Preferences
-                                            </button>
+                                                <button class="btn btn-default btn-primary" style="margin-top: 20px;"
+                                                        type="submit" ng-click="savePref()">Update Preferences
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
