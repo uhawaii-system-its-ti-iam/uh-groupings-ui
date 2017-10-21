@@ -306,7 +306,41 @@
             var deleteUser = $scope.list[index].username;
             var deleteUrl = "api/groupings/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteAdmin";
 
-            var message = "Are you sure you want to delete " + deleteUser;
+            $scope.deleteModal(deleteUser, deleteUrl, index, 'admin');
+        };
+
+        $scope.removeMember = function (type, row) {
+            var user;
+            if (type === 'Include') {
+                user = $scope.groupingInclude[row].username;
+            }
+            if (type === 'Exclude') {
+                user = $scope.groupingExclude[row].username;
+            }
+
+            var URL = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
+
+            $scope.deleteModal(user, URL, null, $scope.groupingPath);
+        };
+
+        $scope.removeOwner = function (index) {
+            var removeOwner = $scope.ownerList[index].username;
+            var removeOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
+            if ($scope.ownerList.length > 1) {
+                $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.groupingPath);
+            }
+        };
+
+        /**
+         *
+         * @param user - name of the user to be deleted
+         * @param url - api url call to remove user
+         * @param location - The index of the user in the admin list table.
+         * @param type - Declaring if removing from admin list or from a grouping path.
+         */
+        $scope.deleteModal = function(user, url, location, type)
+        {
+            var message = "Are you sure you want to delete " + user;
             var modalHtml = '<div class="modal-body">' + message + '</div>';
             modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
 
@@ -316,12 +350,18 @@
             });
 
             $scope.modalInstance.result.then(function () {
-                console.log(deleteUrl);
-                if ($scope.list.length > 1) {
+                if (type == 'admin' && $scope.list.length > 1) {
                     dataDelete.deleteData(function (d) {
-                        $scope.list.splice(index, 1);
+                        $scope.list.splice(location, 1);
                         $scope.init();
-                    }, deleteUrl);
+                    }, url);
+                }
+                else
+                {
+                    dataDelete.deleteData(function (d) {
+                        console.log(d);
+                        $scope.getData(type);
+                    }, url);
                 }
             });
         };
@@ -338,34 +378,6 @@
          */
         $scope.cancel = function () {
             $scope.modalInstance.dismiss();
-        };
-
-        $scope.removeMember = function (type, row) {
-            var user;
-            if (type === 'Include') {
-                user = $scope.groupingInclude[row].username;
-            }
-            if (type === 'Exclude') {
-                user = $scope.groupingExclude[row].username;
-            }
-
-            var URL = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
-            console.log(URL);
-            dataDelete.deleteData(function (d) {
-                console.log(d);
-                $scope.getData($scope.groupingPath);
-            }, URL);
-        };
-
-        $scope.removeOwner = function (index) {
-            var removeOwner = $scope.ownerList[index].username;
-            var removeOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
-            console.log(removeOwnerUrl);
-            if ($scope.ownerList.length > 1) {
-                dataDelete.deleteData(function (d) {
-                    $scope.getData($scope.groupingPath);
-                }, removeOwnerUrl);
-            }
         };
 
         $scope.savePref = function () {
