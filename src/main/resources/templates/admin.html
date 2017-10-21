@@ -37,29 +37,28 @@
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="grouping">
                         <!-- <h2 class="text-center">Search For Grouping</h2> -->
-
-                        <div class="input-group">
-                            <input class="form-control" style="width: 75em" list="testList"
-                                   ng-keyup="$event.keyCode == 13 ? search() : null"
-                                   data-list="testList"
-                                   type="text" ng-model="groupingName" placeholder="Search For Grouping"
-                                   id="searchAdmin"/>
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" type="button" ng-click="search()">Search</button>
-                            </span>
-                            <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
-                                <option ng-repeat="o in groupingList" value="{{o.name}}"></option>
-                            </datalist>
-                        </div>
-                        <div class="alert alert-danger" role="alert" ng-show="error">
-                            <a class="close" ng-click="dismiss()">&times;</a>
-                            <strong href="#" class="alert-link">Not A Valid Grouping</strong>
-                        </div>
-                        <h2 ng-hide="error">{{title}}</h2>
-
                         <div id="members" class="tab-pane fade in active">
-                            <div class="panel panel-default">
-                                <div class="panel-body" style="min-height: 350px">
+                            <div class="panel panel-default panel-tab-content" style="border-top: none;">
+                                <div class="panel-body" style="min-height: 450px;">
+                                    <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
+                                        <option ng-repeat="o in groupingList" value="{{o.name}}"></option>
+                                    </datalist>
+                                    <form class="form-group" ng-submit="search()">
+                                        <div class="input-group">
+                                            <input class="form-control" style="width: 100%" list="testList"
+                                                   data-list="testList"
+                                                   type="text" ng-model="groupingName" placeholder="Search for Grouping" id="searchAdmin"/>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary" type="submit">Search</button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                    <div class="alert alert-danger alert-dismissible" role="alert" ng-show="error">
+                                        <a class="close" ng-click="dismiss()">&times;</a>
+                                        <span><strong>Error! </strong>You have entered an invalid Grouping.</span>
+                                    </div>
+                                    <h2 ng-hide="error">{{title}}</h2>
+
                                     <div class="col-md-2 col-xs-2" style="top: 55px; width: 80px">
                                         <ul class="nav nav-pills nav-stacked">
                                             <li class="active" data-toggle="tooltip" data-placement="right"
@@ -441,25 +440,27 @@
                                                 <table width="100%">
                                                     <th>
                                                         <h3>Add/Remove</h3>
-                                                        <label>
-                                                            <input type="checkbox" ng-model="preference.optIn"/> Allow
-                                                            people to add
-                                                            themselves to this group
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox" ng-model="preference.optOut"/> Allow
-                                                            people to remove
-                                                            themselves to this group
-                                                        </label>
-
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" ng-model="preference.optIn"/> Allow people to add
+                                                                themselves to this group
+                                                            </label>
+                                                        </div>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" ng-model="preference.optOut"/> Allow people to remove
+                                                                themselves to this group
+                                                            </label>
+                                                        </div>
                                                     </th>
                                                     <th>
                                                         <h3>Publication Destinations</h3>
-                                                        <label>
-                                                            <input type="checkbox" ng-model="preference.listserv"
-                                                                   ng-init="pref"/>
-                                                            LISTSERV list: {{groupingName.name}}
-                                                        </label>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/>
+                                                                LISTSERV list: {{groupingName.name}}
+                                                            </label>
+                                                        </div>
                                                     </th>
                                                 </table>
 
