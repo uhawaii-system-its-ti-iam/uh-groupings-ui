@@ -350,7 +350,7 @@
             });
 
             $scope.modalInstance.result.then(function () {
-                if (type == 'admin' && $scope.list.length > 1) {
+                if (type === 'admin' && $scope.list.length > 1) {
                     dataDelete.deleteData(function (d) {
                         $scope.list.splice(location, 1);
                         $scope.init();
