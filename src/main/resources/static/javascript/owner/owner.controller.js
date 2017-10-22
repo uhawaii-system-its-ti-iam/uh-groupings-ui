@@ -278,18 +278,38 @@
          */
         $scope.addOwner = function () {
             var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.ownerUser + "/assignOwnership";
-            dataUpdater.addData(function (d) {
-                if (d.resultCode === "SUCCESS") {
-                    console.log("Assigned " + $scope.ownerUser + " as an owner");
-                    alert("Assigned " + $scope.ownerUser + " as an owner");
-                    $scope.getData($scope.groupingPath);
-                }
-                else if (typeof d.resultsCode === 'undefined') {
-                    console.log($scope.ownerUser + " this user does not exist.");
-                    alert($scope.ownerUser + " this user does not exist.");
-                }
-            }, addOwnerUrl);
+            $scope.addModalAlert(addOwnerUrl, $scope.ownerUser);
             $scope.ownerUser = '';
+        };
+
+        $scope.addModalAlert = function (url, user) {
+            var message = user + " has been added";
+            var modalHtml = '<div class="modal-body">' + message + '</div>';
+            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="continue()">OK</button></div>';
+
+            $scope.addModalInstance = $uibModal.open({
+                template: modalHtml,
+                scope: $scope
+            });
+
+            $scope.addModalInstance.result.then(function () {
+                dataUpdater.addData(function (d) {
+                    if (d.resultCode === "SUCCESS") {
+                        console.log("Assigned " + user + " as an owner");
+                        $scope.getData($scope.groupingPath);
+                    }
+                    else if (typeof d.resultsCode === 'undefined') {
+                        console.log(user + " this user does not exist.");
+                    }
+                }, url);
+            });
+        };
+
+        /**
+         * Function that closes modal and proceeds with the modal result.
+         */
+        $scope.continue = function () {
+            $scope.addModalInstance.close();
         };
 
         /**
@@ -330,12 +350,12 @@
             var modalHtml = '<div class="modal-body">' + message + '</div>';
             modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
 
-            $scope.modalInstance = $uibModal.open({
+            $scope.deleteModalInstance = $uibModal.open({
                 template: modalHtml,
                 scope: $scope
             });
 
-            $scope.modalInstance.result.then(function () {
+            $scope.deleteModalInstance.result.then(function () {
                 if (type === 'admin' && $scope.list.length > 1) {
                     dataDeleter.deleteData(function (d) {
                         $scope.list.splice(location, 1);
@@ -356,14 +376,14 @@
          * Function that closes modal and proceeds with the modal result.
          */
         $scope.ok = function () {
-            $scope.modalInstance.close();
+            $scope.deleteModalInstance.close();
         };
 
         /**
          * Function that closes modal.
          */
         $scope.cancel = function () {
-            $scope.modalInstance.dismiss();
+            $scope.deleteModalInstance.dismiss();
         };
 
         /**
