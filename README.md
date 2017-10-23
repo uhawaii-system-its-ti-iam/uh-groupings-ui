@@ -4,7 +4,7 @@ A "Grouping" is a collection of members. The Groupings app allows you to create 
 
 Groupings can be integrated with one or more of the following: email LISTSERV lists, permissions and privilege assignments for access control via CAS, etc. Adn this list will continue to grow.  Additionally, Groupings allows you to leverage existing membership collections, which can substantially reduce the manual overhead of membership management.
 
-Groupings utilizes Grouper.  Grouper is an enterprise access management system designed for the highly distributed management environment and heterogeneous information technology environment common to Universities.
+Groupings utilizes the Internet2 Grouper project.  Grouper is an enterprise access management system designed for the highly distributed management environment and heterogeneous information technology environment common to Universities.
 
 [![Build Status](https://travis-ci.org/uhawaii-system-its-ti-iam/uhgroupings.png?branch=master)](https://travis-ci.org/uhawaii-system-its-ti-iam/uhgroupings)
 [![Coverage Status](https://coveralls.io/repos/github/uhawaii-system-its-ti-iam/uhgroupings/badge.svg?branch=master)](https://coveralls.io/github/uhawaii-system-its-ti-iam/uhgroupings?branch=master)
