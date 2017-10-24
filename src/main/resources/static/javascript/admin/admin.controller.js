@@ -242,22 +242,19 @@
         $scope.addAdmin = function () {
             var addUrl = "api/groupings/" + $scope.getCurrentUsername() + "/" + $scope.username + "/addAdmin";
             $scope.testdata = [];
-            console.log(addUrl);
 
-            if (confirm("You are adding " + $scope.username + " to the include list of this grouping")) {
-                dataUpdater.updateData(function (d) {
-                    console.log(d);
-                    if (d.resultCode === 'SUCCESS') {
-                        console.log("Success In Adding");
-                        //reload data table
-                        $scope.loading = true;
-                        $scope.init();
-                    }
-                    else if (typeof d.resultCode === 'undefined') {
-                        console.log("Failure In Adding");
-                    }
-                }, addUrl);
-            }
+            dataUpdater.updateData(function (d) {
+                if (d.resultCode === 'SUCCESS') {
+                    console.log("Success In Adding");
+                    //reload data table
+                    $scope.addModalAlert('admin', 'success');
+                }
+                else if (typeof d.resultCode === 'undefined') {
+                    console.log("Failure In Adding");
+                    $scope.addModalAlert();
+                }
+            }, addUrl);
+
         };
 
         $scope.addMember = function (type) {
@@ -265,12 +262,11 @@
             dataUpdater.updateData(function (d) {
                 if (d.resultCode === "SUCCESS") {
                     console.log("success in adding " + $scope.addUser);
-                    alert("SUCCESS IN ADDING " + $scope.addUser);
-                    $scope.getData($scope.groupingPath);
+                    $scope.addModalAlert('grouping', 'success');
                 }
                 else if (typeof d.resultsCode === 'undefined') {
                     console.log($scope.addUser + " this user does not exist.");
-                    alert($scope.addUser + " this user does not exist.");
+                    $scope.addModalAlert();
                 }
             }, addUrl);
             $scope.addUser = '';
@@ -282,17 +278,41 @@
                 console.log(d);
                 if (d.resultCode === "SUCCESS") {
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
-                    alert("Assigned " + $scope.ownerUser + " as an owner");
-                    $scope.getData($scope.groupingPath);
+                    $scope.addModalAlert('grouping', 'success');
                 }
                 else if (typeof d.resultsCode === 'undefined') {
                     console.log($scope.ownerUser + " this user does not exist.");
-                    alert($scope.ownerUser + " this user does not exist.");
+                    $scope.addModalAlert();
                 }
             }, addOwnerUrl);
             $scope.ownerUser = '';
         };
 
+        $scope.addModalAlert = function (location, success) {
+            if (success === 'success') var message = "User has been added";
+            else var message = "Error: User is not a valid username";
+
+            var modalHtml = '<div class="modal-body">' + message + '</div>';
+            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="continue()">OK</button></div>';
+
+            $scope.addModalInstance = $uibModal.open({
+                template: modalHtml,
+                scope: $scope
+            });
+
+            $scope.addModalInstance.result.then(function () {
+                if (success === 'success')
+                {
+                    $scope.loading = true;
+                    if (location === 'admin') $scope.init();
+                    if (location === 'grouping') $scope.getData($scope.groupingPath);
+                }
+            });
+        };
+
+        $scope.continue = function () {
+            $scope.addModalInstance.close();
+        };
 
         // TODO: Find a way to make the 3 removes into a more singular function.
 
@@ -344,12 +364,13 @@
             var modalHtml = '<div class="modal-body">' + message + '</div>';
             modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
 
-            $scope.modalInstance = $uibModal.open({
+            $scope.deleteModalInstance = $uibModal.open({
                 template: modalHtml,
                 scope: $scope
             });
 
-            $scope.modalInstance.result.then(function () {
+            $scope.deleteModalInstance.result.then(function () {
+                $scope.loading = true;
                 if (type === 'admin' && $scope.list.length > 1) {
                     dataDelete.deleteData(function (d) {
                         $scope.list.splice(location, 1);
@@ -370,14 +391,14 @@
          * Function that closes modal and proceeds with the modal result.
          */
         $scope.ok = function () {
-            $scope.modalInstance.close();
+            $scope.deleteModalInstance.close();
         };
 
         /**
          * Function that closes modal.
          */
         $scope.cancel = function () {
-            $scope.modalInstance.dismiss();
+            $scope.deleteModalInstance.dismiss();
         };
 
         $scope.savePref = function () {

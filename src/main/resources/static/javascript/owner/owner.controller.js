@@ -259,13 +259,11 @@
             var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataUpdater.addData(function (d) {
                 if (d.resultCode === "SUCCESS") {
-                    console.log("success in adding " + $scope.addUser);
-                    alert("SUCCESS IN ADDING " + $scope.addUser);
-                    $scope.getData();
+                    $scope.addModalAlert('success');
                 }
                 else if (typeof d.resultsCode === 'undefined') {
                     console.log($scope.addUser + " this user does not exist.");
-                    alert($scope.addUser + " this user does not exist.");
+                    $scope.addModalAlert();
                 }
             }, addUrl);
             $scope.addUser = '';
@@ -278,12 +276,28 @@
          */
         $scope.addOwner = function () {
             var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.ownerUser + "/assignOwnership";
-            $scope.addModalAlert(addOwnerUrl, $scope.ownerUser);
+            dataUpdater.addData(function (d) {
+                if (d.resultCode === "SUCCESS") {
+                    console.log("Assigned " + $scope.ownerUser + " as an owner");
+                    $scope.addModalAlert('success');
+                }
+                else if (typeof d.resultsCode === 'undefined') {
+                    console.log($scope.ownerUser + " this user does not exist.");
+                    $scope.addModalAlert();
+                }
+            }, addOwnerUrl);
             $scope.ownerUser = '';
         };
 
-        $scope.addModalAlert = function (url, user) {
-            var message = user + " has been added";
+        /**
+         *
+         * @param user - user being added
+         * @param success - whether if the addData service returned a success in adding.
+         */
+        $scope.addModalAlert = function (success) {
+            if (success === 'success') var message = "User has been added";
+            else var message = "Error: User is not a valid username";
+
             var modalHtml = '<div class="modal-body">' + message + '</div>';
             modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="continue()">OK</button></div>';
 
@@ -293,15 +307,8 @@
             });
 
             $scope.addModalInstance.result.then(function () {
-                dataUpdater.addData(function (d) {
-                    if (d.resultCode === "SUCCESS") {
-                        console.log("Assigned " + user + " as an owner");
-                        $scope.getData($scope.groupingPath);
-                    }
-                    else if (typeof d.resultsCode === 'undefined') {
-                        console.log(user + " this user does not exist.");
-                    }
-                }, url);
+                $scope.loading = true;
+                if (success === 'success') $scope.getData();
             });
         };
 
@@ -362,10 +369,10 @@
                         $scope.init();
                     }, url);
                 }
-                else
-                {
+                else {
                     dataDeleter.deleteData(function (d) {
                         console.log(d);
+                        $scope.loading = true;
                         $scope.getData(type);
                     }, url);
                 }
