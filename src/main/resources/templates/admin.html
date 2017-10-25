@@ -38,21 +38,30 @@
                     <div class="tab-pane fade in active" id="grouping">
                         <!-- <h2 class="text-center">Search For Grouping</h2> -->
                         <div id="members" class="tab-pane fade in active">
-                            <div class="panel panel-default panel-tab-content" style="border-top: none;">
-                                <div class="panel-body" style="min-height: 450px;">
-                                    <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
-                                        <option ng-repeat="o in groupingList" value="{{o.name}}"></option>
-                                    </datalist>
-                                    <form class="form-group" ng-submit="search()">
-                                        <div class="input-group">
-                                            <input class="form-control" style="width: 100%" list="testList"
-                                                   data-list="testList"
-                                                   type="text" ng-model="groupingName" placeholder="Search for Grouping" id="searchAdmin"/>
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-primary" type="submit">Search</button>
-                                            </span>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 style="margin-top: 0px;">Administer a Grouping</h3>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="pull-left input-group col-md-6" style="padding-left: 15px;">
+                                                <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
+                                                    <option ng-repeat="o in groupingList" value="{{o.name}}"></option>
+                                                </datalist>
+                                                <form ng-submit="search()">
+                                                    <div class="input-group">
+                                                        <input class="form-control" style="width: 100%" list="testList"
+                                                               data-list="testList"
+                                                               type="text" ng-model="groupingName" placeholder="Search for Grouping" id="searchAdmin"/>
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-primary" type="submit">Search</button>
+                                                        </span>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
-                                    </form>
+                                    </div>
+                                </div>
+                                <div class="panel-body" style="min-height: 450px;">
                                     <div class="alert alert-danger alert-dismissible" role="alert" ng-show="error">
                                         <a class="close" ng-click="dismiss()">&times;</a>
                                         <span><strong>Error! </strong>You have entered an invalid Grouping.</span>
