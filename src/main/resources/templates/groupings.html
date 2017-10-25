@@ -12,17 +12,12 @@
             <h1 class="text-left">Manage My Groupings</h1>
 
             <p class="text-left">View and manage Groupings I own.  Manage members, configure Grouping options and integration destinations.</p>
-            <h1 class="text-center">Groupings Owned</h1>
-
-            <p class="text-center">Owner can modify the groupings that they own.</p>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
+                <div id="overlay" ng-show="loading">
+                    <div class="loader" ng-show="loading"></div>
+                </div>
                 <div ng-show="!showGrouping">
-                    <div id="overlay" ng-show="loading">
-                        <div class="loader" ng-show="loading"></div>
-                    </div>
-                    <br/>
-
                     <!-- This will allow you to search for specific groups -->
                     <div class="panel panel-default">
                         <div class="panel-heading" id="groupHeader">
@@ -45,9 +40,9 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="l in pagedItemsOwned[currentPageOwned] ">
-                                <td ng-click="showData($index)" style="cursor: pointer">
+                                <td>
                                     {{l.name}}
-                                    <span class="glyphicon glyphicon-edit"></span>
+                                    <span class="pull-right glyphicon glyphicon-edit" ng-click="showData($index)" style="cursor: pointer; margin-right: 5px;"></span>
                                 </td>
                                 <td>{{l.folder}}</td>
                             </tr>
@@ -85,9 +80,6 @@
                 </div>
 
                 <div ng-show="showGrouping">
-                    <div id="overlay" ng-show="loading">
-                        <div class="loader" ng-show="loading"></div>
-                    </div>
                     <h2 class="text-center">{{groupingName.name}}</h2>
                     <ul class="nav nav-tabs">
                         <li class="active" data-toggle="tooltip" data-placement="top" title="Manage Members"><a
