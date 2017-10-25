@@ -242,22 +242,19 @@
         $scope.addAdmin = function () {
             var addUrl = "api/groupings/" + $scope.getCurrentUsername() + "/" + $scope.username + "/addAdmin";
             $scope.testdata = [];
-            console.log(addUrl);
 
-            if (confirm("You are adding " + $scope.username + " to the include list of this grouping")) {
-                dataUpdater.updateData(function (d) {
-                    console.log(d);
-                    if (d.resultCode === 'SUCCESS') {
-                        console.log("Success In Adding");
-                        //reload data table
-                        $scope.loading = true;
-                        $scope.init();
-                    }
-                    else if (typeof d.resultCode === 'undefined') {
-                        console.log("Failure In Adding");
-                    }
-                }, addUrl);
-            }
+            dataUpdater.updateData(function (d) {
+                if (d.resultCode === 'SUCCESS') {
+                    console.log("Success In Adding");
+                    //reload data table
+                    $scope.addModalAlert('admin', 'success');
+                }
+                else if (typeof d.resultCode === 'undefined') {
+                    console.log("Failure In Adding");
+                    $scope.addModalAlert();
+                }
+            }, addUrl);
+
         };
 
         $scope.addMember = function (type) {
@@ -265,12 +262,11 @@
             dataUpdater.updateData(function (d) {
                 if (d.resultCode === "SUCCESS") {
                     console.log("success in adding " + $scope.addUser);
-                    alert("SUCCESS IN ADDING " + $scope.addUser);
-                    $scope.getData($scope.groupingPath);
+                    $scope.addModalAlert('grouping', 'success');
                 }
                 else if (typeof d.resultsCode === 'undefined') {
                     console.log($scope.addUser + " this user does not exist.");
-                    alert($scope.addUser + " this user does not exist.");
+                    $scope.addModalAlert();
                 }
             }, addUrl);
             $scope.addUser = '';
@@ -282,17 +278,41 @@
                 console.log(d);
                 if (d.resultCode === "SUCCESS") {
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
-                    alert("Assigned " + $scope.ownerUser + " as an owner");
-                    $scope.getData($scope.groupingPath);
+                    $scope.addModalAlert('grouping', 'success');
                 }
                 else if (typeof d.resultsCode === 'undefined') {
                     console.log($scope.ownerUser + " this user does not exist.");
-                    alert($scope.ownerUser + " this user does not exist.");
+                    $scope.addModalAlert();
                 }
             }, addOwnerUrl);
             $scope.ownerUser = '';
         };
 
+        $scope.addModalAlert = function (location, success) {
+            if (success === 'success') var message = "User has been added";
+            else var message = "Error: User is not a valid username";
+
+            var modalHtml = '<div class="modal-body">' + message + '</div>';
+            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="continue()">OK</button></div>';
+
+            $scope.addModalInstance = $uibModal.open({
+                template: modalHtml,
+                scope: $scope
+            });
+
+            $scope.addModalInstance.result.then(function () {
+                if (success === 'success')
+                {
+                    $scope.loading = true;
+                    if (location === 'admin') $scope.init();
+                    if (location === 'grouping') $scope.getData($scope.groupingPath);
+                }
+            });
+        };
+
+        $scope.continue = function () {
+            $scope.addModalInstance.close();
+        };
 
         // TODO: Find a way to make the 3 removes into a more singular function.
 
@@ -305,38 +325,9 @@
         $scope.removeAdmin = function (index) {
             var deleteUser = $scope.list[index].username;
             var deleteUrl = "api/groupings/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteAdmin";
-            console.log(deleteUrl);
 
-            var message = "Are you sure you want to delete " + deleteUser;
-            var modalHtml = '<div class="modal-body">' + message + '</div>';
-            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()">Cancel</button></div>';
-
-
-            var modalInstance = $uibModal.open({
-                template: modalHtml,
-                controller: AdminJsController
-            });
-
-            /*modalInstance.result.then(function() {
-                console.log("hello");
-            });*/
-            /*if ($scope.list.length > 1) {
-             dataDelete.deleteData(function (d) {
-             $scope.list.splice(index, 1);
-             $scope.init();
-             }, deleteUrl);
-             }*/
+            $scope.deleteModal(deleteUser, deleteUrl, index, 'admin');
         };
-
-        $scope.ok = function () {
-            modalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            console.log("Trying to cancel");
-            modalInstance.dismiss('cancel');
-        };
-
 
         $scope.removeMember = function (type, row) {
             var user;
@@ -348,22 +339,66 @@
             }
 
             var URL = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
-            console.log(URL);
-            dataDelete.deleteData(function (d) {
-                console.log(d);
-                $scope.getData($scope.groupingPath);
-            }, URL);
+
+            $scope.deleteModal(user, URL, null, $scope.groupingPath);
         };
 
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.ownerList[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
-            console.log(removeOwnerUrl);
             if ($scope.ownerList.length > 1) {
-                dataDelete.deleteData(function (d) {
-                    $scope.getData($scope.groupingPath);
-                }, removeOwnerUrl);
+                $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.groupingPath);
             }
+        };
+
+        /**
+         *
+         * @param user - name of the user to be deleted
+         * @param url - api url call to remove user
+         * @param location - The index of the user in the admin list table.
+         * @param type - Declaring if removing from admin list or from a grouping path.
+         */
+        $scope.deleteModal = function(user, url, location, type)
+        {
+            var message = "Are you sure you want to delete " + user;
+            var modalHtml = '<div class="modal-body">' + message + '</div>';
+            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
+
+            $scope.deleteModalInstance = $uibModal.open({
+                template: modalHtml,
+                scope: $scope
+            });
+
+            $scope.deleteModalInstance.result.then(function () {
+                $scope.loading = true;
+                if (type === 'admin' && $scope.list.length > 1) {
+                    dataDelete.deleteData(function (d) {
+                        $scope.list.splice(location, 1);
+                        $scope.init();
+                    }, url);
+                }
+                else
+                {
+                    dataDelete.deleteData(function (d) {
+                        console.log(d);
+                        $scope.getData(type);
+                    }, url);
+                }
+            });
+        };
+
+        /**
+         * Function that closes modal and proceeds with the modal result.
+         */
+        $scope.ok = function () {
+            $scope.deleteModalInstance.close();
+        };
+
+        /**
+         * Function that closes modal.
+         */
+        $scope.cancel = function () {
+            $scope.deleteModalInstance.dismiss();
         };
 
         $scope.savePref = function () {
@@ -424,14 +459,6 @@
                 }
             }
             return pagedList;
-            /*$scope.pagedItems=[];
-             for(var i = 0; i < $scope.list.length ; i++){
-             if(i % $scope.itemsPerPage === 0){
-             $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)] = [ $scope.list[i]];
-             }else{
-             $scope.pagedItems[Math.floor(i/$scope.itemsPerPage)].push( $scope.list[i]);
-             }
-             }*/
         };
 
         /**shows the range between the start and end
@@ -624,15 +651,13 @@
             }
         });
 
-        /*$(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });*/
 
         $('#myModal').on('shown.bs.modal', function () {
             $('#myInput').focus()
         });
 
     }
+
     adminApp.controller("AdminJsController", AdminJsController);
 })
 ();
