@@ -269,20 +269,10 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-
-                                            <div>
-                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                                        data-target="#addInclude" aria-expanded="false"
-                                                        aria-controls="addOwner">
-                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                                </button>
-                                                <div class="collapse" id="addInclude">
-                                                    <input type="text" placeholder="Add user to include"
-                                                           ng-model="addUser"/>
-                                                    <button class="btn btn-success" ng-click="addMember('Include')">Add
-                                                        to
-                                                        Included
-                                                    </button>
+                                            <div class="input-group col-md-3">
+                                                <input type="text" placeholder="Add user to include" ng-model="addUser" class="form-control"/>
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-primary" ng-click="addMember('Include')">Add</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -348,19 +338,10 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <div>
-                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                                        data-target="#addExclude" aria-expanded="false"
-                                                        aria-controls="addOwner">
-                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                                </button>
-                                                <div class="collapse" id="addExclude">
-                                                    <input type="text" placeholder="Add user to exclude"
-                                                           ng-model="addUser"/>
-                                                    <button class="btn btn-success" ng-click="addMember('Exclude')">Add
-                                                        to
-                                                        Excluded
-                                                    </button>
+                                            <div class="input-group col-md-3">
+                                                <input type="text" placeholder="Add user to exclude" ng-model="addUser" class="form-control"/>
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-primary" ng-click="addMember('Exclude')">Add</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -418,17 +399,10 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <div>
-                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                                        data-target="#addOwner" aria-expanded="false"
-                                                        aria-controls="addOwner">
-                                                    Add Owner
-                                                </button>
-                                                <div class="collapse" id="addOwner">
-                                                    <input type="text" placeholder="Add an user as an owner..."
-                                                           ng-model="ownerUser"/>
-                                                    <button class="btn btn-success" ng-click="addOwner()">Add Owner
-                                                    </button>
+                                            <div class="input-group col-md-3">
+                                                <input type="text" placeholder="Add user as owner" ng-model="ownerUser" class="form-control"/>
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-primary" ng-click="addOwner()">Add</button>
                                                 </div>
                                             </div>
                                         </div>
