@@ -42,9 +42,9 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="l in pagedItemsOwned[currentPageOwned] ">
-                                <td ng-click="showData($index)" style="cursor: pointer">
+                                <td>
                                     {{l.name}}
-                                    <span class="glyphicon glyphicon-edit"></span>
+                                    <span class="pull-right glyphicon glyphicon-edit" ng-click="showData($index)" style="cursor: pointer; margin-right: 5px;"></span>
                                 </td>
                                 <td>{{l.folder}}</td>
                             </tr>
