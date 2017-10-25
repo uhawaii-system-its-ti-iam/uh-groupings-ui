@@ -38,26 +38,35 @@
                     <div class="tab-pane fade in active" id="grouping">
                         <!-- <h2 class="text-center">Search For Grouping</h2> -->
                         <div id="members" class="tab-pane fade in active">
-                            <div class="panel panel-default panel-tab-content" style="border-top: none;">
-                                <div class="panel-body" style="min-height: 450px;">
-                                    <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
-                                        <option ng-repeat="o in groupingList" value="{{o.name}}"></option>
-                                    </datalist>
-                                    <form class="form-group" ng-submit="search()">
-                                        <div class="input-group">
-                                            <input class="form-control" style="width: 100%" list="testList"
-                                                   data-list="testList"
-                                                   type="text" ng-model="groupingName" placeholder="Search for Grouping" id="searchAdmin"/>
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-primary" type="submit">Search</button>
-                                            </span>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 style="margin-top: 0px;">Administer a Grouping</h3>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="pull-left input-group col-md-6" style="padding-left: 15px;">
+                                                <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
+                                                    <option ng-repeat="o in groupingList" value="{{o.name}}"></option>
+                                                </datalist>
+                                                <form ng-submit="search()">
+                                                    <div class="input-group">
+                                                        <input class="form-control" style="width: 100%" list="testList"
+                                                               data-list="testList"
+                                                               type="text" ng-model="groupingName" placeholder="Search for Grouping" id="searchAdmin"/>
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-primary" type="submit">Search</button>
+                                                        </span>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
-                                    </form>
+                                    </div>
+                                </div>
+                                <div class="panel-body" style="min-height: 450px;">
                                     <div class="alert alert-danger alert-dismissible" role="alert" ng-show="error">
                                         <a class="close" ng-click="dismiss()">&times;</a>
                                         <span><strong>Error! </strong>You have entered an invalid Grouping.</span>
                                     </div>
-                                    <h2 ng-hide="error">{{title}}</h2>
+                                    <h2 ng-hide="error" class="text-center" style="margin-top: 0px; margin-bottom: 0px;">{{title}}</h2>
 
                                     <div class="col-md-2 col-xs-2" style="top: 55px; width: 80px">
                                         <ul class="nav nav-pills nav-stacked">
@@ -155,7 +164,7 @@
                                             </table>
                                         </div>
                                         <div id="basis" class="tab-pane fade">
-                                            <h3 class="text-center">Basis</h3>
+                                            <h3>Basis</h3>
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
@@ -208,7 +217,7 @@
                                             </table>
                                         </div>
                                         <div id="include" class="tab-pane fade">
-                                            <h3 class="text-center">Include</h3>
+                                            <h3>Include</h3>
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
@@ -269,25 +278,15 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-
-                                            <div>
-                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                                        data-target="#addInclude" aria-expanded="false"
-                                                        aria-controls="addOwner">
-                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                                </button>
-                                                <div class="collapse" id="addInclude">
-                                                    <input type="text" placeholder="Add user to include"
-                                                           ng-model="addUser"/>
-                                                    <button class="btn btn-success" ng-click="addMember('Include')">Add
-                                                        to
-                                                        Included
-                                                    </button>
+                                            <div class="input-group col-md-3">
+                                                <input type="text" placeholder="Add user to include" ng-model="addUser" class="form-control"/>
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-primary" ng-click="addMember('Include')">Add</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div id="exclude" class="tab-pane fade">
-                                            <h3 class="text-center">Exclude</h3>
+                                            <h3>Exclude</h3>
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                 <tr>
@@ -348,24 +347,15 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <div>
-                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                                        data-target="#addExclude" aria-expanded="false"
-                                                        aria-controls="addOwner">
-                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                                </button>
-                                                <div class="collapse" id="addExclude">
-                                                    <input type="text" placeholder="Add user to exclude"
-                                                           ng-model="addUser"/>
-                                                    <button class="btn btn-success" ng-click="addMember('Exclude')">Add
-                                                        to
-                                                        Excluded
-                                                    </button>
+                                            <div class="input-group col-md-3">
+                                                <input type="text" placeholder="Add user to exclude" ng-model="addUser" class="form-control"/>
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-primary" ng-click="addMember('Exclude')">Add</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div id="owner" class="tab-pane fade">
-                                            <h3 class="text-center">Owners</h3>
+                                            <h3>Owners</h3>
                                             <table class="table table-bordered table-condensed table-hover">
                                                 <thead>
                                                 <tr>
@@ -418,22 +408,15 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <div>
-                                                <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                                        data-target="#addOwner" aria-expanded="false"
-                                                        aria-controls="addOwner">
-                                                    Add Owner
-                                                </button>
-                                                <div class="collapse" id="addOwner">
-                                                    <input type="text" placeholder="Add an user as an owner..."
-                                                           ng-model="ownerUser"/>
-                                                    <button class="btn btn-success" ng-click="addOwner()">Add Owner
-                                                    </button>
+                                            <div class="input-group col-md-3">
+                                                <input type="text" placeholder="Add user as owner" ng-model="ownerUser" class="form-control"/>
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-primary" ng-click="addOwner()">Add</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div id="options" class="tab-pane fade">
-                                            <h3 class="text-center">Preferences</h3>
+                                            <h3>Preferences</h3>
 
                                             <div class="well">
 
@@ -484,17 +467,16 @@
                                     <div class="form-group">
                                         <div class="pull-left col-md-3 input-group"
                                              style="padding-left: 15px; padding-right: 15px;">
-                                            <input class="form-control" type="text" style="margin-top: 5px;"
+                                            <input class="form-control" type="text"
                                                    placeholder="UH Username" ng-model="username"/>
-
                                             <div class="input-group-btn">
-                                                <button class="btn btn-success" style="margin-top: 5px;"
+                                                <button class="btn btn-primary"
                                                         ng-click="addAdmin()">Add
                                                 </button>
                                             </div>
                                         </div>
                                         <div class="pull-right input-group col-md-2" style="padding-right: 15px;">
-                                            <input class="form-control" type="text" style="margin-top: 5px;"
+                                            <input class="form-control" type="text"
                                                    placeholder="Filter Admins..." ng-model="query"/>
                                         </div>
                                     </div>
