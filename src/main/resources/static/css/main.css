@@ -183,7 +183,18 @@ td.uh-pre {
 #headingHeight{
     height: 80px;
 }
+#iconTop{
+    display: flex;
+    justify-content: flex-end;
+    font-size: 45px;
+}
 
+
+#footerBottom{
+    display: relative;
+    padding:0px 15px;
+
+}
 #groupHeader {
     height: 55px;
 }
