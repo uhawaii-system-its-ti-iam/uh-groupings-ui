@@ -36,7 +36,6 @@
 
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="grouping">
-                        <!-- <h2 class="text-center">Search For Grouping</h2> -->
                         <div id="members" class="tab-pane fade in active">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -85,23 +84,31 @@
                                             <li data-toggle="tooltip" data-placement="right"
                                                 title="Manage Include Members List">
                                                 <a data-toggle="tab" href="#include">
-                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+
+                                                    <!-- <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
                                                 </a>
                                             </li>
                                             <li data-toggle="tooltip" data-placement="right"
                                                 title="Manage Exclude Members List">
                                                 <a data-toggle="tab" href="#exclude">
-                                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                                    <i class="fa fa-minus" aria-hidden="true"></i>
+
+                                                    <!-- <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> -->
                                                 </a>
                                             </li>
                                             <li data-toggle="tooltip" data-placement="right" title="Manage Owners List">
                                                 <a data-toggle="tab" href="#owner">
-                                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                                    <i class="fa fa-user" aria-hidden="true"></i>
+
+                                                    <!-- <span class="glyphicon glyphicon-user" aria-hidden="true"></span> -->
                                                 </a>
                                             </li>
                                             <li data-toggle="tooltip" data-placement="right" title="Manage Preferences">
                                                 <a data-toggle="tab" href="#options">
-                                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                                    <i class="fa fa-cog" aria-hidden="true"></i>
+
+                                                    <!-- <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> -->
                                                 </a>
                                             </li>
                                         </ul>
@@ -452,10 +459,11 @@
                                                         </div>
                                                     </th>
                                                 </table>
-
+                                                <div id = "prefrences">
                                                 <button class="btn btn-default btn-primary" style="margin-top: 20px;"
                                                         type="submit" ng-click="savePref()">Update Preferences
                                                 </button>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>

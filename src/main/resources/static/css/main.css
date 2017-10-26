@@ -180,19 +180,46 @@ td.uh-pre {
     text-align: center;
 }
 
+#headingHeight{
+    height: 80px;
+}
+#iconTop{
+    display: flex;
+    justify-content: flex-end;
+    font-size: 45px;
+}
+
+
+#footerBottom{
+    display: relative;
+    padding:0px 15px;
+
+}
 #groupHeader {
     height: 55px;
+}
+#prefrences{
+    display: flex;
+    justify-content: flex-end;
 }
 
 #headingOptIn {
     position: relative;
-    vertical-align: 50%;
+    /*vertical-align: 50%;*/
     white-space: nowrap;
     margin-top: 5px;
     /*height:  15px;*/
 
 }
 
+#headingOptInExplained {
+    /*position: relative;*/
+    /*vertical-align: 50%;*/
+    /*white-space: nowrap;*/
+    /*margin-top: 5px;*/
+    /*height:  15px;*/
+
+}
 #filters {
     padding: 10px;
 }
