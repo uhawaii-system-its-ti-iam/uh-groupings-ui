@@ -12,22 +12,17 @@
             <h1 class="text-left">Manage My Groupings</h1>
 
             <p class="text-left">View and manage Groupings I own.  Manage members, configure Grouping options and integration destinations.</p>
-            <h1 class="text-center">Groupings Owned</h1>
-
-            <p class="text-center">Owner can modify the groupings that they own.</p>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
+                <div id="overlay" ng-show="loading">
+                    <div class="loader" ng-show="loading"></div>
+                </div>
                 <div ng-show="!showGrouping">
-                    <div id="overlay" ng-show="loading">
-                        <div class="loader" ng-show="loading"></div>
-                    </div>
-                    <br/>
-
                     <!-- This will allow you to search for specific groups -->
                     <div class="panel panel-default">
                         <div class="panel-heading" id="groupHeader">
                             <div class="form-group ">
-                                <h3 class="col-md-4" id="headingOptIn">Groupings</h3>
+                                <h3 class="col-md-4" id="headingOptIn">My Groupings</h3>
                             </div>
                         </div>
                         <table class="table table-bordered table-condensed table-hover">
@@ -35,19 +30,19 @@
                             <tr>
                                 <th><a type="button" class="btn btn-default btn-block"
                                        style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                       ng-click="sortCol(ownedList, 'name', 'pagedItemsOwned', 'symbolMember')"><b>Grouping
+                                       ng-click="sortCol(ownedList, 'name', 'pagedItemsOwned', 'symbolMember')"><b>Grouping Name
                                     {{symbol.name}}</b></a></th>
                                 <th><a type="button" class="btn btn-default btn-block"
                                        style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                       ng-click="sortCol(ownedList, 'folder', 'pagedItemsOwned', 'symbolMember')"><b>Folder
+                                       ng-click="sortCol(ownedList, 'folder', 'pagedItemsOwned', 'symbolMember')"><b>Grouping Path
                                     {{symbol.folder}}</b></a></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="l in pagedItemsOwned[currentPageOwned] ">
-                                <td ng-click="showData($index)" style="cursor: pointer">
+                                <td>
                                     {{l.name}}
-                                    <span class="glyphicon glyphicon-edit"></span>
+                                    <span class="pull-right glyphicon glyphicon-edit" ng-click="showData($index)" style="cursor: pointer; margin-right: 5px;"></span>
                                 </td>
                                 <td>{{l.folder}}</td>
                             </tr>
@@ -85,20 +80,17 @@
                 </div>
 
                 <div ng-show="showGrouping">
-                    <div id="overlay" ng-show="loading">
-                        <div class="loader" ng-show="loading"></div>
-                    </div>
                     <h2 class="text-center">{{groupingName.name}}</h2>
                     <ul class="nav nav-tabs">
-                        <li class="active" data-toggle="tooltip" data-placement="top" title="Members of Groupings"><a
+                        <li class="active" data-toggle="tooltip" data-placement="top" title="Manage Members"><a
                                 data-toggle="tab" href="#members">Members</a></li>
-                        <li data-toggle="tooltip" data-placement="top" title="Owners of Groupings"><a data-toggle="tab"
+                        <li data-toggle="tooltip" data-placement="top" title="Manage Owners"><a data-toggle="tab"
                                                                                                       href="#owners">Owners</a>
                         </li>
-                        <li data-toggle="tooltip" data-placement="top" title="Preferences of Groupings"><a
+                        <li data-toggle="tooltip" data-placement="top" title="Manage Preferences"><a
                                 data-toggle="tab" href="#preference">Preferences</a></li>
                         <li class="pull-right">
-                            <button ng-click="showGroups()" class="btn btn-primary">Return to groupings</button>
+                            <button ng-click="showGroups()" class="btn btn-primary">Return to Groupings List</button>
                         </li>
                     </ul>
 
@@ -486,21 +478,20 @@
                                     <th ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwners')">
                                         Username {{symbol.username}}
                                     </th>
-                                    <th>Remove</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
-                                    <td>{{owner.name}}</td>
-                                    <td>{{owner.username}}</td>
                                     <td>
-                                        <!-- <button class="btn btn-warning btn-block" ng-click="removeOwner($index)"><span
-                                                class="glyphicon glyphicon-remove"></span>
-                                        </button> -->
-                                        <button class="btn btn-danger btn-block" ng-click="removeOwner($index)"><span
-                                                class="glyphicon glyphicon-trash"></span>
-                                        </button>
+                                        {{owner.name}}
+                                        <span class="glyphicon glyphicon-trash pull-right"
+                                              data-toggle="tooltip"
+                                              data-placement="top" onmouseover="$(this).tooltip('show')"
+                                              title="Delete owner from owners list"
+                                              ng-click="removeOwner($index)"
+                                              style="margin-right: 10px; cursor: pointer"></span>
                                     </td>
+                                    <td>{{owner.username}}</td>
                                 </tr>
                                 </tbody>
                                 <tfoot>
@@ -559,9 +550,9 @@
                             <h3>Add/Remove</h3>
 
                             <input ng-model="preference.optIn" type="checkbox"/>
-                            Allow people to add themselves to this group <br/>
+                            Allow people to add themselves to this Grouping <br/>
                             <input ng-model="preference.optOut" type="checkbox"/>
-                            Allow people to remove themselves to this group
+                            Allow people to remove themselves to this Grouping
                             <br/>
 
                             <h3>Publication Destinations</h3>
