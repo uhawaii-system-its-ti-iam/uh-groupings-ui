@@ -132,7 +132,15 @@
                                     <div class="tab-content col-md-10 col-xs-8">
                                         <div id="all" class="tab-pane fade in active">
                                             <div class="row member-row-title">
-                                                <h3 class="pull-left members-tab-title">All Members</h3>
+                                                <h3 class="members-tab-title">All Members</h3>
+                                            </div>
+                                            <div class="row member-row-title">
+                                                <div class="pull-left">
+                                                    <button type="button" class="btn btn-primary"
+                                                            ng-click="export(groupingsList, 'members')">
+                                                        Export To CSV
+                                                    </button>
+                                                </div>
                                                 <div class="pull-right">
                                                     <input placeholder="Filter Names..." type="text"
                                                            ng-model="ListQuery" class="form-control"
@@ -195,13 +203,18 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <button class="btn btn-primary" ng-click="export(groupingsList, 'members')">Export
-                                                To CSV
-                                            </button>
                                         </div>
                                         <div id="basis" class="tab-pane fade">
                                             <div class="row member-row-title">
-                                                <h3 class="pull-left members-tab-title">Basis</h3>
+                                                <h3 class="members-tab-title">Basis</h3>
+                                            </div>
+                                            <div class="row member-row-title">
+                                                <div class="pull-left">
+                                                    <button type="button" class="btn btn-primary"
+                                                            ng-click="export(groupingsBasis, 'basis')">
+                                                        Export To CSV
+                                                    </button>
+                                                </div>
                                                 <div class="pull-right">
                                                     <input placeholder="Filter Names..." type="text"
                                                            ng-model="basisQuery" class="form-control"
@@ -263,13 +276,18 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <button class="btn btn-primary" ng-click="export(groupingsBasis, 'basis')">Export To
-                                                CSV
-                                            </button>
                                         </div>
                                         <div id="include" class="tab-pane fade">
                                             <div class="row member-row-title">
-                                                <h3 class="pull-left members-tab-title">Include</h3>
+                                                <h3 class="members-tab-title">Include</h3>
+                                            </div>
+                                            <div class="row member-row-title">
+                                                <div class="pull-left">
+                                                    <button type="button" class="btn btn-primary"
+                                                            ng-click="export(groupingInclude, 'include')">
+                                                        Export To CSV
+                                                    </button>
+                                                </div>
                                                 <div class="pull-right">
                                                     <input placeholder="Filter Names..." type="text"
                                                            ng-model="includeQuery" class="form-control"
@@ -349,14 +367,18 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                            <button type="button" class="btn btn-primary"
-                                                    ng-click="export(groupingInclude, 'include')">
-                                                Export To CSV
-                                            </button>
                                         </div>
                                         <div id="exclude" class="tab-pane fade">
                                             <div class="row member-row-title">
-                                                <h3 class="pull-left members-tab-title">Exclude</h3>
+                                                <h3 class="members-tab-title">Exclude</h3>
+                                            </div>
+                                            <div class="row member-row-title">
+                                                <div class="pull-left">
+                                                    <button type="button" class="btn btn-primary"
+                                                            ng-click="export(groupingExclude, 'exclude')">
+                                                        Export To CSV
+                                                    </button>
+                                                </div>
                                                 <div class="pull-right">
                                                     <input placeholder="Filter Names..." type="text"
                                                            ng-model="excludeQuery" class="form-control"
@@ -437,9 +459,6 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                            <button class="btn btn-primary" ng-click="export(groupingExclude, 'exclude')">
-                                                Export To CSV
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
