@@ -9,29 +9,33 @@
 <div class="container" ng-controller="HolidayJsController" data-ng-init="init()">
     <div class="jumbotron">
         <div class = "container">
-            <div class = "col-md-9">
+            <div class = "col-md-9 col-lg-7">
         <h1 class="dropshadow">UH Groupings</h1>
         <p class="lead">
             Manage your Groupings in one place, use them in many.
         </p>
 
-        <div>
-            <div sec:authorize="!isAuthenticated()">
-                <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
-            </div>
-            <div sec:authorize="isAuthenticated()">
-                <form action="/logout" th:action="@{/logout}" method="post">
-                    <button class="btn btn-lg btn-default" type="submit">Logout</button>
-                </form>
-            </div>
-        </div>
+
         </div>
 
 
-        <div class = "col-md-3" id = "iconTop">
+        <div class = "col-md-3 col-lg-5 hidden-xs hidden-sm" id = "iconTop">
             <i class="fa fa-users fa-5x" aria-hidden="true" ></i>
         </div>
 
+
+        <div class = "col-md-3 col-lg-3">
+            <div>
+                <div sec:authorize="!isAuthenticated()">
+                    <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <form action="/logout" th:action="@{/logout}" method="post">
+                        <button class="btn btn-lg btn-default" type="submit">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     </div>
 
