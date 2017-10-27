@@ -322,3 +322,15 @@ td.uh-pre {
     }
 
 }
+
+.members-tab-title {
+    margin: inherit;
+    padding-top: 5px;
+}
+
+.row.member-row-title {
+    margin-top: inherit;
+    margin-right: inherit;
+    margin-bottom: 5px;
+    margin-left: inherit;
+}

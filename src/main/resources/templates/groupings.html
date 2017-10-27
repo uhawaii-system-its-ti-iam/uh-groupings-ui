@@ -131,13 +131,21 @@
 
                                     <div class="tab-content col-md-10 col-xs-8">
                                         <div id="all" class="tab-pane fade in active">
-                                            <h3>All Members</h3>
-
-                                            <div align="right" style="margin-top: 10px" id="filters">
-                                                <input placeholder="Filter" type="text"
-                                                       ng-model="ListQuery"
-                                                       ng-change="search(groupingsList, 'pagedItemsList', 'ListQuery')"
-                                                       id="members"/>
+                                            <div class="row member-row-title">
+                                                <h3 class="members-tab-title">All Members</h3>
+                                            </div>
+                                            <div class="row member-row-title">
+                                                <div class="pull-left">
+                                                    <button type="button" class="btn btn-primary"
+                                                            ng-click="export(groupingsList, 'members')">
+                                                        Export To CSV
+                                                    </button>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <input placeholder="Filter Names..." type="text"
+                                                           ng-model="ListQuery" class="form-control"
+                                                           ng-change="search(groupingsList, 'pagedItemsList', 'ListQuery')"/>
+                                                </div>
                                             </div>
                                             <table class="table table-bordered table-hover">
                                                 <thead>
@@ -195,19 +203,23 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <button class="btn btn-primary" ng-click="export(groupingsList, 'members')">Export
-                                                To CSV
-                                            </button>
                                         </div>
                                         <div id="basis" class="tab-pane fade">
-                                            <h3>Basis</h3>
-
-                                            <!-- must put search bar here.. -->
-                                            <div align="right" style="margin-top: 10px" id="filters">
-                                                <input placeholder="Filter" type="text"
-                                                       ng-model="basisQuery"
-                                                       ng-change="search(groupingsBasis, 'pagedItemsBasis', 'basisQuery')"
-                                                       id="members"/>
+                                            <div class="row member-row-title">
+                                                <h3 class="members-tab-title">Basis</h3>
+                                            </div>
+                                            <div class="row member-row-title">
+                                                <div class="pull-left">
+                                                    <button type="button" class="btn btn-primary"
+                                                            ng-click="export(groupingsBasis, 'basis')">
+                                                        Export To CSV
+                                                    </button>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <input placeholder="Filter Names..." type="text"
+                                                           ng-model="basisQuery" class="form-control"
+                                                           ng-change="search(groupingsBasis, 'pagedItemsBasis', 'basisQuery')"/>
+                                                </div>
                                             </div>
                                             <table class="table table-bordered table-hover">
                                                 <thead>
@@ -264,36 +276,23 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <button class="btn btn-primary" ng-click="export(groupingsBasis, 'basis')">Export To
-                                                CSV
-                                            </button>
                                         </div>
                                         <div id="include" class="tab-pane fade">
-                                            <h3>Include</h3>
-
-                                            <!-- Add button to add users to the include group -->
-                                            <div style="float: left; margin-right: 10px;" data-toggle="tooltip" data-placement="left"
-                                                 title="Add to Include List">
-                                                <button class="btn btn-primary" data-toggle="collapse"
-                                                        data-target="#addInclude" aria-expanded="false"
-                                                        aria-controls="addInclude">
-                                                    <i class="icon ion-person-add"
-                                                       style="font-size: 15px"></i>
-                                                </button>
+                                            <div class="row member-row-title">
+                                                <h3 class="members-tab-title">Include</h3>
                                             </div>
-                                            <div style="float: left;">
-                                                <div class="collapse" id="addInclude">
-                                                    <input type="text" placeholder="Add user to include" ng-model="addUser"/>
-                                                    <button class="btn btn-success" ng-click="addMember('Include')">Add User to Include</button>
+                                            <div class="row member-row-title">
+                                                <div class="pull-left">
+                                                    <button type="button" class="btn btn-primary"
+                                                            ng-click="export(groupingInclude, 'include')">
+                                                        Export To CSV
+                                                    </button>
                                                 </div>
-                                            </div>
-
-                                            <!--  must put search bar here...-->
-                                            <div align="right" style="margin-top: 10px" id="filters">
-                                                <input placeholder="Filter" type="text"
-                                                       ng-model="includeQuery"
-                                                       ng-change="search(groupingInclude, 'pagedItemsInclude', 'includeQuery')"
-                                                       id="members"/>
+                                                <div class="pull-right">
+                                                    <input placeholder="Filter Names..." type="text"
+                                                           ng-model="includeQuery" class="form-control"
+                                                           ng-change="search(groupingInclude, 'pagedItemsInclude', 'includeQuery')"/>
+                                                </div>
                                             </div>
                                             <table class="table table-bordered table-hover">
                                                 <thead>
@@ -358,20 +357,33 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <button type="button" class="btn btn-primary"
-                                                    ng-click="export(groupingInclude, 'include')">
-                                                Export To CSV
-                                            </button>
-
+                                            <div class="col-lg-4 col-md-6">
+                                                <form ng-submit="addMember('Include')">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="Add user to include" ng-model="addUser" class="form-control"/>
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-primary" type="submit">Add</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                         <div id="exclude" class="tab-pane fade">
-                                            <h3>Exclude</h3>
-
-                                            <!-- must put search bar here... -->
-                                            <div align="right" style="margin-top: 10px" id="filters">
-                                                <input placeholder="Filter" type="text"
-                                                       ng-model="excludeQuery"
-                                                       ng-change="search(groupingExclude, 'pagedItemsExclude', 'excludeQuery')"/>
+                                            <div class="row member-row-title">
+                                                <h3 class="members-tab-title">Exclude</h3>
+                                            </div>
+                                            <div class="row member-row-title">
+                                                <div class="pull-left">
+                                                    <button type="button" class="btn btn-primary"
+                                                            ng-click="export(groupingExclude, 'exclude')">
+                                                        Export To CSV
+                                                    </button>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <input placeholder="Filter Names..." type="text"
+                                                           ng-model="excludeQuery" class="form-control"
+                                                           ng-change="search(groupingExclude, 'pagedItemsExclude', 'excludeQuery')"/>
+                                                </div>
                                             </div>
                                             <table class="table table-bordered table-hover">
                                                 <thead>
@@ -437,24 +449,15 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-
-                                            <div style="float: left" data-toggle="tooltip" data-placement="left"
-                                                 title="Add User to Exclude Group">
-                                                <button class="btn btn-primary icon ion-person-add" type="button"
-                                                        data-toggle="collapse"
-                                                        data-target="#addExclude" aria-expanded="false" style="font-size: 14px;"
-                                                        aria-controls="addOwner">
-                                                </button>
-                                                <div class="collapse" id="addExclude">
-                                                    <input type="text" placeholder="Add user to exclude"
-                                                           ng-model="addUser"/>
-                                                    <button class="btn btn-success" ng-click="addMember('Exclude')">Add to
-                                                        Exclude
-                                                    </button>
-                                                </div>
-                                                <button class="btn btn-primary" ng-click="export(groupingExclude, 'exclude')">
-                                                    Export To CSV
-                                                </button>
+                                            <div class="col-lg-4 col-md-6">
+                                                <form ng-submit="addMember('Exclude')">
+                                                    <div class="input-group">
+                                                        <input type="text" placeholder="Add user to exclude" ng-model="addUser" class="form-control"/>
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-primary" type="submit">Add</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
