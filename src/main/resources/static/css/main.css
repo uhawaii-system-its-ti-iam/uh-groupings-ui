@@ -186,9 +186,14 @@ td.uh-pre {
 #iconTop{
     display: flex;
     justify-content: flex-end;
-    font-size: 45px;
+    font-size: 30px;
 }
 
+#logInButton{
+    display: relative;
+    padding: 10px;
+
+}
 
 #footerBottom{
     display: relative;
