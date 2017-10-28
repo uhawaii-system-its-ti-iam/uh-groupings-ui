@@ -8,36 +8,56 @@
 <!--  Content container -->
 <div class="container" ng-controller="HolidayJsController" data-ng-init="init()">
     <div class="jumbotron">
-        <h1 class="dropshadow">Welcome to UH Groupings</h1>
+        <div class = "container">
+            <div class = "col-md-9 col-lg-7">
+        <h1 class="dropshadow">UH Groupings</h1>
         <p class="lead">
-            Manage your Groupings in one place, use them in many places.
+            Manage your Groupings in one place, use them in many.
         </p>
-        <div>
-            <div sec:authorize="!isAuthenticated()">
-                <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
-            </div>
-            <div sec:authorize="isAuthenticated()">
-                <form action="/logout" th:action="@{/logout}" method="post">
-                    <button class="btn btn-lg btn-default" type="submit">Logout</button>
-                </form>
+
+
+        </div>
+
+
+        <div class = "col-md-3 col-lg-5 hidden-xs hidden-sm" id = "iconTop">
+            <i class="fa fa-users fa-5x" aria-hidden="true" ></i>
+        </div>
+
+
+        <div class = "col-md-3 col-lg-3">
+            <div>
+                <div sec:authorize="!isAuthenticated()">
+                    <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <form action="/logout" th:action="@{/logout}" method="post">
+                        <button class="btn btn-lg btn-default" type="submit">Logout</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+    </div>
+
+
     <div class="row" style="margin-left: inherit; margin-right: inherit">
         <span class="h4">What is UH Groupings?</span>
         <p>
-            A "Grouping" is a collection of members.  UH Groupings allows you to create Groupings, manage Grouping memberships, 
+            A "Grouping" is a collection of members.  UH Groupings allows you to create Groupings, manage Grouping memberships,
             control members' self-service options, designate Grouping integrations, and more.
         </p>
         <p>
-            Groupings can be integrated with one or more of the following: email LISTSERV lists, permissions and privilege 
-            assignments for access control via CAS, etc.  Additionally, UH Groupings allows you to leverage existing membership 
-            collections, which can substantially reduce the manual overhead of membership management. 
+            Groupings can be integrated with one or more of the following: email LISTSERV lists, permissions and privilege
+            assignments for access control via CAS, etc.  Additionally, UH Groupings allows you to leverage existing membership
+            collections, which can substantially reduce the manual overhead of membership management.
         </p>
         <p>
             For more information, visit &lt;<a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings</a>&gt;
         </p>
     </div>
+
+
+<div id = "footerBottom">
     <div class="row" sec:authorize="isAuthenticated()">
         <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
             <p class="h4">View Admin Page</p>
@@ -61,6 +81,10 @@
             <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">View</a></p>
         </div>
     </div>
+</div>
+
+
+
 </div>
 <!-- / Content container. -->
 

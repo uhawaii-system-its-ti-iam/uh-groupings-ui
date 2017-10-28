@@ -70,9 +70,6 @@ h1, h2, h3, h4 {
     z-index: 9999;
 }
 
-#searchAdmin{
-    margin-top: 10px;
-}
 @keyframes spin {
     0% {
         transform: rotate(0deg);
@@ -183,25 +180,58 @@ td.uh-pre {
     text-align: center;
 }
 
+#headingHeight{
+    height: 80px;
+}
+#iconTop{
+    display: flex;
+    justify-content: flex-end;
+    font-size: 45px;
+}
+
+
+#footerBottom{
+    display: relative;
+    padding:0px 15px;
+
+}
 #groupHeader {
     height: 55px;
+}
+#prefrences{
+    display: flex;
+    justify-content: flex-end;
 }
 
 #headingOptIn {
     position: relative;
-    vertical-align: 50%;
+    /*vertical-align: 50%;*/
     white-space: nowrap;
     margin-top: 5px;
     /*height:  15px;*/
 
 }
 
+#headingOptInExplained {
+    /*position: relative;*/
+    /*vertical-align: 50%;*/
+    /*white-space: nowrap;*/
+    /*margin-top: 5px;*/
+    /*height:  15px;*/
+
+}
 #filters {
     padding: 10px;
 }
 
 .dropshadow {
     text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
+}
+
+.panel.panel-tab-content {
+    border-radius: 0px 0px 3px 3px;
+    -webkit-border-radius: 0px 0px 3px 3px;
+    -moz-border-radius: 0px 0px 3px 3px;
 }
 
 @media (min-width: 768px) {
@@ -291,4 +321,16 @@ td.uh-pre {
         background-color: white;
     }
 
+}
+
+.members-tab-title {
+    margin: inherit;
+    padding-top: 5px;
+}
+
+.row.member-row-title {
+    margin-top: inherit;
+    margin-right: inherit;
+    margin-bottom: 5px;
+    margin-left: inherit;
 }

@@ -9,7 +9,7 @@
      * @param dataDeleter   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function OwnerJsController($scope, $window, $filter, dataProvider, dataUpdater, dataDeleter) {
+    function OwnerJsController($scope, $uibModal, $window, $filter, dataProvider, dataUpdater, dataDeleter) {
         $scope.currentUsername = "";
         $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -259,16 +259,64 @@
             var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataUpdater.addData(function (d) {
                 if (d.resultCode === "SUCCESS") {
-                    console.log("success in adding " + $scope.addUser);
-                    alert("SUCCESS IN ADDING " + $scope.addUser);
-                    $scope.getData();
+                    $scope.addModalAlert('success');
                 }
                 else if (typeof d.resultsCode === 'undefined') {
                     console.log($scope.addUser + " this user does not exist.");
-                    alert($scope.addUser + " this user does not exist.");
+                    $scope.addModalAlert();
                 }
             }, addUrl);
             $scope.addUser = '';
+        };
+
+        /**
+         * Gives a user ownership of a grouping.
+         * If the user is successfully assigned ownership, then alerts success.
+         * Otherwise alerts that the user does not exist.
+         */
+        $scope.addOwner = function () {
+            var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.ownerUser + "/assignOwnership";
+            dataUpdater.addData(function (d) {
+                if (d.resultCode === "SUCCESS") {
+                    console.log("Assigned " + $scope.ownerUser + " as an owner");
+                    $scope.addModalAlert('success');
+                }
+                else if (typeof d.resultsCode === 'undefined') {
+                    console.log($scope.ownerUser + " this user does not exist.");
+                    $scope.addModalAlert();
+                }
+            }, addOwnerUrl);
+            $scope.ownerUser = '';
+        };
+
+        /**
+         *
+         * @param user - user being added
+         * @param success - whether if the addData service returned a success in adding.
+         */
+        $scope.addModalAlert = function (success) {
+            if (success === 'success') var message = "User has been added";
+            else var message = "Error: User is not a valid username";
+
+            var modalHtml = '<div class="modal-body">' + message + '</div>';
+            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="continue()">OK</button></div>';
+
+            $scope.addModalInstance = $uibModal.open({
+                template: modalHtml,
+                scope: $scope
+            });
+
+            $scope.addModalInstance.result.then(function () {
+                $scope.loading = true;
+                if (success === 'success') $scope.getData();
+            });
+        };
+
+        /**
+         * Function that closes modal and proceeds with the modal result.
+         */
+        $scope.continue = function () {
+            $scope.addModalInstance.close();
         };
 
         /**
@@ -287,10 +335,8 @@
             }
 
             var URL = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
-            dataDeleter.deleteData(function (d) {
-                console.log(d);
-                $scope.getData();
-            }, URL);
+
+            $scope.deleteModal(user, URL, null, $scope.groupingPath);
         };
 
         /**
@@ -302,31 +348,49 @@
             var removeOwner = $scope.ownerList[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
             if ($scope.ownerList.length > 1) {
-                dataDeleter.deleteData(function (d) {
-                    $scope.getData();
-                }, removeOwnerUrl);
+                $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.groupingPath);
             }
         };
 
+        $scope.deleteModal = function (user, url, location, type) {
+            var message = "Are you sure you want to delete " + user;
+            var modalHtml = '<div class="modal-body">' + message + '</div>';
+            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
+
+            $scope.deleteModalInstance = $uibModal.open({
+                template: modalHtml,
+                scope: $scope
+            });
+
+            $scope.deleteModalInstance.result.then(function () {
+                if (type === 'admin' && $scope.list.length > 1) {
+                    dataDeleter.deleteData(function (d) {
+                        $scope.list.splice(location, 1);
+                        $scope.init();
+                    }, url);
+                }
+                else {
+                    dataDeleter.deleteData(function (d) {
+                        console.log(d);
+                        $scope.loading = true;
+                        $scope.getData(type);
+                    }, url);
+                }
+            });
+        };
+
         /**
-         * Gives a user ownership of a grouping.
-         * If the user is successfully assigned ownership, then alerts success.
-         * Otherwise alerts that the user does not exist.
+         * Function that closes modal and proceeds with the modal result.
          */
-        $scope.addOwner = function () {
-            var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.ownerUser + "/assignOwnership";
-            dataUpdater.addData(function (d) {
-                if (d[0].resultCode === "SUCCESS") {
-                    console.log("Assigned " + $scope.ownerUser + " as an owner");
-                    alert("Assigned " + $scope.ownerUser + " as an owner");
-                    $scope.getData();
-                }
-                else if (typeof d[0].resultsCode === 'undefined') {
-                    console.log($scope.ownerUser + " this user does not exist.");
-                    alert($scope.ownerUser + " this user does not exist.");
-                }
-            }, addOwnerUrl);
-            $scope.ownerUser = '';
+        $scope.ok = function () {
+            $scope.deleteModalInstance.close();
+        };
+
+        /**
+         * Function that closes modal.
+         */
+        $scope.cancel = function () {
+            $scope.deleteModalInstance.dismiss();
         };
 
         /**
