@@ -401,6 +401,19 @@
             $scope.deleteModalInstance.dismiss();
         };
 
+        $scope.infoModal = function (preference, group) {
+            if(preference === 'opt')
+                var modalHtml = '<div class="modal-body">This option allows owners to set whether or not members can ' + group + ' themselves from the grouping</div>';
+            else if(preference === 'publication')
+                var modalHtml = '<div class="modal-body">This option allows owners to </div>';
+
+            $scope.deleteModalInstance = $uibModal.open({
+                template: modalHtml,
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
+
         $scope.savePref = function () {
             var prefUrls = [];
 

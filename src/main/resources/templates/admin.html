@@ -443,7 +443,6 @@
                                                 <h3 class="members-tab-title">Preferences</h3>
                                             </div>
                                             <div class="well">
-
                                                 <table width="100%">
                                                     <th>
                                                         <h3>Add/Remove</h3>
@@ -452,12 +451,18 @@
                                                                 <input type="checkbox" ng-model="preference.optIn"/> Allow people to add
                                                                 themselves to this group
                                                             </label>
+                                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                                               ng-click="infoModal('opt', 'add')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
+                                                               title="Click for more information"></i>
                                                         </div>
                                                         <div class="checkbox">
                                                             <label>
                                                                 <input type="checkbox" ng-model="preference.optOut"/> Allow people to remove
                                                                 themselves to this group
                                                             </label>
+                                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                                               ng-click="infoModal('opt', 'remove')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
+                                                               title="Click for more information"></i>
                                                         </div>
                                                     </th>
                                                     <th>
@@ -465,8 +470,29 @@
                                                         <div class="checkbox">
                                                             <label>
                                                                 <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/>
-                                                                LISTSERV list: {{groupingName.name}}
+                                                                LISTSERV list
                                                             </label>
+                                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                                               ng-click="infoModal('publication')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
+                                                               title="Click for more information"></i>
+                                                        </div>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox"/>
+                                                                uhReleasedGroupings LDAP/CAS Attribute
+                                                            </label>
+                                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                                               ng-click="infoModal('publication')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
+                                                               title="Click for more information"></i>
+                                                        </div>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox"/>
+                                                                LDAP Group
+                                                            </label>
+                                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                                               ng-click="infoModal('publication')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
+                                                               title="Click for more information"></i>
                                                         </div>
                                                     </th>
                                                 </table>
