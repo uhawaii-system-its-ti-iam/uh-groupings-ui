@@ -225,6 +225,8 @@
                 case 'username':
                     $scope.symbol.username = '\u21c5';
                     break;
+                case 'basis':
+                    $scope.symbol.basis = '\u21c5';
             }
         };
 

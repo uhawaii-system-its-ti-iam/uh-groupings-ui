@@ -83,7 +83,7 @@
                         <li class="active" data-toggle="tooltip" data-placement="top" title="Manage Members"><a
                                 data-toggle="tab" href="#members">Members</a></li>
                         <li data-toggle="tooltip" data-placement="top" title="Manage Owners"><a data-toggle="tab"
-                                                                                                      href="#owners">Owners</a>
+                                                                                                href="#owners">Owners</a>
                         </li>
                         <li data-toggle="tooltip" data-placement="top" title="Manage Preferences"><a
                                 data-toggle="tab" href="#preference">Preferences</a></li>
@@ -187,7 +187,7 @@
                                                         <li ng-repeat="n in range(pagedItemsList.length, currentPageList - gap, currentPageList + gap + 1) "
                                                             ng-class="{active: n == currentPageList}"
                                                             ng-click="currentPage('Set','currentPageList','pagedItemsList')"
-                                                        ><a href="" ng-bind="n + 1">1</a>
+                                                                ><a href="" ng-bind="n + 1">1</a>
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 || pagedItemsList.length == 0}">
                                                             <a href=""
@@ -260,7 +260,7 @@
                                                             ng-class="{active: n == currentPageBasis}"
 
                                                             ng-click="currentPage('Set','currentPageBasis','pagedItemsBasis')"
-                                                        ><a href="" ng-bind="n + 1">1</a>
+                                                                ><a href="" ng-bind="n + 1">1</a>
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 || pagedItemsBasis.length == 0}">
                                                             <a href=""
@@ -341,7 +341,7 @@
                                                         <li ng-repeat="n in range(pagedItemsInclude.length, currentPageInclude - gap, currentPageInclude + gap + 1) "
                                                             ng-class="{active: n == currentPageInclude}"
                                                             ng-click="currentPage('Set','currentPageInclude','pagedItemsInclude')"
-                                                        ><a href="" ng-bind="n + 1">1</a>
+                                                                ><a href="" ng-bind="n + 1">1</a>
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 || pagedItemsInclude.length == 0}">
                                                             <a href=""
@@ -433,7 +433,7 @@
                                                             ng-class="{active: n == currentPageExclude}"
 
                                                             ng-click="currentPage('Set','currentPageExclude','pagedItemsExclude')"
-                                                        ><a href="" ng-bind="n + 1">1</a>
+                                                                ><a href="" ng-bind="n + 1">1</a>
                                                         </li>
                                                         <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
                                                             <a href=""
@@ -522,7 +522,7 @@
                                                 ng-class="{active: n == currentPageOwners}"
 
                                                 ng-click="currentPage('Set','currentPageOwners','pagedItemsOwners')"
-                                            ><a href="" ng-bind="n + 1">1</a>
+                                                    ><a href="" ng-bind="n + 1">1</a>
                                             </li>
                                             <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
                                                 <a href=""
