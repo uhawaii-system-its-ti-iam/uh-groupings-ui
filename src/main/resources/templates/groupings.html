@@ -169,7 +169,8 @@
                                                         style="cursor: pointer">
                                                         Username {{symbol.username}}
                                                     </th>
-                                                    <th>In Basis?</th>
+                                                    <th ng-click="sortCol(groupingsList, 'basis', 'pagedItemsList', 'symbolList')"
+                                                    style="cursor: pointer">In Basis? {{symbol.basis}}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -322,7 +323,8 @@
                                                         style="cursor: pointer">
                                                         Username {{symbol.username}}
                                                     </th>
-                                                    <th>In Basis?</th>
+                                                    <th ng-click="sortCol(groupingInclude, 'basis', 'pagedItemsInclude', 'symbolInclude')"
+                                                        style="cursor: pointer">In Basis? {{symbol.basis}}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -419,7 +421,8 @@
                                                         style="cursor: pointer">
                                                         Username {{symbol.username}}
                                                     </th>
-                                                    <th>In Basis?</th>
+                                                    <th ng-click="sortCol(groupingExclude, 'basis', 'pagedItemsExclude', 'symbolExclude')"
+                                                        style="cursor: pointer">In Basis? {{symbol.basis}}</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
