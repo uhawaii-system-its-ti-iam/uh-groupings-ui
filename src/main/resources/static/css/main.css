@@ -277,6 +277,10 @@ td.uh-pre {
         font-size: 25px;
     }
 
+    .navbar-brand.uh-nav-app-name:hover {
+        color: #B08A17;
+    }
+
     .uh-branding-one {
         font-family: cinzel-regular, serif;
         font-size: 1.6em;
@@ -342,6 +346,7 @@ td.uh-pre {
 }
 
 @media (max-width: 991px) {
+
     .navbar-header {
         float: none;
     }
@@ -375,5 +380,19 @@ td.uh-pre {
     }
     .collapse.in{
         display:block !important;
+    }
+
+    .navbar-brand.uh-nav-app-name {
+        color: #BD9319;
+    }
+
+    .navbar-brand.uh-nav-app-name:hover {
+        color: #B08A17;
+    }
+}
+
+@media (max-width: 767px) {
+    .navbar-brand.uh-nav-app-name {
+        padding-left: 5px;
     }
 }
