@@ -12,8 +12,8 @@
             <div ng-app="adminApp" ng-controller="AdminJsController" data-ng-init="init()">
                 <h1 class="text-left">UH Groupings Administration</h1>
 
-                <p class="text-left">Manage the list of administrators for this service. Search for and manage any
-                    Grouping on behalf of the owner.</p>
+                <p class="text-left">Search for and manage any Grouping on behalf of its owner. 
+                      Manage the list of UH Groupings administrators. </p>
 
                 <div id="overlay" ng-show="loading">
                     <div class="loader" ng-show="loading"></div>
@@ -134,7 +134,13 @@
                                                            style="padding-left: 0px; text-align: left; width: 100%; border: none"
                                                            ng-click="sortCol(groupingsList, 'username', 'pagedItemsList', 'symbolList')"><b>UH Username
                                                         {{symbol.username}}</b></a></th>
-                                                    <th style="vertical-align: middle;">Basis</th>
+                                                    <th style="vertical-align: middle;">
+                                                        <a type="button" class="btn btn-default btn-block"
+                                                           style="padding-left: 0px; text-align: left; width: 100%; border: none"
+                                                           ng-click="sortCol(groupingsList, 'basis', 'pagedItemsList', 'symbolList')">
+                                                            <b>In Basis? {{symbol.basis}}</b>
+                                                        </a>
+                                                        </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -246,7 +252,13 @@
                                                            style="padding-left: 0px; text-align: left; width: 100%; border: none"
                                                            ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')"><b>Username
                                                         {{symbol.username}}</b></a></th>
-                                                    <th style="vertical-align: middle;">Basis Member?</th>
+                                                    <th style="vertical-align: middle;">
+                                                        <a type="button" class="btn btn-default btn-block"
+                                                           style="padding-left: 0px; text-align: left; width: 100%; border: none"
+                                                           ng-click="sortCol(groupingInclude, 'basis', 'pagedItemsInclude', 'symbolInclude')">
+                                                            <b>In Basis? {{symbol.basis}}</b>
+                                                        </a>
+                                                    </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -319,7 +331,13 @@
                                                            style="padding-left: 0px; text-align: left; width: 100%; border: none"
                                                            ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')"><b>Username
                                                         {{symbol.username}}</b></a></th>
-                                                    <th style="vertical-align: middle;">Basis</th>
+                                                    <th style="vertical-align: middle;">
+                                                        <a type="button" class="btn btn-default btn-block"
+                                                           style="padding-left: 0px; text-align: left; width: 100%; border: none"
+                                                           ng-click="sortCol(groupingExclude, 'basis', 'pagedItemsExclude', 'symbolExclude')">
+                                                            <b>In Basis? {{symbol.basis}}</b>
+                                                        </a>
+                                                    </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -443,7 +461,6 @@
                                                 <h3 class="members-tab-title">Preferences</h3>
                                             </div>
                                             <div class="well">
-
                                                 <table width="100%">
                                                     <th>
                                                         <h3>Add/Remove</h3>
@@ -452,12 +469,18 @@
                                                                 <input type="checkbox" ng-model="preference.optIn"/> Allow people to add
                                                                 themselves to this group
                                                             </label>
+                                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                                               ng-click="infoModal('opt', 'add')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
+                                                               title="Click for more information"></i>
                                                         </div>
                                                         <div class="checkbox">
                                                             <label>
                                                                 <input type="checkbox" ng-model="preference.optOut"/> Allow people to remove
                                                                 themselves to this group
                                                             </label>
+                                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                                               ng-click="infoModal('opt', 'remove')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
+                                                               title="Click for more information"></i>
                                                         </div>
                                                     </th>
                                                     <th>
@@ -465,8 +488,29 @@
                                                         <div class="checkbox">
                                                             <label>
                                                                 <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/>
-                                                                LISTSERV list: {{groupingName.name}}
+                                                                LISTSERV list
                                                             </label>
+                                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                                               ng-click="infoModal('publication')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
+                                                               title="Click for more information"></i>
+                                                        </div>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox"/>
+                                                                uhReleasedGroupings LDAP/CAS Attribute
+                                                            </label>
+                                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                                               ng-click="infoModal('publication')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
+                                                               title="Click for more information"></i>
+                                                        </div>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox"/>
+                                                                LDAP Group
+                                                            </label>
+                                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                                               ng-click="infoModal('publication')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
+                                                               title="Click for more information"></i>
                                                         </div>
                                                     </th>
                                                 </table>
@@ -532,7 +576,7 @@
                                          <span class="glyphicon glyphicon-trash pull-right"
                                                data-toggle="tooltip"
                                                data-placement="top" onmouseover="$(this).tooltip('show')"
-                                               title="Remove admin from admins list"
+                                               title="Remove this designated administrator (there must be at least 1 remaining)"
                                                ng-click="removeAdmin($index + (currentPage * itemsPerPage))"
                                                style="margin-right: 10px; cursor: pointer"></span>
                                     </td>

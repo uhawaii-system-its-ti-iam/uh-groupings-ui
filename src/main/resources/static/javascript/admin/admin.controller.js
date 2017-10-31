@@ -106,6 +106,8 @@
                 case 'username':
                     $scope.symbol.username = '\u21c5';
                     break;
+                case 'basis':
+                    $scope.symbol.basis = '\u21c5';
             }
         };
 
@@ -204,7 +206,7 @@
         $scope.modify = function (grouping) {
             //Filter out names with hawaii.edu and adds basis object.
             for (var i = 0; i < grouping.length; i++) {
-                grouping[i].basis = "\u2716";
+                grouping[i].basis = "No";
                 if (grouping[i].name.includes("hawaii.edu")) {
                     grouping.splice(i, 1);
                     i--;
@@ -215,7 +217,7 @@
             for (var l = 0; l < $scope.basis.length; l++) {
                 for (var m = 0; m < grouping.length; m++) {
                     if ($scope.basis[l].uuid === grouping[m].uuid) {
-                        grouping[m].basis = "\u2714";
+                        grouping[m].basis = "Yes";
                     }
                 }
             }
@@ -399,6 +401,19 @@
          */
         $scope.cancel = function () {
             $scope.deleteModalInstance.dismiss();
+        };
+
+        $scope.infoModal = function (preference, group) {
+            if(preference === 'opt')
+                var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not members can ' + group + ' themselves from the grouping</div>';
+            else if(preference === 'publication')
+                var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not the publication destination is active or not</div>';
+
+            $scope.deleteModalInstance = $uibModal.open({
+                template: modalHtml,
+                windowClass: 'center-modal',
+                scope: $scope
+            });
         };
 
         $scope.savePref = function () {
