@@ -441,6 +441,19 @@
             }
         };
 
+        $scope.infoModal = function (preference, group) {
+            if(preference === 'opt')
+                var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not members can ' + group + ' themselves from the grouping</div>';
+            else if(preference === 'publication')
+                var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not the publication destination is active or not</div>';
+
+            $scope.deleteModalInstance = $uibModal.open({
+                template: modalHtml,
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
+
         /**
          * Export data in table to a CSV file
          *
