@@ -134,7 +134,13 @@
                                                            style="padding-left: 0px; text-align: left; width: 100%; border: none"
                                                            ng-click="sortCol(groupingsList, 'username', 'pagedItemsList', 'symbolList')"><b>UH Username
                                                         {{symbol.username}}</b></a></th>
-                                                    <th style="vertical-align: middle;">In Basis?</th>
+                                                    <th style="vertical-align: middle;">
+                                                        <a type="button" class="btn btn-default btn-block"
+                                                           style="padding-left: 0px; text-align: left; width: 100%; border: none"
+                                                           ng-click="sortCol(groupingsList, 'basis', 'pagedItemsList', 'symbolList')">
+                                                            <b>In Basis? {{symbol.basis}}</b>
+                                                        </a>
+                                                        </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -246,7 +252,13 @@
                                                            style="padding-left: 0px; text-align: left; width: 100%; border: none"
                                                            ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')"><b>Username
                                                         {{symbol.username}}</b></a></th>
-                                                    <th style="vertical-align: middle;">Basis Member?</th>
+                                                    <th style="vertical-align: middle;">
+                                                        <a type="button" class="btn btn-default btn-block"
+                                                           style="padding-left: 0px; text-align: left; width: 100%; border: none"
+                                                           ng-click="sortCol(groupingInclude, 'basis', 'pagedItemsInclude', 'symbolInclude')">
+                                                            <b>In Basis? {{symbol.basis}}</b>
+                                                        </a>
+                                                    </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -319,7 +331,13 @@
                                                            style="padding-left: 0px; text-align: left; width: 100%; border: none"
                                                            ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')"><b>Username
                                                         {{symbol.username}}</b></a></th>
-                                                    <th style="vertical-align: middle;">Basis</th>
+                                                    <th style="vertical-align: middle;">
+                                                        <a type="button" class="btn btn-default btn-block"
+                                                           style="padding-left: 0px; text-align: left; width: 100%; border: none"
+                                                           ng-click="sortCol(groupingExclude, 'basis', 'pagedItemsExclude', 'symbolExclude')">
+                                                            <b>In Basis? {{symbol.basis}}</b>
+                                                        </a>
+                                                    </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
