@@ -1,16 +1,16 @@
 @font-face {
     font-family: cinzel-regular;
-    src: url(/myiam/fonts/Cinzel-Regular.ttf);
+    src: url(/uhgroupings/fonts/Cinzel-Regular.ttf);
 }
 
 @font-face {
     font-family: cormorant-upright-regular;
-    src: url(/myiam/fonts/CormorantUpright-Regular.ttf);
+    src: url(/uhgroupings/fonts/CormorantUpright-Regular.ttf);
 }
 
 @font-face {
     font-family: alegreyasans-regular;
-    src: url(/myiam/fonts/AlegreyaSans-Regular.ttf);
+    src: url(/uhgroupings/fonts/AlegreyaSans-Regular.ttf);
 }
 
 html {
@@ -326,4 +326,22 @@ td.uh-pre {
         background-color: white;
     }
 
+}
+
+.members-tab-title {
+    margin: inherit;
+    padding-top: 5px;
+}
+
+.row.member-row-title {
+    margin-top: inherit;
+    margin-right: inherit;
+    margin-bottom: 5px;
+    margin-left: inherit;
+}
+
+.center-modal {
+    position: fixed;
+    top: 30%;
+    z-index: 1050;
 }

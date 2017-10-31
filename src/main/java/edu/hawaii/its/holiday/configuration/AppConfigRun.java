@@ -7,7 +7,7 @@ import org.springframework.context.annotation.*;
 @ComponentScan(basePackages = "edu.hawaii.its")
 @PropertySources({
         @PropertySource("classpath:custom.properties"),
-        @PropertySource(value = "file:${user.home}/.${user.name}-conf/myiam-overrides.properties",
+        @PropertySource(value = "file:${user.home}/.${user.name}-conf/uhgroupings-overrides.properties",
                 ignoreResourceNotFound = true)
 })
 public class AppConfigRun {
