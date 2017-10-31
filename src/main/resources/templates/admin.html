@@ -545,8 +545,11 @@
                                             </div>
                                         </div>
                                         <div class="pull-right input-group col-md-2" style="padding-right: 15px;">
-                                            <input class="form-control" type="text"
-                                                   placeholder="Filter Admins..." ng-model="query"/>
+                                            <!--<input class="form-control" type="text"
+                                                   placeholder="Filter Admins..." ng-model="query"/>-->
+                                            <input placeholder="Filter Names..." type="text"
+                                                   ng-model="ListQuery" class="form-control"
+                                                   ng-change="filter(list, 'pagedItems', 'ListQuery')"/>
                                         </div>
                                     </div>
                                 </div>
@@ -570,7 +573,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="l in data = (pagedItems[currentPage] | filter: query)">
+                                <tr ng-repeat="l in pagedItems[currentPage]">
                                     <td>
                                         {{l.name}}
                                          <span class="glyphicon glyphicon-trash pull-right"

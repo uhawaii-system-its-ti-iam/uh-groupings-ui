@@ -9,7 +9,7 @@
      * @param dataDelete   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function AdminJsController($scope, $window, $uibModal, dataProvider, dataUpdater, dataDelete) {
+    function AdminJsController($scope, $window, $uibModal, $filter, dataProvider, dataUpdater, dataDelete) {
 
         $scope.currentUsername = "";
         $scope.filteredItems = [];
@@ -457,6 +457,40 @@
                     }
                 }, prefUrls[i].url);
             }
+        };
+
+        $scope.filter = function (list,whatList, whatQuery) {
+            var query = "";
+            query = $scope[whatQuery];
+            $scope.filteredItems = $filter('filter')(list, function (item) {
+                if (searchMatch(item.name, query)) {
+                    return true;
+                }
+            });
+            // console.log($scope.filteredItems);
+            page = 0;
+            // now group by pages
+            var emptyList = [];
+            $scope[whatList] = $scope.groupToPagesChanged(emptyList);
+        };
+
+        var searchMatch = function (haystack, needle) {
+            if (!needle) {
+                return true;
+            }
+            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+        };
+
+        $scope.groupToPagesChanged = function (pagedList) {
+            var pagedList = [];
+            for (var i = 0; i < $scope.filteredItems.length; i++) {
+                if (i % $scope.itemsPerPage === 0) {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                } else {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                }
+            }
+            return pagedList;
         };
 
         $scope.groupToPages = function (list, pagedList) {
