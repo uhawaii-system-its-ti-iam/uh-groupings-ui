@@ -311,6 +311,7 @@
             $scope.addModalInstance.result.then(function () {
                 $scope.loading = true;
                 if (success === 'success') $scope.getData();
+                else $scope.loading = false;
             });
         };
 

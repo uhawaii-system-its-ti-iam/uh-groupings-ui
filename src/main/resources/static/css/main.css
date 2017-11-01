@@ -400,3 +400,7 @@ td.uh-pre {
         padding-left: 5px;
     }
 }
+
+opt-button[disabled], .opt-button:disabled, .opt-button[disabled]:active, .opt-button:disabled:active {
+    color: #C2C2C2;
+}
