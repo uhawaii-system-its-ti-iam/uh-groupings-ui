@@ -545,8 +545,9 @@
                                         </div>
                                         <div class="pull-right col-md-2 col-sm-3 col-xs-12" style="padding: 0px;">
                                             <div class="form-group" style="margin: inherit;">
-                                                <input class="form-control" type="text"
-                                                       placeholder="Filter Admins..." ng-model="query"/>
+                                                <input placeholder="Filter Names..." type="text"
+                                                       ng-model="ListQuery" class="form-control"
+                                                       ng-change="filter(list, 'pagedItems', 'ListQuery')"/>
                                             </div>
                                         </div>
                                     </div>

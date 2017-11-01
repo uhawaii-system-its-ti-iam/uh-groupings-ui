@@ -462,9 +462,12 @@
         $scope.filter = function (list,whatList, whatQuery) {
             var query = "";
             query = $scope[whatQuery];
+            $scope.filteredItems = [];
             $scope.filteredItems = $filter('filter')(list, function (item) {
-                if (searchMatch(item.name, query)) {
-                    return true;
+                for (var key in item) {
+                    if (item.hasOwnProperty(key) && key !== 'basis' && searchMatch(item[key], query)) {
+                        return true;
+                    }
                 }
             });
             // console.log($scope.filteredItems);
