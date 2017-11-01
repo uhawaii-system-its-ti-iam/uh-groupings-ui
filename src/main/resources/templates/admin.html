@@ -488,7 +488,7 @@
                                                         <div class="checkbox">
                                                             <label>
                                                                 <input type="checkbox" ng-model="preference.listserv" ng-init="pref"/>
-                                                                LISTSERV list
+                                                                LISTSERV list: &lt;{{title}}@lists.hawaii.edu&gt;
                                                             </label>
                                                             <i class="fa fa-question-circle" aria-hidden="true"
                                                                ng-click="infoModal('publication')" style="cursor: pointer" data-toggle="tooltip" data-placement="right"
@@ -545,8 +545,9 @@
                                         </div>
                                         <div class="pull-right col-md-2 col-sm-3 col-xs-12" style="padding: 0px;">
                                             <div class="form-group" style="margin: inherit;">
-                                                <input class="form-control" type="text"
-                                                       placeholder="Filter Admins..." ng-model="query"/>
+                                                <input placeholder="Filter Names..." type="text"
+                                                       ng-model="ListQuery" class="form-control"
+                                                       ng-change="filter(list, 'pagedItems', 'ListQuery')"/>
                                             </div>
                                         </div>
                                     </div>
@@ -571,7 +572,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="l in data = (pagedItems[currentPage] | filter: query)">
+                                <tr ng-repeat="l in pagedItems[currentPage]">
                                     <td>
                                         {{l.name}}
                                          <span class="glyphicon glyphicon-trash pull-right"
