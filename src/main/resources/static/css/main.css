@@ -389,6 +389,10 @@ td.uh-pre {
     .navbar-brand.uh-nav-app-name:hover {
         color: #B08A17;
     }
+
+    .nav.navbar-nav {
+        padding-top: 0px;
+    }
 }
 
 @media (max-width: 767px) {
