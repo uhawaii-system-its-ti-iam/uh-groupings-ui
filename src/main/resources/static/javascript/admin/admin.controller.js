@@ -133,7 +133,9 @@
                 $scope.pagedItemsInclude = [];
                 $scope.pagedItemsExclude = [];
                 $scope.pagedItemsOwners = [];
+                $scope.preference = [];
                 $scope.loading = false;
+                $scope.title = '';
             } else {
                 $scope.getData($scope.groupingPath);
             }
@@ -702,12 +704,6 @@
                 input.attr('list', datalist);
             }
         });
-
-
-        $('#myModal').on('shown.bs.modal', function () {
-            $('#myInput').focus()
-        });
-
     }
 
     adminApp.controller("AdminJsController", AdminJsController);
