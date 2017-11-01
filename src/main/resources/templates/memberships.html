@@ -99,7 +99,7 @@
                             <tr ng-repeat="l in pagedItemsMembersList[currentPageOptOut] ">
                                 <td>{{l.name}}</td>
                                 <td class="col-md-2">
-                                    <button id="optOutButton" class="btn btn-primary btn-block"
+                                    <button id="optOutButton" class="btn btn-primary btn-block opt-button"
                                             ng-click="optOut($index + (currentPageOptIn * itemsPerPage))" ng-disabled="disableOptOut($index + (currentPageOptIn * itemsPerPage))"
                                             ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
                                         Opt Out
@@ -153,7 +153,7 @@
                                 <td>{{o.name}}</td>
                                 <td>{{o.path}}</td>
                                 <td class="col-md-2">
-                                    <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-primary btn-block"
+                                    <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-primary btn-block opt-button"
                                             ng-click="optIn($index + (currentPageOptOut * itemsPerPage))">Opt In
                                     </button>
                                 </td>
