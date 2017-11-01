@@ -42,13 +42,13 @@
                                     <h3 style="margin-top: 0px;">Administer a Grouping</h3>
                                     <div class="row">
                                         <div class="form-group">
-                                            <div class="pull-left input-group col-md-6" style="padding-left: 15px;">
+                                            <div class="pull-left input-group col-md-6 col-xs-12" style="padding-left: 15px; padding-right: 15px;">
                                                 <datalist id="testList" style="width: 20px; height: 20px; overflow: scroll;">
                                                     <option ng-repeat="o in groupingList" value="{{o.name}}"></option>
                                                 </datalist>
                                                 <form ng-submit="search()">
                                                     <div class="input-group">
-                                                        <input class="form-control" style="width: 100%" list="testList"
+                                                        <input class="form-control" list="testList"
                                                                data-list="testList"
                                                                type="text" ng-model="groupingName" placeholder="Search for Grouping" id="searchAdmin"/>
                                                         <span class="input-group-btn">
@@ -532,10 +532,9 @@
                             <div class="panel-heading">
                                 <h3 style="margin-top: 0px;">Designated Admins</h3>
 
-                                <div class="row">
+                                <div class="row" style="margin: inherit;">
                                     <div class="form-group">
-                                        <div class="pull-left col-md-3 input-group"
-                                             style="padding-left: 15px; padding-right: 15px;">
+                                        <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group">
                                             <input class="form-control" type="text"
                                                    placeholder="UH Username" ng-model="username"/>
                                             <div class="input-group-btn">
@@ -544,12 +543,11 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="pull-right input-group col-md-2" style="padding-right: 15px;">
-                                            <!--<input class="form-control" type="text"
-                                                   placeholder="Filter Admins..." ng-model="query"/>-->
-                                            <input placeholder="Filter Names..." type="text"
-                                                   ng-model="ListQuery" class="form-control"
-                                                   ng-change="filter(list, 'pagedItems', 'ListQuery')"/>
+                                        <div class="pull-right col-md-2 col-sm-3 col-xs-12" style="padding: 0px;">
+                                            <div class="form-group" style="margin: inherit;">
+                                                <input class="form-control" type="text"
+                                                       placeholder="Filter Admins..." ng-model="query"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
