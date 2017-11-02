@@ -5,7 +5,7 @@
 
     <groupId>edu.hawaii.its.ti.iam</groupId>
     <artifactId>myiam</artifactId>
-    <name>uhgroupings</name>
+    <name>myiam</name>
     <description>ITS Grouper Application</description>
     <packaging>war</packaging>
     <version>0.0.9</version>
