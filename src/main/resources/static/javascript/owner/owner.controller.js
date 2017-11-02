@@ -225,6 +225,8 @@
                 case 'username':
                     $scope.symbol.username = '\u21c5';
                     break;
+                case 'basis':
+                    $scope.symbol.basis = '\u21c5';
             }
         };
 
@@ -309,6 +311,7 @@
             $scope.addModalInstance.result.then(function () {
                 $scope.loading = true;
                 if (success === 'success') $scope.getData();
+                else $scope.loading = false;
             });
         };
 
@@ -439,6 +442,19 @@
             }
         };
 
+        $scope.infoModal = function (preference, group) {
+            if(preference === 'opt')
+                var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not members can ' + group + ' themselves from the grouping</div>';
+            else if(preference === 'publication')
+                var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not the publication destination is active or not</div>';
+
+            $scope.deleteModalInstance = $uibModal.open({
+                template: modalHtml,
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
+
         /**
          * Export data in table to a CSV file
          *
@@ -507,12 +523,13 @@
         $scope.search = function (list, whatList, whatQuery) {
             var query = "";
             query = $scope[whatQuery];
-            console.log(query);
             //console.log($scope[whatList]);
             $scope.filteredItems = [];
             $scope.filteredItems = $filter('filter')(list, function (item) {
-                if (searchMatch(item.name, query)) {
-                    return true;
+                for (var key in item) {
+                    if (item.hasOwnProperty(key) && key !== 'basis' && searchMatch(item[key], query)) {
+                        return true;
+                    }
                 }
             });
             // console.log($scope.filteredItems);

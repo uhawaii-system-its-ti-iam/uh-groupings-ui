@@ -9,7 +9,7 @@
      * @param dataDelete   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function AdminJsController($scope, $window, $uibModal, dataProvider, dataUpdater, dataDelete) {
+    function AdminJsController($scope, $window, $uibModal, $filter, dataProvider, dataUpdater, dataDelete) {
 
         $scope.currentUsername = "";
         $scope.filteredItems = [];
@@ -106,6 +106,8 @@
                 case 'username':
                     $scope.symbol.username = '\u21c5';
                     break;
+                case 'basis':
+                    $scope.symbol.basis = '\u21c5';
             }
         };
 
@@ -131,7 +133,9 @@
                 $scope.pagedItemsInclude = [];
                 $scope.pagedItemsExclude = [];
                 $scope.pagedItemsOwners = [];
+                $scope.preference = [];
                 $scope.loading = false;
+                $scope.title = '';
             } else {
                 $scope.getData($scope.groupingPath);
             }
@@ -204,7 +208,7 @@
         $scope.modify = function (grouping) {
             //Filter out names with hawaii.edu and adds basis object.
             for (var i = 0; i < grouping.length; i++) {
-                grouping[i].basis = "\u2716";
+                grouping[i].basis = "No";
                 if (grouping[i].name.includes("hawaii.edu")) {
                     grouping.splice(i, 1);
                     i--;
@@ -215,7 +219,7 @@
             for (var l = 0; l < $scope.basis.length; l++) {
                 for (var m = 0; m < grouping.length; m++) {
                     if ($scope.basis[l].uuid === grouping[m].uuid) {
-                        grouping[m].basis = "\u2714";
+                        grouping[m].basis = "Yes";
                     }
                 }
             }
@@ -457,6 +461,43 @@
             }
         };
 
+        $scope.filter = function (list,whatList, whatQuery) {
+            var query = "";
+            query = $scope[whatQuery];
+            $scope.filteredItems = [];
+            $scope.filteredItems = $filter('filter')(list, function (item) {
+                for (var key in item) {
+                    if (item.hasOwnProperty(key) && key !== 'basis' && searchMatch(item[key], query)) {
+                        return true;
+                    }
+                }
+            });
+            // console.log($scope.filteredItems);
+            page = 0;
+            // now group by pages
+            var emptyList = [];
+            $scope[whatList] = $scope.groupToPagesChanged(emptyList);
+        };
+
+        var searchMatch = function (haystack, needle) {
+            if (!needle) {
+                return true;
+            }
+            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+        };
+
+        $scope.groupToPagesChanged = function (pagedList) {
+            var pagedList = [];
+            for (var i = 0; i < $scope.filteredItems.length; i++) {
+                if (i % $scope.itemsPerPage === 0) {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                } else {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                }
+            }
+            return pagedList;
+        };
+
         $scope.groupToPages = function (list, pagedList) {
             var pagedList = [];
             if (list == null) {
@@ -663,12 +704,6 @@
                 input.attr('list', datalist);
             }
         });
-
-
-        $('#myModal').on('shown.bs.modal', function () {
-            $('#myInput').focus()
-        });
-
     }
 
     adminApp.controller("AdminJsController", AdminJsController);
