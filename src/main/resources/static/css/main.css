@@ -1,16 +1,16 @@
 @font-face {
     font-family: cinzel-regular;
-    src: url(/uhgroupings/fonts/Cinzel-Regular.ttf);
+    src: url(/myiam/fonts/Cinzel-Regular.ttf);
 }
 
 @font-face {
     font-family: cormorant-upright-regular;
-    src: url(/uhgroupings/fonts/CormorantUpright-Regular.ttf);
+    src: url(/myiam/fonts/CormorantUpright-Regular.ttf);
 }
 
 @font-face {
     font-family: alegreyasans-regular;
-    src: url(/uhgroupings/fonts/AlegreyaSans-Regular.ttf);
+    src: url(/myiam/fonts/AlegreyaSans-Regular.ttf);
 }
 
 html {
