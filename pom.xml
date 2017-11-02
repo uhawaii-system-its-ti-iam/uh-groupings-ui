@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.hawaii.its.ti.iam</groupId>
-    <artifactId>uhgroupings</artifactId>
+    <artifactId>myiam</artifactId>
     <name>uhgroupings</name>
     <description>ITS Grouper Application</description>
     <packaging>war</packaging>
