@@ -82,7 +82,10 @@
                 </div>
 
                 <div ng-show="showGrouping">
-                    <h2 class="text-center">{{groupingName.name}}</h2>
+                    <div>
+                        <i class="fa fa-users fa-2x" style="margin-right: 5px; float: left;"></i>
+                        <p class="h2" style="margin-top: 10px;">{{groupingName.name}}</p>
+                    </div>
                     <ul class="nav nav-tabs">
                         <li class="active" data-toggle="tooltip" data-placement="top" title="Manage this Grouping's Members"><a
                                 data-toggle="tab" href="#members">Members</a></li>
@@ -104,7 +107,7 @@
                                 <div class="panel-heading">
                                     <h3 style="margin: inherit;">Members</h3>
                                 </div>
-                                <div class="panel-body">
+                                <div class="panel-body" style="min-height: 400px;">
                                     <div class="col-md-2 col-xs-2" style="top: 100px; width: 80px">
                                         <ul class="nav nav-pills nav-stacked">
                                             <li class="active" data-toggle="tooltip" data-placement="right"
@@ -376,7 +379,7 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <div class="col-lg-4 col-md-6">
+                                            <div class="col-lg-4 col-md-6" style="padding: inherit;">
                                                 <form ng-submit="addMember('Include')">
                                                     <div class="input-group">
                                                         <input type="text" placeholder="Add user to include"
@@ -475,7 +478,7 @@
                                                 </td>
                                                 </tfoot>
                                             </table>
-                                            <div class="col-lg-4 col-md-6">
+                                            <div class="col-lg-4 col-md-6" style="padding: inherit;">
                                                 <form ng-submit="addMember('Exclude')">
                                                     <div class="input-group">
                                                         <input type="text" placeholder="Add user to exclude"
@@ -570,15 +573,16 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <div style="float: left" data-toggle="tooltip" data-placement="top"
-                                 title="Add Owner to Grouping">
-                                <button class="btn btn-primary icon ion-person-add" type="button" data-toggle="collapse"
-                                        data-target="#addOwner" aria-expanded="false" aria-controls="addOwner">
-                                </button>
-                                <div class="collapse" id="addOwner">
-                                    <input type="text" placeholder="Add an user as an owner..." ng-model="ownerUser"/>
-                                    <button class="btn btn-success" ng-click="addOwner()">Add Owner</button>
-                                </div>
+                            <div class="col-lg-3 col-md-3" style="padding: inherit;">
+                                <form ng-submit="addOwner()">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Add a user as an owner..."
+                                               ng-model="ownerUser" class="form-control"/>
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-primary" type="submit">Add</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
 
                         </div>
