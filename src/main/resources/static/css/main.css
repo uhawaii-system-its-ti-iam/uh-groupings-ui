@@ -236,9 +236,9 @@ td.uh-pre {
 }
 
 .panel.panel-tab-content {
-    border-radius: 0px 0px 3px 3px;
-    -webkit-border-radius: 0px 0px 3px 3px;
-    -moz-border-radius: 0px 0px 3px 3px;
+    border-radius: 0px 3px 3px 3px;
+    -webkit-border-radius: 0px 3px 3px 3px;
+    -moz-border-radius: 0px 3px 3px 3px;
 }
 
 @media (min-width: 992px) {
@@ -410,4 +410,18 @@ td.uh-pre {
 
 .opt-button[disabled], .opt-button:disabled, .opt-button[disabled]:active, .opt-button:disabled:active {
     color: #C2C2C2;
+}
+
+.nav.nav-tabs {
+    border-bottom: none;
+}
+
+.panel-tab-content .panel-heading {
+    border-radius: 0px 3px 0px 0px;
+    -webkit-border-radius: 0px 3px 0px 0px;
+    -moz-border-radius: 0px 3px 0px 0px;
+}
+
+.nav.nav-tabs > li.active > a {
+    border-bottom: none;
 }
