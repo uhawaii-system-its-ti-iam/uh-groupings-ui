@@ -414,3 +414,7 @@ td.uh-pre {
     -webkit-border-radius: 0px 3px 0px 0px;
     -moz-border-radius: 0px 3px 0px 0px;
 }
+
+.nav.nav-tabs > li.active > a {
+    border-bottom: none;
+}
