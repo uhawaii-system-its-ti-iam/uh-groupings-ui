@@ -20,6 +20,7 @@
         $scope.groupingsBasis = [];
         $scope.groupingInclude = [];
         $scope.groupingExclude = [];
+        $scope.symbol = [];
 
         //Variables for pagination
         $scope.pagedItems = [];
@@ -68,7 +69,7 @@
                 $scope.groupingList = d.allGroupings;
 
                 $scope.modify($scope.list);
-
+                $scope.symbol.name = '\u21c5';
                 console.log($scope.list);
                 $scope.pagedItems = $scope.groupToPages($scope.list, $scope.pagedItems);
                 $scope.loading = false;
@@ -86,15 +87,15 @@
         $scope.sortCol = function (list, col, listPaged, symbol) {
             $scope.symbol = {'name': '', 'uuid': '', 'username': ''};
 
-            if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
+            if ($scope[symbol] === 'ascend' || typeof $scope[symbol] == 'undefined') {
                 list = _.sortBy(list, col);
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = '\u25BC';
+                $scope[symbol] = 'descend';
             }
             else {
                 list = _.sortBy(list, col).reverse();
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = '\u25B2';
+                $scope[symbol] = 'ascend';
             }
             switch (col) {
                 case 'name':
@@ -225,6 +226,8 @@
             }
 
             //sorts data in alphabetic order
+
+
             grouping.sort(function (a, b) {
                 var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
                 if (nameA < nameB) //sort string ascending
@@ -407,7 +410,7 @@
 
         $scope.infoModal = function (preference, group) {
             if(preference === 'opt')
-                var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not members can ' + group + ' themselves from the grouping</div>';
+                    var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not members can ' + group + ' themselves from the grouping</div>';
             else if(preference === 'publication')
                 var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not the publication destination is active or not</div>';
 
