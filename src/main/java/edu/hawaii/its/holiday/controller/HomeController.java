@@ -37,6 +37,12 @@ public class HomeController {
         return "info";
     }
 
+    @RequestMapping(value = "/infoModal", method = RequestMethod.GET)
+    public String infoModal(Locale locale, Model model) {
+        logger.info("User at infoModal.");
+        return "infoModal";
+    }
+
     @RequestMapping(value = "/404", method = RequestMethod.GET)
     public String invalid() {
         return "redirect:/";

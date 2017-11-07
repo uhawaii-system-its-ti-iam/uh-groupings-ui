@@ -409,16 +409,28 @@
         };
 
         $scope.infoModal = function (preference, group) {
-            if(preference === 'opt')
-                    var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not members can ' + group + ' themselves from the grouping</div>';
-            else if(preference === 'publication')
-                var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not the publication destination is active or not</div>';
+            $scope.test = '';
 
-            $scope.deleteModalInstance = $uibModal.open({
-                template: modalHtml,
+            if(preference === 'opt')
+                $scope.test = "members can " + group + " themselves from the grouping";
+            else if(preference === 'publication')
+                $scope.test = "the publication destination is active or not";
+
+
+            $scope.infoModalInstance = $uibModal.open({
+                templateUrl: 'infoModal.html',
                 windowClass: 'center-modal',
-                scope: $scope
+                scope: $scope,
+                resolve: {
+                    items: function () {
+                        return $scope.test;
+                    }
+                }
             });
+        };
+
+        $scope.infoDismiss = function() {
+            $scope.infoModalInstance.dismiss();
         };
 
         $scope.savePref = function () {
