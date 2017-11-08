@@ -87,12 +87,12 @@
                         <p class="h2" style="margin-top: 10px;">{{groupingName.name}}</p>
                     </div>
                     <ul class="nav nav-tabs">
-                        <li class="active" data-toggle="tooltip" data-placement="top" title="Manage this Grouping's Members"><a
+                        <li class="active" data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.members}"><a
                                 data-toggle="tab" href="#members">Members</a></li>
-                        <li data-toggle="tooltip" data-placement="top" title="Manage this Grouping's Owners"><a data-toggle="tab"
+                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.owners}"><a data-toggle="tab"
                                                                                                 href="#owners">Owners</a>
                         </li>
-                        <li data-toggle="tooltip" data-placement="top" title="Manage this Grouping's Preferences"><a
+                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.preference}"><a
                                 data-toggle="tab" href="#preference">Preferences</a></li>
                         <li class="pull-right">
                             <button ng-click="showGroups()" class="btn btn-primary">Return to Groupings List</button>
@@ -111,25 +111,25 @@
                                     <div class="col-md-2 col-xs-2" style="top: 100px; width: 80px">
                                         <ul class="nav nav-pills nav-stacked">
                                             <li class="active" data-toggle="tooltip" data-placement="right"
-                                                title="All Members of Groupings"><a data-toggle="tab" href="#all">
+                                                th:title="#{screen.message.owner.tooltip.navbar.list}"><a data-toggle="tab" href="#all">
                                                 <i class="fa fa-user fa-lg" aria-hidden="true"></i>
                                                 <!-- <span class="glyphicon glyphicon-user" aria-hidden="true"></span> -->
                                             </a></li>
                                             <li data-toggle="tooltip" data-placement="right"
-                                                title="Basis Members of Groupings">
-                                                <a data-toggle="tab" href="#basis" id ="basisIcon">
+                                                th:title="#{screen.message.owner.tooltip.navbar.basis}">
+                                                <a data-toggle="tab" href="#basis">
                                                     <i class="fa fa-id-card-o" aria-hidden="true" id = "cardo"></i>
                                                     <!-- <span class="glyphicon glyphicon-lock" aria-hidden="true"></span> -->
                                                 </a></li>
                                             <li data-toggle="tooltip" data-placement="right"
-                                                title="Include Members of Groupings"><a data-toggle="tab"
+                                                th:title="#{screen.message.owner.tooltip.navbar.include}"><a data-toggle="tab"
                                                                                         href="#include">
                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                                 <!-- <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> -->
                                             </a>
                                             </li>
                                             <li data-toggle="tooltip" data-placement="right"
-                                                title="Exclude Members of Groupings"><a data-toggle="tab"
+                                                th:title="#{screen.message.owner.tooltip.navbar.exclude}"><a data-toggle="tab"
                                                                                         href="#exclude">
                                                 <i class="fa fa-minus" aria-hidden="true"></i>
                                                 <!-- <span class="glyphicon glyphicon-minus"
@@ -339,7 +339,7 @@
                                                               ng-click="removeMember('Include', $index)"
                                                               data-toggle="tooltip"
                                                               data-placement="top" onmouseover="$(this).tooltip('show')"
-                                                              title="Delete member from the include grouping"
+                                                              th:title="#{screen.message.owner.remove.include}"
                                                               style="margin-right: 10px"></span>
                                                     </td>
                                                     <td>{{i.uuid}}</td>
@@ -436,7 +436,7 @@
                                                         <span class="glyphicon glyphicon-trash pull-right"
                                                               data-toggle="tooltip"
                                                               data-placement="top" onmouseover="$(this).tooltip('show')"
-                                                              title="Delete member from the exclude group"
+                                                              th:title="#{screen.message.owner.remove.exclude}"
                                                               ng-click="removeMember('Exclude', $index)"
                                                               style="margin-right: 10px"></span>
                                                     </td>
@@ -533,7 +533,7 @@
                                             <span class="glyphicon glyphicon-trash pull-right"
                                                   data-toggle="tooltip"
                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
-                                                  title="Delete owner from owners list"
+                                                  th:title="#{screen.message.owner.remove.owner}"
                                                   ng-click="removeOwner($index)"
                                                   style="margin-right: 10px; cursor: pointer"></span>
                                         </td>
@@ -608,7 +608,7 @@
                                                ng-click="infoModal('opt', 'add')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               title="Click for more information"></i>
+                                               th:title="#{screen.message.owner.info}"></i>
                                         </div>
                                         <div class="checkbox">
                                             <label>
@@ -620,10 +620,10 @@
                                                ng-click="infoModal('opt', 'remove')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               title="Click for more information"></i>
+                                               th:title="#{screen.message.owner.info}"></i>
                                         </div>
                                     </div>
-                                    <div class="col-md-6" style="padding: 0 0 0 15px;">
+                                    <div class="col-md-6" style="padding: 0;">
                                         <h3 style="margin-top: 0px;">Publication Destinations</h3>
 
                                         <div class="checkbox">
@@ -636,7 +636,7 @@
                                                ng-click="infoModal('publication')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               title="Click for more information"></i>
+                                               th:title="#{screen.message.owner.info}"></i>
                                         </div>
                                         <div class="checkbox">
                                             <label>
@@ -647,18 +647,7 @@
                                                ng-click="infoModal('publication')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               title="Click for more information"></i>
-                                        </div>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"/>
-                                                LDAP Group
-                                            </label>
-                                            <i class="fa fa-question-circle" aria-hidden="true"
-                                               ng-click="infoModal('publication')"
-                                               style="cursor: pointer" data-toggle="tooltip"
-                                               data-placement="right"
-                                               title="Click for more information"></i>
+                                               th:title="#{screen.message.owner.info}"></i>
                                         </div>
                                         <div id="prefrences">
                                             <button class="btn btn-default btn-primary"
