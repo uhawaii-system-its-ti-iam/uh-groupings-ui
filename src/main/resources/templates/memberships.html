@@ -11,6 +11,8 @@
         <div class='container-fluid' ng-controller="MembershipJsController" data-ng-init="init()">
             <h1 class="text-left">Manage My Memberships</h1>
 
+            <p th:text="#{screen.message.home.test('{{currentUsername}}')}">Hi my name is aaron</p>
+
             <p class="text-left">View and manage my memberships. Search for new Groupings to join as a member.</p>
 
             <ul class="nav nav-tabs " id="memTab">
@@ -94,11 +96,16 @@
                             <tr ng-repeat="l in pagedItemsMembersList[currentPageOptOut] ">
                                 <td>{{l.name}}</td>
                                 <td class="col-md-2 col-sm-2 col-xs-2">
-                                    <button id="optOutButton" class="btn btn-primary btn-block opt-button"
-                                            ng-click="optOut($index + (currentPageOptIn * itemsPerPage))" ng-disabled="disableOptOut($index + (currentPageOptIn * itemsPerPage))"
-                                            ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
-                                        Opt Out
-                                    </button>
+                                    <div ng-if="required($index + (currentPageOptIn * itemsPerPage))">
+                                        <p align="center">Membership Required</p>
+                                    </div>
+                                    <div ng-if="!required($index + (currentPageOptIn * itemsPerPage))">
+                                        <button id="optOutButton" class="btn btn-primary btn-block opt-button text-center"
+                                                ng-click="optOut($index + (currentPageOptIn * itemsPerPage))"
+                                                ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
+                                            Opt Out
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>

@@ -54,7 +54,7 @@
              *                  optInList
              *                  optedIn
              *                  optedOut
-             *takes all of that data and puts them into pages as called by "grouptToPages"
+             *takes all of that data and puts them into pages as called by "groupToPages"
              **/
             dataProvider.loadData(function (d) {
                 console.log(d);
@@ -252,16 +252,17 @@
         };
 
         /**
-         * Disables the button for the index on the Groupings In list
+         * Function that will show opt out button if true otherwise will not show opt out button
          * @param index - table row
-         * @returns {boolean} - if there is a match then return false inorder to disable button.
+         * @returns {boolean} - if there is a match then return true inorder enable button.
          */
-        $scope.disableOptOut = function (index) {
+
+        $scope.required = function(index)
+        {
             for (var i = 0; i < $scope.optOutList.length; i++) {
                 if ($scope.pagedItemsMembersList[$scope.currentPageOptOut][index].name === $scope.optOutList[i].name) {
                     return false;
                 }
-
             }
             return true;
         };
