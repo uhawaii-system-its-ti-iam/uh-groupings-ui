@@ -49,9 +49,10 @@
                                                     <div class="input-group">
                                                         <input class="form-control" list="testList"
                                                                data-list="testList"
-                                                               type="text" ng-model="groupingName" placeholder="Search for Grouping" id="searchAdmin"/>
+                                                               type="text" ng-model="groupingName" placeholder="Search for grouping (min. 3 characters)" id="searchAdmin"/>
                                                         <span class="input-group-btn">
-                                                            <button class="btn btn-primary" type="submit">Search</button>
+                                                            <button class="btn btn-primary" type="submit" data-toggle="tooltip" data-placement="right"
+                                                                    title="Enter a least 3 characters to begin your search">Search</button>
                                                         </span>
                                                     </div>
                                                 </form>
