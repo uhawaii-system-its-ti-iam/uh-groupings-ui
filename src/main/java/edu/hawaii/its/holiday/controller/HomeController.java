@@ -39,8 +39,12 @@ public class HomeController {
 
     @RequestMapping(value = "/infoModal", method = RequestMethod.GET)
     public String infoModal(Locale locale, Model model) {
-        logger.info("User at infoModal.");
         return "infoModal";
+    }
+
+    @RequestMapping(value = "/apiError", method = RequestMethod.GET)
+    public String apiError(Locale locale, Model model) {
+        return "apiError";
     }
 
     @RequestMapping(value = "/404", method = RequestMethod.GET)

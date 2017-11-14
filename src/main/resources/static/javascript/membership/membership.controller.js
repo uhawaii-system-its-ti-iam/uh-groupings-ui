@@ -12,7 +12,7 @@
      *@param dataUpdater
      *    Using the CRUD operators this would be the update of CRUD
      **/
-    function MembershipJsController($scope, $window, $filter, dataProvider, dataUpdater) {
+    function MembershipJsController($scope, $window, $uibModal, $filter, dataProvider, dataUpdater) {
 
         $scope.currentUsername = "";
         $scope.membersList = [];
@@ -58,29 +58,47 @@
              **/
             dataProvider.loadData(function (d) {
                 console.log(d);
-                $scope.membersList = d.groupingsIn;
-                $scope.optOutList = d.groupingsToOptOutOf;
-                $scope.optInList = d.groupingsToOptInTo;
-                $scope.optedIn = d.groupingsOptedInTo;
-                $scope.optedOut = d.groupingsOptedOutOf;
-
-                if ($scope.optedIn.length === 0) {
-                    $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
+                if(typeof d.groupingsIn === 'undefined') {
+                    $scope.loading = false;
+                    $scope.errorModal();
                 }
-                if ($scope.optedOut.length === 0) {
-                    $scope.optedOut.push({'name': "NO GROUPINGS TO CANCEL OPT OUT"});
-                }
-                if ($scope.optInList.length === 0) {
-                    $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
-                }
+                else{
+                    $scope.membersList = d.groupingsIn;
+                    $scope.optOutList = d.groupingsToOptOutOf;
+                    $scope.optInList = d.groupingsToOptInTo;
+                    $scope.optedIn = d.groupingsOptedInTo;
+                    $scope.optedOut = d.groupingsOptedOutOf;
 
-                $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList, $scope.pagedItemsMembersList);
-                $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
-                $scope.pagedItemsOptedInList = $scope.groupToPages($scope.optedIn, $scope.pagedItemsOptedInList);
-                $scope.pagedItemsOptedOutList = $scope.groupToPages($scope.optedOut, $scope.pagedItemsOptedOutList);
+                    if ($scope.optedIn.length === 0) {
+                        $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
+                    }
+                    if ($scope.optedOut.length === 0) {
+                        $scope.optedOut.push({'name': "NO GROUPINGS TO CANCEL OPT OUT"});
+                    }
+                    if ($scope.optInList.length === 0) {
+                        $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
+                    }
 
-                $scope.loading = false;
+                    $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList, $scope.pagedItemsMembersList);
+                    $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
+                    $scope.pagedItemsOptedInList = $scope.groupToPages($scope.optedIn, $scope.pagedItemsOptedInList);
+                    $scope.pagedItemsOptedOutList = $scope.groupToPages($scope.optedOut, $scope.pagedItemsOptedOutList);
+
+                    $scope.loading = false;
+                }
             }, groupingURL);
+        };
+
+        $scope.errorModal = function () {
+            $scope.errorModalInstance = $uibModal.open({
+                templateUrl: 'apiError.html',
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
+
+        $scope.errorDismiss = function() {
+            $scope.errorModalInstance.dismiss();
         };
 
         /**
@@ -245,10 +263,6 @@
         $scope.disableButton = function (type, index) {
             var list = type[index];
             return list.name.includes("NO GROUPINGS TO");
-        };
-
-        $scope.tooltipText = function (index) {
-            return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
         };
 
         /**
