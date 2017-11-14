@@ -72,25 +72,43 @@
             dataProvider.loadData(function (d) {
                 var temp = [];
                 console.log(d);
-                //Assigns grouping name, folder directories and url used for api call.
-                for (var i = 0; i < d.groupingsOwned.length; i++) {
-                    temp[i] = d.groupingsOwned[i].path.split(':');
-                    var folder = '';
-                    for (var j = 0; j < temp[i].length - 1; j++) {
-                        folder += temp[i][j];
-                        if (j != temp[i].length - 1) {
-                            folder += "/";
-                        }
-                    }
-                    $scope.ownedList.push({
-                        'name': d.groupingsOwned[i].name,
-                        'folder': folder,
-                        'url': d.groupingsOwned[i].path
-                    });
+                if(typeof d.groupingsIn === 'undefined') {
+                    $scope.errorModal();
                 }
-                $scope.pagedItemsOwned = $scope.groupToPages($scope.ownedList, $scope.pagedItemsOwned);
+                else
+                {
+                    //Assigns grouping name, folder directories and url used for api call.
+                    for (var i = 0; i < d.groupingsOwned.length; i++) {
+                        temp[i] = d.groupingsOwned[i].path.split(':');
+                        var folder = '';
+                        for (var j = 0; j < temp[i].length - 1; j++) {
+                            folder += temp[i][j];
+                            if (j != temp[i].length - 1) {
+                                folder += "/";
+                            }
+                        }
+                        $scope.ownedList.push({
+                            'name': d.groupingsOwned[i].name,
+                            'folder': folder,
+                            'url': d.groupingsOwned[i].path
+                        });
+                    }
+                    $scope.pagedItemsOwned = $scope.groupToPages($scope.ownedList, $scope.pagedItemsOwned);
+                }
                 $scope.loading = false;
             }, groupingsOwned);
+        };
+
+        $scope.errorModal = function () {
+            $scope.errorModalInstance = $uibModal.open({
+                templateUrl: 'apiError.html',
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
+
+        $scope.errorDismiss = function() {
+            $scope.errorModalInstance.dismiss();
         };
 
         /**
