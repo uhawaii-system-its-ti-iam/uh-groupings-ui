@@ -8,36 +8,28 @@
 <!--  Content container -->
 <div class="container" ng-controller="HolidayJsController" data-ng-init="init()">
     <div class="jumbotron">
-        <div class = "container row">
-
-        <div class = "col-md-6 col-lg-2 hidden-xs hidden-sm" id = "iconTop">
-            <i class="fa fa-users fa-5x" aria-hidden="true" ></i>
-        </div>
-
-        <div class = "col-sm-12 col-md-6 col-lg-10">
-        <h1 class="dropshadow">UH Groupings</h1>
-        <p class="lead">
-            Manage your Groupings in one place, use them in many.
-        </p>
-        </div>
-
-        <div class = "col-sm-1 col-md-1 col-lg-2" id = "logInButton">
-            <div>
-                <div sec:authorize="!isAuthenticated()">
-                    <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
-                </div>
-                <div sec:authorize="isAuthenticated()">
-                    <form action="/logout" th:action="@{/logout}" method="post">
-                        <button class="btn btn-lg btn-default" type="submit">Logout</button>
-                    </form>
+        <div class="row">
+            <div class = "col-md-2 col-lg-2 hidden-xs hidden-sm" id = "iconTop">
+                <i class="fa fa-users fa-5x" aria-hidden="true" ></i>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <h1 class="dropshadow">UH Groupings</h1>
+                <p class="lead">
+                    Manage your Groupings in one place, use them in many.
+                </p>
+                <div>
+                    <div sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
+                    </div>
+                    <div sec:authorize="isAuthenticated()">
+                        <form action="/logout" th:action="@{/logout}" method="post">
+                            <button class="btn btn-lg btn-default" type="submit">Logout</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-
-
         </div>
     </div>
-    </div>
-
 
     <div class="row" style="margin-left: inherit; margin-right: inherit">
         <span class="h4">What is a UH Grouping?</span>

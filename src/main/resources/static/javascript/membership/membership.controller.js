@@ -12,7 +12,7 @@
      *@param dataUpdater
      *    Using the CRUD operators this would be the update of CRUD
      **/
-    function MembershipJsController($scope, $window, $filter, dataProvider, dataUpdater) {
+    function MembershipJsController($scope, $window, $uibModal, $filter, dataProvider, dataUpdater) {
 
         $scope.currentUsername = "";
         $scope.membersList = [];
@@ -29,7 +29,7 @@
         $scope.pagedItemsOptedOutList = [];
         $scope.gap = 2;
 
-        $scope.itemsPerPage = 5;
+        $scope.itemsPerPage = 20;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
         $scope.currentPageCancelOptIn = 0;
@@ -54,33 +54,51 @@
              *                  optInList
              *                  optedIn
              *                  optedOut
-             *takes all of that data and puts them into pages as called by "grouptToPages"
+             *takes all of that data and puts them into pages as called by "groupToPages"
              **/
             dataProvider.loadData(function (d) {
                 console.log(d);
-                $scope.membersList = d.groupingsIn;
-                $scope.optOutList = d.groupingsToOptOutOf;
-                $scope.optInList = d.groupingsToOptInTo;
-                $scope.optedIn = d.groupingsOptedInTo;
-                $scope.optedOut = d.groupingsOptedOutOf;
-
-                if ($scope.optedIn.length === 0) {
-                    $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
+                if(typeof d.groupingsIn === 'undefined') {
+                    $scope.loading = false;
+                    $scope.errorModal();
                 }
-                if ($scope.optedOut.length === 0) {
-                    $scope.optedOut.push({'name': "NO GROUPINGS TO CANCEL OPT OUT"});
-                }
-                if ($scope.optInList.length === 0) {
-                    $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
-                }
+                else{
+                    $scope.membersList = d.groupingsIn;
+                    $scope.optOutList = d.groupingsToOptOutOf;
+                    $scope.optInList = d.groupingsToOptInTo;
+                    $scope.optedIn = d.groupingsOptedInTo;
+                    $scope.optedOut = d.groupingsOptedOutOf;
 
-                $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList, $scope.pagedItemsMembersList);
-                $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
-                $scope.pagedItemsOptedInList = $scope.groupToPages($scope.optedIn, $scope.pagedItemsOptedInList);
-                $scope.pagedItemsOptedOutList = $scope.groupToPages($scope.optedOut, $scope.pagedItemsOptedOutList);
+                    if ($scope.optedIn.length === 0) {
+                        $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
+                    }
+                    if ($scope.optedOut.length === 0) {
+                        $scope.optedOut.push({'name': "NO GROUPINGS TO CANCEL OPT OUT"});
+                    }
+                    if ($scope.optInList.length === 0) {
+                        $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
+                    }
 
-                $scope.loading = false;
+                    $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList, $scope.pagedItemsMembersList);
+                    $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
+                    $scope.pagedItemsOptedInList = $scope.groupToPages($scope.optedIn, $scope.pagedItemsOptedInList);
+                    $scope.pagedItemsOptedOutList = $scope.groupToPages($scope.optedOut, $scope.pagedItemsOptedOutList);
+
+                    $scope.loading = false;
+                }
             }, groupingURL);
+        };
+
+        $scope.errorModal = function () {
+            $scope.errorModalInstance = $uibModal.open({
+                templateUrl: 'apiError.html',
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
+
+        $scope.errorDismiss = function() {
+            $scope.errorModalInstance.dismiss();
         };
 
         /**
@@ -247,21 +265,18 @@
             return list.name.includes("NO GROUPINGS TO");
         };
 
-        $scope.tooltipText = function (index) {
-            return ($scope.disableOptOut(index)) ? 'You cannot opt out of this grouping' : '';
-        };
-
         /**
-         * Disables the button for the index on the Groupings In list
+         * Function that will show opt out button if true otherwise will not show opt out button
          * @param index - table row
-         * @returns {boolean} - if there is a match then return false inorder to disable button.
+         * @returns {boolean} - if there is a match then return true inorder enable button.
          */
-        $scope.disableOptOut = function (index) {
+
+        $scope.required = function(index)
+        {
             for (var i = 0; i < $scope.optOutList.length; i++) {
                 if ($scope.pagedItemsMembersList[$scope.currentPageOptOut][index].name === $scope.optOutList[i].name) {
                     return false;
                 }
-
             }
             return true;
         };

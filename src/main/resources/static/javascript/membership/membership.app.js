@@ -1,3 +1,3 @@
 'use strict';
 
-var membershipApp = angular.module("membershipApp", []);
+var membershipApp = angular.module("membershipApp", ['ui.bootstrap']);

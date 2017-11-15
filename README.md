@@ -1,10 +1,10 @@
-Manage your Groupings in one place, use them in many.
+Manage your groupings in one place, use them in many.
 
-A "Grouping" is a collection of members. The Groupings app allows you to create Groupings, manage Grouping memberships, control members' self-service options, designate Grouping integrations, and more.
+A "grouping" is a collection of members. UH Groupings allows you to create groupings, manage grouping memberships, control members' self-service options, designate grouping integrations, and more.
 
-Groupings can be integrated with one or more of the following: email LISTSERV lists, permissions and privilege assignments for access control via CAS, etc. Adn this list will continue to grow.  Additionally, Groupings allows you to leverage existing membership collections, which can substantially reduce the manual overhead of membership management.
+Groupings can be integrated with one or more of the following: email LISTSERV lists, permissions and privilege assignments for access control via CAS, etc, and this list will continue to grow.  Additionally, UH Groupings allows you to leverage existing membership collections, which can substantially reduce the manual overhead of membership management.
 
-Groupings utilizes the Internet2 Grouper project.  Grouper is an enterprise access management system designed for the highly distributed management environment and heterogeneous information technology environment common to Universities.
+UH Groupings utilizes the Internet2 Grouper project.  Grouper is an enterprise access management system designed for the highly distributed management environment and heterogeneous information technology environment common to universities.
 
 [![Build Status](https://travis-ci.org/uhawaii-system-its-ti-iam/uhgroupings.png?branch=master)](https://travis-ci.org/uhawaii-system-its-ti-iam/uhgroupings)
 [![Coverage Status](https://coveralls.io/repos/github/uhawaii-system-its-ti-iam/uhgroupings/badge.svg?branch=master)](https://coveralls.io/github/uhawaii-system-its-ti-iam/uhgroupings?branch=master)
