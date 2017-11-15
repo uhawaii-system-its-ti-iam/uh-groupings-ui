@@ -95,7 +95,7 @@
                         <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.preference}"><a
                                 data-toggle="tab" href="#preference">Preferences</a></li>
                         <li class="pull-right">
-                            <button ng-click="showGroups()" class="btn btn-primary">Return to Groupings List</button>
+                            <button ng-click="showGroups()" class="btn btn-primary">Return to List</button>
                         </li>
                     </ul>
 
@@ -579,7 +579,7 @@
                             <div class="col-lg-3 col-md-3" style="padding: inherit;">
                                 <form ng-submit="addOwner()">
                                     <div class="input-group">
-                                        <input type="text" placeholder="Add a user as an owner..."
+                                        <input type="text" placeholder="Add an owner..."
                                                ng-model="ownerUser" class="form-control"/>
                                         <div class="input-group-btn">
                                             <button class="btn btn-primary" type="submit">Add</button>
