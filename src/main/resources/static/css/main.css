@@ -180,6 +180,11 @@ td.uh-pre {
     text-align: center;
 }
 
+#wellHolder{
+    /*padding: 10px;*/
+    margin-top: 1em;
+}
+
 #headingHeight{
     height: 80px;
 }

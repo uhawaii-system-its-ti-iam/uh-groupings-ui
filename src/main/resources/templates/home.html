@@ -49,6 +49,7 @@
 
 
 <div id = "footerBottom">
+    <div class = "well well-sm" id = "wellHolder">
     <div class="row" sec:authorize="isAuthenticated()">
         <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
             <p class="h4">Admin Functions</p>
@@ -72,6 +73,7 @@
             <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">Groupings</a></p>
         </div>
     </div>
+</div>
 </div>
 
 
