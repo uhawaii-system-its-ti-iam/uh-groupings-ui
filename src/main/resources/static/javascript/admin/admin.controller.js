@@ -65,15 +65,34 @@
             var url = "api/groupings/" + $scope.getCurrentUsername() + "/adminLists";
 
             dataProvider.loadData(function (d) {
-                $scope.list = d.adminGroup.members;
-                $scope.groupingList = d.allGroupings;
+                console.log(d.allGroupings.length);
+                if(d.allGroupings.length == 0) {
+                    $scope.errorModal();
+                }
+                else
+                {
+                    $scope.list = d.adminGroup.members;
+                    $scope.groupingList = d.allGroupings;
 
-                $scope.modify($scope.list);
-                $scope.symbol.name = '\u21c5';
-                console.log($scope.list);
-                $scope.pagedItems = $scope.groupToPages($scope.list, $scope.pagedItems);
+                    $scope.modify($scope.list);
+                    $scope.symbol.name = '\u21c5';
+                    console.log($scope.list);
+                    $scope.pagedItems = $scope.groupToPages($scope.list, $scope.pagedItems);
+                }
                 $scope.loading = false;
             }, url);
+        };
+
+        $scope.errorModal = function () {
+            $scope.errorModalInstance = $uibModal.open({
+                templateUrl: 'apiError.html',
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
+
+        $scope.errorDismiss = function() {
+            $scope.errorModalInstance.dismiss();
         };
 
         $scope.initCurrentUsername = function () {
@@ -149,42 +168,47 @@
 
             dataProvider.loadData(function (d) {
                 console.log(d);
-                $scope.error = false;
-                $scope.basis = d.basis.members;
+                if(d.path.length == 0) {
+                    $scope.errorModal();
+                }
+                else
+                {
+                    $scope.error = false;
+                    $scope.basis = d.basis.members;
 
-                //Gets members in grouping
-                $scope.groupingsList = d.composite.members;
-                $scope.modify($scope.groupingsList);
-                $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsList);
+                    //Gets members in grouping
+                    $scope.groupingsList = d.composite.members;
+                    $scope.modify($scope.groupingsList);
+                    $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsList);
 
-                //Gets members in the basis group
-                $scope.groupingsBasis = d.basis.members;
-                $scope.modify($scope.groupingsBasis);
-                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingsBasis, $scope.pagedItemsBasis);
+                    //Gets members in the basis group
+                    $scope.groupingsBasis = d.basis.members;
+                    $scope.modify($scope.groupingsBasis);
+                    $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingsBasis, $scope.pagedItemsBasis);
 
-                //Gets members in the include group
-                $scope.groupingInclude = d.include.members;
-                $scope.modify($scope.groupingInclude);
-                $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude, $scope.pagedItemsInclude);
+                    //Gets members in the include group
+                    $scope.groupingInclude = d.include.members;
+                    $scope.modify($scope.groupingInclude);
+                    $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude, $scope.pagedItemsInclude);
 
-                //Gets members in the exclude group
-                $scope.groupingExclude = d.exclude.members;
-                $scope.modify($scope.groupingExclude);
-                $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
+                    //Gets members in the exclude group
+                    $scope.groupingExclude = d.exclude.members;
+                    $scope.modify($scope.groupingExclude);
+                    $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
 
-                //Gets owners of the grouping
-                $scope.ownerList = d.owners.members;
-                $scope.modify($scope.ownerList);
-                $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
+                    //Gets owners of the grouping
+                    $scope.ownerList = d.owners.members;
+                    $scope.modify($scope.ownerList);
+                    $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
 
-                $scope.preference = {
-                    optIn: d.optInOn,
-                    optOut: d.optOutOn,
-                    listserv: d.listservOn
-                };
-
-                //Stop loading spinner
-                $scope.title = $scope.groupingName;
+                    $scope.preference = {
+                        optIn: d.optInOn,
+                        optOut: d.optOutOn,
+                        listserv: d.listservOn
+                    };
+                    //Stop loading spinner
+                    $scope.title = $scope.groupingName;
+                }
                 $scope.loading = false;
             }, groupingDataUrl);
         };
