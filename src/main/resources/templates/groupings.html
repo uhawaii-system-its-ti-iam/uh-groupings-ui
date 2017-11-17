@@ -82,10 +82,31 @@
                 </div>
 
                 <div ng-show="showGrouping">
-                    <div>
-                        <h2 style="margin-top: 10px;">{{groupingName.name}}</h2>
-                        <p>Path: {{groupingName.url}}</p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row" style="margin: inherit;">
+                                <div class="pull-left">
+                                    <h3 style="margin: inherit; padding-top: .11875em;">Selected Grouping</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button ng-click="showGroups()" class="btn btn-primary">Return to List</button>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <td>{{ groupingName.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Path</th>
+                                <td>{{ groupingName.url }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
+
                     <ul class="nav nav-tabs">
                         <li class="active" data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.members}"><a
                                 data-toggle="tab" href="#members">Members</a></li>
@@ -94,9 +115,6 @@
                         </li>
                         <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.preference}"><a
                                 data-toggle="tab" href="#preference">Preferences</a></li>
-                        <li class="pull-right">
-                            <button ng-click="showGroups()" class="btn btn-primary">Return to List</button>
-                        </li>
                     </ul>
 
                     <div class="tab-content">
