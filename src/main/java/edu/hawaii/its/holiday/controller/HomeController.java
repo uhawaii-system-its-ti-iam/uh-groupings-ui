@@ -47,6 +47,16 @@ public class HomeController {
         return "apiError";
     }
 
+    @RequestMapping(value = "/addModal", method = RequestMethod.GET)
+    public String addModal(Locale locale, Model model) {
+        return "addModal";
+    }
+
+    @RequestMapping(value = "/removeModal", method = RequestMethod.GET)
+    public String removeModal(Locale locale, Model model) {
+        return "removeModal";
+    }
+
     @RequestMapping(value = "/404", method = RequestMethod.GET)
     public String invalid() {
         return "redirect:/";

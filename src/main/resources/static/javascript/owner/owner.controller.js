@@ -315,15 +315,20 @@
          * @param success - whether if the addData service returned a success in adding.
          */
         $scope.addModalAlert = function (success) {
-            if (success === 'success') var message = "User has been added";
-            else var message = "Error: User is not a valid username";
+            if (success === 'success') $scope.successAdd = true;
+            else $scope.successAdd = false;
 
-            var modalHtml = '<div class="modal-body">' + message + '</div>';
-            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="continue()">OK</button></div>';
+            console.log($scope.successAdd);
 
             $scope.addModalInstance = $uibModal.open({
-                template: modalHtml,
-                scope: $scope
+                templateUrl: 'addModal.html',
+                windowClass: 'center-modal',
+                scope: $scope,
+                resolve: {
+                    items: function () {
+                        return $scope.successAdd;
+                    }
+                }
             });
 
             $scope.addModalInstance.result.then(function () {
@@ -374,12 +379,9 @@
         };
 
         $scope.deleteModal = function (user, url, location, type) {
-            var message = "Are you sure you want to delete " + user;
-            var modalHtml = '<div class="modal-body">' + message + '</div>';
-            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
-
             $scope.deleteModalInstance = $uibModal.open({
-                template: modalHtml,
+                templateUrl: 'removeModal.html',
+                windowClass: 'center-modal',
                 scope: $scope
             });
 
