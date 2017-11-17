@@ -29,7 +29,7 @@
         $scope.pagedItemsOptedOutList = [];
         $scope.gap = 2;
 
-        $scope.itemsPerPage = 5;
+        $scope.itemsPerPage = 20;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
         $scope.currentPageCancelOptIn = 0;

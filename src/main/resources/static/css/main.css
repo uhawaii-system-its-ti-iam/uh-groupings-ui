@@ -180,6 +180,11 @@ td.uh-pre {
     text-align: center;
 }
 
+#wellHolder{
+    /*padding: 10px;*/
+    margin-top: 1em;
+}
+
 #headingHeight{
     height: 80px;
 }
@@ -189,10 +194,14 @@ td.uh-pre {
     justify-content: flex-end;
     font-size: 20px;
 }
+#basisIcon{
+    font-size: 1.3em;
+    padding: .7em .7em;
+}
 
 #logInButton{
     display: relative;
-    margin-left: 25px;
+    margin-left: 3em;
     padding: 10px;
 
 }

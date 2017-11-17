@@ -11,7 +11,7 @@
         <div class='container-fluid'>
             <h1 class="text-left">Manage My Groupings</h1>
 
-            <p class="text-left">View and manage Groupings I own. Manage members, configure Grouping options and
+            <p class="text-left">View and manage groupings I own. Manage members, configure grouping options and
                 integration destinations.</p>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
@@ -82,10 +82,31 @@
                 </div>
 
                 <div ng-show="showGrouping">
-                    <div>
-                        <h2 style="margin-top: 10px;">{{groupingName.name}}</h2>
-                        <p>Path: {{groupingName.url}}</p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row" style="margin: inherit;">
+                                <div class="pull-left">
+                                    <h3 style="margin: inherit; padding-top: .11875em;">Selected Grouping</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button ng-click="showGroups()" class="btn btn-primary">Return to List</button>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <td>{{ groupingName.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Path</th>
+                                <td>{{ groupingName.url }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
+
                     <ul class="nav nav-tabs">
                         <li class="active" data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.members}"><a
                                 data-toggle="tab" href="#members">Members</a></li>
@@ -94,9 +115,6 @@
                         </li>
                         <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.preference}"><a
                                 data-toggle="tab" href="#preference">Preferences</a></li>
-                        <li class="pull-right">
-                            <button ng-click="showGroups()" class="btn btn-primary">Return to List</button>
-                        </li>
                     </ul>
 
                     <div class="tab-content">
@@ -520,11 +538,11 @@
                                     <tr>
                                         <th ng-click="sortCol(ownerList, 'name', 'pagedItemsOwners', 'symbolOwners')"
                                             style="cursor: pointer">
-                                            Name {{symbol.name}}
+                                            Owner Name {{symbol.name}}
                                         </th>
                                         <th ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwners')"
                                             style="cursor: pointer">
-                                            Username {{symbol.username}}
+                                            UH Username {{symbol.username}}
                                         </th>
                                     </tr>
                                     </thead>
@@ -598,7 +616,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="col-md-6" style="padding: 0 15px 0 0;">
-                                        <h3 style="margin-top: 0px;">Add/Remove</h3>
+                                        <h4 style="margin-top: 0px;">Add/Remove</h4>
 
                                         <div class="checkbox">
                                             <label>
@@ -626,7 +644,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6" style="padding: 0;">
-                                        <h3 style="margin-top: 0px;">Publication Destinations</h3>
+                                        <h4 style="margin-top: 0px;">Publication Destinations</h4>
 
                                         <div class="checkbox">
                                             <label>

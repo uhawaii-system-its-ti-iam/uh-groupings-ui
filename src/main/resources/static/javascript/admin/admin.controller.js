@@ -44,7 +44,7 @@
         $scope.currentPageList = 0;
 
         $scope.gap = 2;
-        $scope.itemsPerPage = 10;
+        $scope.itemsPerPage = 20;
         $scope.currentPage = 0;
         $scope.currentPageOptOut = 0;
 
