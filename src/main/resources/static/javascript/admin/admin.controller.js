@@ -43,6 +43,11 @@
         $scope.pagedItemsList = [];
         $scope.currentPageList = 0;
 
+        $scope.allowOptIn = false;
+        $scope.allowOptIn = false;
+        $scope.listserv = false;
+        $scope.LDAP = false;
+
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
         $scope.currentPage = 0;
@@ -201,11 +206,11 @@
                     $scope.modify($scope.ownerList);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
 
-                    $scope.preference = {
-                        optIn: d.optInOn,
-                        optOut: d.optOutOn,
-                        listserv: d.listservOn
-                    };
+
+                    $scope.allowOptIn = d.optInOn;
+                    $scope.allowOptOut - d.optOutOn;
+                    $scope.listserv = d.listservOn;
+
                     //Stop loading spinner
                     $scope.title = $scope.groupingName;
                 }
@@ -459,7 +464,7 @@
 
         $scope.savePref = function () {
             var prefUrls = [];
-
+            $scope.prefSucess = 0;
             prefUrls.push({
                 "url": "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.listserv + "/setListserv",
                 "name": "Listserv"
@@ -475,29 +480,41 @@
 
             for (var i = 0; i < prefUrls.length; i++) {
                 dataUpdater.updateData(function (d) {
-                    var success = 0;
                     console.log(d);
                     if (d.resultCode === "SUCCESS") {
                         console.log("LISTSERV preference successfully updated");
-                        alert("LISTSERV preference successfully updated");
-                        success = 1;
                     }
                     else if (typeof d.resultsCode === 'undefined') {
                         if (typeof d[0] != 'undefined' && (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED" )) {
                             console.log("OptIn/OptOut preference successfully updated");
-                            alert("OptIn/OptOut preference successfully updated");
-                            success = 1;
                         }
                         else {
                             console.log("Preference did not change");
-                            alert("Preference did not change");
                         }
                     }
-                    if (success == 1) {
-                        $scope.getData($scope.groupingPath);
-                    }
+                    console.log($scope.prefSucess);
                 }, prefUrls[i].url);
             }
+        };
+
+        $scope.updateAllowOptOut = function () {
+            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut";
+            console.log(url);
+
+        };
+
+        $scope.updateAllowOptIn = function () {
+            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn";
+            console.log(url);
+        };
+
+        $scope.updateListserv = function () {
+            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.listserv + "/setListserv";
+            console.log(url);
+        };
+
+        $scope.checkLDAP = function() {
+          console.log($scope.LDAP);
         };
 
         $scope.filter = function (list,whatList, whatQuery) {

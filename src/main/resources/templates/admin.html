@@ -468,7 +468,7 @@
 
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input type="checkbox" ng-model="preference.optIn"/>
+                                                                    <input type="checkbox" ng-model="allowOptIn" ng-change="updateAllowOptIn()"/>
                                                                     Allow people to add
                                                                     themselves to this group
                                                                 </label>
@@ -480,7 +480,7 @@
                                                             </div>
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input type="checkbox" ng-model="preference.optOut"/>
+                                                                    <input type="checkbox" ng-model="allowOptOut" ng-change="updateAllowOptOut()"/>
                                                                     Allow people to remove
                                                                     themselves to this group
                                                                 </label>
@@ -496,9 +496,9 @@
 
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input type="checkbox" ng-model="preference.listserv"
+                                                                    <input type="checkbox" ng-model="listserv" ng-change="updateListserv()"
                                                                            ng-init="pref"/>
-                                                                    LISTSERV list: &lt;{{ groupingName.name }}@lists.hawaii.edu&gt;
+                                                                    LISTSERV list: &lt;{{title}}@lists.hawaii.edu&gt;
                                                                 </label>
                                                                 <i class="fa fa-question-circle" aria-hidden="true"
                                                                    ng-click="infoModal('publication')"
@@ -508,7 +508,7 @@
                                                             </div>
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input type="checkbox"/>
+                                                                    <input type="checkbox" ng-model="LDAP" ng-change="checkLDAP()"/>
                                                                     uhReleasedGroupings LDAP/CAS Attribute
                                                                 </label>
                                                                 <i class="fa fa-question-circle" aria-hidden="true"
