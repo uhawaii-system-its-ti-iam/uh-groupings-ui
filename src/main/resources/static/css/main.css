@@ -185,12 +185,6 @@ td.uh-pre {
     margin-top: 1em;
 }
 
-#groupHeadingBox{
-    padding:5px;
-}
-#headingHeight{
-    height: 80px;
-}
 #iconTop{
     display:flex;
     margin-top: 20px;
@@ -409,6 +403,10 @@ td.uh-pre {
     .navbar-brand.uh-nav-app-name {
         padding-left: 5px;
     }
+
+    #btn-return-to-list {
+        float: left;
+    }
 }
 
 .opt-button[disabled], .opt-button:disabled, .opt-button[disabled]:active, .opt-button:disabled:active {
@@ -427,4 +425,10 @@ td.uh-pre {
 
 .nav.nav-tabs > li.active > a {
     border-bottom: none;
+}
+
+@media (min-width: 768px) {
+    #btn-return-to-list {
+        float: right;
+    }
 }
