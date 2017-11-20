@@ -185,6 +185,9 @@ td.uh-pre {
     margin-top: 1em;
 }
 
+#groupHeadingBox{
+    padding:5px;
+}
 #headingHeight{
     height: 80px;
 }

@@ -155,7 +155,7 @@
             console.log(optOutURL);
             dataUpdater.updateData(function (d) {
                 console.log(d);
-                if (d[0].resultCode.includes("FAILURE")) {
+                if (d[0].resultCode.indexOf("FAILURE") > -1) {
                     console.log("Failed to opt out");
                     alert("Failed to opt out");
                 }
@@ -262,7 +262,7 @@
         //Disable button if list is empty
         $scope.disableButton = function (type, index) {
             var list = type[index];
-            return list.name.includes("NO GROUPINGS TO");
+            return list.name.indexOf("NO GROUPINGS TO") > -1;
         };
 
         /**
