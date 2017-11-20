@@ -22,7 +22,17 @@
                     <!-- This will allow you to search for specific groups -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 style="margin-top: 0px; margin-bottom: 0px;">My Groupings</h3>
+                            <div class="row" style="margin: inherit">
+                                <div class="col-md-6 col-sm-7" style="padding: 0px;">
+                                    <h3 style="padding: 2.5px 0px; margin: inherit;">My Groupings</h3>
+                                </div>
+                                <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
+                                    <input placeholder="Filter Groupings..." type="text"
+                                           ng-model="queryGroupings" class="form-control"
+                                           ng-change="search(ownedList, 'pagedItemsOwned', 'queryGroupings')"
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
