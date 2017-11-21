@@ -158,6 +158,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/home").permitAll()
                 .antMatchers("/info").permitAll()
+                .antMatchers("/feedback").permitAll()
                 .antMatchers("/campus").hasRole("UH")
                 .antMatchers("/campuses").hasRole("UH")
                 .antMatchers("/denied").permitAll()

@@ -37,6 +37,12 @@ public class HomeController {
         return "info";
     }
 
+    @RequestMapping(value = "/feedback", method = RequestMethod.GET)
+    public String feedback(Locale locale, Model model) {
+        logger.info("User at feedback.");
+        return "feedback";
+    }
+
     @RequestMapping(value = "/infoModal", method = RequestMethod.GET)
     public String infoModal(Locale locale, Model model) {
         return "infoModal";
