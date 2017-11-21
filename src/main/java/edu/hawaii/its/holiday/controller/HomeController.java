@@ -53,6 +53,12 @@ public class HomeController {
         return "apiError";
     }
 
+    @RequestMapping(value = "/preferenceErrorModal", method = RequestMethod.GET)
+    public String preferenceErrorModal(Locale locale, Model model) {
+        return "preferenceErrorModal";
+    }
+
+
     @RequestMapping(value = "/addModal", method = RequestMethod.GET)
     public String addModal(Locale locale, Model model) {
         return "addModal";
