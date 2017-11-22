@@ -529,7 +529,7 @@
             $scope.filteredItems = [];
             $scope.filteredItems = $filter('filter')(list, function (item) {
                 for (var key in item) {
-                    if (item.hasOwnProperty(key) && key !== 'basis' && searchMatch(item[key], query)) {
+                    if (item.hasOwnProperty(key) && key !== 'basis' && key !== '$$hashKey' && searchMatch(item[key], query)) {
                         return true;
                     }
                 }
