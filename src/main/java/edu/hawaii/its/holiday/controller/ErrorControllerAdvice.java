@@ -21,18 +21,12 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ModelAndView handelIllegalArgumentException(IllegalArgumentException iae) {
-        String username = null;
-        User user = userContextService.getCurrentUser();
-        if (user != null) {
-            username = user.getUsername();
-        }
-        logger.error("username: " + username + "; Exception: ", iae.getCause());
+        return error(iae);
+    }
 
-        ModelAndView modelAndView = new ModelAndView("/error");
-        modelAndView.addObject("errCode", 500);
-        modelAndView.addObject("errMsg", iae.getMessage());
-
-        return modelAndView;
+    @ExceptionHandler(RuntimeException.class)
+    public ModelAndView handelIllegalArgumentException(RuntimeException re) {
+        return error(re);
     }
 
     @ExceptionHandler(Exception.class)
@@ -47,4 +41,19 @@ public class ErrorControllerAdvice {
         return "redirect:/";
     }
 
+    private ModelAndView error(Exception exception) {
+        String username = null;
+        User user = userContextService.getCurrentUser();
+        if (user != null) {
+            username = user.getUsername();
+        }
+        logger.error("username: " + username + "; Exception: ", exception.getCause());
+
+        ModelAndView modelAndView = new ModelAndView("/error");
+        modelAndView.addObject("errCode", 500);
+        modelAndView.addObject("errMsg", exception.getMessage());
+
+        return modelAndView;
+
+    }
 }
