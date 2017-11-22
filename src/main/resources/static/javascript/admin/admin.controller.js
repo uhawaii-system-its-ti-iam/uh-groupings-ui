@@ -71,11 +71,10 @@
 
             dataProvider.loadData(function (d) {
                 console.log(d.allGroupings.length);
-                if(d.allGroupings.length == 0) {
+                if (d.allGroupings.length == 0) {
                     $scope.errorModal();
                 }
-                else
-                {
+                else {
                     $scope.list = d.adminGroup.members;
                     $scope.groupingList = d.allGroupings;
 
@@ -96,7 +95,7 @@
             });
         };
 
-        $scope.errorDismiss = function() {
+        $scope.errorDismiss = function () {
             $scope.errorModalInstance.dismiss();
         };
 
@@ -173,11 +172,10 @@
 
             dataProvider.loadData(function (d) {
                 console.log(d);
-                if(d.path.length == 0) {
+                if (d.path.length == 0) {
                     $scope.errorModal();
                 }
-                else
-                {
+                else {
                     $scope.error = false;
                     $scope.basis = d.basis.members;
 
@@ -337,8 +335,7 @@
             });
 
             $scope.addModalInstance.result.then(function () {
-                if (success === 'success')
-                {
+                if (success === 'success') {
                     $scope.loading = true;
                     if (location === 'admin') $scope.init();
                     if (location === 'grouping') $scope.getData($scope.groupingPath);
@@ -394,8 +391,7 @@
          * @param location - The index of the user in the admin list table.
          * @param type - Declaring if removing from admin list or from a grouping path.
          */
-        $scope.deleteModal = function(user, url, location, type)
-        {
+        $scope.deleteModal = function (user, url, location, type) {
             var message = "Are you sure you want to delete " + user;
             var modalHtml = '<div class="modal-body">' + message + '</div>';
             modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
@@ -413,8 +409,7 @@
                         $scope.init();
                     }, url);
                 }
-                else
-                {
+                else {
                     dataDelete.deleteData(function (d) {
                         console.log(d);
                         $scope.getData(type);
@@ -440,9 +435,9 @@
         $scope.infoModal = function (preference, group) {
             $scope.test = '';
 
-            if(preference === 'opt')
+            if (preference === 'opt')
                 $scope.test = "members can " + group + " themselves from the grouping";
-            else if(preference === 'publication')
+            else if (preference === 'publication')
                 $scope.test = "the publication destination is active or not";
 
 
@@ -458,41 +453,56 @@
             });
         };
 
-        $scope.infoDismiss = function() {
+        $scope.infoDismiss = function () {
             $scope.infoModalInstance.dismiss();
         };
 
         $scope.updateAllowOptOut = function () {
             var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut";
-                dataUpdater.updateData(function (d) {
-                   if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED")
-                   {
-                       console.log("success");
-                   }
-                    else
-                   {
-                       console.log("failed");
-                       $scope.preferenceErrorModal();
-                   }
-                }, url);
+            dataUpdater.updateData(function (d) {
+                if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                    console.log("success");
+                }
+                else {
+                    console.log("failed");
+                    $scope.preferenceErrorModal();
+                }
+            }, url);
             console.log(url);
 
         };
 
         $scope.updateAllowOptIn = function () {
             var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn";
-
+            dataUpdater.updateData(function (d) {
+                if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                    console.log("success");
+                }
+                else {
+                    console.log("failed");
+                    $scope.preferenceErrorModal();
+                }
+            }, url);
             console.log(url);
         };
 
         $scope.updateListserv = function () {
             var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.listserv + "/setListserv";
+            dataUpdater.updateData(function (d) {
+                if (d.resultCode === "SUCCESS") {
+                    console.log("success");
+                }
+                else {
+                    console.log("failed");
+                    $scope.preferenceErrorModal();
+                }
+            }, url);
 
             console.log(url);
         };
 
-        $scope.checkLDAP = function() {
-          console.log($scope.LDAP);
+        $scope.checkLDAP = function () {
+            console.log($scope.LDAP);
         };
 
         $scope.preferenceErrorModal = function () {
@@ -503,11 +513,11 @@
             });
         };
 
-        $scope.preferenceErrorDismiss = function() {
+        $scope.preferenceErrorDismiss = function () {
             $scope.preferenceErrorModalInstance.dismiss();
         };
 
-        $scope.filter = function (list,whatList, whatQuery) {
+        $scope.filter = function (list, whatList, whatQuery) {
             var query = "";
             query = $scope[whatQuery];
             $scope.filteredItems = [];
