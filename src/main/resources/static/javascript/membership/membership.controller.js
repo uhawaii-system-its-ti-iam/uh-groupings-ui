@@ -228,8 +228,16 @@
             console.log(query);
             $scope.filteredItems = [];
             $scope.filteredItems = $filter('filter')(list, function (item) {
-                if (searchMatch(item.name, query)) {
-                    return true;
+                // Filter by path name for groups in Available Groupings tab
+                if (list === $scope.optInList) {
+                    if (searchMatch(item.path, query)) {
+                        return true;
+                    }
+                } else {
+                    // Otherwise filter by name of grouping for My Grouping Memberships tab
+                    if (searchMatch(item.name, query)) {
+                        return true;
+                    }
                 }
             });
             page = 0;
