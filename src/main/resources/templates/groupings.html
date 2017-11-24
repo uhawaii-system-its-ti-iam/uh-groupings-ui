@@ -99,7 +99,7 @@
                                     <h3 style="margin: inherit; padding-top: .11875em;">Selected Grouping</h3>
                                 </div>
                                 <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="padding: 0;">
-                                    <button ng-click="showGroups()" class="btn btn-primary" id="btn-return-to-list">Return to List</button>
+                                    <button ng-click="showGroups()" class="btn btn-primary xs-left-sm-right">Return to List</button>
                                 </div>
                             </div>
                         </div>
@@ -172,16 +172,20 @@
                                                     <h3 class="members-tab-title">All Members</h3>
                                                 </div>
                                                 <div class="row member-row-title">
-                                                    <div class="pull-left">
-                                                        <button type="button" class="btn btn-primary"
-                                                                ng-click="export(groupingsList, 'members')">
-                                                            Export To CSV
-                                                        </button>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                                                        <div class="pull-left">
+                                                            <button type="button" class="btn btn-primary"
+                                                                    ng-click="export(groupingsList, 'members')">
+                                                                Export To CSV
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <div class="pull-right">
-                                                        <input placeholder="Filter Members..." type="text"
-                                                               ng-model="ListQuery" class="form-control"
-                                                               ng-change="search(groupingsList, 'pagedItemsList', 'ListQuery')"/>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                                                        <div class="xs-left-sm-right">
+                                                            <input placeholder="Filter Members..." type="text"
+                                                                   ng-model="ListQuery" class="form-control"
+                                                                   ng-change="search(groupingsList, 'pagedItemsList', 'ListQuery')"/>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <table class="table table-bordered table-hover">
@@ -250,16 +254,22 @@
                                                     <h3 class="members-tab-title">Basis</h3>
                                                 </div>
                                                 <div class="row member-row-title">
-                                                    <div class="pull-left">
-                                                        <button type="button" class="btn btn-primary"
-                                                                ng-click="export(groupingsBasis, 'basis')">
-                                                            Export To CSV
-                                                        </button>
-                                                    </div>
-                                                    <div class="pull-right">
-                                                        <input placeholder="Filter Members..." type="text"
-                                                               ng-model="basisQuery" class="form-control"
-                                                               ng-change="search(groupingsBasis, 'pagedItemsBasis', 'basisQuery')"/>
+                                                    <div class="row member-row-title">
+                                                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                                                            <div class="pull-left">
+                                                                <button type="button" class="btn btn-primary"
+                                                                        ng-click="export(groupingsBasis, 'basis')">
+                                                                    Export To CSV
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                                                            <div class="xs-left-sm-right">
+                                                                <input placeholder="Filter Members..." type="text"
+                                                                       ng-model="basisQuery" class="form-control"
+                                                                       ng-change="search(groupingsBasis, 'pagedItemsBasis', 'basisQuery')"/>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <table class="table table-bordered table-hover">
@@ -326,16 +336,22 @@
                                                     <h3 class="members-tab-title">Include</h3>
                                                 </div>
                                                 <div class="row member-row-title">
-                                                    <div class="pull-left">
-                                                        <button type="button" class="btn btn-primary"
-                                                                ng-click="export(groupingInclude, 'include')">
-                                                            Export To CSV
-                                                        </button>
-                                                    </div>
-                                                    <div class="pull-right">
-                                                        <input placeholder="Filter Members..." type="text"
-                                                               ng-model="includeQuery" class="form-control"
-                                                               ng-change="search(groupingInclude, 'pagedItemsInclude', 'includeQuery')"/>
+                                                    <div class="row member-row-title">
+                                                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                                                            <div class="pull-left">
+                                                                <button type="button" class="btn btn-primary"
+                                                                        ng-click="export(groupingInclude, 'include')">
+                                                                    Export To CSV
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                                                            <div class="xs-left-sm-right">
+                                                                <input placeholder="Filter Members..." type="text"
+                                                                       ng-model="includeQuery" class="form-control"
+                                                                       ng-change="search(groupingInclude, 'pagedItemsInclude', 'includeQuery')"/>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <table class="table table-bordered table-hover">
@@ -424,16 +440,22 @@
                                                     <h3 class="members-tab-title">Exclude</h3>
                                                 </div>
                                                 <div class="row member-row-title">
-                                                    <div class="pull-left">
-                                                        <button type="button" class="btn btn-primary"
-                                                                ng-click="export(groupingExclude, 'exclude')">
-                                                            Export To CSV
-                                                        </button>
-                                                    </div>
-                                                    <div class="pull-right">
-                                                        <input placeholder="Filter Members..." type="text"
-                                                               ng-model="excludeQuery" class="form-control"
-                                                               ng-change="search(groupingExclude, 'pagedItemsExclude', 'excludeQuery')"/>
+                                                    <div class="row member-row-title">
+                                                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                                                            <div class="pull-left">
+                                                                <button type="button" class="btn btn-primary"
+                                                                        ng-click="export(groupingExclude, 'exclude')">
+                                                                    Export To CSV
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                                                            <div class="xs-left-sm-right">
+                                                                <input placeholder="Filter Members..." type="text"
+                                                                       ng-model="excludeQuery" class="form-control"
+                                                                       ng-change="search(groupingExclude, 'pagedItemsExclude', 'excludeQuery')"/>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <table class="table table-bordered table-hover">
