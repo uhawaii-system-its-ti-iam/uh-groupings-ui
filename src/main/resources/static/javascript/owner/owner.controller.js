@@ -59,8 +59,8 @@
         $scope.pagedItemsOwners = [];
         $scope.currentPageOwners = 0;
 
-        $scope.pagedItemsList = [];
-        $scope.currentPageList = 0;
+        $scope.pagedItemsMembers = [];
+        $scope.currentPageMembers = 0;
 
         /**
          * Initialize function that retrieves the groupings you own.
@@ -114,14 +114,14 @@
                 $scope.basis = d.basis.members;
 
                 //Gets members in grouping
-                $scope.groupingsList = d.composite.members;
+                $scope.groupingMembers = d.composite.members;
                 $scope.modify($scope.groupingsList);
-                $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsList);
+                $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
 
                 //Gets members in the basis group
-                $scope.groupingsBasis = d.basis.members;
-                $scope.modify($scope.groupingsBasis);
-                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingsBasis, $scope.pagedItemsBasis);
+                $scope.groupingBasis = d.basis.members;
+                $scope.modify($scope.groupingBasis);
+                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis, $scope.pagedItemsBasis);
 
                 //Gets members in the include group
                 $scope.groupingInclude = d.include.members;

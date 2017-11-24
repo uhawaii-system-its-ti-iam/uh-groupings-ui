@@ -125,12 +125,12 @@
                     $scope.groupingPath = $scope.groupingsList[i].path;
                 }
             }
-            console.log($scope.groupingName);
             if ($scope.groupingPath === '') {
                 console.log("Not a valid grouping");
                 $scope.error = true;
 
                 //Empties array
+                $scope.basis = [];
                 $scope.pagedItemsMembers = [];
                 $scope.pagedItemsBasis = [];
                 $scope.pagedItemsInclude = [];

@@ -183,32 +183,32 @@
                                                     <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                                                         <div class="xs-left-sm-right">
                                                             <input placeholder="Filter Members..." type="text"
-                                                                   ng-model="ListQuery" class="form-control"
-                                                                   ng-change="search(groupingsList, 'pagedItemsList', 'ListQuery')"/>
+                                                                   ng-model="membersQuery" class="form-control"
+                                                                   ng-change="search(groupingMembers, 'pagedItemsMembers', 'membersQuery')"/>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
-                                                        <th ng-click="sortCol(groupingsList, 'name', 'pagedItemsList', 'symbolList')"
+                                                        <th ng-click="sortCol(groupingMembers, 'name', 'pagedItemsMembers', 'symbolList')"
                                                             style="cursor: pointer">
                                                             Member Name {{symbol.name}}
                                                         </th>
-                                                        <th ng-click="sortCol(groupingsList, 'uuid', 'pagedItemsList', 'symbolList')"
+                                                        <th ng-click="sortCol(groupingMembers, 'uuid', 'pagedItemsMembers', 'symbolList')"
                                                             style="cursor: pointer">
                                                             UH Number {{symbol.uuid}}
                                                         </th>
-                                                        <th ng-click="sortCol(groupingsList, 'username', 'pagedItemsList', 'symbolList')"
+                                                        <th ng-click="sortCol(groupingMembers, 'username', 'pagedItemsMembers', 'symbolList')"
                                                             style="cursor: pointer">
                                                             UH Username {{symbol.username}}
                                                         </th>
-                                                        <th ng-click="sortCol(groupingsList, 'basis', 'pagedItemsList', 'symbolList')"
+                                                        <th ng-click="sortCol(groupingMembers, 'basis', 'pagedItemsMembers', 'symbolList')"
                                                             style="cursor: pointer">In Basis? {{symbol.basis}}</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr ng-repeat="g in pagedItemsList[currentPageList]">
+                                                    <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]">
                                                         <td>{{g.name}}</td>
                                                         <td width="25px">{{g.uuid}}</td>
                                                         <td>{{g.username}}</td>
@@ -219,29 +219,29 @@
                                                     <!-- Top part of the two parts  -->
                                                     <td colspan="6">
                                                         <ul class="pagination pull-right">
-                                                            <li ng-class="{disabled: (currentPageList) == 0 }">
+                                                            <li ng-class="{disabled: (currentPageMembers) == 0 }">
                                                                 <a href=""
-                                                                   ng-click="currentPage('First','currentPageList','pagedItemsList')">««
+                                                                   ng-click="currentPage('First','currentPageMembers','pagedItemsMembers')">««
                                                                     First</a>
                                                             </li>
-                                                            <li ng-class="{disabled: (currentPageList) == 0 }">
+                                                            <li ng-class="{disabled: (currentPageMembers) == 0 }">
                                                                 <a href=""
-                                                                   ng-click="currentPage('Prev','currentPageList','pagedItemsList')">«
+                                                                   ng-click="currentPage('Prev','currentPageMembers','pagedItemsMembers')">«
                                                                     Prev</a>
                                                             </li>
-                                                            <li ng-repeat="n in range(pagedItemsList.length, currentPageList - gap, currentPageList + gap + 1) "
-                                                                ng-class="{active: n == currentPageList}"
-                                                                ng-click="currentPage('Set','currentPageList','pagedItemsList')"
+                                                            <li ng-repeat="n in range(pagedItemsMembers.length, currentPageMembers - gap, currentPageMembers + gap + 1) "
+                                                                ng-class="{active: n == currentPageMembers}"
+                                                                ng-click="currentPage('Set','currentPageMembers','pagedItemsMembers')"
                                                             ><a href="" ng-bind="n + 1">1</a>
                                                             </li>
-                                                            <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 || pagedItemsList.length == 0}">
+                                                            <li ng-class="{disabled: (currentPageMembers) == pagedItemsMembers.length - 1 || pagedItemsMembers.length == 0}">
                                                                 <a href=""
-                                                                   ng-click="currentPage('Next','currentPageList','pagedItemsList')">Next
+                                                                   ng-click="currentPage('Next','currentPageMembers','pagedItemsMembers')">Next
                                                                     »</a>
                                                             </li>
-                                                            <li ng-class="{disabled: (currentPageList) == pagedItemsList.length - 1 || pagedItemsList.length == 0}">
+                                                            <li ng-class="{disabled: (currentPageMembers) == pagedItemsMembers.length - 1 || pagedItemsMembers.length == 0}">
                                                                 <a href=""
-                                                                   ng-click="currentPage('Last','currentPageList','pagedItemsList')">Last
+                                                                   ng-click="currentPage('Last','currentPageMembers','pagedItemsMembers')">Last
                                                                     »»</a>
                                                             </li>
                                                         </ul>
@@ -258,7 +258,7 @@
                                                         <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                                                             <div class="pull-left">
                                                                 <button type="button" class="btn btn-primary"
-                                                                        ng-click="export(groupingsBasis, 'basis')">
+                                                                        ng-click="export(groupingBasis, 'basis')">
                                                                     Export To CSV
                                                                 </button>
                                                             </div>
@@ -267,7 +267,7 @@
                                                             <div class="xs-left-sm-right">
                                                                 <input placeholder="Filter Members..." type="text"
                                                                        ng-model="basisQuery" class="form-control"
-                                                                       ng-change="search(groupingsBasis, 'pagedItemsBasis', 'basisQuery')"/>
+                                                                       ng-change="search(groupingBasis, 'pagedItemsBasis', 'basisQuery')"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -275,15 +275,15 @@
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
-                                                        <th ng-click="sortCol(groupingsBasis, 'name', 'pagedItemsBasis', 'symbolBasis')"
+                                                        <th ng-click="sortCol(groupingBasis, 'name', 'pagedItemsBasis', 'symbolBasis')"
                                                             style="cursor: pointer">
                                                             Name {{symbol.name}}
                                                         </th>
-                                                        <th ng-click="sortCol(groupingsBasis, 'uuid', 'pagedItemsBasis', 'symbolBasis')"
+                                                        <th ng-click="sortCol(groupingBasis, 'uuid', 'pagedItemsBasis', 'symbolBasis')"
                                                             style="cursor: pointer">
                                                             UH ID {{symbol.uuid}}
                                                         </th>
-                                                        <th ng-click="sortCol(groupingsBasis, 'username', 'pagedItemsBasis', 'symbolBasis')"
+                                                        <th ng-click="sortCol(groupingBasis, 'username', 'pagedItemsBasis', 'symbolBasis')"
                                                             style="cursor: pointer">
                                                             Username {{symbol.username}}
                                                         </th>
