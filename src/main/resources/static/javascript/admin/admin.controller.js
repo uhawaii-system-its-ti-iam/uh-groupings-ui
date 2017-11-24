@@ -49,7 +49,6 @@
 
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
-        $scope.currentPageOptOut = 0;
 
         /**
          * Initializing function for the admin page.
