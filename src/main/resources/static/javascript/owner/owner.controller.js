@@ -72,19 +72,10 @@
             dataProvider.loadData(function (d) {
                 var temp = [];
                 console.log(d);
-                //Assigns grouping name, folder directories and url used for api call.
+                // Assigns grouping name and url used for api call.
                 for (var i = 0; i < d.groupingsOwned.length; i++) {
-                    temp[i] = d.groupingsOwned[i].path.split(':');
-                    var folder = '';
-                    for (var j = 0; j < temp[i].length - 1; j++) {
-                        folder += temp[i][j];
-                        if (j != temp[i].length - 1) {
-                            folder += "/";
-                        }
-                    }
                     $scope.ownedList.push({
                         'name': d.groupingsOwned[i].name,
-                        'folder': folder,
                         'url': d.groupingsOwned[i].path
                     });
                 }
@@ -200,7 +191,7 @@
          * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
          */
         $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'folder': '', 'uuid': '', 'username': ''};
+            $scope.symbol = {'name': '', 'url': '', 'uuid': '', 'username': ''};
 
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
                 list = _.sortBy(list, col);
@@ -216,8 +207,8 @@
                 case 'name':
                     $scope.symbol.name = '\u21c5';
                     break;
-                case 'folder':
-                    $scope.symbol.folder = '\u21c5';
+                case 'url':
+                    $scope.symbol.url = '\u21c5';
                     break;
                 case 'uuid':
                     $scope.symbol.uuid = '\u21c5';
