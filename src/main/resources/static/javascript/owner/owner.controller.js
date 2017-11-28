@@ -72,11 +72,10 @@
             dataProvider.loadData(function (d) {
                 var temp = [];
                 console.log(d);
-                if(typeof d.groupingsIn === 'undefined') {
+                if (typeof d.groupingsIn === 'undefined') {
                     $scope.errorModal();
                 }
-                else
-                {
+                else {
                     //Assigns grouping name, folder directories and url used for api call.
                     for (var i = 0; i < d.groupingsOwned.length; i++) {
                         temp[i] = d.groupingsOwned[i].path.split(':');
@@ -107,7 +106,7 @@
             });
         };
 
-        $scope.errorDismiss = function() {
+        $scope.errorDismiss = function () {
             $scope.errorModalInstance.dismiss();
         };
 
@@ -279,7 +278,7 @@
             var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataUpdater.addData(function (d) {
                 if (d.resultCode === "SUCCESS") {
-                    $scope.addModalAlert('success');
+                    $scope.addModalAlert('success', 'member');
                 }
                 else if (typeof d.resultsCode === 'undefined') {
                     console.log($scope.addUser + " this user does not exist.");
@@ -299,7 +298,7 @@
             dataUpdater.addData(function (d) {
                 if (d.resultCode === "SUCCESS") {
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
-                    $scope.addModalAlert('success');
+                    $scope.addModalAlert('success', 'owner');
                 }
                 else if (typeof d.resultsCode === 'undefined') {
                     console.log($scope.ownerUser + " this user does not exist.");
@@ -314,19 +313,23 @@
          * @param user - user being added
          * @param success - whether if the addData service returned a success in adding.
          */
-        $scope.addModalAlert = function (success) {
+        $scope.addModalAlert = function (success, role) {
             if (success === 'success') $scope.successAdd = true;
             else $scope.successAdd = false;
 
+            $scope.role = role;
             console.log($scope.successAdd);
-
+            console.log(role);
             $scope.addModalInstance = $uibModal.open({
                 templateUrl: 'addModal.html',
                 windowClass: 'center-modal',
                 scope: $scope,
                 resolve: {
-                    items: function () {
+                    success: function () {
                         return $scope.successAdd;
+                    },
+                    type: function () {
+                        return $scope.role;
                     }
                 }
             });
@@ -359,10 +362,8 @@
             if (type === 'Exclude') {
                 user = $scope.groupingExclude[row].username;
             }
-
             var URL = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
-
-            $scope.deleteModal(user, URL, null, $scope.groupingPath);
+            $scope.deleteModal(user, URL, $scope.groupingPath);
         };
 
         /**
@@ -374,31 +375,29 @@
             var removeOwner = $scope.ownerList[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
             if ($scope.ownerList.length > 1) {
-                $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.groupingPath);
+                $scope.deleteModal(removeOwner, removeOwnerUrl, $scope.groupingPath);
             }
         };
 
-        $scope.deleteModal = function (user, url, location, type) {
+        $scope.deleteModal = function (user, url, type) {
+            $scope.deleteUser = user;
             $scope.deleteModalInstance = $uibModal.open({
                 templateUrl: 'removeModal.html',
                 windowClass: 'center-modal',
-                scope: $scope
+                scope: $scope,
+                resolve: {
+                    name: function() {
+                        return $scope.deleteUser;
+                    }
+                }
             });
 
             $scope.deleteModalInstance.result.then(function () {
-                if (type === 'admin' && $scope.list.length > 1) {
-                    dataDeleter.deleteData(function (d) {
-                        $scope.list.splice(location, 1);
-                        $scope.init();
-                    }, url);
-                }
-                else {
-                    dataDeleter.deleteData(function (d) {
-                        console.log(d);
-                        $scope.loading = true;
-                        $scope.getData(type);
-                    }, url);
-                }
+                dataDeleter.deleteData(function (d) {
+                    console.log(d);
+                    $scope.loading = true;
+                    $scope.getData(type);
+                }, url);
             });
         };
 
@@ -463,9 +462,9 @@
         };
 
         $scope.infoModal = function (preference, group) {
-            if(preference === 'opt')
+            if (preference === 'opt')
                 var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not members can ' + group + ' themselves from the grouping</div>';
-            else if(preference === 'publication')
+            else if (preference === 'publication')
                 var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not the publication destination is active or not</div>';
 
             $scope.deleteModalInstance = $uibModal.open({
