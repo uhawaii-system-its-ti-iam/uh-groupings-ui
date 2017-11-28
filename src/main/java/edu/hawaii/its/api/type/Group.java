@@ -6,9 +6,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "groups")
-public class Group {
+public class Group implements Comparable<Group> {
     private List<Person> members = new ArrayList<>();
-
     private String path = "";
 
     public Group() {
@@ -82,5 +81,29 @@ public class Group {
     @Override
     public String toString() {
         return "Group [members=" + members + "]";
+    }
+
+    @Transient
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Group) && (compareTo((Group) o) == 0);
+    }
+
+    @Transient
+    @Override
+    public int compareTo(Group group) {
+        int pathComp = getPath().compareTo(group.getPath());
+        if (pathComp != 0) {
+            return pathComp;
+        }
+
+        for (int i = 0; i < getMembers().size(); i++) {
+            int personComp = getMembers().get(i).compareTo(group.getMembers().get(i));
+            if (personComp != 0) {
+                return personComp;
+            }
+        }
+
+        return 0;
     }
 }

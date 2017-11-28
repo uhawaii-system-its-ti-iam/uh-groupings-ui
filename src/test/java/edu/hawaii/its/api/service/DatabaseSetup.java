@@ -2,8 +2,10 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.Person;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.*;
@@ -22,15 +24,17 @@ public class DatabaseSetup {
     private PersonRepository personRepository;
     private GroupRepository groupRepository;
     private GroupingRepository groupingRepository;
+    private MembershipRepository membershipRepository;
 
     private List<Person> persons = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
     private List<Grouping> groupings = new ArrayList<>();
 
-    public DatabaseSetup(PersonRepository personRepository, GroupRepository groupRepository, GroupingRepository groupingRepository) {
+    public DatabaseSetup(PersonRepository personRepository, GroupRepository groupRepository, GroupingRepository groupingRepository, MembershipRepository membershipRepository) {
         this.personRepository = personRepository;
         this.groupRepository = groupRepository;
         this.groupingRepository = groupingRepository;
+        this.membershipRepository = membershipRepository;
 
         fillDatabase();
     }
@@ -42,6 +46,7 @@ public class DatabaseSetup {
         fillGroupRepository();
         fillGroupingRepository();
 
+        setUpMemberships();
     }
 
     private void fillPersonRepository() {
@@ -247,6 +252,47 @@ public class DatabaseSetup {
         makeGrouping(pathRoot + 4, groups.get(16), groups.get(17), groups.get(18), groups.get(19), false, false, false);
     }
 
+    private void setUpMemberships() {
+        Person grouperAll = new Person();
+        grouperAll.setUsername("GrouperAll");
+        personRepository.save(grouperAll);
+
+        Iterable<Group> groups = groupRepository.findAll();
+
+        for(Group group : groups) {
+            group.addMember(grouperAll);
+            groupRepository.save(group);
+            for(Person person : group.getMembers()) {
+                Membership membership = new Membership(person, group);
+                membershipRepository.save(membership);
+            }
+        }
+
+        Iterable<Grouping> groupings = groupingRepository.findAll();
+
+        for(Grouping grouping : groupings) {
+            Membership allExclude = membershipRepository.findByPersonAndGroup(grouperAll, grouping.getExclude());
+            Membership allInclude = membershipRepository.findByPersonAndGroup(grouperAll, grouping.getInclude());
+            Membership allComposite = membershipRepository.findByPersonAndGroup(grouperAll, grouping.getComposite());
+            if(grouping.isOptOutOn()){
+                allComposite.setOptOutEnabled(true);
+                allExclude.setOptInEnabled(true);
+                allExclude.setOptOutEnabled(true);
+
+            }
+            if(grouping.isOptInOn()){
+                allComposite.setOptInEnabled(true);
+                allInclude.setOptInEnabled(true);
+                allInclude.setOptOutEnabled(true);
+
+            }
+
+            membershipRepository.save(allComposite);
+            membershipRepository.save(allExclude);
+            membershipRepository.save(allInclude);
+        }
+    }
+
     ///////////////////////////////////////////////////////////
     // factory methods
     ///////////////////////////////////////////////////////////
@@ -262,13 +308,13 @@ public class DatabaseSetup {
     }
 
     public Grouping makeGrouping(String path,
-                              Group basis,
-                              Group exclude,
-                              Group include,
-                              Group owners,
-                              boolean listserveOn,
-                              boolean optInOn,
-                              boolean optOutOn) {
+                                 Group basis,
+                                 Group exclude,
+                                 Group include,
+                                 Group owners,
+                                 boolean listserveOn,
+                                 boolean optInOn,
+                                 boolean optOutOn) {
 
         Grouping grouping = new Grouping(path);
         Group composite = buildComposite(include, exclude, basis, path);

@@ -23,7 +23,6 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/groupings")
 public class GroupingsRestController {
 
     private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
@@ -41,6 +40,15 @@ public class GroupingsRestController {
     public void init() {
         Assert.hasLength(uuid, "Property 'app.groupings.controller.uuid' is required.");
         logger.info("GroupingsRestController started.");
+    }
+
+    @RequestMapping(value = "/",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> hello() {
+        return ResponseEntity
+                .ok()
+                .body("hello");
     }
 
     /**

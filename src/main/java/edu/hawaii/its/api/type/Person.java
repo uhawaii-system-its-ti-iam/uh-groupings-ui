@@ -5,6 +5,7 @@ import org.hibernate.annotations.Proxy;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Comparator;
 
 @Entity
 @Proxy(lazy = false)
@@ -61,17 +62,27 @@ public class Person implements Comparable<Person> {
 
     @Override
     public boolean equals(Object o) {
-        return compareTo((Person)o) == 0;
+        return (o instanceof Person) && (compareTo((Person) o) == 0);
     }
+
 
     @Override
     public int compareTo(Person person) {
+        Comparator<String> nullSafeComparator = Comparator.nullsFirst(String::compareTo);
 
-        if (this.getName().compareTo(person.getName()) == 0
-                && this.getUsername().compareTo(person.getUsername()) == 0
-                && this.getName().compareTo(person.getName()) == 0) {
-            return 0;
+        int usernameComp = nullSafeComparator.compare(getUsername(), person.getUsername());
+        int nameComp = nullSafeComparator.compare(getName(), person.getName());
+        int uuidComp = nullSafeComparator.compare(getUuid(), person.getUuid());
+
+        if (usernameComp != 0) {
+            return usernameComp;
         }
-        return this.getUsername().compareTo(person.getUsername());
+        if (nameComp != 0) {
+            return nameComp;
+        }
+        if (uuidComp != 0) {
+            return uuidComp;
+        }
+        return 0;
     }
 }
