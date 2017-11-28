@@ -49,7 +49,7 @@ public class ErrorControllerAdvice {
         }
         logger.error("username: " + username + "; Exception: ", exception.getCause());
 
-        ModelAndView modelAndView = new ModelAndView("/error");
+        ModelAndView modelAndView = new ModelAndView("redirect:/error");
         modelAndView.addObject("errCode", 500);
         modelAndView.addObject("errMsg", exception.getMessage());
 
