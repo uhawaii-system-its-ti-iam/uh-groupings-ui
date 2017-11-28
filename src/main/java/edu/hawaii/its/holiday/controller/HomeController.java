@@ -37,6 +37,7 @@ public class HomeController {
         return "info";
     }
 
+    @PreAuthorize("hasRole('UH')")
     @RequestMapping(value = "/feedback", method = RequestMethod.GET)
     public String feedback(Locale locale, Model model) {
         logger.info("User at feedback.");
@@ -57,7 +58,6 @@ public class HomeController {
     public String preferenceErrorModal(Locale locale, Model model) {
         return "preferenceErrorModal";
     }
-
 
     @RequestMapping(value = "/addModal", method = RequestMethod.GET)
     public String addModal(Locale locale, Model model) {
