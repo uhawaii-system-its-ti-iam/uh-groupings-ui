@@ -139,11 +139,6 @@
                 console.log(d);
                 $scope.basis = d.basis.members;
 
-                //Gets members in grouping
-                $scope.groupingsList = d.composite.members;
-                $scope.modify($scope.groupingsList);
-                $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsList);
-
                 //Gets members in the basis group
                 $scope.groupingsBasis = d.basis.members;
                 $scope.modify($scope.groupingsBasis);
@@ -158,6 +153,12 @@
                 $scope.groupingExclude = d.exclude.members;
                 $scope.modify($scope.groupingExclude);
                 $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
+
+                //Gets members in grouping
+                $scope.groupingsList = d.composite.members;
+                $scope.modify($scope.groupingsList, "members");
+                $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsList);
+
 
                 //Gets owners of the grouping
                 $scope.ownerList = d.owners.members;
@@ -187,10 +188,11 @@
          *                -1 for descending
          *                0 for failed attempt
          */
-        $scope.modify = function (grouping) {
+        $scope.modify = function (grouping, list) {
             //Filter out names with hawaii.edu and adds basis object.
             for (var i = 0; i < grouping.length; i++) {
-                grouping[i].basis = "No";
+                if(list === 'members') grouping[i].basis = "in Include";
+                else grouping[i].basis = "No";
                 if (grouping[i].name.indexOf("hawaii.edu") > -1) {
                     grouping.splice(i, 1);
                     i--;
@@ -201,7 +203,15 @@
             for (var l = 0; l < $scope.basis.length; l++) {
                 for (var m = 0; m < grouping.length; m++) {
                     if ($scope.basis[l].uuid === grouping[m].uuid) {
-                        grouping[m].basis = "Yes";
+                        if(list === 'members') {
+                            grouping[m].basis = "in Basis";
+                            for(var k = 0; k <  $scope.groupingInclude.length;k++) {
+                                if($scope.groupingInclude[k].uuid === grouping[m].uuid){
+                                    grouping[m].basis = "in Basis / in Include";
+                                }
+                            }
+                        }
+                        else grouping[m].basis = "Yes";
                     }
                 }
             }
