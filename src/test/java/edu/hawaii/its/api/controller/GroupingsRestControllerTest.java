@@ -64,7 +64,7 @@ public class GroupingsRestControllerTest {
         given(groupingsService.getGrouping(grouping, username))
                 .willReturn(grouping());
 
-        mockMvc.perform(get("/grouping/username/grouping"))
+        mockMvc.perform(get("/api/groupings/grouping/username/grouping"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name").value("bob"))
                 .andExpect(jsonPath("path").value("test:ing:me:bob"))
@@ -160,13 +160,13 @@ public class GroupingsRestControllerTest {
         given(groupingsService.addMemberAs(username, grouping + ":exclude", username))
                 .willReturn(gsr2);
 
-        mockMvc.perform(post("/grouping/username/username/addMemberToIncludeGroup")
+        mockMvc.perform(post("/api/groupings/grouping/username/username/addMemberToIncludeGroup")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("action").value("add member to include group"));
 
-        mockMvc.perform(post("/grouping/username/username/addMemberToExcludeGroup")
+        mockMvc.perform(post("/api/groupings/grouping/username/username/addMemberToExcludeGroup")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
@@ -186,13 +186,13 @@ public class GroupingsRestControllerTest {
         given(groupingsService.deleteMemberAs(username, grouping + ":exclude", username))
                 .willReturn(gsr2);
 
-        mockMvc.perform(post("/grouping/username/username/deleteMemberFromIncludeGroup")
+        mockMvc.perform(post("/api/groupings/grouping/username/username/deleteMemberFromIncludeGroup")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("action").value("delete member from include group"));
 
-        mockMvc.perform(post("/grouping/username/username/deleteMemberFromExcludeGroup")
+        mockMvc.perform(post("/api/groupings/grouping/username/username/deleteMemberFromExcludeGroup")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
@@ -211,7 +211,7 @@ public class GroupingsRestControllerTest {
         given(groupingsService.assignOwnership(grouping, username, username))
                 .willReturn(gsr);
 
-        mockMvc.perform(post("/grouping/username/username/assignOwnership")
+        mockMvc.perform(post("/api/groupings/grouping/username/username/assignOwnership")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
@@ -230,7 +230,7 @@ public class GroupingsRestControllerTest {
         given(groupingsService.removeOwnership(grouping, username, username))
                 .willReturn(gsr);
 
-        mockMvc.perform(post("/grouping/username/username/removeOwnership")
+        mockMvc.perform(post("/api/groupings/grouping/username/username/removeOwnership")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
@@ -251,7 +251,7 @@ public class GroupingsRestControllerTest {
         given(groupingsService.getGroupingAssignment(username))
                 .willReturn(myGroupings());
 
-        String mvcResult = mockMvc.perform(get("/username/groupingAssignment"))
+        String mvcResult = mockMvc.perform(get("/api/groupings/username/groupingAssignment"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -304,13 +304,13 @@ public class GroupingsRestControllerTest {
         given(groupingsService.changeListservStatus(grouping, username, false))
                 .willReturn(gsr2);
 
-        mockMvc.perform(post("/grouping/username/true/setListserv")
+        mockMvc.perform(post("/api/groupings/grouping/username/true/setListserv")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("action").value("listserv has been added to grouping"));
 
-        mockMvc.perform(post("/grouping/username/false/setListserv")
+        mockMvc.perform(post("/api/groupings/grouping/username/false/setListserv")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
@@ -334,13 +334,13 @@ public class GroupingsRestControllerTest {
         given(groupingsService.changeOptInStatus(grouping, username, false))
                 .willReturn(gsResults2);
 
-        mockMvc.perform(post("/grouping/username/true/setOptIn")
+        mockMvc.perform(post("/api/groupings/grouping/username/true/setOptIn")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$[0].action").value("OptIn has been added to grouping"));
 
-        mockMvc.perform(post("/grouping/username/false/setOptIn")
+        mockMvc.perform(post("/api/groupings/grouping/username/false/setOptIn")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
@@ -364,13 +364,13 @@ public class GroupingsRestControllerTest {
         given(groupingsService.changeOptOutStatus(grouping, username, false))
                 .willReturn(gsResults2);
 
-        mockMvc.perform(post("/grouping/username/true/setOptOut")
+        mockMvc.perform(post("/api/groupings/grouping/username/true/setOptOut")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$[0].action").value("OptOut has been added to grouping"));
 
-        mockMvc.perform(post("/grouping/username/false/setOptOut")
+        mockMvc.perform(post("/api/groupings/grouping/username/false/setOptOut")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
@@ -394,7 +394,7 @@ public class GroupingsRestControllerTest {
         given(groupingsService.optIn(username, grouping))
                 .willReturn(gsr);
 
-        mockMvc.perform(post("/grouping/username/optIn")
+        mockMvc.perform(post("/api/groupings/grouping/username/optIn")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(6)))
@@ -429,7 +429,7 @@ public class GroupingsRestControllerTest {
         given(groupingsService.optOut(username, grouping))
                 .willReturn(gsr);
 
-        mockMvc.perform(post("/grouping/username/optOut")
+        mockMvc.perform(post("/api/groupings/grouping/username/optOut")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(6)))
@@ -459,7 +459,7 @@ public class GroupingsRestControllerTest {
         given(groupingsService.cancelOptOut(grouping, username))
                 .willReturn(gsr);
 
-        mockMvc.perform(post("/grouping/username/cancelOptOut")
+        mockMvc.perform(post("/api/groupings/grouping/username/cancelOptOut")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -481,7 +481,7 @@ public class GroupingsRestControllerTest {
         given(groupingsService.cancelOptIn(grouping, username))
                 .willReturn(gsr);
 
-        mockMvc.perform(post("/grouping/username/cancelOptIn")
+        mockMvc.perform(post("/api/groupings/grouping/username/cancelOptIn")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -494,7 +494,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getAddGrouping() throws Exception {
-        mockMvc.perform(get("/addGrouping"))
+        mockMvc.perform(get("/api/groupings/addGrouping"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URI.create(requestForm).toString()));
     }
@@ -502,7 +502,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getDeleteGrouping() throws Exception {
-        mockMvc.perform(get("/deleteGrouping"))
+        mockMvc.perform(get("/api/groupings/deleteGrouping"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URI.create(requestForm).toString()));
     }
