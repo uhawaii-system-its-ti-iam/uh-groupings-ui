@@ -912,6 +912,9 @@ public class GroupingsServiceImpl implements GroupingsService {
                         assignMembershipAttributes(OPERATION_REMOVE_ATTRIBUTE, SELF_OPTED, membershipID),
                         action);
             }
+            return new GroupingsServiceResult(
+                    FAILURE + ", " + username + " is not self-opted into " + group,
+                    action);
         }
         return new GroupingsServiceResult(
                 FAILURE + ", " + username + " is not a member of " + group,

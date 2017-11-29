@@ -3,6 +3,7 @@ package edu.hawaii.its.api.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
@@ -880,14 +881,35 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void removeSelfOptedTest() {
+        Group group = groupRepository.findByPath(GROUPING_4_EXCLUDE_PATH);
+
+        //member is not in group
+        GroupingsServiceResult gsr = groupingsService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(5).getUsername());
+        assertTrue(gsr.getResultCode().startsWith(FAILURE));
+
+        //member is not self-opted
+        gsr = groupingsService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(4).getUsername());
+        assertTrue(gsr.getResultCode().startsWith(FAILURE));
+
+        //make member self-opted
+        Membership membership = membershipRepository.findByPersonAndGroup(users.get(4), group);
+        membership.setSelfOpted(true);
+        membershipRepository.save(membership);
+
+        //member is self-opted
+        gsr = groupingsService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(4).getUsername());
+        assertTrue(gsr.getResultCode().startsWith(SUCCESS));
 
 //todo
     }
 
     @Test
     public void groupOptOutPermissionTest() {
+        boolean oop = groupingsService.groupOptOutPermission(users.get(1).getUsername(), GROUPING_2_EXCLUDE_PATH);
+        assertEquals(false, oop);
 
-//todo
+        oop = groupingsService.groupOptOutPermission(users.get(1).getUsername(), GROUPING_1_EXCLUDE_PATH);
+        assertEquals(true, oop);
     }
 
     @Test
@@ -1006,5 +1028,25 @@ public class GroupingsServiceMockTest {
     public void changeGroupAttributeStatusTest() {
 
 //todo
+    }
+
+    @Test(expected = NotImplementedException.class)
+    public void deleteGroupingTest() {
+        groupingsService.deleteGrouping(users.get(0).getUsername(), GROUPING_4_PATH);
+    }
+
+    @Test(expected = NotImplementedException.class)
+    public void addGrouping() {
+        List<String> basis = new ArrayList<>();
+        List<String> exclude = new ArrayList<>();
+        List<String> include = new ArrayList<>();
+        List<String> owners = new ArrayList<>();
+        groupingsService.addGrouping(
+                users.get(0).getUsername(),
+                "newGroupingPath",
+                basis,
+                include,
+                exclude,
+                owners);
     }
 }
