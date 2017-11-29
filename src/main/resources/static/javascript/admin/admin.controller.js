@@ -460,7 +460,7 @@
             $scope.filteredItems = [];
             $scope.filteredItems = $filter('filter')(list, function (item) {
                 for (var key in item) {
-                    if (item.hasOwnProperty(key) && typeof item[key] === 'string' && key !== '$$hashKey') {
+                    if (item.hasOwnProperty(key) && typeof item[key] === 'string' && key !== '$$hashKey' && key !== 'basis') {
                         if (searchMatch(item[key], query)) return true;
                     }
                 }
@@ -568,7 +568,6 @@
                 $scope.showGrouping = true;
             } else {
                 $scope.showGrouping = false;
-                $scope.groupingsList = [];
                 $scope.groupingsBasis = [];
                 $scope.groupingInclude = [];
                 $scope.groupingExclude = [];
