@@ -460,8 +460,8 @@
             $scope.filteredItems = [];
             $scope.filteredItems = $filter('filter')(list, function (item) {
                 for (var key in item) {
-                    if (item.hasOwnProperty(key) && key !== 'basis' && searchMatch(item[key], query)) {
-                        return true;
+                    if (item.hasOwnProperty(key) && typeof item[key] === 'string' && key !== '$$hashKey') {
+                        if (searchMatch(item[key], query)) return true;
                     }
                 }
             });
@@ -472,7 +472,7 @@
             $scope[whatList] = $scope.groupToPagesChanged(emptyList);
         };
 
-        var searchMatch = function (haystack, needle) {
+        var searchMatch = function(haystack, needle) {
             if (!needle) {
                 return true;
             }
