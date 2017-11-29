@@ -9,6 +9,7 @@ import edu.hawaii.its.holiday.util.Dates;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Service("groupingsService")
 public class GroupingsServiceImpl implements GroupingsService {
     public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
+    private WsStemLookup STEM_LOOKUP;
 
     @Value("${groupings.api.settings}")
     private String SETTINGS;
@@ -134,7 +136,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("$groupings.api.stem}")
     private String STEM;
 
-    private GrouperFactoryService gf = new GrouperFactoryServiceImpl();
+    //    private GrouperFactoryService gf = new GrouperFactoryServiceImpl();
+    @Autowired
+    private GrouperFactoryService gf;
 
     public GroupingsServiceImpl() {
     }
@@ -143,7 +147,6 @@ public class GroupingsServiceImpl implements GroupingsService {
         gf = grouperFactory;
     }
 
-    private WsStemLookup STEM_LOOKUP = gf.makeWsStemLookup(STEM, null);
 
     @Override
     public List<GroupingsServiceResult> addGrouping(String username, String path, List<String> basis, List<String> include, List<String> exclude, List<String> owners) {
@@ -193,7 +196,6 @@ public class GroupingsServiceImpl implements GroupingsService {
 //                addGroupingResults.add(addMemberAs(username, path + entry.getKey(), entry.getValue()));
 //                addGroupingResults.add(updateLastModified(path + entry.getKey()));
 //            }
-//            //todo add isTrio to Grouping
 //
 //            addGroupingResults.add(addMemberAs(username, GROUPING_OWNERS, memberLists.get(OWNERS)));
 //            addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
@@ -660,11 +662,12 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (groupsOpted.size() > 0) {
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResults(
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
                     TRIO,
                     groupsOpted);
 
+            //todo check if it is better to use getWsGroups or getWsAttributeAssigns
             WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
 
             for (WsGroup group : trios) {
@@ -686,7 +689,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (isSuperuser(username)) {
             List<String> groupPaths = new ArrayList<>();
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResults(
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
                     TRIO);
 
@@ -715,18 +718,20 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> trios = new ArrayList<>();
         List<String> opts = new ArrayList<>();
 
-        WsGetAttributeAssignmentsResults assignmentsResults = gf.makeWsGetAttributeAssignmentsResults(ASSIGN_TYPE_GROUP,
+        WsGetAttributeAssignmentsResults assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+                ASSIGN_TYPE_GROUP,
                 TRIO,
                 OPT_OUT,
                 groupPaths);
 
         if (assignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign assign : assignmentsResults.getWsAttributeAssigns()) {
-                if (assign.getAttributeDefNameName().equals(TRIO)) {
-                    trios.add(assign.getOwnerGroupName());
-                }
-                if (assign.getAttributeDefNameName().equals(OPT_OUT)) {
-                    opts.add(assign.getOwnerGroupName());
+                if (assign.getAttributeDefNameName() != null) {
+                    if (assign.getAttributeDefNameName().equals(TRIO)) {
+                        trios.add(assign.getOwnerGroupName());
+                    } else if (assign.getAttributeDefNameName().equals(OPT_OUT)) {
+                        opts.add(assign.getOwnerGroupName());
+                    }
                 }
             }
 
@@ -750,17 +755,19 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> trios = new ArrayList<>();
         List<String> opts = new ArrayList<>();
 
-        WsGetAttributeAssignmentsResults assignmentsResults = gf.makeWsGetAttributeAssignmentsResults(
+        WsGetAttributeAssignmentsResults assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                 ASSIGN_TYPE_GROUP,
                 TRIO,
                 OPT_IN);
 
         if (assignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign assign : assignmentsResults.getWsAttributeAssigns()) {
-                if (assign.getAttributeDefNameName().equals(TRIO)) {
-                    trios.add(assign.getOwnerGroupName());
-                } else if (assign.getAttributeDefNameName().equals(OPT_IN)) {
-                    opts.add(assign.getOwnerGroupName());
+                if (assign.getAttributeDefNameName() != null) {
+                    if (assign.getAttributeDefNameName().equals(TRIO)) {
+                        trios.add(assign.getOwnerGroupName());
+                    } else if (assign.getAttributeDefNameName().equals(OPT_IN)) {
+                        opts.add(assign.getOwnerGroupName());
+                    }
                 }
             }
 
@@ -826,8 +833,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                     , membershipID);
 
             for (WsAttributeAssign att : wsAttributes) {
-                if (att.getAttributeDefNameName().equals(SELF_OPTED)) {
-                    return true;
+                if (att.getAttributeDefNameName() != null) {
+                    if (att.getAttributeDefNameName().equals(SELF_OPTED)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -1365,7 +1374,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (groupPaths.size() > 0) {
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResults(
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
                     TRIO,
                     groupPaths);
@@ -1387,6 +1396,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     List<String> getGroupPaths(String username) {
         logger.info("getGroupPaths; username: " + username + ";");
+        STEM_LOOKUP = gf.makeWsStemLookup(STEM, null);
 
         WsGetGroupsResults wsGetGroupsResults = gf.makeWsGetGroupsResults(
                 username,
@@ -1412,14 +1422,16 @@ public class GroupingsServiceImpl implements GroupingsService {
         );
 
         WsAttributeDefName[] attributeDefNames = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
-        for (WsAttributeDefName defName : attributeDefNames) {
-            String name = defName.getName();
-            if (name.equals(LISTSERV)) {
-                listservOn = true;
-            } else if (name.equals(OPT_IN)) {
-                optInOn = true;
-            } else if (name.equals(OPT_OUT)) {
-                optOutOn = true;
+        if (attributeDefNames != null && attributeDefNames.length > 0) {
+            for (WsAttributeDefName defName : attributeDefNames) {
+                String name = defName.getName();
+                if (name.equals(LISTSERV)) {
+                    listservOn = true;
+                } else if (name.equals(OPT_IN)) {
+                    optInOn = true;
+                } else if (name.equals(OPT_OUT)) {
+                    optOutOn = true;
+                }
             }
         }
 
