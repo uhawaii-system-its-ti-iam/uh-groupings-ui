@@ -43,6 +43,15 @@ public class GroupingsRestController {
         logger.info("GroupingsRestController started.");
     }
 
+    @RequestMapping(value = "/",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> hello() {
+        return ResponseEntity
+                .ok()
+                .body("hello");
+    }
+
     /**
      * adds a member to the admin group
      *

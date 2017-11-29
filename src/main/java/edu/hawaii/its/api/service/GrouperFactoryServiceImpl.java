@@ -4,11 +4,13 @@ import edu.internet2.middleware.grouperClient.api.*;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.*;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("GrouperFactoryService")
+@Service("grouperFactoryService")
+@Profile(value = {"localhost", "test", "integrationTest"})
 public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     public GrouperFactoryServiceImpl() {
         //empty
@@ -136,8 +138,8 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
 
 
     @Override
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
-                                                                                 String attributeDefNameName) {
+    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+                                                                                     String attributeDefNameName) {
         return new GcGetAttributeAssignments()
                 .addAttributeDefNameName(attributeDefNameName)
                 .assignAttributeAssignType(assignType)
@@ -145,9 +147,9 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     }
 
     @Override
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
-                                                                                 String attributeDefNameName0,
-                                                                                 String attributeDefNameName1) {
+    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+                                                                                     String attributeDefNameName0,
+                                                                                     String attributeDefNameName1) {
         return new GcGetAttributeAssignments()
                 .addAttributeDefNameName(attributeDefNameName0)
                 .addAttributeDefNameName(attributeDefNameName1)
@@ -156,9 +158,9 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     }
 
     @Override
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
-                                                                                 String attributeDefNameName,
-                                                                                 List<String> ownerGroupNames) {
+    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+                                                                                     String attributeDefNameName,
+                                                                                     List<String> ownerGroupNames) {
 
         GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
                 .addAttributeDefNameName(attributeDefNameName)
@@ -170,10 +172,10 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     }
 
     @Override
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResults(String assignType,
-                                                                                 String attributeDefNameName0,
-                                                                                 String attributeDefNameName1,
-                                                                                 List<String> ownerGroupNames) {
+    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+                                                                                     String attributeDefNameName0,
+                                                                                     String attributeDefNameName1,
+                                                                                     List<String> ownerGroupNames) {
 
         GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
                 .addAttributeDefNameName(attributeDefNameName0)
