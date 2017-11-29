@@ -50,6 +50,9 @@
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
 
+        $scope.selectedGrouping;
+        $scope.showGrouping = false;
+
         /**
          * Initializing function for the admin page.
          * Calls dataProvider service to retrieve a list of admins.
@@ -69,10 +72,12 @@
             dataProvider.loadData(function (d) {
                 $scope.adminsList = d.adminGroup.members;
                 $scope.groupingsList = d.allGroupings;
-
+                $scope.groupingsList = _.sortBy($scope.groupingsList, 'name');
                 $scope.modify($scope.adminsList);
                 $scope.symbol.name = '\u21c5';
                 $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList, $scope.pagedItemsAdmins);
+                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
+                console.log($scope.groupingsList);
                 $scope.loading = false;
             }, url);
         };
@@ -86,7 +91,7 @@
         };
 
         $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'uuid': '', 'username': ''};
+            $scope.symbol = {'name': '', 'path': '', 'uuid': '', 'username': ''};
 
             if ($scope[symbol] === 'ascend' || typeof $scope[symbol] == 'undefined') {
                 list = _.sortBy(list, col);
@@ -102,6 +107,9 @@
                 case 'name':
                     $scope.symbol.name = '\u21c5';
                     break;
+                case 'path':
+                    $scope.symbol.path = '\u21c5';
+                    break;
                 case 'uuid':
                     $scope.symbol.uuid = '\u21c5';
                     break;
@@ -114,44 +122,18 @@
         };
 
         /**
-         * Gets the information about a grouping based off the name in the input box.
+         *
+         * @param index
          */
-        $scope.search = function () {
-            $scope.groupingPath = '';
-            $scope.groupingURL = '';
-            //Finds the path of the grouping based on the name of the grouping.
-            for (var i = 0; i < $scope.groupingsList.length; i++) {
-                if ($scope.groupingsList[i].name === $scope.groupingName) {
-                    $scope.groupingPath = $scope.groupingsList[i].path;
-                }
-            }
-            if ($scope.groupingPath === '') {
-                console.log("Not a valid grouping");
-                $scope.error = true;
-
-                //Empties array
-                $scope.basis = [];
-                $scope.pagedItemsMembers = [];
-                $scope.pagedItemsBasis = [];
-                $scope.pagedItemsInclude = [];
-                $scope.pagedItemsExclude = [];
-                $scope.pagedItemsOwners = [];
-                $scope.preference = [];
-                $scope.loading = false;
-                $scope.title = '';
-            } else {
-                $scope.getData($scope.groupingPath);
-            }
-        };
-
-        $scope.getData = function (path) {
+        $scope.getData = function(index) {
+            path = $scope.pagedItemsGroupings[$scope.currentPageGroupings][index].path;
             $scope.loading = true;
             var groupingDataUrl = "api/groupings/" + path + "/" + $scope.getCurrentUsername() + "/grouping";
             console.log(groupingDataUrl);
 
             dataProvider.loadData(function (d) {
                 console.log(d);
-                $scope.error = false;
+                $scope.selectedGrouping = d;
                 $scope.basis = d.basis.members;
 
                 //Gets members in grouping
@@ -186,16 +168,10 @@
                 };
 
                 //Stop loading spinner
-                $scope.title = $scope.groupingName;
                 $scope.loading = false;
+                $scope.showGrouping = true;
             }, groupingDataUrl);
         };
-
-        $scope.dismiss = function () {
-            $scope.title = '';
-            $scope.error = false;
-        };
-
 
         /**
          * Modify the data from the grouping to be sorted, filter out hawaii.edu
@@ -583,17 +559,23 @@
             }
         };
 
-        //Makes it so that you have to type at least 3 characters in order for the datalist to autocomplete
-        $('input[list]').on('input', function (e) {
-            var input = $(e.target),
-                datalist = input.attr('data-list');
-
-            if (input.val().length < 3) {
-                input.attr('list', '');
+        /**
+         *  Function that switches from the view of a single grouping
+         *  to the list of groupings that you own.
+         */
+        $scope.showGroups = function () {
+            if ($scope.showGrouping == false) {
+                $scope.showGrouping = true;
             } else {
-                input.attr('list', datalist);
+                $scope.showGrouping = false;
+                $scope.groupingsList = [];
+                $scope.groupingsBasis = [];
+                $scope.groupingInclude = [];
+                $scope.groupingExclude = [];
+                $scope.ownerList = [];
             }
-        });
+        };
+
     }
 
     adminApp.controller("AdminJsController", AdminJsController);
