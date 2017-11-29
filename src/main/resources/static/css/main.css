@@ -431,4 +431,7 @@ td.uh-pre {
     .xs-left-sm-right {
         float: right;
     }
+    .input-inline-pagination {
+        margin-top: 1.40625em;
+    }
 }
