@@ -59,8 +59,8 @@
         $scope.pagedItemsOwners = [];
         $scope.currentPageOwners = 0;
 
-        $scope.pagedItemsList = [];
-        $scope.currentPageList = 0;
+        $scope.pagedItemsMembers = [];
+        $scope.currentPageMembers = 0;
 
         /**
          * Initialize function that retrieves the groupings you own.
@@ -72,28 +72,14 @@
             dataProvider.loadData(function (d) {
                 var temp = [];
                 console.log(d);
-                if (typeof d.groupingsIn === 'undefined') {
-                    $scope.errorModal();
+                // Assigns grouping name and url used for api call.
+                for (var i = 0; i < d.groupingsOwned.length; i++) {
+                    $scope.ownedList.push({
+                        'name': d.groupingsOwned[i].name,
+                        'url': d.groupingsOwned[i].path
+                    });
                 }
-                else {
-                    //Assigns grouping name, folder directories and url used for api call.
-                    for (var i = 0; i < d.groupingsOwned.length; i++) {
-                        temp[i] = d.groupingsOwned[i].path.split(':');
-                        var folder = '';
-                        for (var j = 0; j < temp[i].length - 1; j++) {
-                            folder += temp[i][j];
-                            if (j != temp[i].length - 1) {
-                                folder += "/";
-                            }
-                        }
-                        $scope.ownedList.push({
-                            'name': d.groupingsOwned[i].name,
-                            'folder': folder,
-                            'url': d.groupingsOwned[i].path
-                        });
-                    }
-                    $scope.pagedItemsOwned = $scope.groupToPages($scope.ownedList, $scope.pagedItemsOwned);
-                }
+                $scope.pagedItemsOwned = $scope.groupToPages($scope.ownedList, $scope.pagedItemsOwned);
                 $scope.loading = false;
             }, groupingsOwned);
         };
@@ -139,10 +125,15 @@
                 console.log(d);
                 $scope.basis = d.basis.members;
 
+                //Gets members in grouping
+                $scope.groupingMembers = d.composite.members;
+                $scope.modify($scope.groupingsList);
+                $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
+
                 //Gets members in the basis group
-                $scope.groupingsBasis = d.basis.members;
-                $scope.modify($scope.groupingsBasis);
-                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingsBasis, $scope.pagedItemsBasis);
+                $scope.groupingBasis = d.basis.members;
+                $scope.modify($scope.groupingBasis);
+                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis, $scope.pagedItemsBasis);
 
                 //Gets members in the include group
                 $scope.groupingInclude = d.include.members;
@@ -154,12 +145,6 @@
                 $scope.modify($scope.groupingExclude);
                 $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
 
-                //Gets members in grouping
-                $scope.groupingsList = d.composite.members;
-                $scope.modify($scope.groupingsList, "members");
-                $scope.pagedItemsList = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsList);
-
-
                 //Gets owners of the grouping
                 $scope.ownerList = d.owners.members;
                 $scope.modify($scope.ownerList);
@@ -170,8 +155,6 @@
                     optOut: d.optOutOn,
                     listserv: d.listservOn
                 };
-
-
                 //Stop loading spinner
                 $scope.loading = false;
             }, getUrl);
@@ -227,7 +210,7 @@
          * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
          */
         $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'folder': '', 'uuid': '', 'username': ''};
+            $scope.symbol = {'name': '', 'url': '', 'uuid': '', 'username': ''};
 
             if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
                 list = _.sortBy(list, col);
@@ -243,8 +226,8 @@
                 case 'name':
                     $scope.symbol.name = '\u21c5';
                     break;
-                case 'folder':
-                    $scope.symbol.folder = '\u21c5';
+                case 'url':
+                    $scope.symbol.url = '\u21c5';
                     break;
                 case 'uuid':
                     $scope.symbol.uuid = '\u21c5';
@@ -506,7 +489,9 @@
             link = document.createElement('a');
             link.setAttribute('href', data);
             link.setAttribute('download', filename);
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
         };
 
         /**
@@ -556,7 +541,7 @@
             $scope.filteredItems = [];
             $scope.filteredItems = $filter('filter')(list, function (item) {
                 for (var key in item) {
-                    if (item.hasOwnProperty(key) && key !== 'basis' && searchMatch(item[key], query)) {
+                    if (item.hasOwnProperty(key) && key !== 'basis' && key !== '$$hashKey' && searchMatch(item[key], query)) {
                         return true;
                     }
                 }

@@ -404,7 +404,7 @@ td.uh-pre {
         padding-left: 5px;
     }
 
-    #btn-return-to-list {
+    .xs-left-sm-right {
         float: left;
     }
 }
@@ -428,7 +428,10 @@ td.uh-pre {
 }
 
 @media (min-width: 768px) {
-    #btn-return-to-list {
+    .xs-left-sm-right {
         float: right;
+    }
+    .input-inline-pagination {
+        margin-top: 1.40625em;
     }
 }
