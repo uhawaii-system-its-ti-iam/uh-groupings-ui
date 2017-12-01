@@ -72,14 +72,18 @@
             dataProvider.loadData(function (d) {
                 var temp = [];
                 console.log(d);
-                // Assigns grouping name and url used for api call.
-                for (var i = 0; i < d.groupingsOwned.length; i++) {
-                    $scope.ownedList.push({
-                        'name': d.groupingsOwned[i].name,
-                        'url': d.groupingsOwned[i].path
-                    });
+                if (typeof d.groupingsIn === 'undefined') {
+                    $scope.errorModal();
+                } else {
+                    // Assigns grouping name and url used for api call.
+                    for (var i = 0; i < d.groupingsOwned.length; i++) {
+                        $scope.ownedList.push({
+                            'name': d.groupingsOwned[i].name,
+                            'url': d.groupingsOwned[i].path
+                        });
+                    }
+                    $scope.pagedItemsOwned = $scope.groupToPages($scope.ownedList, $scope.pagedItemsOwned);
                 }
-                $scope.pagedItemsOwned = $scope.groupToPages($scope.ownedList, $scope.pagedItemsOwned);
                 $scope.loading = false;
             }, groupingsOwned);
         };
@@ -127,7 +131,7 @@
 
                 //Gets members in grouping
                 $scope.groupingMembers = d.composite.members;
-                $scope.modify($scope.groupingsList);
+                $scope.modify($scope.groupingMembers, 'members');
                 $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
 
                 //Gets members in the basis group
