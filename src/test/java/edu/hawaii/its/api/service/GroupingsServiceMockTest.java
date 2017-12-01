@@ -244,8 +244,48 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
+    public void addAdminTest() {
+        //user is not super user
+        GroupingsServiceResult gsr = groupingsService.addAdmin(users.get(9).getUsername(), users.get(9).getUsername());
+        assertTrue(gsr.getResultCode().startsWith(FAILURE));
+
+        //user is super user
+        gsr = groupingsService.addAdmin(ADMIN_USER, users.get(9).getUsername());
+        assertTrue(gsr.getResultCode().startsWith(SUCCESS));
+    }
+
+    @Test
+    public void deleteAdminTest() {
+        //usernameToDelete is not a superuser
+        String usernameToDelete = users.get(9).getUsername();
+
+        //user is not super user
+        GroupingsServiceResult gsr = groupingsService.deleteAdmin(usernameToDelete, ADMIN_USER);
+        assertTrue(gsr.getResultCode().startsWith(FAILURE));
+
+        //user is super user usernameToDelete is not superuser
+        gsr = groupingsService.deleteAdmin(ADMIN_USER, usernameToDelete);
+        assertEquals(SUCCESS, gsr.getResultCode());
+
+        //make usernameToDelete a superuser
+        groupingsService.addAdmin(ADMIN_USER, usernameToDelete);
+        assertTrue(groupingsService.isAdmin(usernameToDelete));
+
+        //user is super user usernameToDelete is not superuser
+        gsr = groupingsService.deleteAdmin(ADMIN_USER, usernameToDelete);
+        assertEquals(SUCCESS, gsr.getResultCode());
+
+    }
+
+    @Test
     public void construction() {
+        //autowired
         assertNotNull(groupingsService);
+
+        //constructed normally
+        GrouperFactoryService grouperFactoryOther = new GrouperFactoryServiceImplLocal();
+        GroupingsService groupingsServiceOther = new GroupingsServiceImpl(grouperFactoryOther);
+        assertNotNull(groupingsServiceOther);
     }
 
     @Test
@@ -899,8 +939,6 @@ public class GroupingsServiceMockTest {
         //member is self-opted
         gsr = groupingsService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(4).getUsername());
         assertTrue(gsr.getResultCode().startsWith(SUCCESS));
-
-//todo
     }
 
     @Test
@@ -910,60 +948,6 @@ public class GroupingsServiceMockTest {
 
         oop = groupingsService.groupOptOutPermission(users.get(1).getUsername(), GROUPING_1_EXCLUDE_PATH);
         assertEquals(true, oop);
-    }
-
-    @Test
-    public void groupOptInPermissionTest() {
-
-//todo
-    }
-
-    @Test
-    public void updateLastModifiedTest() {
-
-//todo
-    }
-
-    @Test
-    public void assignMembershipAttributesTest() {
-
-//todo
-    }
-
-    @Test
-    public void getMembershipAttributesTest() {
-
-//todo
-    }
-
-    @Test
-    public void assignGroupAttributesTest() {
-
-//todo
-    }
-
-    @Test
-    public void attributeAssignmentsResultsTest() {
-
-//todo
-    }
-
-    @Test
-    public void getGrouperPrivilegeTest() {
-
-//todo
-    }
-
-    @Test
-    public void assignGrouperPrivilegeTest() {
-
-//todo
-    }
-
-    @Test
-    public void membershipsResultsTest() {
-
-//todo
     }
 
     @Test
@@ -977,57 +961,44 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
-    public void deleteMemberAsTest() {
+    public void addMemberAsTest2() {
+        //add all usernames
+        List<String> usernames = new ArrayList<>();
+        for(Person user : users) {
+            usernames.add(user.getUsername());
+        }
 
-//todo
-    }
+        Grouping grouping = groupingRepository.findByPath(GROUPING_3_PATH);
 
-    @Test
-    public void deleteMemberTest() {
+        //check how many members are in the basis
+        int numberOfBasisMembers = grouping.getBasis().getMembers().size();
 
-//todo
-    }
+        //try to put all users into exclude group
+        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_3_EXCLUDE_PATH, usernames);
+        grouping = groupingRepository.findByPath(GROUPING_3_PATH);
+        //there should be no real members in composite, but it should still have the 'grouperAll' member
+        assertEquals(1, grouping.getComposite().getMembers().size());
+        //only the users in the basis should have been added to the exclude group
+        assertEquals(numberOfBasisMembers, grouping.getExclude().getMembers().size());
 
-    @Test
-    public void getMembersTest() {
-
-//todo
-    }
-
-    @Test
-    public void extractGroupingsTest() {
-
-//todo
-    }
-
-    @Test
-    public void getGroupPathsTest() {
-
-//todo
-    }
-
-    @Test
-    public void setGroupingAttributesTest() {
-
-//todo
+        //try to put all users into the include group
+        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_3_INCLUDE_PATH, usernames);
+        grouping = groupingRepository.findByPath(GROUPING_3_PATH);
+        //all members should be in the group ( - 1 for 'grouperAll' in composite);
+        assertEquals(usernames.size(), grouping.getComposite().getMembers().size() - 1);
+        //members in basis should not have been added to the include group ( + 2 for 'grouperAll' in both groups)
+        assertEquals(usernames.size() - numberOfBasisMembers + 2, grouping.getInclude().getMembers().size());
     }
 
     @Test
     public void parentGroupingPathTest() {
-
-//todo
-    }
-
-    @Test
-    public void extractGroupPathsTest() {
-
-//todo
-    }
-
-    @Test
-    public void changeGroupAttributeStatusTest() {
-
-//todo
+        assertEquals(GROUPING_2_PATH, groupingsService.parentGroupingPath(GROUPING_2_BASIS_PATH));
+        assertEquals(GROUPING_2_PATH, groupingsService.parentGroupingPath(GROUPING_2_PATH + BASIS_PLUS_INCLUDE));
+        assertEquals(GROUPING_2_PATH, groupingsService.parentGroupingPath(GROUPING_2_EXCLUDE_PATH));
+        assertEquals(GROUPING_2_PATH, groupingsService.parentGroupingPath(GROUPING_2_INCLUDE_PATH));
+        assertEquals(GROUPING_2_PATH, groupingsService.parentGroupingPath(GROUPING_2_OWNERS_PATH));
+        assertEquals(GROUPING_APPS, groupingsService.parentGroupingPath(GROUPING_APPS));
+        assertEquals("", groupingsService.parentGroupingPath(null));
     }
 
     @Test(expected = NotImplementedException.class)

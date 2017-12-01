@@ -1588,19 +1588,6 @@ public class GroupingsServiceImpl implements GroupingsService {
         return group;
     }
 
-    private Group makeGroup(String path, List<String> usernames) {
-        List<Person> members = new ArrayList<>();
-
-        for (String username : usernames) {
-            WsSubject subject = new WsSubject();
-            subject.setAttributeValues(new String[]{username});
-            members.add(makePerson(subject));
-        }
-
-        return new Group(path, members);
-    }
-
-
     /**
      * @param person:
      * @return a person made from the WsSubject
@@ -1617,16 +1604,4 @@ public class GroupingsServiceImpl implements GroupingsService {
         }
         return new Person();
     }
-
-    List<String> unionMemberLists(List<String> list1, List<String> list2) {
-        List<String> list = new ArrayList<>();
-        list.addAll(list1);
-        list.addAll(list2);
-
-        //remove duplicates
-        Set<String> s = new TreeSet<>();
-        s.addAll(list);
-        return Arrays.asList(s.toArray(new String[s.size()]));
-    }
-
 }
