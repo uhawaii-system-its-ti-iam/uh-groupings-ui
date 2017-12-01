@@ -49,7 +49,8 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table table-bordered table-condensed table-hover">
+                        <div class = "table-responsive">
+                        <table class="table table-responsive table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
                                 <th><a type="button" class="btn btn-default btn-block"
@@ -113,6 +114,7 @@
                             </tbody>
                         </table>
                     </div>
+                    </div>
                 </div>
 
 
@@ -138,11 +140,9 @@
                                 <thead>
                                 <tr>
                                     <th><a type="button" class="btn btn-default btn-block"
-                                           style="padding-left: 0px; text-align: left; width: 100%; border: none"
                                            ng-click="sort(optInList, 'name', 'pagedItemsOptInList', 'symbolOptIn')"><b>Grouping Name
                                         {{symbol.optInName}}</b></a></th>
                                     <th><a type="button" class="btn btn-default btn-block"
-                                           style="padding-left: 0px; text-align: left; width: 100%; border: none"
                                            ng-click="sort(optInList, 'path', 'pagedItemsOptInList', 'symbolOptIn')"><b>Grouping Path
                                         {{symbol.optInPath}}</b></a></th>
                                     <th class="col-md-2 text-center" style="vertical-align: middle;">Opt In</th>
@@ -151,7 +151,7 @@
                                 <tbody>
                                 <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn] ">
                                     <td>{{o.name}}</td>
-                                    <td>{{o.path}}</td>
+                                    <td id = "groupingOptInPath">{{o.path}}</td>
                                     <td class="col-md-2">
                                         <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-primary btn-block opt-button"
                                                 ng-click="optIn($index + (currentPageOptOut * itemsPerPage))">Opt In
