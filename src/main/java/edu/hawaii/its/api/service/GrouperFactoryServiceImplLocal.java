@@ -254,34 +254,41 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         Grouping grouping = groupingRepository.findByIncludePathOrExcludePathOrCompositePathOrOwnersPath(group, group, group, group);
         Person newGroupMember = personRepository.findByUsername(newMember);
 
-        boolean inBasis = grouping.getBasis().getMembers().contains(newGroupMember);
-        boolean inExclude = grouping.getExclude().getMembers().contains(newGroupMember);
-        boolean inInclude = grouping.getInclude().getMembers().contains(newGroupMember);
+        if (grouping == null) {
+            Group groupToAddTo = groupRepository.findByPath(group);
+            addMember(groupToAddTo, newGroupMember);
+        } else {
 
-        if (group.endsWith(OWNERS)) {
-            addMember(grouping.getOwners(), newGroupMember);
-        } else if (group.endsWith(EXCLUDE)) {
-            if (inBasis) {
-                addMember(grouping.getExclude(), newGroupMember);
-            } else if (inInclude) {
-                deleteMember(grouping.getInclude(), newGroupMember);
+            boolean inBasis = grouping.getBasis().getMembers().contains(newGroupMember);
+            boolean inExclude = grouping.getExclude().getMembers().contains(newGroupMember);
+            boolean inInclude = grouping.getInclude().getMembers().contains(newGroupMember);
+
+            if (group.endsWith(OWNERS)) {
+                addMember(grouping.getOwners(), newGroupMember);
+            } else if (group.endsWith(EXCLUDE)) {
+                if (inBasis) {
+                    addMember(grouping.getExclude(), newGroupMember);
+                } else if (inInclude) {
+                    deleteMember(grouping.getInclude(), newGroupMember);
+                }
+            } else if (group.endsWith(INCLUDE)) {
+                if (inExclude) {
+                    deleteMember(grouping.getExclude(), newGroupMember);
+                } else if (!inBasis) {
+                    addMember(grouping.getInclude(), newGroupMember);
+                }
             }
-        } else if (group.endsWith(INCLUDE)) {
-            if (inExclude) {
-                deleteMember(grouping.getExclude(), newGroupMember);
-            } else if (!inBasis) {
-                addMember(grouping.getInclude(), newGroupMember);
-            }
+
+            grouping = groupingRepository.findByPath(grouping.getPath());
+            Group composite = buildComposite(
+                    grouping.getInclude(),
+                    grouping.getExclude(),
+                    grouping.getBasis(),
+                    grouping.getPath());
+
+            groupRepository.save(composite);
+
         }
-
-        grouping = groupingRepository.findByPath(grouping.getPath());
-        Group composite = buildComposite(
-                grouping.getInclude(),
-                grouping.getExclude(),
-                grouping.getBasis(),
-                grouping.getPath());
-
-        groupRepository.save(composite);
         return wsAddMemberResults;
     }
 
@@ -295,24 +302,30 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         Grouping grouping = groupingRepository.findByIncludePathOrExcludePathOrCompositePathOrOwnersPath(group, group, group, group);
         Person personToDelete = personRepository.findByUsername(memberToDelete);
 
-        if (group.endsWith(OWNERS)) {
-            deleteMember(grouping.getOwners(), personToDelete);
-        } else if (group.endsWith(EXCLUDE)) {
-            deleteMember(grouping.getExclude(), personToDelete);
+        if (grouping == null) {
+            Group groupToDeleteFrom = groupRepository.findByPath(group);
+            deleteMember(groupToDeleteFrom, personToDelete);
+        } else {
 
-        } else if (group.endsWith(INCLUDE)) {
-            deleteMember(grouping.getInclude(), personToDelete);
+            if (group.endsWith(OWNERS)) {
+                deleteMember(grouping.getOwners(), personToDelete);
+            } else if (group.endsWith(EXCLUDE)) {
+                deleteMember(grouping.getExclude(), personToDelete);
+
+            } else if (group.endsWith(INCLUDE)) {
+                deleteMember(grouping.getInclude(), personToDelete);
+            }
+
+            grouping = groupingRepository.findByPath(grouping.getPath());
+            grouping = groupingRepository.findByPath(grouping.getPath());
+            Group composite = buildComposite(
+                    grouping.getInclude(),
+                    grouping.getExclude(),
+                    grouping.getBasis(),
+                    grouping.getPath());
+
+            groupRepository.save(composite);
         }
-
-        grouping = groupingRepository.findByPath(grouping.getPath());
-        grouping = groupingRepository.findByPath(grouping.getPath());
-        Group composite = buildComposite(
-                grouping.getInclude(),
-                grouping.getExclude(),
-                grouping.getBasis(),
-                grouping.getPath());
-
-        groupRepository.save(composite);
         return wsDeleteMemberResults;
     }
 
@@ -399,13 +412,13 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         return wsGetAttributeAssignmentsResults;
     }
 
-    private List<WsAttributeAssign> attributeAssignsOptIn(){
+    private List<WsAttributeAssign> attributeAssignsOptIn() {
         List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
 
         Iterable<Grouping> groupings = groupingRepository.findAll();
 
-        for(Grouping grouping: groupings) {
-            if(grouping.isOptInOn()) {
+        for (Grouping grouping : groupings) {
+            if (grouping.isOptInOn()) {
                 WsAttributeAssign attributeAssign = new WsAttributeAssign();
                 attributeAssign.setAttributeDefNameName(OPT_IN);
                 attributeAssign.setOwnerGroupName(grouping.getPath());
@@ -417,13 +430,13 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         return attributeAssigns;
     }
 
-    private List<WsAttributeAssign> attributeAssignsOptOut(){
+    private List<WsAttributeAssign> attributeAssignsOptOut() {
         List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
 
         Iterable<Grouping> groupings = groupingRepository.findAll();
 
-        for(Grouping grouping: groupings) {
-            if(grouping.isOptOutOn()) {
+        for (Grouping grouping : groupings) {
+            if (grouping.isOptOutOn()) {
                 WsAttributeAssign attributeAssign = new WsAttributeAssign();
                 attributeAssign.setAttributeDefNameName(OPT_OUT);
                 attributeAssign.setOwnerGroupName(grouping.getPath());
@@ -813,8 +826,8 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     ////////////////////////////////////////////////////////////////////////////////
 
     private Group buildComposite(Group include, Group exclude, Group basis, String path) {
-        Group basisPlusInclude = addIncludedMembers(include, basis);
-        Group compositeGroup = removeExcludedMembers(basisPlusInclude, exclude);
+        Group basisMinusExclude = removeExcludedMembers(basis, exclude);
+        Group compositeGroup = addIncludedMembers(include, basisMinusExclude);
         compositeGroup.setPath(path);
 
         return compositeGroup;
@@ -923,7 +936,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         for (WsGroup wsGroup : wsGroupList) {
             Grouping grouping = groupingRepository.findByPath(wsGroup.getName());
 
-            if(grouping.isOptInOn()) {
+            if (grouping.isOptInOn()) {
                 wsGroupsWithOptIn.add(wsGroup);
             }
         }
@@ -931,7 +944,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         for (WsAttributeAssign wsAttributeAssign : wsAttributeAssignList) {
             Grouping grouping = groupingRepository.findByPath(wsAttributeAssign.getOwnerGroupName());
 
-            if(grouping.isOptInOn()) {
+            if (grouping.isOptInOn()) {
                 wsAttributeAssignsWithOptIn.add(wsAttributeAssign);
             }
         }
