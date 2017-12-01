@@ -427,7 +427,6 @@
                                                         <div class="input-group">
                                                             <input type="text" placeholder="Add user to include"
                                                                    ng-model="addUser" class="form-control"/>
-
                                                             <div class="input-group-btn">
                                                                 <button class="btn btn-primary" type="submit">Add</button>
                                                             </div>
@@ -619,20 +618,22 @@
                                                     »»</a>
                                             </li>
                                         </ul>
+                                        <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group input-inline-pagination">
+                                            <form ng-submit="addOwner()">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Add an owner..." ng-model="ownerUser"/>
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-primary" type="submit">Add</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </td>
                                     </tfoot>
                                 </table>
                             </div>
                             <div class="col-lg-3 col-md-3" style="padding: inherit;">
-                                <form ng-submit="addOwner()">
-                                    <div class="input-group">
-                                        <input type="text" placeholder="Add an owner..."
-                                               ng-model="ownerUser" class="form-control"/>
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-primary" type="submit">Add</button>
-                                        </div>
-                                    </div>
-                                </form>
                             </div>
 
                         </div>

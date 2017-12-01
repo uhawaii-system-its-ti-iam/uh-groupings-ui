@@ -174,13 +174,13 @@
                                             </li>
                                         </ul>
                                         <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group input-inline-pagination">
-                                            <input class="form-control" type="text"
-                                                   placeholder="UH Username" ng-model="username"/>
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-primary"
-                                                        ng-click="addAdmin()">Add
-                                                </button>
-                                            </div>
+                                            <form ng-submit="addAdmin()">
+                                                <input class="form-control" type="text"
+                                                       placeholder="UH Username" ng-model="username"/>
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-primary" type="submit">Add</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </td>
                                     </tfoot>
@@ -452,12 +452,14 @@
                                             </tfoot>
                                         </table>
                                         <div class="col-lg-4 col-md-6" style="padding: inherit;">
-                                            <div class="input-group">
-                                                <input type="text" placeholder="Add user to include" ng-model="addUser" class="form-control"/>
-                                                <div class="input-group-btn">
-                                                    <button class="btn btn-primary" ng-click="addMember('Include')">Add</button>
+                                            <form ng-submit="addMember('Include')">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Add user to include" ng-model="addUser" class="form-control"/>
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-primary" type="submit">Add</button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </form>
                                         </div>
                                     </div>
                                     <div id="exclude" class="tab-pane fade">
@@ -531,12 +533,14 @@
                                             </tfoot>
                                         </table>
                                         <div class="col-lg-4 col-md-6" style="padding: inherit;">
-                                            <div class="input-group">
-                                                <input type="text" placeholder="Add user to exclude" ng-model="addUser" class="form-control"/>
-                                                <div class="input-group-btn">
-                                                    <button class="btn btn-primary" ng-click="addMember('Exclude')">Add</button>
+                                            <form ng-submit="addMember('Exclude')">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Add user to exclude" ng-model="addUser" class="form-control"/>
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-primary" type="submit">Add</button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </form>
                                         </div>
                                     </div>
                                     <div id="owner" class="tab-pane fade">
@@ -596,12 +600,14 @@
                                             </tfoot>
                                         </table>
                                         <div class="col-lg-4 col-md-6" style="padding: inherit;">
-                                            <div class="input-group">
-                                                <input type="text" placeholder="Add user as owner" ng-model="ownerUser" class="form-control"/>
-                                                <div class="input-group-btn">
-                                                    <button class="btn btn-primary" ng-click="addOwner()">Add</button>
+                                            <form ng-submit="addOwner()">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Add user as owner" ng-model="ownerUser" class="form-control"/>
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-primary" type="submit">Add</button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </form>
                                         </div>
                                     </div>
                                     <div id="options" class="tab-pane fade">
