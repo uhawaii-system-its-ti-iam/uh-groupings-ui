@@ -47,9 +47,6 @@
         $scope.pagedItemsOwners = [];
         $scope.currentPageOwners = 0;
 
-        $scope.pagedItemsList = [];
-        $scope.currentPageList = 0;
-
         $scope.allowOptIn = false;
         $scope.allowOptOut = false;
         $scope.listserv = false;
