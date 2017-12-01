@@ -206,11 +206,11 @@
                             <tbody>
                             <tr>
                                 <th>Name</th>
-                                <td>{{ selectedGroupingName }}</td>
+                                <td>{{ groupingName }}</td>
                             </tr>
                             <tr>
                                 <th>Path</th>
-                                <td>{{ selectedGroupingPath }}</td>
+                                <td>{{ groupingPath }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -643,7 +643,7 @@
                                                         <label>
                                                             <input type="checkbox" ng-model="listserv" ng-change="updateListserv()"
                                                                    ng-init="pref"/>
-                                                            LISTSERV list: &lt;{{ selectedGroupingName }}@lists.hawaii.edu&gt;
+                                                            LISTSERV list: &lt;{{ groupingName }}@lists.hawaii.edu&gt;
                                                         </label>
                                                         <i class="fa fa-question-circle" aria-hidden="true"
                                                            ng-click="infoModal('publication')"
