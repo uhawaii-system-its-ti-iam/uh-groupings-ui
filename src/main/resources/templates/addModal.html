@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="dialog" style="float: right;">
+        <span aria-hidden="true" ng-click="infoDismiss()">&times;</span>
+    </button>
+    <h3 class="modal-title" id="modal-title">Adding User</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <div class="text-center modal-body">
+        <p ng-if="successAdd">
+            This {{role}} has been added.
+        </p>
+        <p ng-if="!successAdd">
+            There has been an error adding this {{role}}.
+        </p>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="continue()">OK</button>
+</div>

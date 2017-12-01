@@ -47,6 +47,14 @@
         $scope.pagedItemsOwners = [];
         $scope.currentPageOwners = 0;
 
+        $scope.pagedItemsList = [];
+        $scope.currentPageList = 0;
+
+        $scope.allowOptIn = false;
+        $scope.allowOptOut = false;
+        $scope.listserv = false;
+        $scope.LDAP = false;
+
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
 
@@ -70,16 +78,33 @@
             var url = "api/groupings/" + $scope.getCurrentUsername() + "/adminLists";
 
             dataProvider.loadData(function (d) {
-                $scope.adminsList = d.adminGroup.members;
-                $scope.groupingsList = d.allGroupings;
-                $scope.groupingsList = _.sortBy($scope.groupingsList, 'name');
-                $scope.modify($scope.adminsList);
-                $scope.symbol.name = '\u21c5';
-                $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList, $scope.pagedItemsAdmins);
-                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
-                console.log($scope.groupingsList);
+                console.log(d.allGroupings.length);
+                if (d.allGroupings.length == 0) {
+                    $scope.errorModal();
+                } else {
+                    $scope.adminsList = d.adminGroup.members;
+                    $scope.groupingsList = d.allGroupings;
+                    $scope.groupingsList = _.sortBy($scope.groupingsList, 'name');
+                    $scope.modify($scope.adminsList);
+                    $scope.symbol.name = '\u21c5';
+                    $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList, $scope.pagedItemsAdmins);
+                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
+                    console.log($scope.groupingsList);
+                }
                 $scope.loading = false;
             }, url);
+        };
+
+        $scope.errorModal = function () {
+            $scope.errorModalInstance = $uibModal.open({
+                templateUrl: 'apiError.html',
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
+
+        $scope.errorDismiss = function () {
+            $scope.errorModalInstance.dismiss();
         };
 
         $scope.initCurrentUsername = function () {
@@ -133,43 +158,48 @@
 
             dataProvider.loadData(function (d) {
                 console.log(d);
-                $scope.selectedGrouping = d;
-                $scope.basis = d.basis.members;
+                if (d.path.length == 0) {
+                    $scope.errorModal();
+                }
+                else {
+                    $scope.selectedGrouping = d;
+                    $scope.basis = d.basis.members;
 
-                //Gets members in grouping
-                $scope.groupingMembers = d.composite.members;
-                $scope.modify($scope.groupingMembers);
-                $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
+                    //Gets members in grouping
+                    $scope.groupingMembers = d.composite.members;
+                    $scope.modify($scope.groupingMembers);
+                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
 
-                //Gets members in the basis group
-                $scope.groupingBasis = d.basis.members;
-                $scope.modify($scope.groupingBasis);
-                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis, $scope.pagedItemsBasis);
+                    //Gets members in the basis group
+                    $scope.groupingBasis = d.basis.members;
+                    $scope.modify($scope.groupingBasis);
+                    $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis, $scope.pagedItemsBasis);
 
-                //Gets members in the include group
-                $scope.groupingInclude = d.include.members;
-                $scope.modify($scope.groupingInclude);
-                $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude, $scope.pagedItemsInclude);
+                    //Gets members in the include group
+                    $scope.groupingInclude = d.include.members;
+                    $scope.modify($scope.groupingInclude);
+                    $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude, $scope.pagedItemsInclude);
 
-                //Gets members in the exclude group
-                $scope.groupingExclude = d.exclude.members;
-                $scope.modify($scope.groupingExclude);
-                $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
+                    //Gets members in the exclude group
+                    $scope.groupingExclude = d.exclude.members;
+                    $scope.modify($scope.groupingExclude);
+                    $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
 
-                //Gets owners of the grouping
-                $scope.groupingOwners = d.owners.members;
-                $scope.modify($scope.groupingOwners);
-                $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners, $scope.pagedItemsOwners);
+                    //Gets owners of the grouping
+                    $scope.groupingOwners = d.owners.members;
+                    $scope.modify($scope.groupingOwners);
+                    $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners, $scope.pagedItemsOwners);
 
-                $scope.preference = {
-                    optIn: d.optInOn,
-                    optOut: d.optOutOn,
-                    listserv: d.listservOn
-                };
+                    $scope.allowOptIn = d.optInOn;
+                    $scope.allowOptOut = d.optOutOn;
+                    $scope.listserv = d.listservOn;
 
-                //Stop loading spinner
-                $scope.loading = false;
-                $scope.showGrouping = true;
+                    //Stop loading spinner
+                    $scope.selectedGroupingName = d.name;
+                    $scope.selectedGroupingPath = d.path;
+                    $scope.loading = false;
+                    $scope.showGrouping = true;
+                }
             }, groupingDataUrl);
         };
 
@@ -286,8 +316,7 @@
             });
 
             $scope.addModalInstance.result.then(function () {
-                if (success === 'success')
-                {
+                if (success === 'success') {
                     $scope.loading = true;
                     if (location === 'admin') $scope.init();
                     if (location === 'grouping') $scope.getData($scope.groupingPath);
@@ -343,8 +372,7 @@
          * @param location - The index of the user in the admin list table.
          * @param type - Declaring if removing from admin list or from a grouping path.
          */
-        $scope.deleteModal = function(user, url, location, type)
-        {
+        $scope.deleteModal = function (user, url, location, type) {
             var message = "Are you sure you want to delete " + user;
             var modalHtml = '<div class="modal-body">' + message + '</div>';
             modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
@@ -362,8 +390,7 @@
                         $scope.init();
                     }, url);
                 }
-                else
-                {
+                else {
                     dataDelete.deleteData(function (d) {
                         console.log(d);
                         $scope.getData(type);
@@ -389,9 +416,9 @@
         $scope.infoModal = function (preference, group) {
             $scope.test = '';
 
-            if(preference === 'opt')
+            if (preference === 'opt')
                 $scope.test = "members can " + group + " themselves from the grouping";
-            else if(preference === 'publication')
+            else if (preference === 'publication')
                 $scope.test = "the publication destination is active or not";
 
 
@@ -407,54 +434,71 @@
             });
         };
 
-        $scope.infoDismiss = function() {
+        $scope.infoDismiss = function () {
             $scope.infoModalInstance.dismiss();
         };
 
-        $scope.savePref = function () {
-            var prefUrls = [];
+        $scope.updateAllowOptOut = function () {
+            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut";
+            dataUpdater.updateData(function (d) {
+                if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                    console.log("success");
+                }
+                else {
+                    console.log("failed");
+                    $scope.preferenceErrorModal();
+                }
+            }, url);
+            console.log(url);
 
-            prefUrls.push({
-                "url": "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.listserv + "/setListserv",
-                "name": "Listserv"
-            });
-            prefUrls.push({
-                "url": "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.optIn + "/setOptIn",
-                "name": "optInOption"
-            });
-            prefUrls.push({
-                "url": "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.optOut + "/setOptOut",
-                "name": "optOutOption"
-            });
-
-            for (var i = 0; i < prefUrls.length; i++) {
-                dataUpdater.updateData(function (d) {
-                    var success = 0;
-                    console.log(d);
-                    if (d.resultCode === "SUCCESS") {
-                        console.log("LISTSERV preference successfully updated");
-                        alert("LISTSERV preference successfully updated");
-                        success = 1;
-                    }
-                    else if (typeof d.resultsCode === 'undefined') {
-                        if (typeof d[0] != 'undefined' && (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED" )) {
-                            console.log("OptIn/OptOut preference successfully updated");
-                            alert("OptIn/OptOut preference successfully updated");
-                            success = 1;
-                        }
-                        else {
-                            console.log("Preference did not change");
-                            alert("Preference did not change");
-                        }
-                    }
-                    if (success == 1) {
-                        $scope.getData($scope.groupingPath);
-                    }
-                }, prefUrls[i].url);
-            }
         };
 
-        $scope.filter = function (list,whatList, whatQuery) {
+        $scope.updateAllowOptIn = function () {
+            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn";
+            dataUpdater.updateData(function (d) {
+                if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                    console.log("success");
+                }
+                else {
+                    console.log("failed");
+                    $scope.preferenceErrorModal();
+                }
+            }, url);
+            console.log(url);
+        };
+
+        $scope.updateListserv = function () {
+            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.listserv + "/setListserv";
+            dataUpdater.updateData(function (d) {
+                if (d.resultCode === "SUCCESS") {
+                    console.log("success");
+                }
+                else {
+                    console.log("failed");
+                    $scope.preferenceErrorModal();
+                }
+            }, url);
+
+            console.log(url);
+        };
+
+        $scope.checkLDAP = function () {
+            console.log($scope.LDAP);
+        };
+
+        $scope.preferenceErrorModal = function () {
+            $scope.preferenceErrorModalInstance = $uibModal.open({
+                templateUrl: 'preferenceErrorModal.html',
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
+
+        $scope.preferenceErrorDismiss = function () {
+            $scope.preferenceErrorModalInstance.dismiss();
+        };
+
+        $scope.filter = function (list, whatList, whatQuery) {
             var query = "";
             query = $scope[whatQuery];
             $scope.filteredItems = [];
@@ -472,7 +516,7 @@
             $scope[whatList] = $scope.groupToPagesChanged(emptyList);
         };
 
-        var searchMatch = function(haystack, needle) {
+        var searchMatch = function (haystack, needle) {
             if (!needle) {
                 return true;
             }

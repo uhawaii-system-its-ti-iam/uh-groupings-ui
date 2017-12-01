@@ -84,6 +84,18 @@
             }, groupingsOwned);
         };
 
+        $scope.errorModal = function () {
+            $scope.errorModalInstance = $uibModal.open({
+                templateUrl: 'apiError.html',
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
+
+        $scope.errorDismiss = function () {
+            $scope.errorModalInstance.dismiss();
+        };
+
         /**
          * Switches from showing that data of the grouping you own to the information about the grouping selected.
          *
@@ -143,8 +155,6 @@
                     optOut: d.optOutOn,
                     listserv: d.listservOn
                 };
-
-
                 //Stop loading spinner
                 $scope.loading = false;
             }, getUrl);
@@ -161,10 +171,11 @@
          *                -1 for descending
          *                0 for failed attempt
          */
-        $scope.modify = function (grouping) {
+        $scope.modify = function (grouping, list) {
             //Filter out names with hawaii.edu and adds basis object.
             for (var i = 0; i < grouping.length; i++) {
-                grouping[i].basis = "No";
+                if(list === 'members') grouping[i].basis = "in Include";
+                else grouping[i].basis = "No";
                 if (grouping[i].name.indexOf("hawaii.edu") > -1) {
                     grouping.splice(i, 1);
                     i--;
@@ -175,7 +186,15 @@
             for (var l = 0; l < $scope.basis.length; l++) {
                 for (var m = 0; m < grouping.length; m++) {
                     if ($scope.basis[l].uuid === grouping[m].uuid) {
-                        grouping[m].basis = "Yes";
+                        if(list === 'members') {
+                            grouping[m].basis = "in Basis";
+                            for(var k = 0; k <  $scope.groupingInclude.length;k++) {
+                                if($scope.groupingInclude[k].uuid === grouping[m].uuid){
+                                    grouping[m].basis = "in Basis / in Include";
+                                }
+                            }
+                        }
+                        else grouping[m].basis = "Yes";
                     }
                 }
             }
@@ -252,7 +271,7 @@
             var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataUpdater.addData(function (d) {
                 if (d.resultCode === "SUCCESS") {
-                    $scope.addModalAlert('success');
+                    $scope.addModalAlert('success', 'member');
                 }
                 else if (typeof d.resultsCode === 'undefined') {
                     console.log($scope.addUser + " this user does not exist.");
@@ -272,7 +291,7 @@
             dataUpdater.addData(function (d) {
                 if (d.resultCode === "SUCCESS") {
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
-                    $scope.addModalAlert('success');
+                    $scope.addModalAlert('success', 'owner');
                 }
                 else if (typeof d.resultsCode === 'undefined') {
                     console.log($scope.ownerUser + " this user does not exist.");
@@ -287,16 +306,25 @@
          * @param user - user being added
          * @param success - whether if the addData service returned a success in adding.
          */
-        $scope.addModalAlert = function (success) {
-            if (success === 'success') var message = "User has been added";
-            else var message = "Error: User is not a valid username";
+        $scope.addModalAlert = function (success, role) {
+            if (success === 'success') $scope.successAdd = true;
+            else $scope.successAdd = false;
 
-            var modalHtml = '<div class="modal-body">' + message + '</div>';
-            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="continue()">OK</button></div>';
-
+            $scope.role = role;
+            console.log($scope.successAdd);
+            console.log(role);
             $scope.addModalInstance = $uibModal.open({
-                template: modalHtml,
-                scope: $scope
+                templateUrl: 'addModal.html',
+                windowClass: 'center-modal',
+                scope: $scope,
+                resolve: {
+                    success: function () {
+                        return $scope.successAdd;
+                    },
+                    type: function () {
+                        return $scope.role;
+                    }
+                }
             });
 
             $scope.addModalInstance.result.then(function () {
@@ -327,10 +355,8 @@
             if (type === 'Exclude') {
                 user = $scope.groupingExclude[row].username;
             }
-
             var URL = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
-
-            $scope.deleteModal(user, URL, null, $scope.groupingPath);
+            $scope.deleteModal(user, URL, $scope.groupingPath);
         };
 
         /**
@@ -342,34 +368,29 @@
             var removeOwner = $scope.ownerList[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
             if ($scope.ownerList.length > 1) {
-                $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.groupingPath);
+                $scope.deleteModal(removeOwner, removeOwnerUrl, $scope.groupingPath);
             }
         };
 
-        $scope.deleteModal = function (user, url, location, type) {
-            var message = "Are you sure you want to delete " + user;
-            var modalHtml = '<div class="modal-body">' + message + '</div>';
-            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
-
+        $scope.deleteModal = function (user, url, type) {
+            $scope.deleteUser = user;
             $scope.deleteModalInstance = $uibModal.open({
-                template: modalHtml,
-                scope: $scope
+                templateUrl: 'removeModal.html',
+                windowClass: 'center-modal',
+                scope: $scope,
+                resolve: {
+                    name: function() {
+                        return $scope.deleteUser;
+                    }
+                }
             });
 
             $scope.deleteModalInstance.result.then(function () {
-                if (type === 'admin' && $scope.list.length > 1) {
-                    dataDeleter.deleteData(function (d) {
-                        $scope.list.splice(location, 1);
-                        $scope.init();
-                    }, url);
-                }
-                else {
-                    dataDeleter.deleteData(function (d) {
-                        console.log(d);
-                        $scope.loading = true;
-                        $scope.getData(type);
-                    }, url);
-                }
+                dataDeleter.deleteData(function (d) {
+                    console.log(d);
+                    $scope.loading = true;
+                    $scope.getData(type);
+                }, url);
             });
         };
 
@@ -434,9 +455,9 @@
         };
 
         $scope.infoModal = function (preference, group) {
-            if(preference === 'opt')
+            if (preference === 'opt')
                 var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not members can ' + group + ' themselves from the grouping</div>';
-            else if(preference === 'publication')
+            else if (preference === 'publication')
                 var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not the publication destination is active or not</div>';
 
             $scope.deleteModalInstance = $uibModal.open({

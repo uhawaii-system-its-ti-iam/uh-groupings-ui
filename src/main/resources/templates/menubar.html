@@ -24,6 +24,7 @@
                 <li sec:authorize="hasRole('ROLE_UH')"><a th:href="@{/memberships}">Memberships</a></li>
                 <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"><a th:href="@{/groupings}">Groupings</a></li>
                 <li><a th:href="@{/info}">Info</a></li>
+                <li sec:authorize="hasRole('ROLE_UH')"><a th:href="@{/feedback}">Feedback</a></li>
                 <li><a th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a></li>
                 <li class="app-logout">
                     <form sec:authorize="isAuthenticated()" action="/logout" th:action="@{/logout}" method="post" id="logout_form">

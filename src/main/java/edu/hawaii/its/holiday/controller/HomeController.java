@@ -37,6 +37,13 @@ public class HomeController {
         return "info";
     }
 
+    @PreAuthorize("hasRole('UH')")
+    @RequestMapping(value = "/feedback", method = RequestMethod.GET)
+    public String feedback(Locale locale, Model model) {
+        logger.info("User at feedback.");
+        return "feedback";
+    }
+
     @RequestMapping(value = "/infoModal", method = RequestMethod.GET)
     public String infoModal(Locale locale, Model model) {
         return "infoModal";
@@ -45,6 +52,21 @@ public class HomeController {
     @RequestMapping(value = "/apiError", method = RequestMethod.GET)
     public String apiError(Locale locale, Model model) {
         return "apiError";
+    }
+
+    @RequestMapping(value = "/preferenceErrorModal", method = RequestMethod.GET)
+    public String preferenceErrorModal(Locale locale, Model model) {
+        return "preferenceErrorModal";
+    }
+
+    @RequestMapping(value = "/addModal", method = RequestMethod.GET)
+    public String addModal(Locale locale, Model model) {
+        return "addModal";
+    }
+
+    @RequestMapping(value = "/removeModal", method = RequestMethod.GET)
+    public String removeModal(Locale locale, Model model) {
+        return "removeModal";
     }
 
     @RequestMapping(value = "/404", method = RequestMethod.GET)

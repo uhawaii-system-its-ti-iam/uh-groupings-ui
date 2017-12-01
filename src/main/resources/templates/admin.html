@@ -159,19 +159,18 @@
                                                 <a href="" ng-click="currentPage('First','currentPageAdmins','pagedItemsAdmins')">«« First</a>
                                             </li>
                                             <li ng-class="{disabled: (currentPageAdmins) == 0}">
-                                                <a href="" ng-click="paging('prev')">« Prev</a>
+                                                <a href="" ng-click="currentPage('Prev','currentPageAdmins','pagedItemsAdmins')">« Prev</a>
                                             </li>
                                             <li ng-repeat="n in range(pagedItemsAdmins.length, currentPageAdmins - gap, currentPageAdmins + gap + 1) "
                                                 ng-class="{active: n == currentPageAdmins}"
-
-                                                ng-click="paging(n)"
+                                                ng-click="currentPage('Set','currentPageAdmins','pagedItemsAdmins')"
                                             ><a href="" ng-bind="n + 1">1</a>
                                             </li>
                                             <li ng-class="{disabled: ((currentPageAdmins) == pagedItemsAdmins.length - 1) || pagedItemsAdmins.length == 0 }">
-                                                <a href="" ng-click="paging('next')">Next »</a>
+                                                <a href="" ng-click="currentPage('Next','currentPageAdmins','pagedItemsAdmins')">Next »</a>
                                             </li>
                                             <li ng-class="{disabled: ((currentPageAdmins) == pagedItemsAdmins.length - 1) || pagedItemsAdmins.length == 0 }">
-                                                <a href="" ng-click="paging('last')">Last »»</a>
+                                                <a href="" ng-click="currentPage('Last','currentPageAdmins','pagedItemsAdmins')">Last »»</a>
                                             </li>
                                         </ul>
                                         <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group input-inline-pagination">
@@ -207,11 +206,11 @@
                             <tbody>
                             <tr>
                                 <th>Name</th>
-                                <td>{{ selectedGrouping.name }}</td>
+                                <td>{{ selectedGroupingName }}</td>
                             </tr>
                             <tr>
                                 <th>Path</th>
-                                <td>{{ selectedGrouping.path }}</td>
+                                <td>{{ selectedGroupingPath }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -613,10 +612,9 @@
                                             <div class="row" style="margin: inherit;">
                                                 <div class="col-md-6" style="padding: 0 15px 0 0;">
                                                     <h4 style="margin-top: 0px;">Add/Remove</h4>
-
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" ng-model="preference.optIn"/>
+                                                            <input type="checkbox" ng-model="allowOptIn" ng-change="updateAllowOptIn()"/>
                                                             Allow people to add
                                                             themselves to this group
                                                         </label>
@@ -624,11 +622,11 @@
                                                            ng-click="infoModal('opt', 'add')"
                                                            style="cursor: pointer" data-toggle="tooltip"
                                                            data-placement="right"
-                                                           th:title="#{screen.message.admin.tooltip.info}"></i>
+                                                           th:title="#{screen.message.admin.tooltip.preference.allowOptIn}"></i>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" ng-model="preference.optOut"/>
+                                                            <input type="checkbox" ng-model="allowOptOut" ng-change="updateAllowOptOut()"/>
                                                             Allow people to remove
                                                             themselves to this group
                                                         </label>
@@ -636,41 +634,35 @@
                                                            ng-click="infoModal('opt', 'remove')"
                                                            style="cursor: pointer" data-toggle="tooltip"
                                                            data-placement="right"
-                                                           th:title="#{screen.message.owner.info}"></i>
+                                                           th:title="#{screen.message.admin.tooltip.preference.allowOptOut}"></i>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6" style="padding: 0;">
                                                     <h4 style="margin-top: 0px;">Publication Destinations</h4>
-
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox" ng-model="preference.listserv"
+                                                            <input type="checkbox" ng-model="listserv" ng-change="updateListserv()"
                                                                    ng-init="pref"/>
-                                                            LISTSERV list: &lt;{{ selectedGrouping.name }}@lists.hawaii.edu&gt;
+                                                            LISTSERV list: &lt;{{ selectedGroupingName }}@lists.hawaii.edu&gt;
                                                         </label>
                                                         <i class="fa fa-question-circle" aria-hidden="true"
                                                            ng-click="infoModal('publication')"
                                                            style="cursor: pointer" data-toggle="tooltip"
                                                            data-placement="right"
-                                                           th:title="#{screen.message.admin.tooltip.info}"></i>
+                                                           th:title="#{screen.message.admin.tooltip.preference.listserv}"></i>
                                                     </div>
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input type="checkbox"/>
+                                                            <input type="checkbox" ng-model="LDAP" ng-change="checkLDAP()"/>
                                                             uhReleasedGroupings LDAP/CAS Attribute
                                                         </label>
                                                         <i class="fa fa-question-circle" aria-hidden="true"
                                                            ng-click="infoModal('publication')"
                                                            style="cursor: pointer" data-toggle="tooltip"
                                                            data-placement="right"
-                                                           th:title="#{screen.message.admin.tooltip.info}"></i>
+                                                           th:title="#{screen.message.admin.tooltip.preference.ldap}"></i>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div id = "preferences">
-                                                <button class="btn btn-default btn-primary" style="margin-top: 20px;"
-                                                        type="submit" ng-click="savePref()">Update Preferences
-                                                </button>
                                             </div>
                                         </div>
                                     </div>
