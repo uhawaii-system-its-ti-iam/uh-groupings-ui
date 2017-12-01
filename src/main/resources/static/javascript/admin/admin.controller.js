@@ -55,7 +55,6 @@
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
 
-        $scope.selectedGrouping;
         $scope.showGrouping = false;
 
         /**
@@ -148,9 +147,9 @@
          * @param index
          */
         $scope.getData = function(index) {
-            path = $scope.pagedItemsGroupings[$scope.currentPageGroupings][index].path;
+            $scope.groupingPath = $scope.pagedItemsGroupings[$scope.currentPageGroupings][index].path;
             $scope.loading = true;
-            var groupingDataUrl = "api/groupings/" + path + "/" + $scope.getCurrentUsername() + "/grouping";
+            var groupingDataUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/grouping";
             console.log(groupingDataUrl);
 
             dataProvider.loadData(function (d) {
@@ -159,7 +158,6 @@
                     $scope.errorModal();
                 }
                 else {
-                    $scope.selectedGrouping = d;
                     $scope.basis = d.basis.members;
 
                     //Gets members in grouping
@@ -192,8 +190,7 @@
                     $scope.listserv = d.listservOn;
 
                     //Stop loading spinner
-                    $scope.selectedGroupingName = d.name;
-                    $scope.selectedGroupingPath = d.path;
+                    $scope.groupingName = d.name;
                     $scope.loading = false;
                     $scope.showGrouping = true;
                 }
