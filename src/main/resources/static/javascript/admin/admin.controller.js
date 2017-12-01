@@ -639,9 +639,9 @@
             $scope.pagedItemsOwners = [];
             // Reset page numbers
             $scope.currentPageMembers = 0;
+            $scope.currentPageBasis = 0;
             $scope.currentPageInclude = 0;
             $scope.currentPageExclude = 0;
-            $scope.currentPageOwners = 0;
             $scope.currentPageOwners = 0;
         };
 
