@@ -147,7 +147,8 @@
          * @param index
          */
         $scope.getData = function(index) {
-            $scope.groupingPath = $scope.pagedItemsGroupings[$scope.currentPageGroupings][index].path;
+            if (typeof index === 'string') $scope.groupingPath = index;
+            else $scope.groupingPath = $scope.pagedItemsGroupings[$scope.currentPageGroupings][index].path;
             $scope.loading = true;
             var groupingDataUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/grouping";
             console.log(groupingDataUrl);
