@@ -34,8 +34,8 @@
     <div class="row" style="margin-left: inherit; margin-right: inherit">
         <span class="h4">What is a UH Grouping?</span>
         <p>
-            A "Grouping" is a collection of members (e.g., all full-time faculty).  UH Groupings allows you to create Groupings, manage Grouping memberships,
-            control members' self-service options, designate Grouping integrations, and more.
+            A "Grouping" is a collection of members (e.g., all full-time Hilo faculty).  UH Groupings allows you to create groupings, manage grouping memberships,
+            control members' self-service options, designate grouping integrations, and more.
         </p>
         <p>
             Groupings can be integrated with one or more of the following: email LISTSERV lists, permissions and privilege
@@ -53,21 +53,21 @@
                 <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
                     <p class="h4" style="margin-top: 0;">Admin Functions</p>
                     <p>
-                        Manage the list of Administrators for this service.  Search for and manage any Grouping on behalf of the owner.
+                        Manage the list of Administrators for this service.  Search for and manage any grouping on behalf of the owner.
                     </p>
                     <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">Admin</a></p>
                 </div>
                 <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
                     <p class="h4" style="margin-top: 0;">My Memberships</p>
                     <p>
-                        View and manage my memberships.  Search for new Groupings to join as a member.
+                        View and manage my memberships.  Search for new groupings to join as a member.
                     </p>
                     <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">Memberships</a></p>
                 </div>
                 <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
                     <p class="h4" style="margin-top: 0;">My Groupings</p>
                     <p>
-                        View and manage Groupings I own.  Manage members, configure Grouping options and integration destinations.
+                        View and manage Groupings I own.  Manage members, configure grouping options and integration destinations.
                     </p>
                     <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">Groupings</a></p>
                 </div>
