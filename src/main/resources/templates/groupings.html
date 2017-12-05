@@ -175,7 +175,7 @@
                                                     <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                                                         <div class="pull-left">
                                                             <button type="button" class="btn btn-primary"
-                                                                    ng-click="export(groupingsList, 'members')">
+                                                                    ng-click="export(groupingMembers, 'members')">
                                                                 Export To CSV
                                                             </button>
                                                         </div>
@@ -382,7 +382,7 @@
                                                                   data-toggle="tooltip"
                                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
                                                                   th:title="#{screen.message.owner.remove.include}"
-                                                                  style="margin-right: 10px"></span>
+                                                                  style="margin-right: 10px; cursor: pointer;"></span>
                                                         </td>
                                                         <td>{{i.uuid}}</td>
                                                         <td>{{i.username}}</td>
@@ -485,7 +485,7 @@
                                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
                                                                   th:title="#{screen.message.owner.remove.exclude}"
                                                                   ng-click="removeMember('Exclude', $index)"
-                                                                  style="margin-right: 10px"></span>
+                                                                  style="margin-right: 10px; cursor: pointer;"></span>
                                                         </td>
                                                         <td>{{e.uuid}}</td>
                                                         <td>{{e.username}}</td>
@@ -657,7 +657,7 @@
                                                ng-click="infoModal('opt', 'add')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               th:title="#{screen.message.owner.info}"></i>
+                                               th:title="#{screen.message.owner.tooltip.preference.allowOptIn}"></i>
                                         </div>
                                         <div class="checkbox">
                                             <label>
@@ -668,7 +668,7 @@
                                                ng-click="infoModal('opt', 'remove')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               th:title="#{screen.message.owner.info}"></i>
+                                               th:title="#{screen.message.owner.tooltip.preference.allowOptOut}"></i>
                                         </div>
                                     </div>
                                     <div class="col-md-6" style="padding: 0;">
@@ -684,7 +684,7 @@
                                                ng-click="infoModal('publication')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               th:title="#{screen.message.owner.info}"></i>
+                                               th:title="#{screen.message.owner.tooltip.preference.listserv}"></i>
                                         </div>
                                         <div class="checkbox">
                                             <label>
@@ -695,7 +695,7 @@
                                                ng-click="infoModal('publication')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               th:title="#{screen.message.owner.info}"></i>
+                                               th:title="#{screen.message.owner.tooltip.preference.ldap}"></i>
                                         </div>
                                         <div id="preferences">
                                             <button class="btn btn-default btn-primary"
