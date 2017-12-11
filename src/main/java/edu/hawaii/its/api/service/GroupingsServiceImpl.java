@@ -205,7 +205,8 @@ public class GroupingsServiceImpl implements GroupingsService {
 //            addGroupingResults.add(gsr);
 //        }
 //
-//        return addGroupingResults;
+//        return addGroupingResults;\
+        NotImplementedException nie = new NotImplementedException();
         throw new NotImplementedException();
     }
 
