@@ -2,6 +2,7 @@ package edu.hawaii.its.holiday.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import edu.hawaii.its.api.type.GroupingsHTTPException;
 import edu.hawaii.its.holiday.access.User;
 import edu.hawaii.its.holiday.access.UserContextService;
 
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.xml.ws.http.HTTPException;
+
 @ControllerAdvice
 public class ErrorControllerAdvice {
 
@@ -22,46 +25,24 @@ public class ErrorControllerAdvice {
     private UserContextService userContextService;
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<IllegalArgumentException> handelIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
-        String username = null;
-        User user = userContextService.getCurrentUser();
-        if (user != null) {
-            username = user.getUsername();
-        }
-        IllegalArgumentException e = new IllegalArgumentException("http status: " + 404, iae.getCause());
-        e.setStackTrace(iae.getStackTrace());
-
-        logger.error("username: " + username + "; Exception: ", e);
-        System.out.println("username: " + username + "; Exception: " + e.getStackTrace());
-
-        return ResponseEntity.status(404).body(e);
+    public ResponseEntity<GroupingsHTTPException> handelIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
+        return error("Resource not available", iae, 404);
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Exception> handelRuntimeException(RuntimeException re) {
-        return error(re, 500);
+    public ResponseEntity<GroupingsHTTPException> handelRuntimeException(RuntimeException re) {
+        return error("runtime exception", re, 500);
     }
 
 
     @ExceptionHandler(NotImplementedException.class)
-    public ResponseEntity<Exception> handelNotImplementedException(NotImplementedException nie) {
-        return error(nie, 501);
+    public ResponseEntity<GroupingsHTTPException> handelNotImplementedException(NotImplementedException nie) {
+        return error("Method not implemented", nie, 501);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Exception> handleException(Exception exception) {
-        String username = null;
-        User user = userContextService.getCurrentUser();
-        if (user != null) {
-            username = user.getUsername();
-        }
-        Exception e = new Exception("http status: " + 500 + "\n" + exception.getMessage(), exception.getCause());
-        e.setStackTrace(exception.getStackTrace());
-
-        logger.error("username: " + username + "; Exception: ", e.getCause());
-        System.out.println("username: " + username + "; Exception: " + e.getStackTrace());
-
-        return ResponseEntity.status(500).body(e);
+    public ResponseEntity<GroupingsHTTPException> handleException(Exception exception) {
+        return error("Exception", exception, 500);
     }
 
     //todo this is for the HolidayRestControllerTest test (should we really have this behavior?)
@@ -78,19 +59,18 @@ public class ErrorControllerAdvice {
         return "redirect:/error";
     }
 
-    private ResponseEntity<Exception> error(Exception exception, int status) {
+    private ResponseEntity<GroupingsHTTPException> error(String message, Throwable cause, int status) {
         String username = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {
             username = user.getUsername();
         }
 
-        Exception e = new Exception("http status: " + status + "\n" + exception.getMessage(), exception.getCause());
-        e.setStackTrace(exception.getStackTrace());
+        GroupingsHTTPException httpException = new GroupingsHTTPException(message, cause, status);
+        httpException.fillInStackTrace();
 
-        logger.error("username: " + username + "; Exception: ", e.getCause());
-        System.out.println("username: " + username + "; Status: " + status + "; Exception: " + e.getStackTrace());
+        logger.error("username: " + username + "; Exception: ", httpException.getCause());
 
-        return ResponseEntity.status(status).body(e);
+        return ResponseEntity.status(status).body(httpException);
     }
 }
