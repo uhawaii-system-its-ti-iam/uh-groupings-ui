@@ -251,15 +251,11 @@
         $scope.showGroups = function () {
             if ($scope.showGrouping == false) {
                 $scope.showGrouping = true;
-            }
-            else {
+            } else {
                 $scope.showGrouping = false;
-                $scope.groupingName = '';
-                $scope.groupingsList = [];
-                $scope.groupingsBasis = [];
-                $scope.groupingInclude = [];
-                $scope.groupingExclude = [];
-                $scope.ownerList = [];
+                $scope.resetGroupingInformation();
+                $scope.resetSelectedGroup();
+                $scope.resetTopTab();
             }
         };
 
@@ -643,6 +639,63 @@
             }
         };
 
+        /**
+         * Resets the arrays containing the members of each grouping and their page numbers.
+         */
+        $scope.resetGroupingInformation = function() {
+            // Reset grouping member data for next load
+            $scope.groupingMembers = [];
+            $scope.groupingBasis = [];
+            $scope.groupingInclude = [];
+            $scope.groupingExclude = [];
+            $scope.groupingOwners = [];
+            // Reset paged items
+            $scope.pagedItemsMembers = [];
+            $scope.pagedItemsBasis = [];
+            $scope.pagedItemsInclude = [];
+            $scope.pagedItemsExclude = [];
+            $scope.pagedItemsOwners = [];
+            // Reset page numbers
+            $scope.currentPageMembers = 0;
+            $scope.currentPageBasis = 0;
+            $scope.currentPageInclude = 0;
+            $scope.currentPageExclude = 0;
+            $scope.currentPageOwners = 0;
+        };
+
+        /**
+         * Resets the selected group to the list of all members.
+         */
+        $scope.resetSelectedGroup = function() {
+            var pills = $('#group-pills')[0].children;
+            var tabContents = $('#pill-content')[0].children
+            for (var i = 0; i < pills.length; i++) {
+                if (i === 0 && !$(pills[i]).hasClass('active')) {
+                    $(pills[i]).addClass('active');
+                    $(tabContents[i]).addClass('in active');
+                } else if (i !== 0 && $(pills[i]).hasClass('active')) {
+                    $(pills[i]).removeClass('active');
+                    $(tabContents[i]).removeClass('in active');
+                }
+            }
+        };
+
+        /**
+         * Resets the selected top navigational tab to the Members tab.
+         */
+        $scope.resetTopTab = function() {
+            var topTabs = $('#grouping-top-tabs')[0].children;
+            var topTabContents = $('#top-tab-content')[0].children
+            for (var i = 0; i < topTabs.length; i++) {
+                if (i == 0 && !$(topTabs[i]).hasClass('active')) {
+                    $(topTabs[i]).addClass('active');
+                    $(topTabContents[i]).addClass('in active');
+                } else if (i !== 0 && $(topTabs[i]).hasClass('active')) {
+                    $(topTabs[i]).removeClass('active');
+                    $(topTabContents[i]).removeClass('in active');
+                }
+            }
+        };
     }
 
     ownerApp.controller("OwnerJsController", OwnerJsController);

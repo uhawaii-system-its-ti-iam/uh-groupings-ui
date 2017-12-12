@@ -224,7 +224,7 @@
                         <div class="panel-body" style="min-height: 450px;">
                             <div class="row" style="margin: inherit;">
                                 <div class="col-md-1 col-sm-1 col-xs-2">
-                                    <ul class="nav nav-pills nav-stacked" style="width: 3.125em; margin-top: 2.5em;">
+                                    <ul class="nav nav-pills nav-stacked" style="width: 3.125em; margin-top: 2.5em;" id="group-pills">
                                         <li class="active" data-toggle="tooltip" data-placement="right"
                                             th:title="#{screen.message.admin.tooltip.nav.members}">
                                             <a data-toggle="tab" href="#all" class="text-center">
@@ -264,7 +264,7 @@
                                     </ul>
                                 </div>
 
-                                <div class="tab-content col-md-11 col-sm-11 col-xs-10">
+                                <div class="tab-content col-md-11 col-sm-11 col-xs-10" id="pill-content">
                                     <div id="all" class="tab-pane fade in active">
                                         <div class="row member-row-title">
                                             <h3 class="members-tab-title">All Members</h3>

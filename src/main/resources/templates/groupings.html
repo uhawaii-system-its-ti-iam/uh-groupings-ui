@@ -117,17 +117,19 @@
                         </table>
                     </div>
 
-                    <ul class="nav nav-tabs">
-                        <li class="active" data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.members}"><a
-                                data-toggle="tab" href="#members">Members</a></li>
-                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.owners}"><a data-toggle="tab"
-                                                                                                href="#owners">Owners</a>
+                    <ul class="nav nav-tabs" id="grouping-top-tabs">
+                        <li class="active" data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.members}">
+                            <a data-toggle="tab" href="#members">Members</a>
                         </li>
-                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.preference}"><a
-                                data-toggle="tab" href="#preference">Preferences</a></li>
+                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.owners}">
+                            <a data-toggle="tab" href="#owners">Owners</a>
+                        </li>
+                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.preference}">
+                            <a data-toggle="tab" href="#preference">Preferences</a>
+                        </li>
                     </ul>
 
-                    <div class="tab-content">
+                    <div class="tab-content" id="top-tab-content">
                         <!-- List of the members in the grouping -->
 
                         <div id="members" class="tab-pane fade in active">
@@ -138,7 +140,7 @@
                                 <div class="panel-body" style="min-height: 400px;">
                                     <div class="row" style="margin: inherit;">
                                         <div class="col-md-1 col-sm-1 col-xs-2">
-                                            <ul class="nav nav-pills nav-stacked" style="width: 3.125em; margin-top: 2.5em;">
+                                            <ul class="nav nav-pills nav-stacked" style="width: 3.125em; margin-top: 2.5em;" id="group-pills">
                                                 <li class="active" data-toggle="tooltip" data-placement="right"
                                                     th:title="#{screen.message.owner.tooltip.navbar.list}">
                                                     <a data-toggle="tab" href="#all" class="text-center">
@@ -166,7 +168,7 @@
                                             </ul>
                                         </div>
 
-                                        <div class="tab-content col-md-11 col-sm-11 col-xs-10">
+                                        <div class="tab-content col-md-11 col-sm-11 col-xs-10" id="pill-content">
                                             <div id="all" class="tab-pane fade in active">
                                                 <div class="row member-row-title">
                                                     <h3 class="members-tab-title">All Members</h3>
