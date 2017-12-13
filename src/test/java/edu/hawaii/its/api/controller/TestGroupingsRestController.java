@@ -420,7 +420,7 @@ public class TestGroupingsRestController {
     public void addDeleteAdminTest() {
         GroupingsServiceResult addAdminResults;
         GroupingsServiceResult deleteAdminResults;
-       
+
         try {
             addAdminResults = gc.addAdmin(tst[0], tst[0]).getBody();
         } catch (GroupingsServiceResultException gsre) {
