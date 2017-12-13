@@ -703,6 +703,9 @@ public class TestGroupingsService {
 
     @Test
     public void changeOptOutStatusTest() {
+        //expect this to fail
+        List<GroupingsServiceResult> optOutFail;
+
         assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
         assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
@@ -720,7 +723,14 @@ public class TestGroupingsService {
         assertFalse(gs.optOutPermission(GROUPING));
         assertFalse(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
         assertFalse(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
-        List<GroupingsServiceResult> optOutFail = gs.optOut(username[1], GROUPING);
+
+        try {
+            optOutFail = gs.optOut(username[1], GROUPING);
+        } catch (GroupingsServiceResultException gsre) {
+            optOutFail = new ArrayList<>();
+            optOutFail.add(gsre.getGsr());
+        }
+
         assertTrue(optOutFail.get(0).getResultCode().startsWith(FAILURE));
         assertTrue(gs.inGroup(GROUPING, username[1]));
         gs.changeOptOutStatus(GROUPING, username[0], false);
@@ -729,7 +739,13 @@ public class TestGroupingsService {
         assertFalse(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
         assertFalse(gs.isOwner(GROUPING, username[1]));
-        gs.changeOptOutStatus(GROUPING, username[1], true);
+
+        try {
+            gs.changeOptOutStatus(GROUPING, username[1], true);
+        } catch (GroupingsServiceResultException gsre) {
+            assertTrue(gsre.getGsr().getResultCode().startsWith(FAILURE));
+        }
+
         assertFalse(gs.optOutPermission(GROUPING));
         assertFalse(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
         assertFalse(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
@@ -737,7 +753,13 @@ public class TestGroupingsService {
         assertTrue(gs.optOutPermission(GROUPING));
         assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
         assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
-        gs.changeOptOutStatus(GROUPING, username[1], false);
+
+        try {
+            gs.changeOptOutStatus(GROUPING, username[1], false);
+        } catch (GroupingsServiceResultException gsre) {
+            assertTrue(gsre.getGsr().getResultCode().startsWith(FAILURE));
+        }
+
         assertTrue(gs.optOutPermission(GROUPING));
         assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
         assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
