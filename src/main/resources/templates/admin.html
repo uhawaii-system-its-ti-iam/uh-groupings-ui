@@ -64,10 +64,11 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                                        <td ng-click="showData($index)" style="cursor: pointer;">
+                                        <td class="clickable" ng-click="showData($index)">
                                             {{l.name}}
                                             <span class="pull-right glyphicon glyphicon-edit"
-                                                  style="margin-right: 5px;"></span>
+                                                  style="margin-right: 5px;">
+                                            </span>
                                         </td>
                                         <td>{{l.path}}</td>
                                     </tr>
@@ -139,12 +140,12 @@
                                     <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]">
                                         <td>
                                             {{l.name}}
-                                            <span class="glyphicon glyphicon-trash pull-right"
+                                            <span class="glyphicon glyphicon-trash pull-right clickable"
                                                   data-toggle="tooltip"
                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
                                                   th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
                                                   ng-click="removeAdmin($index + (currentPageAdmins * itemsPerPage))"
-                                                  style="margin-right: 10px; cursor: pointer"></span>
+                                                  style="margin-right: 10px;"></span>
                                         </td>
                                         <td>{{l.uuid}}</td>
                                         <td>{{l.username}}</td>
@@ -407,12 +408,12 @@
                                             <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]">
                                                 <td>
                                                     {{i.name}}
-                                                    <span class="glyphicon glyphicon-trash pull-right"
+                                                    <span class="glyphicon glyphicon-trash pull-right clickable"
                                                           ng-click="removeMember('Include', $index)"
                                                           data-toggle="tooltip"
                                                           data-placement="top" onmouseover="$(this).tooltip('show')"
                                                           th:title="#{screen.message.admin.tooltip.nav.delete.include}"
-                                                          style="margin-right: 10px; cursor: pointer"></span>
+                                                          style="margin-right: 10px;"></span>
                                                 </td>
                                                 <td>{{i.uuid}}</td>
                                                 <td>{{i.username}}</td>
@@ -485,12 +486,12 @@
                                             <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]">
                                                 <td>
                                                     {{e.name}}
-                                                    <span class="glyphicon glyphicon-trash pull-right"
+                                                    <span class="glyphicon glyphicon-trash pull-right clickable"
                                                           data-toggle="tooltip"
                                                           data-placement="top" onmouseover="$(this).tooltip('show')"
                                                           th:title="#{screen.message.admin.tooltip.nav.delete.exclude}"
                                                           ng-click="removeMember('Exclude', $index)"
-                                                          style="margin-right: 10px; cursor: pointer"></span>
+                                                          style="margin-right: 10px;"></span>
                                                 </td>
                                                 <td>{{e.uuid}}</td>
                                                 <td>{{e.username}}</td>
@@ -555,12 +556,12 @@
                                             <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
                                                 <td>
                                                     {{owner.name}}
-                                                    <span class="glyphicon glyphicon-trash pull-right"
+                                                    <span class="glyphicon glyphicon-trash pull-right clickable"
                                                           data-toggle="tooltip"
                                                           data-placement="top" onmouseover="$(this).tooltip('show')"
                                                           th:title="#{screen.message.admin.tooltip.nav.delete.owner}"
                                                           ng-click="removeOwner($index)"
-                                                          style="margin-right: 10px; cursor: pointer"></span>
+                                                          style="margin-right: 10px;"></span>
                                                 </td>
                                                 <td>{{owner.username}}</td>
                                             </tr>
@@ -615,9 +616,9 @@
                                                             Allow people to add
                                                             themselves to this group
                                                         </label>
-                                                        <i class="fa fa-question-circle" aria-hidden="true"
+                                                        <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                            ng-click="infoModal('opt', 'add')"
-                                                           style="cursor: pointer" data-toggle="tooltip"
+                                                           data-toggle="tooltip"
                                                            data-placement="right"
                                                            th:title="#{screen.message.admin.tooltip.preference.allowOptIn}"></i>
                                                     </div>
@@ -627,9 +628,9 @@
                                                             Allow people to remove
                                                             themselves to this group
                                                         </label>
-                                                        <i class="fa fa-question-circle" aria-hidden="true"
+                                                        <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                            ng-click="infoModal('opt', 'remove')"
-                                                           style="cursor: pointer" data-toggle="tooltip"
+                                                           data-toggle="tooltip"
                                                            data-placement="right"
                                                            th:title="#{screen.message.admin.tooltip.preference.allowOptOut}"></i>
                                                     </div>
@@ -642,9 +643,9 @@
                                                                    ng-init="pref"/>
                                                             LISTSERV list: &lt;{{ selectedGrouping.name }}@lists.hawaii.edu&gt;
                                                         </label>
-                                                        <i class="fa fa-question-circle" aria-hidden="true"
+                                                        <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                            ng-click="infoModal('publication')"
-                                                           style="cursor: pointer" data-toggle="tooltip"
+                                                           data-toggle="tooltip"
                                                            data-placement="right"
                                                            th:title="#{screen.message.admin.tooltip.preference.listserv}"></i>
                                                     </div>
@@ -653,9 +654,9 @@
                                                             <input type="checkbox" ng-model="LDAP" ng-change="checkLDAP()"/>
                                                             uhReleasedGroupings LDAP/CAS Attribute
                                                         </label>
-                                                        <i class="fa fa-question-circle" aria-hidden="true"
+                                                        <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                            ng-click="infoModal('publication')"
-                                                           style="cursor: pointer" data-toggle="tooltip"
+                                                           data-toggle="tooltip"
                                                            data-placement="right"
                                                            th:title="#{screen.message.admin.tooltip.preference.ldap}"></i>
                                                     </div>

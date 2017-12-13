@@ -47,7 +47,7 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="l in pagedItemsOwned[currentPageOwned] ">
-                                <td ng-click="showData($index)" style="cursor: pointer;">
+                                <td class="clickable" ng-click="showData($index)">
                                     {{l.name}}
                                     <span class="pull-right glyphicon glyphicon-edit"
                                           style="margin-right: 5px;"></span>
@@ -276,15 +276,15 @@
                                                     <thead>
                                                     <tr>
                                                         <th ng-click="sortCol(groupingBasis, 'name', 'pagedItemsBasis', 'symbolBasis')"
-                                                            style="cursor: pointer">
+                                                            class="clickable">
                                                             Name {{symbol.name}}
                                                         </th>
                                                         <th ng-click="sortCol(groupingBasis, 'uuid', 'pagedItemsBasis', 'symbolBasis')"
-                                                            style="cursor: pointer">
+                                                            class="clickable">
                                                             UH ID {{symbol.uuid}}
                                                         </th>
                                                         <th ng-click="sortCol(groupingBasis, 'username', 'pagedItemsBasis', 'symbolBasis')"
-                                                            style="cursor: pointer">
+                                                            class="clickable">
                                                             Username {{symbol.username}}
                                                         </th>
                                                     </tr>
@@ -358,31 +358,33 @@
                                                     <thead>
                                                     <tr>
                                                         <th ng-click="sortCol(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude')"
-                                                            style="cursor: pointer">
+                                                            class="clickable">
                                                             Name {{symbol.name}}
                                                         </th>
                                                         <th ng-click="sortCol(groupingInclude, 'uuid', 'pagedItemsInclude', 'symbolInclude')"
-                                                            style="cursor: pointer">
+                                                            class="clickable">
                                                             UH ID {{symbol.uuid}}
                                                         </th>
                                                         <th ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')"
-                                                            style="cursor: pointer">
+                                                            class="clickable">
                                                             Username {{symbol.username}}
                                                         </th>
                                                         <th ng-click="sortCol(groupingInclude, 'basis', 'pagedItemsInclude', 'symbolInclude')"
-                                                            style="cursor: pointer">In Basis? {{symbol.basis}}</th>
+                                                            class="clickable">
+                                                            In Basis? {{symbol.basis}}
+                                                        </th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
                                                     <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]">
                                                         <td>
                                                             {{i.name}}
-                                                            <span class="glyphicon glyphicon-trash pull-right"
+                                                            <span class="glyphicon glyphicon-trash pull-right clickable"
                                                                   ng-click="removeMember('Include', $index)"
                                                                   data-toggle="tooltip"
                                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
                                                                   th:title="#{screen.message.owner.remove.include}"
-                                                                  style="margin-right: 10px; cursor: pointer;"></span>
+                                                                  style="margin-right: 10px;"></span>
                                                         </td>
                                                         <td>{{i.uuid}}</td>
                                                         <td>{{i.username}}</td>
@@ -461,31 +463,33 @@
                                                     <thead>
                                                     <tr>
                                                         <th ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')"
-                                                            style="cursor: pointer">
+                                                            class="clickable">
                                                             Name {{symbol.name}}
                                                         </th>
                                                         <th ng-click="sortCol(groupingExclude, 'uuid', 'pagedItemsExclude', 'symbolExclude')"
-                                                            style="cursor: pointer">
+                                                            class="clickable">
                                                             UH ID {{symbol.uuid}}
                                                         </th>
                                                         <th ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')"
-                                                            style="cursor: pointer">
+                                                            class="clickable">
                                                             Username {{symbol.username}}
                                                         </th>
                                                         <th ng-click="sortCol(groupingExclude, 'basis', 'pagedItemsExclude', 'symbolExclude')"
-                                                            style="cursor: pointer">In Basis? {{symbol.basis}}</th>
+                                                            class="clickable">
+                                                            In Basis? {{symbol.basis}}
+                                                        </th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
                                                     <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]">
                                                         <td>
                                                             {{e.name}}
-                                                            <span class="glyphicon glyphicon-trash pull-right"
+                                                            <span class="glyphicon glyphicon-trash pull-right clickable"
                                                                   data-toggle="tooltip"
                                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
                                                                   th:title="#{screen.message.owner.remove.exclude}"
                                                                   ng-click="removeMember('Exclude', $index)"
-                                                                  style="margin-right: 10px; cursor: pointer;"></span>
+                                                                  style="margin-right: 10px;"></span>
                                                         </td>
                                                         <td>{{e.uuid}}</td>
                                                         <td>{{e.username}}</td>
@@ -565,11 +569,11 @@
                                     <thead>
                                     <tr>
                                         <th ng-click="sortCol(ownerList, 'name', 'pagedItemsOwners', 'symbolOwners')"
-                                            style="cursor: pointer">
+                                            class="clickable">
                                             Owner Name {{symbol.name}}
                                         </th>
                                         <th ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwners')"
-                                            style="cursor: pointer">
+                                            class="clickable">
                                             UH Username {{symbol.username}}
                                         </th>
                                     </tr>
@@ -578,12 +582,12 @@
                                     <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
                                         <td>
                                             {{owner.name}}
-                                            <span class="glyphicon glyphicon-trash pull-right"
+                                            <span class="glyphicon glyphicon-trash pull-right clickable"
                                                   data-toggle="tooltip"
                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
                                                   th:title="#{screen.message.owner.remove.owner}"
                                                   ng-click="removeOwner($index)"
-                                                  style="margin-right: 10px; cursor: pointer"></span>
+                                                  style="margin-right: 10px;"></span>
                                         </td>
                                         <td>{{owner.username}}</td>
                                     </tr>
@@ -653,9 +657,9 @@
                                                 <input type="checkbox" ng-model="preference.optIn"/>
                                                 Allow people to add themselves to this grouping
                                             </label>
-                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                            <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                ng-click="infoModal('opt', 'add')"
-                                               style="cursor: pointer" data-toggle="tooltip"
+                                               data-toggle="tooltip"
                                                data-placement="right"
                                                th:title="#{screen.message.owner.tooltip.preference.allowOptIn}"></i>
                                         </div>
@@ -664,9 +668,9 @@
                                                 <input type="checkbox" ng-model="preference.optOut"/>
                                                 Allow members to remove themselves to this grouping
                                             </label>
-                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                            <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                ng-click="infoModal('opt', 'remove')"
-                                               style="cursor: pointer" data-toggle="tooltip"
+                                               data-toggle="tooltip"
                                                data-placement="right"
                                                th:title="#{screen.message.owner.tooltip.preference.allowOptOut}"></i>
                                         </div>
@@ -680,9 +684,9 @@
                                                        ng-init="pref"/>
                                                 LISTSERV list: &lt;{{ groupingName.name }}@lists.hawaii.edu&gt;
                                             </label>
-                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                            <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                ng-click="infoModal('publication')"
-                                               style="cursor: pointer" data-toggle="tooltip"
+                                               data-toggle="tooltip"
                                                data-placement="right"
                                                th:title="#{screen.message.owner.tooltip.preference.listserv}"></i>
                                         </div>
@@ -691,9 +695,9 @@
                                                 <input type="checkbox"/>
                                                 LDAP/CAS Attribute: uhReleasedGroupings
                                             </label>
-                                            <i class="fa fa-question-circle" aria-hidden="true"
+                                            <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                ng-click="infoModal('publication')"
-                                               style="cursor: pointer" data-toggle="tooltip"
+                                               data-toggle="tooltip"
                                                data-placement="right"
                                                th:title="#{screen.message.owner.tooltip.preference.ldap}"></i>
                                         </div>
