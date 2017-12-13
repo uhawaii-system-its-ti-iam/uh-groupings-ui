@@ -256,8 +256,13 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void addAdminTest() {
-        //user is not super user
-        GroupingsServiceResult gsr = groupingsService.addAdmin(users.get(9).getUsername(), users.get(9).getUsername());
+        GroupingsServiceResult gsr;
+        try {
+            //user is not super user
+            gsr = groupingsService.addAdmin(users.get(9).getUsername(), users.get(9).getUsername());
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
         assertTrue(gsr.getResultCode().startsWith(FAILURE));
 
         //user is super user
@@ -431,19 +436,44 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void changeOptInStatusTest() {
+        //expect actions done by "Random" to fail
+        List<GroupingsServiceResult> turnOnWhenOnRandom;
+        List<GroupingsServiceResult> turnOnWhenOffRandom;
+        List<GroupingsServiceResult> turnOffWhenOnRandom;
+        List<GroupingsServiceResult> turnOffWhenOffRandom;
 
-        List<GroupingsServiceResult> turnOnWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), true);
+        try {
+            turnOnWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), true);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOnWhenOnRandom = new ArrayList<>();
+            turnOnWhenOnRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOnWhenOnOwner = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(0).getUsername(), true);
         List<GroupingsServiceResult> turnOnWhenOnAdmin = groupingsService.changeOptInStatus(GROUPING_0_PATH, ADMIN_USER, true);
 
-        List<GroupingsServiceResult> turnOffWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), false);
+        try {
+            turnOffWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), false);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOffWhenOnRandom = new ArrayList<>();
+            turnOffWhenOnRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOffWhenOnOwner = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(0).getUsername(), false);
 
-        List<GroupingsServiceResult> turnOffWhenOffRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), false);
+        try {
+            turnOffWhenOffRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), false);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOffWhenOffRandom = new ArrayList<>();
+            turnOffWhenOffRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOffWhenOffOwner = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(0).getUsername(), false);
         List<GroupingsServiceResult> turnOffWhenOffAdmin = groupingsService.changeOptInStatus(GROUPING_0_PATH, ADMIN_USER, false);
 
-        List<GroupingsServiceResult> turnOnWhenOffRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), true);
+        try {
+            turnOnWhenOffRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), true);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOnWhenOffRandom = new ArrayList<>();
+            turnOnWhenOffRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOnWhenOffOwner = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(0).getUsername(), true);
 
         List<GroupingsServiceResult> turnOffWhenOnAdmin = groupingsService.changeOptInStatus(GROUPING_0_PATH, ADMIN_USER, false);
@@ -567,9 +597,14 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void removeOwnershipTest() {
+        GroupingsServiceResult randomUserRemoves;
 
-        //non-owner/non-admin tries to remove ownership
-        GroupingsServiceResult randomUserRemoves = groupingsService.removeOwnership(GROUPING_0_PATH, users.get(1).getUsername(), users.get(1).getUsername());
+        try {
+            //non-owner/non-admin tries to remove ownership
+            randomUserRemoves = groupingsService.removeOwnership(GROUPING_0_PATH, users.get(1).getUsername(), users.get(1).getUsername());
+        } catch (GroupingsServiceResultException gsre) {
+            randomUserRemoves = gsre.getGsr();
+        }
         assertTrue(randomUserRemoves.getResultCode().startsWith(FAILURE));
 
         //add owner for owner to remove
@@ -634,8 +669,15 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void optInTest() {
-        //opt in Permission for include group false
-        List<GroupingsServiceResult> optInResults = groupingsService.optIn(users.get(2).getUsername(), GROUPING_2_PATH);
+        List<GroupingsServiceResult> optInResults;
+
+        try {
+            //opt in Permission for include group false
+            optInResults = groupingsService.optIn(users.get(2).getUsername(), GROUPING_2_PATH);
+        } catch (GroupingsServiceResultException gsre) {
+            optInResults = new ArrayList<>();
+            optInResults.add(gsre.getGsr());
+        }
         assertTrue(optInResults.get(0).getResultCode().startsWith(FAILURE));
 
         //opt in Permission for include group true and not in group, but in basis
@@ -659,9 +701,14 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void optOutTest() {
-
-        //opt in Permission for exclude group false
-        List<GroupingsServiceResult> optInResults = groupingsService.optOut(users.get(1).getUsername(), GROUPING_0_PATH);
+        List<GroupingsServiceResult> optInResults;
+        try {
+            //opt in Permission for exclude group false
+            optInResults = groupingsService.optOut(users.get(1).getUsername(), GROUPING_0_PATH);
+        } catch (GroupingsServiceResultException gsre) {
+            optInResults = new ArrayList<>();
+            optInResults.add(gsre.getGsr());
+        }
         assertTrue(optInResults.get(0).getResultCode().startsWith(FAILURE));
 
         //opt in Permission for exclude group true
@@ -989,8 +1036,14 @@ public class GroupingsServiceMockTest {
     public void removeSelfOptedTest() {
         Group group = groupRepository.findByPath(GROUPING_4_EXCLUDE_PATH);
 
-        //member is not in group
-        GroupingsServiceResult gsr = groupingsService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(5).getUsername());
+        GroupingsServiceResult gsr;
+
+        try {
+            //member is not in group
+            gsr = groupingsService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(5).getUsername());
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
         assertTrue(gsr.getResultCode().startsWith(FAILURE));
 
         //member is not self-opted
