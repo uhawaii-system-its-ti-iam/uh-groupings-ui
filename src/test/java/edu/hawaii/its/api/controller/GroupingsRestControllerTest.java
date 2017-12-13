@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.net.URI;
@@ -494,16 +496,17 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getAddGrouping() throws Exception {
-        mockMvc.perform(get("/api/groupings/addGrouping"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URI.create(requestForm).toString()));
+
+        mockMvc.perform(post("/api/groupings/fakeGroup/fakePerson/fakeBasis/fakeIncldue/fakeExclude/fakeOwners/addGrouping")
+                .with(csrf()))
+                .andExpect(status().is5xxServerError());
     }
 
     @Test
     @WithMockUhUser
     public void getDeleteGrouping() throws Exception {
-        mockMvc.perform(get("/api/groupings/deleteGrouping"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URI.create(requestForm).toString()));
+        mockMvc.perform(get("/api/groupings/fakeGroup/fakePerson/deleteGrouping")
+                .with(csrf()))
+                .andExpect(status().is5xxServerError());
     }
 }

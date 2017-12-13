@@ -117,17 +117,19 @@
                         </table>
                     </div>
 
-                    <ul class="nav nav-tabs">
-                        <li class="active" data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.members}"><a
-                                data-toggle="tab" href="#members">Members</a></li>
-                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.owners}"><a data-toggle="tab"
-                                                                                                href="#owners">Owners</a>
+                    <ul class="nav nav-tabs" id="grouping-top-tabs">
+                        <li class="active" data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.members}">
+                            <a data-toggle="tab" href="#members">Members</a>
                         </li>
-                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.preference}"><a
-                                data-toggle="tab" href="#preference">Preferences</a></li>
+                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.owners}">
+                            <a data-toggle="tab" href="#owners">Owners</a>
+                        </li>
+                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.preference}">
+                            <a data-toggle="tab" href="#preference">Preferences</a>
+                        </li>
                     </ul>
 
-                    <div class="tab-content">
+                    <div class="tab-content" id="top-tab-content">
                         <!-- List of the members in the grouping -->
 
                         <div id="members" class="tab-pane fade in active">
@@ -138,7 +140,7 @@
                                 <div class="panel-body" style="min-height: 400px;">
                                     <div class="row" style="margin: inherit;">
                                         <div class="col-md-1 col-sm-1 col-xs-2">
-                                            <ul class="nav nav-pills nav-stacked" style="width: 3.125em; margin-top: 2.5em;">
+                                            <ul class="nav nav-pills nav-stacked" style="width: 3.125em; margin-top: 2.5em;" id="group-pills">
                                                 <li class="active" data-toggle="tooltip" data-placement="right"
                                                     th:title="#{screen.message.owner.tooltip.navbar.list}">
                                                     <a data-toggle="tab" href="#all" class="text-center">
@@ -166,7 +168,7 @@
                                             </ul>
                                         </div>
 
-                                        <div class="tab-content col-md-11 col-sm-11 col-xs-10">
+                                        <div class="tab-content col-md-11 col-sm-11 col-xs-10" id="pill-content">
                                             <div id="all" class="tab-pane fade in active">
                                                 <div class="row member-row-title">
                                                     <h3 class="members-tab-title">All Members</h3>
@@ -175,7 +177,7 @@
                                                     <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                                                         <div class="pull-left">
                                                             <button type="button" class="btn btn-primary"
-                                                                    ng-click="export(groupingsList, 'members')">
+                                                                    ng-click="export(groupingMembers, 'members')">
                                                                 Export To CSV
                                                             </button>
                                                         </div>
@@ -206,7 +208,7 @@
                                                             UH Username {{symbol.username}}
                                                         </th>
                                                         <th ng-click="sortCol(groupingMembers, 'basis', 'pagedItemsMembers', 'symbolList')"
-                                                            style="cursor: pointer">In Basis? {{symbol.basis}}</th>
+                                                            style="cursor: pointer">Where Listed? {{symbol.basis}}</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -389,7 +391,7 @@
                                                                   data-toggle="tooltip"
                                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
                                                                   th:title="#{screen.message.owner.remove.include}"
-                                                                  style="margin-right: 10px"></span>
+                                                                  style="margin-right: 10px; cursor: pointer;"></span>
                                                         </td>
                                                         <td>{{i.uuid}}</td>
                                                         <td>{{i.username}}</td>
@@ -494,7 +496,7 @@
                                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
                                                                   th:title="#{screen.message.owner.remove.exclude}"
                                                                   ng-click="removeMember('Exclude', $index)"
-                                                                  style="margin-right: 10px"></span>
+                                                                  style="margin-right: 10px; cursor: pointer;"></span>
                                                         </td>
                                                         <td>{{e.uuid}}</td>
                                                         <td>{{e.username}}</td>
@@ -663,26 +665,24 @@
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" ng-model="preference.optIn"/>
-                                                Allow people to add
-                                                themselves to this group
+                                                Allow people to add themselves to this grouping
                                             </label>
                                             <i class="fa fa-question-circle" aria-hidden="true"
                                                ng-click="infoModal('opt', 'add')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               th:title="#{screen.message.owner.info}"></i>
+                                               th:title="#{screen.message.owner.tooltip.preference.allowOptIn}"></i>
                                         </div>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" ng-model="preference.optOut"/>
-                                                Allow people to remove
-                                                themselves to this group
+                                                Allow members to remove themselves to this grouping
                                             </label>
                                             <i class="fa fa-question-circle" aria-hidden="true"
                                                ng-click="infoModal('opt', 'remove')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               th:title="#{screen.message.owner.info}"></i>
+                                               th:title="#{screen.message.owner.tooltip.preference.allowOptOut}"></i>
                                         </div>
                                     </div>
                                     <div class="col-md-6" style="padding: 0;">
@@ -698,18 +698,18 @@
                                                ng-click="infoModal('publication')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               th:title="#{screen.message.owner.info}"></i>
+                                               th:title="#{screen.message.owner.tooltip.preference.listserv}"></i>
                                         </div>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox"/>
-                                                uhReleasedGroupings LDAP/CAS Attribute
+                                                LDAP/CAS Attribute: uhReleasedGroupings
                                             </label>
                                             <i class="fa fa-question-circle" aria-hidden="true"
                                                ng-click="infoModal('publication')"
                                                style="cursor: pointer" data-toggle="tooltip"
                                                data-placement="right"
-                                               th:title="#{screen.message.owner.info}"></i>
+                                               th:title="#{screen.message.owner.tooltip.preference.ldap}"></i>
                                         </div>
                                         <div id="preferences">
                                             <button class="btn btn-default btn-primary"

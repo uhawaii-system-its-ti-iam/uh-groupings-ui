@@ -143,12 +143,11 @@
         };
 
         /**
-         *
-         * @param index
+         * Retrieves information about the grouping.
+         * @param {string} path - the grouping's path
          */
-        $scope.getData = function(index) {
-            if (typeof index === 'string') $scope.groupingPath = index;
-            else $scope.groupingPath = $scope.pagedItemsGroupings[$scope.currentPageGroupings][index].path;
+        $scope.getData = function(path) {
+            $scope.groupingPath = path;
             $scope.loading = true;
             var groupingDataUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/grouping";
             console.log(groupingDataUrl);
@@ -157,8 +156,7 @@
                 console.log(d);
                 if (d.path.length == 0) {
                     $scope.errorModal();
-                }
-                else {
+                } else {
                     $scope.basis = d.basis.members;
 
                     //Gets members in grouping
@@ -191,7 +189,6 @@
                     $scope.listserv = d.listservOn;
 
                     //Stop loading spinner
-                    $scope.groupingName = d.name;
                     $scope.loading = false;
                     $scope.showGrouping = true;
                 }
@@ -332,7 +329,7 @@
          * @param index - the index of the user based on the html table.
          */
         $scope.removeAdmin = function (index) {
-            var deleteUser = $scope.list[index].username;
+            var deleteUser = $scope.pagedItemsAdmins[$scope.currentPageAdmins][index].username;
             var deleteUrl = "api/groupings/" + $scope.getCurrentUsername() + "/" + deleteUser + "/deleteAdmin";
 
             $scope.deleteModal(deleteUser, deleteUrl, index, 'admin');
@@ -341,10 +338,10 @@
         $scope.removeMember = function (type, row) {
             var user;
             if (type === 'Include') {
-                user = $scope.groupingInclude[row].username;
+                user = $scope.pagedItemsInclude[$scope.currentPageInclude][row].username;
             }
             if (type === 'Exclude') {
-                user = $scope.groupingExclude[row].username;
+                user = $scope.pagedItemsExclude[$scope.currentPageExclude][row].username;
             }
 
             var URL = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
@@ -353,9 +350,9 @@
         };
 
         $scope.removeOwner = function (index) {
-            var removeOwner = $scope.ownerList[index].username;
+            var removeOwner = $scope.pagedItemsOwners[$scope.currentPageOwners][index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
-            if ($scope.ownerList.length > 1) {
+            if ($scope.groupingOwners.length > 1) {
                 $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.groupingPath);
             }
         };
@@ -379,9 +376,9 @@
 
             $scope.deleteModalInstance.result.then(function () {
                 $scope.loading = true;
-                if (type === 'admin' && $scope.list.length > 1) {
+                if (type === 'admin' && $scope.adminsList.length > 1) {
                     dataDelete.deleteData(function (d) {
-                        $scope.list.splice(location, 1);
+                        $scope.adminsList.splice(location, 1);
                         $scope.init();
                     }, url);
                 }
@@ -599,21 +596,72 @@
         };
 
         /**
-         *  Function that switches from the view of a single grouping
-         *  to the list of groupings that you own.
+         * Goes back to the list of groupings available for administration.
          */
         $scope.showGroups = function () {
-            if ($scope.showGrouping == false) {
+            if (!$scope.showGrouping) {
                 $scope.showGrouping = true;
             } else {
                 $scope.showGrouping = false;
-                $scope.groupingsBasis = [];
-                $scope.groupingInclude = [];
-                $scope.groupingExclude = [];
-                $scope.ownerList = [];
+                $scope.resetGroupingInformation();
+                $scope.resetSelectedGroup();
             }
         };
 
+        /**
+         * Gets information about the grouping clicked by the user on the Manage Groupings tab
+         * @param {number} row - the row clicked on by the user (zero-indexed)
+         */
+        $scope.showData = function(row) {
+            $scope.selectedGrouping = $scope.pagedItemsGroupings[$scope.currentPageGroupings][row];
+            if (!$scope.showGrouping) {
+                $scope.showGrouping = true;
+                $scope.getData($scope.selectedGrouping.path);
+            } else {
+                $scope.showGrouping = false;
+            }
+        };
+
+        /**
+         * Resets the arrays containing the members of each grouping and their page numbers.
+         */
+        $scope.resetGroupingInformation = function() {
+            // Reset grouping member data for next load
+            $scope.groupingMembers = [];
+            $scope.groupingBasis = [];
+            $scope.groupingInclude = [];
+            $scope.groupingExclude = [];
+            $scope.groupingOwners = [];
+            // Reset paged items
+            $scope.pagedItemsMembers = [];
+            $scope.pagedItemsBasis = [];
+            $scope.pagedItemsInclude = [];
+            $scope.pagedItemsExclude = [];
+            $scope.pagedItemsOwners = [];
+            // Reset page numbers
+            $scope.currentPageMembers = 0;
+            $scope.currentPageBasis = 0;
+            $scope.currentPageInclude = 0;
+            $scope.currentPageExclude = 0;
+            $scope.currentPageOwners = 0;
+        };
+
+        /**
+         * Resets the selected group to the list of all members.
+         */
+        $scope.resetSelectedGroup = function() {
+            var pills = $('#group-pills')[0].children;
+            var content = $('#pill-content')[0].children
+            for (var i = 0; i < pills.length; i++) {
+                if (i === 0 && !$(content[i]).hasClass('active')) {
+                    $(pills[i]).addClass('active');
+                    $(content[i]).addClass('in active');
+                } else if (i !== 0 && $(pills[i]).hasClass('active')) {
+                    $(pills[i]).removeClass('active');
+                    $(content[i]).removeClass('in active');
+                }
+            }
+        };
     }
 
     adminApp.controller("AdminJsController", AdminJsController);

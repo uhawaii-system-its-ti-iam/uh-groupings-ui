@@ -2,14 +2,19 @@ package edu.hawaii.its.holiday.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import edu.hawaii.its.api.type.GroupingsHTTPException;
 import edu.hawaii.its.holiday.access.User;
 import edu.hawaii.its.holiday.access.UserContextService;
 
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.context.request.WebRequest;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import javax.xml.ws.http.HTTPException;
 
 @ControllerAdvice
 public class ErrorControllerAdvice {
@@ -20,40 +25,52 @@ public class ErrorControllerAdvice {
     private UserContextService userContextService;
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ModelAndView handelIllegalArgumentException(IllegalArgumentException iae) {
-        return error(iae);
+    public ResponseEntity<GroupingsHTTPException> handelIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
+        return error("Resource not available", iae, 404);
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ModelAndView handelIllegalArgumentException(RuntimeException re) {
-        return error(re);
+    public ResponseEntity<GroupingsHTTPException> handelRuntimeException(RuntimeException re) {
+        return error("runtime exception", re, 500);
+    }
+
+
+    @ExceptionHandler(NotImplementedException.class)
+    public ResponseEntity<GroupingsHTTPException> handelNotImplementedException(NotImplementedException nie) {
+        return error("Method not implemented", nie, 501);
     }
 
     @ExceptionHandler(Exception.class)
-    public String handleException(Exception ex) {
+    public ResponseEntity<GroupingsHTTPException> handleException(Exception exception) {
+        return error("Exception", exception, 500);
+    }
+
+    //todo this is for the HolidayRestControllerTest test (should we really have this behavior?)
+    @ExceptionHandler(TypeMismatchException.class)
+    public String handleTypeMismatchException(Exception ex) {
         String username = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {
             username = user.getUsername();
         }
         logger.error("username: " + username + "; Exception: ", ex);
+        System.out.println("username: " + username + "; Exception: " + ex.getStackTrace());
 
-        return "redirect:/";
+        return "redirect:/error";
     }
 
-    private ModelAndView error(Exception exception) {
+    private ResponseEntity<GroupingsHTTPException> error(String message, Throwable cause, int status) {
         String username = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {
             username = user.getUsername();
         }
-        logger.error("username: " + username + "; Exception: ", exception.getCause());
 
-        ModelAndView modelAndView = new ModelAndView("redirect:/error");
-        modelAndView.addObject("errCode", 500);
-        modelAndView.addObject("errMsg", exception.getMessage());
+        GroupingsHTTPException httpException = new GroupingsHTTPException(message, cause, status);
+        httpException.fillInStackTrace();
 
-        return modelAndView;
+        logger.error("username: " + username + "; Exception: ", httpException.getCause());
 
+        return ResponseEntity.status(status).body(httpException);
     }
 }

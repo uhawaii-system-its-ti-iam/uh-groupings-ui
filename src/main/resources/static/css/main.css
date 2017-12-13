@@ -464,3 +464,10 @@ td.uh-pre {
         margin-top: 1.40625em;
     }
 }
+
+.well-borderless {
+    border: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}

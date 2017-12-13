@@ -1,5 +1,6 @@
 package edu.hawaii.its.api.controller;
 
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import edu.hawaii.its.api.service.GroupingsService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -394,12 +396,24 @@ public class GroupingsRestController {
      *
      * @return information about the new Grouping and its success
      */
-    @RequestMapping(value = "/addGrouping",
-            method = RequestMethod.GET,
+//    String username, String path, List<String> basis, List<String> include, List<String> exclude, List<String> owners
+    @RequestMapping(value = "/{grouping}/{username}/{basis}/{include}/{exclude}/{owners}/addGrouping",
+            method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public RedirectView addGrouping() {
-        return new RedirectView(requestForm);
-        //todo change to real method when it is ready for testing
+    public ResponseEntity<List<GroupingsServiceResult>> addGrouping(@PathVariable String grouping,
+                                                                    @PathVariable String username,
+                                                                    @PathVariable List<String> basis,
+                                                                    @PathVariable List<String> include,
+                                                                    @PathVariable List<String> exclude,
+                                                                    @PathVariable List<String> owners) {
+        logger.info("Entered REST addGrouping...");
+
+        throw new NotImplementedException();
+
+        //todo implement method
+//        return ResponseEntity
+//                .ok()
+//                .body(gs.addGrouping(username, grouping, basis, include, exclude, owners));
     }
 
     /**
@@ -407,11 +421,17 @@ public class GroupingsRestController {
      *
      * @return information about the deleted Grouping and its success
      */
-    @RequestMapping(value = "/deleteGrouping",
-            method = RequestMethod.GET,
+    @RequestMapping(value = "/{grouping}/{username}/deleteGrouping",
+            method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public RedirectView deleteGrouping() {
-        return new RedirectView(requestForm);
+    public RedirectView deleteGrouping(@PathVariable String grouping, @PathVariable String username) {
+        logger.info("Entered REST deleteGrouping...");
+
+        throw new NotImplementedException();
+
+        //todo implement method
+//        return ResponseEntity
+//                .ok()
+//                .body(gs.deleteGrouping(username, grouping));
     }
-    //todo change to real method when it is ready for testing
 }
