@@ -604,6 +604,7 @@
             } else {
                 $scope.showGrouping = false;
                 $scope.resetGroupingInformation();
+                $scope.resetSelectedGroup();
             }
         };
 
@@ -645,6 +646,22 @@
             $scope.currentPageOwners = 0;
         };
 
+        /**
+         * Resets the selected group to the list of all members.
+         */
+        $scope.resetSelectedGroup = function() {
+            var pills = $('#group-pills')[0].children;
+            var content = $('#pill-content')[0].children
+            for (var i = 0; i < pills.length; i++) {
+                if (i === 0 && !$(content[i]).hasClass('active')) {
+                    $(pills[i]).addClass('active');
+                    $(content[i]).addClass('in active');
+                } else if (i !== 0 && $(pills[i]).hasClass('active')) {
+                    $(pills[i]).removeClass('active');
+                    $(content[i]).removeClass('in active');
+                }
+            }
+        };
     }
 
     adminApp.controller("AdminJsController", AdminJsController);
