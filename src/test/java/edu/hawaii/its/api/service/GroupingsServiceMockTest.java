@@ -300,13 +300,20 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void assignOwnershipTest() {
+        //expect this to fail
+        GroupingsServiceResult randomUserAdds;
 
         Person randomUser = personRepository.findByUsername(users.get(1).getUsername());
         Grouping grouping = groupingRepository.findByPath(GROUPING_0_PATH);
 
         assertFalse(grouping.getOwners().getMembers().contains(randomUser));
 
-        GroupingsServiceResult randomUserAdds = groupingsService.assignOwnership(GROUPING_0_PATH, randomUser.getUsername(), randomUser.getUsername());
+        try {
+            randomUserAdds = groupingsService.assignOwnership(GROUPING_0_PATH, randomUser.getUsername(), randomUser.getUsername());
+        } catch (GroupingsServiceResultException gsre) {
+            randomUserAdds = gsre.getGsr();
+        }
+
         grouping = groupingRepository.findByPath(GROUPING_0_PATH);
         assertFalse(grouping.getOwners().getMembers().contains(randomUser));
         assertNotEquals(randomUserAdds.getResultCode(), SUCCESS);
