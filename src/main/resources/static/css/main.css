@@ -442,3 +442,7 @@ td.uh-pre {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
 }
+
+.clickable {
+    cursor: pointer;
+}
