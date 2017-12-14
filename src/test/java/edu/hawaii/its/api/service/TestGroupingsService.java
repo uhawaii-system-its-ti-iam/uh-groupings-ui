@@ -250,6 +250,10 @@ public class TestGroupingsService {
 
     @Test
     public void optTest() {
+        //expect this to fail
+        List<GroupingsServiceResult> cancelOptInFail;
+        List<GroupingsServiceResult> cancelOptOutFail;
+
         assertFalse(gs.inGroup(GROUPING, username[4]));
         assertFalse(gs.inGroup(GROUPING_INCLUDE, username[4]));
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[4]));
@@ -271,7 +275,13 @@ public class TestGroupingsService {
         assertTrue(cancelOptIn_notInGroup.get(0).getResultCode().startsWith(SUCCESS));
         //not selfOpted
         assertTrue(gs.inGroup(GROUPING_INCLUDE, username[2]));
-        List<GroupingsServiceResult> cancelOptInFail = gs.cancelOptIn(GROUPING, username[2]);
+
+        try {
+            cancelOptInFail = gs.cancelOptIn(GROUPING, username[2]);
+        }catch (GroupingsServiceResultException gsre) {
+            cancelOptInFail = new ArrayList<>();
+            cancelOptInFail.add(gsre.getGsr());
+        }
         assertTrue(cancelOptInFail.get(0).getResultCode().startsWith(FAILURE));
 
         gs.optOut(username[4], GROUPING);
@@ -290,7 +300,12 @@ public class TestGroupingsService {
         assertTrue(cancelOptOut_notInGroup.get(0).getResultCode().startsWith(SUCCESS));
         //not selfOpted
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[3]));
-        List<GroupingsServiceResult> cancelOptOutFail = gs.cancelOptOut(GROUPING, username[3]);
+        try {
+            cancelOptOutFail = gs.cancelOptOut(GROUPING, username[3]);
+        }catch (GroupingsServiceResultException gsre) {
+            cancelOptOutFail = new ArrayList<>();
+            cancelOptOutFail.add(gsre.getGsr());
+        }
         assertTrue(cancelOptOutFail.get(0).getResultCode().startsWith(FAILURE));
 
         gs.addMemberAs(username[0], GROUPING_EXCLUDE, username[4]);
