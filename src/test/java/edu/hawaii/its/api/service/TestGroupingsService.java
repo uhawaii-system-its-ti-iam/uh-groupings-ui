@@ -278,7 +278,7 @@ public class TestGroupingsService {
 
         try {
             cancelOptInFail = gs.cancelOptIn(GROUPING, username[2]);
-        }catch (GroupingsServiceResultException gsre) {
+        } catch (GroupingsServiceResultException gsre) {
             cancelOptInFail = new ArrayList<>();
             cancelOptInFail.add(gsre.getGsr());
         }
@@ -302,7 +302,7 @@ public class TestGroupingsService {
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[3]));
         try {
             cancelOptOutFail = gs.cancelOptOut(GROUPING, username[3]);
-        }catch (GroupingsServiceResultException gsre) {
+        } catch (GroupingsServiceResultException gsre) {
             cancelOptOutFail = new ArrayList<>();
             cancelOptOutFail.add(gsre.getGsr());
         }
@@ -341,11 +341,19 @@ public class TestGroupingsService {
 
     @Test
     public void assignRemoveOwnershipTest() {
+        //expect to fail
+        GroupingsServiceResult assignOwnershipFail;
+        GroupingsServiceResult removeOwnershipFail;
+
         assertTrue(gs.isOwner(GROUPING, username[0]));
         assertFalse(gs.isOwner(GROUPING, username[1]));
         assertFalse(gs.isOwner(GROUPING, username[2]));
 
-        GroupingsServiceResult assignOwnershipFail = gs.assignOwnership(GROUPING, username[1], username[1]);
+        try {
+            assignOwnershipFail = gs.assignOwnership(GROUPING, username[1], username[1]);
+        } catch (GroupingsServiceResultException gsre) {
+            assignOwnershipFail = gsre.getGsr();
+        }
         assertFalse(gs.isOwner(GROUPING, username[1]));
         assertTrue(assignOwnershipFail.getResultCode().startsWith(FAILURE));
 
@@ -353,7 +361,12 @@ public class TestGroupingsService {
         assertTrue(gs.isOwner(GROUPING, username[1]));
         assertTrue(assignOwnershipSuccess.getResultCode().startsWith(SUCCESS));
 
-        GroupingsServiceResult removeOwnershipFail = gs.removeOwnership(GROUPING, username[2], username[1]);
+        try {
+            removeOwnershipFail = gs.removeOwnership(GROUPING, username[2], username[1]);
+        } catch (GroupingsServiceResultException gsre) {
+            removeOwnershipFail = gsre.getGsr();
+        }
+
         assertTrue(gs.isOwner(GROUPING, username[1]));
         assertTrue(removeOwnershipFail.getResultCode().startsWith(FAILURE));
 
@@ -436,6 +449,7 @@ public class TestGroupingsService {
     @Test
     public void addRemoveSelfOptedTest() {
         List<String> groupsIn = gs.getGroupPaths(username[4]);
+        GroupingsServiceResult groupingsServiceResult;
 
         assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
         int numberOptedInBefore = gs.groupingsOptedOutOf(username[4], groupsIn).size();
@@ -453,7 +467,12 @@ public class TestGroupingsService {
         gs.removeSelfOpted(GROUPING_EXCLUDE, username[4]);
         assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
 
-        gs.addSelfOpted(GROUPING_EXCLUDE, username[2]);
+        try {
+            groupingsServiceResult = gs.addSelfOpted(GROUPING_EXCLUDE, username[2]);
+        } catch (GroupingsServiceResultException gsre) {
+            groupingsServiceResult = gsre.getGsr();
+        }
+        assertTrue(groupingsServiceResult.getResultCode().startsWith(FAILURE));
         assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[2]));
     }
 
@@ -656,6 +675,8 @@ public class TestGroupingsService {
 
     @Test
     public void changeListServeStatusTest() {
+        GroupingsServiceResult groupingsServiceResult;
+
         assertTrue(gs.isOwner(GROUPING, username[0]));
         assertTrue(gs.hasListserv(GROUPING));
         gs.changeListservStatus(GROUPING, username[0], true);
@@ -666,16 +687,29 @@ public class TestGroupingsService {
         assertFalse(gs.hasListserv(GROUPING));
 
         assertFalse(gs.isOwner(GROUPING, username[1]));
-        gs.changeListservStatus(GROUPING, username[1], true);
+        try {
+            groupingsServiceResult = gs.changeListservStatus(GROUPING, username[1], true);
+        } catch (GroupingsServiceResultException gsre) {
+            groupingsServiceResult = gsre.getGsr();
+        }
+        assertTrue(groupingsServiceResult.getResultCode().startsWith(FAILURE));
         assertFalse(gs.hasListserv(GROUPING));
         gs.changeListservStatus(GROUPING, username[0], true);
         assertTrue(gs.hasListserv(GROUPING));
-        gs.changeListservStatus(GROUPING, username[1], false);
+        try {
+            groupingsServiceResult = gs.changeListservStatus(GROUPING, username[1], false);
+        } catch (GroupingsServiceResultException gsre) {
+            groupingsServiceResult = gsre.getGsr();
+        }
+        assertTrue(groupingsServiceResult.getResultCode().startsWith(FAILURE));
         assertTrue(gs.hasListserv(GROUPING));
     }
 
     @Test
     public void changeOptInStatusTest() {
+        //expect these to fail
+        List<GroupingsServiceResult> optInFail;
+
         assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
         assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
@@ -693,7 +727,13 @@ public class TestGroupingsService {
         assertFalse(gs.optInPermission(GROUPING));
         assertFalse(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
         assertFalse(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
-        List<GroupingsServiceResult> optInFail = gs.optIn(username[4], GROUPING);
+
+        try {
+            optInFail = gs.optIn(username[4], GROUPING);
+        } catch (GroupingsServiceResultException gsre) {
+            optInFail = new ArrayList<>();
+            optInFail.add(gsre.getGsr());
+        }
         assertTrue(optInFail.get(0).getResultCode().startsWith(FAILURE));
         assertFalse(gs.inGroup(GROUPING, username[4]));
         gs.changeOptInStatus(GROUPING, username[0], false);
@@ -702,7 +742,13 @@ public class TestGroupingsService {
         assertFalse(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
 
         assertFalse(gs.isOwner(GROUPING, username[1]));
-        gs.changeOptInStatus(GROUPING, username[1], true);
+        try {
+            optInFail = gs.changeOptInStatus(GROUPING, username[1], true);
+        } catch (GroupingsServiceResultException gsre) {
+            optInFail = new ArrayList<>();
+            optInFail.add(gsre.getGsr());
+        }
+        assertTrue(optInFail.get(0).getResultCode().startsWith(FAILURE));
         assertFalse(gs.optInPermission(GROUPING));
         assertFalse(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
         assertFalse(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
@@ -710,7 +756,13 @@ public class TestGroupingsService {
         assertTrue(gs.optInPermission(GROUPING));
         assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
         assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
-        gs.changeOptInStatus(GROUPING, username[1], false);
+        try {
+            optInFail = gs.changeOptInStatus(GROUPING, username[1], false);
+        } catch (GroupingsServiceResultException gsre) {
+            optInFail = new ArrayList<>();
+            optInFail.add(gsre.getGsr());
+        }
+        assertTrue(optInFail.get(0).getResultCode().startsWith(FAILURE));
         assertTrue(gs.optInPermission(GROUPING));
         assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
         assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
