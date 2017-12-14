@@ -466,7 +466,11 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (groupOptInPermission(username, addGroup)) {
             results.add(deleteMemberAs(username, deleteGroup, username));
             results.add(addMemberAs(username, addGroup, username));
-            results.add(addSelfOpted(addGroup, username));
+
+            if(inGroup(addGroup, username)) {
+                results.add(addSelfOpted(addGroup, username));
+            }
+
             return results;
         }
 
@@ -914,7 +918,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                         action);
             }
             return makeGroupingsServiceResult(
-                    FAILURE + ", " + username + " is not self-opted into " + group,
+                    SUCCESS + ", " + username + " was not self-opted into " + group,
                     action);
         }
         return makeGroupingsServiceResult(
@@ -1311,7 +1315,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete) {
-        logger.info("delteMemberAs; user: "
+        logger.info("deleteMemberAs; user: "
                 + username
                 + "; group: "
                 + group + "; userToDelete: "

@@ -684,7 +684,7 @@ public class GroupingsServiceMockTest {
         optInResults = groupingsService.optIn(users.get(1).getUsername(), GROUPING_1_PATH);
         assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
         assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(optInResults.get(2).getResultCode().startsWith(FAILURE));
+        assertEquals(2, optInResults.size());
 
         //opt in Permission for include group true but already in group, not self opted
         optInResults = groupingsService.optIn(users.get(9).getUsername(), GROUPING_0_PATH);
@@ -737,8 +737,13 @@ public class GroupingsServiceMockTest {
         List<GroupingsServiceResult> cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(2).getUsername());
         assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(SUCCESS));
 
-        //in group but not self opted
-        cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(5).getUsername());
+        try {
+            //in group but not self opted
+            cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(5).getUsername());
+        }catch (GroupingsServiceResultException gsre) {
+            cancelOptInResults = new ArrayList<>();
+            cancelOptInResults.add(gsre.getGsr());
+        }
         assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(FAILURE));
 
         //in group and self opted
@@ -1048,7 +1053,7 @@ public class GroupingsServiceMockTest {
 
         //member is not self-opted
         gsr = groupingsService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(4).getUsername());
-        assertTrue(gsr.getResultCode().startsWith(FAILURE));
+        assertTrue(gsr.getResultCode().startsWith(SUCCESS));
 
         //make member self-opted
         Membership membership = membershipRepository.findByPersonAndGroup(users.get(4), group);
