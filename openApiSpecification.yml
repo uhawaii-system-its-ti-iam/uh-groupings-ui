@@ -1,0 +1,198 @@
+swagger: "2.0"
+
+info:
+  version: 2.0
+  title: uhgroupings api
+  description: The imbedded API for UHGroupings
+
+schemes:
+  -https
+host: https://www.test.hawaii.edu/uhgroupings/ #test environment
+basePath: /uhgroupings/api/groupings
+
+paths:
+  /{username}/{adminToAdd}/addAdmin:
+    post:
+      summary: Adds an admin to the group of admins
+      description: Adds an admin to the group of admins
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: username of the user doing the adding
+          type: string
+        - name: adminToAdd
+          in: path
+          required: true
+          description: username of the user being addes as an admin
+          type: string
+      responses:
+        200:
+          description: Successfully added an admin.
+          schema:
+        404:
+          description: User with username <adminToAdd> does not exist
+        403:
+          description: User with username <username> does not have permission to add admins
+  /{username}/{adminToDelete}/deleteAdmin
+    post:
+      summary:
+      description:
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: username of the user doing the removal
+          type: string
+        -name: adminToDelete
+        in: path
+        required: true
+        description: username of the usering being removed
+        type: string
+      responses:
+        200:
+          description: sucessfully deleted admin
+          schema:
+        404:
+          description: User with username <adminToDelete> is not an admin or does not exist
+        403:
+          description: User with username <username> does not have permission to delete admins
+  /{grouping}/{username}/{userToAdd}/addMemberToIncludeGroup
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/{userToAdd}/addMemberToExcludeGroup
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/{userToDelete}/deleteMemberFromIncludeGroup
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/{userToDelete}/deleteMemberFromExcludeGroup
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/{newOwner}/assignOwnership
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/{ownerToRemove}/removeOwnership
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/grouping
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{username}/groupingAssignment
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/optIn
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/optOut
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/cancelOptIn
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/cancelOptOut
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/{listservOn}/setListserv
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/{optInOn}/setOptIn
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/{optOutOn}/setOptOut
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{username}/adminLists
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/{basis}/{include}/{exclude}/{owners}/addGrouping
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description:
+          schema:
+  /{grouping}/{username}/deleteGrouping
+    delete:
+
