@@ -1,8 +1,5 @@
 package edu.hawaii.its.api.type;
 
-/**
- * Created by zknoebel on 12/12/2017.
- */
 public class GroupingsHTTPException extends RuntimeException{
     private Integer statusCode = null;
 
@@ -20,5 +17,8 @@ public class GroupingsHTTPException extends RuntimeException{
         this.statusCode = statusCode;
     }
 
+    public Integer getStatusCode() {
+        return statusCode;
+    }
 
 }

@@ -201,8 +201,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 //            addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
 //
 //        } else {
-//            GroupingsServiceResult gsr = new GroupingsServiceResult(FAILURE, action);
-        //todo add error checking for GSR
+//            GroupingsServiceResult gsr = makeGroupingsServiceResult(FAILURE, action);
 //            addGroupingResults.add(gsr);
 //        }
 //
@@ -224,10 +223,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 //            deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
 //            deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
 //        } else {
-//            GroupingsServiceResult failureResult = new GroupingsServiceResult();
-        //todo add error checking for GSR
-//            failureResult.setAction("delete grouping" + groupingPath);
-//            failureResult.setResultCode(FAILURE);
+//            GroupingsServiceResult failureResult = makeGroupingsServiceResult(FAILURE, "delete grouping" + groupingPath);
 //
 //            deleteGroupingResults.add(failureResult);
 //        }
@@ -264,9 +260,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             return ownershipResult;
         }
 
-        ownershipResult = new GroupingsServiceResult(
-//todo add error checking for GSR
-                FAILURE + ", " + username + " does not own " + grouping, action);
+        ownershipResult = makeGroupingsServiceResult(FAILURE + ", " + username + " does not own " + grouping, action);
         return ownershipResult;
     }
 
@@ -295,9 +289,10 @@ public class GroupingsServiceImpl implements GroupingsService {
             results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + EXCLUDE, set));
             results.add(changeGroupAttributeStatus(grouping, username, OPT_IN, set));
         } else {
-            GroupingsServiceResult failure = new GroupingsServiceResult();//todo add error checking for GSR
-            failure.setResultCode(FAILURE + ", " + username + " does not own " + grouping);
-            failure.setAction("change opt in status for " + grouping + " to " + set);
+
+            GroupingsServiceResult failure = makeGroupingsServiceResult(
+                    FAILURE + ", " + username + " does not own " + grouping,
+                    "change opt in status for " + grouping + " to " + set);
             results.add(failure);
         }
         return results;
@@ -317,9 +312,11 @@ public class GroupingsServiceImpl implements GroupingsService {
             results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + INCLUDE, set));
             results.add(changeGroupAttributeStatus(grouping, username, OPT_OUT, set));
         } else {
-            GroupingsServiceResult failure = new GroupingsServiceResult();//todo add error checking for GSR
-            failure.setResultCode(FAILURE + ", " + username + " does not own " + grouping);
-            failure.setAction("change opt out status for " + grouping + " to " + set);
+
+            GroupingsServiceResult failure = makeGroupingsServiceResult(
+                    FAILURE + ", " + username + " does not own " + grouping,
+                    "change opt out status for " + grouping + " to " + set);
+
             results.add(failure);
         }
         return results;
@@ -356,7 +353,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             return ownershipResults;
         }
 
-        ownershipResults = new GroupingsServiceResult(//todo add error checking for GSR
+        ownershipResults = makeGroupingsServiceResult(
                 FAILURE + ", " + username + " does not own " + grouping,
                 action);
         return ownershipResults;
@@ -469,7 +466,11 @@ public class GroupingsServiceImpl implements GroupingsService {
         if (groupOptInPermission(username, addGroup)) {
             results.add(deleteMemberAs(username, deleteGroup, username));
             results.add(addMemberAs(username, addGroup, username));
-            results.add(addSelfOpted(addGroup, username));
+
+            if(inGroup(addGroup, username)) {
+                results.add(addSelfOpted(addGroup, username));
+            }
+
             return results;
         }
 
@@ -481,7 +482,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + outOrrIn
                 + preposition
                 + grouping;
-        results.add(new GroupingsServiceResult(failureResult, action));//todo add error checking for GSR
+        results.add(makeGroupingsServiceResult(failureResult, action));
         return results;
     }
 
@@ -506,12 +507,12 @@ public class GroupingsServiceImpl implements GroupingsService {
 
                 return results;
             } else {
-                results.add(new GroupingsServiceResult(//todo add error checking for GSR
+                results.add(makeGroupingsServiceResult(
                         FAILURE + ", " + username + " is not allowed to opt out of " + group,
                         action));
             }
         } else {
-            results.add(new GroupingsServiceResult(//todo add error checking for GSR
+            results.add(makeGroupingsServiceResult(
                     SUCCESS + ", " + username + " is not opted in, because " + username + " was not in " + group,
                     action));
         }
@@ -540,12 +541,12 @@ public class GroupingsServiceImpl implements GroupingsService {
 
                 return results;
             } else {
-                results.add(new GroupingsServiceResult(//todo add error checking for GSR
+                results.add(makeGroupingsServiceResult(
                         FAILURE + ", " + username + " is not allowed to opt out of " + group,
                         action));
             }
         } else {
-            results.add(new GroupingsServiceResult(//todo add error checking for GSR
+            results.add(makeGroupingsServiceResult(
                     SUCCESS + ", " + username + " is not opted out, because " + username + " was not in " + group,
                     action));
         }
@@ -811,11 +812,11 @@ public class GroupingsServiceImpl implements GroupingsService {
                         assignMembershipAttributes(OPERATION_ASSIGN_ATTRIBUTE, SELF_OPTED, membershipID),
                         action);
             }
-            return new GroupingsServiceResult(//todo add error checking for GSR
+            return makeGroupingsServiceResult(
                     SUCCESS + ", " + username + " was already self opted into " + group,
                     action);
         }
-        return new GroupingsServiceResult(//todo add error checking for GSR
+        return makeGroupingsServiceResult(
                 FAILURE + ", " + username + " is not a member of " + group,
                 action);
     }
@@ -916,11 +917,11 @@ public class GroupingsServiceImpl implements GroupingsService {
                         assignMembershipAttributes(OPERATION_REMOVE_ATTRIBUTE, SELF_OPTED, membershipID),
                         action);
             }
-            return new GroupingsServiceResult(//todo add error checking for GSR
-                    FAILURE + ", " + username + " is not self-opted into " + group,
+            return makeGroupingsServiceResult(
+                    SUCCESS + ", " + username + " was not self-opted into " + group,
                     action);
         }
-        return new GroupingsServiceResult(//todo add error checking for GSR
+        return makeGroupingsServiceResult(
                 FAILURE + ", " + username + " is not a member of " + group,
                 action);
     }
@@ -1211,7 +1212,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             return makeGroupingsServiceResult(addMemberResults, action);
         }
 
-        return new GroupingsServiceResult("FAILURE: " + username + " is not an admin", action);//todo add error checking for GSR
+        return makeGroupingsServiceResult("FAILURE: " + username + " is not an admin", action);
     }
 
     /**
@@ -1237,7 +1238,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
             return makeGroupingsServiceResult(deleteMemberResults, action);
         }
-        return new GroupingsServiceResult("FAILURE: " + username + " is not an admin", action);//todo add error checking for GSR
+        return makeGroupingsServiceResult("FAILURE: " + username + " is not an admin", action);
     }
 
     /**
@@ -1314,7 +1315,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete) {
-        logger.info("delteMemberAs; user: "
+        logger.info("deleteMemberAs; user: "
                 + username
                 + "; group: "
                 + group + "; userToDelete: "
@@ -1499,13 +1500,13 @@ public class GroupingsServiceImpl implements GroupingsService {
             , String username
             , String attributeName
             , boolean attributeOn) {
-        GroupingsServiceResult gsr = new GroupingsServiceResult();//todo add error checking for GSR
+        GroupingsServiceResult gsr;
 
         String verb = "removed from ";
         if (attributeOn) {
             verb = "added to ";
         }
-        gsr.setAction(attributeName + " has been " + verb + group + " by " + username);
+        String action = attributeName + " has been " + verb + group + " by " + username;
 
         if (isOwner(group, username) || isAdmin(username)) {
             boolean hasAttribute = groupHasAttribute(group, attributeName);
@@ -1513,22 +1514,22 @@ public class GroupingsServiceImpl implements GroupingsService {
                 if (!hasAttribute) {
                     assignGroupAttributes(attributeName, OPERATION_ASSIGN_ATTRIBUTE, group);
 
-                    gsr.setResultCode(SUCCESS);
+                    gsr = makeGroupingsServiceResult(SUCCESS, action);
                 } else {
-                    gsr.setResultCode(SUCCESS + ", " + attributeName + " already existed");
+                    gsr = makeGroupingsServiceResult(SUCCESS + ", " + attributeName + " already existed", action);
                 }
             } else {
                 if (hasAttribute) {
                     assignGroupAttributes(attributeName, OPERATION_REMOVE_ATTRIBUTE, group);
 
-                    gsr.setResultCode(SUCCESS);
+                    gsr = makeGroupingsServiceResult(SUCCESS, action);
                 } else {
-                    gsr.setResultCode(SUCCESS + ", " + attributeName + " did not exist");
+                    gsr = makeGroupingsServiceResult(SUCCESS + ", " + attributeName + " did not exist", action);
                 }
             }
         } else {
-            gsr.setResultCode(FAILURE + ", " + username + "does not have permission to set " + attributeName
-                    + " because " + username + " does not own " + group);
+            gsr = makeGroupingsServiceResult(FAILURE + ", " + username + "does not have permission to set " + attributeName
+                    + " because " + username + " does not own " + group, action);
         }
 
         return gsr;
@@ -1545,9 +1546,25 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return a GroupingsServiceResult made from the ResultMetadataHolder and the action
      */
     GroupingsServiceResult makeGroupingsServiceResult(ResultMetadataHolder resultMetadataHolder, String action) {
-        GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();//todo add error checking for GSR
+        GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();
         groupingsServiceResult.setAction(action);
         groupingsServiceResult.setResultCode(resultMetadataHolder.getResultMetadata().getResultCode());
+
+        if (groupingsServiceResult.getResultCode().startsWith(FAILURE)) {
+            throw new GroupingsServiceResultException(groupingsServiceResult);
+        }
+
+        return groupingsServiceResult;
+    }
+
+    GroupingsServiceResult makeGroupingsServiceResult(String resultCode, String action) {
+        GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();
+        groupingsServiceResult.setAction(action);
+        groupingsServiceResult.setResultCode(resultCode);
+
+        if (groupingsServiceResult.getResultCode().startsWith(FAILURE)) {
+            throw new GroupingsServiceResultException(groupingsServiceResult);
+        }
 
         return groupingsServiceResult;
     }
