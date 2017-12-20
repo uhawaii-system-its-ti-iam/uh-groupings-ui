@@ -113,25 +113,13 @@
                         </table>
                     </div>
 
-                    <ul class="nav nav-tabs" id="grouping-top-tabs">
-                        <li class="active" data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.members}">
-                            <a data-toggle="tab" href="#members">Members</a>
-                        </li>
-                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.owners}">
-                            <a data-toggle="tab" href="#owners">Owners</a>
-                        </li>
-                        <li data-toggle="tooltip" data-placement="top" th:title="#{screen.message.owner.tooltip.navbar.preference}">
-                            <a data-toggle="tab" href="#preference">Preferences</a>
-                        </li>
-                    </ul>
-
                     <div class="tab-content" id="top-tab-content">
                         <!-- List of the members in the grouping -->
 
                         <div id="members" class="tab-pane fade in active">
                             <div class="panel panel-default panel-tab-content">
                                 <div class="panel-heading">
-                                    <h3 style="margin: inherit;">Members</h3>
+                                    <h3 style="margin: inherit;">Manage Grouping</h3>
                                 </div>
                                 <div class="panel-body" style="min-height: 400px;">
                                     <div class="row" style="margin: inherit;">
@@ -161,10 +149,23 @@
                                                         <i class="fa fa-minus" aria-hidden="true"></i>
                                                     </a>
                                                 </li>
+                                                <li data-toggle="tooltip" data-placement="right"
+                                                    th:title="#{screen.message.owner.tooltip.navbar.owners}">
+                                                    <a data-toggle="tab" href="#owners" class="text-center">
+                                                        <i class="fa fa-user" aria-hidden="true"></i>
+                                                    </a>
+                                                </li>
+                                                <li data-toggle="tooltip" data-placement="right"
+                                                    th:title="#{screen.message.owner.tooltip.navbar.preferences}">
+                                                    <a data-toggle="tab" href="#preferences" class="text-center">
+                                                        <i class="fa fa-cog" aria-hidden="true"></i>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
 
                                         <div class="tab-content col-md-11 col-sm-11 col-xs-10" id="pill-content">
+
                                             <div id="all" class="tab-pane fade in active">
                                                 <div class="row member-row-title">
                                                     <h3 class="members-tab-title">All Members</h3>
@@ -249,6 +250,7 @@
                                                     </tfoot>
                                                 </table>
                                             </div>
+
                                             <div id="basis" class="tab-pane fade">
                                                 <div class="row member-row-title">
                                                     <h3 class="members-tab-title">Basis</h3>
@@ -331,6 +333,7 @@
                                                     </tfoot>
                                                 </table>
                                             </div>
+
                                             <div id="include" class="tab-pane fade">
                                                 <div class="row member-row-title">
                                                     <h3 class="members-tab-title">Include</h3>
@@ -436,6 +439,7 @@
                                                     </form>
                                                 </div>
                                             </div>
+
                                             <div id="exclude" class="tab-pane fade">
                                                 <div class="row member-row-title">
                                                     <h3 class="members-tab-title">Exclude</h3>
@@ -543,169 +547,153 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- List of the owners in the grouping -->
-                        <div id="owners" class="tab-pane fade">
-                            <div class="panel panel-default panel-tab-content">
-                                <div class="panel-heading">
-                                    <div class="row" style="margin: inherit;">
-                                        <div class="pull-left">
-                                            <h3 style="padding: 2.5px 0px; margin: inherit;">Owners</h3>
-                                        </div>
-                                        <div class="pull-right">
-                                            <input placeholder="Filter Owners..." type="text"
-                                                   ng-model="ownersQuery" class="form-control"
-                                                   ng-change="search(ownerList, 'pagedItemsOwners', 'ownersQuery')"
-                                                   id="members"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <table class="table table-bordered table-condensed table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th ng-click="sortCol(ownerList, 'name', 'pagedItemsOwners', 'symbolOwners')"
-                                            class="clickable">
-                                            Owner Name {{symbol.name}}
-                                        </th>
-                                        <th ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwners')"
-                                            class="clickable">
-                                            UH Username {{symbol.username}}
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
-                                        <td>
-                                            {{owner.name}}
-                                            <span class="glyphicon glyphicon-trash pull-right clickable"
-                                                  data-toggle="tooltip"
-                                                  data-placement="top" onmouseover="$(this).tooltip('show')"
-                                                  th:title="#{screen.message.owner.remove.owner}"
-                                                  ng-click="removeOwner($index)"
-                                                  style="margin-right: 10px;"></span>
-                                        </td>
-                                        <td>{{owner.username}}</td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot>
-                                    <td colspan="6">
-                                        <ul class="pagination pull-right">
-                                            <li ng-class="{disabled: (currentPageOwners) == 0 }">
-                                                <a href=""
-                                                   ng-click="currentPage('First','currentPageOwners','pagedItemsOwners')">««
-                                                    First</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageOwners) == 0 }">
-                                                <a href=""
-                                                   ng-click="currentPage('Prev','currentPageOwners','pagedItemsOwners')">«
-                                                    Prev</a>
-                                            </li>
-                                            <li ng-repeat="n in range(pagedItemsOwners.length, currentPageOwners - gap, currentPageOwners + gap + 1) "
-                                                ng-class="{active: n == currentPageOwners}"
+                                            <div id="owners" class="tab-pane fade">
+                                                <div class="row member-row-title">
+                                                    <h3 class="members-tab-title">Owners</h3>
+                                                </div>
+                                                <table class="table table-bordered table-condensed table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th ng-click="sortCol(ownerList, 'name', 'pagedItemsOwners', 'symbolOwners')"
+                                                            class="clickable">
+                                                            Owner Name {{symbol.name}}
+                                                        </th>
+                                                        <th ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwners')"
+                                                            class="clickable">
+                                                            UH Username {{symbol.username}}
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
+                                                        <td>
+                                                            {{owner.name}}
+                                                            <span class="glyphicon glyphicon-trash pull-right clickable"
+                                                                  data-toggle="tooltip"
+                                                                  data-placement="top" onmouseover="$(this).tooltip('show')"
+                                                                  th:title="#{screen.message.owner.remove.owner}"
+                                                                  ng-click="removeOwner($index)"
+                                                                  style="margin-right: 10px;"></span>
+                                                        </td>
+                                                        <td>{{owner.username}}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                    <td colspan="6">
+                                                        <ul class="pagination pull-right">
+                                                            <li ng-class="{disabled: (currentPageOwners) == 0 }">
+                                                                <a href=""
+                                                                   ng-click="currentPage('First','currentPageOwners','pagedItemsOwners')">««
+                                                                    First</a>
+                                                            </li>
+                                                            <li ng-class="{disabled: (currentPageOwners) == 0 }">
+                                                                <a href=""
+                                                                   ng-click="currentPage('Prev','currentPageOwners','pagedItemsOwners')">«
+                                                                    Prev</a>
+                                                            </li>
+                                                            <li ng-repeat="n in range(pagedItemsOwners.length, currentPageOwners - gap, currentPageOwners + gap + 1) "
+                                                                ng-class="{active: n == currentPageOwners}"
 
-                                                ng-click="currentPage('Set','currentPageOwners','pagedItemsOwners')"
-                                                    ><a href="" ng-bind="n + 1">1</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
-                                                <a href=""
-                                                   ng-click="currentPage('Next','currentPageOwners','pagedItemsOwners')">Next
-                                                    »</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
-                                                <a href=""
-                                                   ng-click="currentPage('Last','currentPageOwners','pagedItemsOwners')">Last
-                                                    »»</a>
-                                            </li>
-                                        </ul>
-                                        <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group input-inline-pagination">
-                                            <form ng-submit="addOwner()">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control"
-                                                           placeholder="Add an owner..." ng-model="ownerUser"/>
-                                                    <div class="input-group-btn">
-                                                        <button class="btn btn-primary" type="submit">Add</button>
+                                                                ng-click="currentPage('Set','currentPageOwners','pagedItemsOwners')"
+                                                            ><a href="" ng-bind="n + 1">1</a>
+                                                            </li>
+                                                            <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
+                                                                <a href=""
+                                                                   ng-click="currentPage('Next','currentPageOwners','pagedItemsOwners')">Next
+                                                                    »</a>
+                                                            </li>
+                                                            <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
+                                                                <a href=""
+                                                                   ng-click="currentPage('Last','currentPageOwners','pagedItemsOwners')">Last
+                                                                    »»</a>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+                                                    </tfoot>
+                                                </table>
+                                                <div class="col-lg-4 col-md-6" style="padding: inherit;">
+                                                    <form ng-submit="addOwner()">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control"
+                                                                   placeholder="Add an owner..." ng-model="ownerUser"/>
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-primary" type="submit">Add</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <div id="preferences" class="tab-pane fade">
+                                                <div class="row member-row-title">
+                                                    <h3 class="members-tab-title">Preferences</h3>
+                                                </div>
+                                                <div class="well">
+                                                    <div class="row" style="margin: inherit;">
+                                                        <div class="col-md-6" style="padding: 0 15px 0 0;">
+                                                            <h4 style="margin-top: 0px;">Add/Remove</h4>
+
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input type="checkbox" ng-model="preference.optIn"/>
+                                                                    Allow people to add themselves to this grouping
+                                                                </label>
+                                                                <i class="fa fa-question-circle clickable" aria-hidden="true"
+                                                                   ng-click="infoModal('opt', 'add')"
+                                                                   data-toggle="tooltip"
+                                                                   data-placement="right"
+                                                                   th:title="#{screen.message.owner.tooltip.preference.allowOptIn}"></i>
+                                                            </div>
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input type="checkbox" ng-model="preference.optOut"/>
+                                                                    Allow members to remove themselves to this grouping
+                                                                </label>
+                                                                <i class="fa fa-question-circle clickable" aria-hidden="true"
+                                                                   ng-click="infoModal('opt', 'remove')"
+                                                                   data-toggle="tooltip"
+                                                                   data-placement="right"
+                                                                   th:title="#{screen.message.owner.tooltip.preference.allowOptOut}"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6" style="padding: 0;">
+                                                            <h4 style="margin-top: 0px;">Publication Destinations</h4>
+
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input type="checkbox" ng-model="preference.listserv"
+                                                                           ng-init="pref"/>
+                                                                    LISTSERV list: &lt;{{ groupingName.name }}@lists.hawaii.edu&gt;
+                                                                </label>
+                                                                <i class="fa fa-question-circle clickable" aria-hidden="true"
+                                                                   ng-click="infoModal('publication')"
+                                                                   data-toggle="tooltip"
+                                                                   data-placement="right"
+                                                                   th:title="#{screen.message.owner.tooltip.preference.listserv}"></i>
+                                                            </div>
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input type="checkbox"/>
+                                                                    LDAP/CAS Attribute: uhReleasedGroupings
+                                                                </label>
+                                                                <i class="fa fa-question-circle clickable" aria-hidden="true"
+                                                                   ng-click="infoModal('publication')"
+                                                                   data-toggle="tooltip"
+                                                                   data-placement="right"
+                                                                   th:title="#{screen.message.owner.tooltip.preference.ldap}"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="pull-right">
+                                                            <button class="btn btn-default btn-primary"
+                                                                    style="margin-top: 20px;"
+                                                                    type="submit" ng-click="savePref()">Update Preferences
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </form>
-                                        </div>
-                                    </td>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <div class="col-lg-3 col-md-3" style="padding: inherit;">
-                            </div>
+                                            </div>
 
-                        </div>
-
-                        <!-- Preference page -->
-                        <div id="preference" class="tab-pane fade">
-                            <div class="panel panel-default panel-tab-content">
-                                <div class="panel-heading">
-                                    <h3 style="margin: inherit;">Preferences</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="col-md-6" style="padding: 0 15px 0 0;">
-                                        <h4 style="margin-top: 0px;">Add/Remove</h4>
-
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" ng-model="preference.optIn"/>
-                                                Allow people to add themselves to this grouping
-                                            </label>
-                                            <i class="fa fa-question-circle clickable" aria-hidden="true"
-                                               ng-click="infoModal('opt', 'add')"
-                                               data-toggle="tooltip"
-                                               data-placement="right"
-                                               th:title="#{screen.message.owner.tooltip.preference.allowOptIn}"></i>
-                                        </div>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" ng-model="preference.optOut"/>
-                                                Allow members to remove themselves to this grouping
-                                            </label>
-                                            <i class="fa fa-question-circle clickable" aria-hidden="true"
-                                               ng-click="infoModal('opt', 'remove')"
-                                               data-toggle="tooltip"
-                                               data-placement="right"
-                                               th:title="#{screen.message.owner.tooltip.preference.allowOptOut}"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6" style="padding: 0;">
-                                        <h4 style="margin-top: 0px;">Publication Destinations</h4>
-
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" ng-model="preference.listserv"
-                                                       ng-init="pref"/>
-                                                LISTSERV list: &lt;{{ groupingName.name }}@lists.hawaii.edu&gt;
-                                            </label>
-                                            <i class="fa fa-question-circle clickable" aria-hidden="true"
-                                               ng-click="infoModal('publication')"
-                                               data-toggle="tooltip"
-                                               data-placement="right"
-                                               th:title="#{screen.message.owner.tooltip.preference.listserv}"></i>
-                                        </div>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"/>
-                                                LDAP/CAS Attribute: uhReleasedGroupings
-                                            </label>
-                                            <i class="fa fa-question-circle clickable" aria-hidden="true"
-                                               ng-click="infoModal('publication')"
-                                               data-toggle="tooltip"
-                                               data-placement="right"
-                                               th:title="#{screen.message.owner.tooltip.preference.ldap}"></i>
-                                        </div>
-                                        <div id="preferences">
-                                            <button class="btn btn-default btn-primary"
-                                                    style="margin-top: 20px;"
-                                                    type="submit" ng-click="savePref()">Update Preferences
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -719,9 +707,6 @@
     </div>
 
 </div>
-<script type="javascript">
-
-</script>
 <!-- / Content container. -->
 
 <div th:substituteby="footer :: copy"></div>
