@@ -267,7 +267,13 @@
         $scope.addMember = function (type) {
             var addUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataUpdater.updateData(function (d) {
-                if (d.resultCode === "SUCCESS") {
+                console.log(d);
+                if(d.statusCode != null)
+                {
+                    console.log("failed");
+                    $scope.addModalAlert();
+                }
+                else if (d.resultCode === "SUCCESS") {
                     console.log("success in adding " + $scope.addUser);
                     $scope.addModalAlert('grouping', 'success');
                 }
@@ -297,7 +303,7 @@
 
         $scope.addModalAlert = function (location, success) {
             if (success === 'success') var message = "User has been added";
-            else var message = "Error: User is not a valid username";
+            else var message = "Error: There was an error in trying to add this user.";
 
             var modalHtml = '<div class="modal-body">' + message + '</div>';
             modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="continue()">OK</button></div>';
@@ -431,14 +437,16 @@
         };
 
         $scope.updateAllowOptOut = function () {
-            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut";
+            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "lk/" + $scope.allowOptOut + "/setOptOut";
             dataUpdater.updateData(function (d) {
-                if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
-                    console.log("success");
-                }
-                else {
+                console.log(d);
+                if(d.statusCode != null)
+                {
                     console.log("failed");
                     $scope.preferenceErrorModal();
+                }
+                else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                    console.log("success");
                 }
             }, url);
             console.log(url);
@@ -462,6 +470,7 @@
         $scope.updateListserv = function () {
             var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.listserv + "/setListserv";
             dataUpdater.updateData(function (d) {
+                console.log(d);
                 if (d.resultCode === "SUCCESS") {
                     console.log("success");
                 }
