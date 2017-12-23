@@ -19,6 +19,12 @@ import javax.xml.ws.http.HTTPException;
 @ControllerAdvice
 public class ErrorControllerAdvice {
 
+
+    //todo change this to HATEOAS style
+    //  do we need to use @ResponseBody for the methods or is this already being handled?
+    //  do we need to use @ResponseStatus for the methods or is the HTTP status already being added?
+    //  should we use VndErrors() type and get rid of the Groupings specific error types?
+
     private static final Log logger = LogFactory.getLog(HomeController.class);
 
     @Autowired
