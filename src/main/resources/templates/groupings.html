@@ -18,7 +18,7 @@
                 <div id="overlay" ng-show="loading">
                     <div class="loader" ng-show="loading"></div>
                 </div>
-                <div ng-show="!showGrouping" id = "goupingInitList">
+                <div ng-show="!showGrouping">
                     <!-- This will allow you to search for specific groups -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -34,7 +34,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class = "table-responsive">
                         <table class="table table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
@@ -85,7 +84,6 @@
                             </td>
                             </tfoot>
                         </table>
-                    </div>
                     </div>
                 </div>
 
@@ -189,8 +187,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                <div class = "table-responsive">
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
@@ -221,7 +217,7 @@
                                                     </tr>
                                                     </tbody>
                                                     <tfoot>
-                                                    Top part of the two parts
+                                                    <!-- Top part of the two parts  -->
                                                     <td colspan="6">
                                                         <ul class="pagination pull-right">
                                                             <li ng-class="{disabled: (currentPageMembers) == 0 }">
@@ -253,7 +249,6 @@
                                                     </td>
                                                     </tfoot>
                                                 </table>
-                                                </div>
                                             </div>
 
                                             <div id="basis" class="tab-pane fade">
@@ -279,7 +274,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class = "table-responsive">
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
@@ -363,7 +357,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class = "table-responsive">
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
@@ -434,7 +427,6 @@
                                                     </td>
                                                     </tfoot>
                                                 </table>
-                                            </div>
                                                 <div class="col-lg-4 col-md-6" style="padding: inherit;">
                                                     <form ng-submit="addMember('Include')">
                                                         <div class="input-group">
@@ -471,7 +463,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class = "table-responsive">
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
@@ -543,7 +534,6 @@
                                                     </td>
                                                     </tfoot>
                                                 </table>
-                                            </div>
                                                 <div class="col-lg-4 col-md-6" style="padding: inherit;">
                                                     <form ng-submit="addMember('Exclude')">
                                                         <div class="input-group">

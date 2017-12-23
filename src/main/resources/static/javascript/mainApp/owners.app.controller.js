@@ -698,5 +698,5 @@
         };
     }
 
-    UHGroupingApp.controller("OwnerJsController", OwnerJsController);
+    UHGroupingsApp.controller("OwnerJsController", OwnerJsController);
 })();
