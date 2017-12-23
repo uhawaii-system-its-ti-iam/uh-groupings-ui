@@ -244,9 +244,25 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
+    public void construction() {
+        //autowired
+        assertNotNull(groupingsService);
+
+        //constructed normally
+        GrouperFactoryService grouperFactoryOther = new GrouperFactoryServiceImplLocal();
+        GroupingsService groupingsServiceOther = new GroupingsServiceImpl(grouperFactoryOther);
+        assertNotNull(groupingsServiceOther);
+    }
+
+    @Test
     public void addAdminTest() {
-        //user is not super user
-        GroupingsServiceResult gsr = groupingsService.addAdmin(users.get(9).getUsername(), users.get(9).getUsername());
+        GroupingsServiceResult gsr;
+        try {
+            //user is not super user
+            gsr = groupingsService.addAdmin(users.get(9).getUsername(), users.get(9).getUsername());
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
         assertTrue(gsr.getResultCode().startsWith(FAILURE));
 
         //user is super user
@@ -256,11 +272,17 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void deleteAdminTest() {
+        GroupingsServiceResult gsr;
+
         //usernameToDelete is not a superuser
         String usernameToDelete = users.get(9).getUsername();
 
-        //user is not super user
-        GroupingsServiceResult gsr = groupingsService.deleteAdmin(usernameToDelete, ADMIN_USER);
+        try {
+            //user is not super user
+            gsr = groupingsService.deleteAdmin(usernameToDelete, ADMIN_USER);
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
         assertTrue(gsr.getResultCode().startsWith(FAILURE));
 
         //user is super user usernameToDelete is not superuser
@@ -278,17 +300,6 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
-    public void construction() {
-        //autowired
-        assertNotNull(groupingsService);
-
-        //constructed normally
-        GrouperFactoryService grouperFactoryOther = new GrouperFactoryServiceImplLocal();
-        GroupingsService groupingsServiceOther = new GroupingsServiceImpl(grouperFactoryOther);
-        assertNotNull(groupingsServiceOther);
-    }
-
-    @Test
     public void databaseTest() {
         Iterable<Person> persons = personRepository.findAll();
         Iterable<Group> groups = groupRepository.findAll();
@@ -300,13 +311,20 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void assignOwnershipTest() {
+        //expect this to fail
+        GroupingsServiceResult randomUserAdds;
 
         Person randomUser = personRepository.findByUsername(users.get(1).getUsername());
         Grouping grouping = groupingRepository.findByPath(GROUPING_0_PATH);
 
         assertFalse(grouping.getOwners().getMembers().contains(randomUser));
 
-        GroupingsServiceResult randomUserAdds = groupingsService.assignOwnership(GROUPING_0_PATH, randomUser.getUsername(), randomUser.getUsername());
+        try {
+            randomUserAdds = groupingsService.assignOwnership(GROUPING_0_PATH, randomUser.getUsername(), randomUser.getUsername());
+        } catch (GroupingsServiceResultException gsre) {
+            randomUserAdds = gsre.getGsr();
+        }
+
         grouping = groupingRepository.findByPath(GROUPING_0_PATH);
         assertFalse(grouping.getOwners().getMembers().contains(randomUser));
         assertNotEquals(randomUserAdds.getResultCode(), SUCCESS);
@@ -326,10 +344,20 @@ public class GroupingsServiceMockTest {
     @Test
     public void changeListservStatusTest() {
 
+        //expect actions by "Random" to fail
+        GroupingsServiceResult turnOnWhenOnRandom;
+        GroupingsServiceResult turnOnWhenOffRandom;
+        GroupingsServiceResult turnOffWhenOnRandom;
+        GroupingsServiceResult turnOffWhenOffRandom;
+
         Grouping grouping = groupingRepository.findByPath(GROUPING_4_PATH);
         assertFalse(grouping.isListservOn());
 
-        GroupingsServiceResult turnOnWhenOffRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), true);
+        try {
+            turnOnWhenOffRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), true);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOnWhenOffRandom = gsre.getGsr();
+        }
         grouping = groupingRepository.findByPath(GROUPING_4_PATH);
         assertFalse(grouping.isListservOn());
 
@@ -337,7 +365,11 @@ public class GroupingsServiceMockTest {
         grouping = groupingRepository.findByPath(GROUPING_4_PATH);
         assertTrue(grouping.isListservOn());
 
-        GroupingsServiceResult turnOnWhenOnRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), true);
+        try {
+            turnOnWhenOnRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), true);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOnWhenOnRandom = gsre.getGsr();
+        }
         grouping = groupingRepository.findByPath(GROUPING_4_PATH);
         assertTrue(grouping.isListservOn());
 
@@ -349,7 +381,11 @@ public class GroupingsServiceMockTest {
         grouping = groupingRepository.findByPath(GROUPING_4_PATH);
         assertTrue(grouping.isListservOn());
 
-        GroupingsServiceResult turnOffWhenOnRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), false);
+        try {
+            turnOffWhenOnRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), false);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOffWhenOnRandom = gsre.getGsr();
+        }
         grouping = groupingRepository.findByPath(GROUPING_4_PATH);
         assertTrue(grouping.isListservOn());
 
@@ -365,7 +401,11 @@ public class GroupingsServiceMockTest {
         grouping = groupingRepository.findByPath(GROUPING_4_PATH);
         assertFalse(grouping.isListservOn());
 
-        GroupingsServiceResult turnOffWhenOffRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), false);
+        try {
+            turnOffWhenOffRandom = groupingsService.changeListservStatus(GROUPING_4_PATH, users.get(1).getUsername(), false);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOffWhenOffRandom = gsre.getGsr();
+        }
         grouping = groupingRepository.findByPath(GROUPING_4_PATH);
         assertFalse(grouping.isListservOn());
 
@@ -394,22 +434,46 @@ public class GroupingsServiceMockTest {
         assertTrue(turnOffWhenOffAdmin.getResultCode().startsWith(SUCCESS));
     }
 
-
     @Test
     public void changeOptInStatusTest() {
+        //expect actions done by "Random" to fail
+        List<GroupingsServiceResult> turnOnWhenOnRandom;
+        List<GroupingsServiceResult> turnOnWhenOffRandom;
+        List<GroupingsServiceResult> turnOffWhenOnRandom;
+        List<GroupingsServiceResult> turnOffWhenOffRandom;
 
-        List<GroupingsServiceResult> turnOnWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), true);
+        try {
+            turnOnWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), true);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOnWhenOnRandom = new ArrayList<>();
+            turnOnWhenOnRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOnWhenOnOwner = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(0).getUsername(), true);
         List<GroupingsServiceResult> turnOnWhenOnAdmin = groupingsService.changeOptInStatus(GROUPING_0_PATH, ADMIN_USER, true);
 
-        List<GroupingsServiceResult> turnOffWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), false);
+        try {
+            turnOffWhenOnRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), false);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOffWhenOnRandom = new ArrayList<>();
+            turnOffWhenOnRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOffWhenOnOwner = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(0).getUsername(), false);
 
-        List<GroupingsServiceResult> turnOffWhenOffRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), false);
+        try {
+            turnOffWhenOffRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), false);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOffWhenOffRandom = new ArrayList<>();
+            turnOffWhenOffRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOffWhenOffOwner = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(0).getUsername(), false);
         List<GroupingsServiceResult> turnOffWhenOffAdmin = groupingsService.changeOptInStatus(GROUPING_0_PATH, ADMIN_USER, false);
 
-        List<GroupingsServiceResult> turnOnWhenOffRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), true);
+        try {
+            turnOnWhenOffRandom = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(1).getUsername(), true);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOnWhenOffRandom = new ArrayList<>();
+            turnOnWhenOffRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOnWhenOffOwner = groupingsService.changeOptInStatus(GROUPING_0_PATH, users.get(0).getUsername(), true);
 
         List<GroupingsServiceResult> turnOffWhenOnAdmin = groupingsService.changeOptInStatus(GROUPING_0_PATH, ADMIN_USER, false);
@@ -453,19 +517,46 @@ public class GroupingsServiceMockTest {
     @Test
     public void changeOptOutStatusTest() {
 
-        List<GroupingsServiceResult> turnOnWhenOnRandom = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(1).getUsername(), true);
+        //expect to fail
+        List<GroupingsServiceResult> turnOnWhenOnRandom;
+        List<GroupingsServiceResult> turnOffWhenOnRandom;
+        List<GroupingsServiceResult> turnOnWhenOffRandom;
+        List<GroupingsServiceResult> turnOffWhenOffRandom;
+
+        try {
+            turnOnWhenOnRandom = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(1).getUsername(), true);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOnWhenOnRandom = new ArrayList<>();
+            turnOnWhenOnRandom.add(gsre.getGsr());
+        }
+
         List<GroupingsServiceResult> turnOnWhenOnOwner = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(0).getUsername(), true);
         List<GroupingsServiceResult> turnOnWhenOnAdmin = groupingsService.changeOptOutStatus(GROUPING_1_PATH, ADMIN_USER, true);
 
-        List<GroupingsServiceResult> turnOffWhenOnRandom = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(1).getUsername(), false);
+        try {
+            turnOffWhenOnRandom = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(1).getUsername(), false);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOffWhenOnRandom = new ArrayList<>();
+            turnOffWhenOnRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOffWhenOnOwner = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(0).getUsername(), false);
 
-        List<GroupingsServiceResult> turnOnWhenOffRandom = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(1).getUsername(), true);
+        try {
+            turnOnWhenOffRandom = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(1).getUsername(), true);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOnWhenOffRandom = new ArrayList<>();
+            turnOnWhenOffRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOnWhenOffOwner = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(0).getUsername(), true);
 
         List<GroupingsServiceResult> turnOffWhenOnAdmin = groupingsService.changeOptOutStatus(GROUPING_1_PATH, ADMIN_USER, false);
 
-        List<GroupingsServiceResult> turnOffWhenOffRandom = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(1).getUsername(), false);
+        try {
+            turnOffWhenOffRandom = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(1).getUsername(), false);
+        } catch (GroupingsServiceResultException gsre) {
+            turnOffWhenOffRandom = new ArrayList<>();
+            turnOffWhenOffRandom.add(gsre.getGsr());
+        }
         List<GroupingsServiceResult> turnOffWhenOffOwner = groupingsService.changeOptOutStatus(GROUPING_1_PATH, users.get(0).getUsername(), false);
         List<GroupingsServiceResult> turnOffWhenOffAdmin = groupingsService.changeOptOutStatus(GROUPING_1_PATH, ADMIN_USER, false);
 
@@ -506,9 +597,14 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void removeOwnershipTest() {
+        GroupingsServiceResult randomUserRemoves;
 
-        //non-owner/non-admin tries to remove ownership
-        GroupingsServiceResult randomUserRemoves = groupingsService.removeOwnership(GROUPING_0_PATH, users.get(1).getUsername(), users.get(1).getUsername());
+        try {
+            //non-owner/non-admin tries to remove ownership
+            randomUserRemoves = groupingsService.removeOwnership(GROUPING_0_PATH, users.get(1).getUsername(), users.get(1).getUsername());
+        } catch (GroupingsServiceResultException gsre) {
+            randomUserRemoves = gsre.getGsr();
+        }
         assertTrue(randomUserRemoves.getResultCode().startsWith(FAILURE));
 
         //add owner for owner to remove
@@ -573,15 +669,22 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void optInTest() {
-        //opt in Permission for include group false
-        List<GroupingsServiceResult> optInResults = groupingsService.optIn(users.get(2).getUsername(), GROUPING_2_PATH);
+        List<GroupingsServiceResult> optInResults;
+
+        try {
+            //opt in Permission for include group false
+            optInResults = groupingsService.optIn(users.get(2).getUsername(), GROUPING_2_PATH);
+        } catch (GroupingsServiceResultException gsre) {
+            optInResults = new ArrayList<>();
+            optInResults.add(gsre.getGsr());
+        }
         assertTrue(optInResults.get(0).getResultCode().startsWith(FAILURE));
 
         //opt in Permission for include group true and not in group, but in basis
         optInResults = groupingsService.optIn(users.get(1).getUsername(), GROUPING_1_PATH);
         assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
         assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(optInResults.get(2).getResultCode().startsWith(FAILURE));
+        assertEquals(2, optInResults.size());
 
         //opt in Permission for include group true but already in group, not self opted
         optInResults = groupingsService.optIn(users.get(9).getUsername(), GROUPING_0_PATH);
@@ -598,9 +701,14 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void optOutTest() {
-
-        //opt in Permission for exclude group false
-        List<GroupingsServiceResult> optInResults = groupingsService.optOut(users.get(1).getUsername(), GROUPING_0_PATH);
+        List<GroupingsServiceResult> optInResults;
+        try {
+            //opt in Permission for exclude group false
+            optInResults = groupingsService.optOut(users.get(1).getUsername(), GROUPING_0_PATH);
+        } catch (GroupingsServiceResultException gsre) {
+            optInResults = new ArrayList<>();
+            optInResults.add(gsre.getGsr());
+        }
         assertTrue(optInResults.get(0).getResultCode().startsWith(FAILURE));
 
         //opt in Permission for exclude group true
@@ -629,8 +737,13 @@ public class GroupingsServiceMockTest {
         List<GroupingsServiceResult> cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(2).getUsername());
         assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(SUCCESS));
 
-        //in group but not self opted
-        cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(5).getUsername());
+        try {
+            //in group but not self opted
+            cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(5).getUsername());
+        }catch (GroupingsServiceResultException gsre) {
+            cancelOptInResults = new ArrayList<>();
+            cancelOptInResults.add(gsre.getGsr());
+        }
         assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(FAILURE));
 
         //in group and self opted
@@ -649,13 +762,18 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void cancelOptOutTest() {
+
         //not in group
         List<GroupingsServiceResult> cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_0_PATH, users.get(1).getUsername());
         assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(SUCCESS));
 
-        //in group but not self opted
-        cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_0_PATH, users.get(2).getUsername());
-
+        try {
+            //in group but not self opted
+            cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_0_PATH, users.get(2).getUsername());
+        } catch (GroupingsServiceResultException gsre) {
+            cancelOptOutResults = new ArrayList<>();
+            cancelOptOutResults.add(gsre.getGsr());
+        }
         assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(FAILURE));
 
         //in group and self opted
@@ -718,22 +836,22 @@ public class GroupingsServiceMockTest {
         for (Group group : groupsIn) {
             groupPaths.add(group.getPath());
         }
-        for(String groupPath : groupPaths) {
-            if(groupPath.matches("[a-zA-Z0-9:]*grouping[0-9]*")) {
+        for (String groupPath : groupPaths) {
+            if (groupPath.matches("[a-zA-Z0-9:]*grouping[0-9]*")) {
                 supposedGroupings.add(groupPath);
             }
         }
 
         List<Grouping> groupingsIn = groupingsService.groupingsIn(groupPaths);
         List<String> groupingPaths = new ArrayList<>();
-        for(Grouping grouping : groupingsIn) {
+        for (Grouping grouping : groupingsIn) {
             groupingPaths.add(grouping.getPath());
         }
 
-        for(String path : supposedGroupings) {
+        for (String path : supposedGroupings) {
             assertTrue(groupingPaths.contains(path));
         }
-        for(Grouping grouping : groupingsIn) {
+        for (Grouping grouping : groupingsIn) {
             assertTrue(supposedGroupings.contains(grouping.getPath()));
         }
     }
@@ -772,7 +890,7 @@ public class GroupingsServiceMockTest {
 
         Iterable<Group> groups = groupRepository.findByMembersUsername(user5);
         List<String> groupPaths = new ArrayList<>();
-        for(Group group : groups) {
+        for (Group group : groups) {
             groupPaths.add(group.getPath());
         }
 
@@ -808,7 +926,7 @@ public class GroupingsServiceMockTest {
 
         Iterable<Group> groups = groupRepository.findByMembersUsername(user1);
         List<String> groupPaths = new ArrayList<>();
-        for(Group group : groups) {
+        for (Group group : groups) {
             groupPaths.add(group.getPath());
         }
 
@@ -821,7 +939,7 @@ public class GroupingsServiceMockTest {
         groupingsService.optOut(user1, GROUPING_1_PATH);
         groups = groupRepository.findByMembersUsername(user1);
         groupPaths = new ArrayList<>();
-        for(Group group : groups) {
+        for (Group group : groups) {
             groupPaths.add(group.getPath());
         }
         groupingsOptedOutOf = groupingsService.groupingsOptedOutOf(user1, groupPaths);
@@ -831,7 +949,7 @@ public class GroupingsServiceMockTest {
         groupingsService.optOut(user1, GROUPING_3_PATH);
         groups = groupRepository.findByMembersUsername(user1);
         groupPaths = new ArrayList<>();
-        for(Group group : groups) {
+        for (Group group : groups) {
             groupPaths.add(group.getPath());
         }
         groupingsOptedOutOf = groupingsService.groupingsOptedOutOf(user1, groupPaths);
@@ -841,7 +959,7 @@ public class GroupingsServiceMockTest {
         groupingsService.optIn(user1, GROUPING_3_PATH);
         groups = groupRepository.findByMembersUsername(user1);
         groupPaths = new ArrayList<>();
-        for(Group group : groups) {
+        for (Group group : groups) {
             groupPaths.add(group.getPath());
         }
         groupingsOptedOutOf = groupingsService.groupingsOptedOutOf(user1, groupPaths);
@@ -851,7 +969,7 @@ public class GroupingsServiceMockTest {
         groupingsService.optIn(user1, GROUPING_1_PATH);
         groups = groupRepository.findByMembersUsername(user1);
         groupPaths = new ArrayList<>();
-        for(Group group : groups) {
+        for (Group group : groups) {
             groupPaths.add(group.getPath());
         }
         groupingsOptedOutOf = groupingsService.groupingsOptedOutOf(user1, groupPaths);
@@ -923,13 +1041,19 @@ public class GroupingsServiceMockTest {
     public void removeSelfOptedTest() {
         Group group = groupRepository.findByPath(GROUPING_4_EXCLUDE_PATH);
 
-        //member is not in group
-        GroupingsServiceResult gsr = groupingsService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(5).getUsername());
+        GroupingsServiceResult gsr;
+
+        try {
+            //member is not in group
+            gsr = groupingsService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(5).getUsername());
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
         assertTrue(gsr.getResultCode().startsWith(FAILURE));
 
         //member is not self-opted
         gsr = groupingsService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(4).getUsername());
-        assertTrue(gsr.getResultCode().startsWith(FAILURE));
+        assertTrue(gsr.getResultCode().startsWith(SUCCESS));
 
         //make member self-opted
         Membership membership = membershipRepository.findByPersonAndGroup(users.get(4), group);
@@ -964,7 +1088,7 @@ public class GroupingsServiceMockTest {
     public void addMemberAsTest2() {
         //add all usernames
         List<String> usernames = new ArrayList<>();
-        for(Person user : users) {
+        for (Person user : users) {
             usernames.add(user.getUsername());
         }
 

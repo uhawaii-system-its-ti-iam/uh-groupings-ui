@@ -53,24 +53,23 @@
                                 <table class="table table-bordered table-condensed table-hover">
                                     <thead>
                                     <tr>
-                                        <th><a type="button" class="btn btn-default btn-block"
-                                               style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                               ng-click="sortCol(groupingsList, 'name', 'pagedItemsGroupings', 'symbolMember')"><b>Grouping
-                                            Name
-                                            {{symbol.name}}</b></a></th>
-                                        <th><a type="button" class="btn btn-default btn-block"
-                                               style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                               ng-click="sortCol(groupingsList, 'path', 'pagedItemsGroupings', 'symbolMember')"><b>Grouping
-                                            Path
-                                            {{symbol.path}}</b></a></th>
+                                        <th ng-click="sortCol(groupingsList, 'name', 'pagedItemsGroupings', 'symbolMember')"
+                                            class="clickable">
+                                            Grouping Name {{symbol.name}}
+                                        </th>
+                                        <th ng-click="sortCol(groupingsList, 'path', 'pagedItemsGroupings', 'symbolMember')"
+                                            class="clickable">
+                                            Grouping Path {{symbol.path}}
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                                        <td ng-click="showData($index)" style="cursor: pointer;">
+                                        <td class="clickable" ng-click="showData($index)">
                                             {{l.name}}
                                             <span class="pull-right glyphicon glyphicon-edit"
-                                                  style="margin-right: 5px;"></span>
+                                                  style="margin-right: 5px;">
+                                            </span>
                                         </td>
                                         <td>{{l.path}}</td>
                                     </tr>
@@ -126,30 +125,30 @@
                                 <table class="table table-bordered table-condensed table-hover">
                                     <thead>
                                     <tr>
-                                        <th><a type="button" class="btn btn-default btn-block"
-                                               style="padding-left: 0; text-align: left; width: 100%; border: none"
-                                               ng-click="sortCol(adminsList, 'name', 'pagedItemsAdmins', 'symbolAdmin')"><b>Admin Name
-                                            {{symbol.name}}</b></a></th>
-                                        <th><a type="button" class="btn btn-default btn-block"
-                                               style="padding-left: 0; text-align: left; width: 100%; border: none"
-                                               ng-click="sortCol(adminsList, 'uuid', 'pagedItemsAdmins', 'symbolAdmin')"><b>UH Number
-                                            {{symbol.uuid}}</b></a></th>
-                                        <th><a type="button" class="btn btn-default btn-block"
-                                               style="padding-left: 0; text-align: left; width: 100%; border: none"
-                                               ng-click="sortCol(adminsList, 'username', 'pagedItemsAdmins', 'symbolAdmin')"><b>UH Username
-                                            {{symbol.username}}</b></a></th>
+                                        <th ng-click="sortCol(adminsList, 'name', 'pagedItemsAdmins', 'symbolAdmin')"
+                                            class="clickable">
+                                            Admin Name {{symbol.name}}
+                                        </th>
+                                        <th ng-click="sortCol(adminsList, 'uuid', 'pagedItemsAdmins', 'symbolAdmin')"
+                                            class="clickable">
+                                            UH Number {{symbol.uuid}}
+                                        </th>
+                                        <th ng-click="sortCol(adminsList, 'username', 'pagedItemsAdmins', 'symbolAdmin')"
+                                            class="clickable">
+                                            UH Username {{symbol.username}}
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]">
                                         <td>
                                             {{l.name}}
-                                            <span class="glyphicon glyphicon-trash pull-right"
+                                            <span class="glyphicon glyphicon-trash pull-right clickable"
                                                   data-toggle="tooltip"
                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
                                                   th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
                                                   ng-click="removeAdmin($index + (currentPageAdmins * itemsPerPage))"
-                                                  style="margin-right: 10px; cursor: pointer"></span>
+                                                  style="margin-right: 10px;"></span>
                                         </td>
                                         <td>{{l.uuid}}</td>
                                         <td>{{l.username}}</td>
@@ -257,13 +256,13 @@
                                         </li>
                                         <li data-toggle="tooltip" data-placement="right"
                                             th:title="#{screen.message.admin.tooltip.nav.owner}">
-                                            <a data-toggle="tab" href="#owner" class="text-center">
-                                                <i class="fa fa-user" aria-hidden="true"></i>
+                                            <a data-toggle="tab" href="#owners" class="text-center">
+                                                <i class="fa fa-star" aria-hidden="true"></i>
                                             </a>
                                         </li>
                                         <li data-toggle="tooltip" data-placement="right"
                                             th:title="#{screen.message.admin.tooltip.nav.preferences}">
-                                            <a data-toggle="tab" href="#options" class="text-center">
+                                            <a data-toggle="tab" href="#preferences" class="text-center">
                                                 <i class="fa fa-cog" aria-hidden="true"></i>
                                             </a>
                                         </li>
@@ -279,24 +278,21 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                             <tr>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingMembers, 'name', 'pagedItemsMembers', 'symbolList')"><b>Member Name
-                                                    {{symbol.name}}</b></a></th>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingMembers, 'uuid', 'pagedItemsMembers', 'symbolList')"><b>UH
-                                                    Number {{symbol.uuid}}</b></a></th>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingMembers, 'username', 'pagedItemsMembers', 'symbolList')"><b>UH Username
-                                                    {{symbol.username}}</b></a></th>
-                                                <th style="vertical-align: middle;">
-                                                    <a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingMembers, 'basis', 'pagedItemsMembers', 'symbolList')">
-                                                        <b>In Basis? {{symbol.basis}}</b>
-                                                    </a>
+                                                <th ng-click="sortCol(groupingMembers, 'name', 'pagedItemsMembers', 'symbolList')"
+                                                    class="clickable">
+                                                    Member Name {{symbol.name}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingMembers, 'uuid', 'pagedItemsMembers', 'symbolList')"
+                                                    class="clickable">
+                                                    UH Number {{symbol.uuid}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingMembers, 'username', 'pagedItemsMembers', 'symbolList')"
+                                                    class="clickable">
+                                                    UH Username {{symbol.username}}
+                                                </th>
+                                                <th style="vertical-align: middle;" class="clickable"
+                                                    ng-click="sortCol(groupingMembers, 'basis', 'pagedItemsMembers', 'symbolList')">
+                                                    In Basis? {{symbol.basis}}
                                                 </th>
                                             </tr>
                                             </thead>
@@ -344,18 +340,18 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                             <tr>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingBasis, 'name', 'pagedItemsBasis', 'symbolBasis')"><b>Member Name
-                                                    {{symbol.name}}</b></a></th>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingBasis, 'uuid', 'pagedItemsBasis', 'symbolBasis')"><b>UH Number
-                                                    {{symbol.uuid}}</b></a></th>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingBasis, 'username', 'pagedItemsBasis', 'symbolBasis')"><b>UH Username
-                                                    {{symbol.username}}</b></a></th>
+                                                <th ng-click="sortCol(groupingBasis, 'name', 'pagedItemsBasis', 'symbolBasis')"
+                                                    class="clickable">
+                                                    Member Name {{symbol.name}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingBasis, 'uuid', 'pagedItemsBasis', 'symbolBasis')"
+                                                    class="clickable">
+                                                    UH Number {{symbol.uuid}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingBasis, 'username', 'pagedItemsBasis', 'symbolBasis')"
+                                                    class="clickable">
+                                                    UH Username {{symbol.username}}
+                                                </th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -401,24 +397,21 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                             <tr>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude')"><b>Name
-                                                    {{symbol.name}}</b></a></th>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingInclude, 'uuid', 'pagedItemsInclude', 'symbolInclude')"><b>UH
-                                                    ID {{symbol.uuid}}</b></a></th>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')"><b>Username
-                                                    {{symbol.username}}</b></a></th>
-                                                <th style="vertical-align: middle;">
-                                                    <a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingInclude, 'basis', 'pagedItemsInclude', 'symbolInclude')">
-                                                        <b>In Basis? {{symbol.basis}}</b>
-                                                    </a>
+                                                <th ng-click="sortCol(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude')"
+                                                    class="clickable">
+                                                    Name {{symbol.name}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingInclude, 'uuid', 'pagedItemsInclude', 'symbolInclude')"
+                                                    class="clickable">
+                                                    UH ID {{symbol.uuid}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')"
+                                                    class="clickable">
+                                                    Username {{symbol.username}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingInclude, 'basis', 'pagedItemsInclude', 'symbolInclude')"
+                                                    style="vertical-align: middle;" class="clickable">
+                                                    In Basis? {{symbol.basis}}
                                                 </th>
                                             </tr>
                                             </thead>
@@ -426,12 +419,12 @@
                                             <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]">
                                                 <td>
                                                     {{i.name}}
-                                                    <span class="glyphicon glyphicon-trash pull-right"
+                                                    <span class="glyphicon glyphicon-trash pull-right clickable"
                                                           ng-click="removeMember('Include', $index)"
                                                           data-toggle="tooltip"
                                                           data-placement="top" onmouseover="$(this).tooltip('show')"
                                                           th:title="#{screen.message.admin.tooltip.nav.delete.include}"
-                                                          style="margin-right: 10px; cursor: pointer"></span>
+                                                          style="margin-right: 10px;"></span>
                                                 </td>
                                                 <td>{{i.uuid}}</td>
                                                 <td>{{i.username}}</td>
@@ -484,24 +477,21 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                             <tr>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')"><b>Name
-                                                    {{symbol.name}}</b></a></th>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingExclude, 'uuid', 'pagedItemsExclude', 'symbolExclude')"><b>UH
-                                                    ID {{symbol.uuid}}</b></a></th>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')"><b>Username
-                                                    {{symbol.username}}</b></a></th>
-                                                <th style="vertical-align: middle;">
-                                                    <a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(groupingExclude, 'basis', 'pagedItemsExclude', 'symbolExclude')">
-                                                        <b>In Basis? {{symbol.basis}}</b>
-                                                    </a>
+                                                <th ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')"
+                                                    class="clickable">
+                                                    Name {{symbol.name}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingExclude, 'uuid', 'pagedItemsExclude', 'symbolExclude')"
+                                                    class="clickable">
+                                                    UH ID {{symbol.uuid}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')"
+                                                    class="clickable">
+                                                    Username {{symbol.username}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingExclude, 'basis', 'pagedItemsExclude', 'symbolExclude')"
+                                                    class="clickable" style="vertical-align: middle;">
+                                                    In Basis? {{symbol.basis}}
                                                 </th>
                                             </tr>
                                             </thead>
@@ -509,12 +499,12 @@
                                             <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]">
                                                 <td>
                                                     {{e.name}}
-                                                    <span class="glyphicon glyphicon-trash pull-right"
+                                                    <span class="glyphicon glyphicon-trash pull-right clickable"
                                                           data-toggle="tooltip"
                                                           data-placement="top" onmouseover="$(this).tooltip('show')"
                                                           th:title="#{screen.message.admin.tooltip.nav.delete.exclude}"
                                                           ng-click="removeMember('Exclude', $index)"
-                                                          style="margin-right: 10px; cursor: pointer"></span>
+                                                          style="margin-right: 10px;"></span>
                                                 </td>
                                                 <td>{{e.uuid}}</td>
                                                 <td>{{e.username}}</td>
@@ -559,7 +549,7 @@
                                             </form>
                                         </div>
                                     </div>
-                                    <div id="owner" class="tab-pane fade">
+                                    <div id="owners" class="tab-pane fade">
                                         <div class="row member-row-title">
                                             <h3 class="members-tab-title">Owners</h3>
                                         </div>
@@ -567,26 +557,26 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                             <tr>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(ownerList, 'name', 'pagedItemsOwners', 'symbolOwner')"><b>Name
-                                                    {{symbol.name}}</b></a></th>
-                                                <th><a type="button" class="btn btn-default btn-block"
-                                                       style="padding-left: 0px; text-align: left; width: 100%; border: none"
-                                                       ng-click="sortCol(ownerList, 'username', 'pagedItemsOwners', 'symbolOwner')"><b>Username
-                                                    {{symbol.username}}</b></a></th>
+                                                <th ng-click="sortCol(groupingOwners, 'name', 'pagedItemsOwners', 'symbolOwner')"
+                                                    class="clickable">
+                                                    Name {{symbol.name}}
+                                                </th>
+                                                <th ng-click="sortCol(groupingOwners, 'username', 'pagedItemsOwners', 'symbolOwner')"
+                                                    class="clickable">
+                                                    Username {{symbol.username}}
+                                                </th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
                                                 <td>
                                                     {{owner.name}}
-                                                    <span class="glyphicon glyphicon-trash pull-right"
+                                                    <span class="glyphicon glyphicon-trash pull-right clickable"
                                                           data-toggle="tooltip"
                                                           data-placement="top" onmouseover="$(this).tooltip('show')"
                                                           th:title="#{screen.message.admin.tooltip.nav.delete.owner}"
                                                           ng-click="removeOwner($index)"
-                                                          style="margin-right: 10px; cursor: pointer"></span>
+                                                          style="margin-right: 10px;"></span>
                                                 </td>
                                                 <td>{{owner.username}}</td>
                                             </tr>
@@ -628,7 +618,7 @@
                                             </form>
                                         </div>
                                     </div>
-                                    <div id="options" class="tab-pane fade">
+                                    <div id="preferences" class="tab-pane fade">
                                         <div class="row member-row-title">
                                             <h3 class="members-tab-title">Preferences</h3>
                                         </div>
@@ -642,9 +632,9 @@
                                                             Allow people to add
                                                             themselves to this group
                                                         </label>
-                                                        <i class="fa fa-question-circle" aria-hidden="true"
+                                                        <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                            ng-click="infoModal('opt', 'add')"
-                                                           style="cursor: pointer" data-toggle="tooltip"
+                                                           data-toggle="tooltip"
                                                            data-placement="right"
                                                            th:title="#{screen.message.admin.tooltip.preference.allowOptIn}"></i>
                                                     </div>
@@ -654,9 +644,9 @@
                                                             Allow people to remove
                                                             themselves to this group
                                                         </label>
-                                                        <i class="fa fa-question-circle" aria-hidden="true"
+                                                        <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                            ng-click="infoModal('opt', 'remove')"
-                                                           style="cursor: pointer" data-toggle="tooltip"
+                                                           data-toggle="tooltip"
                                                            data-placement="right"
                                                            th:title="#{screen.message.admin.tooltip.preference.allowOptOut}"></i>
                                                     </div>
@@ -669,9 +659,9 @@
                                                                    ng-init="pref"/>
                                                             LISTSERV list: &lt;{{ selectedGrouping.name }}@lists.hawaii.edu&gt;
                                                         </label>
-                                                        <i class="fa fa-question-circle" aria-hidden="true"
+                                                        <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                            ng-click="infoModal('publication')"
-                                                           style="cursor: pointer" data-toggle="tooltip"
+                                                           data-toggle="tooltip"
                                                            data-placement="right"
                                                            th:title="#{screen.message.admin.tooltip.preference.listserv}"></i>
                                                     </div>
@@ -680,9 +670,9 @@
                                                             <input type="checkbox" ng-model="LDAP" ng-change="checkLDAP()"/>
                                                             uhReleasedGroupings LDAP/CAS Attribute
                                                         </label>
-                                                        <i class="fa fa-question-circle" aria-hidden="true"
+                                                        <i class="fa fa-question-circle clickable" aria-hidden="true"
                                                            ng-click="infoModal('publication')"
-                                                           style="cursor: pointer" data-toggle="tooltip"
+                                                           data-toggle="tooltip"
                                                            data-placement="right"
                                                            th:title="#{screen.message.admin.tooltip.preference.ldap}"></i>
                                                     </div>

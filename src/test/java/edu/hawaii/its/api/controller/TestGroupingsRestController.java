@@ -4,10 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import edu.hawaii.its.api.service.GroupingsService;
-import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingAssignment;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -421,18 +418,24 @@ public class TestGroupingsRestController {
 
     @Test
     public void addDeleteAdminTest() {
+        GroupingsServiceResult addAdminResults;
+        GroupingsServiceResult deleteAdminResults;
 
+        try {
+            addAdminResults = gc.addAdmin(tst[0], tst[0]).getBody();
+        } catch (GroupingsServiceResultException gsre) {
+            addAdminResults = gsre.getGsr();
+        }
 
-        GroupingsServiceResult addAdminResults = gc.addAdmin(tst[0], tst[0]).getBody();
-        assertTrue(addAdminResults.getResultCode().startsWith(FAILURE));
-
-        addAdminResults = gc.addAdmin(API_ACCOUNT, tst[0]).getBody();
-        assertNotNull(addAdminResults);
-
-        GroupingsServiceResult deleteAdminResults = gc.deleteAdmin(API_ACCOUNT, tst[0]).getBody();
+        deleteAdminResults = gc.deleteAdmin(API_ACCOUNT, tst[0]).getBody();
         assertNotNull(deleteAdminResults);
 
-        deleteAdminResults = gc.deleteAdmin(tst[0], tst[0]).getBody();
+        try {
+            deleteAdminResults = gc.deleteAdmin(tst[0], tst[0]).getBody();
+        } catch (GroupingsServiceResultException gsre) {
+            deleteAdminResults = gsre.getGsr();
+        }
+
         assertTrue(deleteAdminResults.getResultCode().startsWith(FAILURE));
 
     }

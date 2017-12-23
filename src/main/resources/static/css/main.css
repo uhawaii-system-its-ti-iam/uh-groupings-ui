@@ -216,10 +216,6 @@ td.uh-pre {
 #groupHeader {
     height: 55px;
 }
-#preferences{
-    display: flex;
-    justify-content: flex-end;
-}
 
 #headingOptIn {
     position: relative;
@@ -470,4 +466,8 @@ td.uh-pre {
     box-shadow: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
+}
+
+.clickable {
+    cursor: pointer;
 }
