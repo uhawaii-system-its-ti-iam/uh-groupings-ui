@@ -564,4 +564,88 @@ paths:
           description: the Grouping did not exist
         403:
           description: the user does not have the permission to delete the Grouping
-
+definitions:
+  Person:
+    type: object
+    properties:
+      id:
+        type: string
+        format: name
+      uuid:
+        type: string
+        format: uuid
+      username:
+        type: string
+        format: name
+  Group:
+    type: object
+    properties:
+      path:
+        type: string
+        format: path
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/Person'
+      usernames:
+        type: array
+        items:
+          type: string
+  Grouping:
+    type: object
+    properties:
+      path:
+        type: string
+        format: path
+      name:
+        type: string
+        format: name
+      listServOn:
+        type: boolean
+      optInOn:
+        type: boolean
+      optOutOn:
+        type: boolean
+      basis:
+        $ref: '#/definitions/Group'
+      exclude:
+        $ref: '#/definitions/Group'
+      include:
+        $ref: '#/definitions/Group'
+      composite:
+        $ref: '#/definitions/Group'
+      owners:
+        $ref: '#/definitions/Group'
+  GroupingAssignment:
+    type: object
+    properties:
+      groupingsIn:
+        $ref: '#/definitions/Grouping'
+      groupingsOwned:
+        $ref: '#/definitions/Grouping'
+      groupingsOptedOutOf:
+        $ref: '#/definitions/Grouping'
+      groupingsOptedInTo:
+        $ref: '#/definitions/Grouping'
+      groupingsToOptOutOf:
+        $ref: '#/definitions/Grouping'
+      groupingsToOptInTo:
+        $ref: '#/definitions/Grouping'
+  GroupingServiceResult:
+    type: object
+    properties:
+      action:
+        type: string
+      resultCode:
+        type: string
+        format: response
+  AdminListsHolder:
+    type: object
+    properties:
+      adminGroup:
+        $ref: '#/definitions/Group'
+      allGroupings:
+        type: array
+        items:
+          $ref: '#/definitions/Grouping'
+  
