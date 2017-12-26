@@ -42,7 +42,7 @@
            addData: function(callback, url) {
                $http.post(encodeURI(url))
                    .success(callback)
-                   .error(function(data, status) {
+                   .error(callback, function(data, status) {
                        console.log('Error in dataUpdater; status: ', status);
                    })
            }
