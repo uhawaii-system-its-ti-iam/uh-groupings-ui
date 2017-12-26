@@ -25,14 +25,6 @@
         }
     });
 
-    adminApp.factory('modalFactory', function($uiModal) {
-        return {
-            open: function(size) {
-                return $uibModal.open({});
-            }
-        }
-    });
-
     /**
      * Service function that makes a AJAX post call from an api url
      *
@@ -51,8 +43,10 @@
                 $http.post(encodeURI(url))
                     .success(callback)
                     .error(callback,function(data, status) {
+
                         console.log('Error in dataUpdater; status: ', status);
                         callback = "Error";
+                        return callback;
                     });
             }
        }
