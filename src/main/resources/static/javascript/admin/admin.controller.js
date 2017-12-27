@@ -418,12 +418,12 @@
         };
 
         $scope.infoModal = function (preference, group) {
-            $scope.test = '';
+            $scope.info = '';
 
             if (preference === 'opt')
-                $scope.test = "members can " + group + " themselves from the grouping";
+                $scope.info = "or not members can " + group + " themselves to the grouping";
             else if (preference === 'publication')
-                $scope.test = "the publication destination is active or not";
+                $scope.info = "the publication destination is active or not";
 
 
             $scope.infoModalInstance = $uibModal.open({
@@ -431,7 +431,7 @@
                 scope: $scope,
                 resolve: {
                     items: function () {
-                        return $scope.test;
+                        return $scope.info;
                     }
                 }
             });
