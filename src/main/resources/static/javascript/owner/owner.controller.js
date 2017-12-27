@@ -481,7 +481,6 @@
 
             $scope.infoModalInstance = $uibModal.open({
                 templateUrl: 'infoModal.html',
-                windowClass: 'center-modal',
                 scope: $scope,
                 resolve: {
                     items: function () {
