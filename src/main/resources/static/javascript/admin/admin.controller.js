@@ -91,6 +91,10 @@
             }, url);
         };
 
+        $scope.change = function () {
+            $scope.showGrouping = false;
+        };
+
         $scope.errorModal = function () {
             $scope.errorModalInstance = $uibModal.open({
                 templateUrl: 'apiError.html',
