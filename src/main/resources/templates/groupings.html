@@ -633,10 +633,9 @@
                                                     <div class="row" style="margin: inherit;">
                                                         <div class="col-md-6" style="padding: 0 15px 0 0;">
                                                             <h4 style="margin-top: 0px;">Add/Remove</h4>
-
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input type="checkbox" ng-model="preference.optIn"/>
+                                                                    <input type="checkbox" ng-model="allowOptIn" ng-change="updateAllowOptIn()"/>
                                                                     Allow people to add themselves to this grouping
                                                                 </label>
                                                                 <i class="fa fa-question-circle clickable" aria-hidden="true"
@@ -647,7 +646,7 @@
                                                             </div>
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input type="checkbox" ng-model="preference.optOut"/>
+                                                                    <input type="checkbox" ng-model="allowOptOut" ng-change="updateAllowOptOut()"/>
                                                                     Allow members to remove themselves to this grouping
                                                                 </label>
                                                                 <i class="fa fa-question-circle clickable" aria-hidden="true"
@@ -662,7 +661,7 @@
 
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input type="checkbox" ng-model="preference.listserv"
+                                                                    <input type="checkbox" ng-model="listserv" ng-change="updateListserv()"
                                                                            ng-init="pref"/>
                                                                     LISTSERV list: &lt;{{ groupingName.name }}@lists.hawaii.edu&gt;
                                                                 </label>
@@ -674,7 +673,7 @@
                                                             </div>
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input type="checkbox"/>
+                                                                    <input type="checkbox" ng-model="LDAP" ng-change="checkLDAP()"/>
                                                                     LDAP/CAS Attribute: uhReleasedGroupings
                                                                 </label>
                                                                 <i class="fa fa-question-circle clickable" aria-hidden="true"
@@ -683,12 +682,6 @@
                                                                    data-placement="right"
                                                                    th:title="#{screen.message.owner.tooltip.preference.ldap}"></i>
                                                             </div>
-                                                        </div>
-                                                        <div class="pull-right">
-                                                            <button class="btn btn-default btn-primary"
-                                                                    style="margin-top: 20px;"
-                                                                    type="submit" ng-click="savePref()">Update Preferences
-                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
