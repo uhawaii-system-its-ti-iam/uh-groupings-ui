@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.xml.ws.http.HTTPException;
-
 @ControllerAdvice
 public class ErrorControllerAdvice {
 
@@ -32,23 +30,23 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<GroupingsHTTPException> handelIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
-        return error("Resource not available", iae, 404);
+        return exceptionResponse("Resource not available", iae, 404);
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<GroupingsHTTPException> handelRuntimeException(RuntimeException re) {
-        return error("runtime exception", re, 500);
+        return exceptionResponse("runtime exception", re, 500);
     }
 
 
     @ExceptionHandler(NotImplementedException.class)
     public ResponseEntity<GroupingsHTTPException> handelNotImplementedException(NotImplementedException nie) {
-        return error("Method not implemented", nie, 501);
+        return exceptionResponse("Method not implemented", nie, 501);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GroupingsHTTPException> handleException(Exception exception) {
-        return error("Exception", exception, 500);
+        return exceptionResponse("Exception", exception, 500);
     }
 
     //todo this is for the HolidayRestControllerTest test (should we really have this behavior?)
@@ -65,7 +63,7 @@ public class ErrorControllerAdvice {
         return "redirect:/error";
     }
 
-    private ResponseEntity<GroupingsHTTPException> error(String message, Throwable cause, int status) {
+    private ResponseEntity<GroupingsHTTPException> exceptionResponse(String message, Throwable cause, int status) {
         String username = null;
         User user = userContextService.getCurrentUser();
         if (user != null) {
