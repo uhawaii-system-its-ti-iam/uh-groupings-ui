@@ -25,7 +25,9 @@ paths:
 
       responses:
         200:
-          description: Successful response
+          description: Successful response, an admin Person object is added to the Admin group
+          schema:
+            $ref: '#/definitions/Person'
         404:
           description: User with username <adminToAdd> does not exist
         403:
@@ -82,6 +84,8 @@ paths:
       responses:
         200:
           description: Successful addition
+          schema:
+            $ref: '#/definitions/Person'
         404:
           description: user with the username <userToAdd> does not exist
         403:
@@ -113,6 +117,8 @@ paths:
       responses:
         200:
           description: Successful addition
+          schema:
+            $ref: '#/definitions/Person'
         404:
           description: user with the username <userToAdd> does not exist
         403:
@@ -206,6 +212,8 @@ paths:
       responses:
         200:
           description: Successful addition
+          schema:
+            $ref: '#/definitions/Person'
         404:
           description: user with the username <newOwner> does not exist
         403:
@@ -262,6 +270,8 @@ paths:
       responses:
         200:
           description: Successful retrival
+          schema:
+            $ref: '#/definitions/Grouping'
         404:
           description: Grouping with the path <grouping> does not exist
         403:
@@ -281,6 +291,8 @@ paths:
       responses:
         200:
           description: Successful retrival
+          schema:
+            $ref: '#/definitions/Grouping'
         404:
           description: user with the username <username> does not exist
 
@@ -538,6 +550,8 @@ paths:
       responses:
         200:
           description: Successful creation of Grouping
+          schema:
+            $ref: '#/definitions/Group'
         403:
           description: user is not allowed to create a Grouping or a Grouping with that path aready exist
 
@@ -648,3 +662,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Grouping'
+
+
+
