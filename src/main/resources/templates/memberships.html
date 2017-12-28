@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:substituteby="header :: copy"></head>
-<body ng-app="membershipApp">
+<body ng-app="UHGroupingsApp">
 <nav th:substituteby="menubar :: copy"></nav>
 
 <!--  Content container -->
@@ -19,7 +19,7 @@
                 <li role="presentation" class="active" data-toggle="tooltip" data-placement="top" th:title="#{screen.message.membership.tooltip.optIn}">
                     <a href="#belong" data-toggle="tab" role="tab">
                         <!--<i class="fa fa-users fa-3x" aria-hidden="true"></i>-->
-                        Current Membership
+                        Current Memberships
                     </a>
                 </li>
                     <li role="presentation" data-toggle="tooltip" data-placement="top" th:title="#{screen.message.membership.tooltip.optOut}">
@@ -51,7 +51,8 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table table-bordered table-condensed table-hover">
+                        <div class = "table-responsive">
+                        <table class="table table-responsive table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
                                 <th ng-click="sort(membersList, 'name', 'pagedItemsMembersList', 'symbolList')"
@@ -115,6 +116,7 @@
                             </tbody>
                         </table>
                     </div>
+                    </div>
                 </div>
 
 
@@ -152,7 +154,7 @@
                                 <tbody>
                                 <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn] ">
                                     <td>{{o.name}}</td>
-                                    <td>{{o.path}}</td>
+                                    <td id = "groupingOptInPath">{{o.path}}</td>
                                     <td class="col-md-2">
                                         <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-primary btn-block opt-button"
                                                 ng-click="optIn($index + (currentPageOptOut * itemsPerPage))">Opt In

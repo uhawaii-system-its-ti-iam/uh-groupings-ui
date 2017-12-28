@@ -11,6 +11,6 @@
             console.log($scope.description);
         }
     }
-    feedbackApp.controller("FeedbackJsController", FeedbackJsController);
+    UHGroupingsApp.controller("FeedbackJsController", FeedbackJsController);
 
 })();

@@ -185,6 +185,11 @@ td.uh-pre {
     margin-top: 1em;
 }
 
+#all{
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
 #iconTop{
     display:flex;
     margin-top: 20px;
@@ -219,6 +224,30 @@ td.uh-pre {
     margin-top: 5px;
     /*height:  15px;*/
 
+}
+
+#groupingOptInPath{
+    text-overflow: ellipsis;
+}
+#optOut th a{
+    padding-left: 0px;
+    text-align: left;
+    width: 100%;
+    border: none;
+}
+
+#goupingInitList th a{
+    padding-left: 0px;
+    text-align: left;
+    width: 100%;
+    border: none;
+}
+
+#belong th a{
+    padding-left: 0px;
+    text-align: left;
+    width: 100%;
+    border: none;
 }
 #filters {
     padding: 10px;
@@ -339,10 +368,23 @@ td.uh-pre {
     margin-left: inherit;
 }
 
-.center-modal {
-    position: fixed;
-    top: 30%;
-    z-index: 1050;
+.modal {
+    text-align: center;
+    padding: 0!important;
+}
+
+.modal::before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
+}
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
 }
 
 @media (max-width: 991px) {

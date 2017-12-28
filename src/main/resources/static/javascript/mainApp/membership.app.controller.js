@@ -368,5 +368,5 @@
 
     }
 
-    membershipApp.controller("MembershipJsController", MembershipJsController);
+    UHGroupingsApp.controller("MembershipJsController", MembershipJsController);
 })();

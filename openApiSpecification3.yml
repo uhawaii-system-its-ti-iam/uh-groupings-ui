@@ -1,0 +1,687 @@
+openapi: 3.0.0
+servers: []
+info:
+  version: '2.0'
+  title:
+paths:
+  '/{username}/{adminToAdd}/addAdmin':
+    post:
+      description: Adds an admin to the group of admins
+      parameters:
+        - name: username
+          in: path
+          description: username of the user adding the admin
+          required: true
+          schema:
+            type: string
+        - name: adminToAdd
+          in: path
+          description: username of the user becoming an admin
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: >-
+            Successful response, an admin Person object is added to the Admin
+            group
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Person'
+        '403':
+          description: >-
+            User with username  does not exist or does not have
+            permission to add admins
+        '404':
+          description: User with username  does not exist
+  '/{username}/{adminToDelete}/deleteAdmin':
+    post:
+      description: Deletes an admin from the group of admins
+      parameters:
+        - name: username
+          in: path
+          description: username of the user doing the deletion
+          required: true
+          schema:
+            type: string
+        - name: adminToDelete
+          in: path
+          description: username of the user being deleted from the admin list
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful deleteion
+        '403':
+          description: >-
+            User with username  does not exist or does not have
+            permission to delete admins
+        '404':
+          description: User with username  is not in the list of admins
+  '/{grouping}/{username}/{userToAdd}/addMemberToIncludeGroup':
+    post:
+      description: Adds a member to the include group of a grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user doing the addition
+          required: true
+          schema:
+            type: string
+        - name: userToAdd
+          in: path
+          description: username of the user who is being added
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful addition
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Person'
+        '403':
+          description: >-
+            user with the username  does not exist or does not have
+            permission to add users to that Grouping
+        '404':
+          description: user with the username  does not exist
+  '/{grouping}/{username}/{userToAdd}/addMemberToExcludeGroup':
+    post:
+      description: Adds a member to the exclude group of a grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user doing the addition
+          required: true
+          schema:
+            type: string
+        - name: userToAdd
+          in: path
+          description: username of the user who is being added
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful addition
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Person'
+        '403':
+          description: >-
+            user with the username  does not exist or does not have
+            permission to add users to that Grouping
+        '404':
+          description: user with the username  does not exist
+  '/{grouping}/{username}/{userToDelete}/deleteMemberFromIncludeGroup':
+    post:
+      description: removes a member from the include group of a Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user doing the deletion
+          required: true
+          schema:
+            type: string
+        - name: userToDelete
+          in: path
+          description: username of the user who is being deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful deletion
+        '403':
+          description: >-
+            user with the username  does not exist or does not have
+            permission to delete users from that Grouping
+        '404':
+          description: user with the username  is not in the include group
+  '/{grouping}/{username}/{userToDelete}/deleteMemberFromExcludeGroup':
+    post:
+      description: removes a member from the exclude group of a Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user doing the deletion
+          required: true
+          schema:
+            type: string
+        - name: userToDelete
+          in: path
+          description: username of the user who is being deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful deletion
+        '403':
+          description: >-
+            user with the username  does not exist or does not have
+            permission to delete users from that Grouping
+        '404':
+          description: user with the username  is not in the include group
+  '/{grouping}/{username}/{newOwner}/assignOwnership':
+    post:
+      description: >-
+        add a user to the owners group of a Grouping, giving them owner
+        privelages for that Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user doing the addition
+          required: true
+          schema:
+            type: string
+        - name: newOwner
+          in: path
+          description: username of the user who is being added
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful addition
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Person'
+        '403':
+          description: >-
+            user with the username  does not exist or does not have
+            permission to add users to that Grouping
+        '404':
+          description: user with the username  does not exist
+  '/{grouping}/{username}/{ownerToRemove}/removeOwnership':
+    post:
+      description: >-
+        remove a user from the owners group of a Grouping, removing their owner
+        privelages for that Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user doing the removal
+          required: true
+          schema:
+            type: string
+        - name: ownerToRemove
+          in: path
+          description: username of the user who is being removed
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful removal
+        '403':
+          description: >-
+            user with the username  does not exist or does not have
+            permission to remove users from that Grouping
+        '404':
+          description: >-
+            user with the username  is not in the owners group of
+            that Grouping
+  '/{grouping}/{username}/grouping':
+    get:
+      description: returns a Grouping object
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user getting the Grouping
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrival
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Grouping'
+        '403':
+          description: >-
+            user with the username  does not exist or does not have
+            permission to view that Grouping
+        '404':
+          description: Grouping with the path  does not exist
+  '/{username}/groupingAssignment':
+    get:
+      description: >-
+        get the Groupings that a user is in, owns, can opt into and can opt out
+        of
+      parameters:
+        - name: username
+          in: path
+          description: username of the user whos Groupings are being retrieved
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrival
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Grouping'
+        '404':
+          description: user with the username  does not exist
+  '/{grouping}/{username}/optIn':
+    post:
+      description: allows a user to become a member of a Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user who is opting in
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful opt-in
+        '403':
+          description: user does not have permission to opt into the Grouping
+        '404':
+          description: Grouping does not exist
+  '/{grouping}/{username}/optOut':
+    post:
+      description: allows a user to remove themselves from a Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user who is opting out
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful opt-out
+        '403':
+          description: user does not have permission to opt out of the Grouping
+        '404':
+          description: Grouping does not exist
+  '/{grouping}/{username}/cancelOptIn':
+    post:
+      description: >-
+        allows a user to remove themselves from a Grouping if the opted into the
+        Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user who is removing themselves
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful cancel opt-in
+        '403':
+          description: >-
+            user does not have permission to cancel the opt-in or user did not
+            opt into the Grouping in the first place
+        '404':
+          description: Grouping does not exist
+  '/{grouping}/{username}/cancelOptOut':
+    post:
+      description: >-
+        allows a user to remove themselves from a Grouping if the opted into the
+        Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user who is removing themselves
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful cancel opt-in
+        '403':
+          description: >-
+            user does not have permission to cancel the opt-in or user did not
+            opt into the Grouping in the first place
+        '404':
+          description: Grouping does not exist
+  '/{grouping}/{username}/{listservOn}/setListserv':
+    post:
+      description: allows an owner to turn the publication destination "listserv" on or off
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user who modifying the listserv status
+          required: true
+          schema:
+            type: string
+        - name: listservOn
+          in: path
+          description: true will turn the listserv on false will turn it off
+          required: true
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Successful listserv status modification
+        '403':
+          description: user does not have permission to modify the listserv status
+        '404':
+          description: Grouping does not exist
+  '/{grouping}/{username}/{optInOn}/setOptIn':
+    post:
+      description: allows an owner to allow/disallow users to opt into a Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user who modifying the opt-in status
+          required: true
+          schema:
+            type: string
+        - name: optInOn
+          in: path
+          description: >-
+            true will allow users to opt in, false will make it so users have to
+            be added by owners or admins
+          required: true
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Successful opt-in status modification
+        '403':
+          description: user does not have permission to modify the opt-in status
+        '404':
+          description: Grouping does not exist
+  '/{grouping}/{username}/{optOutOn}/setOptOut':
+    post:
+      description: allows an owner to allow/disallow users to opt out of a Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user who modifying the opt-out status
+          required: true
+          schema:
+            type: string
+        - name: optOutOn
+          in: path
+          description: >-
+            true will allow users to opt out, false will make it so users have
+            to be removed by owners or admins
+          required: true
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Successful opt-out status modification
+        '403':
+          description: user does not have permission to modify the opt-out status
+        '404':
+          description: Grouping does not exist
+  '/{username}/adminLists':
+    get:
+      description: gets a list of all Groupings and all Admins
+      parameters:
+        - name: username
+          in: path
+          description: >-
+            username of the user who is retrieving the adminLists (must be an
+            admin)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of adminLists
+        '403':
+          description: user is not an admin
+  '/{grouping}/{username}/{basis}/{include}/{exclude}/{owners}/addGrouping':
+    post:
+      description: creates a new Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: >-
+            username of the user who is retrieving the adminLists (must be an
+            admin)
+          required: true
+          schema:
+            type: string
+        - name: basis
+          in: path
+          description: the basis Group for the Grouping
+          required: true
+          schema:
+            type: string
+        - name: include
+          in: path
+          description: the include Group for the Grouping
+          required: true
+          schema:
+            type: string
+        - name: exclude
+          in: path
+          description: the exclude Group for the Grouping
+          required: true
+          schema:
+            type: string
+        - name: owners
+          in: path
+          description: >-
+            the owners Group for the Grouping (all members of this Group will
+            "own" the Grouping)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful creation of Grouping
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Group'
+        '403':
+          description: >-
+            user is not allowed to create a Grouping or a Grouping with that
+            path aready exist
+  '/{grouping}/{username}/deleteGrouping':
+    delete:
+      description: removes a Grouping
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          description: username of the user who is deleting the Grouping
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successfully deleted the Grouping
+        '403':
+          description: the user does not have the permission to delete the Grouping
+        '404':
+          description: the Grouping did not exist
+components:
+  schemas:
+    Person:
+      type: object
+      properties:
+        id:
+          type: string
+          format: name
+        uuid:
+          type: string
+          format: uuid
+        username:
+          type: string
+          format: name
+    Group:
+      type: object
+      properties:
+        path:
+          type: string
+          format: path
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        usernames:
+          type: array
+          items:
+            type: string
+    Grouping:
+      type: object
+      properties:
+        path:
+          type: string
+          format: path
+        name:
+          type: string
+          format: name
+        listServOn:
+          type: boolean
+        optInOn:
+          type: boolean
+        optOutOn:
+          type: boolean
+        basis:
+          $ref: '#/components/schemas/Group'
+        exclude:
+          $ref: '#/components/schemas/Group'
+        include:
+          $ref: '#/components/schemas/Group'
+        composite:
+          $ref: '#/components/schemas/Group'
+        owners:
+          $ref: '#/components/schemas/Group'
+    GroupingAssignment:
+      type: object
+      properties:
+        groupingsIn:
+          $ref: '#/components/schemas/Grouping'
+        groupingsOwned:
+          $ref: '#/components/schemas/Grouping'
+        groupingsOptedOutOf:
+          $ref: '#/components/schemas/Grouping'
+        groupingsOptedInTo:
+          $ref: '#/components/schemas/Grouping'
+        groupingsToOptOutOf:
+          $ref: '#/components/schemas/Grouping'
+        groupingsToOptInTo:
+          $ref: '#/components/schemas/Grouping'
+    GroupingServiceResult:
+      type: object
+      properties:
+        action:
+          type: string
+        resultCode:
+          type: string
+          format: response
+    AdminListsHolder:
+      type: object
+      properties:
+        adminGroup:
+          $ref: '#/components/schemas/Group'
+        allGroupings:
+          type: array
+          items:
+            $ref: '#/components/schemas/Grouping'
