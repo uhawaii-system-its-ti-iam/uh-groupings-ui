@@ -1,5 +1,6 @@
 $(function() {
-  $('[data-toggle="tooltip"]').tooltip({
-    trigger : 'hover'
-  });
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger : 'hover',
+        container: 'body'
+    });
 });
