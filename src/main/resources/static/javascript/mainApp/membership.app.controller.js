@@ -2,17 +2,14 @@
 
     // BIG QUESTIONS: why is there so much output for the URL?
 
-    /**Membership controller for the whole memberships page
-     *@param $scope
-     *    defining what is within the controller
-     *@param  $window
-     *    reference to the browser's window
-     *@param dataProvider
-     *     given the "loadData" function, it loads all the data to be viewed
-     *@param dataUpdater
-     *    Using the CRUD operators this would be the update of CRUD
-     **/
-    function MembershipJsController($scope, $window, $uibModal, $filter, dataProvider, dataUpdater) {
+    /**
+     * Membership controller for the whole memberships page
+     *
+     * @param $scope - binding between controller and HTML page
+     * @param $window - reference to the browser's window
+     * @param dataProvider - service function that provides GET and POST requests for getting or updating data
+     */
+    function MembershipJsController($scope, $window, $uibModal, $filter, dataProvider) {
 
         $scope.currentUsername = "";
         $scope.membersList = [];
@@ -48,7 +45,7 @@
          **/
         $scope.init = function () {
             $scope.initCurrentUsername();
-            var groupingURL = "api/groupings/" + $scope.getCurrentUsername() + "/groupingAssignment";
+            var groupingURL = "api/groupings/groupingAssignment";
             /**Loads Data into a membersList
              *                  optOutList
              *                  optInList
@@ -151,9 +148,9 @@
          **/
         $scope.optOut = function (index) {
             console.log(index);
-            var optOutURL = "api/groupings/" + $scope.membersList[index].path + "/" + $scope.getCurrentUsername() + "/optOut";
+            var optOutURL = "api/groupings/" + $scope.membersList[index].path + "/optOut";
             $scope.loading = true;
-            dataUpdater.updateData(function (d) {
+            dataProvider.updateData(function (d) {
                 console.log(d);
                 if (d[0].resultCode.indexOf("FAILURE") > -1) {
                     console.log("Failed to opt out");
@@ -172,10 +169,10 @@
          *takes in a grouping so it knows which group it is going into for the path
          **/
         $scope.optIn = function (index) {
-            var optInURL = "api/groupings/" + $scope.optInList[index].path + "/" + $scope.getCurrentUsername() + "/optIn";
+            var optInURL = "api/groupings/" + $scope.optInList[index].path + "/optIn";
             console.log(optInURL);
             $scope.loading = true;
-            dataUpdater.updateData(function (d) {
+            dataProvider.updateData(function (d) {
                 $scope.init();
             }, optInURL);
         };
@@ -187,9 +184,9 @@
          *   takes in a grouping so it knows which group it is going into for the path
          **/
         $scope.cancelOptIn = function (index) {
-            var cancelInURL = "api/groupings/" + $scope.optedIn[index].path + "/" + $scope.getCurrentUsername() + "/cancelOptIn";
+            var cancelInURL = "api/groupings/" + $scope.optedIn[index].path + "/cancelOptIn";
             console.log(cancelInURL);
-            dataUpdater.updateData(function (d) {
+            dataProvider.updateData(function (d) {
                 $scope.loading = true;
                 $scope.init();
             }, cancelInURL);
@@ -202,9 +199,9 @@
          *takes in a grouping so it knows which group it is going into for the path
          **/
         $scope.cancelOptOut = function (index) {
-            var cancelOutURL = "api/groupings/" + $scope.optedOut[index].path + "/" + $scope.getCurrentUsername() + "/cancelOptOut";
+            var cancelOutURL = "api/groupings/" + $scope.optedOut[index].path + "/cancelOptOut";
             console.log(cancelOutURL);
-            dataUpdater.updateData(function (d) {
+            dataProvider.updateData(function (d) {
                 $scope.loading = true;
                 $scope.init();
             }, cancelOutURL);
