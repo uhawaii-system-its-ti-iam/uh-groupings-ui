@@ -5,11 +5,11 @@
      *
      * @param $scope        - A Binding variable between controller and html page.
      * @param dataProvider  - service function that acts as the AJAX get.
-     * @param dataAdder   - service function that acts as AJAX post, used mainly for adding or updating
+     * @param dataUpdater   - service function that acts as AJAX post, used mainly for adding or updating
      * @param dataDeleter   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function OwnerJsController($scope, $uibModal, $window, $filter, dataProvider, dataAdder, dataDeleter) {
+    function OwnerJsController($scope, $uibModal, $window, $filter, dataProvider, dataUpdater, dataDeleter) {
         $scope.currentUsername = "";
         $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -154,11 +154,10 @@
                 $scope.modify($scope.ownerList);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
 
-                $scope.preference = {
-                    optIn: d.optInOn,
-                    optOut: d.optOutOn,
-                    listserv: d.listservOn
-                };
+                $scope.allowOptIn = d.optInOn;
+                $scope.allowOptOut = d.optOutOn;
+                $scope.listserv = d.listservOn;
+
                 //Stop loading spinner
                 $scope.loading = false;
             }, getUrl);
@@ -269,13 +268,14 @@
          */
         $scope.addMember = function (type) {
             var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
-            dataAdder.addData(function (d) {
-                if (d.resultCode === "SUCCESS") {
-                    $scope.addModalAlert('success', 'member');
+            dataUpdater.addData(function (d) {
+                if (d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
+                    $scope.addModalAlert('false', 'member');
                 }
-                else if (typeof d.resultsCode === 'undefined') {
-                    console.log($scope.addUser + " this user does not exist.");
-                    $scope.addModalAlert();
+                else if (d.resultCode === "SUCCESS") {
+                    $scope.addModalAlert('success', 'member');
                 }
             }, addUrl);
             $scope.addUser = '';
@@ -288,14 +288,15 @@
          */
         $scope.addOwner = function () {
             var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.ownerUser + "/assignOwnership";
-            dataAdder.addData(function (d) {
-                if (d.resultCode === "SUCCESS") {
+            dataUpdater.addData(function (d) {
+                if (d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
+                    $scope.addModalAlert('false', 'member');
+                }
+                else if (d.resultCode === "SUCCESS") {
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
                     $scope.addModalAlert('success', 'owner');
-                }
-                else if (typeof d.resultsCode === 'undefined') {
-                    console.log($scope.ownerUser + " this user does not exist.");
-                    $scope.addModalAlert();
                 }
             }, addOwnerUrl);
             $scope.ownerUser = '';
@@ -411,60 +412,86 @@
         /**
          * Saves changes made to grouping privileges
          */
-        $scope.savePref = function () {
-            var prefUrls = [];
-
-            prefUrls.push({
-                "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.listserv + "/setListserv",
-                "name": "Listserv"
-            });
-            prefUrls.push({
-                "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.optIn + "/setOptIn",
-                "name": "optInOption"
-            });
-            prefUrls.push({
-                "url": "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.preference.optOut + "/setOptOut",
-                "name": "optOutOption"
-            });
-
-            for (var i = 0; i < prefUrls.length; i++) {
-                dataAdder.addData(function (d) {
-                    var success = 0;
-                    console.log(d);
-                    if (d.resultCode === "SUCCESS") {
-                        console.log("LISTSERV preference successfully updated");
-                        alert("LISTSERV preference successfully updated");
-                        success = 1;
-                    }
-                    else if (typeof d.resultsCode === 'undefined') {
-                        if (typeof d[0] != 'undefined' && (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED" )) {
-                            console.log("OptIn/OptOut preference successfully updated");
-                            alert("OptIn/OptOut preference successfully updated");
-                            success = 1;
-                        }
-                        else {
-                            console.log("Preference did not change");
-                            alert("Preference did not change");
-                        }
-                    }
-                    if (success == 1) {
-                        $scope.getData($scope.groupingPath);
-                    }
-                }, prefUrls[i].url);
-            }
+        $scope.updateAllowOptOut = function() {
+            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" +  $scope.allowOptOut + "/setOptOut";
+            dataUpdater.addData(function (d) {
+                if(d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
+                    $scope.preferenceErrorModal();
+                }
+                else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                    console.log("success");
+                }
+            }, url);
         };
 
-        $scope.infoModal = function (preference, group) {
-            if (preference === 'opt')
-                var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not members can ' + group + ' themselves from the grouping</div>';
-            else if (preference === 'publication')
-                var modalHtml = '<div class="text-center modal-body">This option allows owners to set whether or not the publication destination is active or not</div>';
+        $scope.updateAllowOptIn = function () {
+            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" +  $scope.allowOptIn + "/setOptIn";
+            dataUpdater.addData(function (d) {
+                if(d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
+                    $scope.preferenceErrorModal();
+                }
+                else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                    console.log("success");
+                }
+            }, url);
+        };
 
-            $scope.deleteModalInstance = $uibModal.open({
-                template: modalHtml,
+        $scope.updateListserv = function () {
+            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.listserv + "/setListserv";
+            dataUpdater.addData(function (d) {
+                console.log(d);
+                if(d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
+                    $scope.preferenceErrorModal();
+                }
+                else if (d.resultCode === "SUCCESS") {
+                    console.log("success");
+                }
+            }, url);
+        };
+
+        $scope.checkLDAP = function () {
+            console.log($scope.LDAP);
+        };
+
+
+        $scope.preferenceErrorModal = function () {
+            $scope.preferenceErrorModalInstance = $uibModal.open({
+                templateUrl: 'preferenceErrorModal.html',
                 windowClass: 'center-modal',
                 scope: $scope
             });
+        };
+
+        $scope.preferenceErrorDismiss = function () {
+            $scope.preferenceErrorModalInstance.dismiss();
+        };
+
+        $scope.infoModal = function (preference, group) {
+            $scope.info = '';
+            if (preference === 'opt')
+                $scope.info = "or not members can " + group + " themselves to the grouping";
+            else if (preference === 'publication')
+                $scope.info = "the publication destination is active or not";
+
+            $scope.infoModalInstance = $uibModal.open({
+                templateUrl: 'infoModal.html',
+                scope: $scope,
+                resolve: {
+                    items: function () {
+                        return $scope.info;
+                    }
+                }
+            });
+        };
+
+        $scope.infoDismiss = function () {
+            $scope.infoModalInstance.dismiss();
         };
 
         /**

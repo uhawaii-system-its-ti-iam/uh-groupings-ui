@@ -152,15 +152,15 @@
         $scope.optOut = function (index) {
             console.log(index);
             var optOutURL = "api/groupings/" + $scope.membersList[index].path + "/" + $scope.getCurrentUsername() + "/optOut";
-            console.log(optOutURL);
+            $scope.loading = true;
             dataUpdater.updateData(function (d) {
                 console.log(d);
                 if (d[0].resultCode.indexOf("FAILURE") > -1) {
                     console.log("Failed to opt out");
                     alert("Failed to opt out");
+                    $scope.loading = false;
                 }
                 else {
-                    $scope.loading = true;
                     $scope.init();
                 }
             }, optOutURL);
@@ -174,8 +174,8 @@
         $scope.optIn = function (index) {
             var optInURL = "api/groupings/" + $scope.optInList[index].path + "/" + $scope.getCurrentUsername() + "/optIn";
             console.log(optInURL);
+            $scope.loading = true;
             dataUpdater.updateData(function (d) {
-                $scope.loading = true;
                 $scope.init();
             }, optInURL);
         };

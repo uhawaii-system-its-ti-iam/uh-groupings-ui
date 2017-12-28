@@ -91,6 +91,10 @@
             }, url);
         };
 
+        $scope.change = function () {
+            $scope.showGrouping = false;
+        };
+
         $scope.errorModal = function () {
             $scope.errorModalInstance = $uibModal.open({
                 templateUrl: 'apiError.html',
@@ -146,7 +150,7 @@
          * Retrieves information about the grouping.
          * @param {string} path - the grouping's path
          */
-        $scope.getData = function(path) {
+        $scope.getData = function (path) {
             $scope.groupingPath = path;
             $scope.loading = true;
             var groupingDataUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/grouping";
@@ -161,7 +165,7 @@
 
                     //Gets members in grouping
                     $scope.groupingMembers = d.composite.members;
-                    $scope.modify($scope.groupingMembers);
+                    $scope.modify($scope.groupingMembers, 'members');
                     $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
 
                     //Gets members in the basis group
@@ -206,10 +210,11 @@
          *                -1 for descending
          *                0 for failed attempt
          */
-        $scope.modify = function (grouping) {
+        $scope.modify = function (grouping, list) {
             //Filter out names with hawaii.edu and adds basis object.
             for (var i = 0; i < grouping.length; i++) {
-                grouping[i].basis = "No";
+                if (list === 'members') grouping[i].basis = "in Include";
+                else grouping[i].basis = "No";
                 if (grouping[i].name.indexOf("hawaii.edu") > -1) {
                     grouping.splice(i, 1);
                     i--;
@@ -220,7 +225,15 @@
             for (var l = 0; l < $scope.basis.length; l++) {
                 for (var m = 0; m < grouping.length; m++) {
                     if ($scope.basis[l].uuid === grouping[m].uuid) {
-                        grouping[m].basis = "Yes";
+                        if (list === 'members') {
+                            grouping[m].basis = "in Basis";
+                            for (var k = 0; k < $scope.groupingInclude.length; k++) {
+                                if ($scope.groupingInclude[k].uuid === grouping[m].uuid) {
+                                    grouping[m].basis = "in Basis / in Include";
+                                }
+                            }
+                        }
+                        else grouping[m].basis = "Yes";
                     }
                 }
             }
@@ -267,13 +280,15 @@
         $scope.addMember = function (type) {
             var addUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataUpdater.updateData(function (d) {
-                if (d.resultCode === "SUCCESS") {
+                console.log(d);
+                if(d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
+                    $scope.addModalAlert();
+                }
+                else if (d.resultCode === "SUCCESS") {
                     console.log("success in adding " + $scope.addUser);
                     $scope.addModalAlert('grouping', 'success');
-                }
-                else if (typeof d.resultsCode === 'undefined') {
-                    console.log($scope.addUser + " this user does not exist.");
-                    $scope.addModalAlert();
                 }
             }, addUrl);
             $scope.addUser = '';
@@ -283,13 +298,14 @@
             var addOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.ownerUser + "/assignOwnership";
             dataUpdater.updateData(function (d) {
                 console.log(d);
-                if (d.resultCode === "SUCCESS") {
+                if(d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
+                    $scope.addModalAlert();
+                }
+                else if (d.resultCode === "SUCCESS") {
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
                     $scope.addModalAlert('grouping', 'success');
-                }
-                else if (typeof d.resultsCode === 'undefined') {
-                    console.log($scope.ownerUser + " this user does not exist.");
-                    $scope.addModalAlert();
                 }
             }, addOwnerUrl);
             $scope.ownerUser = '';
@@ -297,7 +313,7 @@
 
         $scope.addModalAlert = function (location, success) {
             if (success === 'success') var message = "User has been added";
-            else var message = "Error: User is not a valid username";
+            else var message = "Error: There was an error in trying to add this user.";
 
             var modalHtml = '<div class="modal-body">' + message + '</div>';
             modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="continue()">OK</button></div>';
@@ -406,21 +422,20 @@
         };
 
         $scope.infoModal = function (preference, group) {
-            $scope.test = '';
+            $scope.info = '';
 
             if (preference === 'opt')
-                $scope.test = "members can " + group + " themselves from the grouping";
+                $scope.info = "or not members can " + group + " themselves to the grouping";
             else if (preference === 'publication')
-                $scope.test = "the publication destination is active or not";
+                $scope.info = "the publication destination is active or not";
 
 
             $scope.infoModalInstance = $uibModal.open({
                 templateUrl: 'infoModal.html',
-                windowClass: 'center-modal',
                 scope: $scope,
                 resolve: {
                     items: function () {
-                        return $scope.test;
+                        return $scope.info;
                     }
                 }
             });
@@ -431,14 +446,16 @@
         };
 
         $scope.updateAllowOptOut = function () {
-            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptOut + "/setOptOut";
+            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "lk/" + $scope.allowOptOut + "/setOptOut";
             dataUpdater.updateData(function (d) {
-                if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
-                    console.log("success");
-                }
-                else {
-                    console.log("failed");
+                console.log(d);
+                if(d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
                     $scope.preferenceErrorModal();
+                }
+                else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                    console.log("success");
                 }
             }, url);
             console.log(url);
@@ -448,12 +465,13 @@
         $scope.updateAllowOptIn = function () {
             var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.allowOptIn + "/setOptIn";
             dataUpdater.updateData(function (d) {
-                if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
-                    console.log("success");
-                }
-                else {
-                    console.log("failed");
+                if(d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
                     $scope.preferenceErrorModal();
+                }
+                else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                    console.log("success");
                 }
             }, url);
             console.log(url);
@@ -462,12 +480,14 @@
         $scope.updateListserv = function () {
             var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.getCurrentUsername() + "/" + $scope.listserv + "/setListserv";
             dataUpdater.updateData(function (d) {
-                if (d.resultCode === "SUCCESS") {
-                    console.log("success");
-                }
-                else {
-                    console.log("failed");
+                console.log(d);
+                if(d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
                     $scope.preferenceErrorModal();
+                }
+                else if (d.resultCode === "SUCCESS") {
+                    console.log("success");
                 }
             }, url);
 
@@ -591,7 +611,7 @@
                     if ($scope[whatPage] >= 0) {
                         $scope[whatPage] = $scope[whatList].length - 1;
                     }
-                break;
+                    break;
             }
         };
 
@@ -612,7 +632,7 @@
          * Gets information about the grouping clicked by the user on the Manage Groupings tab
          * @param {number} row - the row clicked on by the user (zero-indexed)
          */
-        $scope.showData = function(row) {
+        $scope.showData = function (row) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[$scope.currentPageGroupings][row];
             if (!$scope.showGrouping) {
                 $scope.showGrouping = true;
@@ -625,7 +645,7 @@
         /**
          * Resets the arrays containing the members of each grouping and their page numbers.
          */
-        $scope.resetGroupingInformation = function() {
+        $scope.resetGroupingInformation = function () {
             // Reset grouping member data for next load
             $scope.groupingMembers = [];
             $scope.groupingBasis = [];
@@ -649,7 +669,7 @@
         /**
          * Resets the selected group to the list of all members.
          */
-        $scope.resetSelectedGroup = function() {
+        $scope.resetSelectedGroup = function () {
             var pills = $('#group-pills')[0].children;
             var content = $('#pill-content')[0].children
             for (var i = 0; i < pills.length; i++) {
