@@ -146,54 +146,59 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst01")
     public void assignAndRemoveOwnershipTest() throws Exception {
 
-        Grouping g = restControllerGrouping(mockMvc, GROUPING);
+        Grouping g = restControllerGrouping(GROUPING);
 
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
 
-        restControllerAssignOwnership(mockMvc, GROUPING, tst[1]);
+        mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/assignOwnership");
 
-        g = restControllerGrouping(mockMvc, GROUPING);
+        g = restControllerGrouping(GROUPING);
 
         assertTrue(g.getOwners().getUsernames().contains(tst[1]));
 
-        restControllerRemoveOwnership(mockMvc, GROUPING, tst[1]);
+        mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/removeOwnership");
 
-        g = restControllerGrouping(mockMvc, GROUPING);
+        g = restControllerGrouping(GROUPING);
 
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
     }
 
-//    @Test
-//    public void addMemberTest() {
-//
-//        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
-//
-//        gc.addMemberToIncludeGroup(GROUPING, tst[0], tst[4]);
-//        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
-//        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[4]));
-//
-//        gc.addMemberToExcludeGroup(GROUPING, tst[0], tst[4]);
-//        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[4]));
-//        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
-//    }
+    @Test
+    @WithMockUhUser(username = "iamtst01")
+    public void addMemberTest() throws Exception {
 
-//    @Test
-//    public void deleteMemberTest() {
-//
-//        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
-//        gc.deleteMemberFromExcludeGroup(GROUPING, tst[0], tst[4]);
-//        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
-//        assertTrue(gs.inGroup(GROUPING, tst[4]));
-//
-//        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[1]));
-//        gc.deleteMemberFromIncludeGroup(GROUPING, tst[0], tst[1]);
-//        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[1]));
-//        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[1]));
-//
-//        //reset Grouping
-//        gc.addMemberToExcludeGroup(GROUPING, tst[0], tst[4]);
-//        gc.addMemberToIncludeGroup(GROUPING, tst[0], tst[1]);
-//    }
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+
+        mapGSR("/api/groupings/" + GROUPING + "/" + tst[4] + "/addMemberToIncludeGroup");
+
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[4]));
+
+        mapGSR("/api/groupings/" + GROUPING + "/" + tst[4] + "/addMemberToExcludeGroup");
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[4]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+    }
+
+    @Test
+    @WithMockUhUser(username = "iamtst01")
+    public void deleteMemberTest() throws Exception {
+
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+        mapGSR("/api/groupings/" + GROUPING + "/" + tst[4] + "/deleteMemberFromExcludeGroup");
+
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+        assertTrue(gs.inGroup(GROUPING, tst[4]));
+
+        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[1]));
+        mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/deleteMemberFromIncludeGroup");
+
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[1]));
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[1]));
+
+        //reset Grouping
+        mapGSR("/api/groupings/" + GROUPING + "/" + tst[4] + "/addMemberToExcludeGroup");
+        mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/addMemberToIncludeGroup");
+    }
 
 //    @Test
 //    public void getGroupingTest() {
@@ -469,7 +474,7 @@ public class TestGroupingsRestController {
     // MVC mapping
     //////////////////////////////////////////////////////////////////////
 
-    private Grouping restControllerGrouping(MockMvc mockMvc, String groupingPath) throws Exception {
+    private Grouping restControllerGrouping(String groupingPath) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(get("/api/groupings/" + groupingPath + "/grouping"))
@@ -479,21 +484,10 @@ public class TestGroupingsRestController {
         return objectMapper.readValue(result.getResponse().getContentAsByteArray(), Grouping.class);
     }
 
-    private GroupingsServiceResult restControllerAssignOwnership(MockMvc mockMvc, String groupingPath, String newOwner) throws Exception{
+    private GroupingsServiceResult mapGSR(String uri) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        MvcResult result = mockMvc.perform(post("/api/groupings/" + groupingPath + "/" + newOwner + "/assignOwnership")
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), GroupingsServiceResult.class);
-    }
-
-    private GroupingsServiceResult restControllerRemoveOwnership(MockMvc mockMvc, String groupingPath, String ownerToRemove) throws Exception{
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        MvcResult result = mockMvc.perform(post("/api/groupings/" + groupingPath + "/" + ownerToRemove + "/removeOwnership")
+        MvcResult result = mockMvc.perform(post(uri)
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
