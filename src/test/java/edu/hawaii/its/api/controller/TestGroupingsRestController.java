@@ -23,6 +23,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -203,7 +205,7 @@ public class TestGroupingsRestController {
 
     @Test
     @WithMockUhUser(username = "iamtst01")
-    public void getGroupingTest() throws  Exception{
+    public void getGroupingTest() throws Exception {
         Grouping grouping = mapGrouping(GROUPING);
 
         assertTrue(grouping.getInclude().getNames().contains(tstName[0]));
@@ -243,7 +245,7 @@ public class TestGroupingsRestController {
 
     @Test
     @WithMockUhUser(username = "iamtst01")
-    public void groupingAssignmentTest() throws Exception{
+    public void groupingAssignmentTest() throws Exception {
 //        GroupingAssignment groupings = gc.groupingAssignment(tst[0]).getBody();
         GroupingAssignment groupings = mapGroupingAssignment();
 
@@ -287,7 +289,7 @@ public class TestGroupingsRestController {
 
     @Test
     @WithMockUhUser(username = "iamtst05")
-    public void myGroupingsTest2() throws Exception{
+    public void myGroupingsTest2() throws Exception {
         GroupingAssignment groupings = mapGroupingAssignment();
 
         boolean inGrouping = false;
@@ -309,60 +311,70 @@ public class TestGroupingsRestController {
         assertFalse(ownsGrouping);
     }
 
-//    @Test
-//    public void myGroupingsTest3() {
-//        boolean optedIn = false;
-//        boolean optedOut = false;
-//
-//        GroupingAssignment tst4Groupings = gc.groupingAssignment(tst[4]).getBody();
-//        assertEquals(tst4Groupings.getGroupingsOptedInTo().size(), 0);
-//        gc.optIn(GROUPING, tst[4]);
-//        tst4Groupings = gc.groupingAssignment(tst[4]).getBody();
-//        for (Grouping grouping : tst4Groupings.getGroupingsOptedInTo()) {
-//            if (grouping.getPath().contains(this.GROUPING)) {
-//                optedIn = true;
-//            }
-//        }
-//        assertTrue(optedIn);
-//
-//        GroupingAssignment tst5Groupings = gc.groupingAssignment(tst[5]).getBody();
-//        assertEquals(tst5Groupings.getGroupingsOptedOutOf().size(), 0);
-//        gc.optOut(GROUPING, tst[5]);
-//        tst5Groupings = gc.groupingAssignment(tst[5]).getBody();
-//        for (Grouping grouping : tst5Groupings.getGroupingsOptedOutOf()) {
-//            if (grouping.getPath().contains(this.GROUPING)) {
-//                optedOut = true;
-//            }
-//        }
-//        assertTrue(optedOut);
-//
-//        //reset Grouping
-//        gc.cancelOptIn(GROUPING, tst[4]);
-//        gc.addMemberToExcludeGroup(GROUPING, tst[0], tst[4]);
-//        gc.cancelOptOut(GROUPING, tst[5]);
-//    }
+    @Test
+    @WithMockUhUser(username = "iamtst05")
+    public void myGroupingsTest3() throws Exception {
+        boolean optedIn = false;
+
+        GroupingAssignment tst4Groupings = mapGroupingAssignment();
+        assertEquals(tst4Groupings.getGroupingsOptedInTo().size(), 0);
+        mapGSRs("/api/groupings/" + GROUPING + "/optIn");
+        tst4Groupings = mapGroupingAssignment();
+        for (Grouping grouping : tst4Groupings.getGroupingsOptedInTo()) {
+            if (grouping.getPath().contains(this.GROUPING)) {
+                optedIn = true;
+            }
+        }
+        assertTrue(optedIn);
+
+        //reset Grouping
+        gs.cancelOptIn(GROUPING, tst[4]);
+        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[4]);
+    }
+
+    @Test
+    @WithMockUhUser(username = "iamtst06")
+    public void myGroupingsTest4() throws Exception{
+        boolean optedOut = false;
+
+        GroupingAssignment tst5Groupings = mapGroupingAssignment();
+        assertEquals(tst5Groupings.getGroupingsOptedOutOf().size(), 0);
+        mapGSRs("/api/groupings/" + GROUPING + "/optOut");
+        tst5Groupings = mapGroupingAssignment();
+
+        for (Grouping grouping : tst5Groupings.getGroupingsOptedOutOf()) {
+            if (grouping.getPath().contains(this.GROUPING)) {
+                optedOut = true;
+            }
+        }
+        assertTrue(optedOut);
+
+        // reset Grouping
+        gs.cancelOptOut(GROUPING, tst[5]);
+    }
 
 
-//    @Test
-//    public void optInTest() {
-//        assertFalse(gs.inGroup(GROUPING, tst[4]));
-//        assertTrue(gs.inGroup(GROUPING + BASIS, tst[5]));
-//
-//        gc.optIn(GROUPING, tst[4]);
-//        assertTrue(gs.checkSelfOpted(GROUPING_INCLUDE, tst[4]));
-//        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[4]));
-//        assertTrue(gs.inGroup(GROUPING, tst[4]));
-//
-//        gc.cancelOptIn(GROUPING, tst[4]);
-//        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[4]));
-//        assertFalse(gs.checkSelfOpted(GROUPING_INCLUDE, tst[4]));
-//
-//        assertTrue(gs.inGroup(GROUPING, tst[5]));
-//
-//        //reset Grouping
-//        gc.addMemberToExcludeGroup(GROUPING, tst[0], tst[4]);
-//        assertFalse(gs.inGroup(GROUPING, tst[4]));
-//    }
+    @Test
+    @WithMockUhUser(username = "iamtst05")
+    public void optInTest() throws Exception{
+        assertFalse(gs.inGroup(GROUPING, tst[4]));
+        assertTrue(gs.inGroup(GROUPING + BASIS, tst[5]));
+
+        mapGSRs("/api/groupings/" + GROUPING + "/optIn");
+        assertTrue(gs.checkSelfOpted(GROUPING_INCLUDE, tst[4]));
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[4]));
+        assertTrue(gs.inGroup(GROUPING, tst[4]));
+
+        mapGSRs("/api/groupings/" + GROUPING + "/cancelOptIn");
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[4]));
+        assertFalse(gs.checkSelfOpted(GROUPING_INCLUDE, tst[4]));
+
+        assertTrue(gs.inGroup(GROUPING, tst[5]));
+
+        //reset Grouping
+        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[4]);
+        assertFalse(gs.inGroup(GROUPING, tst[4]));
+    }
 
 //    @Test
 //    public void optOutTest() {
@@ -502,7 +514,19 @@ public class TestGroupingsRestController {
         return objectMapper.readValue(result.getResponse().getContentAsByteArray(), GroupingsServiceResult.class);
     }
 
-    private GroupingAssignment mapGroupingAssignment() throws Exception{
+    private List<GroupingsServiceResult> mapGSRs(String uri) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        MvcResult result = mockMvc.perform(post(uri)
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+
+    }
+
+    private GroupingAssignment mapGroupingAssignment() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(get("/api/groupings/groupingAssignment")
