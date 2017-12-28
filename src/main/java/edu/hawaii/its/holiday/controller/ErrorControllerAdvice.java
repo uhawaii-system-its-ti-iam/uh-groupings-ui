@@ -1,5 +1,6 @@
 package edu.hawaii.its.holiday.controller;
 
+import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import edu.hawaii.its.api.type.GroupingsHTTPException;
@@ -47,6 +48,11 @@ public class ErrorControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GroupingsHTTPException> handleException(Exception exception) {
         return exceptionResponse("Exception", exception, 500);
+    }
+
+    @ExceptionHandler(GroupingsServiceResultException.class)
+    public ResponseEntity<GroupingsHTTPException> handelGroupingsServiceResultException(GroupingsServiceResultException gsre) {
+        return exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
     }
 
     //todo this is for the HolidayRestControllerTest test (should we really have this behavior?)

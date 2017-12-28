@@ -3,6 +3,9 @@ package edu.hawaii.its.api.type;
 public class GroupingsHTTPException extends RuntimeException{
     private Integer statusCode = null;
 
+    public GroupingsHTTPException() {
+        //empty
+    }
 
     public GroupingsHTTPException(String message) {
         super(message);
