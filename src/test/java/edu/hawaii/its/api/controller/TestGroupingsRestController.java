@@ -3,6 +3,7 @@ package edu.hawaii.its.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hawaii.its.api.service.GroupingsService;
 import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
@@ -146,19 +147,19 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst01")
     public void assignAndRemoveOwnershipTest() throws Exception {
 
-        Grouping g = restControllerGrouping(GROUPING);
+        Grouping g = mapGrouping(GROUPING);
 
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
 
         mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/assignOwnership");
 
-        g = restControllerGrouping(GROUPING);
+        g = mapGrouping(GROUPING);
 
         assertTrue(g.getOwners().getUsernames().contains(tst[1]));
 
         mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/removeOwnership");
 
-        g = restControllerGrouping(GROUPING);
+        g = mapGrouping(GROUPING);
 
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
     }
@@ -200,107 +201,113 @@ public class TestGroupingsRestController {
         mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/addMemberToIncludeGroup");
     }
 
-//    @Test
-//    public void getGroupingTest() {
-//        Grouping grouping = gc.grouping(this.GROUPING, tst[0]).getBody();
-//
-//        assertTrue(grouping.getInclude().getNames().contains(tstName[0]));
-//        assertTrue(grouping.getInclude().getNames().contains(tstName[1]));
-//        assertTrue(grouping.getInclude().getNames().contains(tstName[2]));
-//        assertTrue(grouping.getExclude().getNames().contains(tstName[3]));
-//        assertTrue(grouping.getExclude().getNames().contains(tstName[4]));
-//
-//        assertTrue(grouping.getInclude().getUsernames().contains(tst[0]));
-//        assertTrue(grouping.getInclude().getUsernames().contains(tst[1]));
-//        assertTrue(grouping.getInclude().getUsernames().contains(tst[2]));
-//        assertTrue(grouping.getExclude().getUsernames().contains(tst[3]));
-//        assertTrue(grouping.getExclude().getUsernames().contains(tst[4]));
-//
-//        assertTrue(grouping.getInclude().getUuids().contains(tst[0]));
-//        assertTrue(grouping.getInclude().getUuids().contains(tst[1]));
-//        assertTrue(grouping.getInclude().getUuids().contains(tst[2]));
-//        assertTrue(grouping.getExclude().getUuids().contains(tst[3]));
-//        assertTrue(grouping.getExclude().getUuids().contains(tst[4]));
-//
-//        assertTrue(grouping.getComposite().getUsernames().contains(tst[0]));
-//        assertTrue(grouping.getComposite().getUsernames().contains(tst[1]));
-//        assertTrue(grouping.getComposite().getUsernames().contains(tst[2]));
-//        assertFalse(grouping.getComposite().getUsernames().contains(tst[3]));
-//        assertFalse(grouping.getComposite().getUsernames().contains(tst[4]));
-//
-//        assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
-//        gc.assignOwnership(grouping.getPath(), tst[0], tst[5]);
-//        grouping = gc.grouping(this.GROUPING, tst[0]).getBody();
-//        assertTrue(grouping.getOwners().getNames().contains(tstName[5]));
-//        gc.removeOwnership(grouping.getPath(), tst[0], tst[5]);
-//        grouping = gc.grouping(this.GROUPING, tst[0]).getBody();
-//        assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
-//    }
+    @Test
+    @WithMockUhUser(username = "iamtst01")
+    public void getGroupingTest() throws  Exception{
+        Grouping grouping = mapGrouping(GROUPING);
 
-//    @Test
-//    public void groupingAssignmentTest() {
+        assertTrue(grouping.getInclude().getNames().contains(tstName[0]));
+        assertTrue(grouping.getInclude().getNames().contains(tstName[1]));
+        assertTrue(grouping.getInclude().getNames().contains(tstName[2]));
+        assertTrue(grouping.getExclude().getNames().contains(tstName[3]));
+        assertTrue(grouping.getExclude().getNames().contains(tstName[4]));
+
+        assertTrue(grouping.getInclude().getUsernames().contains(tst[0]));
+        assertTrue(grouping.getInclude().getUsernames().contains(tst[1]));
+        assertTrue(grouping.getInclude().getUsernames().contains(tst[2]));
+        assertTrue(grouping.getExclude().getUsernames().contains(tst[3]));
+        assertTrue(grouping.getExclude().getUsernames().contains(tst[4]));
+
+        assertTrue(grouping.getInclude().getUuids().contains(tst[0]));
+        assertTrue(grouping.getInclude().getUuids().contains(tst[1]));
+        assertTrue(grouping.getInclude().getUuids().contains(tst[2]));
+        assertTrue(grouping.getExclude().getUuids().contains(tst[3]));
+        assertTrue(grouping.getExclude().getUuids().contains(tst[4]));
+
+        assertTrue(grouping.getComposite().getUsernames().contains(tst[0]));
+        assertTrue(grouping.getComposite().getUsernames().contains(tst[1]));
+        assertTrue(grouping.getComposite().getUsernames().contains(tst[2]));
+        assertFalse(grouping.getComposite().getUsernames().contains(tst[3]));
+        assertFalse(grouping.getComposite().getUsernames().contains(tst[4]));
+
+        assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
+        mapGSR("/api/groupings/" + grouping.getPath() + "/" + tst[5] + "/assignOwnership");
+        grouping = mapGrouping(GROUPING);
+
+        assertTrue(grouping.getOwners().getNames().contains(tstName[5]));
+        mapGSR("/api/groupings/" + grouping.getPath() + "/" + tst[5] + "/removeOwnership");
+        grouping = mapGrouping(GROUPING);
+
+        assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
+    }
+
+    @Test
+    @WithMockUhUser(username = "iamtst01")
+    public void groupingAssignmentTest() throws Exception{
 //        GroupingAssignment groupings = gc.groupingAssignment(tst[0]).getBody();
-//
-//        boolean inGrouping = false;
-//        for (Grouping grouping : groupings.getGroupingsIn()) {
-//            if (grouping.getPath().contains(this.GROUPING)) {
-//                inGrouping = true;
-//                break;
-//            }
-//        }
-//        assertTrue(inGrouping);
-//
-//        boolean canOptin = false;
-//        for (Grouping grouping : groupings.getGroupingsToOptInTo()) {
-//            if (grouping.getPath().contains(this.GROUPING)) {
-//                canOptin = true;
-//                break;
-//            }
-//        }
-//        assertFalse(canOptin);
-//
-//        boolean canOptOut = false;
-//        for (Grouping grouping : groupings.getGroupingsToOptOutOf()) {
-//            if (grouping.getPath().contains(this.GROUPING)) {
-//                canOptOut = true;
-//                break;
-//            }
-//        }
-//        assertTrue(canOptOut);
-//
-//        boolean ownsGrouping = false;
-//        for (Grouping grouping : groupings.getGroupingsOwned()) {
-//            if (grouping.getPath().contains(this.GROUPING)) {
-//                ownsGrouping = true;
-//                break;
-//            }
-//        }
-//        assertTrue(ownsGrouping);
-//
-//    }
+        GroupingAssignment groupings = mapGroupingAssignment();
 
-//    @Test
-//    public void myGroupingsTest2() {
-//        GroupingAssignment groupings = gc.groupingAssignment(tst[4]).getBody();
-//
-//        boolean inGrouping = false;
-//        for (Grouping grouping : groupings.getGroupingsIn()) {
-//            if (grouping.getPath().contains(this.GROUPING)) {
-//                inGrouping = true;
-//                break;
-//            }
-//        }
-//        assertFalse(inGrouping);
-//
-//        boolean ownsGrouping = false;
-//        for (Grouping grouping : groupings.getGroupingsOwned()) {
-//            if (grouping.getPath().contains(this.GROUPING)) {
-//                ownsGrouping = true;
-//                break;
-//            }
-//        }
-//        assertFalse(ownsGrouping);
-//    }
+        boolean inGrouping = false;
+        for (Grouping grouping : groupings.getGroupingsIn()) {
+            if (grouping.getPath().contains(this.GROUPING)) {
+                inGrouping = true;
+                break;
+            }
+        }
+        assertTrue(inGrouping);
+
+        boolean canOptin = false;
+        for (Grouping grouping : groupings.getGroupingsToOptInTo()) {
+            if (grouping.getPath().contains(this.GROUPING)) {
+                canOptin = true;
+                break;
+            }
+        }
+        assertFalse(canOptin);
+
+        boolean canOptOut = false;
+        for (Grouping grouping : groupings.getGroupingsToOptOutOf()) {
+            if (grouping.getPath().contains(this.GROUPING)) {
+                canOptOut = true;
+                break;
+            }
+        }
+        assertTrue(canOptOut);
+
+        boolean ownsGrouping = false;
+        for (Grouping grouping : groupings.getGroupingsOwned()) {
+            if (grouping.getPath().contains(this.GROUPING)) {
+                ownsGrouping = true;
+                break;
+            }
+        }
+        assertTrue(ownsGrouping);
+
+    }
+
+    @Test
+    @WithMockUhUser(username = "iamtst05")
+    public void myGroupingsTest2() throws Exception{
+        GroupingAssignment groupings = mapGroupingAssignment();
+
+        boolean inGrouping = false;
+        for (Grouping grouping : groupings.getGroupingsIn()) {
+            if (grouping.getPath().contains(this.GROUPING)) {
+                inGrouping = true;
+                break;
+            }
+        }
+        assertFalse(inGrouping);
+
+        boolean ownsGrouping = false;
+        for (Grouping grouping : groupings.getGroupingsOwned()) {
+            if (grouping.getPath().contains(this.GROUPING)) {
+                ownsGrouping = true;
+                break;
+            }
+        }
+        assertFalse(ownsGrouping);
+    }
 
 //    @Test
 //    public void myGroupingsTest3() {
@@ -474,7 +481,7 @@ public class TestGroupingsRestController {
     // MVC mapping
     //////////////////////////////////////////////////////////////////////
 
-    private Grouping restControllerGrouping(String groupingPath) throws Exception {
+    private Grouping mapGrouping(String groupingPath) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(get("/api/groupings/" + groupingPath + "/grouping"))
@@ -493,5 +500,16 @@ public class TestGroupingsRestController {
                 .andReturn();
 
         return objectMapper.readValue(result.getResponse().getContentAsByteArray(), GroupingsServiceResult.class);
+    }
+
+    private GroupingAssignment mapGroupingAssignment() throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        MvcResult result = mockMvc.perform(get("/api/groupings/groupingAssignment")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), GroupingAssignment.class);
     }
 }
