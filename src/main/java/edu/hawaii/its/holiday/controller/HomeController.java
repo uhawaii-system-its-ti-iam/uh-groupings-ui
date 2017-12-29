@@ -64,6 +64,11 @@ public class HomeController {
         return "addModal";
     }
 
+    @RequestMapping(value = "/feedbackModal", method = RequestMethod.GET)
+    public String feedbackModal(Locale locale, Model model) {
+        return "feedbackModal";
+    }
+
     @RequestMapping(value = "/removeModal", method = RequestMethod.GET)
     public String removeModal(Locale locale, Model model) {
         return "removeModal";
