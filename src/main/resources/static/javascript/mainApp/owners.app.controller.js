@@ -312,7 +312,7 @@
             console.log($scope.successAdd);
             console.log(role);
             $scope.addModalInstance = $uibModal.open({
-                templateUrl: 'addModal.html',
+                templateUrl: 'modal/addModal.html',
                 windowClass: 'center-modal',
                 scope: $scope,
                 resolve: {
@@ -373,7 +373,7 @@
         $scope.deleteModal = function (user, url, type) {
             $scope.deleteUser = user;
             $scope.deleteModalInstance = $uibModal.open({
-                templateUrl: 'removeModal.html',
+                templateUrl: 'modal/removeModal.html',
                 windowClass: 'center-modal',
                 scope: $scope,
                 resolve: {
@@ -459,7 +459,7 @@
 
         $scope.preferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
-                templateUrl: 'preferenceErrorModal.html',
+                templateUrl: 'modal/preferenceErrorModal.html',
                 windowClass: 'center-modal',
                 scope: $scope
             });
@@ -477,7 +477,7 @@
                 $scope.info = "the publication destination is active or not";
 
             $scope.infoModalInstance = $uibModal.open({
-                templateUrl: 'infoModal.html',
+                templateUrl: 'modal/infoModal.html',
                 scope: $scope,
                 resolve: {
                     items: function () {

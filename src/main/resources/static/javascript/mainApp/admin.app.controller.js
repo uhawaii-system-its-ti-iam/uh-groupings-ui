@@ -95,7 +95,7 @@
 
         $scope.errorModal = function () {
             $scope.errorModalInstance = $uibModal.open({
-                templateUrl: 'apiError.html',
+                templateUrl: 'modal/apiError.html',
                 windowClass: 'center-modal',
                 scope: $scope
             });
@@ -262,14 +262,15 @@
             $scope.testdata = [];
 
             dataProvider.updateData(function (d) {
-                if (d.resultCode === 'SUCCESS') {
+                if(d.statusCode != null)
+                {
+                    console.log("Error, Status Code: " + d.statusCode);
+                    $scope.addModalAlert();
+                }
+                else if (d.resultCode === 'SUCCESS') {
                     console.log("Success In Adding");
                     //reload data table
                     $scope.addModalAlert('admin', 'success');
-                }
-                else if (typeof d.resultCode === 'undefined') {
-                    console.log("Failure In Adding");
-                    $scope.addModalAlert();
                 }
             }, addUrl);
 
@@ -429,7 +430,7 @@
 
 
             $scope.infoModalInstance = $uibModal.open({
-                templateUrl: 'infoModal.html',
+                templateUrl: 'modal/infoModal.html',
                 scope: $scope,
                 resolve: {
                     items: function () {
@@ -498,7 +499,7 @@
 
         $scope.preferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
-                templateUrl: 'preferenceErrorModal.html',
+                templateUrl: 'modal/preferenceErrorModal.html',
                 windowClass: 'center-modal',
                 scope: $scope
             });

@@ -88,7 +88,7 @@
 
         $scope.errorModal = function () {
             $scope.errorModalInstance = $uibModal.open({
-                templateUrl: 'apiError.html',
+                templateUrl: 'modal/apiError.html',
                 windowClass: 'center-modal',
                 scope: $scope
             });

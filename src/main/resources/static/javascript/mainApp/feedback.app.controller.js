@@ -17,7 +17,7 @@
             $scope.email = "";
             $scope.description = "";
             $scope.feedbackModalInstance = $uibModal.open({
-                templateUrl: 'feedbackModal.html',
+                templateUrl: 'modal/feedbackModal.html',
                 windowClass: 'center-modal',
                 scope: $scope
             });
