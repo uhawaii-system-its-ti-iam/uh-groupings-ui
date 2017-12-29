@@ -91,6 +91,7 @@
 
         $scope.change = function () {
             $scope.showGrouping = false;
+            $scope.resetGroupingInformation();
         };
 
         $scope.errorModal = function () {
