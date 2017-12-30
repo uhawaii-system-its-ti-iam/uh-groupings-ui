@@ -126,37 +126,37 @@
                                         <div class="col-md-1 col-sm-1 col-xs-2">
                                             <ul class="nav nav-pills nav-stacked" style="width: 3.125em; margin-top: 2.5em;" id="group-pills">
                                                 <li class="active" data-toggle="tooltip" data-placement="right"
-                                                    th:title="#{screen.message.owner.tooltip.navbar.list}">
+                                                    th:title="#{screen.message.common.tooltip.nav.members}">
                                                     <a data-toggle="tab" href="#all" class="text-center">
                                                         <i class="fa fa-user" aria-hidden="true"></i>
                                                     </a>
                                                 </li>
                                                 <li data-toggle="tooltip" data-placement="right"
-                                                    th:title="#{screen.message.owner.tooltip.navbar.basis}">
+                                                    th:title="#{screen.message.common.tooltip.nav.basis}">
                                                     <a data-toggle="tab" href="#basis" class="text-left">
                                                         <i class="fa fa-id-card-o" aria-hidden="true"></i>
                                                     </a>
                                                 </li>
                                                 <li data-toggle="tooltip" data-placement="right"
-                                                    th:title="#{screen.message.owner.tooltip.navbar.include}">
+                                                    th:title="#{screen.message.common.tooltip.nav.include}">
                                                     <a data-toggle="tab" href="#include" class="text-center">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                     </a>
                                                 </li>
                                                 <li data-toggle="tooltip" data-placement="right"
-                                                    th:title="#{screen.message.owner.tooltip.navbar.exclude}">
+                                                    th:title="#{screen.message.common.tooltip.nav.exclude}">
                                                     <a data-toggle="tab" href="#exclude" class="text-center">
                                                         <i class="fa fa-minus" aria-hidden="true"></i>
                                                     </a>
                                                 </li>
                                                 <li data-toggle="tooltip" data-placement="right"
-                                                    th:title="#{screen.message.owner.tooltip.navbar.owners}">
+                                                    th:title="#{screen.message.common.tooltip.nav.owners}">
                                                     <a data-toggle="tab" href="#owners" class="text-center">
                                                         <i class="fa fa-star" aria-hidden="true"></i>
                                                     </a>
                                                 </li>
                                                 <li data-toggle="tooltip" data-placement="right"
-                                                    th:title="#{screen.message.owner.tooltip.navbar.preferences}">
+                                                    th:title="#{screen.message.common.tooltip.nav.preferences}">
                                                     <a data-toggle="tab" href="#preferences" class="text-center">
                                                         <i class="fa fa-cog" aria-hidden="true"></i>
                                                     </a>
@@ -386,7 +386,7 @@
                                                                   ng-click="removeMember('Include', $index)"
                                                                   data-toggle="tooltip"
                                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
-                                                                  th:title="#{screen.message.owner.remove.include}"
+                                                                  th:title="#{screen.message.common.tooltip.remove.include}"
                                                                   style="margin-right: 10px;"></span>
                                                         </td>
                                                         <td>{{i.uuid}}</td>
@@ -491,7 +491,7 @@
                                                             <span class="glyphicon glyphicon-trash pull-right clickable"
                                                                   data-toggle="tooltip"
                                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
-                                                                  th:title="#{screen.message.owner.remove.exclude}"
+                                                                  th:title="#{screen.message.common.tooltip.remove.exclude}"
                                                                   ng-click="removeMember('Exclude', $index)"
                                                                   style="margin-right: 10px;"></span>
                                                         </td>
@@ -572,7 +572,7 @@
                                                             <span class="glyphicon glyphicon-trash pull-right clickable"
                                                                   data-toggle="tooltip"
                                                                   data-placement="top" onmouseover="$(this).tooltip('show')"
-                                                                  th:title="#{screen.message.owner.remove.owner}"
+                                                                  th:title="#{screen.message.common.tooltip.remove.owner}"
                                                                   ng-click="removeOwner($index)"
                                                                   style="margin-right: 10px;"></span>
                                                         </td>
@@ -642,7 +642,7 @@
                                                                    ng-click="infoModal('opt', 'add')"
                                                                    data-toggle="tooltip"
                                                                    data-placement="right"
-                                                                   th:title="#{screen.message.owner.tooltip.preference.allowOptIn}"></i>
+                                                                   th:title="#{screen.message.common.tooltip.preference.allowOptIn}"></i>
                                                             </div>
                                                             <div class="checkbox">
                                                                 <label>
@@ -653,7 +653,7 @@
                                                                    ng-click="infoModal('opt', 'remove')"
                                                                    data-toggle="tooltip"
                                                                    data-placement="right"
-                                                                   th:title="#{screen.message.owner.tooltip.preference.allowOptOut}"></i>
+                                                                   th:title="#{screen.message.common.tooltip.preference.allowOptOut}"></i>
                                                             </div>
                                                         </div>
                                                         <div>
@@ -668,7 +668,7 @@
                                                                    ng-click="infoModal('publication')"
                                                                    data-toggle="tooltip"
                                                                    data-placement="right"
-                                                                   th:title="#{screen.message.owner.tooltip.preference.listserv}"></i>
+                                                                   th:title="#{screen.message.common.tooltip.preference.listserv}"></i>
                                                             </div>
                                                             <div class="checkbox">
                                                                 <label>
@@ -679,7 +679,7 @@
                                                                    ng-click="infoModal('publication')"
                                                                    data-toggle="tooltip"
                                                                    data-placement="right"
-                                                                   th:title="#{screen.message.owner.tooltip.preference.ldap}"></i>
+                                                                   th:title="#{screen.message.common.tooltip.preference.ldap}"></i>
                                                             </div>
                                                         </div>
                                                     </div>

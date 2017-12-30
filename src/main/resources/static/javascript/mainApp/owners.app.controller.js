@@ -3,13 +3,10 @@
     /**
      * Owner controller for the groupings page
      *
-     * @param $scope        - A Binding variable between controller and html page.
-     * @param dataProvider  - service function that acts as the AJAX get.
-     * @param dataUpdater   - service function that acts as AJAX post, used mainly for adding or updating
-     * @param dataDeleter   - service function that acts as AJAX psst, use function mainly for delete function.
-     * @constructor
+     * @param $scope - binding between controller and HTML page
+     * @param dataProvider  - service function that provides GET and POST requests for getting or updating data
      */
-    function OwnerJsController($scope, $uibModal, $window, $filter, dataProvider, dataUpdater, dataDeleter) {
+    function OwnerJsController($scope, $uibModal, $window, $filter, dataProvider) {
         $scope.currentUsername = "";
         $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -68,7 +65,7 @@
         $scope.init = function () {
             $scope.initCurrentUsername();
 
-            groupingsOwned = "api/groupings/" + $scope.getCurrentUsername() + "/groupingAssignment";
+            groupingsOwned = "api/groupings/groupingAssignment";
             dataProvider.loadData(function (d) {
                 var temp = [];
                 console.log(d);
@@ -123,7 +120,7 @@
          *  owners list and grouping privileges.
          */
         $scope.getData = function () {
-            getUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/grouping";
+            getUrl = "api/groupings/" + $scope.groupingName.url + "/grouping";
             $scope.loading = true;
             dataProvider.loadData(function (d) {
                 console.log(d);
@@ -267,8 +264,8 @@
          * @param type - the type of group that the user is being added into. Include or exclude.
          */
         $scope.addMember = function (type) {
-            var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
-            dataUpdater.addData(function (d) {
+            var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
+            dataProvider.updateData(function (d) {
                 if (d.statusCode != null)
                 {
                     console.log("Error, Status Code: " + d.statusCode);
@@ -287,8 +284,8 @@
          * Otherwise alerts that the user does not exist.
          */
         $scope.addOwner = function () {
-            var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.ownerUser + "/assignOwnership";
-            dataUpdater.addData(function (d) {
+            var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.ownerUser + "/assignOwnership";
+            dataProvider.updateData(function (d) {
                 if (d.statusCode != null)
                 {
                     console.log("Error, Status Code: " + d.statusCode);
@@ -356,7 +353,7 @@
             if (type === 'Exclude') {
                 user = $scope.groupingExclude[row].username;
             }
-            var URL = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + user + "/deleteMemberFrom" + type + "Group";
+            var URL = "api/groupings/" + $scope.groupingName.url + "/" + user + "/deleteMemberFrom" + type + "Group";
             $scope.deleteModal(user, URL, $scope.groupingPath);
         };
 
@@ -367,7 +364,7 @@
          */
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.ownerList[index].username;
-            var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + removeOwner + "/removeOwnership";
+            var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + removeOwner + "/removeOwnership";
             if ($scope.ownerList.length > 1) {
                 $scope.deleteModal(removeOwner, removeOwnerUrl, $scope.groupingPath);
             }
@@ -387,7 +384,7 @@
             });
 
             $scope.deleteModalInstance.result.then(function () {
-                dataDeleter.deleteData(function (d) {
+                dataProvider.updateData(function (d) {
                     console.log(d);
                     $scope.loading = true;
                     $scope.getData(type);
@@ -413,8 +410,8 @@
          * Saves changes made to grouping privileges
          */
         $scope.updateAllowOptOut = function() {
-            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" +  $scope.allowOptOut + "/setOptOut";
-            dataUpdater.addData(function (d) {
+            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.allowOptOut + "/setOptOut";
+            dataProvider.updateData(function (d) {
                 if(d.statusCode != null)
                 {
                     console.log("Error, Status Code: " + d.statusCode);
@@ -427,8 +424,8 @@
         };
 
         $scope.updateAllowOptIn = function () {
-            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" +  $scope.allowOptIn + "/setOptIn";
-            dataUpdater.addData(function (d) {
+            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.allowOptIn + "/setOptIn";
+            dataProvider.updateData(function (d) {
                 if(d.statusCode != null)
                 {
                     console.log("Error, Status Code: " + d.statusCode);
@@ -441,8 +438,8 @@
         };
 
         $scope.updateListserv = function () {
-            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.getCurrentUsername() + "/" + $scope.listserv + "/setListserv";
-            dataUpdater.addData(function (d) {
+            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.listserv + "/setListserv";
+            dataProvider.updateData(function (d) {
                 console.log(d);
                 if(d.statusCode != null)
                 {

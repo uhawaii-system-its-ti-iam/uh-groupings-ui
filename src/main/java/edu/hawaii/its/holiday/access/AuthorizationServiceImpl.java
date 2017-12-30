@@ -95,7 +95,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public boolean fetchOwner(String username) {
         try {
             System.out.println("//////////////////////////////");
-            if (!gc.groupingAssignment(username).getBody().getGroupingsOwned().isEmpty()) {
+            if (!gs.getGroupingAssignment(username).getGroupingsOwned().isEmpty()) {
                 System.out.println("This person is an owner");
                 return true;
             } else {
