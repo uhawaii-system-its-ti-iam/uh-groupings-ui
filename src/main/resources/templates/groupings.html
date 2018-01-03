@@ -626,66 +626,8 @@
                                             </div>
 
                                             <div id="preferences" class="tab-pane fade">
-                                                <div class="row member-row-title">
-                                                    <h3 class="members-tab-title">Preferences</h3>
-                                                </div>
-                                                <div class="well">
-                                                    <div class="row" style="margin: inherit;">
-                                                        <div>
-                                                            <h4 style="margin-top: 0;">User Options</h4>
-                                                            <div class="checkbox">
-                                                                <label>
-                                                                    <input type="checkbox" ng-model="allowOptIn" ng-change="updateAllowOptIn()"/>
-                                                                    Allow people to add themselves to this grouping
-                                                                </label>
-                                                                <i class="fa fa-question-circle clickable" aria-hidden="true"
-                                                                   ng-click="infoModal('opt', 'add')"
-                                                                   data-toggle="tooltip"
-                                                                   data-placement="right"
-                                                                   th:title="#{screen.message.common.tooltip.preference.allowOptIn}"></i>
-                                                            </div>
-                                                            <div class="checkbox">
-                                                                <label>
-                                                                    <input type="checkbox" ng-model="allowOptOut" ng-change="updateAllowOptOut()"/>
-                                                                    Allow members to remove themselves to this grouping
-                                                                </label>
-                                                                <i class="fa fa-question-circle clickable" aria-hidden="true"
-                                                                   ng-click="infoModal('opt', 'remove')"
-                                                                   data-toggle="tooltip"
-                                                                   data-placement="right"
-                                                                   th:title="#{screen.message.common.tooltip.preference.allowOptOut}"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <h4>Publication Destinations</h4>
-                                                            <div class="checkbox">
-                                                                <label>
-                                                                    <input type="checkbox" ng-model="listserv" ng-change="updateListserv()"
-                                                                           ng-init="pref"/>
-                                                                    Email list: &lt;{{ groupingName.name }}@lists.hawaii.edu&gt;
-                                                                </label>
-                                                                <i class="fa fa-question-circle clickable" aria-hidden="true"
-                                                                   ng-click="infoModal('publication')"
-                                                                   data-toggle="tooltip"
-                                                                   data-placement="right"
-                                                                   th:title="#{screen.message.common.tooltip.preference.listserv}"></i>
-                                                            </div>
-                                                            <div class="checkbox">
-                                                                <label>
-                                                                    <input type="checkbox" ng-model="LDAP" ng-change="checkLDAP()"/>
-                                                                    CAS/LDAP: uhReleasedGroupings
-                                                                </label>
-                                                                <i class="fa fa-question-circle clickable" aria-hidden="true"
-                                                                   ng-click="infoModal('publication')"
-                                                                   data-toggle="tooltip"
-                                                                   data-placement="right"
-                                                                   th:title="#{screen.message.common.tooltip.preference.ldap}"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <div th:replace="fragments/preferences :: preferences"></div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
