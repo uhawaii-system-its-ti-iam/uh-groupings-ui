@@ -9,7 +9,7 @@
      * @param dataDeleter   - service function that acts as AJAX psst, use function mainly for delete function.
      * @constructor
      */
-    function GeneralController($scope, $uibModal, $window, $filter, dataProvider, dataUpdater, dataDeleter) {
+    function GeneralJSController($scope, $uibModal, $window, $filter, dataProvider, dataUpdater, dataDeleter) {
 
         $scope.errorModal = function () {
             $scope.errorModalInstance = $uibModal.open({
@@ -212,5 +212,5 @@
         };
     }
 
-    UHGroupingsApp.controller("GeneralJSController", OwnerJsController);
+    UHGroupingsApp.controller("GeneralJSController", GeneralJsController);
 })();
