@@ -2,7 +2,7 @@ openapi: 3.0.0
 servers: []
 info:
   version: '2.0'
-  title:
+  title: 'UH Groupings API v2.0'
 paths:
   '/{username}/{adminToAdd}/addAdmin':
     post:
