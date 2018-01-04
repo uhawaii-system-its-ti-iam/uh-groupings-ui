@@ -251,7 +251,6 @@
                 $scope.showGrouping = false;
                 $scope.resetGroupingInformation();
                 $scope.resetSelectedGroup();
-                $scope.resetTopTab();
             }
         };
 
@@ -704,22 +703,6 @@
             }
         };
 
-        /**
-         * Resets the selected top navigational tab to the Members tab.
-         */
-        $scope.resetTopTab = function() {
-            var topTabs = $('#grouping-top-tabs')[0].children;
-            var topTabContents = $('#top-tab-content')[0].children
-            for (var i = 0; i < topTabs.length; i++) {
-                if (i == 0 && !$(topTabs[i]).hasClass('active')) {
-                    $(topTabs[i]).addClass('active');
-                    $(topTabContents[i]).addClass('in active');
-                } else if (i !== 0 && $(topTabs[i]).hasClass('active')) {
-                    $(topTabs[i]).removeClass('active');
-                    $(topTabContents[i]).removeClass('in active');
-                }
-            }
-        };
     }
 
     UHGroupingsApp.controller("OwnerJsController", OwnerJsController);
