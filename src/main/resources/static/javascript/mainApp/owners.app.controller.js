@@ -20,7 +20,6 @@
         var getUrl;
 
         $scope.ownedList = [];
-        $scope.groupingsList = [];
         $scope.groupingsBasis = [];
         $scope.groupingInclude = [];
         $scope.groupingExclude = [];
@@ -43,9 +42,6 @@
 
         $scope.pagedItemsInclude = [];
         $scope.currentPageInclude = 0;
-
-        $scope.pagedItemsGroupings = [];
-        $scope.currentPageGroupings = 0;
 
         $scope.pagedItemsBasis = [];
         $scope.currentPageBasis = 0;
