@@ -286,66 +286,7 @@
 
                                 <div class="tab-content col-md-11 col-sm-11 col-xs-10" id="pill-content">
                                     <div id="all" class="tab-pane fade in active">
-                                        <div class="row member-row-title">
-                                            <h3 class="members-tab-title">All Members</h3>
-                                        </div>
-                                        <div class = "table-responsive">
-                                        <table class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th ng-click="sortCol(groupingMembers, 'name', 'pagedItemsMembers', 'symbolList')"
-                                                    class="clickable">
-                                                    Member Name {{symbol.name}}
-                                                </th>
-                                                <th ng-click="sortCol(groupingMembers, 'uuid', 'pagedItemsMembers', 'symbolList')"
-                                                    class="clickable">
-                                                    UH Number {{symbol.uuid}}
-                                                </th>
-                                                <th ng-click="sortCol(groupingMembers, 'username', 'pagedItemsMembers', 'symbolList')"
-                                                    class="clickable">
-                                                    UH Username {{symbol.username}}
-                                                </th>
-                                                <th style="vertical-align: middle;" class="clickable"
-                                                    ng-click="sortCol(groupingMembers, 'basis', 'pagedItemsMembers', 'symbolList')">
-                                                    Where Listed? {{symbol.basis}}
-                                                </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]">
-                                                <td>{{g.name}}</td>
-                                                <td>{{g.uuid}}</td>
-                                                <td>{{g.username}}</td>
-                                                <td class="text-center" style="width: 3%">{{g.basis}}</td>
-                                            </tr>
-                                            </tbody>
-                                            <tfoot>
-                                            <!-- Top part of the two parts  -->
-                                            <td colspan="6">
-                                                <ul class="pagination pull-right">
-                                                    <li ng-class="{disabled: (currentPageMembers) == 0}">
-                                                        <a href="" ng-click="currentPage('First','currentPageMembers','pagedItemsMembers')">«« First</a>
-                                                    </li>
-                                                    <li ng-class="{disabled: (currentPageMembers) == 0 }">
-                                                        <a href="" ng-click="currentPage('Prev','currentPageMembers','pagedItemsMembers')">« Prev</a>
-                                                    </li>
-                                                    <li ng-repeat="n in range(pagedItemsMembers.length, currentPageMembers - gap, currentPageMembers + gap + 1) "
-                                                        ng-class="{active: n == currentPageMembers}"
-
-                                                        ng-click="currentPage('Set','currentPageMembers','pagedItemsMembers')"
-                                                    ><a href="" ng-bind="n + 1">1</a>
-                                                    </li>
-                                                    <li ng-class="{disabled: ((currentPageMembers) == pagedItemsMembers.length - 1) || pagedItemsMembers.length == 0}">
-                                                        <a href="" ng-click="currentPage('Next','currentPageMembers','pagedItemsMembers')">Next »</a>
-                                                    </li>
-                                                    <li ng-class="{disabled: ((currentPageMembers) == pagedItemsMembers.length - 1) || pagedItemsMembers.length == 0}">
-                                                        <a href="" ng-click="currentPage('Last','currentPageMembers','pagedItemsMembers')">Last »»</a>
-                                                    </li>
-                                                </ul>
-                                            </td>
-                                            </tfoot>
-                                        </table>
-                                    </div>
+                                        <div th:replace="fragments/members :: members"></div>
                                     </div>
                                     <div id="basis" class="tab-pane fade">
                                         <div class="row member-row-title">
