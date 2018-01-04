@@ -66,6 +66,9 @@
                     $scope.optedIn = d.groupingsOptedInTo;
                     $scope.optedOut = d.groupingsOptedOutOf;
 
+                    $scope.membersList = $scope.sortOrder($scope.membersList, 'name');
+                    $scope.optInList = $scope.sortOrder($scope.optInList, 'name');
+
                     if ($scope.optedIn.length === 0) {
                         $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
                     }
