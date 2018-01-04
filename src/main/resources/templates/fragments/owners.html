@@ -1,0 +1,70 @@
+<th:block th:fragment="owners">
+    <div class="row member-row-title">
+        <h3 class="members-tab-title">Owners</h3>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th ng-click="sortCol(groupingOwners, 'name', 'pagedItemsOwners', 'symbolOwners')"
+                    class="clickable">
+                    Owner Name {{symbol.name}}
+                </th>
+                <th ng-click="sortCol(groupingOwners, 'username', 'pagedItemsOwners', 'symbolOwners')"
+                    class="clickable">
+                    UH Username {{symbol.username}}
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
+                <td>
+                    {{owner.name}}
+                    <span class="glyphicon glyphicon-trash pull-right clickable"
+                          data-toggle="tooltip" data-placement="top"
+                          onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
+                          th:title="#{screen.message.common.tooltip.remove.owner}"
+                          ng-click="removeOwner($index)" >
+                    </span>
+                </td>
+                <td>{{owner.username}}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <td colspan="6">
+                <ul class="pagination pull-right">
+                    <li ng-class="{disabled: (currentPageOwners) == 0 }">
+                        <a href="" ng-click="currentPage('First','currentPageOwners','pagedItemsOwners')">«« First</a>
+                    </li>
+                    <li ng-class="{disabled: (currentPageOwners) == 0 }">
+                        <a href="" ng-click="currentPage('Prev','currentPageOwners','pagedItemsOwners')">« Prev</a>
+                    </li>
+                    <li ng-repeat="n in range(pagedItemsOwners.length, currentPageOwners - gap, currentPageOwners + gap + 1) "
+                        ng-class="{active: n == currentPageOwners}"
+                        ng-click="currentPage('Set','currentPageOwners','pagedItemsOwners')">
+                        <a href="" ng-bind="n + 1"></a>
+                    </li>
+                    <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
+                        <a href="" ng-click="currentPage('Next','currentPageOwners','pagedItemsOwners')">Next »</a>
+                    </li>
+                    <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
+                        <a href="" ng-click="currentPage('Last','currentPageOwners','pagedItemsOwners')">Last »»</a>
+                    </li>
+                </ul>
+            </td>
+            </tfoot>
+        </table>
+    </div>
+    <!-- Input to add a user to the list of owners -->
+    <div class="col-lg-4 col-md-6" style="padding: inherit;">
+        <form ng-submit="addOwner()">
+            <div class="input-group">
+                <input class="form-control" type="text" placeholder="Add an owner..."
+                       ng-model="ownerUser"/>
+                <div class="input-group-btn">
+                    <button class="btn btn-primary" type="submit">Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</th:block>

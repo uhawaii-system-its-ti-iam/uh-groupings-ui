@@ -23,7 +23,7 @@
         $scope.groupingsBasis = [];
         $scope.groupingInclude = [];
         $scope.groupingExclude = [];
-        $scope.ownerList = [];
+        $scope.groupingOwners = [];
         $scope.pref = [];
         $scope.allowOptIn = [];
         $scope.allowOptOut = [];
@@ -143,9 +143,9 @@
                 $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
 
                 //Gets owners of the grouping
-                $scope.ownerList = d.owners.members;
-                $scope.modify($scope.ownerList);
-                $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
+                $scope.groupingOwners = d.owners.members;
+                $scope.modify($scope.groupingOwners);
+                $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners, $scope.pagedItemsOwners);
 
                 $scope.allowOptIn = d.optInOn;
                 $scope.allowOptOut = d.optOutOn;
@@ -358,9 +358,9 @@
          * @param index - The index of the member in the ownerList array.
          */
         $scope.removeOwner = function (index) {
-            var removeOwner = $scope.ownerList[index].username;
+            var removeOwner = $scope.groupingOwners[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + removeOwner + "/removeOwnership";
-            if ($scope.ownerList.length > 1) {
+            if ($scope.groupingOwners.length > 1) {
                 $scope.deleteModal(removeOwner, removeOwnerUrl, $scope.groupingPath);
             }
         };
