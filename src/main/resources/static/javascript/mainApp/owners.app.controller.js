@@ -552,7 +552,7 @@
                 for (var key in item) {
                     // Ignore the 'basis' and '$$hashKey' properties
                     if (item.hasOwnProperty(key) && key !== 'basis' && key !== '$$hashKey') {
-                        if (item[key].indexOf(query) != -1) return true;
+                        if (searchMatch(item[key], query)) return true;
                     }
                 }
             });
