@@ -184,7 +184,7 @@
          **@param whatList - it gives you the list you need to search through
          **@param whatQuery - it gives the search bar its seperate search function.
          **/
-        $scope.search = function (list, whatList, whatQuery) {
+        $scope.search = function (list, whatList, whatQuery, whatPage) {
             var query = "";
             query = $scope[whatQuery];
             console.log(query);
@@ -202,10 +202,10 @@
                     }
                 }
             });
-            page = 0;
+            $scope[whatPage] = 0;
             // now group by pages
             var emptyList = [];
-            $scope[whatList] = $scope.groupToPagesChanged(emptyList);
+            $scope[whatList] = $scope.groupToPagesChanged(emptyList)
         };
 
 
