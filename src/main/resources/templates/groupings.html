@@ -19,99 +19,12 @@
                     <div class="loader" ng-show="loading"></div>
                 </div>
                 <div ng-show="!showGrouping">
-                    <!-- This will allow you to search for specific groups -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="row" style="margin: inherit">
-                                <div class="col-md-6 col-sm-7" style="padding: 0px;">
-                                    <h3 style="padding: 2.5px 0px; margin: inherit;">My Groupings</h3>
-                                </div>
-                                <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
-                                    <input placeholder="Filter Groupings..." type="text"
-                                           ng-model="queryGroupings" class="form-control"
-                                           ng-change="filter(ownedList, 'pagedItemsOwned', 'currentPageGroupings', 'queryGroupings')"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <table class="table table-bordered table-condensed table-hover">
-                            <thead>
-                            <tr>
-                                <th ng-click="sortCol(ownedList, 'name', 'pagedItemsOwned', 'symbolMember')" class="clickable">
-                                    Grouping Name {{symbol.name}}
-                                </th>
-                                <th ng-click="sortCol(ownedList, 'url', 'pagedItemsOwned', 'symbolMember')" class="clickable">
-                                    Grouping Path {{symbol.url}}
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="l in pagedItemsOwned[currentPageOwned] ">
-                                <td class="clickable" ng-click="showData($index)">
-                                    {{l.name}}
-                                    <span class="pull-right glyphicon glyphicon-edit"
-                                          style="margin-right: 5px;"></span>
-                                </td>
-                                <td>{{l.url}}</td>
-                            </tr>
-                            </tbody>
-                            <tfoot>
-                            <!-- Top part of the two parts  -->
-                            <td colspan="6">
-                                <ul class="pagination pull-right">
-                                    <li ng-class="{disabled: (currentPageOwned) == 0}">
-                                        <a href="" ng-click="currentPage('First','currentPageOwned','pagedItemsOwned')">««
-                                            First</a>
-                                    </li>
-                                    <li ng-class="{disabled: (currentPageOwned) == 0 }">
-                                        <a href="" ng-click="currentPage('Prev','currentPageOwned','pagedItemsOwned')">«
-                                            Prev</a>
-                                    </li>
-                                    <li ng-repeat="n in range(pagedItemsOwned.length, currentPageOwned - gap, currentPageOwned + gap + 1)"
-                                        ng-class="{active: n == currentPageOwned}"
-                                        ng-click="currentPage('Set','currentPageOwned','pagedItemsOwned')"
-                                            ><a href="" ng-bind="n + 1">1</a>
-                                    </li>
-                                    <li ng-class="{disabled: (currentPageOwned) == pagedItemsOwned.length - 1 || pagedItemsOwned.length == 0}">
-                                        <a href="" ng-click="currentPage('Next','currentPageOwned','pagedItemsOwned')">Next
-                                            »</a>
-                                    </li>
-                                    <li ng-class="{disabled: (currentPageOwned) == pagedItemsOwned.length - 1 || pagedItemsOwned.length == 0}">
-                                        <a href="" ng-click="currentPage('Last','currentPageOwned','pagedItemsOwned')">Last
-                                            »»</a>
-                                    </li>
-                                </ul>
-                            </td>
-                            </tfoot>
-                        </table>
-                    </div>
+                    <div th:replace="fragments/groupings-list :: groupings-list(title='My Groupings', tabContent=false)"></div>
                 </div>
 
                 <div ng-show="showGrouping">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="row" style="margin: inherit;">
-                                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 pull-left" style="padding: 0;">
-                                    <h3 style="margin: inherit; padding-top: .11875em;">Selected Grouping</h3>
-                                </div>
-                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="padding: 0;">
-                                    <button ng-click="showGroups()" class="btn btn-primary xs-left-sm-right">Return to List</button>
-                                </div>
-                            </div>
-                        </div>
-                        <table class="table table-bordered">
-                            <tbody>
-                            <tr>
-                                <th>Name</th>
-                                <td>{{ groupingName.name }}</td>
-                            </tr>
-                            <tr>
-                                <th>Path</th>
-                                <td>{{ groupingName.url }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <div th:replace="fragments/selected-grouping :: selected-grouping"></div>
+
                     <div class="panel panel-default panel-tab-content">
                         <div class="panel-heading">
                             <h3 style="margin: inherit;">Manage Grouping</h3>
