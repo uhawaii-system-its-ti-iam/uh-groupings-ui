@@ -149,11 +149,9 @@
          * Retrieves information about the grouping.
          * @param {string} path - the grouping's path
          */
-        $scope.getData = function (path) {
-            $scope.groupingPath = path;
+        $scope.getData = function() {
             $scope.loading = true;
-            var groupingDataUrl = "api/groupings/" + $scope.groupingPath + "/grouping";
-            console.log(groupingDataUrl);
+            var groupingDataUrl = "api/groupings/" + $scope.selectedGrouping.path + "/grouping";
 
             dataProvider.loadData(function (d) {
                 console.log(d);
@@ -640,7 +638,7 @@
             $scope.selectedGrouping = $scope.pagedItemsGroupings[$scope.currentPageGroupings][row];
             if (!$scope.showGrouping) {
                 $scope.showGrouping = true;
-                $scope.getData($scope.selectedGrouping.path);
+                $scope.getData();
             } else {
                 $scope.showGrouping = false;
             }

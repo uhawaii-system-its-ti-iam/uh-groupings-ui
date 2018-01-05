@@ -19,7 +19,7 @@
         var groupingsOwned;
         var getUrl;
 
-        $scope.ownedList = [];
+        $scope.groupingsList = [];
         $scope.groupingsBasis = [];
         $scope.groupingInclude = [];
         $scope.groupingExclude = [];
@@ -37,8 +37,8 @@
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
         //figure out how much pages to paginate. so far lets do one
-        $scope.pagedItemsOwned = [];
-        $scope.currentPageOwned = 0;
+        $scope.pagedItemsGroupings = [];
+        $scope.currentPageGroupings = 0;
 
         $scope.pagedItemsInclude = [];
         $scope.currentPageInclude = 0;
@@ -70,12 +70,12 @@
                 } else {
                     // Assigns grouping name and url used for api call.
                     for (var i = 0; i < d.groupingsOwned.length; i++) {
-                        $scope.ownedList.push({
+                        $scope.groupingsList.push({
                             'name': d.groupingsOwned[i].name,
-                            'url': d.groupingsOwned[i].path
+                            'path': d.groupingsOwned[i].path
                         });
                     }
-                    $scope.pagedItemsOwned = $scope.groupToPages($scope.ownedList, $scope.pagedItemsOwned);
+                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
                 }
                 $scope.loading = false;
             }, groupingsOwned);
@@ -98,10 +98,10 @@
          *
          * @param row - row of the grouping with relation to the table.
          */
-        $scope.showData = function (row) {
-            $scope.groupingName = $scope.ownedList[row];
+        $scope.showData = function(row) {
+            $scope.selectedGrouping = $scope.pagedItemsGroupings[$scope.currentPageGroupings][row];
             //URLS being used in the api calls.
-            if ($scope.showGrouping == false) {
+            if (!$scope.showGrouping) {
                 $scope.showGrouping = true;
                 $scope.getData();
             }
@@ -116,7 +116,7 @@
          *  owners list and grouping privileges.
          */
         $scope.getData = function () {
-            getUrl = "api/groupings/" + $scope.groupingName.url + "/grouping";
+            getUrl = "api/groupings/" + $scope.selectedGrouping.path + "/grouping";
             $scope.loading = true;
             dataProvider.loadData(function (d) {
                 console.log(d);
@@ -268,7 +268,7 @@
          * @param type - the type of group that the user is being added into. Include or exclude.
          */
         $scope.addMember = function (type) {
-            var addUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
+            var addUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataProvider.updateData(function (d) {
                 if (d.statusCode != null)
                 {
@@ -288,7 +288,7 @@
          * Otherwise alerts that the user does not exist.
          */
         $scope.addOwner = function () {
-            var addOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + $scope.ownerUser + "/assignOwnership";
+            var addOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.ownerUser + "/assignOwnership";
             dataProvider.updateData(function (d) {
                 if (d.statusCode != null)
                 {
@@ -357,7 +357,7 @@
             if (type === 'Exclude') {
                 user = $scope.groupingExclude[row].username;
             }
-            var URL = "api/groupings/" + $scope.groupingName.url + "/" + user + "/deleteMemberFrom" + type + "Group";
+            var URL = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
             $scope.deleteModal(user, URL, $scope.groupingPath);
         };
 
@@ -368,7 +368,7 @@
          */
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.groupingOwners[index].username;
-            var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + removeOwner + "/removeOwnership";
+            var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
                 $scope.deleteModal(removeOwner, removeOwnerUrl, $scope.groupingPath);
             }
@@ -414,7 +414,7 @@
          * Saves changes made to grouping privileges
          */
         $scope.updateAllowOptOut = function() {
-            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.allowOptOut + "/setOptOut";
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (d) {
                 if(d.statusCode != null)
                 {
@@ -428,7 +428,7 @@
         };
 
         $scope.updateAllowOptIn = function () {
-            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.allowOptIn + "/setOptIn";
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.allowOptIn + "/setOptIn";
             dataProvider.updateData(function (d) {
                 if(d.statusCode != null)
                 {
@@ -442,7 +442,7 @@
         };
 
         $scope.updateListserv = function () {
-            var url = "api/groupings/" + $scope.groupingName.url + "/" + $scope.listserv + "/setListserv";
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.listserv + "/setListserv";
             dataProvider.updateData(function (d) {
                 console.log(d);
                 if(d.statusCode != null)
