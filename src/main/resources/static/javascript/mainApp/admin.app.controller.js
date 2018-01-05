@@ -9,7 +9,6 @@
      */
     function AdminJsController($scope, $window, $uibModal, $filter, dataProvider) {
 
-        $scope.currentUsername = "";
         $scope.filteredItems = [];
         $scope.basis = [];
 
@@ -67,8 +66,6 @@
             // Adds the loading spinner.
             $scope.loading = true;
 
-            $scope.initCurrentUsername();
-
             var url = "api/groupings/adminLists";
 
             dataProvider.loadData(function (d) {
@@ -104,14 +101,6 @@
 
         $scope.errorDismiss = function () {
             $scope.errorModalInstance.dismiss();
-        };
-
-        $scope.initCurrentUsername = function () {
-            $scope.currentUsername = $window.document.getElementById("name").innerHTML;
-        };
-
-        $scope.getCurrentUsername = function () {
-            return $scope.currentUsername;
         };
 
         $scope.sortCol = function (list, col, listPaged, symbol) {

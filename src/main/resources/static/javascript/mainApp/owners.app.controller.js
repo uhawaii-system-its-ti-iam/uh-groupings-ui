@@ -7,14 +7,6 @@
      * @param dataProvider  - service function that provides GET and POST requests for getting or updating data
      */
     function OwnerJsController($scope, $uibModal, $window, $filter, dataProvider) {
-        $scope.currentUsername = "";
-        $scope.initCurrentUsername = function () {
-            $scope.currentUsername = $window.document.getElementById("name").innerHTML;
-        };
-
-        $scope.getCurrentUsername = function () {
-            return $scope.currentUsername;
-        };
 
         var groupingsOwned;
         var getUrl;
@@ -59,7 +51,6 @@
          * Initialize function that retrieves the groupings you own.
          */
         $scope.init = function () {
-            $scope.initCurrentUsername();
 
             groupingsOwned = "api/groupings/groupingAssignment";
             dataProvider.loadData(function (d) {
