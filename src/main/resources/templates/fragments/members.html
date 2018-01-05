@@ -16,12 +16,12 @@
             <div class="xs-left-sm-right">
                 <input placeholder="Filter Members..." type="text"
                        ng-model="membersQuery" class="form-control"
-                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'membersQuery')"/>
+                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', 'membersQuery')"/>
             </div>
         </div>
     </div>
     <div class="table-responsive">
-        <table class="table table-bordered table-hover">
+        <table class="table table-bordered table-condensed table-hover">
             <thead>
             <tr>
                 <th ng-click="sortCol(groupingMembers, 'name', 'pagedItemsMembers', 'symbolList')"

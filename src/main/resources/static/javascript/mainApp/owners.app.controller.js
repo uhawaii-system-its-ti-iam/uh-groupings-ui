@@ -194,6 +194,15 @@
                     }
                 }
             }
+
+            grouping.sort(function (a, b) {
+                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                if (nameA < nameB) //sort string ascending
+                    return -1;
+                if (nameA > nameB)
+                    return 1;
+                return 0
+            });
         };
 
         /**
@@ -307,7 +316,7 @@
             console.log($scope.successAdd);
             console.log(role);
             $scope.addModalInstance = $uibModal.open({
-                templateUrl: 'addModal.html',
+                templateUrl: 'modal/addModal.html',
                 windowClass: 'center-modal',
                 scope: $scope,
                 resolve: {
@@ -368,7 +377,7 @@
         $scope.deleteModal = function (user, url, type) {
             $scope.deleteUser = user;
             $scope.deleteModalInstance = $uibModal.open({
-                templateUrl: 'removeModal.html',
+                templateUrl: 'modal/removeModal.html',
                 windowClass: 'center-modal',
                 scope: $scope,
                 resolve: {
@@ -454,7 +463,7 @@
 
         $scope.preferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
-                templateUrl: 'preferenceErrorModal.html',
+                templateUrl: 'modal/preferenceErrorModal.html',
                 windowClass: 'center-modal',
                 scope: $scope
             });
@@ -472,7 +481,7 @@
                 $scope.info = "the publication destination is active or not";
 
             $scope.infoModalInstance = $uibModal.open({
-                templateUrl: 'infoModal.html',
+                templateUrl: 'modal/infoModal.html',
                 scope: $scope,
                 resolve: {
                     items: function () {
@@ -544,18 +553,22 @@
          * Filters through a list given a user's query.
          * @param {object[]} list - the list to filter
          * @param {string} pagedListVar - the name of the variable containing the paginated list
+         * @param {string} pageVar - the name of the variable containing the current page of the list
          * @param {string} queryVar - the name of the variable containing the user's query
          */
-        $scope.filter = function (list, pagedListVar, queryVar) {
+        $scope.filter = function (list, pagedListVar, pageVar, queryVar) {
             var query = $scope[queryVar];
+            // Filters for items that match the user's query
             var filteredItems = $filter('filter')(list, function (item) {
                 for (var key in item) {
-                    // Ignore the 'basis' and '$$hashKey' properties
-                    if (item.hasOwnProperty(key) && key !== 'basis' && key !== '$$hashKey') {
+                    // Ignore the 'basis' and '$$hashKey' properties, as well as non-string items
+                    if (item.hasOwnProperty(key) && key !== 'basis' && key !== '$$hashKey' && typeof(item[key]) === 'string') {
                         if (searchMatch(item[key], query)) return true;
                     }
                 }
             });
+            // Resets the page number
+            $scope[pageVar] = 0;
             // Paginates the filtered items
             $scope[pagedListVar] = $scope.groupToPages(filteredItems, []);
         };

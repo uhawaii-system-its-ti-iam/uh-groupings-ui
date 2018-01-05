@@ -3,14 +3,14 @@
         <h3 class="members-tab-title">Owners</h3>
     </div>
     <div class="table-responsive">
-        <table class="table table-bordered table-hover">
+        <table class="table table-bordered table-condensed table-hover">
             <thead>
             <tr>
                 <th ng-click="sortCol(groupingOwners, 'name', 'pagedItemsOwners', 'symbolOwners')"
                     class="clickable">
                     Owner Name {{symbol.name}}
                 </th>
-                <th ng-click="sortCol(groupingOwners, 'username', 'pagedItemsOwners', 'symbolOwners')"
+                <th ng-click="sortCol(groupingOwners, 'username', 'pagedItemsOwners', 'currentPageOwners', 'symbolOwners')"
                     class="clickable">
                     UH Username {{symbol.username}}
                 </th>

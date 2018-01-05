@@ -17,13 +17,13 @@
                 <div class="xs-left-sm-right">
                     <input class="form-control" placeholder="Filter Members..." type="text"
                            ng-model="excludeQuery"
-                           ng-change="filter(groupingExclude, 'pagedItemsExclude', 'excludeQuery')"/>
+                           ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', 'excludeQuery')"/>
                 </div>
             </div>
         </div>
     </div>
     <div class="table-responsive">
-        <table class="table table-bordered table-hover">
+        <table class="table table-bordered table-condensed table-hover">
             <thead>
             <tr>
                 <th ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')"
