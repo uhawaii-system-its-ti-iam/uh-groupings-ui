@@ -34,21 +34,6 @@
                 </ul>
 
                 <div ng-show="!showGrouping">
-                    <!--<ul class="nav nav-tabs">
-                        <li role="presentation" class="active" data-toggle="tooltip" data-placement="top"
-                            th:title="#{screen.message.admin.tooltip.nav.groupings}">
-                            <a href="#grouping" data-toggle="tab" role="tab">
-                                Manage Groupings
-                            </a>
-                        </li>
-                        <li role="presentation" data-toggle="tooltip" data-placement="top"
-                            th:title="#{screen.message.admin.tooltip.nav.admin}">
-                            <a href="#list" data-toggle="tab" role="tab">
-                                Manage Admins
-                            </a>
-                        </li>
-                    </ul>-->
-
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="grouping">
                             <div class="panel panel-default panel-tab-content">
@@ -60,7 +45,7 @@
                                         <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
                                             <input placeholder="Filter Groupings..." type="text"
                                                    ng-model="queryGroupings" class="form-control"
-                                                   ng-change="filter(groupingsList, 'pagedItemsGroupings', 'queryGroupings')"/>
+                                                   ng-change="filter(groupingsList, 'pagedItemsGroupings', 'queryGroupings', 'currentPageGroupings')"/>
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +116,7 @@
                                         <div class="col-md-push-4 col-md-2 col-sm-push-2 col-sm-3" style="padding: 0px;">
                                             <input placeholder="Filter Admins..." type="text"
                                                    ng-model="ListQuery" class="form-control"
-                                                   ng-change="filter(adminsList, 'pagedItemsAdmins', 'ListQuery')"/>
+                                                   ng-change="filter(adminsList, 'pagedItemsAdmins', 'ListQuery', 'currentPageAdmins')"/>
                                         </div>
                                     </div>
                                 </div>

@@ -29,7 +29,7 @@
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
                                     <input placeholder="Filter Groupings..." type="text"
                                            ng-model="queryGroupings" class="form-control"
-                                           ng-change="search(ownedList, 'pagedItemsOwned', 'queryGroupings')"
+                                           ng-change="search(ownedList, 'pagedItemsOwned', 'queryGroupings', 'currentPageOwned')"
                                     />
                                 </div>
                             </div>
@@ -183,7 +183,7 @@
                                                         <div class="xs-left-sm-right">
                                                             <input placeholder="Filter Members..." type="text"
                                                                    ng-model="membersQuery" class="form-control"
-                                                                   ng-change="search(groupingMembers, 'pagedItemsMembers', 'membersQuery')"/>
+                                                                   ng-change="search(groupingMembers, 'pagedItemsMembers', 'membersQuery','currentPageMembers')"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -269,7 +269,7 @@
                                                             <div class="xs-left-sm-right">
                                                                 <input placeholder="Filter Members..." type="text"
                                                                        ng-model="basisQuery" class="form-control"
-                                                                       ng-change="search(groupingBasis, 'pagedItemsBasis', 'basisQuery')"/>
+                                                                       ng-change="search(groupingBasis, 'pagedItemsBasis', 'basisQuery', 'currentPageBasis')"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -352,7 +352,7 @@
                                                             <div class="xs-left-sm-right">
                                                                 <input placeholder="Filter Members..." type="text"
                                                                        ng-model="includeQuery" class="form-control"
-                                                                       ng-change="search(groupingInclude, 'pagedItemsInclude', 'includeQuery')"/>
+                                                                       ng-change="search(groupingInclude, 'pagedItemsInclude', 'includeQuery', 'currentPageInclude')"/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -458,7 +458,7 @@
                                                             <div class="xs-left-sm-right">
                                                                 <input placeholder="Filter Members..." type="text"
                                                                        ng-model="excludeQuery" class="form-control"
-                                                                       ng-change="search(groupingExclude, 'pagedItemsExclude', 'excludeQuery')"/>
+                                                                       ng-change="search(groupingExclude, 'pagedItemsExclude', 'excludeQuery', 'currentPageExclude')"/>
                                                             </div>
                                                         </div>
                                                     </div>

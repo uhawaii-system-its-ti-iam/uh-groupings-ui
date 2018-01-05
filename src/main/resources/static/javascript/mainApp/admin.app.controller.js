@@ -510,7 +510,7 @@
             $scope.preferenceErrorModalInstance.dismiss();
         };
 
-        $scope.filter = function (list, whatList, whatQuery) {
+        $scope.filter = function (list, whatList, whatQuery, whatPage) {
             var query = "";
             query = $scope[whatQuery];
             $scope.filteredItems = [];
@@ -522,7 +522,7 @@
                 }
             });
             // console.log($scope.filteredItems);
-            page = 0;
+            $scope[whatPage] = 0;
             // now group by pages
             var emptyList = [];
             $scope[whatList] = $scope.groupToPagesChanged(emptyList);
