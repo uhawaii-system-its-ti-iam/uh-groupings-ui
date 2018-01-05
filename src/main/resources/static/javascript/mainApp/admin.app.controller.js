@@ -510,43 +510,47 @@
             $scope.preferenceErrorModalInstance.dismiss();
         };
 
-        $scope.filter = function (list, whatList, whatQuery, whatPage) {
-            var query = "";
-            query = $scope[whatQuery];
-            $scope.filteredItems = [];
-            $scope.filteredItems = $filter('filter')(list, function (item) {
+        /**
+         * Checks if a string contains a substring (case insensitive).
+         * @param {string} str - the string to check
+         * @param {string} substr - the substring to find
+         * @returns {boolean} true if the string contains the substring. Otherwise returns false.
+         */
+        var searchMatch = function (str, substr) {
+            if (!substr) return true;
+            return str.toLowerCase().indexOf(substr.toLowerCase()) !== -1;
+        };
+
+        /**
+         * Filters through a list given a user's query.
+         * @param {object[]} list - the list to filter
+         * @param {string} pagedListVar - the name of the variable containing the paginated list
+         * @param {string} pageVar - the name of the variable containing the current page of the list
+         * @param {string} queryVar - the name of the variable containing the user's query
+         */
+        $scope.filter = function (list, pagedListVar, pageVar, queryVar) {
+            var query = $scope[queryVar];
+            // Filters for items that match the user's query
+            var filteredItems = $filter('filter')(list, function (item) {
                 for (var key in item) {
-                    if (item.hasOwnProperty(key) && typeof item[key] === 'string' && key !== '$$hashKey' && key !== 'basis') {
+                    // Ignore the 'basis' and '$$hashKey' properties, as well as non-string items
+                    if (item.hasOwnProperty(key) && key !== 'basis' && key !== '$$hashKey' && typeof(item[key]) === 'string') {
                         if (searchMatch(item[key], query)) return true;
                     }
                 }
             });
-            // console.log($scope.filteredItems);
-            $scope[whatPage] = 0;
-            // now group by pages
-            var emptyList = [];
-            $scope[whatList] = $scope.groupToPagesChanged(emptyList);
+            // Resets the page number
+            $scope[pageVar] = 0;
+            // Paginates the filtered items
+            $scope[pagedListVar] = $scope.groupToPages(filteredItems, []);
         };
 
-        var searchMatch = function (haystack, needle) {
-            if (!needle) {
-                return true;
-            }
-            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
-        };
-
-        $scope.groupToPagesChanged = function (pagedList) {
-            var pagedList = [];
-            for (var i = 0; i < $scope.filteredItems.length; i++) {
-                if (i % $scope.itemsPerPage === 0) {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
-                } else {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
-                }
-            }
-            return pagedList;
-        };
-
+        /**
+         * Paginates a list of items.
+         * @param {object[]} list - the unpaginated list
+         * @param {object[]} pagedList - the paginated list
+         * @returns {object[]} list (the first parameter), paginated
+         */
         $scope.groupToPages = function (list, pagedList) {
             var pagedList = [];
             if (list == null) {
@@ -682,8 +686,51 @@
                 }
             }
         };
+
+        /**
+         * Exports data in a table to a CSV file
+         * @param {object[]} table - the table to export
+         * @param name - the name of the group (i.e. include or exclude)
+         */
+        $scope.export = function(table, name) {
+            var data, filename, link;
+
+            var csv = $scope.convertArrayOfObjectsToCSV(table);
+            if (csv == null) return;
+
+            filename = name + '_export.csv';
+
+            if (!csv.match(/^data:text\/csv/i)) {
+                csv = 'data:text/csv;charset=utf-8,' + csv;
+            }
+            data = encodeURI(csv);
+
+            link = document.createElement('a');
+            link.setAttribute('href', data);
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        /**
+         * Converts the data in the table into comma-separated values.
+         * @param {object[]} table - the table to convert
+         * @returns the table in CSV format
+         */
+        $scope.convertArrayOfObjectsToCSV = function(table) {
+            var str = "Name, Username, Email \r\n";
+            for (var i = 0; i < table.length; i++) {
+                var line = '';
+                if (line != '')
+                    line += ',';
+                line += table[i].name + ', ' + table[i].username + ', ' + table[i].username + "@hawaii.edu,";
+                str += line + '\r\n';
+            }
+            return str;
+        };
     }
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
-})
-();
+
+})();

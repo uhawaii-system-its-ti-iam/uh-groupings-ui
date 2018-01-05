@@ -20,11 +20,10 @@
         var getUrl;
 
         $scope.ownedList = [];
-        $scope.groupingsList = [];
         $scope.groupingsBasis = [];
         $scope.groupingInclude = [];
         $scope.groupingExclude = [];
-        $scope.ownerList = [];
+        $scope.groupingOwners = [];
         $scope.pref = [];
         $scope.allowOptIn = [];
         $scope.allowOptOut = [];
@@ -43,9 +42,6 @@
 
         $scope.pagedItemsInclude = [];
         $scope.currentPageInclude = 0;
-
-        $scope.pagedItemsGroupings = [];
-        $scope.currentPageGroupings = 0;
 
         $scope.pagedItemsBasis = [];
         $scope.currentPageBasis = 0;
@@ -147,9 +143,9 @@
                 $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
 
                 //Gets owners of the grouping
-                $scope.ownerList = d.owners.members;
-                $scope.modify($scope.ownerList);
-                $scope.pagedItemsOwners = $scope.groupToPages($scope.ownerList, $scope.pagedItemsOwners);
+                $scope.groupingOwners = d.owners.members;
+                $scope.modify($scope.groupingOwners);
+                $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners, $scope.pagedItemsOwners);
 
                 $scope.allowOptIn = d.optInOn;
                 $scope.allowOptOut = d.optOutOn;
@@ -260,7 +256,6 @@
                 $scope.showGrouping = false;
                 $scope.resetGroupingInformation();
                 $scope.resetSelectedGroup();
-                $scope.resetTopTab();
             }
         };
 
@@ -372,9 +367,9 @@
          * @param index - The index of the member in the ownerList array.
          */
         $scope.removeOwner = function (index) {
-            var removeOwner = $scope.ownerList[index].username;
+            var removeOwner = $scope.groupingOwners[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.groupingName.url + "/" + removeOwner + "/removeOwnership";
-            if ($scope.ownerList.length > 1) {
+            if ($scope.groupingOwners.length > 1) {
                 $scope.deleteModal(removeOwner, removeOwnerUrl, $scope.groupingPath);
             }
         };
@@ -501,15 +496,14 @@
         };
 
         /**
-         * Export data in table to a CSV file
-         *
-         * @param type - type of group being exported
-         * @param name - name of the group. i.e. include or exclude
+         * Exports data in a table to a CSV file
+         * @param {object[]} table - the table to export
+         * @param name - the name of the group (i.e. include or exclude)
          */
-        $scope.export = function (type, name) {
+        $scope.export = function(table, name) {
             var data, filename, link;
 
-            var csv = $scope.convertArrayOfObjectsToCSV(type);
+            var csv = $scope.convertArrayOfObjectsToCSV(table);
             if (csv == null) return;
 
             filename = name + '_export.csv';
@@ -528,91 +522,74 @@
         };
 
         /**
-         * Converts the data in the table into data that is usable for a csv file.
-         *
-         * @param type - type of group to retrieve data.
-         * @returns a string of converted array to be usable for the csv file.
+         * Converts the data in the table into comma-separated values.
+         * @param {object[]} table - the table to convert
+         * @returns the table in CSV format
          */
-        $scope.convertArrayOfObjectsToCSV = function (type) {
+        $scope.convertArrayOfObjectsToCSV = function(table) {
             var str = "Name, Username, Email \r\n";
-
-            for (var i = 0; i < type.length; i++) {
+            for (var i = 0; i < table.length; i++) {
                 var line = '';
-                //for (var index in type[i]) {
                 if (line != '')
                     line += ',';
-                line += type[i].name + ', ' + type[i].username + ', ' + type[i].username + "@hawaii.edu,";
-                //}
+                line += table[i].name + ', ' + table[i].username + ', ' + table[i].username + "@hawaii.edu,";
                 str += line + '\r\n';
             }
             return str;
         };
-        //Pagination code
 
-
-        /**gives you a true or false if it finds the match
-         **@param haystack - the thing to be checked
-         **@param needle - the check against
-         **
-         **/
-        var searchMatch = function (haystack, needle) {
-            if (!needle) {
-                return true;
-            }
-            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+        /**
+         * Checks if a string contains a substring (case insensitive).
+         * @param {string} str - the string to check
+         * @param {string} substr - the substring to find
+         * @returns {boolean} true if the string contains the substring. Otherwise returns false.
+         */
+        var searchMatch = function (str, substr) {
+            if (!substr) return true;
+            return str.toLowerCase().indexOf(substr.toLowerCase()) !== -1;
         };
 
-        /**searches through the array to find matches and then fixes the list
-         **@param list - gives the whole list to sort out
-         **@param whatList - it gives you the list you need to search through
-         **@param whatQuery - it gives the search bar its seperate search function.
-         **/
-        $scope.search = function (list, whatList, whatQuery, whatPage) {
-            var query = "";
-            query = $scope[whatQuery];
-            //console.log($scope[whatList]);
-            $scope.filteredItems = [];
-            $scope.filteredItems = $filter('filter')(list, function (item) {
+        /**
+         * Filters through a list given a user's query.
+         * @param {object[]} list - the list to filter
+         * @param {string} pagedListVar - the name of the variable containing the paginated list
+         * @param {string} pageVar - the name of the variable containing the current page of the list
+         * @param {string} queryVar - the name of the variable containing the user's query
+         */
+        $scope.filter = function (list, pagedListVar, pageVar, queryVar) {
+            var query = $scope[queryVar];
+            // Filters for items that match the user's query
+            var filteredItems = $filter('filter')(list, function (item) {
                 for (var key in item) {
-                    if (item.hasOwnProperty(key) && key !== 'basis' && key !== '$$hashKey' && searchMatch(item[key], query)) {
-                        return true;
+                    // Ignore the 'basis' and '$$hashKey' properties, as well as non-string items
+                    if (item.hasOwnProperty(key) && key !== 'basis' && key !== '$$hashKey' && typeof(item[key]) === 'string') {
+                        if (searchMatch(item[key], query)) return true;
                     }
                 }
             });
-            $scope[whatPage] = 0;
-            // console.log($scope.filteredItems);
-            // now group by pages
-            var emptyList = [];
-            $scope[whatList] = $scope.groupToPagesChanged(emptyList);
+            // Resets the page number
+            $scope[pageVar] = 0;
+            // Paginates the filtered items
+            $scope[pagedListVar] = $scope.groupToPages(filteredItems, []);
         };
 
-        $scope.groupToPagesChanged = function (pagedList) {
+        /**
+         * Paginates a list of items.
+         * @param {object[]} list - the unpaginated list
+         * @param {object[]} pagedList - the paginated list
+         * @returns {object[]} list (the first parameter), paginated
+         */
+        $scope.groupToPages = function (list, pagedList) {
             var pagedList = [];
-            for (var i = 0; i < $scope.filteredItems.length; i++) {
-                if (i % $scope.itemsPerPage === 0) {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
-                } else {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
-                }
-            }
-            return pagedList;
-        };
-
-
-        /**groups all the items to pages
-         have separate arrays
-         **/
-        $scope.groupToPages = function (theList, pagedList) {
-            var pagedList = [];
-            if (theList == null) {
+            if (list == null) {
                 console.log("I AM NULL ... WHY?!");
             }
-            if (theList != null) {
-                for (var i = 0; i < theList.length; i++) {
+            if (list != null) {
+                for (var i = 0; i < list.length; i++) {
                     if (i % $scope.itemsPerPage === 0) {
-                        pagedList[Math.floor(i / $scope.itemsPerPage)] = [theList[i]];
+                        pagedList[Math.floor(i / $scope.itemsPerPage)] = [list[i]];
                     } else {
-                        pagedList[Math.floor(i / $scope.itemsPerPage)].push(theList[i]);
+                        pagedList[Math.floor(i / $scope.itemsPerPage)].push(list[i]);
                     }
                 }
             }
@@ -713,22 +690,6 @@
             }
         };
 
-        /**
-         * Resets the selected top navigational tab to the Members tab.
-         */
-        $scope.resetTopTab = function() {
-            var topTabs = $('#grouping-top-tabs')[0].children;
-            var topTabContents = $('#top-tab-content')[0].children
-            for (var i = 0; i < topTabs.length; i++) {
-                if (i == 0 && !$(topTabs[i]).hasClass('active')) {
-                    $(topTabs[i]).addClass('active');
-                    $(topTabContents[i]).addClass('in active');
-                } else if (i !== 0 && $(topTabs[i]).hasClass('active')) {
-                    $(topTabs[i]).removeClass('active');
-                    $(topTabContents[i]).removeClass('in active');
-                }
-            }
-        };
     }
 
     UHGroupingsApp.controller("OwnerJsController", OwnerJsController);
