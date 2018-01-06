@@ -9,7 +9,7 @@
      * @param $window - reference to the browser's window
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function MembershipJsController($scope, $window, $uibModal, $filter, dataProvider) {
+    function MembershipJsController($scope, $window, $uibModal, $filter, $controller, dataProvider) {
 
         $scope.currentUsername = "";
         $scope.membersList = [];
@@ -31,6 +31,14 @@
         $scope.currentPageOptOut = 0;
         $scope.currentPageCancelOptIn = 0;
         $scope.currentPageCancelOptOut = 0;
+
+        /////////////////You are able to call the general function controller 
+        // var vm = this;
+        //
+        // angular.extend(vm, $controller('GeneralJSController', {
+        //     $scope:$scope
+        // }));
+        ///////////////////////
 
         $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
@@ -54,6 +62,7 @@
              *takes all of that data and puts them into pages as called by "groupToPages"
              **/
             dataProvider.loadData(function (d) {
+                // console.log(vm.funnyVideo());
                 console.log(d);
                 if(typeof d.groupingsIn === 'undefined') {
                     $scope.loading = false;
@@ -86,17 +95,17 @@
             }, groupingURL);
         };
 
-        $scope.errorModal = function () {
-            $scope.errorModalInstance = $uibModal.open({
-                templateUrl: 'apiError.html',
-                windowClass: 'center-modal',
-                scope: $scope
-            });
-        };
-
-        $scope.errorDismiss = function() {
-            $scope.errorModalInstance.dismiss();
-        };
+        // $scope.errorModal = function () {
+        //     $scope.errorModalInstance = $uibModal.open({
+        //         templateUrl: 'apiError.html',
+        //         windowClass: 'center-modal',
+        //         scope: $scope
+        //     });
+        // };
+        //
+        // $scope.errorDismiss = function() {
+        //     $scope.errorModalInstance.dismiss();
+        // };
 
         /**
          *  Sorts the data in the table in ascending or descending order based on
