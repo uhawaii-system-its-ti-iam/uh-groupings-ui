@@ -262,7 +262,7 @@
          * @param {string} type - the type of group to add the user to (either include of exclude)
          */
         $scope.addMember = function (type) {
-            var addUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
+            var addUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataProvider.updateData(function (d) {
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
@@ -276,7 +276,7 @@
         };
 
         $scope.addOwner = function () {
-            var addOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.ownerUser + "/assignOwnership";
+            var addOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.ownerUser + "/assignOwnership";
             dataProvider.updateData(function (d) {
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
@@ -305,7 +305,7 @@
                 if (success === 'success') {
                     $scope.loading = true;
                     if (location === 'admin') $scope.init();
-                    if (location === 'grouping') $scope.getData($scope.groupingPath);
+                    if (location === 'grouping') $scope.getData($scope.selectedGrouping.path);
                 }
             });
         };
@@ -336,15 +336,15 @@
             } else if (type === 'Exclude') {
                 user = $scope.pagedItemsExclude[$scope.currentPageExclude][row].username;
             }
-            var URL = "api/groupings/" + $scope.groupingPath + "/" + user + "/deleteMemberFrom" + type + "Group";
-            $scope.deleteModal(user, URL, null, $scope.groupingPath);
+            var URL = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
+            $scope.deleteModal(user, URL, null, $scope.selectedGrouping.path);
         };
 
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.pagedItemsOwners[$scope.currentPageOwners][index].username;
-            var removeOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + removeOwner + "/removeOwnership";
+            var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
-                $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.groupingPath);
+                $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.selectedGrouping.path);
             }
         };
 
@@ -421,7 +421,7 @@
         };
 
         $scope.updateAllowOptOut = function () {
-            var url = "api/groupings/" + $scope.groupingPath + "/"  + $scope.allowOptOut + "/setOptOut";
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/"  + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (d) {
                 console.log(d);
                 if(d.statusCode != null)
@@ -438,7 +438,7 @@
         };
 
         $scope.updateAllowOptIn = function () {
-            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.allowOptIn + "/setOptIn";
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.allowOptIn + "/setOptIn";
             dataProvider.updateData(function (d) {
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
@@ -451,7 +451,7 @@
         };
 
         $scope.updateListserv = function () {
-            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.listserv + "/setListserv";
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.listserv + "/setListserv";
             dataProvider.updateData(function (d) {
                 console.log(d);
                 if (d.statusCode != null) {
