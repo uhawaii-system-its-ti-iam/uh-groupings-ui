@@ -240,28 +240,22 @@
         // TODO: Find a way to make the 3 adds into a more singular function.
 
         /**
-         * Adds function that adds an member to the admin grouping.
-         * Uses dataUpdater service to post the user that is being added.
-         * If user is successfully added, dataProvider will return a Success in result Code.
-         * Else if resultCode is undefined, then user was not successfully added.
+         * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            var addUrl = "api/groupings/" + $scope.username + "/addAdmin";
-            $scope.testdata = [];
+            var addUrl = "api/groupings/" + $scope.adminToAdd + "/addAdmin";
 
             dataProvider.updateData(function (d) {
-                if(d.statusCode != null)
-                {
+                if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                     $scope.addModalAlert();
-                }
-                else if (d.resultCode === 'SUCCESS') {
+                } else if (d.resultCode === 'SUCCESS') {
                     console.log("Success In Adding");
-                    //reload data table
                     $scope.addModalAlert('admin', 'success');
+                    // Clear the input field
+                    $scope.adminToAdd = '';
                 }
             }, addUrl);
-
         };
 
         $scope.addMember = function (type) {
@@ -284,7 +278,6 @@
         $scope.addOwner = function () {
             var addOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.ownerUser + "/assignOwnership";
             dataProvider.updateData(function (d) {
-                console.log(d);
                 if(d.statusCode != null)
                 {
                     console.log("Error, Status Code: " + d.statusCode);
