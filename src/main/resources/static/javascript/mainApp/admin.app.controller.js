@@ -110,8 +110,7 @@
                 list = _.sortBy(list, col);
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = 'descend';
-            }
-            else {
+            } else {
                 list = _.sortBy(list, col).reverse();
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = 'ascend';
@@ -372,8 +371,7 @@
                         $scope.adminsList.splice(location, 1);
                         $scope.init();
                     }, url);
-                }
-                else {
+                } else {
                     dataProvider.updateData(function (d) {
                         console.log(d);
                         $scope.getData(type);
@@ -424,12 +422,10 @@
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/"  + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (d) {
                 console.log(d);
-                if(d.statusCode != null)
-                {
+                if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                     $scope.preferenceErrorModal();
-                }
-                else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                } else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
                     console.log("success");
                 }
             }, url);
