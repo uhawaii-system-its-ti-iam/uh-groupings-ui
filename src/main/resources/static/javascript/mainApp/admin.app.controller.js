@@ -223,8 +223,6 @@
             }
 
             //sorts data in alphabetic order
-
-
             grouping.sort(function (a, b) {
                 var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
                 if (nameA < nameB) //sort string ascending
@@ -233,6 +231,9 @@
                     return 1;
                 return 0
             });
+
+            $scope.checkUsernames(grouping);
+
         };
 
         // TODO: Find a way to make the 3 adds into a more singular function.
@@ -694,6 +695,18 @@
                 str += line + '\r\n';
             }
             return str;
+        };
+
+        /**
+         * Checks if the UH usernames in a group are blank or not. If it is blank, it will default to N/A.
+         * @param {object[]} group - the group to check
+         */
+        $scope.checkUsernames = function (group) {
+            for (var i = 0; i < group.length; i++) {
+                if (group[i].username === '') {
+                    group[i].username = 'N/A';
+                }
+            }
         };
     }
 

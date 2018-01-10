@@ -27,7 +27,15 @@
                           ng-click="removeOwner($index)" >
                     </span>
                 </td>
-                <td>{{owner.username}}</td>
+                <td>
+                    {{owner.username}}
+                    <i class="fa fa-question-circle clickable" aria-hidden="true"
+                       data-toggle="tooltip" data-placement="right"
+                       onmouseover="$(this).tooltip('show')"
+                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
+                       ng-if="owner.username === 'N/A'">
+                    </i>
+                </td>
             </tr>
             </tbody>
             <tfoot>
