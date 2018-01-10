@@ -646,7 +646,7 @@
         $scope.resetSelectedGroup = function () {
             var pills = $('#group-pills')[0].children;
             var content = $('#pill-content')[0].children
-            for (var i = 0; i < pills.length; i++) {
+            for (var i = 0; i < pills.length && i < content.length; i++) {
                 if (i === 0 && !$(content[i]).hasClass('active')) {
                     $(pills[i]).addClass('active');
                     $(content[i]).addClass('in active');
