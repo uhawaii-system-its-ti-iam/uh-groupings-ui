@@ -206,7 +206,6 @@ public class GroupingsServiceImpl implements GroupingsService {
 //        }
 //
 //        return addGroupingResults;\
-        NotImplementedException nie = new NotImplementedException();
         throw new NotImplementedException();
     }
 
@@ -483,73 +482,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + preposition
                 + grouping;
         results.add(makeGroupingsServiceResult(failureResult, action));
-        return results;
-    }
-
-    /**
-     * if the user has opted into a Grouping, this will remove them from the include group
-     *
-     * @param grouping: the path to the Grouping that the user is opted into
-     * @param username: username of the user canceling optIn
-     * @return information about the success of the operation
-     */
-    @Override
-    public List<GroupingsServiceResult> cancelOptIn(String grouping, String username) {
-        List<GroupingsServiceResult> results = new ArrayList<>();
-        String group = grouping + INCLUDE;
-        String action = "cancel opt in for " + username + " to " + grouping;
-
-        if (inGroup(group, username)) {
-            if (checkSelfOpted(group, username)) {
-                results.add(deleteMember(group, username));
-                results.add(updateLastModified(group));
-                results.add(updateLastModified(grouping));
-
-                return results;
-            } else {
-                results.add(makeGroupingsServiceResult(
-                        FAILURE + ", " + username + " is not allowed to opt out of " + group,
-                        action));
-            }
-        } else {
-            results.add(makeGroupingsServiceResult(
-                    SUCCESS + ", " + username + " is not opted in, because " + username + " was not in " + group,
-                    action));
-        }
-
-        return results;
-    }
-
-    /**
-     * if the user has opted out of a Grouping, this will remove them from the exclude group
-     *
-     * @param grouping: the path to the Grouping that the user is opted out of
-     * @param username: username of the user canceling optOut
-     * @return information about the success of the operation
-     */
-    @Override
-    public List<GroupingsServiceResult> cancelOptOut(String grouping, String username) {
-        String group = grouping + EXCLUDE;
-        List<GroupingsServiceResult> results = new ArrayList<>();
-        String action = "cancel opt out for " + username + " to " + grouping;
-
-        if (inGroup(group, username)) {
-            if (checkSelfOpted(group, username)) {
-                results.add(deleteMember(group, username));
-                results.add(updateLastModified(group));
-                results.add(updateLastModified(grouping));
-
-                return results;
-            } else {
-                results.add(makeGroupingsServiceResult(
-                        FAILURE + ", " + username + " is not allowed to opt out of " + group,
-                        action));
-            }
-        } else {
-            results.add(makeGroupingsServiceResult(
-                    SUCCESS + ", " + username + " is not opted out, because " + username + " was not in " + group,
-                    action));
-        }
         return results;
     }
 
@@ -1075,34 +1007,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + ";");
 
         WsAssignAttributesResults attributesResults = gf.makeWsAssignAttributesResultsForGroup(
-                ASSIGN_TYPE_GROUP,
-                attributeOperation,
-                attributeName,
-                group);
-
-        return makeGroupingsServiceResult(attributesResults, "assign " + attributeName + " attribute to " + group);
-    }
-
-    /**
-     * @param attributeName:      name of attribute to be assigned
-     * @param attributeOperation: operation to be done with the attribute to the group
-     * @param group:              path to the group to have the attribute acted upon
-     * @param username:           username of user assigning attribute
-     */
-    private GroupingsServiceResult assignGroupAttributes(String username, String attributeName, String attributeOperation, String group) {
-        logger.info("assignGroupAttributes; "
-                + "; username: "
-                + username
-                + "; attributeName: "
-                + attributeName
-                + "; attributeOperation: "
-                + attributeOperation
-                + "; group: "
-                + group
-                + ";");
-
-        WsAssignAttributesResults attributesResults = gf.makeWsAssignAttributesResultsForGroup(
-                gf.makeWsSubjectLookup(username),
                 ASSIGN_TYPE_GROUP,
                 attributeOperation,
                 attributeName,

@@ -732,64 +732,6 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
-    public void cancelOptInTest() {
-        //not in group
-        List<GroupingsServiceResult> cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(2).getUsername());
-        assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(SUCCESS));
-
-        try {
-            //in group but not self opted
-            cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(5).getUsername());
-        }catch (GroupingsServiceResultException gsre) {
-            cancelOptInResults = new ArrayList<>();
-            cancelOptInResults.add(gsre.getGsr());
-        }
-        assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(FAILURE));
-
-        //in group and self opted
-        Person person = personRepository.findByUsername(users.get(5).getUsername());
-        Group group = groupRepository.findByPath(GROUPING_0_INCLUDE_PATH);
-        Membership membership = membershipRepository.findByPersonAndGroup(person, group);
-        membership.setSelfOpted(true);
-        membershipRepository.save(membership);
-
-        cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(5).getUsername());
-        assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(SUCCESS));
-        assertTrue(cancelOptInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(cancelOptInResults.get(2).getResultCode().startsWith(SUCCESS));
-
-    }
-
-    @Test
-    public void cancelOptOutTest() {
-
-        //not in group
-        List<GroupingsServiceResult> cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_0_PATH, users.get(1).getUsername());
-        assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(SUCCESS));
-
-        try {
-            //in group but not self opted
-            cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_0_PATH, users.get(2).getUsername());
-        } catch (GroupingsServiceResultException gsre) {
-            cancelOptOutResults = new ArrayList<>();
-            cancelOptOutResults.add(gsre.getGsr());
-        }
-        assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(FAILURE));
-
-        //in group and self opted
-        Person person = personRepository.findByUsername(users.get(2).getUsername());
-        Group group = groupRepository.findByPath(GROUPING_1_EXCLUDE_PATH);
-        Membership membership = membershipRepository.findByPersonAndGroup(person, group);
-        membership.setSelfOpted(true);
-        membershipRepository.save(membership);
-
-        cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_1_PATH, users.get(2).getUsername());
-        assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(SUCCESS));
-        assertTrue(cancelOptOutResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(cancelOptOutResults.get(2).getResultCode().startsWith(SUCCESS));
-    }
-
-    @Test
     public void optOutPermissionTest() {
 
         boolean permission = groupingsService.optOutPermission(GROUPING_0_PATH);

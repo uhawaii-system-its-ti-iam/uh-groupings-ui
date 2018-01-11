@@ -303,9 +303,14 @@
                                 <echo>$ mvn clean test -Dspring.profiles.active=test -Dtest=Test* </echo>
                                 <echo>$ mvn clean package</echo>
                                 <echo>$ mvn -Dmaven.test.skip=true clean package</echo>
-                                <echo>$ mvn clean spring-boot:run</echo>
                                 <echo>$ mvn jasmine:test</echo>
                                 <echo>$ mvn clean test cobertura:cobertura</echo>
+                                <echo></echo>
+                                <echo>To run the integrations tests with your Grouper server:</echo>
+                                <echo>REPLACE THIS WITH A COMMAND</echo>
+                                <echo></echo>
+                                <echo>To run UH Groupings locally:</echo>
+                                <echo>$ mvn clean spring-boot:run</echo>
                             </tasks>
                         </configuration>
                     </execution>

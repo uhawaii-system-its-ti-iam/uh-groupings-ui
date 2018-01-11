@@ -330,7 +330,6 @@ public class TestGroupingsRestController {
         assertTrue(optedIn);
 
         //reset Grouping
-        gs.cancelOptIn(GROUPING, tst[4]);
         gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[4]);
     }
 
@@ -351,8 +350,7 @@ public class TestGroupingsRestController {
         }
         assertTrue(optedOut);
 
-        // reset Grouping
-        gs.cancelOptOut(GROUPING, tst[5]);
+        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[5]);
     }
 
 
@@ -440,7 +438,7 @@ public class TestGroupingsRestController {
                 GroupingAssignment aaronsGroupings = mapGroupingAssignment();
                 assertNotNull(aaronsGroupings);
                 break;
-            } catch (RuntimeException e) {
+            } catch (AssertionError ae) {
                 i++;
             }
         }

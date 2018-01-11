@@ -32,6 +32,8 @@ public class TestGroupingsService {
 
     @Value("${groupings.api.test.grouping_many}")
     private String GROUPING;
+    @Value("${groupings.api.test.grouping_many_basis}")
+    private String GROUPING_BASIS;
     @Value("${groupings.api.test.grouping_many_include}")
     private String GROUPING_INCLUDE;
     @Value("${groupings.api.test.grouping_many_exclude}")
@@ -250,65 +252,38 @@ public class TestGroupingsService {
 
     @Test
     public void optTest() {
-        //expect this to fail
-        List<GroupingsServiceResult> cancelOptInFail;
-        List<GroupingsServiceResult> cancelOptOutFail;
 
-        assertFalse(gs.inGroup(GROUPING, username[4]));
+        //tst[4] is not in the Grouping or include, but is in the basis and exclude
+        //tst[4] is not self opted into the exclude
         assertFalse(gs.inGroup(GROUPING_INCLUDE, username[4]));
+        assertFalse(gs.inGroup(GROUPING, username[4]));
+        assertTrue(gs.inGroup(GROUPING_BASIS, username[4]));
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[4]));
         assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
 
+        //tst[4] opts in to the Grouping
         gs.optIn(username[4], GROUPING);
+        //tst[4] should still be in the basis and now also in the Grouping
+        assertTrue(gs.inGroup(GROUPING_BASIS, username[4]));
         assertTrue(gs.inGroup(GROUPING, username[4]));
-        assertTrue(gs.inGroup(GROUPING_INCLUDE, username[4]));
-        assertFalse(gs.inGroup(GROUPING_EXCLUDE, username[4]));
-        assertTrue(gs.checkSelfOpted(GROUPING_INCLUDE, username[4]));
-
-        gs.cancelOptIn(GROUPING, username[4]);
-        assertTrue(gs.inGroup(GROUPING, username[4]));
+        //tst[4] is no longer in the exclude, and because tst[4] is in the basis,
+        //tst[4] does not get added to the include
         assertFalse(gs.inGroup(GROUPING_INCLUDE, username[4]));
         assertFalse(gs.inGroup(GROUPING_EXCLUDE, username[4]));
 
-        //not in group
-        List<GroupingsServiceResult> cancelOptIn_notInGroup = gs.cancelOptIn(GROUPING, username[4]);
-        assertTrue(cancelOptIn_notInGroup.get(0).getResultCode().startsWith(SUCCESS));
-        //not selfOpted
-        assertTrue(gs.inGroup(GROUPING_INCLUDE, username[2]));
-
-        try {
-            cancelOptInFail = gs.cancelOptIn(GROUPING, username[2]);
-        } catch (GroupingsServiceResultException gsre) {
-            cancelOptInFail = new ArrayList<>();
-            cancelOptInFail.add(gsre.getGsr());
-        }
-        assertTrue(cancelOptInFail.get(0).getResultCode().startsWith(FAILURE));
-
+        //tst[4] opts out of the Grouping
         gs.optOut(username[4], GROUPING);
+        //tst[4] is still in basis, now in exclude and not in Grouping or include
+        assertTrue(gs.inGroup(GROUPING_BASIS, username[4]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[4]));
         assertFalse(gs.inGroup(GROUPING, username[4]));
         assertFalse(gs.inGroup(GROUPING_INCLUDE, username[4]));
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[4]));
+        //tst[4] is now self opted into exclude
         assertTrue(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
 
-        gs.cancelOptOut(GROUPING, username[4]);
-        assertTrue(gs.inGroup(GROUPING, username[4]));
-        assertFalse(gs.inGroup(GROUPING_INCLUDE, username[4]));
-        assertFalse(gs.inGroup(GROUPING_EXCLUDE, username[4]));
-
-        //not in group
-        List<GroupingsServiceResult> cancelOptOut_notInGroup = gs.cancelOptOut(GROUPING, username[4]);
-        assertTrue(cancelOptOut_notInGroup.get(0).getResultCode().startsWith(SUCCESS));
-        //not selfOpted
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[3]));
-        try {
-            cancelOptOutFail = gs.cancelOptOut(GROUPING, username[3]);
-        } catch (GroupingsServiceResultException gsre) {
-            cancelOptOutFail = new ArrayList<>();
-            cancelOptOutFail.add(gsre.getGsr());
-        }
-        assertTrue(cancelOptOutFail.get(0).getResultCode().startsWith(FAILURE));
-
-        gs.addMemberAs(username[0], GROUPING_EXCLUDE, username[4]);
+        //reset group
+        gs.removeSelfOpted(GROUPING_EXCLUDE, username[4]);
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, username[4]));
     }
 
     @Test
