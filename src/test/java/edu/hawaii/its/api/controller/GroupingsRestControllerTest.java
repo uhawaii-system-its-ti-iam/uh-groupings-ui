@@ -448,50 +448,6 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void getCancelOptOut() throws Exception {
-        final String grouping = "grouping";
-        final String username = "user";
-        List<GroupingsServiceResult> gsr = new ArrayList<>();
-        gsr.add(new GroupingsServiceResult("SUCCESS", "delete memeber from exclude group"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "update last-modified attribute for exclude group"));
-
-        given(groupingsService.cancelOptOut(grouping, username))
-                .willReturn(gsr);
-
-        mockMvc.perform(post("/api/groupings/grouping/cancelOptOut")
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[0].action").value("delete memeber from exclude group"))
-                .andExpect(jsonPath("$[1].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[1].action").value("update last-modified attribute for exclude group"));
-    }
-
-    @Test
-    @WithMockUhUser
-    public void getCancelOptIn() throws Exception {
-        final String grouping = "grouping";
-        final String username = "user";
-        List<GroupingsServiceResult> gsr = new ArrayList<>();
-        gsr.add(new GroupingsServiceResult("SUCCESS", "delete memeber from include group"));
-        gsr.add(new GroupingsServiceResult("SUCCESS", "update last-modified attribute for include group"));
-
-        given(groupingsService.cancelOptIn(grouping, username))
-                .willReturn(gsr);
-
-        mockMvc.perform(post("/api/groupings/grouping/cancelOptIn")
-                .with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[0].action").value("delete memeber from include group"))
-                .andExpect(jsonPath("$[1].resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$[1].action").value("update last-modified attribute for include group"));
-    }
-
-    @Test
-    @WithMockUhUser
     public void getAddGrouping() throws Exception {
 
         mockMvc.perform(post("/api/groupings/fakeGroup/fakeBasis/fakeIncldue/fakeExclude/fakeOwners/addGrouping")
