@@ -330,32 +330,32 @@
         };
 
         /**
-         * Removes member from the include group or exclude groups. Completely removes them from the group.
-         *
-         * @param type - type of group that the user is being added into. Include or exclude.
-         * @param row  - index of the user in the respected group array.
+         * Removes a user from the include or exclude group.
+         * @param {string} type - the type of group the user will be removed from (either Include or Exclude)
+         * @param {number} index - the index of the user to delete, with the current page and items per page taken into
+         * account
          */
-        $scope.removeMember = function (type, row) {
+        $scope.removeMember = function (type, index) {
             var user;
             if (type === 'Include') {
-                user = $scope.groupingInclude[row].username;
+                user = $scope.groupingInclude[index].username;
             } else if (type === 'Exclude') {
-                user = $scope.groupingExclude[row].username;
+                user = $scope.groupingExclude[index].username;
             }
             var URL = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
-            $scope.deleteModal(user, URL, $scope.groupingPath);
+            $scope.deleteModal(user, URL, $scope.selectedGrouping.path);
         };
 
         /**
-         * Removes ownership of a grouping from an user
-         *
-         * @param index - The index of the member in the ownerList array.
+         * Removes a grouping owner. There must be at least one grouping owner remaining.
+         * @param {number} index - the index of the owner to delete, with the current page and items per page taken into
+         * account
          */
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.groupingOwners[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
-                $scope.deleteModal(removeOwner, removeOwnerUrl, $scope.groupingPath);
+                $scope.deleteModal(removeOwner, removeOwnerUrl, $scope.selectedGrouping.path);
             }
         };
 

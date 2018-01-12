@@ -317,31 +317,41 @@
         // TODO: Find a way to make the 3 removes into a more singular function.
 
         /**
-         * Remove function uses dataDelete Service to remove user from admin grouping.
-         * Will not delete admin if there is only one admin in the list.
-         *
-         * @param index - the index of the user based on the html table.
+         * Removes an admin from the admin list. There must be at least one admin remaining.
+         * @param {number} index - the index of the admin to delete, with the current page and items per page taken into
+         * account
          */
         $scope.removeAdmin = function (index) {
-            var deleteUser = $scope.pagedItemsAdmins[$scope.currentPageAdmins][index].username;
+            var deleteUser = $scope.adminsList[index].username;
             var deleteUrl = "api/groupings/" + deleteUser + "/deleteAdmin";
 
             $scope.deleteModal(deleteUser, deleteUrl, index, 'admin');
         };
 
-        $scope.removeMember = function (type, row) {
+        /**
+         * Removes a user from the include or exclude group.
+         * @param {string} type - the type of group the user will be removed from (either Include or Exclude)
+         * @param {number} index - the index of the user to delete, with the current page and items per page taken into
+         * account
+         */
+        $scope.removeMember = function (type, index) {
             var user;
             if (type === 'Include') {
-                user = $scope.pagedItemsInclude[$scope.currentPageInclude][row].username;
+                user = $scope.groupingInclude[index].username;
             } else if (type === 'Exclude') {
-                user = $scope.pagedItemsExclude[$scope.currentPageExclude][row].username;
+                user = $scope.groupingExclude[index].username;
             }
             var URL = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
             $scope.deleteModal(user, URL, null, $scope.selectedGrouping.path);
         };
 
+        /**
+         * Removes a grouping owner. There must be at least one grouping owner remaining.
+         * @param {number} index - the index of the owner to delete, with the current page and items per page taken into
+         * account
+         */
         $scope.removeOwner = function (index) {
-            var removeOwner = $scope.pagedItemsOwners[$scope.currentPageOwners][index].username;
+            var removeOwner = $scope.groupingOwners[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
                 $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.selectedGrouping.path);
