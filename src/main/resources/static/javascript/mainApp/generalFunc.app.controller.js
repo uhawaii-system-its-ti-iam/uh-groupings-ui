@@ -13,12 +13,12 @@
 
         ////This was to test out how making this a parent class works//////
         // var vm =this;
-        // vm.data = {'skeet':"quick maffs"};
+        // vm.data = {'id':"data"};
         //
-        // vm.funnyVideo = funnyVideo;
+        // vm.variable = variable;
         //
-        // function funnyVideo(){
-        //     return "i went viral";
+        // function variable(){
+        //     return "This is a test";
         // };
         ///////////
 

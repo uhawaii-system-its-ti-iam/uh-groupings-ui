@@ -28,7 +28,6 @@
          */
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
-        //figure out how much pages to paginate. so far lets do one
         $scope.pagedItemsGroupings = [];
         $scope.currentPageGroupings = 0;
 

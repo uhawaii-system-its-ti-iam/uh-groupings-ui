@@ -28,12 +28,13 @@
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
 
-        /////////////////You are able to call the general function controller 
+        /////////////////You are able to call the general function controller
         // var vm = this;
         //
         // angular.extend(vm, $controller('GeneralJSController', {
         //     $scope:$scope
         // }));
+        // you are now able to call
         ///////////////////////
 
         $scope.initCurrentUsername = function () {
@@ -58,7 +59,6 @@
              *takes all of that data and puts them into pages as called by "groupToPages"
              **/
             dataProvider.loadData(function (d) {
-                // console.log(vm.funnyVideo());
                 console.log(d);
                 if(typeof d.groupingsIn === 'undefined') {
                     $scope.loading = false;

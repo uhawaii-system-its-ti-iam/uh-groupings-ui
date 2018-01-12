@@ -86,11 +86,17 @@
             }, url);
         };
 
+        /**
+        * Changing the state of the grouping information. a reset of the information.
+        */
         $scope.change = function () {
             $scope.showGrouping = false;
             $scope.resetGroupingInformation();
         };
 
+        /**
+        * IN GENERAL FUNCTIONS JS FILE
+        */
         $scope.errorModal = function () {
             $scope.errorModalInstance = $uibModal.open({
                 templateUrl: 'modal/apiError.html',
@@ -99,10 +105,16 @@
             });
         };
 
+        /**
+        * IN GENERAL FUNCTION JS FILE
+        */
         $scope.errorDismiss = function () {
             $scope.errorModalInstance.dismiss();
         };
 
+        /**
+        * IN GENERAL FUNCTION JS FILE
+        */
         $scope.sortCol = function (list, col, listPaged, symbol) {
             $scope.symbol = {'name': '', 'path': '', 'uuid': '', 'username': ''};
 
@@ -222,7 +234,10 @@
                 }
             }
 
-            //sorts data in alphabetic order
+            /**
+            * sorts data in an alphabetic order
+            * IN THE GENERAL FUNCTIONS JS FILE
+            */
             grouping.sort(function (a, b) {
                 var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
                 if (nameA < nameB) //sort string ascending
@@ -275,6 +290,10 @@
             $scope.addUser = '';
         };
 
+
+        /**
+        * Adding an owner to the group
+        */
         $scope.addOwner = function () {
             var addOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.ownerUser + "/assignOwnership";
             dataProvider.updateData(function (d) {
@@ -289,6 +308,11 @@
             $scope.ownerUser = '';
         };
 
+        /**
+        * a modal to tell you if the person was added to the group or not
+        * @param {string} location - tells which location it is in.
+        * @param {string} success -  a success or failure string
+        */
         $scope.addModalAlert = function (location, success) {
             if (success === 'success') var message = "User has been added";
             else var message = "Error: There was an error in trying to add this user.";
@@ -310,6 +334,9 @@
             });
         };
 
+        /**
+        * a close function to the modals
+        */
         $scope.continue = function () {
             $scope.addModalInstance.close();
         };
@@ -329,6 +356,10 @@
             $scope.deleteModal(deleteUser, deleteUrl, index, 'admin');
         };
 
+        /**
+        *
+        * @param {string} type - either going to be include or exclude. any other will be tossed and marked as invalid.
+        */
         $scope.removeMember = function (type, row) {
             var user;
             if (type === 'Include') {
@@ -340,6 +371,9 @@
             $scope.deleteModal(user, URL, null, $scope.selectedGrouping.path);
         };
 
+        /**
+        *
+        */
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.pagedItemsOwners[$scope.currentPageOwners][index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
@@ -395,6 +429,9 @@
             $scope.deleteModalInstance.dismiss();
         };
 
+        /**
+        *
+        */
         $scope.infoModal = function (preference, group) {
             $scope.info = '';
 
@@ -415,10 +452,16 @@
             });
         };
 
+        /**
+        *
+        */
         $scope.infoDismiss = function () {
             $scope.infoModalInstance.dismiss();
         };
 
+        /**
+        *
+        */
         $scope.updateAllowOptOut = function () {
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/"  + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (d) {
@@ -434,6 +477,9 @@
 
         };
 
+        /**
+        *
+        */
         $scope.updateAllowOptIn = function () {
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.allowOptIn + "/setOptIn";
             dataProvider.updateData(function (d) {
@@ -447,6 +493,9 @@
             console.log(url);
         };
 
+        /**
+        *
+        */
         $scope.updateListserv = function () {
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.listserv + "/setListserv";
             dataProvider.updateData(function (d) {
@@ -462,10 +511,16 @@
             console.log(url);
         };
 
+        /**
+        *
+        */
         $scope.checkLDAP = function () {
             console.log($scope.LDAP);
         };
 
+        /**
+        *
+        */
         $scope.preferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
                 templateUrl: 'modal/preferenceErrorModal.html',
@@ -474,6 +529,9 @@
             });
         };
 
+        /**
+        *
+        */
         $scope.preferenceErrorDismiss = function () {
             $scope.preferenceErrorModalInstance.dismiss();
         };
@@ -560,6 +618,9 @@
             return ret;
         };
 
+        /**
+        *
+        */
         $scope.currentPage = function (pages, whatPage, whatList) {
             switch (pages) {
                 case 'Next':
