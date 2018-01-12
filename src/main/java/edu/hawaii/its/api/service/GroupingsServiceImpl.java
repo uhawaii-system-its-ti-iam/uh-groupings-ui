@@ -1230,67 +1230,12 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("addMemberAs; user: " + username + "; group: " + group + "; usersToAdd: " + usersToAdd + ";");
         //todo change this method to add to the Grouping instead of to a group
 
-        WsSubjectLookup user = gf.makeWsSubjectLookup(username);
-        String action = "add users to " + group;
-        String composite = parentGroupingPath(group);
-        String basis = composite + BASIS;
-        String exclude = composite + EXCLUDE;
-        String include = composite + INCLUDE;
-
-        if (group.endsWith(INCLUDE)) {
-            //if they are in the exclude, get them out
-            if (inGroup(exclude, username)) {
-                gf.makeWsDeleteMemberResults(
-                        exclude,
-                        user,
-                        usersToAdd);
-
-                updateLastModified(exclude);
-                updateLastModified(composite);
-            }
-            //only add them to the include if they are not in the basis
-            if (!inGroup(basis, username)) {
-                WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(include, user, usersToAdd);
-
-                updateLastModified(include);
-                updateLastModified(composite);
-
-                return makeGroupingsServiceResult(addMemberResults, action);
-            } else {
-                return makeGroupingsServiceResult(SUCCESS + ": " + username + " was in basis", action);
-            }
-        } else if (group.endsWith(EXCLUDE)) {
-            //if they are in the include, get them out
-            if (inGroup(include, username)) {
-                gf.makeWsDeleteMemberResults(
-                        include,
-                        user,
-                        usersToAdd);
-
-                updateLastModified(include);
-                updateLastModified(composite);
-            }
-
-            //only add them to the exclude if they are in the basis
-            if (inGroup(basis, username)) {
-                WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(exclude, user, usersToAdd);
-
-                updateLastModified(exclude);
-                updateLastModified(composite);
-
-                return makeGroupingsServiceResult(addMemberResults, action);
-            }
-            else {
-                return makeGroupingsServiceResult(SUCCESS + ": " + username + " was not in basis", action);
-            }
-        } else if (group.endsWith(OWNERS)) {
-            WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(group, user, usersToAdd);
-
-            updateLastModified(group);
-
-            return makeGroupingsServiceResult(addMemberResults, action);
+        //todo make this more efficient
+        for(String userToAdd : usersToAdd) {
+            GroupingsServiceResult gsr = addMemberAs(username, group, userToAdd);
         }
-        return makeGroupingsServiceResult(FAILURE + ": " + username + " may only add to exclude, include or owner group", action);
+
+        return new GroupingsServiceResult(SUCCESS, "All additions were handled successfully.");
     }
 
     /**
