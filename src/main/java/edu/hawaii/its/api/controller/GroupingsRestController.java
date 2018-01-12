@@ -272,46 +272,6 @@ public class GroupingsRestController {
     }
 
     /**
-     * if the user has previously opted in
-     * this will cancel the effects of opting in
-     * the user will be removed from the include Group
-     * the user will not be added to the exclude Group
-     * if the user is also in the basis Group, this will not effectively change the user's membership to that Grouping
-     *
-     * @param grouping : the path to the grouping where the user will be canceling opting in
-     * @return information about the success of canceling the opt in
-     */
-    @RequestMapping(value = "/{grouping}/cancelOptIn",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GroupingsServiceResult>> cancelOptIn(Principal principal, @PathVariable String grouping) {
-        logger.info("Entered REST cancelOptIn...");
-        return ResponseEntity
-                .ok()
-                .body(gs.cancelOptIn(grouping, principal.getName()));
-    }
-
-    /**
-     * if the user has previously opted out
-     * this will cancel the effects of opting out
-     * the user will be removed from the exclude Group
-     * the user will not be added to the include Group
-     * if the user is not in the basis Group, this will not effectively change the user's membership to that Grouping
-     *
-     * @param grouping : the path to the grouping where the user will be canceling opting out
-     * @return information about the success of canceling the opt out
-     */
-    @RequestMapping(value = "/{grouping}/cancelOptOut",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GroupingsServiceResult>> cancelOptOut(Principal principal, @PathVariable String grouping) {
-        logger.info("Entered REST cancelOptOut...");
-        return ResponseEntity
-                .ok()
-                .body(gs.cancelOptOut(grouping, principal.getName()));
-    }
-
-    /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserv
      *
      * @param grouping:   the path to the Grouping

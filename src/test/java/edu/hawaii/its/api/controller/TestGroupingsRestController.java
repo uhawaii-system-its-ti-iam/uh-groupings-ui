@@ -8,6 +8,7 @@ import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -131,6 +132,8 @@ public class TestGroupingsRestController {
 
         gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[4]);
         gs.deleteMemberAs(tst[0], GROUPING_INCLUDE, tst[4]);
+
+        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[5]);
 
         gs.removeOwnership(GROUPING, tst[0], tst[5]);
 
@@ -356,40 +359,35 @@ public class TestGroupingsRestController {
     @Test
     @WithMockUhUser(username = "iamtst05")
     public void optInTest() throws Exception {
+        //tst[4] is not in Grouping, but is in basis and exclude
         assertFalse(gs.inGroup(GROUPING, tst[4]));
-        assertTrue(gs.inGroup(GROUPING + BASIS, tst[5]));
+        assertTrue(gs.inGroup(GROUPING_BASIS, tst[4]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
 
+        //tst[4] opts into Grouping
         mapGSRs("/api/groupings/" + GROUPING + "/optIn");
+
+        //tst[4] is now in include and Grouping, still in basis and not in exclude
         assertTrue(gs.checkSelfOpted(GROUPING_INCLUDE, tst[4]));
-        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[4]));
         assertTrue(gs.inGroup(GROUPING, tst[4]));
-
-        mapGSRs("/api/groupings/" + GROUPING + "/cancelOptIn");
+        assertTrue(gs.inGroup(GROUPING_BASIS, tst[4]));
         assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[4]));
-        assertFalse(gs.checkSelfOpted(GROUPING_INCLUDE, tst[4]));
-
-        assertTrue(gs.inGroup(GROUPING, tst[5]));
-
-        //reset Grouping
-        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[4]);
-        assertFalse(gs.inGroup(GROUPING, tst[4]));
     }
 
     @Test
     @WithMockUhUser(username = "iamtst06")
     public void optOutTest() throws Exception {
+        //tst[5] is in the Grouping and in the basis
         assertTrue(gs.inGroup(GROUPING, tst[5]));
+        assertTrue(gs.inGroup(GROUPING_BASIS, tst[5]));
 
+        //tst[5] opts out of Grouping
         mapGSRs("/api/groupings/" + GROUPING + "/optOut");
+
+        //tst[5] is now in exclude, not in include or Grouping
         assertTrue(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[5]));
-        assertFalse(gs.checkSelfOpted(GROUPING_INCLUDE, tst[5]));
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[5]));
         assertFalse(gs.inGroup(GROUPING, tst[5]));
-
-        mapGSRs("/api/groupings/" + GROUPING + "/cancelOptOut");
-        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[5]));
-        assertFalse(gs.checkSelfOpted(GROUPING_INCLUDE, tst[5]));
-
-        assertTrue(gs.inGroup(GROUPING + BASIS_PLUS_INCLUDE, tst[5]));
     }
 
     @Test
@@ -432,8 +430,21 @@ public class TestGroupingsRestController {
     @Test
     @WithMockUhUser(username = "aaronvil")
     public void aaronTest() throws Exception {
-        GroupingAssignment aaronsGroupings = mapGroupingAssignment();
-        assertNotNull(aaronsGroupings);
+        //This test often fails because the test server is very slow.
+        //Because the server caches some results and gets quicker the more times
+        //it is run, we let it run a few times if it starts failing
+
+        int i = 0;
+        while (i < 5) {
+            try {
+                GroupingAssignment aaronsGroupings = mapGroupingAssignment();
+                assertNotNull(aaronsGroupings);
+                break;
+            } catch (RuntimeException e) {
+                i++;
+            }
+        }
+        assertTrue(i < 5);
     }
 
     @Test
