@@ -36,75 +36,7 @@
                 <div ng-show="!showGrouping">
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="grouping">
-                            <div class="panel panel-default panel-tab-content">
-                                <div class="panel-heading">
-                                    <div class="row" style="margin: inherit">
-                                        <div class="col-md-6 col-sm-7" style="padding: 0px;">
-                                            <h3 style="padding: 2.5px 0px; margin: inherit;">Manage Groupings</h3>
-                                        </div>
-                                        <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
-                                            <input placeholder="Filter Groupings..." type="text"
-                                                   ng-model="queryGroupings" class="form-control"
-                                                   ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', 'queryGroupings')"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            <div class = "table-responsive">
-                                <table class="table table-bordered table-condensed table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th ng-click="sortCol(groupingsList, 'name', 'pagedItemsGroupings', 'symbolMember')"
-                                            class="clickable">
-                                            Grouping Name {{symbol.name}}
-                                        </th>
-                                        <th ng-click="sortCol(groupingsList, 'path', 'pagedItemsGroupings', 'symbolMember')"
-                                            class="clickable">
-                                            Grouping Path {{symbol.path}}
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                                        <td class="clickable" ng-click="showData($index)">
-                                            {{l.name}}
-                                            <span class="pull-right glyphicon glyphicon-edit"
-                                                  style="margin-right: 5px;">
-                                            </span>
-                                        </td>
-                                        <td>{{l.path}}</td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot>
-                                    <!-- Top part of the two parts  -->
-                                    <td colspan="6">
-                                        <ul class="pagination pull-right">
-                                            <li ng-class="{disabled: (currentPageGroupings) == 0}">
-                                                <a href="" ng-click="currentPage('First','currentPageGroupings','pagedItemsGroupings')">««
-                                                    First</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageGroupings) == 0 }">
-                                                <a href="" ng-click="currentPage('Prev','currentPageGroupings','pagedItemsGroupings')">«
-                                                    Prev</a>
-                                            </li>
-                                            <li ng-repeat="n in range(pagedItemsGroupings.length, currentPageGroupings - gap, currentPageGroupings + gap + 1)"
-                                                ng-class="{active: n == currentPageGroupings}"
-                                                ng-click="currentPage('Set','currentPageGroupings','pagedItemsGroupings')"
-                                            ><a href="" ng-bind="n + 1">1</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageGroupings) == pagedItemsGroupings.length - 1 || pagedItemsGroupings.length == 0}">
-                                                <a href="" ng-click="currentPage('Next','currentPageGroupings','pagedItemsGroupings')">Next
-                                                    »</a>
-                                            </li>
-                                            <li ng-class="{disabled: (currentPageGroupings) == pagedItemsGroupings.length - 1 || pagedItemsGroupings.length == 0}">
-                                                <a href="" ng-click="currentPage('Last','currentPageGroupings','pagedItemsGroupings')">Last
-                                                    »»</a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            </div>
+                            <div th:replace="fragments/groupings-list :: groupings-list(title='Manage Groupings', tabContent=true)"></div>
                         </div>
                         <div class="tab-pane fade" id="list">
                             <div class="panel panel-default panel-tab-content">
@@ -179,7 +111,7 @@
                                             <form ng-submit="addAdmin()">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text"
-                                                           placeholder="UH Username" ng-model="username"/>
+                                                           placeholder="UH Username" ng-model="adminToAdd"/>
                                                     <div class="input-group-btn">
                                                         <button class="btn btn-primary" type="submit">Add</button>
                                                     </div>
@@ -196,32 +128,8 @@
                 </div>
 
                 <div ng-show="showGrouping">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="row" style="margin: inherit;">
-                                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 pull-left" style="padding: 0;">
-                                    <h3 style="margin: inherit; padding-top: .11875em;">Selected Grouping</h3>
-                                </div>
-                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="padding: 0;">
-                                    <button ng-click="showGroups()" class="btn btn-primary xs-left-sm-right">Return to List</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class = "table-responsive">
-                        <table class="table table-bordered">
-                            <tbody>
-                            <tr>
-                                <th>Name</th>
-                                <td>{{ selectedGrouping.name }}</td>
-                            </tr>
-                            <tr>
-                                <th>Path</th>
-                                <td>{{ groupingPath }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    </div>
+                    <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
+
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 style="margin-top: 0px; margin-bottom: 0px;">Manage Grouping</h3>

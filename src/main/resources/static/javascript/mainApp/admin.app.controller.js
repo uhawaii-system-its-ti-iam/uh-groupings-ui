@@ -9,7 +9,6 @@
      */
     function AdminJsController($scope, $window, $uibModal, $filter, dataProvider) {
 
-        $scope.currentUsername = "";
         $scope.filteredItems = [];
         $scope.basis = [];
 
@@ -67,8 +66,6 @@
             // Adds the loading spinner.
             $scope.loading = true;
 
-            $scope.initCurrentUsername();
-
             var url = "api/groupings/adminLists";
 
             dataProvider.loadData(function (d) {
@@ -106,14 +103,6 @@
             $scope.errorModalInstance.dismiss();
         };
 
-        $scope.initCurrentUsername = function () {
-            $scope.currentUsername = $window.document.getElementById("name").innerHTML;
-        };
-
-        $scope.getCurrentUsername = function () {
-            return $scope.currentUsername;
-        };
-
         $scope.sortCol = function (list, col, listPaged, symbol) {
             $scope.symbol = {'name': '', 'path': '', 'uuid': '', 'username': ''};
 
@@ -121,8 +110,7 @@
                 list = _.sortBy(list, col);
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = 'descend';
-            }
-            else {
+            } else {
                 list = _.sortBy(list, col).reverse();
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = 'ascend';
@@ -147,13 +135,10 @@
 
         /**
          * Retrieves information about the grouping.
-         * @param {string} path - the grouping's path
          */
-        $scope.getData = function (path) {
-            $scope.groupingPath = path;
+        $scope.getData = function () {
             $scope.loading = true;
-            var groupingDataUrl = "api/groupings/" + $scope.groupingPath + "/grouping";
-            console.log(groupingDataUrl);
+            var groupingDataUrl = "api/groupings/" + $scope.selectedGrouping.path + "/grouping";
 
             dataProvider.loadData(function (d) {
                 console.log(d);
@@ -238,8 +223,6 @@
             }
 
             //sorts data in alphabetic order
-
-
             grouping.sort(function (a, b) {
                 var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
                 if (nameA < nameB) //sort string ascending
@@ -248,45 +231,43 @@
                     return 1;
                 return 0
             });
+
+            $scope.replaceBlankUsernames(grouping);
+
         };
 
         // TODO: Find a way to make the 3 adds into a more singular function.
 
         /**
-         * Adds function that adds an member to the admin grouping.
-         * Uses dataUpdater service to post the user that is being added.
-         * If user is successfully added, dataProvider will return a Success in result Code.
-         * Else if resultCode is undefined, then user was not successfully added.
+         * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            var addUrl = "api/groupings/" + $scope.username + "/addAdmin";
-            $scope.testdata = [];
+            var addUrl = "api/groupings/" + $scope.adminToAdd + "/addAdmin";
 
             dataProvider.updateData(function (d) {
-                if(d.statusCode != null)
-                {
+                if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                     $scope.addModalAlert();
-                }
-                else if (d.resultCode === 'SUCCESS') {
+                } else if (d.resultCode === 'SUCCESS') {
                     console.log("Success In Adding");
-                    //reload data table
                     $scope.addModalAlert('admin', 'success');
+                    // Clear the input field
+                    $scope.adminToAdd = '';
                 }
             }, addUrl);
-
         };
 
+        /**
+         * Adds a user to a group.
+         * @param {string} type - the type of group to add the user to (either include of exclude)
+         */
         $scope.addMember = function (type) {
-            var addUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
+            var addUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataProvider.updateData(function (d) {
-                console.log(d);
-                if(d.statusCode != null)
-                {
+                if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                     $scope.addModalAlert();
-                }
-                else if (d.resultCode === "SUCCESS") {
+                } else if (d.resultCode === "SUCCESS") {
                     console.log("success in adding " + $scope.addUser);
                     $scope.addModalAlert('grouping', 'success');
                 }
@@ -295,15 +276,12 @@
         };
 
         $scope.addOwner = function () {
-            var addOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + $scope.ownerUser + "/assignOwnership";
+            var addOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.ownerUser + "/assignOwnership";
             dataProvider.updateData(function (d) {
-                console.log(d);
-                if(d.statusCode != null)
-                {
+                if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                     $scope.addModalAlert();
-                }
-                else if (d.resultCode === "SUCCESS") {
+                } else if (d.resultCode === "SUCCESS") {
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
                     $scope.addModalAlert('grouping', 'success');
                 }
@@ -327,7 +305,7 @@
                 if (success === 'success') {
                     $scope.loading = true;
                     if (location === 'admin') $scope.init();
-                    if (location === 'grouping') $scope.getData($scope.groupingPath);
+                    if (location === 'grouping') $scope.getData($scope.selectedGrouping.path);
                 }
             });
         };
@@ -355,21 +333,18 @@
             var user;
             if (type === 'Include') {
                 user = $scope.pagedItemsInclude[$scope.currentPageInclude][row].username;
-            }
-            if (type === 'Exclude') {
+            } else if (type === 'Exclude') {
                 user = $scope.pagedItemsExclude[$scope.currentPageExclude][row].username;
             }
-
-            var URL = "api/groupings/" + $scope.groupingPath + "/" + user + "/deleteMemberFrom" + type + "Group";
-
-            $scope.deleteModal(user, URL, null, $scope.groupingPath);
+            var URL = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
+            $scope.deleteModal(user, URL, null, $scope.selectedGrouping.path);
         };
 
         $scope.removeOwner = function (index) {
             var removeOwner = $scope.pagedItemsOwners[$scope.currentPageOwners][index].username;
-            var removeOwnerUrl = "api/groupings/" + $scope.groupingPath + "/" + removeOwner + "/removeOwnership";
+            var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
-                $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.groupingPath);
+                $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.selectedGrouping.path);
             }
         };
 
@@ -397,8 +372,7 @@
                         $scope.adminsList.splice(location, 1);
                         $scope.init();
                     }, url);
-                }
-                else {
+                } else {
                     dataProvider.updateData(function (d) {
                         console.log(d);
                         $scope.getData(type);
@@ -446,15 +420,13 @@
         };
 
         $scope.updateAllowOptOut = function () {
-            var url = "api/groupings/" + $scope.groupingPath + "/"  + $scope.allowOptOut + "/setOptOut";
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/"  + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (d) {
                 console.log(d);
-                if(d.statusCode != null)
-                {
+                if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                     $scope.preferenceErrorModal();
-                }
-                else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                } else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
                     console.log("success");
                 }
             }, url);
@@ -463,14 +435,12 @@
         };
 
         $scope.updateAllowOptIn = function () {
-            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.allowOptIn + "/setOptIn";
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.allowOptIn + "/setOptIn";
             dataProvider.updateData(function (d) {
-                if(d.statusCode != null)
-                {
+                if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                     $scope.preferenceErrorModal();
-                }
-                else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                } else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
                     console.log("success");
                 }
             }, url);
@@ -478,15 +448,13 @@
         };
 
         $scope.updateListserv = function () {
-            var url = "api/groupings/" + $scope.groupingPath + "/" + $scope.listserv + "/setListserv";
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.listserv + "/setListserv";
             dataProvider.updateData(function (d) {
                 console.log(d);
-                if(d.statusCode != null)
-                {
+                if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                     $scope.preferenceErrorModal();
-                }
-                else if (d.resultCode === "SUCCESS") {
+                } else if (d.resultCode === "SUCCESS") {
                     console.log("success");
                 }
             }, url);
@@ -555,8 +523,7 @@
             var pagedList = [];
             if (list == null) {
                 console.log("I AM NULL ... WHY?!");
-            }
-            if (list != null) {
+            } else {
                 for (var i = 0; i < list.length; i++) {
                     if (i % $scope.itemsPerPage === 0) {
                         pagedList[Math.floor(i / $scope.itemsPerPage)] = [list[i]];
@@ -640,7 +607,7 @@
             $scope.selectedGrouping = $scope.pagedItemsGroupings[$scope.currentPageGroupings][row];
             if (!$scope.showGrouping) {
                 $scope.showGrouping = true;
-                $scope.getData($scope.selectedGrouping.path);
+                $scope.getData();
             } else {
                 $scope.showGrouping = false;
             }
@@ -676,7 +643,7 @@
         $scope.resetSelectedGroup = function () {
             var pills = $('#group-pills')[0].children;
             var content = $('#pill-content')[0].children
-            for (var i = 0; i < pills.length; i++) {
+            for (var i = 0; i < pills.length && i < content.length; i++) {
                 if (i === 0 && !$(content[i]).hasClass('active')) {
                     $(pills[i]).addClass('active');
                     $(content[i]).addClass('in active');
@@ -692,7 +659,7 @@
          * @param {object[]} table - the table to export
          * @param name - the name of the group (i.e. include or exclude)
          */
-        $scope.export = function(table, name) {
+        $scope.export = function (table, name) {
             var data, filename, link;
 
             var csv = $scope.convertArrayOfObjectsToCSV(table);
@@ -718,7 +685,7 @@
          * @param {object[]} table - the table to convert
          * @returns the table in CSV format
          */
-        $scope.convertArrayOfObjectsToCSV = function(table) {
+        $scope.convertArrayOfObjectsToCSV = function (table) {
             var str = "Name, Username, Email \r\n";
             for (var i = 0; i < table.length; i++) {
                 var line = '';
@@ -728,6 +695,18 @@
                 str += line + '\r\n';
             }
             return str;
+        };
+
+        /**
+         * Checks if the UH usernames in a group are blank or not. If it is blank, it will be replaced with N/A.
+         * @param {object[]} group - the group to check
+         */
+        $scope.replaceBlankUsernames = function (group) {
+            for (var i = 0; i < group.length; i++) {
+                if (group[i].username === '') {
+                    group[i].username = 'N/A';
+                }
+            }
         };
     }
 

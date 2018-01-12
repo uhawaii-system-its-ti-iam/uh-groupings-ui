@@ -21,5 +21,5 @@ notifications:
       - zknoebel@hawaii.edu
       - aaronvil@hawaii.edu
       - ksanidad@hawaii.edu
-    on_success: never # default: change
-    on_failure: always # default: always
+    on_success: change
+    on_failure: always
