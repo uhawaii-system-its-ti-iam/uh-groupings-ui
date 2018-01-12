@@ -85,6 +85,25 @@ public class GroupingsRestController {
                 .body(gs.deleteAdmin(principal.getName(), adminToDelete));
     }
 
+    /**
+     * adds a member to a Grouping
+     *
+     * a member will not be in a Grouping for one of two reasons
+     *  - The member is not in the basis or include group
+     *  - The member is in the basis group, but also in the exclude group
+     *
+     *  for the first case, the member will be added to the include group
+     *  for the second case, the member will be removed from the exclude group
+     */
+    @RequestMapping(value = "/{grouping}/{userToAdd}/addMember",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GroupingsServiceResult> addMember(Principal principal, @PathVariable String grouping, @PathVariable String userToAdd) {
+        logger.info("Entered REST addMemberToIncludeGroup...");
+        return ResponseEntity
+                .ok()
+                .body(gs.addMemberToGrouping(principal.getName(), grouping, userToAdd));
+    }
 
     /**
      * adds a member to the include group of the Grouping who's path is in 'grouping'
@@ -120,6 +139,22 @@ public class GroupingsRestController {
         return ResponseEntity
                 .ok()
                 .body(gs.addMemberAs(principal.getName(), grouping + ":exclude", userToAdd));
+    }
+
+    /**
+     * Deletes a member from a Grouping
+     *
+     * if the user is in the basis, then it will add them to the exclude
+     * if a user is in the include instead of the basis, then it will remove them from the include
+     */
+    @RequestMapping(value = "/{grouping}/{userToDelete}/deleteMember",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GroupingsServiceResult> deleteMember(Principal principal, @PathVariable String grouping, @PathVariable String userToDelete) {
+        logger.info("Entered REST deleteMemberFromIncludeGroup...");
+        return ResponseEntity
+                .ok()
+                .body(gs.deleteMemberFromGrouping(principal.getName(), grouping, userToDelete));
     }
 
     /**
