@@ -232,7 +232,7 @@
                 return 0
             });
 
-            $scope.checkUsernames(grouping);
+            $scope.replaceBlankUsernames(grouping);
 
         };
 
@@ -698,10 +698,10 @@
         };
 
         /**
-         * Checks if the UH usernames in a group are blank or not. If it is blank, it will default to N/A.
+         * Checks if the UH usernames in a group are blank or not. If it is blank, it will be replaced with N/A.
          * @param {object[]} group - the group to check
          */
-        $scope.checkUsernames = function (group) {
+        $scope.replaceBlankUsernames = function (group) {
             for (var i = 0; i < group.length; i++) {
                 if (group[i].username === '') {
                     group[i].username = 'N/A';
