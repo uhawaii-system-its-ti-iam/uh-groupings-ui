@@ -15,22 +15,18 @@
         $scope.membersList = [];
         $scope.optInList = [];
         $scope.optOutList = [];
-        $scope.optedIn = [];
-        $scope.optedOut = [];
         $scope.loading = true;
+
+        $scope.symbol = {'member': '', 'optInName': '', 'optInPath': ''};
 
         //these will be place holders for now
         $scope.pagedItemsMembersList = [];
         $scope.pagedItemsOptInList = [];
-        $scope.pagedItemsOptedInList = [];
-        $scope.pagedItemsOptedOutList = [];
         $scope.gap = 2;
 
         $scope.itemsPerPage = 20;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
-        $scope.currentPageCancelOptIn = 0;
-        $scope.currentPageCancelOptOut = 0;
 
         /////////////////You are able to call the general function controller 
         // var vm = this;
@@ -72,40 +68,35 @@
                     $scope.membersList = d.groupingsIn;
                     $scope.optOutList = d.groupingsToOptOutOf;
                     $scope.optInList = d.groupingsToOptInTo;
-                    $scope.optedIn = d.groupingsOptedInTo;
-                    $scope.optedOut = d.groupingsOptedOutOf;
 
-                    if ($scope.optedIn.length === 0) {
-                        $scope.optedIn.push({'name': "NO GROUPINGS TO CANCEL OPT IN TO"});
-                    }
-                    if ($scope.optedOut.length === 0) {
-                        $scope.optedOut.push({'name': "NO GROUPINGS TO CANCEL OPT OUT"});
-                    }
+                    $scope.membersList = $scope.sortOrder($scope.membersList, 'name');
+                    $scope.optInList = $scope.sortOrder($scope.optInList, 'name');
+
+                    //Sorts tables by name
+                    $scope.symbol.member = '\u21c5';
+                    $scope.symbolList = '\u25BC';
+                    $scope.symbol.optInName = '\u21c5';
+                    $scope.symbolOptIn = '\u25BC';
+
                     if ($scope.optInList.length === 0) {
                         $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
                     }
 
                     $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList, $scope.pagedItemsMembersList);
                     $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
-                    $scope.pagedItemsOptedInList = $scope.groupToPages($scope.optedIn, $scope.pagedItemsOptedInList);
-                    $scope.pagedItemsOptedOutList = $scope.groupToPages($scope.optedOut, $scope.pagedItemsOptedOutList);
 
                     $scope.loading = false;
                 }
             }, groupingURL);
         };
 
-        // $scope.errorModal = function () {
-        //     $scope.errorModalInstance = $uibModal.open({
-        //         templateUrl: 'apiError.html',
-        //         windowClass: 'center-modal',
-        //         scope: $scope
-        //     });
-        // };
-        //
-        // $scope.errorDismiss = function() {
-        //     $scope.errorModalInstance.dismiss();
-        // };
+        $scope.errorModal = function () {
+            $scope.errorModalInstance = $uibModal.open({
+                templateUrl: 'modal/apiError.html',
+                windowClass: 'center-modal',
+                scope: $scope
+            });
+        };
 
         /**
          *  Sorts the data in the table in ascending or descending order based on
@@ -184,36 +175,6 @@
             dataProvider.updateData(function (d) {
                 $scope.init();
             }, optInURL);
-        };
-
-        /** Cancel user opt into a grouping
-         *   Calls the URL "cancelOptIn" and gives it the data for the update in the
-         *   CRUD operation
-         *   @param index - grouping
-         *   takes in a grouping so it knows which group it is going into for the path
-         **/
-        $scope.cancelOptIn = function (index) {
-            var cancelInURL = "api/groupings/" + $scope.optedIn[index].path + "/cancelOptIn";
-            console.log(cancelInURL);
-            dataProvider.updateData(function (d) {
-                $scope.loading = true;
-                $scope.init();
-            }, cancelInURL);
-        };
-
-        /** Cancels the opt out
-         * Calls the URL "cancelOptOut" and gives it the data for the update in the
-         * CRUD operation
-         *@param index - grouping
-         *takes in a grouping so it knows which group it is going into for the path
-         **/
-        $scope.cancelOptOut = function (index) {
-            var cancelOutURL = "api/groupings/" + $scope.optedOut[index].path + "/cancelOptOut";
-            console.log(cancelOutURL);
-            dataProvider.updateData(function (d) {
-                $scope.loading = true;
-                $scope.init();
-            }, cancelOutURL);
         };
 
         var searchMatch = function (haystack, needle) {

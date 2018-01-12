@@ -1,0 +1,109 @@
+<th:block th:fragment="include">
+    <div class="row member-row-title">
+        <h3 class="members-tab-title">Include</h3>
+    </div>
+    <div class="row member-row-title">
+        <div class="row member-row-title">
+            <!-- Export to CSV button -->
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-primary" ng-click="export(groupingInclude, 'include')">
+                        Export To CSV
+                    </button>
+                </div>
+            </div>
+            <!-- Filter bar -->
+            <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+                <div class="xs-left-sm-right">
+                    <input class="form-control" placeholder="Filter Members..." type="text"
+                           ng-model="includeQuery"
+                           ng-change="filter(groupingInclude, 'pagedItemsInclude', 'currentPageInclude', 'includeQuery')"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-condensed table-hover">
+            <thead>
+            <tr>
+                <th ng-click="sortCol(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude')"
+                    class="clickable">
+                    Name {{symbol.name}}
+                </th>
+                <th ng-click="sortCol(groupingInclude, 'uuid', 'pagedItemsInclude', 'symbolInclude')"
+                    class="clickable">
+                    UH ID {{symbol.uuid}}
+                </th>
+                <th ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')"
+                    class="clickable">
+                    Username {{symbol.username}}
+                </th>
+                <th ng-click="sortCol(groupingInclude, 'basis', 'pagedItemsInclude', 'symbolInclude')"
+                    class="clickable">
+                    In Basis? {{symbol.basis}}
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]">
+                <td>
+                    {{i.name}}
+                    <span class="glyphicon glyphicon-trash pull-right clickable"
+                          data-toggle="tooltip" data-placement="top"
+                          onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
+                          th:title="#{screen.message.common.tooltip.remove.include}"
+                          ng-click="removeMember('Include', $index)">
+                    </span>
+                </td>
+                <td>{{i.uuid}}</td>
+                <td>
+                    {{i.username}}
+                    <i class="fa fa-question-circle clickable" aria-hidden="true"
+                       data-toggle="tooltip" data-placement="right"
+                       onmouseover="$(this).tooltip('show')"
+                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
+                       ng-if="i.username === 'N/A'">
+                    </i>
+                </td>
+                <td class="text-center" style="width: 3%">{{i.basis}}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <!-- Pagination control -->
+            <td colspan="6">
+                <ul class="pagination pull-right">
+                    <li ng-class="{disabled: (currentPageInclude) == 0 }">
+                        <a href="" ng-click="currentPage('First','currentPageInclude','pagedItemsInclude')">«« First</a>
+                    </li>
+                    <li ng-class="{disabled: (currentPageInclude) == 0 }">
+                        <a href="" ng-click="currentPage('Prev','currentPageInclude','pagedItemsInclude')">« Prev</a>
+                    </li>
+                    <li ng-repeat="n in range(pagedItemsInclude.length, currentPageInclude - gap, currentPageInclude + gap + 1) "
+                        ng-class="{active: n == currentPageInclude}"
+                        ng-click="currentPage('Set','currentPageInclude','pagedItemsInclude')">
+                        <a href="" ng-bind="n + 1"></a>
+                    </li>
+                    <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 || pagedItemsInclude.length == 0}">
+                        <a href="" ng-click="currentPage('Next','currentPageInclude','pagedItemsInclude')">Next »</a>
+                    </li>
+                    <li ng-class="{disabled: (currentPageInclude) == pagedItemsInclude.length - 1 || pagedItemsInclude.length == 0}">
+                        <a href="" ng-click="currentPage('Last','currentPageInclude','pagedItemsInclude')">Last »»</a>
+                    </li>
+                </ul>
+            </td>
+            </tfoot>
+        </table>
+    </div>
+    <!-- Input to add a user to the include group -->
+    <div class="col-lg-4 col-md-6" style="padding: inherit;">
+        <form ng-submit="addMember('Include')">
+            <div class="input-group">
+                <input class="form-control" type="text" placeholder="Add user to include"
+                       ng-model="addUser"/>
+                <div class="input-group-btn">
+                    <button class="btn btn-primary" type="submit">Add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</th:block>

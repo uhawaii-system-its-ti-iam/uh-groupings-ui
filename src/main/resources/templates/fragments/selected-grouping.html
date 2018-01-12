@@ -1,0 +1,29 @@
+<th:block th:fragment="selected-grouping">
+    <div class="panel panel-default"
+         th:classappend="${tabContent ? 'panel-tab-content' : ''}">
+        <div class="panel-heading">
+            <div class="row" style="margin: inherit;">
+                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 pull-left" style="padding: 0;">
+                    <h3 style="margin: inherit; padding-top: .11875em;">Selected Grouping</h3>
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="padding: 0;">
+                    <button ng-click="showGroups()" class="btn btn-primary xs-left-sm-right">Return to Groupings</button>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td>{{ selectedGrouping.name }}</td>
+                </tr>
+                <tr>
+                    <th>Path</th>
+                    <td>{{ selectedGrouping.path }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</th:block>

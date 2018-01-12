@@ -44,31 +44,6 @@ public class HomeController {
         return "feedback";
     }
 
-    @RequestMapping(value = "/infoModal", method = RequestMethod.GET)
-    public String infoModal(Locale locale, Model model) {
-        return "infoModal";
-    }
-
-    @RequestMapping(value = "/apiError", method = RequestMethod.GET)
-    public String apiError(Locale locale, Model model) {
-        return "apiError";
-    }
-
-    @RequestMapping(value = "/preferenceErrorModal", method = RequestMethod.GET)
-    public String preferenceErrorModal(Locale locale, Model model) {
-        return "preferenceErrorModal";
-    }
-
-    @RequestMapping(value = "/addModal", method = RequestMethod.GET)
-    public String addModal(Locale locale, Model model) {
-        return "addModal";
-    }
-
-    @RequestMapping(value = "/removeModal", method = RequestMethod.GET)
-    public String removeModal(Locale locale, Model model) {
-        return "removeModal";
-    }
-
     @RequestMapping(value = "/404", method = RequestMethod.GET)
     public String invalid() {
         return "redirect:/";
@@ -99,5 +74,36 @@ public class HomeController {
     public String login(Locale locale, Model model) {
         logger.info("User has logged in.");
         return "redirect:home";
+    }
+
+    /** Modal Pages*/
+    @RequestMapping(value = "/modal/infoModal", method = RequestMethod.GET)
+    public String infoModal(Locale locale, Model model) {
+        return "modal/infoModal";
+    }
+
+    @RequestMapping(value = "/modal/apiError", method = RequestMethod.GET)
+    public String apiError(Locale locale, Model model) {
+        return "modal/apiError";
+    }
+
+    @RequestMapping(value = "/modal/preferenceErrorModal", method = RequestMethod.GET)
+    public String preferenceErrorModal(Locale locale, Model model) {
+        return "modal/preferenceErrorModal";
+    }
+
+    @RequestMapping(value = "/modal/addModal", method = RequestMethod.GET)
+    public String addModal(Locale locale, Model model) {
+        return "modal/addModal";
+    }
+
+    @RequestMapping(value = "/modal/feedbackModal", method = RequestMethod.GET)
+    public String feedbackModal(Locale locale, Model model) {
+        return "modal/feedbackModal";
+    }
+
+    @RequestMapping(value = "/modal/removeModal", method = RequestMethod.GET)
+    public String removeModal(Locale locale, Model model) {
+        return "modal/removeModal";
     }
 }
