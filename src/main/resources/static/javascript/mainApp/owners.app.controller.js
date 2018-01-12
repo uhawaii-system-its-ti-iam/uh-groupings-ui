@@ -194,6 +194,8 @@
                     return 1;
                 return 0
             });
+
+            $scope.replaceBlankUsernames(grouping);
         };
 
         /**
@@ -654,14 +656,26 @@
          */
         $scope.resetSelectedGroup = function () {
             var pills = $('#group-pills')[0].children;
-            var tabContents = $('#pill-content')[0].children
-            for (var i = 0; i < pills.length; i++) {
+            var contents = $('#pill-content')[0].children
+            for (var i = 0; i < pills.length && i < contents.length; i++) {
                 if (i === 0 && !$(pills[i]).hasClass('active')) {
                     $(pills[i]).addClass('active');
-                    $(tabContents[i]).addClass('in active');
+                    $(contents[i]).addClass('in active');
                 } else if (i !== 0 && $(pills[i]).hasClass('active')) {
                     $(pills[i]).removeClass('active');
-                    $(tabContents[i]).removeClass('in active');
+                    $(contents[i]).removeClass('in active');
+                }
+            }
+        };
+
+        /**
+         * Checks if the UH usernames in a group are blank or not. If it is blank, it will be replaced with N/A.
+         * @param {object[]} group - the group to check
+         */
+        $scope.replaceBlankUsernames = function (group) {
+            for (var i = 0; i < group.length; i++) {
+                if (group[i].username === '') {
+                    group[i].username = 'N/A';
                 }
             }
         };

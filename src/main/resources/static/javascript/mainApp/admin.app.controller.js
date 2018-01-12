@@ -110,8 +110,7 @@
                 list = _.sortBy(list, col);
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = 'descend';
-            }
-            else {
+            } else {
                 list = _.sortBy(list, col).reverse();
                 $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
                 $scope[symbol] = 'ascend';
@@ -224,8 +223,6 @@
             }
 
             //sorts data in alphabetic order
-
-
             grouping.sort(function (a, b) {
                 var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
                 if (nameA < nameB) //sort string ascending
@@ -234,6 +231,9 @@
                     return 1;
                 return 0
             });
+
+            $scope.replaceBlankUsernames(grouping);
+
         };
 
         // TODO: Find a way to make the 3 adds into a more singular function.
@@ -372,8 +372,7 @@
                         $scope.adminsList.splice(location, 1);
                         $scope.init();
                     }, url);
-                }
-                else {
+                } else {
                     dataProvider.updateData(function (d) {
                         console.log(d);
                         $scope.getData(type);
@@ -424,12 +423,10 @@
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/"  + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (d) {
                 console.log(d);
-                if(d.statusCode != null)
-                {
+                if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                     $scope.preferenceErrorModal();
-                }
-                else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                } else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
                     console.log("success");
                 }
             }, url);
@@ -646,7 +643,7 @@
         $scope.resetSelectedGroup = function () {
             var pills = $('#group-pills')[0].children;
             var content = $('#pill-content')[0].children
-            for (var i = 0; i < pills.length; i++) {
+            for (var i = 0; i < pills.length && i < content.length; i++) {
                 if (i === 0 && !$(content[i]).hasClass('active')) {
                     $(pills[i]).addClass('active');
                     $(content[i]).addClass('in active');
@@ -698,6 +695,18 @@
                 str += line + '\r\n';
             }
             return str;
+        };
+
+        /**
+         * Checks if the UH usernames in a group are blank or not. If it is blank, it will be replaced with N/A.
+         * @param {object[]} group - the group to check
+         */
+        $scope.replaceBlankUsernames = function (group) {
+            for (var i = 0; i < group.length; i++) {
+                if (group[i].username === '') {
+                    group[i].username = 'N/A';
+                }
+            }
         };
     }
 

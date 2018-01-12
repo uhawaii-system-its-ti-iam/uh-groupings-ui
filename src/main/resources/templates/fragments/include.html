@@ -56,7 +56,15 @@
                     </span>
                 </td>
                 <td>{{i.uuid}}</td>
-                <td>{{i.username}}</td>
+                <td>
+                    {{i.username}}
+                    <i class="fa fa-question-circle clickable" aria-hidden="true"
+                       data-toggle="tooltip" data-placement="right"
+                       onmouseover="$(this).tooltip('show')"
+                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
+                       ng-if="i.username === 'N/A'">
+                    </i>
+                </td>
                 <td class="text-center" style="width: 3%">{{i.basis}}</td>
             </tr>
             </tbody>

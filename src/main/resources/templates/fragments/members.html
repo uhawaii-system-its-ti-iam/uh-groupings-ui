@@ -46,7 +46,15 @@
             <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]">
                 <td>{{g.name}}</td>
                 <td>{{g.uuid}}</td>
-                <td>{{g.username}}</td>
+                <td>
+                    {{g.username}}
+                    <i class="fa fa-question-circle clickable" aria-hidden="true"
+                       data-toggle="tooltip" data-placement="right"
+                       onmouseover="$(this).tooltip('show')"
+                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
+                       ng-if="g.username === 'N/A'">
+                    </i>
+                </td>
                 <td class="text-center" style="width: 3%">{{g.basis}}</td>
             </tr>
             </tbody>
