@@ -342,8 +342,8 @@
             } else if (type === 'Exclude') {
                 user = $scope.groupingExclude[index].username;
             }
-            var URL = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
-            $scope.deleteModal(user, URL, $scope.selectedGrouping.path);
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
+            $scope.createDeleteModal(user, url, $scope.selectedGrouping.path);
         };
 
         /**
@@ -355,43 +355,44 @@
             var removeOwner = $scope.groupingOwners[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
-                $scope.deleteModal(removeOwner, removeOwnerUrl, $scope.selectedGrouping.path);
+                $scope.createDeleteModal(removeOwner, removeOwnerUrl, $scope.selectedGrouping.path);
             }
         };
 
-        $scope.deleteModal = function (user, url, type) {
-            $scope.deleteUser = user;
+        /**
+         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * a request is made to delete the user.
+         * @param {string} user - the user to delete
+         * @param {string} url - the URL used to make the request
+         * @param {string?} path - the path to the grouping (if deleting a user from a grouping)
+         */
+        $scope.createDeleteModal = function (user, url, path) {
+            $scope.userToDelete = user;
             $scope.deleteModalInstance = $uibModal.open({
                 templateUrl: 'modal/removeModal.html',
                 windowClass: 'center-modal',
-                scope: $scope,
-                resolve: {
-                    name: function () {
-                        return $scope.deleteUser;
-                    }
-                }
+                scope: $scope
             });
 
             $scope.deleteModalInstance.result.then(function () {
+                $scope.loading = true;
                 dataProvider.updateData(function (d) {
-                    console.log(d);
-                    $scope.loading = true;
-                    $scope.getData(type);
+                    $scope.getData(path);
                 }, url);
             });
         };
 
         /**
-         * Function that closes modal and proceeds with the modal result.
+         * Closes the modal, then proceeds with deleting a user from a grouping.
          */
-        $scope.ok = function () {
+        $scope.proceedDeleteUser = function () {
             $scope.deleteModalInstance.close();
         };
 
         /**
-         * Function that closes modal.
+         * Closes the modal for deleting a user. This does not delete the user from the grouping.
          */
-        $scope.cancel = function () {
+        $scope.cancelDeleteUser = function () {
             $scope.deleteModalInstance.dismiss();
         };
 
@@ -443,7 +444,6 @@
         $scope.preferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
                 templateUrl: 'modal/preferenceErrorModal.html',
-                windowClass: 'center-modal',
                 scope: $scope
             });
         };

@@ -325,7 +325,7 @@
             var deleteUser = $scope.adminsList[index].username;
             var deleteUrl = "api/groupings/" + deleteUser + "/deleteAdmin";
 
-            $scope.deleteModal(deleteUser, deleteUrl, index, 'admin');
+            $scope.createDeleteModal(deleteUser, deleteUrl);
         };
 
         /**
@@ -341,8 +341,8 @@
             } else if (type === 'Exclude') {
                 user = $scope.groupingExclude[index].username;
             }
-            var URL = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
-            $scope.deleteModal(user, URL, null, $scope.selectedGrouping.path);
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
+            $scope.createDeleteModal(user, url, $scope.selectedGrouping.path);
         };
 
         /**
@@ -354,54 +354,51 @@
             var removeOwner = $scope.groupingOwners[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
-                $scope.deleteModal(removeOwner, removeOwnerUrl, null, $scope.selectedGrouping.path);
+                $scope.createDeleteModal(removeOwner, removeOwnerUrl, $scope.selectedGrouping.path);
             }
         };
 
         /**
-         *
-         * @param user - name of the user to be deleted
-         * @param url - api url call to remove user
-         * @param location - The index of the user in the admin list table.
-         * @param type - Declaring if removing from admin list or from a grouping path.
+         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * a request is made to delete the user.
+         * @param {string} user - the user to delete
+         * @param {string} url - the URL used to make the request
+         * @param {string?} path - the path to the grouping (if deleting a user from a grouping)
          */
-        $scope.deleteModal = function (user, url, location, type) {
-            var message = "Are you sure you want to delete " + user;
-            var modalHtml = '<div class="modal-body">' + message + '</div>';
-            modalHtml += '<div class="modal-footer"><button class="btn btn-primary" ng-click="ok()">OK</button><button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button></div>';
-
+        $scope.createDeleteModal = function (user, url, path) {
+            $scope.userToDelete = user;
             $scope.deleteModalInstance = $uibModal.open({
-                template: modalHtml,
+                templateUrl: 'modal/removeModal.html',
                 scope: $scope
             });
 
             $scope.deleteModalInstance.result.then(function () {
                 $scope.loading = true;
-                if (type === 'admin' && $scope.adminsList.length > 1) {
+                // No path was provided, so delete from the admin list (if at least 1 will remain) and then reload
+                if (path === undefined && $scope.adminsList.length > 1) {
                     dataProvider.updateData(function (d) {
-                        $scope.adminsList.splice(location, 1);
                         $scope.init();
                     }, url);
                 } else {
+                    // Delete the user from the grouping, then reload the grouping
                     dataProvider.updateData(function (d) {
-                        console.log(d);
-                        $scope.getData(type);
+                        $scope.getData(path);
                     }, url);
                 }
             });
         };
 
         /**
-         * Function that closes modal and proceeds with the modal result.
+         * Closes the modal, then proceeds with deleting a user from a grouping.
          */
-        $scope.ok = function () {
+        $scope.proceedDeleteUser = function () {
             $scope.deleteModalInstance.close();
         };
 
         /**
-         * Function that closes modal.
+         * Closes the modal for deleting a user. This does not delete the user from the grouping/admin list.
          */
-        $scope.cancel = function () {
+        $scope.cancelDeleteUser = function () {
             $scope.deleteModalInstance.dismiss();
         };
 
