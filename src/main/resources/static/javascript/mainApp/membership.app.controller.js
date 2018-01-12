@@ -147,9 +147,9 @@
             $scope.loading = true;
             dataProvider.updateData(function (d) {
                 console.log(d);
-                if (d[0].resultCode.indexOf("FAILURE") > -1) {
+                if (d.statusCode != null) {
                     console.log("Failed to opt out");
-                    alert("Failed to opt out");
+                    $scope.optModalError();
                     $scope.loading = false;
                 }
                 else {
@@ -168,8 +168,27 @@
             console.log(optInURL);
             $scope.loading = true;
             dataProvider.updateData(function (d) {
-                $scope.init();
+                console.log(d);
+                if (d.statusCode != null) {
+                    console.log("Failed to opt out");
+                    $scope.optModalError();
+                    $scope.loading = false;
+                }
+                else {
+                    $scope.init();
+                }
             }, optInURL);
+        };
+
+        $scope.optModalError = function () {
+            $scope.optModalInstance = $uibModal.open({
+                templateUrl: 'modal/optModal.html',
+                scope: $scope
+            });
+        };
+
+        $scope.optDismiss = function () {
+            $scope.optModalInstance.dismiss();
         };
 
         var searchMatch = function (haystack, needle) {
