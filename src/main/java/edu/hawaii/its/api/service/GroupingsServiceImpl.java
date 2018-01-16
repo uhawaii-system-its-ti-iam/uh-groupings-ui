@@ -1153,7 +1153,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult addMemberAs(String username, String group, String userToAdd) {
-        //todo change this method to add to the Grouping instead of to a group
         logger.info("addMemberAs; user: " + username + "; group: " + group + "; userToAdd: " + userToAdd + ";");
 
         WsSubjectLookup user = gf.makeWsSubjectLookup(username);
@@ -1228,14 +1227,67 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Override
     public GroupingsServiceResult addMemberAs(String username, String group, List<String> usersToAdd) {
         logger.info("addMemberAs; user: " + username + "; group: " + group + "; usersToAdd: " + usersToAdd + ";");
-        //todo change this method to add to the Grouping instead of to a group
-
         //todo make this more efficient
         for(String userToAdd : usersToAdd) {
             GroupingsServiceResult gsr = addMemberAs(username, group, userToAdd);
         }
 
         return new GroupingsServiceResult(SUCCESS, "All additions were handled successfully.");
+    }
+
+    @Override
+    public GroupingsServiceResult addMemberToGrouping(String username, String groupingPath, String userToAdd) {
+        GroupingsServiceResult groupingsServiceResults;
+        String action = username + " adds " + userToAdd + " to " + groupingPath;
+
+        //check to see that they are not in the Grouping
+        if(!inGroup(groupingPath, userToAdd)){
+            //if they are in the exclude, get them out
+            if(inGroup(groupingPath + EXCLUDE, userToAdd)) {
+               groupingsServiceResults = deleteMemberAs(username, groupingPath + EXCLUDE, userToAdd);
+            }
+            //if they are not in the exclude then they are also not in the basis, so add them to the include
+            else{
+                groupingsServiceResults = addMemberAs(username, groupingPath + INCLUDE, userToAdd);
+            }
+        }
+        //if they are in the Grouping, do nothing but return SUCCESS
+        else {
+            groupingsServiceResults = makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " is already in " + groupingPath, action);
+        }
+
+        return groupingsServiceResults;
+    }
+
+    @Override
+    public GroupingsServiceResult deleteMemberFromGrouping(String username, String groupingPath, String userToDelete) {
+        logger.info("deleteMemberFromGrouping; username: "
+        + username
+        + "; groupingPath: "
+        + groupingPath + "; userToDelete: "
+        + userToDelete
+        + ";");
+
+        GroupingsServiceResult groupingsServiceResult;
+        String action = username + " deletes " + userToDelete + " from " + groupingPath;
+
+        //make sure userToDelete is actually in the Grouping
+        if(inGroup(groupingPath, userToDelete)) {
+            //if they are in the include group, get them out
+            if (inGroup(groupingPath + INCLUDE, userToDelete)) {
+                groupingsServiceResult = deleteMemberAs(username, groupingPath + INCLUDE, userToDelete);
+            }
+            //if they are not in the include group, then they are in the basis, so add them to the exclude group
+            else {
+                groupingsServiceResult = addMemberAs(username, groupingPath + EXCLUDE, userToDelete);
+            }
+        }
+        //since they are not in the Grouping, do nothing, but return SUCCESS
+        else {
+            groupingsServiceResult = makeGroupingsServiceResult(SUCCESS + userToDelete + " was not in " + groupingPath, action);
+        }
+
+        return groupingsServiceResult;
     }
 
     /**
@@ -1246,7 +1298,6 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     @Override
     public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete) {
-        //todo change this method to delete from the Grouping instead of to a group
         logger.info("deleteMemberAs; user: "
                 + username
                 + "; group: "
