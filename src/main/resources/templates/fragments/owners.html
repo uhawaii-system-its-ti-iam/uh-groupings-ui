@@ -24,7 +24,7 @@
                           data-toggle="tooltip" data-placement="top"
                           onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
                           th:title="#{screen.message.common.tooltip.remove.owner}"
-                          ng-click="removeOwner($index)" >
+                          ng-click="removeOwner($index + (currentPageOwners * itemsPerPage))" >
                     </span>
                 </td>
                 <td>
