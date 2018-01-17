@@ -255,77 +255,68 @@
 
         /**
          * Adds a user to a group.
-         * @param {string} type - the type of group to add the user to (either Include of Exclude)
+         * @param {string} type - the type of group to add the user to (either Include or Exclude)
          */
         $scope.addMember = function (type) {
             var addUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataProvider.updateData(function (d) {
+                var successful = false;
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                    $scope.addModalAlert('false', 'member');
                 } else if (d.resultCode === "SUCCESS") {
-                    $scope.addModalAlert('success', 'member');
+                    successful = true;
                 }
+                $scope.createAddModal($scope.addUser, successful, $scope.selectedGrouping.path);
+                $scope.addUser = '';
             }, addUrl);
-            $scope.addUser = '';
         };
 
         /**
          * Gives a user ownership of a grouping.
-         * If the user is successfully assigned ownership, then alerts success.
-         * Otherwise alerts that the user does not exist.
          */
         $scope.addOwner = function () {
             var addOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.ownerUser + "/assignOwnership";
             dataProvider.updateData(function (d) {
+                var successful = false;
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                    $scope.addModalAlert('false', 'member');
+                    $scope.createAddModal($scope.ownerUser, 'owner', successful);
                 } else if (d.resultCode === "SUCCESS") {
+                    successful = true;
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
-                    $scope.addModalAlert('success', 'owner');
                 }
+                $scope.createAddModal($scope.ownerUser, successful, $scope.selectedGrouping.path);
+                $scope.ownerUser = '';
             }, addOwnerUrl);
-            $scope.ownerUser = '';
         };
 
         /**
-         *
-         * @param user - user being added
-         * @param success - whether if the addData service returned a success in adding.
+         * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
+         * @param {string} user - the user being added
+         * @param {boolean} wasSuccessful - whether or not the user was successfully added
+         * @param {string} path - the path to the grouping
          */
-        $scope.addModalAlert = function (success, role) {
-            if (success === 'success') $scope.successAdd = true;
-            else $scope.successAdd = false;
+        $scope.createAddModal = function (user, wasSuccessful, path) {
+            $scope.user = user;
+            $scope.wasSuccessful = wasSuccessful;
 
-            $scope.role = role;
-            console.log($scope.successAdd);
-            console.log(role);
             $scope.addModalInstance = $uibModal.open({
                 templateUrl: 'modal/addModal.html',
-                windowClass: 'center-modal',
                 scope: $scope,
-                resolve: {
-                    success: function () {
-                        return $scope.successAdd;
-                    },
-                    type: function () {
-                        return $scope.role;
-                    }
-                }
             });
 
-            $scope.addModalInstance.result.then(function () {
-                $scope.loading = true;
-                if (success === 'success') $scope.getData();
-                else $scope.loading = false;
+            $scope.addModalInstance.result.finally(function() {
+                if (wasSuccessful) {
+                    $scope.loading = true;
+                    $scope.getData(path);
+                }
             });
         };
 
         /**
-         * Function that closes modal and proceeds with the modal result.
+         * Closes the add user modal.
          */
-        $scope.continue = function () {
+        $scope.closeAddModal = function () {
             $scope.addModalInstance.close();
         };
 
@@ -343,7 +334,7 @@
                 user = $scope.groupingExclude[index].username;
             }
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
-            $scope.createDeleteModal(user, url, $scope.selectedGrouping.path);
+            $scope.createRemoveModal(user, url, $scope.selectedGrouping.path);
         };
 
         /**
@@ -355,7 +346,7 @@
             var removeOwner = $scope.groupingOwners[index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
-                $scope.createDeleteModal(removeOwner, removeOwnerUrl, $scope.selectedGrouping.path);
+                $scope.createRemoveModal(removeOwner, removeOwnerUrl, $scope.selectedGrouping.path);
             }
         };
 
@@ -364,19 +355,19 @@
          * a request is made to delete the user.
          * @param {string} user - the user to delete
          * @param {string} url - the URL used to make the request
-         * @param {string?} path - the path to the grouping (if deleting a user from a grouping)
+         * @param {string} path - the path to the grouping
          */
-        $scope.createDeleteModal = function (user, url, path) {
+        $scope.createRemoveModal = function (user, url, path) {
             $scope.userToDelete = user;
-            $scope.deleteModalInstance = $uibModal.open({
+            $scope.removeModalInstance = $uibModal.open({
                 templateUrl: 'modal/removeModal.html',
-                windowClass: 'center-modal',
                 scope: $scope
             });
 
-            $scope.deleteModalInstance.result.then(function () {
+            $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
-                dataProvider.updateData(function (d) {
+                // Remove the user, then reload the grouping
+                dataProvider.updateData(function () {
                     $scope.getData(path);
                 }, url);
             });
@@ -385,15 +376,15 @@
         /**
          * Closes the modal, then proceeds with deleting a user from a grouping.
          */
-        $scope.proceedDeleteUser = function () {
-            $scope.deleteModalInstance.close();
+        $scope.proceedRemoveUser = function () {
+            $scope.removeModalInstance.close();
         };
 
         /**
          * Closes the modal for deleting a user. This does not delete the user from the grouping.
          */
-        $scope.cancelDeleteUser = function () {
-            $scope.deleteModalInstance.dismiss();
+        $scope.cancelRemoveUser = function () {
+            $scope.removeModalInstance.dismiss();
         };
 
         /**

@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelDeleteUser()">
+    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelRemoveUser()">
         <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title" id="modal-title">Remove User</h4>
@@ -8,6 +8,6 @@
     <p>Are you sure you want to remove {{ userToDelete }}?</p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="proceedDeleteUser()">Yes</button>
-    <button class="btn btn-warning" ng-click="cancelDeleteUser()" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-primary" ng-click="proceedRemoveUser()">Yes</button>
+    <button class="btn btn-warning" ng-click="cancelRemoveUser()" data-dismiss="modal">Cancel</button>
 </div>
