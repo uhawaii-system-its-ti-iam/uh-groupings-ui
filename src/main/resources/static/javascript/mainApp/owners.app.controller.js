@@ -160,7 +160,7 @@
         $scope.modify = function (grouping, list) {
             //Filter out names with hawaii.edu and adds basis object.
             for (var i = 0; i < grouping.length; i++) {
-                if (list === 'members') grouping[i].basis = "in Include";
+                if (list === 'members') grouping[i].basis = "Include";
                 else grouping[i].basis = "No";
 
                 if (grouping[i].name.indexOf("hawaii.edu") > -1) {
@@ -174,10 +174,10 @@
                 for (var m = 0; m < grouping.length; m++) {
                     if ($scope.basis[l].uuid === grouping[m].uuid) {
                         if (list === 'members') {
-                            grouping[m].basis = "in Basis";
+                            grouping[m].basis = "Basis";
                             for (var k = 0; k <  $scope.groupingInclude.length;k++) {
                                 if ($scope.groupingInclude[k].uuid === grouping[m].uuid){
-                                    grouping[m].basis = "in Basis / in Include";
+                                    grouping[m].basis = "Basis / Include";
                                 }
                             }
                         }
