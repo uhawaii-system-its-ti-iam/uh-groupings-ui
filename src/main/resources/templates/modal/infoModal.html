@@ -1,11 +1,12 @@
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="dialog" style="float: right;">
-        <span aria-hidden="true" ng-click="infoDismiss()">&times;</span>
+    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="closePreferenceInfo()">
+        <span aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title" id="modal-title">Preference Information</h3>
+    <h4 class="modal-title" id="modal-title">Preference Information</h4>
 </div>
 <div class="modal-body" id="modal-body">
-    <div class="text-center modal-body">
-        This option allows owners to set whether {{info}}.
-    </div>
+    <p>{{ preferenceInfo }}</p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="closePreferenceInfo()">OK</button>
 </div>

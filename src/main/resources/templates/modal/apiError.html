@@ -1,11 +1,12 @@
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="dialog" style="float: right;">
-        <span aria-hidden="true" ng-click="errorDismiss()">&times;</span>
+    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="closeApiError()">
+        <span aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title" id="modal-title">Error</h3>
+    <h4 class="modal-title" id="modal-title">Error</h4>
 </div>
 <div class="modal-body" id="modal-body">
-    <div class="text-center modal-body">
-        There was an error in loading the data. Please try again later.
-    </div>
+    <p>There was an error in loading the data. Please try again later.</p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="closeApiError()">OK</button>
 </div>

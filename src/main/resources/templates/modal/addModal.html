@@ -5,12 +5,16 @@
     <h4 class="modal-title" id="modal-title">Add User</h4>
 </div>
 <div class="modal-body" id="modal-body">
-    <p ng-if="wasSuccessful">
-        {{ user }} has been successfully added.
-    </p>
-    <p ng-if="!wasSuccessful">
-        There was an error adding {{ user }}.
-    </p>
+    <div ng-if="wasSuccessful">
+        <p>{{ user }} has been successfully added.</p>
+    </div>
+    <div ng-if="!wasSuccessful &amp;&amp; user.length > 0">
+        <p>There was an error adding {{ user }}.</p>
+        <p>Please ensure you have entered a valid UH username and try again.</p>
+    </div>
+    <div ng-if="!wasSuccessful &amp;&amp; user.length === 0">
+        <p>You must enter a UH username to add.</p>
+    </div>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="closeAddModal()">OK</button>

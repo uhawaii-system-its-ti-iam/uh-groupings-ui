@@ -71,7 +71,7 @@
             dataProvider.loadData(function (d) {
                 console.log(d.allGroupings.length);
                 if (d.allGroupings.length == 0) {
-                    $scope.errorModal();
+                    $scope.createApiErrorModal();
                 } else {
                     $scope.adminsList = d.adminGroup.members;
                     $scope.groupingsList = d.allGroupings;
@@ -91,16 +91,21 @@
             $scope.resetGroupingInformation();
         };
 
-        $scope.errorModal = function () {
-            $scope.errorModalInstance = $uibModal.open({
+        /**
+         * Creates a modal for errors in loading data from the API.
+         */
+        $scope.createApiErrorModal = function () {
+            $scope.apiErrorModalInstance = $uibModal.open({
                 templateUrl: 'modal/apiError.html',
-                windowClass: 'center-modal',
                 scope: $scope
             });
         };
 
-        $scope.errorDismiss = function () {
-            $scope.errorModalInstance.dismiss();
+        /**
+         * Closes the API error modal.
+         */
+        $scope.closeApiError = function () {
+            $scope.apiErrorModalInstance.close();
         };
 
         $scope.sortCol = function (list, col, listPaged, symbol) {
@@ -143,7 +148,7 @@
             dataProvider.loadData(function (d) {
                 console.log(d);
                 if (d.path.length == 0) {
-                    $scope.errorModal();
+                    $scope.createApiErrorModal();
                 } else {
                     $scope.basis = d.basis.members;
 
@@ -245,14 +250,11 @@
             var addUrl = "api/groupings/" + $scope.adminToAdd + "/addAdmin";
             dataProvider.updateData(function (d) {
                 var successful = false;
-                console.log(d);
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                 } else if (d.resultCode === 'SUCCESS') {
                     successful = true;
                     console.log("Success In Adding");
-                    $scope.addModalAlert('admin', 'success');
-                    // Clear the input field
                 }
                 $scope.createAddModal($scope.adminToAdd, successful);
                 $scope.adminToAdd = '';
@@ -286,7 +288,6 @@
                 var successful = false;
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                    $scope.createAddModal($scope.ownerUser, 'owner', successful);
                 } else if (d.resultCode === "SUCCESS") {
                     successful = true;
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
@@ -418,37 +419,36 @@
             $scope.removeModalInstance.dismiss();
         };
 
-        $scope.infoModal = function (preference, group) {
-            $scope.info = '';
-
-            if (preference === 'opt')
-                $scope.info = "or not members can " + group + " themselves to the grouping";
-            else if (preference === 'publication')
-                $scope.info = "the publication destination is active or not";
-
+        /**
+         * Creates a modal with a description of the preference selected.
+         * @param {string} desc - the description of the preference
+         */
+        $scope.createPreferenceInfoModal = function (desc) {
+            $scope.preferenceInfo = desc;
 
             $scope.infoModalInstance = $uibModal.open({
                 templateUrl: 'modal/infoModal.html',
                 scope: $scope,
-                resolve: {
-                    items: function () {
-                        return $scope.info;
-                    }
-                }
             });
         };
 
-        $scope.infoDismiss = function () {
-            $scope.infoModalInstance.dismiss();
+        /**
+         * Closes the preference information modal.
+         */
+        $scope.closePreferenceInfo = function () {
+            $scope.infoModalInstance.close();
         };
 
+        /**
+         * Toggles the grouping preference which allows users to opt out of a grouping.
+         */
         $scope.updateAllowOptOut = function () {
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/"  + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (d) {
                 console.log(d);
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                    $scope.preferenceErrorModal();
+                    $scope.createPreferenceErrorModal();
                 } else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
                     console.log("success");
                 }
@@ -457,12 +457,15 @@
 
         };
 
+        /**
+         * Toggles the grouping preference which allows users to discover the grouping and opt into it.
+         */
         $scope.updateAllowOptIn = function () {
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.allowOptIn + "/setOptIn";
             dataProvider.updateData(function (d) {
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                    $scope.preferenceErrorModal();
+                    $scope.createPreferenceErrorModal();
                 } else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
                     console.log("success");
                 }
@@ -470,13 +473,16 @@
             console.log(url);
         };
 
+        /**
+         * Toggles the grouping preference which creates a LISTSERV email list based off the grouping.
+         */
         $scope.updateListserv = function () {
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.listserv + "/setListserv";
             dataProvider.updateData(function (d) {
                 console.log(d);
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                    $scope.preferenceErrorModal();
+                    $scope.createPreferenceErrorModal();
                 } else if (d.resultCode === "SUCCESS") {
                     console.log("success");
                 }
@@ -489,16 +495,21 @@
             console.log($scope.LDAP);
         };
 
-        $scope.preferenceErrorModal = function () {
+        /**
+         * Creates a modal indicating an error in saving the grouping's preferences.
+         */
+        $scope.createPreferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
                 templateUrl: 'modal/preferenceErrorModal.html',
-                windowClass: 'center-modal',
                 scope: $scope
             });
         };
 
-        $scope.preferenceErrorDismiss = function () {
-            $scope.preferenceErrorModalInstance.dismiss();
+        /**
+         * Closes the preference error modal.
+         */
+        $scope.closePreferenceError = function () {
+            $scope.preferenceErrorModalInstance.close();
         };
 
         /**

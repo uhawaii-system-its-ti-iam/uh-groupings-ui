@@ -57,7 +57,7 @@
                 var temp = [];
                 console.log(d);
                 if (typeof d.groupingsIn === 'undefined') {
-                    $scope.errorModal();
+                    $scope.createApiErrorModal();
                 } else {
                     // Assigns grouping name and url used for api call.
                     for (var i = 0; i < d.groupingsOwned.length; i++) {
@@ -72,16 +72,21 @@
             }, groupingsOwned);
         };
 
-        $scope.errorModal = function () {
-            $scope.errorModalInstance = $uibModal.open({
-                templateUrl: 'apiError.html',
-                windowClass: 'center-modal',
+        /**
+         * Creates a modal for errors in loading data from the API.
+         */
+        $scope.createApiErrorModal = function () {
+            $scope.apiErrorModalInstance = $uibModal.open({
+                templateUrl: 'modal/apiError.html',
                 scope: $scope
             });
         };
 
-        $scope.errorDismiss = function () {
-            $scope.errorModalInstance.dismiss();
+        /**
+         * Closes the API error modal.
+         */
+        $scope.closeApiError = function () {
+            $scope.apiErrorModalInstance.close();
         };
 
         /**
@@ -280,7 +285,6 @@
                 var successful = false;
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                    $scope.createAddModal($scope.ownerUser, 'owner', successful);
                 } else if (d.resultCode === "SUCCESS") {
                     successful = true;
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
@@ -299,6 +303,7 @@
         $scope.createAddModal = function (user, wasSuccessful, path) {
             $scope.user = user;
             $scope.wasSuccessful = wasSuccessful;
+            console.log(wasSuccessful);
 
             $scope.addModalInstance = $uibModal.open({
                 templateUrl: 'modal/addModal.html',
@@ -388,39 +393,45 @@
         };
 
         /**
-         * Saves changes made to grouping privileges
+         * Toggles the grouping preference which allows users to opt out of a grouping.
          */
         $scope.updateAllowOptOut = function () {
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (d) {
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                    $scope.preferenceErrorModal();
+                    $scope.createPreferenceErrorModal();
                 } else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
                     console.log("success");
                 }
             }, url);
         };
 
+        /**
+         * Toggles the grouping preference which allows users to discover the grouping and opt into it.
+         */
         $scope.updateAllowOptIn = function () {
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.allowOptIn + "/setOptIn";
             dataProvider.updateData(function (d) {
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                    $scope.preferenceErrorModal();
+                    $scope.createPreferenceErrorModal();
                 } else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
                     console.log("success");
                 }
             }, url);
         };
 
+        /**
+         * Toggles the grouping preference which creates a LISTSERV email list based off the grouping.
+         */
         $scope.updateListserv = function () {
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.listserv + "/setListserv";
             dataProvider.updateData(function (d) {
                 console.log(d);
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                    $scope.preferenceErrorModal();
+                    $scope.createPreferenceErrorModal();
                 } else if (d.resultCode === "SUCCESS") {
                     console.log("success");
                 }
@@ -431,38 +442,41 @@
             console.log($scope.LDAP);
         };
 
-
-        $scope.preferenceErrorModal = function () {
+        /**
+         * Creates a modal indicating an error in saving the grouping's preferences.
+         */
+        $scope.createPreferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
                 templateUrl: 'modal/preferenceErrorModal.html',
                 scope: $scope
             });
         };
 
-        $scope.preferenceErrorDismiss = function () {
-            $scope.preferenceErrorModalInstance.dismiss();
+        /**
+         * Closes the preference error modal.
+         */
+        $scope.closePreferenceError = function () {
+            $scope.preferenceErrorModalInstance.close();
         };
 
-        $scope.infoModal = function (preference, group) {
-            $scope.info = '';
-            if (preference === 'opt')
-                $scope.info = "or not members can " + group + " themselves to the grouping";
-            else if (preference === 'publication')
-                $scope.info = "the publication destination is active or not";
+        /**
+         * Creates a modal with a description of the preference selected.
+         * @param {string} desc - the description of the preference
+         */
+        $scope.createPreferenceInfoModal = function (desc) {
+            $scope.preferenceInfo = desc;
 
             $scope.infoModalInstance = $uibModal.open({
                 templateUrl: 'modal/infoModal.html',
                 scope: $scope,
-                resolve: {
-                    items: function () {
-                        return $scope.info;
-                    }
-                }
             });
         };
 
-        $scope.infoDismiss = function () {
-            $scope.infoModalInstance.dismiss();
+        /**
+         * Closes the preference information modal.
+         */
+        $scope.closePreferenceInfo = function () {
+            $scope.infoModalInstance.close();
         };
 
         /**
