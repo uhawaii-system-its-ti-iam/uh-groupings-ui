@@ -1040,7 +1040,7 @@ public class GroupingsServiceMockTest {
         int numberOfBasisMembers = grouping.getBasis().getMembers().size();
 
         //try to put all users into exclude group
-        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_3_EXCLUDE_PATH, usernames);
+        groupingsService.addMembersAs(users.get(0).getUsername(), GROUPING_3_EXCLUDE_PATH, usernames);
         grouping = groupingRepository.findByPath(GROUPING_3_PATH);
         //there should be no real members in composite, but it should still have the 'grouperAll' member
         assertEquals(1, grouping.getComposite().getMembers().size());
@@ -1048,7 +1048,7 @@ public class GroupingsServiceMockTest {
         assertEquals(numberOfBasisMembers, grouping.getExclude().getMembers().size());
 
         //try to put all users into the include group
-        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_3_INCLUDE_PATH, usernames);
+        groupingsService.addMembersAs(users.get(0).getUsername(), GROUPING_3_INCLUDE_PATH, usernames);
         grouping = groupingRepository.findByPath(GROUPING_3_PATH);
         //all members should be in the group ( - 1 for 'grouperAll' in composite);
         assertEquals(usernames.size(), grouping.getComposite().getMembers().size() - 1);

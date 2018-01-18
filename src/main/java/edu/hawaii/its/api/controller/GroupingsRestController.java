@@ -35,6 +35,12 @@ public class GroupingsRestController {
     @Value("${app.iam.request.form}")
     private String requestForm;
 
+    @Value("${groupings.api.exclude}")
+    private String EXCLUDE;
+
+    @Value("${groupings.api.include}")
+    private String INCLUDE;
+
     @Autowired
     private GroupingsService gs;
 
@@ -95,11 +101,11 @@ public class GroupingsRestController {
      *  for the first case, the member will be added to the include group
      *  for the second case, the member will be removed from the exclude group
      */
-    @RequestMapping(value = "/{grouping}/{userToAdd}/addMember",
+    @RequestMapping(value = "/{grouping}/{userToAdd}/addMemberToGrouping",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult> addMember(Principal principal, @PathVariable String grouping, @PathVariable String userToAdd) {
-        logger.info("Entered REST addMemberToIncludeGroup...");
+    public ResponseEntity<List<GroupingsServiceResult>> addMemberToGrouping(Principal principal, @PathVariable String grouping, @PathVariable String userToAdd) {
+        logger.info("Entered REST addMemberToGrouping...");
         return ResponseEntity
                 .ok()
                 .body(gs.addMemberToGrouping(principal.getName(), grouping, userToAdd));
@@ -116,11 +122,11 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{userToAdd}/addMemberToIncludeGroup",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult> addMemberToIncludeGroup(Principal principal, @PathVariable String grouping, @PathVariable String userToAdd) {
+    public ResponseEntity<List<GroupingsServiceResult>> addMemberToIncludeGroup(Principal principal, @PathVariable String grouping, @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToIncludeGroup...");
         return ResponseEntity
                 .ok()
-                .body(gs.addMemberAs(principal.getName(), grouping + ":include", userToAdd));
+                .body(gs.addMemberAs(principal.getName(), grouping + INCLUDE, userToAdd));
     }
 
     /**
@@ -134,11 +140,11 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{userToAdd}/addMemberToExcludeGroup",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult> addMemberToExcludeGroup(Principal principal, @PathVariable String grouping, @PathVariable String userToAdd) {
+    public ResponseEntity<List<GroupingsServiceResult>> addMemberToExcludeGroup(Principal principal, @PathVariable String grouping, @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToExcludeGroup...");
         return ResponseEntity
                 .ok()
-                .body(gs.addMemberAs(principal.getName(), grouping + ":exclude", userToAdd));
+                .body(gs.addMemberAs(principal.getName(), grouping + EXCLUDE, userToAdd));
     }
 
     /**
@@ -147,11 +153,11 @@ public class GroupingsRestController {
      * if the user is in the basis, then it will add them to the exclude
      * if a user is in the include instead of the basis, then it will remove them from the include
      */
-    @RequestMapping(value = "/{grouping}/{userToDelete}/deleteMember",
+    @RequestMapping(value = "/{grouping}/{userToDelete}/deleteMemberFromGrouping",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult> deleteMember(Principal principal, @PathVariable String grouping, @PathVariable String userToDelete) {
-        logger.info("Entered REST deleteMemberFromIncludeGroup...");
+    public ResponseEntity<List<GroupingsServiceResult>> deleteMemberFromGrouping(Principal principal, @PathVariable String grouping, @PathVariable String userToDelete) {
+        logger.info("Entered REST deleteMemberFromGrouping...");
         return ResponseEntity
                 .ok()
                 .body(gs.deleteMemberFromGrouping(principal.getName(), grouping, userToDelete));
@@ -171,7 +177,7 @@ public class GroupingsRestController {
         logger.info("Entered REST deleteMemberFromIncludeGroup...");
         return ResponseEntity
                 .ok()
-                .body(gs.deleteMemberAs(principal.getName(), grouping + ":include", userToDelete));
+                .body(gs.deleteMemberAs(principal.getName(), grouping + INCLUDE, userToDelete));
     }
 
     /**
@@ -188,7 +194,7 @@ public class GroupingsRestController {
         logger.info("Entered REST deleteMemberFromExcludeGroup...");
         return ResponseEntity
                 .ok()
-                .body(gs.deleteMemberAs(principal.getName(), grouping + ":exclude", userToDelete));
+                .body(gs.deleteMemberAs(principal.getName(), grouping + EXCLUDE, userToDelete));
     }
 
     /**
