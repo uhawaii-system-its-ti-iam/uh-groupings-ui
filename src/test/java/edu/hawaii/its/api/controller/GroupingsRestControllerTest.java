@@ -151,25 +151,27 @@ public class GroupingsRestControllerTest {
     public void getAddMember() throws Exception {
         final String grouping = "grouping";
         final String username = "user";
-        GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "add member to include group");
-        GroupingsServiceResult gsr2 = new GroupingsServiceResult("SUCCESS", "add member to exclude group");
+        List<GroupingsServiceResult> gsrList = new ArrayList<>();
+        List<GroupingsServiceResult> gsrList2 = new ArrayList<>();
+        gsrList.add(new GroupingsServiceResult("SUCCESS", "add member to include group"));
+        gsrList2.add(new GroupingsServiceResult("SUCCESS", "add member to exclude group"));
 
         given(groupingsService.addMemberAs(username, grouping + ":include", username))
-                .willReturn(gsr);
+                .willReturn(gsrList);
         given(groupingsService.addMemberAs(username, grouping + ":exclude", username))
-                .willReturn(gsr2);
+                .willReturn(gsrList2);
 
         mockMvc.perform(post("/api/groupings/grouping/user/addMemberToIncludeGroup")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("add member to include group"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("add member to include group"));
 
         mockMvc.perform(post("/api/groupings/grouping/user/addMemberToExcludeGroup")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("add member to exclude group"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("add member to exclude group"));
     }
 
     @Test

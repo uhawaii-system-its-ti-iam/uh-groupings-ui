@@ -683,20 +683,17 @@ public class GroupingsServiceMockTest {
         //opt in Permission for include group true and not in group, but in basis
         optInResults = groupingsService.optIn(users.get(1).getUsername(), GROUPING_1_PATH);
         assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
-        assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertEquals(2, optInResults.size());
+        assertEquals(1, optInResults.size());
 
         //opt in Permission for include group true but already in group, not self opted
         optInResults = groupingsService.optIn(users.get(9).getUsername(), GROUPING_0_PATH);
         assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
         assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(optInResults.get(2).getResultCode().startsWith(SUCCESS));
 
         //opt in Permission for include group true, but already self-opted
         optInResults = groupingsService.optIn(users.get(9).getUsername(), GROUPING_0_PATH);
         assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
         assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(optInResults.get(2).getResultCode().startsWith(SUCCESS));
     }
 
     @Test
@@ -729,64 +726,6 @@ public class GroupingsServiceMockTest {
         assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
         assertTrue(optInResults.get(2).getResultCode().startsWith(SUCCESS));
 
-    }
-
-    @Test
-    public void cancelOptInTest() {
-        //not in group
-        List<GroupingsServiceResult> cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(2).getUsername());
-        assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(SUCCESS));
-
-        try {
-            //in group but not self opted
-            cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(5).getUsername());
-        }catch (GroupingsServiceResultException gsre) {
-            cancelOptInResults = new ArrayList<>();
-            cancelOptInResults.add(gsre.getGsr());
-        }
-        assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(FAILURE));
-
-        //in group and self opted
-        Person person = personRepository.findByUsername(users.get(5).getUsername());
-        Group group = groupRepository.findByPath(GROUPING_0_INCLUDE_PATH);
-        Membership membership = membershipRepository.findByPersonAndGroup(person, group);
-        membership.setSelfOpted(true);
-        membershipRepository.save(membership);
-
-        cancelOptInResults = groupingsService.cancelOptIn(GROUPING_0_PATH, users.get(5).getUsername());
-        assertTrue(cancelOptInResults.get(0).getResultCode().startsWith(SUCCESS));
-        assertTrue(cancelOptInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(cancelOptInResults.get(2).getResultCode().startsWith(SUCCESS));
-
-    }
-
-    @Test
-    public void cancelOptOutTest() {
-
-        //not in group
-        List<GroupingsServiceResult> cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_0_PATH, users.get(1).getUsername());
-        assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(SUCCESS));
-
-        try {
-            //in group but not self opted
-            cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_0_PATH, users.get(2).getUsername());
-        } catch (GroupingsServiceResultException gsre) {
-            cancelOptOutResults = new ArrayList<>();
-            cancelOptOutResults.add(gsre.getGsr());
-        }
-        assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(FAILURE));
-
-        //in group and self opted
-        Person person = personRepository.findByUsername(users.get(2).getUsername());
-        Group group = groupRepository.findByPath(GROUPING_1_EXCLUDE_PATH);
-        Membership membership = membershipRepository.findByPersonAndGroup(person, group);
-        membership.setSelfOpted(true);
-        membershipRepository.save(membership);
-
-        cancelOptOutResults = groupingsService.cancelOptOut(GROUPING_1_PATH, users.get(2).getUsername());
-        assertTrue(cancelOptOutResults.get(0).getResultCode().startsWith(SUCCESS));
-        assertTrue(cancelOptOutResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(cancelOptOutResults.get(2).getResultCode().startsWith(SUCCESS));
     }
 
     @Test
@@ -1098,7 +1037,7 @@ public class GroupingsServiceMockTest {
         int numberOfBasisMembers = grouping.getBasis().getMembers().size();
 
         //try to put all users into exclude group
-        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_3_EXCLUDE_PATH, usernames);
+        groupingsService.addMembersAs(users.get(0).getUsername(), GROUPING_3_EXCLUDE_PATH, usernames);
         grouping = groupingRepository.findByPath(GROUPING_3_PATH);
         //there should be no real members in composite, but it should still have the 'grouperAll' member
         assertEquals(1, grouping.getComposite().getMembers().size());
@@ -1106,7 +1045,7 @@ public class GroupingsServiceMockTest {
         assertEquals(numberOfBasisMembers, grouping.getExclude().getMembers().size());
 
         //try to put all users into the include group
-        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_3_INCLUDE_PATH, usernames);
+        groupingsService.addMembersAs(users.get(0).getUsername(), GROUPING_3_INCLUDE_PATH, usernames);
         grouping = groupingRepository.findByPath(GROUPING_3_PATH);
         //all members should be in the group ( - 1 for 'grouperAll' in composite);
         assertEquals(usernames.size(), grouping.getComposite().getMembers().size() - 1);
