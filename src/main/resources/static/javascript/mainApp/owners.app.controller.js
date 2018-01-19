@@ -90,13 +90,12 @@
         };
 
         /**
-         * Switches from showing that data of the grouping you own to the information about the grouping selected.
-         *
-         * @param row - row of the grouping with relation to the table.
+         * Gets information about the grouping clicked by the user.
+         * @param {number} index - the index of the grouping selected, with the current page and items per page taken
+         * into account
          */
-        $scope.showData = function (row) {
-            $scope.selectedGrouping = $scope.pagedItemsGroupings[$scope.currentPageGroupings][row];
-            //URLS being used in the api calls.
+        $scope.showData = function (index) {
+            $scope.selectedGrouping = $scope.groupingsList[index];
             if (!$scope.showGrouping) {
                 $scope.showGrouping = true;
                 $scope.getData();

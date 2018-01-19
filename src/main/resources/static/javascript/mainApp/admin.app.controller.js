@@ -634,11 +634,12 @@
         };
 
         /**
-         * Gets information about the grouping clicked by the user on the Manage Groupings tab
-         * @param {number} row - the row clicked on by the user (zero-indexed)
+         * Gets information about the grouping clicked by the user.
+         * @param {number} index - the index of the grouping selected, with the current page and items per page taken
+         * into account
          */
-        $scope.showData = function (row) {
-            $scope.selectedGrouping = $scope.pagedItemsGroupings[$scope.currentPageGroupings][row];
+        $scope.showData = function (index) {
+            $scope.selectedGrouping = $scope.groupingsList[index];
             if (!$scope.showGrouping) {
                 $scope.showGrouping = true;
                 $scope.getData();
