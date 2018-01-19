@@ -1111,8 +1111,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                     GROUPING_ADMINS,
                     newAdmin);
 
-            updateLastModified(GROUPING_ADMINS);
-
             return makeGroupingsServiceResult(addMemberResults, action);
         }
 
@@ -1137,8 +1135,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                     GROUPING_ADMINS,
                     user,
                     adminToDelete);
-
-            updateLastModified(GROUPING_ADMINS);
 
             return makeGroupingsServiceResult(deleteMemberResults, action);
         }
