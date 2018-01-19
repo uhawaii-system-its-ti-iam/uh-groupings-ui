@@ -172,16 +172,16 @@ public class TestGroupingsService {
         gs.changeOptOutStatus(GROUPING, username[0], true);
 
         //put in include
-        gs.addMemberAs(username[0], GROUPING_INCLUDE, username[0]);
-        gs.addMemberAs(username[0], GROUPING_INCLUDE, username[1]);
-        gs.addMemberAs(username[0], GROUPING_INCLUDE, username[2]);
-
-        //add to exclude
-        gs.addMemberAs(username[0], GROUPING_EXCLUDE, username[3]);
+        gs.addMemberToGrouping(username[0], GROUPING, username[0]);
+        gs.addMemberToGrouping(username[0], GROUPING, username[1]);
+        gs.addMemberToGrouping(username[0], GROUPING, username[2]);
 
         //remove from exclude
-        gs.addMemberAs(username[0], GROUPING_INCLUDE, username[4]);
-        gs.addMemberAs(username[0], GROUPING_INCLUDE, username[5]);
+        gs.addMemberToGrouping(username[0], GROUPING, username[4]);
+        gs.addMemberToGrouping(username[0], GROUPING, username[5]);
+
+        //add to exclude
+        gs.deleteMemberFromGrouping(username[0], GROUPING, username[3]);
     }
 
     @Test
@@ -250,7 +250,7 @@ public class TestGroupingsService {
     @Test
     public void optTest() {
 
-        //tst[3] is not in the Grouping or include, but is in the basis and exclude
+        //tst[3] is not in the composite or include, but is in the basis and exclude
         //tst[3] is not self opted into the exclude
         assertFalse(gs.inGroup(GROUPING_INCLUDE, username[3]));
         assertFalse(gs.inGroup(GROUPING, username[3]));
@@ -483,10 +483,10 @@ public class TestGroupingsService {
         assertFalse(gs.inGroup(GROUPING_INCLUDE, username[3]));
 
         //an owner adds username[3] to the include group
-        GroupingsServiceResult addMember = gs.addMemberAs(username[0], GROUPING_INCLUDE, username[3]);
+        List<GroupingsServiceResult> addMember = gs.addMemberAs(username[0], GROUPING_INCLUDE, username[3]);
 
         //the addition was successful
-        assertTrue(addMember.getResultCode().startsWith(SUCCESS));
+        assertTrue(addMember.get(0).getResultCode().startsWith(SUCCESS));
         //username[3] is in the basis and composite, not the exclude or include
         assertTrue(gs.inGroup(GROUPING_BASIS, username[3]));
         assertTrue(gs.inGroup(GROUPING, username[3]));
@@ -497,7 +497,7 @@ public class TestGroupingsService {
         addMember = gs.addMemberAs(username[0], GROUPING_EXCLUDE, username[3]);
 
         //the addition was successful
-        assertEquals(addMember.getResultCode(), SUCCESS);
+        assertEquals(addMember.get(0).getResultCode(), SUCCESS);
         //username[3] is in the basis and exclude, not the composite or include
         assertTrue(gs.inGroup(GROUPING_BASIS, username[3]));
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[3]));
@@ -507,7 +507,7 @@ public class TestGroupingsService {
         //test adding when already in group
         addMember = gs.addMemberAs(username[0], GROUPING_EXCLUDE, username[3]);
         //the addition was successful
-        assertEquals(addMember.getResultCode(), SUCCESS);
+        assertEquals(addMember.get(0).getResultCode(), SUCCESS);
         //username[3] is in the basis and exclude, not the composite or include
         assertTrue(gs.inGroup(GROUPING_BASIS, username[3]));
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, username[3]));

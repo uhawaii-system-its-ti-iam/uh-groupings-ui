@@ -435,9 +435,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         String outOrrIn = "in ";
         String preposition = "to ";
         String addGroup = grouping + INCLUDE;
-        String deleteGroup = grouping + EXCLUDE;
 
-        return opt(username, grouping, addGroup, deleteGroup, outOrrIn, preposition);
+        return opt(username, grouping, addGroup, outOrrIn, preposition);
     }
 
     /**
@@ -454,40 +453,46 @@ public class GroupingsServiceImpl implements GroupingsService {
         String outOrrIn = "out ";
         String preposition = "from ";
         String addGroup = grouping + EXCLUDE;
-        String deleteGroup = grouping + INCLUDE;
 
-        return opt(username, grouping, addGroup, deleteGroup, outOrrIn, preposition);
+        return opt(username, grouping, addGroup, outOrrIn, preposition);
     }
 
     private List<GroupingsServiceResult> opt(String username
             , String grouping
             , String addGroup
-            , String deleteGroup
             , String outOrrIn
             , String preposition) {
 
         List<GroupingsServiceResult> results = new ArrayList<>();
 
         if (groupOptInPermission(username, addGroup)) {
-            results.add(deleteMemberAs(username, deleteGroup, username));
-            results.addAll(addMemberAs(username, addGroup, username));
+
+            switch (outOrrIn) {
+                case "out ":
+                    results.addAll(deleteMemberFromGrouping(username, grouping, username));
+
+                    break;
+
+                case "in ":
+                    results.addAll(addMemberToGrouping(username, grouping, username));
+                    break;
+            }
 
             if (inGroup(addGroup, username)) {
                 results.add(addSelfOpted(addGroup, username));
             }
+        } else {
 
-            return results;
+            String action = "opt " + outOrrIn + username + " " + preposition + grouping;
+            String failureResult = FAILURE
+                    + ": "
+                    + username
+                    + " does not have permission to opt "
+                    + outOrrIn
+                    + preposition
+                    + grouping;
+            results.add(makeGroupingsServiceResult(failureResult, action));
         }
-
-        String action = "opt " + outOrrIn + username + " " + preposition + grouping;
-        String failureResult = FAILURE
-                + ", "
-                + username
-                + " does not have permission to opt "
-                + outOrrIn
-                + preposition
-                + grouping;
-        results.add(makeGroupingsServiceResult(failureResult, action));
         return results;
     }
 
@@ -596,12 +601,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> groupsOpted = new ArrayList<>();
         List<String> groupingsOpted = new ArrayList<>();
 
-        for (String group : groupPaths) {
-            if (group.endsWith(includeOrrExclude)
-                    && checkSelfOpted(group, username)) {
-                groupsOpted.add(parentGroupingPath(group));
-            }
-        }
+        groupsOpted.addAll(groupPaths.stream().filter(group -> group.endsWith(includeOrrExclude)
+                && checkSelfOpted(group, username)).map(this::parentGroupingPath).collect(Collectors.toList()));
 
         if (groupsOpted.size() > 0) {
 
@@ -638,9 +639,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
             List<WsGroup> groups = new ArrayList<>(Arrays.asList(attributeAssignmentsResults.getWsGroups()));
 
-            for (WsGroup group : groups) {
-                groupPaths.add(group.getName());
-            }
+            groupPaths.addAll(groups.stream().map(WsGroup::getName).collect(Collectors.toList()));
 
             Group admin = getMembers(username, GROUPING_ADMINS);
             groupings = makeGroupings(groupPaths, true);
@@ -1117,8 +1116,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                     GROUPING_ADMINS,
                     newAdmin);
 
-            updateLastModified(GROUPING_ADMINS);
-
             return makeGroupingsServiceResult(addMemberResults, action);
         }
 
@@ -1144,8 +1141,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                     user,
                     adminToDelete);
 
-            updateLastModified(GROUPING_ADMINS);
-
             return makeGroupingsServiceResult(deleteMemberResults, action);
         }
         return makeGroupingsServiceResult("FAILURE: " + username + " is not an admin", action);
@@ -1159,7 +1154,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<GroupingsServiceResult> gsrs = new ArrayList<>();
         String action = "add users to " + group;
 
-        if (isOwner(parentGroupingPath(group), username) || isSuperuser(username)) {
+        if (isOwner(parentGroupingPath(group), username) || isSuperuser(username) || userToAdd.equals(username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
             String composite = parentGroupingPath(group);
             String exclude = composite + EXCLUDE;
@@ -1287,18 +1282,27 @@ public class GroupingsServiceImpl implements GroupingsService {
         String exclude = groupingPath + EXCLUDE;
         String include = groupingPath + INCLUDE;
 
+        boolean inBasis = inGroup(basis, userToAdd);
+        boolean inComposite = inGroup(groupingPath, userToAdd);
+        boolean inInclude = inGroup(include, userToAdd);
+
         //check to see if they are already in the grouping
-        if (!inGroup(groupingPath, userToAdd)) {
+        if (!inComposite) {
             //get them out of the exclude
             gsrs.add(deleteMemberAs(username, exclude, userToAdd));
             //only add them to the include if they are not in the basis
-            if (!inGroup(basis, userToAdd)) {
+            if (!inBasis) {
                 gsrs.addAll(addMemberAs(username, include, userToAdd));
             } else {
                 gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was in " + basis, action));
             }
+        } else {
+            gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + groupingPath, action));
         }
-        gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + groupingPath, action));
+        //should only be in one or the other
+        if (inBasis && inInclude) {
+            gsrs.add(deleteMemberAs(username, include, userToAdd));
+        }
 
         return gsrs;
     }
@@ -1315,19 +1319,32 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
 
         String action = username + " deletes " + userToDelete + " from " + groupingPath;
+        String basis = groupingPath + BASIS;
+        String exclude = groupingPath + EXCLUDE;
+        String include = groupingPath + INCLUDE;
+
+        boolean inBasis = inGroup(basis, userToDelete);
+        boolean inComposite = inGroup(groupingPath, userToDelete);
+        boolean inExclude = inGroup(exclude, userToDelete);
+
+        //if they are in the include group, get them out
+        gsrList.add(deleteMemberAs(username, include, userToDelete));
 
         //make sure userToDelete is actually in the Grouping
-        if (inGroup(groupingPath, userToDelete)) {
-            //if they are in the include group, get them out
-            gsrList.add(deleteMemberAs(username, groupingPath + INCLUDE, userToDelete));
+        if (inComposite) {
             //if they are not in the include group, then they are in the basis, so add them to the exclude group
-            if (inGroup(groupingPath + BASIS, userToDelete)) {
-                gsrList.addAll(addMemberAs(username, groupingPath + EXCLUDE, userToDelete));
+            if (inBasis) {
+                gsrList.addAll(addMemberAs(username, exclude, userToDelete));
             }
         }
         //since they are not in the Grouping, do nothing, but return SUCCESS
         else {
             gsrList.add(makeGroupingsServiceResult(SUCCESS + userToDelete + " was not in " + groupingPath, action));
+        }
+
+        //should not be in exclude if not in basis
+        if(!inBasis && inExclude) {
+            gsrList.add(deleteMemberAs(username, exclude, userToDelete));
         }
 
         return gsrList;
@@ -1350,17 +1367,18 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         String action = "delete " + userToDelete + " from " + group;
 
-        if (isOwner(parentGroupingPath(group), username) || isSuperuser(username)) {
+        String composite = parentGroupingPath(group);
+
+        if (isOwner(composite, username) || isSuperuser(username) || userToDelete.equals(username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
             if (group.endsWith(EXCLUDE) || group.endsWith(INCLUDE) || group.endsWith(OWNERS)) {
                 if (inGroup(group, userToDelete)) {
                     WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(group, user, userToDelete);
 
-                    updateLastModified(parentGroupingPath(group));
+                    updateLastModified(composite);
                     updateLastModified(group);
                     return makeGroupingsServiceResult(deleteMemberResults, action);
                 }
-
                 return makeGroupingsServiceResult(SUCCESS + ": " + username + " was not in " + group, action);
             }
             return makeGroupingsServiceResult(FAILURE + ": " + username + " may only delete from exclude, include or owner group", action);
