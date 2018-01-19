@@ -13,10 +13,10 @@
                         themselves to this group
                     </label>
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       ng-click="infoModal('opt', 'add')"
                        data-toggle="tooltip"
                        data-placement="right"
-                       th:title="#{screen.message.common.tooltip.preference.allowOptIn}"></i>
+                       th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
+                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\')'"></i>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -25,10 +25,10 @@
                         themselves to this group
                     </label>
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       ng-click="infoModal('opt', 'remove')"
                        data-toggle="tooltip"
                        data-placement="right"
-                       th:title="#{screen.message.common.tooltip.preference.allowOptOut}"></i>
+                       th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
+                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')'"></i>
                 </div>
             </div>
             <div>
@@ -40,10 +40,10 @@
                         Email list: &lt;{{ selectedGrouping.name }}@lists.hawaii.edu&gt;
                     </label>
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       ng-click="infoModal('publication')"
                        data-toggle="tooltip"
                        data-placement="right"
-                       th:title="#{screen.message.common.tooltip.preference.listserv}"></i>
+                       th:title="#{screen.message.common.tooltip.preference.listserv}"
+                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\')'"></i>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -51,10 +51,10 @@
                         CAS/LDAP: uhReleasedGroupings
                     </label>
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       ng-click="infoModal('publication')"
                        data-toggle="tooltip"
                        data-placement="right"
-                       th:title="#{screen.message.common.tooltip.preference.ldap}"></i>
+                       th:title="#{screen.message.common.tooltip.preference.ldap}"
+                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\')'"></i>
                 </div>
             </div>
         </div>
