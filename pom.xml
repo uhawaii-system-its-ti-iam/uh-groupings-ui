@@ -307,7 +307,7 @@
                                 <echo>$ mvn clean test cobertura:cobertura</echo>
                                 <echo></echo>
                                 <echo>To run the integrations tests with your Grouper server:</echo>
-                                <echo>mvn -Dtest=TestGroupingsService,TestGroupingsRestController test</echo>
+                                <echo>$ mvn -Dtest=TestGroupingsService,TestGroupingsRestController test</echo>
                                 <echo></echo>
                                 <echo>To run UH Groupings locally:</echo>
                                 <echo>$ mvn clean spring-boot:run</echo>
