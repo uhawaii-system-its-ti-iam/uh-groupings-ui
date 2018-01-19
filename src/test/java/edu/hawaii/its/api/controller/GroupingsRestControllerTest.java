@@ -164,14 +164,14 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(post("/api/groupings/grouping/user/addMemberToIncludeGroup")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("add member to include group"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("add member to include group"));
 
         mockMvc.perform(post("/api/groupings/grouping/user/addMemberToExcludeGroup")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("add member to exclude group"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("add member to exclude group"));
     }
 
     @Test

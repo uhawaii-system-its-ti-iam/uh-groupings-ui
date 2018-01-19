@@ -167,18 +167,18 @@ public class TestGroupingsRestController {
 
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
 
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToIncludeGroup");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToIncludeGroup");
 
         assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
-        //tst[3] is in basis, so will not go into include
-        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[3]));
+        //tst[3] is in basis and will go into include
+        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[3]));
 
         //add tst[3] back to exclude
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
 
         //add tst[3] to Grouping
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMember");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToGrouping");
         assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
         //tst[3] is in basis, so will not go into include
         assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[3]));
@@ -206,8 +206,8 @@ public class TestGroupingsRestController {
         assertTrue(gs.inGroup(GROUPING, tst[5]));
         assertTrue(gs.inGroup(GROUPING_BASIS, tst[5]));
         assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[2]));
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[2] + "/deleteMember");
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[5] + "/deleteMember");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[2] + "/deleteMemberFromGrouping");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[5] + "/deleteMemberFromGrouping");
 
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[5]));
         assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[2]));

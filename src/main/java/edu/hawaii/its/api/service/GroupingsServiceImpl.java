@@ -1151,7 +1151,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("addMemberToGroup; user: " + username + "; group: " + group + "; userToAdd: " + userToAdd + ";");
 
         //todo change to map? (add, delete) or (include, exclude, owners)
-        List<GroupingsServiceResult> gsrs = new ArrayList<>();
+        List<GroupingsServiceResult> gsrList = new ArrayList<>();
         String action = "add users to " + group;
 
         if (isOwner(parentGroupingPath(group), username) || isSuperuser(username) || userToAdd.equals(username)) {
@@ -1168,50 +1168,54 @@ public class GroupingsServiceImpl implements GroupingsService {
 
             //check to see if it is the include, exclude or owners
             if (group.endsWith(INCLUDE)) {
+                //if userToAdd is in exclude, get them out
+                if (inGroup(exclude, userToAdd)) {
+                    WsDeleteMemberResults wsDeleteMemberResults = gf.makeWsDeleteMemberResults(
+                            exclude,
+                            user,
+                            userToAdd);
+
+                    updateExclude = true;
+
+                    gsrList.add(makeGroupingsServiceResult(wsDeleteMemberResults, "delete " + userToAdd + " from " + exclude));
+                }
                 //check to see if userToAdd is already in include
                 if (!inGroup(include, userToAdd)) {
-                    //if userToAdd is in exclude, get them out
-                    if (inGroup(exclude, username)) {
-                        gf.makeWsDeleteMemberResults(
-                                exclude,
-                                user,
-                                userToAdd);
-
-                        updateExclude = true;
-                    }
                     //add to include
                     WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(include, user, userToAdd);
 
                     updateInclude = true;
 
-                    gsrs.add(makeGroupingsServiceResult(addMemberResults, action));
+                    gsrList.add(makeGroupingsServiceResult(addMemberResults, action));
                 }
                 //They are already in the group, so just return SUCCESS
-                gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
+                gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
             }
 
             //if exclude check if userToAdd is in the include
             else if (group.endsWith(EXCLUDE)) {
+                //if userToAdd is in include, get them out
+                if (inGroup(include, userToAdd)) {
+                    WsDeleteMemberResults wsDeleteMemberResults = gf.makeWsDeleteMemberResults(
+                            include,
+                            user,
+                            userToAdd);
+
+                    updateInclude = true;
+
+                    gsrList.add(makeGroupingsServiceResult(wsDeleteMemberResults, "delete " + userToAdd + " from " + include));
+                }
                 //check to see if userToAdd is already in exclude
                 if (!inGroup(exclude, userToAdd)) {
-                    //if userToAdd is in include, get them out
-                    if (inGroup(include, username)) {
-                        gf.makeWsDeleteMemberResults(
-                                include,
-                                user,
-                                userToAdd);
-
-                        updateInclude = true;
-                    }
                     //add to exclude
                     WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(exclude, user, userToAdd);
 
                     updateExclude = true;
 
-                    gsrs.add(makeGroupingsServiceResult(addMemberResults, action));
+                    gsrList.add(makeGroupingsServiceResult(addMemberResults, action));
                 }
                 //They are already in the group, so just return SUCCESS
-                gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
+                gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
 
             }
             //if owners check to see if the user is already in owners
@@ -1223,14 +1227,14 @@ public class GroupingsServiceImpl implements GroupingsService {
 
                     updateOwners = true;
 
-                    gsrs.add(makeGroupingsServiceResult(addMemberResults, action));
+                    gsrList.add(makeGroupingsServiceResult(addMemberResults, action));
                 }
                 //They are already in the group, so just return SUCCESS
-                gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
+                gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
             }
             //Owners can only change include, exclude and owners groups
             else {
-                gsrs.add(makeGroupingsServiceResult(FAILURE + ": " + username + " may only add to exclude, include or owner group", action));
+                gsrList.add(makeGroupingsServiceResult(FAILURE + ": " + username + " may only add to exclude, include or owner group", action));
             }
 
             //update groups that were changed
@@ -1249,10 +1253,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                 updateLastModified(owners);
             }
         } else {
-            gsrs.add(makeGroupingsServiceResult(FAILURE + ": " + username + "does not have permission to edit " + group, action));
+            gsrList.add(makeGroupingsServiceResult(FAILURE + ": " + username + "does not have permission to edit " + group, action));
         }
 
-        return gsrs;
+        return gsrList;
     }
 
     /**
@@ -1343,7 +1347,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         }
 
         //should not be in exclude if not in basis
-        if(!inBasis && inExclude) {
+        if (!inBasis && inExclude) {
             gsrList.add(deleteMemberAs(username, exclude, userToDelete));
         }
 

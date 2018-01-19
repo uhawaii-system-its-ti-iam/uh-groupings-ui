@@ -683,20 +683,17 @@ public class GroupingsServiceMockTest {
         //opt in Permission for include group true and not in group, but in basis
         optInResults = groupingsService.optIn(users.get(1).getUsername(), GROUPING_1_PATH);
         assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
-        assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertEquals(2, optInResults.size());
+        assertEquals(1, optInResults.size());
 
         //opt in Permission for include group true but already in group, not self opted
         optInResults = groupingsService.optIn(users.get(9).getUsername(), GROUPING_0_PATH);
         assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
         assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(optInResults.get(2).getResultCode().startsWith(SUCCESS));
 
         //opt in Permission for include group true, but already self-opted
         optInResults = groupingsService.optIn(users.get(9).getUsername(), GROUPING_0_PATH);
         assertTrue(optInResults.get(0).getResultCode().startsWith(SUCCESS));
         assertTrue(optInResults.get(1).getResultCode().startsWith(SUCCESS));
-        assertTrue(optInResults.get(2).getResultCode().startsWith(SUCCESS));
     }
 
     @Test
