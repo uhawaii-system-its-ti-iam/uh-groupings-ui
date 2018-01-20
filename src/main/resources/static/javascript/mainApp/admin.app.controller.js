@@ -555,7 +555,7 @@
          */
         $scope.groupToPages = function (list, pagedList) {
             var pagedList = [];
-            if (list == null) {
+            if (list === null) {
                 console.log("I AM NULL ... WHY?!");
             } else {
                 for (var i = 0; i < list.length; i++) {
