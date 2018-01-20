@@ -192,9 +192,9 @@ td.uh-pre {
 
 #iconTop{
     display:flex;
-    margin-top: 1em;
+    margin-top: 20px;
     justify-content: flex-end;
-    font-size: 1em;
+    font-size: 20px;
 }
 #basisIcon{
     font-size: 1.3em;
@@ -204,13 +204,13 @@ td.uh-pre {
 #logInButton{
     display: relative;
     margin-left: 3em;
-    padding: 0.714em;
+    padding: 10px;
 
 }
 
 #footerBottom{
     display: relative;
-    padding:0em 1.071em;
+    padding:0px 15px;
 
 }
 #groupHeader {
