@@ -24,7 +24,14 @@ body {
     background-color: white;
 }
 
-h1, h2, h3, h4 {
+h1{
+    color:#1995AD;
+}
+h2, h3, h4 {
+    color: #c4dfe6;
+}
+
+#defMem{
     color: #c4dfe6;
 }
 
@@ -257,6 +264,9 @@ td.uh-pre {
     text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
 }
 
+.panel{
+    background-color: #f1f1f1f2;
+}
 .panel.panel-tab-content {
     border-radius: 0px 3px 3px 3px;
     -webkit-border-radius: 0px 3px 3px 3px;
