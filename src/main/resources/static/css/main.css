@@ -19,8 +19,8 @@ html {
 }
 
 body {
-    padding-top: 60px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-    padding-bottom: 50px;
+    padding-top: 4.286em; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    padding-bottom: 3.571em;
     background-color: white;
 }
 
@@ -40,11 +40,11 @@ h2, h3, h4 {
 }
 
 .loader {
-    border: 16px solid white; /* Black */
-    border-top: 16px solid black; /* Blue */
+    border: 1.143em solid white; /* Black */
+    border-top: 1.143em solid black; /* Blue */
     border-radius: 50%;
-    width: 150px;
-    height: 150px;
+    width: 10.714em;
+    height: 10.714em;
     animation: spin 1s linear infinite;
     position: fixed;
     left: 45%;
@@ -133,32 +133,32 @@ td.uh-pre {
 }
 
 .navbar-fixed-top .nav {
-    padding-top: 40px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-top: 2.857em;
+    padding-bottom: 0em;
+    padding-left: 0em;
+    padding-right: 0em;
     background-color: white;
 }
 
 .navbar-fixed-top .navbar-brand {
-    padding-left: 20px;
-    padding-right: 0px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    min-height: 50px;
-    min-width: 50px;
+    padding-left: 1.111em;
+    padding-right: 0em;
+    padding-top: 0em;
+    padding-bottom: 0em;
+    min-height: 2.778em;
+    min-width: 2.778em;
 }
 
 .navbar-fixed-top .navbar-brand > img {
-    height: 50px;
-    width: 50px;
+    height: 2.778em;
+    width: 2.778em;
     background-color: transparent;
 }
 
 .navbar-brand.uh-nav-app-name {
-    height: 50px;
+    height: 2.00em;
     width: auto;
-    padding-top: 20px;
+    padding-top: 0.8em;
     background-color: transparent;
 
     font-family: alegreyasans-regular, opensans-regular, serif;
@@ -174,9 +174,9 @@ td.uh-pre {
 }
 
 .app-logout {
-    height: 50px;
-    padding-top: 8.5px;
-    padding-bottom: 15px;
+    height: 3.571em;
+    padding-top: 0.607em;
+    padding-bottom: 1.071em;
     vertical-align: text-middle;
 }
 
