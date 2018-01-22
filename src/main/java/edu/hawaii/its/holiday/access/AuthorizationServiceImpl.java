@@ -1,20 +1,20 @@
 package edu.hawaii.its.holiday.access;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import edu.hawaii.its.api.controller.GroupingsRestController;
-import edu.hawaii.its.api.service.GroupingsService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import edu.hawaii.its.api.service.GroupingsService;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
@@ -31,10 +31,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Autowired
     private GroupingsService gs;
 
-    @Autowired
-    private GroupingsRestController gc;
-
-    private static final Log logger = LogFactory.getLog(UserBuilder.class);
+    private static final Log logger = LogFactory.getLog(AuthorizationServiceImpl.class);
 
     @PostConstruct
     public void init() {
@@ -58,10 +55,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     /**
      * Assigns roles to user
      *
-     * @param uhuuid   : The UH uuid of the user.
+     * @param uhuuid : The UH uuid of the user.
      * @param username : The username of the person to find the user.
      * @return : Returns an array list of roles assigned to the user.
      */
+    @Override
     public RoleHolder fetchRoles(String uhuuid, String username) {
         RoleHolder roleHolder = new RoleHolder();
         roleHolder.add(Role.ANONYMOUS);
@@ -94,12 +92,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      */
     public boolean fetchOwner(String username) {
         try {
-            System.out.println("//////////////////////////////");
+            logger.info("//////////////////////////////");
             if (!gs.getGroupingAssignment(username).getGroupingsOwned().isEmpty()) {
-                System.out.println("This person is an owner");
+                logger.info("This person is an owner");
                 return true;
             } else {
-                System.out.println("This person is not owner");
+                logger.info("This person is not owner");
             }
         } catch (Exception e) {
             logger.info("The grouping for this person is " + e.getMessage());
@@ -114,18 +112,18 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      * @return true if the person gets pass the grouping admins check by checking if they can get all the groupings.
      */
     public boolean fetchAdmin(String username) {
-        System.out.println("//////////////////////////////");
+        logger.info("//////////////////////////////");
         try {
             if (!gs.adminLists(username).getAllGroupings().isEmpty()) {
-                System.out.println("this person is an admin");
+                logger.info("this person is an admin");
                 return true;
             } else {
-                System.out.println("this person is not an admin");
+                logger.info("this person is not an admin");
             }
         } catch (Exception e) {
             logger.info("Error in getting admin info. Error message: " + e.getMessage());
         }
-        System.out.println("//////////////////////////////");
+        logger.info("//////////////////////////////");
         return false;
     }
 }

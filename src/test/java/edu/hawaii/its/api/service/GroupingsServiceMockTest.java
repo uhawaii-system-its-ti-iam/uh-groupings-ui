@@ -1,14 +1,17 @@
 package edu.hawaii.its.api.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import edu.hawaii.its.api.type.*;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,17 +20,24 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import edu.hawaii.its.api.type.AdminListsHolder;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.GroupingsServiceResultException;
+import edu.hawaii.its.api.type.Membership;
+import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 @WebAppConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GroupingsServiceMockTest {
+
     @Value("${groupings.api.settings}")
     private String SETTINGS;
 
@@ -181,21 +191,15 @@ public class GroupingsServiceMockTest {
     private static final String GROUPING_4_BASIS_PATH = GROUPING_4_PATH + ":basis";
     private static final String GROUPING_4_OWNERS_PATH = GROUPING_4_PATH + ":owners";
 
-    private final WsSubjectLookup EVERY_ENTITY_LOOKUP = new WsSubjectLookup(null, null, EVERY_ENTITY);
-
     private static final String ADMIN_USER = "admin";
-    private static final WsSubjectLookup ADMIN_LOOKUP = new WsSubjectLookup(null, null, ADMIN_USER);
     private static final Person ADMIN_PERSON = new Person(ADMIN_USER, ADMIN_USER, ADMIN_USER);
     private List<Person> admins = new ArrayList<>();
     private Group adminGroup;
 
     private static final String APP_USER = "app";
-    private static final WsSubjectLookup APP_LOOKUP = new WsSubjectLookup(null, null, APP_USER);
     private static final Person APP_PERSON = new Person(APP_USER, APP_USER, APP_USER);
     private List<Person> apps = new ArrayList<>();
     private Group appGroup;
-
-    private DatabaseSetup databaseSetup;
 
     private List<Person> users = new ArrayList<>();
     private List<WsSubjectLookup> lookups = new ArrayList<>();
@@ -218,7 +222,7 @@ public class GroupingsServiceMockTest {
     @Before
     public void setup() throws Exception {
 
-        databaseSetup = new DatabaseSetup(personRepository, groupRepository, groupingRepository, membershipRepository);
+        new DatabaseSetup(personRepository, groupRepository, groupingRepository, membershipRepository);
 
         admins.add(ADMIN_PERSON);
         adminGroup = new Group(GROUPING_ADMINS, admins);
@@ -339,7 +343,6 @@ public class GroupingsServiceMockTest {
         assertTrue(grouping.getOwners().getMembers().contains(randomUser));
         assertEquals(SUCCESS, adminAdds.getResultCode());
     }
-
 
     @Test
     public void changeListservStatusTest() {
@@ -479,7 +482,6 @@ public class GroupingsServiceMockTest {
         List<GroupingsServiceResult> turnOffWhenOnAdmin = groupingsService.changeOptInStatus(GROUPING_0_PATH, ADMIN_USER, false);
 
         List<GroupingsServiceResult> turnOnWhenOffAdmin = groupingsService.changeOptInStatus(GROUPING_0_PATH, ADMIN_USER, true);
-
 
         assertTrue(turnOnWhenOnRandom.get(0).getResultCode().startsWith(FAILURE));
         assertTrue(turnOnWhenOnOwner.get(0).getResultCode().startsWith(SUCCESS));
@@ -920,7 +922,6 @@ public class GroupingsServiceMockTest {
         AdminListsHolder adminListsHolder = groupingsService.adminLists(ADMIN_USER);
         AdminListsHolder emptyAdminListHolder = groupingsService.adminLists(users.get(1).getUsername());
 
-
         assertEquals(adminListsHolder.getAllGroupings().size(), 5);
         assertEquals(adminListsHolder.getAdminGroup().getMembers().size(), 1);
 
@@ -1064,12 +1065,12 @@ public class GroupingsServiceMockTest {
         assertEquals("", groupingsService.parentGroupingPath(null));
     }
 
-    @Test(expected = NotImplementedException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void deleteGroupingTest() {
         groupingsService.deleteGrouping(users.get(0).getUsername(), GROUPING_4_PATH);
     }
 
-    @Test(expected = NotImplementedException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void addGrouping() {
         List<String> basis = new ArrayList<>();
         List<String> exclude = new ArrayList<>();
