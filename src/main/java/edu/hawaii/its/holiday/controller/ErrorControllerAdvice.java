@@ -1,30 +1,28 @@
 package edu.hawaii.its.holiday.controller;
 
-import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import edu.hawaii.its.api.type.GroupingsHTTPException;
-import edu.hawaii.its.holiday.access.User;
-import edu.hawaii.its.holiday.access.UserContextService;
-
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import edu.hawaii.its.api.type.GroupingsHTTPException;
+import edu.hawaii.its.api.type.GroupingsServiceResultException;
+import edu.hawaii.its.holiday.access.User;
+import edu.hawaii.its.holiday.access.UserContextService;
 
 @ControllerAdvice
 public class ErrorControllerAdvice {
 
+    // TODO: change this to HATEOAS style
+    //  Do we need to use @ResponseBody for the methods or is this already being handled?
+    //  Do we need to use @ResponseStatus for the methods or is the HTTP status already being added?
+    //  Should we use VndErrors() type and get rid of the Groupings specific error types?
 
-    //todo change this to HATEOAS style
-    //  do we need to use @ResponseBody for the methods or is this already being handled?
-    //  do we need to use @ResponseStatus for the methods or is the HTTP status already being added?
-    //  should we use VndErrors() type and get rid of the Groupings specific error types?
-
-    private static final Log logger = LogFactory.getLog(HomeController.class);
+    private static final Log logger = LogFactory.getLog(ErrorControllerAdvice.class);
 
     @Autowired
     private UserContextService userContextService;
@@ -39,9 +37,8 @@ public class ErrorControllerAdvice {
         return exceptionResponse("runtime exception", re, 500);
     }
 
-
-    @ExceptionHandler(NotImplementedException.class)
-    public ResponseEntity<GroupingsHTTPException> handelNotImplementedException(NotImplementedException nie) {
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<GroupingsHTTPException> handleUnsupportedOperationException(UnsupportedOperationException nie) {
         return exceptionResponse("Method not implemented", nie, 501);
     }
 
@@ -64,7 +61,6 @@ public class ErrorControllerAdvice {
             username = user.getUsername();
         }
         logger.error("username: " + username + "; Exception: ", ex);
-        System.out.println("username: " + username + "; Exception: " + ex.getStackTrace());
 
         return "redirect:/error";
     }
