@@ -106,7 +106,7 @@
                                     </div>
                                     <div ng-if="!required($index + (currentPageOptIn * itemsPerPage))">
                                         <button id="optOutButton" class="btn btn-primary btn-block opt-button text-center"
-                                                ng-click="optOut($index + (currentPageOptIn * itemsPerPage))"
+                                                ng-click="optOut($index)"
                                                 ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
                                             Opt Out
                                         </button>
@@ -157,7 +157,7 @@
                                     <td id = "groupingOptInPath">{{o.path}}</td>
                                     <td class="col-md-2">
                                         <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-primary btn-block opt-button"
-                                                ng-click="optIn($index + (currentPageOptOut * itemsPerPage))">Opt In
+                                                ng-click="optIn($index)">Opt In
                                         </button>
                                     </td>
                                 </tr>
