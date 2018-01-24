@@ -42,8 +42,10 @@
             </thead>
             <tbody>
             <tr ng-repeat="b in pagedItemsBasis[currentPageBasis]">
+                <td>{{b.name}}</td>
+                <td>{{b.uuid}}</td>
                 <td>
-                    {{b.name}}
+                    {{b.username}}
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
                        data-toggle="tooltip" data-placement="right"
                        onmouseover="$(this).tooltip('show')"
@@ -51,8 +53,6 @@
                        ng-if="b.username === 'N/A'">
                     </i>
                 </td>
-                <td>{{b.uuid}}</td>
-                <td>{{b.username}}</td>
             </tr>
             </tbody>
             <tfoot>

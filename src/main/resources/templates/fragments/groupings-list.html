@@ -29,7 +29,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                    <td class="clickable" ng-click="showData($index)">
+                    <td class="clickable" ng-click="showData($index + (currentPageGroupings * itemsPerPage))">
                         {{l.name}}
                         <span class="pull-right glyphicon glyphicon-edit" style="margin-right: 5px;"></span>
                     </td>
