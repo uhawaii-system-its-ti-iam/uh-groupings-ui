@@ -1,8 +1,13 @@
 package edu.hawaii.its.holiday.configuration;
 
+import java.util.Properties;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +18,10 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-import java.util.Properties;
-
 @Configuration
-@EnableJpaRepositories(basePackages = {"edu.hawaii.its.api.service"})
+@EnableJpaRepositories(basePackages = {
+        "edu.hawaii.its.api.service", "edu.hawaii.its.holiday.repository"
+})
 @EnableTransactionManagement
 public class DatabaseConfig {
 

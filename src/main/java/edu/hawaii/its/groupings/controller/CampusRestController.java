@@ -1,17 +1,17 @@
 package edu.hawaii.its.groupings.controller;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import edu.hawaii.its.groupings.service.CampusService;
-import edu.hawaii.its.groupings.type.Campus;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import edu.hawaii.its.holiday.service.CampusService;
+import edu.hawaii.its.holiday.type.Campus;
 
 @RestController
 public class CampusRestController {
