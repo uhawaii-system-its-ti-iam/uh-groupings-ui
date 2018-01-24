@@ -11,13 +11,13 @@ script:
   - mvn -Denv=dev clean test
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
+  - mvn jacoco:report coveralls:report
 
 notifications:
   email:
     recipients:
-      - duckart@computer.org
       - its-iam-web-app-devs@lists.hawaii.edu
+      - duckart@hawaii.edu
       - zknoebel@hawaii.edu
       - aaronvil@hawaii.edu
       - ksanidad@hawaii.edu
