@@ -661,7 +661,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             groupPaths.addAll(groups.stream().map(WsGroup::getName).collect(Collectors.toList()));
 
             Group admin = getMembers(username, GROUPING_ADMINS);
-            groupings = makeGroupings(groupPaths, true);
+            groupings = makeGroupings(groupPaths, false);
             info.setAdminGroup(admin);
             info.setAllGroupings(groupings);
         }
