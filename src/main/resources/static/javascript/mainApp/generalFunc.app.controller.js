@@ -207,15 +207,15 @@
         /**
          * Removes a user from the include or exclude group.
          * @param {string} type - the type of group the user will be removed from (either Include or Exclude)
-         * @param {number} index - the index of the user to delete, with the current page and items per page taken into
+         * @param {number} index - the index of the user clicked by the user
          * account
          */
         $scope.removeMember = function (type, index) {
             var user;
             if (type === 'Include') {
-                user = $scope.groupingInclude[index].username;
+                user = $scope.pagedItemsInclude[$scope.currentPageInclude][index].username;
             } else if (type === 'Exclude') {
-                user = $scope.groupingExclude[index].username;
+                user = $scope.pagedItemsExclude[$scope.currentPageExclude][index].username;
             }
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
             $scope.createRemoveModal(user, url, $scope.selectedGrouping.path);
@@ -223,11 +223,10 @@
 
         /**
          * Removes a grouping owner. There must be at least one grouping owner remaining.
-         * @param {number} index - the index of the owner to delete, with the current page and items per page taken into
-         * account
+         * @param {number} index - the index of the owner clicked by the user
          */
         $scope.removeOwner = function (index) {
-            var removeOwner = $scope.groupingOwners[index].username;
+            var removeOwner = $scope.pagedItemsOwners[$scope.currentPageOwners][index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
                 $scope.createRemoveModal(removeOwner, removeOwnerUrl, $scope.selectedGrouping.path);
@@ -441,7 +440,6 @@
             $scope[pageVar] = 0;
             // Paginates the filtered items
             $scope[pagedListVar] = $scope.groupToPages(filteredItems, []);
-            console.log($scope[pagedListVar], pagedListVar);
         };
 
         /**
@@ -552,11 +550,10 @@
 
         /**
          * Gets information about the grouping clicked by the user.
-         * @param {number} index - the index of the grouping selected, with the current page and items per page taken
-         * into account
+         * @param {number} index - the index of the grouping clicked by the user
          */
         $scope.showData = function (index) {
-            $scope.selectedGrouping = $scope.groupingsList[index];
+            $scope.selectedGrouping = $scope.pagedItemsGroupings[$scope.currentPageGroupings][index];
             if (!$scope.showGrouping) {
                 $scope.showGrouping = true;
                 $scope.getData();
