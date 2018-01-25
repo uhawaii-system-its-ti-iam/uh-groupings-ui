@@ -4,6 +4,7 @@
 /bin
 grouperClientFailoverState.bin
 /target
+output.txt
 *-overrides.properties
 *.iml
 src/main/resources/static/javascript/tsconfig.json

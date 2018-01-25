@@ -1,14 +1,23 @@
 package edu.hawaii.its.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.hawaii.its.api.service.GroupingsService;
-import edu.hawaii.its.api.type.*;
-import edu.hawaii.its.groupings.controller.WithMockUhUser;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,21 +29,21 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.PostConstruct;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.type.AdminListsHolder;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
+import edu.hawaii.its.api.type.GroupingsHTTPException;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.controller.WithMockUhUser;
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 public class TestGroupingsRestController {
 
     @Value("${groupings.api.test.student_test_username}")
@@ -268,7 +277,7 @@ public class TestGroupingsRestController {
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void groupingAssignmentTest() throws Exception {
-//        GroupingAssignment groupings = gc.groupingAssignment(tst[0]).getBody();
+        //        GroupingAssignment groupings = gc.groupingAssignment(tst[0]).getBody();
         GroupingAssignment groupings = mapGroupingAssignment();
 
         boolean inGrouping = false;
@@ -370,7 +379,6 @@ public class TestGroupingsRestController {
 
         gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[5]);
     }
-
 
     @Test
     @WithMockUhUser(username = "iamtst04")
@@ -508,7 +516,7 @@ public class TestGroupingsRestController {
         GroupingsServiceResult deleteAdminResults;
 
         try {
-//            addAdminResults = gc.addAdmin(tst[0], tst[0]).getBody();
+            //            addAdminResults = gc.addAdmin(tst[0], tst[0]).getBody();
             addAdminResults = mapGSR("/api/groupings/" + tst[0] + "/addAdmin");
         } catch (GroupingsHTTPException ghe) {
             addAdminResults = new GroupingsServiceResult();
@@ -516,7 +524,7 @@ public class TestGroupingsRestController {
         }
 
         try {
-//            deleteAdminResults = gc.deleteAdmin(tst[0], tst[0]).getBody();
+            //            deleteAdminResults = gc.deleteAdmin(tst[0], tst[0]).getBody();
             deleteAdminResults = mapGSR("/api/groupings/" + tst[0] + "/deleteAdmin");
         } catch (GroupingsHTTPException ghe) {
             deleteAdminResults = new GroupingsServiceResult();
@@ -526,7 +534,6 @@ public class TestGroupingsRestController {
         assertTrue(addAdminResults.getResultCode().startsWith(FAILURE));
         assertTrue(deleteAdminResults.getResultCode().startsWith(FAILURE));
     }
-
 
     ///////////////////////////////////////////////////////////////////////
     // MVC mapping

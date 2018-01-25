@@ -1,10 +1,18 @@
 package edu.hawaii.its.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.hawaii.its.api.service.GroupingsService;
-import edu.hawaii.its.api.type.*;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import edu.hawaii.its.holiday.controller.WithMockUhUser;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,22 +26,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.controller.WithMockUhUser;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("localTest")
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 public class GroupingsRestControllerTest {
 
     @Value("${app.iam.request.form}")
@@ -144,7 +150,6 @@ public class GroupingsRestControllerTest {
 
         return mg;
     }
-
 
     @Test
     @WithMockUhUser

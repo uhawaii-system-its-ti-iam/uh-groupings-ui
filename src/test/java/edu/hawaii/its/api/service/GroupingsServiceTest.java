@@ -21,7 +21,7 @@ import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;

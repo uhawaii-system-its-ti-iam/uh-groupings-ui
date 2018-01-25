@@ -1,15 +1,19 @@
 package edu.hawaii.its.api.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import edu.hawaii.its.api.type.*;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-
-import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,16 +22,20 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import edu.hawaii.its.api.type.AdminListsHolder;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.GroupingsServiceResultException;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 public class TestGroupingsService {
 
     @Value("${groupings.api.test.grouping_many}")
@@ -598,7 +606,6 @@ public class TestGroupingsService {
         assertFalse(groupNames3.contains(GROUPING_INCLUDE));
     }
 
-
     @Test
     public void getGroupNames() {
         List<String> groups = gs.getGroupPaths(username[0]);
@@ -619,10 +626,8 @@ public class TestGroupingsService {
     public void grouperTest() {
         List<String> groupPaths = gs.getGroupPaths(username[0]);
 
-
         List<String> groupings = new ArrayList<>();
         List<String> groupings2 = new ArrayList<>();
-
 
         if (groupPaths.size() > 0) {
 
