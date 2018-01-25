@@ -3,6 +3,7 @@ package edu.hawaii.its.api.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -674,7 +675,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     private List<Grouping> groupingsToOptOutOf(String username, List<String> groupPaths) {
         logger.info("groupingsToOptOutOf; username: " + username + "; groupPaths: " + groupPaths + ";");
 
-        List<String> groups = new ArrayList<>();
         List<String> trios = new ArrayList<>();
         List<String> opts = new ArrayList<>();
 
@@ -695,15 +695,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                 }
             }
 
-            //todo change contains to something faster (collection.retainAll()) ?
-            for (String group : opts) {
-                if (trios.contains(group)) {
-                    groups.add(group);
-                }
-            }
+            opts.retainAll(trios);
         }
 
-        return makeGroupings(groups, false);
+        return makeGroupings(opts, false);
     }
 
     /**
@@ -712,9 +707,13 @@ public class GroupingsServiceImpl implements GroupingsService {
     private List<Grouping> groupingsToOptInto(String username, List<String> groupPaths) {
         logger.info("groupingsToOptInto; username: " + username + "; groupPaths : " + groupPaths + ";");
 
-        List<String> groups = new ArrayList<>();
         List<String> trios = new ArrayList<>();
         List<String> opts = new ArrayList<>();
+        List<String> excludes = new ArrayList<>();
+
+        for(String group : groupPaths) {
+            excludes.add(group + EXCLUDE);
+        }
 
         WsGetAttributeAssignmentsResults assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                 ASSIGN_TYPE_GROUP,
@@ -732,18 +731,16 @@ public class GroupingsServiceImpl implements GroupingsService {
                 }
             }
 
-            for (String group : opts) {
-                if (trios.contains(group)) {
+            opts.retainAll(trios);
 
-                    //todo change contains to something faster (collection.retainAll()) ?
-                    if (groupPaths.contains(group + EXCLUDE)
-                            || !groupPaths.contains(group))
-                        groups.add(group);
-                }
-            }
+            excludes.retainAll(opts);
+            opts.removeAll(groupPaths);
+            opts.addAll(excludes);
+
         }
 
-        return makeGroupings(groups, false);
+        //todo this is unchecked, should I do something about it?
+        return makeGroupings(new ArrayList<>(new HashSet(opts)), false);
     }
 
     /**
