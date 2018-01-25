@@ -695,7 +695,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 }
             }
 
-            //todo change contains to something faster
+            //todo change contains to something faster (collection.retainAll()) ?
             for (String group : opts) {
                 if (trios.contains(group)) {
                     groups.add(group);
