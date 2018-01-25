@@ -709,11 +709,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         List<String> trios = new ArrayList<>();
         List<String> opts = new ArrayList<>();
-        List<String> excludes = new ArrayList<>();
-
-        for(String group : groupPaths) {
-            excludes.add(group + EXCLUDE);
-        }
+        List<String> excludes = groupPaths.stream().map(group -> group + EXCLUDE).collect(Collectors.toList());
 
         WsGetAttributeAssignmentsResults assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                 ASSIGN_TYPE_GROUP,
@@ -731,16 +727,20 @@ public class GroupingsServiceImpl implements GroupingsService {
                 }
             }
 
+            //opts intersection trios
             opts.retainAll(trios);
-
+            //excludes intersection opts
             excludes.retainAll(opts);
+            //opts - (opts intersection groupPaths)
             opts.removeAll(groupPaths);
+            //opts union excludes
             opts.addAll(excludes);
 
         }
 
-        //todo this is unchecked, should I do something about it?
-        return makeGroupings(new ArrayList<>(new HashSet(opts)), false);
+        //get rid of duplicates
+        List<String> groups = new ArrayList<>(new HashSet<>(opts));
+        return makeGroupings(groups, false);
     }
 
     /**
