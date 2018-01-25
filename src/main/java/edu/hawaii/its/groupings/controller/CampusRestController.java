@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.hawaii.its.holiday.service.CampusService;
-import edu.hawaii.its.holiday.type.Campus;
+import edu.hawaii.its.api.type.Campus;
+import edu.hawaii.its.groupings.service.CampusService;
 
 @RestController
 public class CampusRestController {

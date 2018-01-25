@@ -1,6 +1,7 @@
 package edu.hawaii.its.groupings.controller;
 
-import edu.hawaii.its.holiday.access.User;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,8 +11,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import edu.hawaii.its.groupings.access.User;
 
 public class WithMockUserSecurityContextFactory
         implements WithSecurityContextFactory<WithMockUhUser> {
@@ -19,7 +19,7 @@ public class WithMockUserSecurityContextFactory
     @Override
     public SecurityContext createSecurityContext(WithMockUhUser uhUser) {
 
-        Set<GrantedAuthority> authorities = new LinkedHashSet<GrantedAuthority>();
+        Set<GrantedAuthority> authorities = new LinkedHashSet<>();
         for (String role : uhUser.roles()) {
             authorities.add(new SimpleGrantedAuthority(role));
         }
