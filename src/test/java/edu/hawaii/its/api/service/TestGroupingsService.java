@@ -845,7 +845,7 @@ public class TestGroupingsService {
         groupingPaths.add(GROUPING_STORE_EMPTY);
         groupingPaths.add(GROUPING_TRUE_EMPTY);
 
-        List<Grouping> groupings = gs.makeGroupings(groupingPaths, true);
+        List<Grouping> groupings = gs.makeGroupings(groupingPaths);
 
         assertTrue(groupings.size() == 3);
     }

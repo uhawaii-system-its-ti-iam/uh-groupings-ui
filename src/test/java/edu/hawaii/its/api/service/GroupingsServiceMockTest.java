@@ -658,6 +658,13 @@ public class GroupingsServiceMockTest {
         assertEquals(0, myGroupings.getGroupingsOptedOutOf().size());
         assertEquals(0, myGroupings.getGroupingsToOptInTo().size());
         assertEquals(2, myGroupings.getGroupingsToOptOutOf().size());
+
+    }
+
+    @Test
+    public void groupingsToOptTest() {
+        GroupingAssignment myGroupings = groupingsService.getGroupingAssignment(users.get(1).getUsername());
+
     }
 
     @Test

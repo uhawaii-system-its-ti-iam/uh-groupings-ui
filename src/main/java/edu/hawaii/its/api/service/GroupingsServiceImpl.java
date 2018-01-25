@@ -563,7 +563,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<Grouping> groupingsIn(List<String> groupPaths) {
         List<String> groupingsIn = extractGroupings(groupPaths);
 
-        return makeGroupings(groupingsIn, false);
+        return makeGroupings(groupingsIn);
     }
 
     /**
@@ -588,7 +588,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         List<String> ownedGroupings = extractGroupings(ownerGroups);
 
-        return makeGroupings(ownedGroupings, true);
+        return makeGroupings(ownedGroupings);
     }
 
     /**
@@ -638,7 +638,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 groupingsOpted.add(group.getName());
             }
         }
-        return makeGroupings(groupingsOpted, false);
+        return makeGroupings(groupingsOpted);
     }
 
     /**
@@ -662,7 +662,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             groupPaths.addAll(groups.stream().map(WsGroup::getName).collect(Collectors.toList()));
 
             Group admin = getMembers(username, GROUPING_ADMINS);
-            groupings = makeGroupings(groupPaths, false);
+            groupings = makeGroupings(groupPaths);
             info.setAdminGroup(admin);
             info.setAllGroupings(groupings);
         }
@@ -698,7 +698,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             opts.retainAll(trios);
         }
 
-        return makeGroupings(opts, false);
+        return makeGroupings(opts);
     }
 
     /**
@@ -740,7 +740,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         //get rid of duplicates
         List<String> groups = new ArrayList<>(new HashSet<>(opts));
-        return makeGroupings(groups, false);
+        return makeGroupings(groups);
     }
 
     /**
@@ -1638,7 +1638,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param groupingPaths: list of paths to groups that are Groupings
      * @return a list of Grouping Objects made from the list of Grouping paths
      */
-    List<Grouping> makeGroupings(List<String> groupingPaths, boolean getAttributes) {
+    List<Grouping> makeGroupings(List<String> groupingPaths) {
         logger.info("makeGroupings; groupingPaths: " + groupingPaths + ";");
 
         List<Grouping> groupings = new ArrayList<>();
@@ -1648,11 +1648,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                     .stream()
                     .map(Grouping::new)
                     .collect(Collectors.toList());
-            if (getAttributes) {
-                for (int i = 0; i < groupings.size(); i++) {
-                    groupings.set(i, setGroupingAttributes(groupings.get(i)));
-                }
-            }
         }
         return groupings;
     }

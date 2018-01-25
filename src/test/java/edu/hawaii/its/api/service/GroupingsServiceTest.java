@@ -265,7 +265,7 @@ public class GroupingsServiceTest {
             groupPaths.add("path:grouping_" + (i + 5));
         }
 
-        List<Grouping> groupings = gs.makeGroupings(groupPaths, false);
+        List<Grouping> groupings = gs.makeGroupings(groupPaths);
 
         for (int i = 5; i < 10; i++) {
             assertEquals("path:grouping_" + i, groupings.get(i).getPath());
@@ -340,4 +340,6 @@ public class GroupingsServiceTest {
         firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "1234");
     }
+
+
 }
