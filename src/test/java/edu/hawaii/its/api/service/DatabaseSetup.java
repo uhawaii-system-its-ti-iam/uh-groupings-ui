@@ -137,7 +137,6 @@ public class DatabaseSetup {
         List<Person> includeMembers = new ArrayList<>();
         List<Person> ownerMembers = new ArrayList<>();
 
-        //todo change member lists
         basisMembers.add(persons.get(0));
         basisMembers.add(persons.get(1));
         basisMembers.add(persons.get(2));
@@ -165,7 +164,6 @@ public class DatabaseSetup {
         List<Person> includeMembers = new ArrayList<>();
         List<Person> ownerMembers = new ArrayList<>();
 
-        //todo change member lists
         basisMembers.add(persons.get(0));
         basisMembers.add(persons.get(1));
         basisMembers.add(persons.get(2));
@@ -193,7 +191,6 @@ public class DatabaseSetup {
         List<Person> includeMembers = new ArrayList<>();
         List<Person> ownerMembers = new ArrayList<>();
 
-        //todo change member lists
         basisMembers.add(persons.get(0));
         basisMembers.add(persons.get(1));
         basisMembers.add(persons.get(2));
@@ -221,7 +218,6 @@ public class DatabaseSetup {
         List<Person> includeMembers = new ArrayList<>();
         List<Person> ownerMembers = new ArrayList<>();
 
-        //todo change member lists
         basisMembers.add(persons.get(0));
         basisMembers.add(persons.get(1));
         basisMembers.add(persons.get(2));

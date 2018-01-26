@@ -22,9 +22,6 @@ import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 @WebAppConfiguration
-//todo adding dirties context breaks one of the tests in CampusServiceTest
-//todo Make new database to fix this?
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class GroupRepositoryTest {
     Person[] persons = new Person[10];
     Group[] groups = new Group[5];

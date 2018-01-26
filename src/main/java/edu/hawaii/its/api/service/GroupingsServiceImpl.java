@@ -1170,7 +1170,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<GroupingsServiceResult> addMemberAs(String username, String group, String userToAdd) {
         logger.info("addMemberToGroup; user: " + username + "; group: " + group + "; userToAdd: " + userToAdd + ";");
 
-        //todo change to map? (add, delete) or (include, exclude, owners)
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
         String action = "add users to " + group;
 

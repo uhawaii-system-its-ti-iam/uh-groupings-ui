@@ -400,7 +400,6 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         List<WsAttributeAssign> attributeAssignList = new ArrayList<>();
 
         for (Group group : groups) {
-            //todo check to see if it returns null when there is no match
             if (groupingRepository.findByPath(group.getPath()) != null) {
                 WsGroup g = new WsGroup();
                 WsAttributeAssign attributeAssign = new WsAttributeAssign();

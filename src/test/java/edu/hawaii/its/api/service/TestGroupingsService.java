@@ -619,7 +619,6 @@ public class TestGroupingsService {
         assertFalse(groups2.contains(GROUPING_OWNERS));
         assertFalse(groups2.contains(GROUPING_STORE_EMPTY_OWNERS));
         assertFalse(groups2.contains(GROUPING_TRUE_EMPTY_OWNERS));
-        //TODO add the rest of the groups
     }
 
     @Test
@@ -849,15 +848,4 @@ public class TestGroupingsService {
 
         assertTrue(groupings.size() == 3);
     }
-    //TODO add test for assignMembershipAttributes (both)
-    //TODO add test for membershipAttributeAssign
-    //TODO add test for attributeAssignments
-    //TODO add test for getGrouperPrivilege (both)
-    //TODO add test for membershipsResults
-    //TODO add test for getMember
-    //TODO add test for extractGroupings
-    //TODO add test for extractGroupingNames
-    //TODO add test for removeGroupOwnership
-    //TODO add test for addGroupOwnership
-    //TODO add test for groupingNamesFromPrivilegeResults
 }

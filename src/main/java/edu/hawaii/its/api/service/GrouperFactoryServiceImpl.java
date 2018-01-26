@@ -134,9 +134,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         addMember.assignActAsSubject(lookup);
         addMember.assignGroupName(group);
 
-        for (String name : newMembers) {
-            addMember.addSubjectIdentifier(name);
-        }
+        newMembers.forEach(addMember::addSubjectIdentifier);
 
         return addMember.execute();
     }
@@ -172,9 +170,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         deleteMember.assignActAsSubject(lookup);
         deleteMember.assignGroupName(group);
 
-        for (String name : membersToDelete) {
-            deleteMember.addSubjectIdentifier(name);
-        }
+        membersToDelete.forEach(deleteMember::addSubjectIdentifier);
 
         return deleteMember.execute();
     }
@@ -224,13 +220,6 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         }
 
         return attributeAssignmentsResultList;
-//        GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
-//                .addAttributeDefNameName(attributeDefNameName)
-//                .assignAttributeAssignType(assignType);
-//
-//        ownerGroupNames.forEach(getAttributeAssignments::addOwnerGroupName);
-//
-//        return getAttributeAssignments.execute();
     }
 
     @Override
@@ -259,16 +248,6 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         }
 
         return attributeAssignmentsResultList;
-
-        //todo remove
-//        GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
-//                .addAttributeDefNameName(attributeDefNameName0)
-//                .addAttributeDefNameName(attributeDefNameName1)
-//                .assignAttributeAssignType(assignType);
-//
-//        ownerGroupNames.forEach(getAttributeAssignments::addOwnerGroupName);
-//
-//        return getAttributeAssignments.execute();
     }
 
     @Override
