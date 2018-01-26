@@ -626,17 +626,17 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (groupsOpted.size() > 0) {
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
                     TRIO,
                     groupsOpted);
 
-            //todo check if it is better to use getWsGroups or getWsAttributeAssigns
-            WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
-
-            for (WsGroup group : trios) {
-                groupingsOpted.add(group.getName());
+            List<WsGroup> triosList = new ArrayList<>();
+            for(WsGetAttributeAssignmentsResults results : attributeAssignmentsResults) {
+                triosList.addAll(Arrays.asList(results.getWsGroups()));
             }
+
+            groupingsOpted.addAll(triosList.stream().map(WsGroup::getName).collect(Collectors.toList()));
         }
         return makeGroupings(groupingsOpted);
     }
@@ -677,23 +677,27 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         List<String> trios = new ArrayList<>();
         List<String> opts = new ArrayList<>();
+        List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
 
-        WsGetAttributeAssignmentsResults assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+        List<WsGetAttributeAssignmentsResults> assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                 ASSIGN_TYPE_GROUP,
                 TRIO,
                 OPT_OUT,
                 groupPaths);
 
-        if (assignmentsResults.getWsAttributeAssigns() != null) {
-            for (WsAttributeAssign assign : assignmentsResults.getWsAttributeAssigns()) {
-                if (assign.getAttributeDefNameName() != null) {
-                    if (assign.getAttributeDefNameName().equals(TRIO)) {
-                        trios.add(assign.getOwnerGroupName());
-                    } else if (assign.getAttributeDefNameName().equals(OPT_OUT)) {
-                        opts.add(assign.getOwnerGroupName());
-                    }
+        for(WsGetAttributeAssignmentsResults results : assignmentsResults) {
+            attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns()));
+        }
+
+
+        if (attributeAssigns.size() > 0) {
+            attributeAssigns.stream().filter(assign -> assign.getAttributeDefNameName() != null).forEach(assign -> {
+                if (assign.getAttributeDefNameName().equals(TRIO)) {
+                    trios.add(assign.getOwnerGroupName());
+                } else if (assign.getAttributeDefNameName().equals(OPT_OUT)) {
+                    opts.add(assign.getOwnerGroupName());
                 }
-            }
+            });
 
             opts.retainAll(trios);
         }
@@ -1452,20 +1456,21 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("extractGroupings; groupPaths: " + groupPaths + ";");
 
         List<String> groupings = new ArrayList<>();
+        List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
 
         if (groupPaths.size() > 0) {
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
                     TRIO,
                     groupPaths);
 
-            WsAttributeAssign[] wsGroups = attributeAssignmentsResults.getWsAttributeAssigns();
+            for(WsGetAttributeAssignmentsResults results : attributeAssignmentsResults) {
+                attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns()));
+            }
 
-            if (wsGroups != null && wsGroups.length > 0) {
-                for (WsAttributeAssign grouping : wsGroups) {
-                    groupings.add(grouping.getOwnerGroupName());
-                }
+            if (attributeAssigns.size() > 0) {
+                groupings.addAll(attributeAssigns.stream().map(WsAttributeAssign::getOwnerGroupName).collect(Collectors.toList()));
             }
         }
         return groupings;

@@ -55,11 +55,11 @@ public interface GrouperFactoryService {
             String attributeDefNameName0,
             String attributeDefNameName1);
 
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+    public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
             String attributeDefNameName,
             List<String> ownerGroupNames);
 
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+    public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
             String attributeDefNameName0,
             String attributeDefNameName1,
             List<String> ownerGroupNames);

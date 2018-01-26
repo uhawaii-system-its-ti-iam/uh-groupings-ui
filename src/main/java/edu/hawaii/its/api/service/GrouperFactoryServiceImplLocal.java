@@ -483,23 +483,26 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     }
 
     @Override
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+    public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
             String attributeDefNameName,
             List<String> ownerGroupNames) {
+        List<WsGetAttributeAssignmentsResults> resultsList = new ArrayList<>();
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = makeWsGetAttributeAssignmentsResultsTrio(
                 assignType,
                 attributeDefNameName);
 
         wsGetAttributeAssignmentsResults = removeGroupsNotInList(wsGetAttributeAssignmentsResults, ownerGroupNames);
+        resultsList.add(wsGetAttributeAssignmentsResults);
 
-        return wsGetAttributeAssignmentsResults;
+        return resultsList;
     }
 
     @Override
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+    public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
             String attributeDefNameName0,
             String attributeDefNameName1,
             List<String> ownerGroupNames) {
+        List<WsGetAttributeAssignmentsResults> resultsList = new ArrayList<>();
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = makeWsGetAttributeAssignmentsResultsTrio(
                 assignType,
@@ -507,8 +510,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
                 attributeDefNameName1);
 
         wsGetAttributeAssignmentsResults = removeGroupsNotInList(wsGetAttributeAssignmentsResults, ownerGroupNames);
+        resultsList.add(wsGetAttributeAssignmentsResults);
 
-        return wsGetAttributeAssignmentsResults;
+        return resultsList;
     }
 
     @Override
