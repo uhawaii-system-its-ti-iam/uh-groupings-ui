@@ -685,9 +685,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                 OPT_OUT,
                 groupPaths);
 
-        for(WsGetAttributeAssignmentsResults results : assignmentsResults) {
-            attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns()));
-        }
+        assignmentsResults
+                .stream()
+                .filter(results -> results.getWsAttributeAssigns() != null)
+                .forEach(results -> attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns())));
 
 
         if (attributeAssigns.size() > 0) {
@@ -1465,9 +1466,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                     TRIO,
                     groupPaths);
 
-            for(WsGetAttributeAssignmentsResults results : attributeAssignmentsResults) {
-                attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns()));
-            }
+            attributeAssignmentsResults
+                    .stream()
+                    .filter(results -> results.getWsAttributeAssigns() != null)
+                    .forEach(results -> attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns())));
 
             if (attributeAssigns.size() > 0) {
                 groupings.addAll(attributeAssigns.stream().map(WsAttributeAssign::getOwnerGroupName).collect(Collectors.toList()));
