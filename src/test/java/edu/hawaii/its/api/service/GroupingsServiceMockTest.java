@@ -313,6 +313,7 @@ public class GroupingsServiceMockTest {
         Grouping grouping = groupingRepository.findByPath(GROUPING_0_PATH);
 
         assertFalse(grouping.getOwners().getMembers().contains(randomUser));
+        assertFalse(grouping.getOwners().isMember(randomUser));
 
         try {
             randomUserAdds = groupingsService.assignOwnership(GROUPING_0_PATH, randomUser.getUsername(), randomUser.getUsername());
@@ -322,16 +323,19 @@ public class GroupingsServiceMockTest {
 
         grouping = groupingRepository.findByPath(GROUPING_0_PATH);
         assertFalse(grouping.getOwners().getMembers().contains(randomUser));
+        assertFalse(grouping.getOwners().isMember(randomUser));
         assertNotEquals(randomUserAdds.getResultCode(), SUCCESS);
 
         GroupingsServiceResult ownerAdds = groupingsService.assignOwnership(GROUPING_0_PATH, users.get(0).getUsername(), randomUser.getUsername());
         grouping = groupingRepository.findByPath(GROUPING_0_PATH);
         assertTrue(grouping.getOwners().getMembers().contains(randomUser));
+        assertTrue(grouping.getOwners().isMember(randomUser));
         assertEquals(ownerAdds.getResultCode(), SUCCESS);
 
         GroupingsServiceResult adminAdds = groupingsService.assignOwnership(GROUPING_0_PATH, ADMIN_USER, randomUser.getUsername());
         grouping = groupingRepository.findByPath(GROUPING_0_PATH);
         assertTrue(grouping.getOwners().getMembers().contains(randomUser));
+        assertTrue(grouping.getOwners().isMember(randomUser));
         assertEquals(SUCCESS, adminAdds.getResultCode());
     }
 

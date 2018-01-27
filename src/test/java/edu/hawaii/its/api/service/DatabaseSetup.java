@@ -1,13 +1,16 @@
 package edu.hawaii.its.api.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.springframework.test.context.ActiveProfiles;
+
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.Person;
-
-import org.springframework.test.context.ActiveProfiles;
-
-import java.util.*;
 
 @ActiveProfiles("localTest")
 public class DatabaseSetup {
@@ -29,7 +32,11 @@ public class DatabaseSetup {
     private List<Group> groups = new ArrayList<>();
     private List<Grouping> groupings = new ArrayList<>();
 
-    public DatabaseSetup(PersonRepository personRepository, GroupRepository groupRepository, GroupingRepository groupingRepository, MembershipRepository membershipRepository) {
+    // Constructor.
+    public DatabaseSetup(PersonRepository personRepository,
+            GroupRepository groupRepository,
+            GroupingRepository groupingRepository,
+            MembershipRepository membershipRepository) {
         this.personRepository = personRepository;
         this.groupRepository = groupRepository;
         this.groupingRepository = groupingRepository;
@@ -39,8 +46,6 @@ public class DatabaseSetup {
     }
 
     private void fillDatabase() {
-
-
         fillPersonRepository();
         fillGroupRepository();
         fillGroupingRepository();
@@ -91,11 +96,10 @@ public class DatabaseSetup {
     }
 
     private void setUpGroup(int i,
-                            List<Person> basisMembers,
-                            List<Person> excludeMembers,
-                            List<Person> includeMembers,
-                            List<Person> ownerMembers) {
-
+            List<Person> basisMembers,
+            List<Person> excludeMembers,
+            List<Person> includeMembers,
+            List<Person> ownerMembers) {
 
         makeGroup(basisMembers, pathRoot + i + BASIS);
         makeGroup(excludeMembers, pathRoot + i + EXCLUDE);
@@ -254,10 +258,10 @@ public class DatabaseSetup {
 
         Iterable<Group> groups = groupRepository.findAll();
 
-        for(Group group : groups) {
+        for (Group group : groups) {
             group.addMember(grouperAll);
             groupRepository.save(group);
-            for(Person person : group.getMembers()) {
+            for (Person person : group.getMembers()) {
                 Membership membership = new Membership(person, group);
                 membershipRepository.save(membership);
             }
@@ -265,17 +269,17 @@ public class DatabaseSetup {
 
         Iterable<Grouping> groupings = groupingRepository.findAll();
 
-        for(Grouping grouping : groupings) {
+        for (Grouping grouping : groupings) {
             Membership allExclude = membershipRepository.findByPersonAndGroup(grouperAll, grouping.getExclude());
             Membership allInclude = membershipRepository.findByPersonAndGroup(grouperAll, grouping.getInclude());
             Membership allComposite = membershipRepository.findByPersonAndGroup(grouperAll, grouping.getComposite());
-            if(grouping.isOptOutOn()){
+            if (grouping.isOptOutOn()) {
                 allComposite.setOptOutEnabled(true);
                 allExclude.setOptInEnabled(true);
                 allExclude.setOptOutEnabled(true);
 
             }
-            if(grouping.isOptInOn()){
+            if (grouping.isOptInOn()) {
                 allComposite.setOptInEnabled(true);
                 allInclude.setOptInEnabled(true);
                 allInclude.setOptOutEnabled(true);
@@ -293,23 +297,21 @@ public class DatabaseSetup {
     ///////////////////////////////////////////////////////////
 
     private void makePerson(String name, String uuid, String username) {
-        Person person = new Person(name, uuid, username);
-        persons.add(person);
+        persons.add(new Person(name, uuid, username));
     }
 
     private void makeGroup(List<Person> members, String path) {
-        Group group = new Group(path, members);
-        groups.add(group);
+        groups.add(new Group(path, members));
     }
 
     public Grouping makeGrouping(String path,
-                                 Group basis,
-                                 Group exclude,
-                                 Group include,
-                                 Group owners,
-                                 boolean listserveOn,
-                                 boolean optInOn,
-                                 boolean optOutOn) {
+            Group basis,
+            Group exclude,
+            Group include,
+            Group owners,
+            boolean listserveOn,
+            boolean optInOn,
+            boolean optOutOn) {
 
         Grouping grouping = new Grouping(path);
         Group composite = buildComposite(include, exclude, basis, path);
@@ -329,7 +331,6 @@ public class DatabaseSetup {
         return grouping;
     }
 
-
     ///////////////////////////////////////////////////////////
     // helper methods
     ///////////////////////////////////////////////////////////
@@ -343,27 +344,19 @@ public class DatabaseSetup {
     }
 
     private Group addIncludedMembers(Group include, Group basis) {
-        Group unionGroup = new Group();
-        List<Person> unionList = new ArrayList<>();
-        unionList.addAll(include.getMembers());
-        unionList.addAll(basis.getMembers());
-
-        //remove duplicates
         Set<Person> s = new TreeSet<>();
-        s.addAll(unionList);
-        unionGroup.setMembers(Arrays.asList(s.toArray(new Person[s.size()])));
+        s.addAll(include.getMembers());
+        s.addAll(basis.getMembers());
 
-        return unionGroup;
+        return new Group(new ArrayList<>(s));
     }
 
     private Group removeExcludedMembers(Group basisPlusInclude, Group exclude) {
-        Group basisPlusIncludeMinusExcludeGroup = new Group();
-        ArrayList<Person> newBasisPlusInclude = new ArrayList<>();
+        List<Person> newBasisPlusInclude = new ArrayList<>();
         newBasisPlusInclude.addAll(basisPlusInclude.getMembers());
+        newBasisPlusInclude.removeAll(exclude.getMembers());
 
-        for (Person person : exclude.getMembers()) {
-            newBasisPlusInclude.remove(person);
-        }
+        Group basisPlusIncludeMinusExcludeGroup = new Group();
         basisPlusIncludeMinusExcludeGroup.setMembers(newBasisPlusInclude);
 
         return basisPlusIncludeMinusExcludeGroup;

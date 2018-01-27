@@ -2,6 +2,7 @@ package edu.hawaii.its.api.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -17,12 +18,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import edu.hawaii.its.api.type.EmptyGroup;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsMembership;
@@ -274,6 +277,83 @@ public class GroupingsServiceTest {
     }
 
     @Test
+    public void makeGroupingsWithAttributes() {
+        GrouperFactoryService gfs = gs.getGrouperFactoryService();
+        GrouperFactoryService obj = new GrouperFactoryServiceImpl() {
+            @Override
+            public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType, String group) {
+                return new WsGetAttributeAssignmentsResults();
+            }
+        };
+        gs.setGrouperFactoryService(obj);
+
+        List<String> groupPaths = new ArrayList<>();
+        groupPaths.add(null);
+        List<Grouping> groupings = gs.makeGroupings(groupPaths);
+        assertThat(groupings.size(), equalTo(1));
+        for (int i = 0; i < groupings.size(); i++) {
+            Grouping g = groupings.get(i);
+            assertThat(g.getName(), equalTo(""));
+            assertThat(g.getPath(), equalTo(""));
+            assertTrue(g.getBasis() instanceof EmptyGroup);
+            assertTrue(g.getExclude() instanceof EmptyGroup);
+            assertTrue(g.getInclude() instanceof EmptyGroup);
+            assertTrue(g.getComposite() instanceof EmptyGroup);
+            assertTrue(g.getOwners() instanceof EmptyGroup);
+            assertFalse(g.isListservOn());
+            assertFalse(g.isOptInOn());
+            assertFalse(g.isOptOutOn());
+        }
+
+        final int SIZE = 50;
+        groupPaths = new ArrayList<>();
+        for (int i = 0; i < SIZE; i++) {
+            groupPaths.add("memo:path:grouping_" + i);
+        }
+
+        groupings = gs.makeGroupings(groupPaths);
+        assertThat(groupings.size(), equalTo(SIZE));
+
+        for (int i = 0; i < groupings.size(); i++) {
+            Grouping g = groupings.get(i);
+            assertThat(g.getName(), equalTo("grouping_" + i));
+            assertThat(g.getPath(), equalTo("memo:path:grouping_" + i));
+            assertTrue(g.getBasis() instanceof EmptyGroup);
+            assertTrue(g.getExclude() instanceof EmptyGroup);
+            assertTrue(g.getInclude() instanceof EmptyGroup);
+            assertTrue(g.getComposite() instanceof EmptyGroup);
+            assertTrue(g.getOwners() instanceof EmptyGroup);
+            assertFalse(g.isListservOn());
+            assertFalse(g.isOptInOn());
+            assertFalse(g.isOptOutOn());
+        }
+
+        groupPaths = new ArrayList<>();
+        for (int i = 0; i < SIZE; i++) {
+            groupPaths.add("grouping_" + i);
+        }
+
+        groupings = gs.makeGroupings(groupPaths);
+        assertThat(groupings.size(), equalTo(SIZE));
+
+        for (int i = 0; i < groupings.size(); i++) {
+            Grouping g = groupings.get(i);
+            assertThat(g.getName(), equalTo("grouping_" + i));
+            assertThat(g.getPath(), equalTo("grouping_" + i));
+            assertTrue(g.getBasis() instanceof EmptyGroup);
+            assertTrue(g.getExclude() instanceof EmptyGroup);
+            assertTrue(g.getInclude() instanceof EmptyGroup);
+            assertTrue(g.getComposite() instanceof EmptyGroup);
+            assertTrue(g.getOwners() instanceof EmptyGroup);
+            assertFalse(g.isListservOn());
+            assertFalse(g.isOptInOn());
+            assertFalse(g.isOptOutOn());
+        }
+
+        gs.setGrouperFactoryService(gfs);
+    }
+
+    @Test
     public void makePerson() {
         String name = "name";
         String id = "uuid";
@@ -340,6 +420,5 @@ public class GroupingsServiceTest {
         firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "1234");
     }
-
 
 }

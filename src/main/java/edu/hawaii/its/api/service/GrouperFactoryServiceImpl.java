@@ -50,6 +50,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     @Value("${groupings.api.attribute_assign_id_size}")
     private Integer ATTRIBUTES_ASSIGN_ID_SIZE;
 
+    // Constructor.
     public GrouperFactoryServiceImpl() {
         // Empty.
     }
@@ -203,16 +204,15 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         List<WsGetAttributeAssignmentsResults> attributeAssignmentsResultList = new ArrayList<>();
         Iterator iterator = ownerGroupNames.iterator();
 
-        for(int i = 0; i < ownerGroupNames.size(); i += ATTRIBUTES_ASSIGN_ID_SIZE){
+        for (int i = 0; i < ownerGroupNames.size(); i += ATTRIBUTES_ASSIGN_ID_SIZE) {
             GcGetAttributeAssignments attributeAssignments = new GcGetAttributeAssignments()
                     .addAttributeDefNameName(attributeDefNameName)
                     .assignAttributeAssignType(assignType);
 
-            for(int j = 0; j < ATTRIBUTES_ASSIGN_ID_SIZE; j ++) {
-                if(iterator.hasNext()) {
+            for (int j = 0; j < ATTRIBUTES_ASSIGN_ID_SIZE; j++) {
+                if (iterator.hasNext()) {
                     attributeAssignments.addOwnerGroupName(iterator.next().toString());
-                }
-                else {
+                } else {
                     break;
                 }
             }
@@ -230,17 +230,16 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         List<WsGetAttributeAssignmentsResults> attributeAssignmentsResultList = new ArrayList<>();
         Iterator iterator = ownerGroupNames.iterator();
 
-        for(int i = 0; i < ownerGroupNames.size(); i += ATTRIBUTES_ASSIGN_ID_SIZE){
+        for (int i = 0; i < ownerGroupNames.size(); i += ATTRIBUTES_ASSIGN_ID_SIZE) {
             GcGetAttributeAssignments attributeAssignments = new GcGetAttributeAssignments()
                     .addAttributeDefNameName(attributeDefNameName0)
                     .addAttributeDefNameName(attributeDefNameName1)
                     .assignAttributeAssignType(assignType);
 
-            for(int j = 0; j < ATTRIBUTES_ASSIGN_ID_SIZE; j ++) {
-                if(iterator.hasNext()) {
+            for (int j = 0; j < ATTRIBUTES_ASSIGN_ID_SIZE; j++) {
+                if (iterator.hasNext()) {
                     attributeAssignments.addOwnerGroupName(iterator.next().toString());
-                }
-                else {
+                } else {
                     break;
                 }
             }
@@ -415,4 +414,10 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     public WsAttributeAssign[] makeEmptyWsAttributeAssignArray() {
         return new WsAttributeAssign[0];
     }
+
+    @Override
+    public String toString() {
+        return "GrouperFactoryServiceImpl";
+    }
+
 }

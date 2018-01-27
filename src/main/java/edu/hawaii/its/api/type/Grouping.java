@@ -67,7 +67,11 @@ public class Grouping {
 
     public void setPath(String path) {
         this.path = path != null ? path : "";
-        this.name = path.split(":")[path.split(":").length - 1];
+        this.name = this.path;
+        int index = this.name.lastIndexOf(':');
+        if (index != -1) {
+            this.name = this.name.substring(index + 1);
+        }
     }
 
     public Group getBasis() {

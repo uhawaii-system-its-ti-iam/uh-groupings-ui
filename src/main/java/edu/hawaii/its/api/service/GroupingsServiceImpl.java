@@ -161,15 +161,25 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("$groupings.api.stem}")
     private String STEM;
 
-    //    private GrouperFactoryService gf = new GrouperFactoryServiceImpl();
     @Autowired
     private GrouperFactoryService gf;
 
+    // Constructor.
     public GroupingsServiceImpl() {
+        // Empty.
     }
 
+    // Constructor.
     public GroupingsServiceImpl(GrouperFactoryService grouperFactory) {
         gf = grouperFactory;
+    }
+
+    public GrouperFactoryService getGrouperFactoryService() {
+        return gf;
+    }
+
+    public void setGrouperFactoryService(GrouperFactoryService gf) {
+        this.gf = gf;
     }
 
     @Override
@@ -632,7 +642,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                     groupsOpted);
 
             List<WsGroup> triosList = new ArrayList<>();
-            for(WsGetAttributeAssignmentsResults results : attributeAssignmentsResults) {
+            for (WsGetAttributeAssignmentsResults results : attributeAssignmentsResults) {
                 triosList.addAll(Arrays.asList(results.getWsGroups()));
             }
 
@@ -689,7 +699,6 @@ public class GroupingsServiceImpl implements GroupingsService {
                 .stream()
                 .filter(results -> results.getWsAttributeAssigns() != null)
                 .forEach(results -> attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns())));
-
 
         if (attributeAssigns.size() > 0) {
             attributeAssigns.stream().filter(assign -> assign.getAttributeDefNameName() != null).forEach(assign -> {
@@ -1432,14 +1441,13 @@ public class GroupingsServiceImpl implements GroupingsService {
     Group getMembers(String username, String group) {
         logger.info("getMembers; user: " + username + "; group: " + group + ";");
 
-        Group groupMembers = new Group();
         WsSubjectLookup lookup = gf.makeWsSubjectLookup(username);
-
         WsGetMembersResults members = gf.makeWsGetMembersResults(
                 SUBJECT_ATTRIBUTE_NAME_UID,
                 lookup,
                 group);
 
+        Group groupMembers = new Group();
         if (members.getResults() != null) {
             groupMembers = makeGroup(members
                     .getResults()[0]
@@ -1648,13 +1656,13 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("makeGroupings; groupingPaths: " + groupingPaths + ";");
 
         List<Grouping> groupings = new ArrayList<>();
-
         if (groupingPaths.size() > 0) {
             groupings = groupingPaths
                     .stream()
                     .map(Grouping::new)
                     .collect(Collectors.toList());
         }
+
         return groupings;
     }
 
@@ -1690,5 +1698,10 @@ public class GroupingsServiceImpl implements GroupingsService {
             return new Person(name, uuid, username);
         }
         return new Person();
+    }
+
+    @Override
+    public String toString() {
+        return "GroupingsServiceImpl [SETTINGS=" + SETTINGS + "]";
     }
 }
