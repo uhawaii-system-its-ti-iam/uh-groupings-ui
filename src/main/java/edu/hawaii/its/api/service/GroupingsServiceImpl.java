@@ -1216,8 +1216,10 @@ public class GroupingsServiceImpl implements GroupingsService {
 
                     gsrList.add(makeGroupingsServiceResult(addMemberResults, action));
                 }
-                //They are already in the group, so just return SUCCESS
-                gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
+                else {
+                    //They are already in the group, so just return SUCCESS
+                    gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
+                }
             }
 
             //if exclude check if userToAdd is in the include
@@ -1416,21 +1418,6 @@ public class GroupingsServiceImpl implements GroupingsService {
             return makeGroupingsServiceResult(FAILURE + ": " + username + " may only delete from exclude, include or owner group", action);
         }
         return makeGroupingsServiceResult(FAILURE + ": " + username + " does not have permission to edit " + group, action);
-    }
-
-    /**
-     * @param group: path to group that the member will be removed from
-     * @param userToDelete: username of user to be removed from group
-     * @return information about success of action
-     */
-    GroupingsServiceResult deleteMember(String group, String userToDelete) {
-        logger.info("deleteMember; group: " + group + "; userToDelete: " + userToDelete + ";");
-
-        WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(group, userToDelete);
-        updateLastModified(group);
-        updateLastModified(parentGroupingPath(group));
-
-        return makeGroupingsServiceResult(deleteMemberResults, "delete " + userToDelete + " from " + group);
     }
 
     /**

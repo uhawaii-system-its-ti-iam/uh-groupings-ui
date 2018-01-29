@@ -524,20 +524,6 @@ public class TestGroupingsService {
     }
 
     @Test
-    public void deleteMemberTest() {
-        //username[2] is in the composite and the include, not in basis
-        assertTrue(gs.inGroup(GROUPING, username[2]));
-        assertTrue(gs.inGroup(GROUPING_INCLUDE, username[2]));
-        assertFalse(gs.inGroup(GROUPING_BASIS, username[2]));
-
-        //delete username[2] from include
-        gs.deleteMember(GROUPING_INCLUDE, username[2]);
-        //username[2] is no longer in composite or include
-        assertFalse(gs.inGroup(GROUPING, username[2]));
-        assertFalse(gs.inGroup(GROUPING_INCLUDE, username[2]));
-    }
-
-    @Test
     public void getMembersTest() {
         Group group = gs.getMembers(username[0], GROUPING);
         List<String> usernames = group.getUsernames();
