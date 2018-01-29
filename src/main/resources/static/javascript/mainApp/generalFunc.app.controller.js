@@ -169,9 +169,10 @@
             var addUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
             dataProvider.updateData(function (d) {
                 var successful = false;
-                if (d.statusCode != null) {
+                var responseLength = d.length;
+                if (d[responseLength - 1].statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                } else if (d.resultCode === "SUCCESS") {
+                } else if (d[responseLength - 1].resultCode.indexOf('SUCCESS' === 0)) {
                     successful = true;
                 }
                 $scope.createAddModal($scope.addUser, successful, $scope.selectedGrouping.path);
