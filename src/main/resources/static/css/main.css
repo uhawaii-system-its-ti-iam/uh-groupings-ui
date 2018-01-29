@@ -24,19 +24,8 @@ body {
     background-color: white;
 }
 
-h1{
-    color:#1995AD;
-}
-h2, h3, h4 {
-    color: #c4dfe6;
-}
-
-.members-tab-title{
-    color: #1995AD;
-}
-
-#defMem{
-    color: #c4dfe6;
+h1, h2, h3, h4 {
+    color: #BD9319;
 }
 
 .loader {
@@ -268,9 +257,6 @@ td.uh-pre {
     text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
 }
 
-.panel{
-    background-color: #f1f1f1f2;
-}
 .panel.panel-tab-content {
     border-radius: 0px 3px 3px 3px;
     -webkit-border-radius: 0px 3px 3px 3px;
@@ -473,11 +459,6 @@ td.uh-pre {
     border-radius: 0px 3px 0px 0px;
     -webkit-border-radius: 0px 3px 0px 0px;
     -moz-border-radius: 0px 3px 0px 0px;
-    background-color: #07575b;
-}
-
-.panel-default > .panel-heading{
-    background-color: #07575b;
 }
 
 .nav.nav-tabs > li.active > a {

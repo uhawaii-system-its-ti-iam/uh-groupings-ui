@@ -41,7 +41,7 @@
                             <div class="row" style="margin: inherit">
                                 <div class="col-md-6 col-sm-7" style="padding: 0px;">
                                     <h3 style="padding: 2.5px 0px; margin: inherit;">My Grouping Memberships</h3>
-                                    <span id = "defMem">Some memberships are optional, and some are required.</span>
+                                    <span>Some memberships are optional, and some are required.</span>
                                 </div>
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
                                     <input placeholder="Filter Groupings..." type="text"
@@ -106,7 +106,7 @@
                                     </div>
                                     <div ng-if="!required($index + (currentPageOptIn * itemsPerPage))">
                                         <button id="optOutButton" class="btn btn-primary btn-block opt-button text-center"
-                                                ng-click="optOut($index + (currentPageOptIn * itemsPerPage))"
+                                                ng-click="optOut($index)"
                                                 ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
                                             Opt Out
                                         </button>
@@ -127,7 +127,7 @@
                             <div class="row" style="margin: inherit;">
                                 <div class="col-md-6 col-sm-7" style="padding: 0px;">
                                     <h3 style="padding: 2.5px 0px; margin: inherit;">Available Groupings</h3>
-                                    <span id = "defMem">You may opt in to any of these Groupings to become a member.</span>
+                                    <span>You may opt in to any of these Groupings to become a member.</span>
                                 </div>
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
                                     <input placeholder="Filter Groupings..." type="text"
@@ -157,7 +157,7 @@
                                     <td id = "groupingOptInPath">{{o.path}}</td>
                                     <td class="col-md-2">
                                         <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-primary btn-block opt-button"
-                                                ng-click="optIn($index + (currentPageOptOut * itemsPerPage))">Opt In
+                                                ng-click="optIn($index)">Opt In
                                         </button>
                                     </td>
                                 </tr>
