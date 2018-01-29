@@ -547,8 +547,18 @@
                 $scope.resetGroupingInformation();
                 $scope.resetSelectedGroup();
             }
+
+            $scope.basisQuery = "";
+            $scope.queryGroupings = "";
+            $scope.excludeQuery = "";
+            $scope.includeQuery = "";
+            $scope.membersQuery = "";
+
         };
 
+        $scope.resetFields = function(){
+            $scope.addUser = "";
+        }
         /**
          * Gets information about the grouping clicked by the user.
          * @param {number} index - the index of the grouping clicked by the user
