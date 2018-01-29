@@ -3,6 +3,7 @@ package edu.hawaii.its.api.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ import edu.hawaii.its.api.type.GroupingAssignment;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.api.type.Person;
-import edu.hawaii.its.holiday.util.Dates;
+import edu.hawaii.its.groupings.util.Dates;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.ResultMetadataHolder;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
@@ -160,15 +161,25 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("$groupings.api.stem}")
     private String STEM;
 
-    //    private GrouperFactoryService gf = new GrouperFactoryServiceImpl();
     @Autowired
     private GrouperFactoryService gf;
 
+    // Constructor.
     public GroupingsServiceImpl() {
+        // Empty.
     }
 
+    // Constructor.
     public GroupingsServiceImpl(GrouperFactoryService grouperFactory) {
         gf = grouperFactory;
+    }
+
+    public GrouperFactoryService getGrouperFactoryService() {
+        return gf;
+    }
+
+    public void setGrouperFactoryService(GrouperFactoryService gf) {
+        this.gf = gf;
     }
 
     @Override
@@ -562,7 +573,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<Grouping> groupingsIn(List<String> groupPaths) {
         List<String> groupingsIn = extractGroupings(groupPaths);
 
-        return makeGroupings(groupingsIn, false);
+        return makeGroupings(groupingsIn);
     }
 
     /**
@@ -587,7 +598,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         List<String> ownedGroupings = extractGroupings(ownerGroups);
 
-        return makeGroupings(ownedGroupings, true);
+        return makeGroupings(ownedGroupings);
     }
 
     /**
@@ -625,19 +636,19 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (groupsOpted.size() > 0) {
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
                     TRIO,
                     groupsOpted);
 
-            //todo check if it is better to use getWsGroups or getWsAttributeAssigns
-            WsGroup[] trios = attributeAssignmentsResults.getWsGroups();
-
-            for (WsGroup group : trios) {
-                groupingsOpted.add(group.getName());
+            List<WsGroup> triosList = new ArrayList<>();
+            for (WsGetAttributeAssignmentsResults results : attributeAssignmentsResults) {
+                triosList.addAll(Arrays.asList(results.getWsGroups()));
             }
+
+            groupingsOpted.addAll(triosList.stream().map(WsGroup::getName).collect(Collectors.toList()));
         }
-        return makeGroupings(groupingsOpted, false);
+        return makeGroupings(groupingsOpted);
     }
 
     /**
@@ -661,7 +672,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             groupPaths.addAll(groups.stream().map(WsGroup::getName).collect(Collectors.toList()));
 
             Group admin = getMembers(username, GROUPING_ADMINS);
-            groupings = makeGroupings(groupPaths, false);
+            groupings = makeGroupings(groupPaths);
             info.setAdminGroup(admin);
             info.setAllGroupings(groupings);
         }
@@ -674,35 +685,34 @@ public class GroupingsServiceImpl implements GroupingsService {
     private List<Grouping> groupingsToOptOutOf(String username, List<String> groupPaths) {
         logger.info("groupingsToOptOutOf; username: " + username + "; groupPaths: " + groupPaths + ";");
 
-        List<String> groups = new ArrayList<>();
         List<String> trios = new ArrayList<>();
         List<String> opts = new ArrayList<>();
+        List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
 
-        WsGetAttributeAssignmentsResults assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+        List<WsGetAttributeAssignmentsResults> assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                 ASSIGN_TYPE_GROUP,
                 TRIO,
                 OPT_OUT,
                 groupPaths);
 
-        if (assignmentsResults.getWsAttributeAssigns() != null) {
-            for (WsAttributeAssign assign : assignmentsResults.getWsAttributeAssigns()) {
-                if (assign.getAttributeDefNameName() != null) {
-                    if (assign.getAttributeDefNameName().equals(TRIO)) {
-                        trios.add(assign.getOwnerGroupName());
-                    } else if (assign.getAttributeDefNameName().equals(OPT_OUT)) {
-                        opts.add(assign.getOwnerGroupName());
-                    }
-                }
-            }
+        assignmentsResults
+                .stream()
+                .filter(results -> results.getWsAttributeAssigns() != null)
+                .forEach(results -> attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns())));
 
-            for (String group : opts) {
-                if (trios.contains(group)) {
-                    groups.add(group);
+        if (attributeAssigns.size() > 0) {
+            attributeAssigns.stream().filter(assign -> assign.getAttributeDefNameName() != null).forEach(assign -> {
+                if (assign.getAttributeDefNameName().equals(TRIO)) {
+                    trios.add(assign.getOwnerGroupName());
+                } else if (assign.getAttributeDefNameName().equals(OPT_OUT)) {
+                    opts.add(assign.getOwnerGroupName());
                 }
-            }
+            });
+
+            opts.retainAll(trios);
         }
 
-        return makeGroupings(groups, false);
+        return makeGroupings(opts);
     }
 
     /**
@@ -711,9 +721,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     private List<Grouping> groupingsToOptInto(String username, List<String> groupPaths) {
         logger.info("groupingsToOptInto; username: " + username + "; groupPaths : " + groupPaths + ";");
 
-        List<String> groups = new ArrayList<>();
         List<String> trios = new ArrayList<>();
         List<String> opts = new ArrayList<>();
+        List<String> excludes = groupPaths.stream().map(group -> group + EXCLUDE).collect(Collectors.toList());
 
         WsGetAttributeAssignmentsResults assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                 ASSIGN_TYPE_GROUP,
@@ -731,17 +741,20 @@ public class GroupingsServiceImpl implements GroupingsService {
                 }
             }
 
-            for (String group : opts) {
-                if (trios.contains(group)) {
+            //opts intersection trios
+            opts.retainAll(trios);
+            //excludes intersection opts
+            excludes.retainAll(opts);
+            //opts - (opts intersection groupPaths)
+            opts.removeAll(groupPaths);
+            //opts union excludes
+            opts.addAll(excludes);
 
-                    if (groupPaths.contains(group + EXCLUDE)
-                            || !groupPaths.contains(group))
-                        groups.add(group);
-                }
-            }
         }
 
-        return makeGroupings(groups, false);
+        //get rid of duplicates
+        List<String> groups = new ArrayList<>(new HashSet<>(opts));
+        return makeGroupings(groups);
     }
 
     /**
@@ -1166,7 +1179,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     public List<GroupingsServiceResult> addMemberAs(String username, String group, String userToAdd) {
         logger.info("addMemberToGroup; user: " + username + "; group: " + group + "; userToAdd: " + userToAdd + ";");
 
-        //todo change to map? (add, delete) or (include, exclude, owners)
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
         String action = "add users to " + group;
 
@@ -1429,14 +1441,13 @@ public class GroupingsServiceImpl implements GroupingsService {
     Group getMembers(String username, String group) {
         logger.info("getMembers; user: " + username + "; group: " + group + ";");
 
-        Group groupMembers = new Group();
         WsSubjectLookup lookup = gf.makeWsSubjectLookup(username);
-
         WsGetMembersResults members = gf.makeWsGetMembersResults(
                 SUBJECT_ATTRIBUTE_NAME_UID,
                 lookup,
                 group);
 
+        Group groupMembers = new Group();
         if (members.getResults() != null) {
             groupMembers = makeGroup(members
                     .getResults()[0]
@@ -1453,20 +1464,22 @@ public class GroupingsServiceImpl implements GroupingsService {
         logger.info("extractGroupings; groupPaths: " + groupPaths + ";");
 
         List<String> groupings = new ArrayList<>();
+        List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
 
         if (groupPaths.size() > 0) {
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
                     TRIO,
                     groupPaths);
 
-            WsAttributeAssign[] wsGroups = attributeAssignmentsResults.getWsAttributeAssigns();
+            attributeAssignmentsResults
+                    .stream()
+                    .filter(results -> results.getWsAttributeAssigns() != null)
+                    .forEach(results -> attributeAssigns.addAll(Arrays.asList(results.getWsAttributeAssigns())));
 
-            if (wsGroups != null && wsGroups.length > 0) {
-                for (WsAttributeAssign grouping : wsGroups) {
-                    groupings.add(grouping.getOwnerGroupName());
-                }
+            if (attributeAssigns.size() > 0) {
+                groupings.addAll(attributeAssigns.stream().map(WsAttributeAssign::getOwnerGroupName).collect(Collectors.toList()));
             }
         }
         return groupings;
@@ -1639,22 +1652,17 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param groupingPaths: list of paths to groups that are Groupings
      * @return a list of Grouping Objects made from the list of Grouping paths
      */
-    List<Grouping> makeGroupings(List<String> groupingPaths, boolean getAttributes) {
+    List<Grouping> makeGroupings(List<String> groupingPaths) {
         logger.info("makeGroupings; groupingPaths: " + groupingPaths + ";");
 
         List<Grouping> groupings = new ArrayList<>();
-
         if (groupingPaths.size() > 0) {
             groupings = groupingPaths
                     .stream()
                     .map(Grouping::new)
                     .collect(Collectors.toList());
-            if (getAttributes) {
-                for (int i = 0; i < groupings.size(); i++) {
-                    groupings.set(i, setGroupingAttributes(groupings.get(i)));
-                }
-            }
         }
+
         return groupings;
     }
 
@@ -1690,5 +1698,10 @@ public class GroupingsServiceImpl implements GroupingsService {
             return new Person(name, uuid, username);
         }
         return new Person();
+    }
+
+    @Override
+    public String toString() {
+        return "GroupingsServiceImpl [SETTINGS=" + SETTINGS + "]";
     }
 }

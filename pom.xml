@@ -289,7 +289,7 @@
                 <version>0.8.0</version>
                 <configuration>
                     <excludes>
-                        <exclude>edu/hawaii/its/holiday/configuration/SpringBootWebApplication.class</exclude>
+                        <exclude>edu/hawaii/its/groupings/configuration/SpringBootWebApplication.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
