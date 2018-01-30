@@ -170,7 +170,7 @@
             dataProvider.updateData(function (d) {
                 var successful = false;
                 var responseLength = d.length;
-                if (d[responseLength - 1].statusCode != null) {
+                if (responseLength === undefined || d[responseLength - 1].statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                 } else if (d[responseLength - 1].resultCode.indexOf('SUCCESS' === 0)) {
                     successful = true;
