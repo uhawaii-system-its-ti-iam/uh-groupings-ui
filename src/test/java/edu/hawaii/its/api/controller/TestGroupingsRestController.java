@@ -1,14 +1,23 @@
 package edu.hawaii.its.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.hawaii.its.api.service.GroupingsService;
-import edu.hawaii.its.api.type.*;
-import edu.hawaii.its.groupings.controller.WithMockUhUser;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,21 +29,21 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.PostConstruct;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.type.AdminListsHolder;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
+import edu.hawaii.its.api.type.GroupingsHTTPException;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.controller.WithMockUhUser;
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 public class TestGroupingsRestController {
 
     @Value("${groupings.api.test.student_test_username}")
@@ -118,24 +127,17 @@ public class TestGroupingsRestController {
                 .apply(springSecurity())
                 .build();
 
+        //put in include
         gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[0]);
-        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[0]);
-
         gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[1]);
-        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[1]);
-
         gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[2]);
-        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[2]);
 
+        //add to exclude
         gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[3]);
-        gs.deleteMemberAs(tst[0], GROUPING_INCLUDE, tst[3]);
 
-        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[4]);
-        gs.deleteMemberAs(tst[0], GROUPING_INCLUDE, tst[4]);
-
-        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[5]);
-
-        gs.removeOwnership(GROUPING, tst[0], tst[5]);
+        //remove from exclude
+        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[4]);
+        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[5]);
 
         gs.changeOptOutStatus(GROUPING, tst[0], true);
         gs.changeOptInStatus(GROUPING, tst[0], true);
@@ -172,27 +174,36 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst01")
     public void addMemberTest() throws Exception {
 
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
 
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[4] + "/addMemberToIncludeGroup");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToIncludeGroup");
 
-        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
-        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[4]));
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+        //tst[3] is in basis and will go into include
+        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[3]));
 
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[4] + "/addMemberToExcludeGroup");
-        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[4]));
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+        //add tst[3] back to exclude
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+
+        //add tst[3] to Grouping
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToGrouping");
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+        //tst[3] is in basis, so will not go into include
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[3]));
+
+        //todo add other test cases
     }
 
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void deleteMemberTest() throws Exception {
 
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[4] + "/deleteMemberFromExcludeGroup");
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+        mapGSR("/api/groupings/" + GROUPING + "/" + tst[3] + "/deleteMemberFromExcludeGroup");
 
-        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
-        assertTrue(gs.inGroup(GROUPING, tst[4]));
+        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(gs.inGroup(GROUPING, tst[3]));
 
         assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[1]));
         mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/deleteMemberFromIncludeGroup");
@@ -200,39 +211,57 @@ public class TestGroupingsRestController {
         assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[1]));
         assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[1]));
 
-        //reset Grouping
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[4] + "/addMemberToExcludeGroup");
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/addMemberToIncludeGroup");
+        assertTrue(gs.inGroup(GROUPING, tst[2]));
+        assertTrue(gs.inGroup(GROUPING, tst[5]));
+        assertTrue(gs.inGroup(GROUPING_BASIS, tst[5]));
+        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[2]));
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[2] + "/deleteMemberFromGrouping");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[5] + "/deleteMemberFromGrouping");
+
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[5]));
+        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[2]));
     }
 
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void getGroupingTest() throws Exception {
         Grouping grouping = mapGrouping(GROUPING);
+        Group basis = grouping.getBasis();
+        Group composite = grouping.getComposite();
+        Group exclude = grouping.getExclude();
+        Group include = grouping.getInclude();
 
-        assertTrue(grouping.getInclude().getNames().contains(tstName[0]));
-        assertTrue(grouping.getInclude().getNames().contains(tstName[1]));
-        assertTrue(grouping.getInclude().getNames().contains(tstName[2]));
-        assertTrue(grouping.getExclude().getNames().contains(tstName[3]));
-        assertTrue(grouping.getExclude().getNames().contains(tstName[4]));
+        //basis
+        assertTrue(basis.getUsernames().contains(tst[3]));
+        assertTrue(basis.getUsernames().contains(tst[4]));
+        assertTrue(basis.getUsernames().contains(tst[5]));
+        assertTrue(basis.getNames().contains(tstName[3]));
+        assertTrue(basis.getNames().contains(tstName[4]));
+        assertTrue(basis.getNames().contains(tstName[5]));
 
-        assertTrue(grouping.getInclude().getUsernames().contains(tst[0]));
-        assertTrue(grouping.getInclude().getUsernames().contains(tst[1]));
-        assertTrue(grouping.getInclude().getUsernames().contains(tst[2]));
-        assertTrue(grouping.getExclude().getUsernames().contains(tst[3]));
-        assertTrue(grouping.getExclude().getUsernames().contains(tst[4]));
+        //composite
+        assertTrue(composite.getUsernames().contains(tst[0]));
+        assertTrue(composite.getUsernames().contains(tst[1]));
+        assertTrue(composite.getUsernames().contains(tst[2]));
+        assertTrue(composite.getUsernames().contains(tst[4]));
+        assertTrue(composite.getUsernames().contains(tst[5]));
+        assertTrue(composite.getNames().contains(tstName[0]));
+        assertTrue(composite.getNames().contains(tstName[1]));
+        assertTrue(composite.getNames().contains(tstName[2]));
+        assertTrue(composite.getNames().contains(tstName[4]));
+        assertTrue(composite.getNames().contains(tstName[5]));
 
-        assertTrue(grouping.getInclude().getUuids().contains(tst[0]));
-        assertTrue(grouping.getInclude().getUuids().contains(tst[1]));
-        assertTrue(grouping.getInclude().getUuids().contains(tst[2]));
-        assertTrue(grouping.getExclude().getUuids().contains(tst[3]));
-        assertTrue(grouping.getExclude().getUuids().contains(tst[4]));
+        //exclude
+        assertTrue(exclude.getUsernames().contains(tst[3]));
+        assertTrue(exclude.getNames().contains(tstName[3]));
 
-        assertTrue(grouping.getComposite().getUsernames().contains(tst[0]));
-        assertTrue(grouping.getComposite().getUsernames().contains(tst[1]));
-        assertTrue(grouping.getComposite().getUsernames().contains(tst[2]));
-        assertFalse(grouping.getComposite().getUsernames().contains(tst[3]));
-        assertFalse(grouping.getComposite().getUsernames().contains(tst[4]));
+        //include
+        assertTrue(include.getUsernames().contains(tst[0]));
+        assertTrue(include.getUsernames().contains(tst[1]));
+        assertTrue(include.getUsernames().contains(tst[2]));
+        assertTrue(include.getNames().contains(tstName[0]));
+        assertTrue(include.getNames().contains(tstName[1]));
+        assertTrue(include.getNames().contains(tstName[2]));
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
         mapGSR("/api/groupings/" + grouping.getPath() + "/" + tst[5] + "/assignOwnership");
@@ -248,7 +277,7 @@ public class TestGroupingsRestController {
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void groupingAssignmentTest() throws Exception {
-//        GroupingAssignment groupings = gc.groupingAssignment(tst[0]).getBody();
+        //        GroupingAssignment groupings = gc.groupingAssignment(tst[0]).getBody();
         GroupingAssignment groupings = mapGroupingAssignment();
 
         boolean inGrouping = false;
@@ -290,7 +319,7 @@ public class TestGroupingsRestController {
     }
 
     @Test
-    @WithMockUhUser(username = "iamtst05")
+    @WithMockUhUser(username = "iamtst04")
     public void myGroupingsTest2() throws Exception {
         GroupingAssignment groupings = mapGroupingAssignment();
 
@@ -314,7 +343,7 @@ public class TestGroupingsRestController {
     }
 
     @Test
-    @WithMockUhUser(username = "iamtst05")
+    @WithMockUhUser(username = "iamtst04")
     public void myGroupingsTest3() throws Exception {
         boolean optedIn = false;
 
@@ -323,15 +352,12 @@ public class TestGroupingsRestController {
         mapGSRs("/api/groupings/" + GROUPING + "/optIn");
         tst4Groupings = mapGroupingAssignment();
         for (Grouping grouping : tst4Groupings.getGroupingsOptedInTo()) {
-            if (grouping.getPath().contains(this.GROUPING)) {
+            if (grouping.getPath().contains(GROUPING)) {
                 optedIn = true;
             }
         }
-        assertTrue(optedIn);
-
-        //reset Grouping
-        gs.cancelOptIn(GROUPING, tst[4]);
-        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[4]);
+        //in basis
+        assertFalse(optedIn);
     }
 
     @Test
@@ -351,27 +377,24 @@ public class TestGroupingsRestController {
         }
         assertTrue(optedOut);
 
-        // reset Grouping
-        gs.cancelOptOut(GROUPING, tst[5]);
+        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[5]);
     }
 
-
     @Test
-    @WithMockUhUser(username = "iamtst05")
+    @WithMockUhUser(username = "iamtst04")
     public void optInTest() throws Exception {
-        //tst[4] is not in Grouping, but is in basis and exclude
-        assertFalse(gs.inGroup(GROUPING, tst[4]));
-        assertTrue(gs.inGroup(GROUPING_BASIS, tst[4]));
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[4]));
+        //tst[3] is not in Grouping, but is in basis and exclude
+        assertFalse(gs.inGroup(GROUPING, tst[3]));
+        assertTrue(gs.inGroup(GROUPING_BASIS, tst[3]));
+        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
 
-        //tst[4] opts into Grouping
+        //tst[3] opts into Grouping
         mapGSRs("/api/groupings/" + GROUPING + "/optIn");
 
-        //tst[4] is now in include and Grouping, still in basis and not in exclude
-        assertTrue(gs.checkSelfOpted(GROUPING_INCLUDE, tst[4]));
-        assertTrue(gs.inGroup(GROUPING, tst[4]));
-        assertTrue(gs.inGroup(GROUPING_BASIS, tst[4]));
-        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[4]));
+        //tst[3] is now in composite, still in basis and not in exclude
+        assertTrue(gs.inGroup(GROUPING, tst[3]));
+        assertTrue(gs.inGroup(GROUPING_BASIS, tst[3]));
+        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[3]));
     }
 
     @Test
@@ -440,7 +463,7 @@ public class TestGroupingsRestController {
                 GroupingAssignment aaronsGroupings = mapGroupingAssignment();
                 assertNotNull(aaronsGroupings);
                 break;
-            } catch (RuntimeException e) {
+            } catch (AssertionError ae) {
                 i++;
             }
         }
@@ -493,7 +516,7 @@ public class TestGroupingsRestController {
         GroupingsServiceResult deleteAdminResults;
 
         try {
-//            addAdminResults = gc.addAdmin(tst[0], tst[0]).getBody();
+            //            addAdminResults = gc.addAdmin(tst[0], tst[0]).getBody();
             addAdminResults = mapGSR("/api/groupings/" + tst[0] + "/addAdmin");
         } catch (GroupingsHTTPException ghe) {
             addAdminResults = new GroupingsServiceResult();
@@ -501,7 +524,7 @@ public class TestGroupingsRestController {
         }
 
         try {
-//            deleteAdminResults = gc.deleteAdmin(tst[0], tst[0]).getBody();
+            //            deleteAdminResults = gc.deleteAdmin(tst[0], tst[0]).getBody();
             deleteAdminResults = mapGSR("/api/groupings/" + tst[0] + "/deleteAdmin");
         } catch (GroupingsHTTPException ghe) {
             deleteAdminResults = new GroupingsServiceResult();
@@ -511,7 +534,6 @@ public class TestGroupingsRestController {
         assertTrue(addAdminResults.getResultCode().startsWith(FAILURE));
         assertTrue(deleteAdminResults.getResultCode().startsWith(FAILURE));
     }
-
 
     ///////////////////////////////////////////////////////////////////////
     // MVC mapping

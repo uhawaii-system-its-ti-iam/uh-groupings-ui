@@ -1,11 +1,12 @@
 package edu.hawaii.its.api.type;
 
-import org.hibernate.annotations.Proxy;
+import java.util.Comparator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.Comparator;
+
+import org.hibernate.annotations.Proxy;
 
 @Entity
 @Proxy(lazy = false)
@@ -65,21 +66,22 @@ public class Person implements Comparable<Person> {
         return (o instanceof Person) && (compareTo((Person) o) == 0);
     }
 
-
     @Override
     public int compareTo(Person person) {
         Comparator<String> nullSafeComparator = Comparator.nullsFirst(String::compareTo);
 
         int usernameComp = nullSafeComparator.compare(getUsername(), person.getUsername());
-        int nameComp = nullSafeComparator.compare(getName(), person.getName());
-        int uuidComp = nullSafeComparator.compare(getUuid(), person.getUuid());
 
         if (usernameComp != 0) {
             return usernameComp;
         }
+
+        int nameComp = nullSafeComparator.compare(getName(), person.getName());
         if (nameComp != 0) {
             return nameComp;
         }
+
+        int uuidComp = nullSafeComparator.compare(getUuid(), person.getUuid());
         if (uuidComp != 0) {
             return uuidComp;
         }

@@ -141,14 +141,14 @@
             return _.sortBy(list, col);
         };
 
-        /** Adds user to the exclude group.
-         * Sends back an alert saying if it failed
-         * other than that, it will go through with opting out
+        /**
+         * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
+         * @param {number} index - the index of the grouping clicked by the user
          *
-         **/
+         */
         $scope.optOut = function (index) {
             console.log(index);
-            var optOutURL = "api/groupings/" + $scope.membersList[index].path + "/optOut";
+            var optOutURL = "api/groupings/" + $scope.pagedItemsMembersList[$scope.currentPageOptOut][index].path + "/optOut";
             $scope.loading = true;
             dataProvider.updateData(function (d) {
                 console.log(d);
@@ -163,13 +163,12 @@
             }, optOutURL);
         };
 
-        /** Adds user to the include group
-         * initializes using the init function.
-         *@param index - grouping
-         *takes in a grouping so it knows which group it is going into for the path
-         **/
+        /**
+         * Adds the user to the include group of the grouping selected.
+         * @param {number} index - the index of the grouping clicked by the user
+         */
         $scope.optIn = function (index) {
-            var optInURL = "api/groupings/" + $scope.optInList[index].path + "/optIn";
+            var optInURL = "api/groupings/" + $scope.pagedItemsOptInList[$scope.currentPageOptIn][index].path + "/optIn";
             console.log(optInURL);
             $scope.loading = true;
             dataProvider.updateData(function (d) {

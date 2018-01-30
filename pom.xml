@@ -195,7 +195,6 @@
             <artifactId>grouperClient</artifactId>
             <version>2.3.0</version>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
@@ -218,11 +217,6 @@
                         <profile>localhost</profile>
                     </profiles>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.3.0</version>
             </plugin>
             <plugin>
                 <groupId>com.github.searls</groupId>
@@ -248,43 +242,11 @@
                         <source>${basedir}/src/main/resources/static/javascript/owner/owner.app.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/owner/owner.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/owner/owner.service.js</source>
-
                     </preloadSources>
                     <specIncludes>
                         <include>**/**.test.js</include>
                     </specIncludes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <formats>
-                        <format>xml</format>
-                        <format>html</format>
-                    </formats>
-                    <maxmem>256m</maxmem>
-                    <instrumentation>
-                        <excludes>
-                            <exclude>edu/hawaii/its/holiday/configuration/SpringBootWebApplication.class</exclude>
-                        </excludes>
-                    </instrumentation>
-                    <!-- aggregated reports for multi-module projects -->
-                    <aggregate>true</aggregate>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                        <version>1.1.8</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-core</artifactId>
-                        <version>1.1.8</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -303,23 +265,48 @@
                                 <echo>$ mvn clean test -Dspring.profiles.active=test -Dtest=Test* </echo>
                                 <echo>$ mvn clean package</echo>
                                 <echo>$ mvn -Dmaven.test.skip=true clean package</echo>
-                                <echo>$ mvn clean spring-boot:run</echo>
                                 <echo>$ mvn jasmine:test</echo>
-                                <echo>$ mvn clean test cobertura:cobertura</echo>
+                                <echo>$ mvn clean test jacoco:report</echo>
+                                <echo></echo>
+                                <echo>To run the integrations tests with your Grouper server:</echo>
+                                <echo>$ mvn -Dtest=TestGroupingsService,TestGroupingsRestController test</echo>
+                                <echo></echo>
+                                <echo>To run UH Groupings locally:</echo>
+                                <echo>$ mvn clean spring-boot:run</echo>
                             </tasks>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
-    </build>
-    <reporting>
-        <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>edu/hawaii/its/groupings/configuration/SpringBootWebApplication.class</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
-    </reporting>
+    </build>
 </project>

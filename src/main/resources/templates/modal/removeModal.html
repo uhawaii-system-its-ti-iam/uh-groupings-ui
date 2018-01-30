@@ -1,15 +1,13 @@
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="dialog" style="float: right;">
-        <span aria-hidden="true" ng-click="infoDismiss()">&times;</span>
+    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelRemoveUser()">
+        <span aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title" id="modal-title">Adding User</h3>
+    <h4 class="modal-title" id="modal-title">Remove User</h4>
 </div>
 <div class="modal-body" id="modal-body">
-    <div class="text-center modal-body">
-        Are you sure you want to remove {{deleteUser}}?
-    </div>
+    <p>Are you sure you want to remove {{ userToDelete }}?</p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="ok()">OK</button>
-    <button class="btn btn-warning" ng-click="cancel()" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-primary" ng-click="proceedRemoveUser()">Yes</button>
+    <button class="btn btn-default" ng-click="cancelRemoveUser()" data-dismiss="modal">Cancel</button>
 </div>

@@ -1,10 +1,20 @@
 package edu.hawaii.its.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.hawaii.its.api.service.GroupingsService;
-import edu.hawaii.its.api.type.*;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
-import edu.hawaii.its.holiday.controller.WithMockUhUser;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,24 +26,23 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.controller.WithMockUhUser;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("localTest")
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 public class GroupingsRestControllerTest {
 
     @Value("${app.iam.request.form}")
@@ -52,46 +61,6 @@ public class GroupingsRestControllerTest {
         mockMvc = webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
-    }
-
-    @Test
-    @WithMockUhUser
-    public void getGrouping() throws Exception {
-        final String grouping = "grouping";
-        final String username = "user";
-
-        given(groupingsService.getGrouping(grouping, username))
-                .willReturn(grouping());
-
-        mockMvc.perform(get("/api/groupings/grouping/grouping"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("name").value("bob"))
-                .andExpect(jsonPath("path").value("test:ing:me:bob"))
-                .andExpect(jsonPath("listservOn").value("true"))
-                .andExpect(jsonPath("basis.members", hasSize(3)))
-                .andExpect(jsonPath("basis.members[0].name").value("b0-name"))
-                .andExpect(jsonPath("basis.members[0].uuid").value("b0-uuid"))
-
-                .andExpect(jsonPath("basis.members[0].username").value("b0-username"))
-                .andExpect(jsonPath("basis.members[1].name").value("b1-name"))
-                .andExpect(jsonPath("basis.members[1].uuid").value("b1-uuid"))
-                .andExpect(jsonPath("basis.members[1].username").value("b1-username"))
-                .andExpect(jsonPath("basis.members[2].name").value("b2-name"))
-                .andExpect(jsonPath("basis.members[2].uuid").value("b2-uuid"))
-                .andExpect(jsonPath("basis.members[2].username").value("b2-username"))
-                .andExpect(jsonPath("exclude.members", hasSize(1)))
-                .andExpect(jsonPath("exclude.members[0].name").value("e0-name"))
-                .andExpect(jsonPath("exclude.members[0].name").value("e0-name"))
-                .andExpect(jsonPath("exclude.members[0].uuid").value("e0-uuid"))
-                .andExpect(jsonPath("include.members", hasSize(2)))
-                .andExpect(jsonPath("include.members[1].name").value("i1-name"))
-                .andExpect(jsonPath("include.members[1].name").value("i1-name"))
-                .andExpect(jsonPath("include.members[1].uuid").value("i1-uuid"))
-                .andExpect(jsonPath("owners.members", hasSize(4)))
-                .andExpect(jsonPath("owners.members[3].name").value("o3-name"))
-                .andExpect(jsonPath("owners.members[3].uuid").value("o3-uuid"))
-                .andExpect(jsonPath("owners.members[3].username").value("o3-username"))
-                .andExpect(jsonPath("composite.members", hasSize(0)));
     }
 
     // Test data.
@@ -145,31 +114,96 @@ public class GroupingsRestControllerTest {
         return mg;
     }
 
+    @Test
+    @WithMockUhUser
+    public void rootTest() throws Exception{
+        MvcResult result = mockMvc.perform(get("/api/groupings/"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertEquals("University of Hawaii Groupings API", result.getResponse().getContentAsString());
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getGrouping() throws Exception {
+        final String grouping = "grouping";
+        final String username = "user";
+
+        given(groupingsService.getGrouping(grouping, username))
+                .willReturn(grouping());
+
+        mockMvc.perform(get("/api/groupings/grouping/grouping"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name").value("bob"))
+                .andExpect(jsonPath("path").value("test:ing:me:bob"))
+                .andExpect(jsonPath("listservOn").value("true"))
+                .andExpect(jsonPath("basis.members", hasSize(3)))
+                .andExpect(jsonPath("basis.members[0].name").value("b0-name"))
+                .andExpect(jsonPath("basis.members[0].uuid").value("b0-uuid"))
+
+                .andExpect(jsonPath("basis.members[0].username").value("b0-username"))
+                .andExpect(jsonPath("basis.members[1].name").value("b1-name"))
+                .andExpect(jsonPath("basis.members[1].uuid").value("b1-uuid"))
+                .andExpect(jsonPath("basis.members[1].username").value("b1-username"))
+                .andExpect(jsonPath("basis.members[2].name").value("b2-name"))
+                .andExpect(jsonPath("basis.members[2].uuid").value("b2-uuid"))
+                .andExpect(jsonPath("basis.members[2].username").value("b2-username"))
+                .andExpect(jsonPath("exclude.members", hasSize(1)))
+                .andExpect(jsonPath("exclude.members[0].name").value("e0-name"))
+                .andExpect(jsonPath("exclude.members[0].name").value("e0-name"))
+                .andExpect(jsonPath("exclude.members[0].uuid").value("e0-uuid"))
+                .andExpect(jsonPath("include.members", hasSize(2)))
+                .andExpect(jsonPath("include.members[1].name").value("i1-name"))
+                .andExpect(jsonPath("include.members[1].name").value("i1-name"))
+                .andExpect(jsonPath("include.members[1].uuid").value("i1-uuid"))
+                .andExpect(jsonPath("owners.members", hasSize(4)))
+                .andExpect(jsonPath("owners.members[3].name").value("o3-name"))
+                .andExpect(jsonPath("owners.members[3].uuid").value("o3-uuid"))
+                .andExpect(jsonPath("owners.members[3].username").value("o3-username"))
+                .andExpect(jsonPath("composite.members", hasSize(0)));
+    }
+
+    @Test
+    @WithMockUhUser(username = "admin")
+    public void addAdminTest() throws Exception{
+        given(groupingsService.addAdmin("admin", "newAdmin"))
+                .willReturn(new GroupingsServiceResult("SUCCESS", "add admin"));
+
+        mockMvc.perform(post("/api/groupings/newAdmin/addAdmin")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("action").value("add admin"));
+
+    }
 
     @Test
     @WithMockUhUser
     public void getAddMember() throws Exception {
         final String grouping = "grouping";
         final String username = "user";
-        GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "add member to include group");
-        GroupingsServiceResult gsr2 = new GroupingsServiceResult("SUCCESS", "add member to exclude group");
+        List<GroupingsServiceResult> gsrList = new ArrayList<>();
+        List<GroupingsServiceResult> gsrList2 = new ArrayList<>();
+        gsrList.add(new GroupingsServiceResult("SUCCESS", "add member to include group"));
+        gsrList2.add(new GroupingsServiceResult("SUCCESS", "add member to exclude group"));
 
         given(groupingsService.addMemberAs(username, grouping + ":include", username))
-                .willReturn(gsr);
+                .willReturn(gsrList);
         given(groupingsService.addMemberAs(username, grouping + ":exclude", username))
-                .willReturn(gsr2);
+                .willReturn(gsrList2);
 
         mockMvc.perform(post("/api/groupings/grouping/user/addMemberToIncludeGroup")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("add member to include group"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("add member to include group"));
 
         mockMvc.perform(post("/api/groupings/grouping/user/addMemberToExcludeGroup")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("add member to exclude group"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("add member to exclude group"));
     }
 
     @Test

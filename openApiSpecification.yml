@@ -346,56 +346,6 @@ paths:
         403:
           description: user does not have permission to opt out of the Grouping
 
-  /{grouping}/{username}/cancelOptIn:
-    post:
-      description: allows a user to remove themselves from a Grouping if the opted into the Grouping
-      parameters:
-        -
-          name: grouping
-          in: path
-          description: path to the Grouping
-          required: true
-          type: string
-        -
-          name: username
-          in: path
-          description: username of the user who is removing themselves
-          required: true
-          type: string
-
-      responses:
-        200:
-          description: Successful cancel opt-in
-        404:
-          description: Grouping does not exist
-        403:
-          description: user does not have permission to cancel the opt-in or user did not opt into the Grouping in the first place
-
-  /{grouping}/{username}/cancelOptOut:
-    post:
-      description: allows a user to remove themselves from a Grouping if the opted into the Grouping
-      parameters:
-        -
-          name: grouping
-          in: path
-          description: path to the Grouping
-          required: true
-          type: string
-        -
-          name: username
-          in: path
-          description: username of the user who is removing themselves
-          required: true
-          type: string
-
-      responses:
-        200:
-          description: Successful cancel opt-in
-        404:
-          description: Grouping does not exist
-        403:
-          description: user does not have permission to cancel the opt-in or user did not opt into the Grouping in the first place
-
   /{grouping}/{username}/{listservOn}/setListserv:
     post:
       description: allows an owner to turn the publication destination "listserv" on or off
