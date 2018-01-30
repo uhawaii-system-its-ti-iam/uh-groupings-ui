@@ -29,7 +29,6 @@
             var url = "api/groupings/adminLists";
 
             dataProvider.loadData(function (d) {
-                console.log(d.allGroupings.length);
                 if (d.allGroupings.length == 0) {
                     $scope.createApiErrorModal();
                 } else {
@@ -40,15 +39,11 @@
                     $scope.symbol.name = '\u21c5';
                     $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList, $scope.pagedItemsAdmins);
                     $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
-                    console.log($scope.groupingsList);
                 }
                 $scope.loading = false;
             }, url);
         };
 
-        /**
-        * Changing the state of the grouping information. a reset of the information.
-        */
         $scope.change = function () {
             $scope.showGrouping = false;
             $scope.resetGroupingInformation();
@@ -94,10 +89,11 @@
             dataProvider.updateData(function (d) {
                 var successful = false;
                 if (d.statusCode != null) {
-                    console.log("Error, Status Code: " + d.statusCode);
+                    // console.log("Error, Status Code: " + d.statusCode);
+                    // Modal here?
+                    // Error catching here
                 } else if (d.resultCode === 'SUCCESS') {
                     successful = true;
-                    console.log("Success In Adding");
                 }
                 $scope.createAddModal($scope.adminToAdd, successful);
                 $scope.adminToAdd = '';

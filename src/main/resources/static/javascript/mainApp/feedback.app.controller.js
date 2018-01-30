@@ -5,16 +5,16 @@
         * init function. used for initializing the feedback page.
         */
         $scope.init = function() {
-          console.log("test");
+        //   console.log("test");
         };
 
         /**
         * submit function. takes in name, email, descritpion. and then a feedback modal tells it when it is a success
         */
         $scope.submit =function() {
-            console.log($scope.name);
-            console.log($scope.email);
-            console.log($scope.description);
+            // console.log($scope.name);
+            // console.log($scope.email);
+            // console.log($scope.description);
             $scope.feedbackModal();
         };
 
