@@ -68,7 +68,7 @@
                 });
                 //console.log(typeof data);
                 $scope.returnModal(returnText);
-                $http.post('https://localhost:8080/uhgroupings/feedback/sendMail/', $scope.data, $scope.config);
+                $http.post('https://www.test.hawaii.edu/uhgroupings/feedback/sendMail/', $scope.data, $scope.config);
                 document.getElementById("reqFeed").style.display = 'none';
                 document.getElementById("reqMail").style.display = 'none';
                 document.getElementById("reqFB").style.display = 'none';
