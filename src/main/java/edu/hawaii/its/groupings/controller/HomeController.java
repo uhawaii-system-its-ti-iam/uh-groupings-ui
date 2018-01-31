@@ -11,11 +11,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import edu.hawaii.its.groupings.service.EmailService;
 
 @Controller
 public class HomeController {
 
     private static final Log logger = LogFactory.getLog(HomeController.class);
+
+    @Autowired
+    private EmailService emailService;
 
     // Mapping to home.
     @RequestMapping(value = { "/", "/home" }, method = { RequestMethod.GET })
@@ -40,6 +47,14 @@ public class HomeController {
     @RequestMapping(value = "/feedback", method = RequestMethod.GET)
     public String feedback(Locale locale, Model model) {
         logger.info("User at feedback.");
+        return "feedback";
+    }
+
+    @PreAuthorize("hasRole('UH')")
+    @RequestMapping(value = "/feedback/sendMail/", method = RequestMethod.POST)
+    public String sendMail(HttpServletRequest request) {
+        logger.info("User at feedback/sendMail.");
+        emailService.send(request.getParameter("name"), request.getParameter("type"), request.getParameter("desc"), request.getParameter("email"));
         return "feedback";
     }
 

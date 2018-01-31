@@ -22,6 +22,7 @@
         <java.version>1.8</java.version>
         <junit.version>4.12</junit.version>
         <commons-dbcp-version>2.1.1</commons-dbcp-version>
+        <hibernate-jpa.version>1.0.0.Final</hibernate-jpa.version>
         <hibernate.version>5.2.3.Final</hibernate.version>
         <h2.version>1.4.192</h2.version>
         <org.jasig.cas.client-version>3.4.1</org.jasig.cas.client-version>
@@ -53,6 +54,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
         <!-- hot swapping, disable cache for template, enable live reload -->
@@ -92,7 +98,7 @@
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
-            <version>1.0.0.Final</version>
+            <version>${hibernate-jpa.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -158,7 +164,6 @@
             <artifactId>angularjs</artifactId>
             <version>${angularjs-version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.webjars.npm/underscore -->
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>underscore</artifactId>

@@ -29,17 +29,17 @@ public class Group implements Comparable<Group> {
 
     // Constructor.
     public Group(String path) {
-        this.path = path;
+        setPath(path);
     }
 
     // Constructor.
     public Group(String path, List<Person> members) {
         this(members);
-        this.path = path;
+        setPath(path);
     }
 
     public void setPath(String path) {
-        this.path = path;
+        this.path = path != null ? path : "";
     }
 
     @Id
@@ -93,13 +93,37 @@ public class Group implements Comparable<Group> {
         return usernames;
     }
 
-    @Transient
     @Override
-    public boolean equals(Object o) {
-        return (o instanceof Group) && (compareTo((Group) o) == 0);
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((members == null) ? 0 : members.hashCode());
+        result = prime * result + ((path == null) ? 0 : path.hashCode());
+        return result;
     }
 
-    @Transient
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Group other = (Group) obj;
+        if (members == null) {
+            if (other.members != null)
+                return false;
+        } else if (!members.equals(other.members))
+            return false;
+        if (path == null) {
+            if (other.path != null)
+                return false;
+        } else if (!path.equals(other.path))
+            return false;
+        return true;
+    }
+
     @Override
     public int compareTo(Group group) {
         int pathComp = getPath().compareTo(group.getPath());
@@ -107,8 +131,18 @@ public class Group implements Comparable<Group> {
             return pathComp;
         }
 
-        for (int i = 0; i < getMembers().size(); i++) {
-            int personComp = getMembers().get(i).compareTo(group.getMembers().get(i));
+        int size0 = getMembers().size();
+        int size1 = group.getMembers().size();
+        if (size0 != size1) {
+            Integer i0 = new Integer(size0);
+            Integer i1 = new Integer(size1);
+            return i0.compareTo(i1);
+        }
+
+        for (int i = 0; i < size0; i++) {
+            Person p0 = getMembers().get(i);
+            Person p1 = group.getMembers().get(i);
+            int personComp = p0.compareTo(p1);
             if (personComp != 0) {
                 return personComp;
             }
@@ -117,9 +151,9 @@ public class Group implements Comparable<Group> {
         return 0;
     }
 
-    @Transient
     @Override
     public String toString() {
-        return "Group [members=" + members + "]";
+        return "Group [path=" + path + ", members=" + members + "]";
     }
+
 }

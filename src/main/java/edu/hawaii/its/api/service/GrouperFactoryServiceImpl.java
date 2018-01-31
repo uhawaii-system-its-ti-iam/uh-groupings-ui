@@ -44,7 +44,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsStemToSave;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @Service("grouperFactoryService")
-@Profile(value = { "localhost", "test", "integrationTest" })
+@Profile(value = { "localhost", "test", "integrationTest", "qa", "prod" })
 public class GrouperFactoryServiceImpl implements GrouperFactoryService {
 
     @Value("${groupings.api.attribute_assign_id_size}")
