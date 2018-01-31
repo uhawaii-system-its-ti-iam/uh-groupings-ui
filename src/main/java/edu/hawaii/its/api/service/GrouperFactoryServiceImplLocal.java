@@ -181,10 +181,6 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     @Autowired
     private PersonRepository personRepository;
 
-    public GrouperFactoryServiceImplLocal() {
-
-    }
-
     @Override
     public WsGroupSaveResults addEmptyGroup(String username, String path) {
 
@@ -293,9 +289,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
             addMember(groupToAddTo, newGroupMember);
         } else {
 
-            boolean inBasis = grouping.getBasis().getMembers().contains(newGroupMember);
-            boolean inExclude = grouping.getExclude().getMembers().contains(newGroupMember);
-            boolean inInclude = grouping.getInclude().getMembers().contains(newGroupMember);
+            boolean inBasis = grouping.getBasis().isMember(newGroupMember);
+            boolean inExclude = grouping.getExclude().isMember(newGroupMember);
+            boolean inInclude = grouping.getInclude().isMember(newGroupMember);
 
             if (group.endsWith(OWNERS)) {
                 addMember(grouping.getOwners(), newGroupMember);
@@ -400,7 +396,6 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         List<WsAttributeAssign> attributeAssignList = new ArrayList<>();
 
         for (Group group : groups) {
-            //todo check to see if it returns null when there is no match
             if (groupingRepository.findByPath(group.getPath()) != null) {
                 WsGroup g = new WsGroup();
                 WsAttributeAssign attributeAssign = new WsAttributeAssign();
@@ -483,23 +478,26 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     }
 
     @Override
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+    public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
             String attributeDefNameName,
             List<String> ownerGroupNames) {
+        List<WsGetAttributeAssignmentsResults> resultsList = new ArrayList<>();
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = makeWsGetAttributeAssignmentsResultsTrio(
                 assignType,
                 attributeDefNameName);
 
         wsGetAttributeAssignmentsResults = removeGroupsNotInList(wsGetAttributeAssignmentsResults, ownerGroupNames);
+        resultsList.add(wsGetAttributeAssignmentsResults);
 
-        return wsGetAttributeAssignmentsResults;
+        return resultsList;
     }
 
     @Override
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+    public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
             String attributeDefNameName0,
             String attributeDefNameName1,
             List<String> ownerGroupNames) {
+        List<WsGetAttributeAssignmentsResults> resultsList = new ArrayList<>();
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = makeWsGetAttributeAssignmentsResultsTrio(
                 assignType,
@@ -507,8 +505,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
                 attributeDefNameName1);
 
         wsGetAttributeAssignmentsResults = removeGroupsNotInList(wsGetAttributeAssignmentsResults, ownerGroupNames);
+        resultsList.add(wsGetAttributeAssignmentsResults);
 
-        return wsGetAttributeAssignmentsResults;
+        return resultsList;
     }
 
     @Override
@@ -572,7 +571,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         Group groupToCheck = groupRepository.findByPath(group);
         Person person = personRepository.findByUsername(username);
 
-        if (groupToCheck.getMembers().contains(person)) {
+        if (groupToCheck.isMember(person)) {
             wsResultMeta.setResultCode(IS_MEMBER);
         } else {
             wsResultMeta.setResultCode("not member");
@@ -685,7 +684,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         Grouping grouping = groupingRepository.findByPath(ownerGroupName);
         Person person = personRepository.findByUsername(lookup.getSubjectIdentifier());
 
-        if (grouping.getOwners().getMembers().contains(person)) {
+        if (grouping.getOwners().isMember(person)) {
             wsAssignAttributesResults = makeWsAssignAttributesResultsForGroup(attributeAssingType,
                     attributeAssignOperation,
                     attributeDefNameName,
@@ -1036,6 +1035,11 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         wsGetAttributeAssignmentsResults.setWsGroups(groupList.toArray(new WsGroup[groupList.size()]));
 
         return wsGetAttributeAssignmentsResults;
+    }
+
+    @Override
+    public String toString() {
+        return "GrouperFactoryServiceImplLocal [SETTINGS=" + SETTINGS + "]";
     }
 
 }

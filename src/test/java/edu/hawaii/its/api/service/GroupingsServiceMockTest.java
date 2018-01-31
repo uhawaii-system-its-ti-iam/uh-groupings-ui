@@ -28,7 +28,7 @@ import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.Person;
-import edu.hawaii.its.holiday.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @ActiveProfiles("localTest")
@@ -167,14 +167,10 @@ public class GroupingsServiceMockTest {
     private static final String GROUPING_4_PATH = PATH_ROOT + 4;
 
     private static final String GROUPING_0_INCLUDE_PATH = GROUPING_0_PATH + ":include";
-    private static final String GROUPING_0_EXCLUDE_PATH = GROUPING_0_PATH + ":exclude";
-    private static final String GROUPING_0_BASIS_PATH = GROUPING_0_PATH + ":basis";
     private static final String GROUPING_0_OWNERS_PATH = GROUPING_0_PATH + ":owners";
 
     private static final String GROUPING_1_INCLUDE_PATH = GROUPING_1_PATH + ":include";
     private static final String GROUPING_1_EXCLUDE_PATH = GROUPING_1_PATH + ":exclude";
-    private static final String GROUPING_1_BASIS_PATH = GROUPING_1_PATH + ":basis";
-    private static final String GROUPING_1_OWNERS_PATH = GROUPING_1_PATH + ":owners";
 
     private static final String GROUPING_2_INCLUDE_PATH = GROUPING_2_PATH + ":include";
     private static final String GROUPING_2_EXCLUDE_PATH = GROUPING_2_PATH + ":exclude";
@@ -183,13 +179,8 @@ public class GroupingsServiceMockTest {
 
     private static final String GROUPING_3_INCLUDE_PATH = GROUPING_3_PATH + ":include";
     private static final String GROUPING_3_EXCLUDE_PATH = GROUPING_3_PATH + ":exclude";
-    private static final String GROUPING_3_BASIS_PATH = GROUPING_3_PATH + ":basis";
-    private static final String GROUPING_3_OWNERS_PATH = GROUPING_3_PATH + ":owners";
 
-    private static final String GROUPING_4_INCLUDE_PATH = GROUPING_4_PATH + ":include";
     private static final String GROUPING_4_EXCLUDE_PATH = GROUPING_4_PATH + ":exclude";
-    private static final String GROUPING_4_BASIS_PATH = GROUPING_4_PATH + ":basis";
-    private static final String GROUPING_4_OWNERS_PATH = GROUPING_4_PATH + ":owners";
 
     private static final String ADMIN_USER = "admin";
     private static final Person ADMIN_PERSON = new Person(ADMIN_USER, ADMIN_USER, ADMIN_USER);
@@ -322,6 +313,7 @@ public class GroupingsServiceMockTest {
         Grouping grouping = groupingRepository.findByPath(GROUPING_0_PATH);
 
         assertFalse(grouping.getOwners().getMembers().contains(randomUser));
+        assertFalse(grouping.getOwners().isMember(randomUser));
 
         try {
             randomUserAdds = groupingsService.assignOwnership(GROUPING_0_PATH, randomUser.getUsername(), randomUser.getUsername());
@@ -331,16 +323,19 @@ public class GroupingsServiceMockTest {
 
         grouping = groupingRepository.findByPath(GROUPING_0_PATH);
         assertFalse(grouping.getOwners().getMembers().contains(randomUser));
+        assertFalse(grouping.getOwners().isMember(randomUser));
         assertNotEquals(randomUserAdds.getResultCode(), SUCCESS);
 
         GroupingsServiceResult ownerAdds = groupingsService.assignOwnership(GROUPING_0_PATH, users.get(0).getUsername(), randomUser.getUsername());
         grouping = groupingRepository.findByPath(GROUPING_0_PATH);
         assertTrue(grouping.getOwners().getMembers().contains(randomUser));
+        assertTrue(grouping.getOwners().isMember(randomUser));
         assertEquals(ownerAdds.getResultCode(), SUCCESS);
 
         GroupingsServiceResult adminAdds = groupingsService.assignOwnership(GROUPING_0_PATH, ADMIN_USER, randomUser.getUsername());
         grouping = groupingRepository.findByPath(GROUPING_0_PATH);
         assertTrue(grouping.getOwners().getMembers().contains(randomUser));
+        assertTrue(grouping.getOwners().isMember(randomUser));
         assertEquals(SUCCESS, adminAdds.getResultCode());
     }
 
@@ -667,6 +662,13 @@ public class GroupingsServiceMockTest {
         assertEquals(0, myGroupings.getGroupingsOptedOutOf().size());
         assertEquals(0, myGroupings.getGroupingsToOptInTo().size());
         assertEquals(2, myGroupings.getGroupingsToOptOutOf().size());
+
+    }
+
+    @Test
+    public void groupingsToOptTest() {
+        GroupingAssignment myGroupings = groupingsService.getGroupingAssignment(users.get(1).getUsername());
+
     }
 
     @Test

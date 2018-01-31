@@ -1,42 +1,50 @@
 package edu.hawaii.its.groupings.service;
 
-import edu.hawaii.its.groupings.type.Campus;
-
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
-@Repository
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import edu.hawaii.its.api.type.Campus;
+import edu.hawaii.its.groupings.repository.CampusRepository;
+
+@Service
 public class CampusService {
 
-    @PersistenceContext
-    private EntityManager em;
+    @Autowired
+    private CampusRepository campusRepository;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "campuses")
+    @Cacheable(value = "campusesAll")
     public List<Campus> findAll() {
-        String qlString = "select s from Campus s "
-                + "where s.actual = 'N' "
-                + "order by s.id";
-        return em.createQuery(qlString, Campus.class).getResultList();
+        return campusRepository.findAll();
     }
 
     @Transactional(readOnly = true)
     @Cacheable(value = "campusesById", key = "#id")
     public Campus find(Integer id) {
-        return em.find(Campus.class, id);
+        return campusRepository.findById(id);
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "campusesActualAll")
     public List<Campus> findActualAll() {
-        String qlString = "select s from Campus s "
-                + "where s.actual = 'Y' "
-                + "order by s.id";
-        return em.createQuery(qlString, Campus.class).getResultList();
+        return campusRepository.findAllByActual("Y", new Sort("id"));
     }
 
+    @Transactional(readOnly = true)
+    public Campus findFirst() {
+        return campusRepository.findTopByOrderByIdDesc();
+    }
+
+    public CampusRepository getCampusRepository() {
+        return campusRepository;
+    }
+
+    public void setCampusRepository(CampusRepository campusRepository) {
+        this.campusRepository = campusRepository;
+    }
 }

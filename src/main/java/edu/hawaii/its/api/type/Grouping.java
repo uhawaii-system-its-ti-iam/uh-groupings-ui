@@ -1,8 +1,10 @@
 package edu.hawaii.its.api.type;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "grouping")
@@ -65,7 +67,11 @@ public class Grouping {
 
     public void setPath(String path) {
         this.path = path != null ? path : "";
-        this.name = path.split(":")[path.split(":").length - 1];
+        this.name = this.path;
+        int index = this.name.lastIndexOf(':');
+        if (index != -1) {
+            this.name = this.name.substring(index + 1);
+        }
     }
 
     public Group getBasis() {

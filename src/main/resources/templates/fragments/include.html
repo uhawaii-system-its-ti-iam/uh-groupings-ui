@@ -52,7 +52,7 @@
                           data-toggle="tooltip" data-placement="top"
                           onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
                           th:title="#{screen.message.common.tooltip.remove.include}"
-                          ng-click="removeMember('Include', $index + (currentPageInclude * itemsPerPage))">
+                          ng-click="removeMember('Include', $index)">
                     </span>
                 </td>
                 <td>{{i.uuid}}</td>

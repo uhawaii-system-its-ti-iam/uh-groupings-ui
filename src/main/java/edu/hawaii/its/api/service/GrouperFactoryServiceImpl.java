@@ -1,7 +1,10 @@
 package edu.hawaii.its.api.service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -41,9 +44,13 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsStemToSave;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @Service("grouperFactoryService")
-@Profile(value = { "localhost", "test", "integrationTest" })
+@Profile(value = { "localhost", "test", "integrationTest", "qa", "prod" })
 public class GrouperFactoryServiceImpl implements GrouperFactoryService {
 
+    @Value("${groupings.api.attribute_assign_id_size}")
+    private Integer ATTRIBUTES_ASSIGN_ID_SIZE;
+
+    // Constructor.
     public GrouperFactoryServiceImpl() {
         // Empty.
     }
@@ -128,9 +135,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         addMember.assignActAsSubject(lookup);
         addMember.assignGroupName(group);
 
-        for (String name : newMembers) {
-            addMember.addSubjectIdentifier(name);
-        }
+        newMembers.forEach(addMember::addSubjectIdentifier);
 
         return addMember.execute();
     }
@@ -166,9 +171,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         deleteMember.assignActAsSubject(lookup);
         deleteMember.assignGroupName(group);
 
-        for (String name : membersToDelete) {
-            deleteMember.addSubjectIdentifier(name);
-        }
+        membersToDelete.forEach(deleteMember::addSubjectIdentifier);
 
         return deleteMember.execute();
     }
@@ -194,33 +197,56 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     }
 
     @Override
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+    public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
             String attributeDefNameName,
             List<String> ownerGroupNames) {
 
-        GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
-                .addAttributeDefNameName(attributeDefNameName)
-                .assignAttributeAssignType(assignType);
+        List<WsGetAttributeAssignmentsResults> attributeAssignmentsResultList = new ArrayList<>();
+        Iterator iterator = ownerGroupNames.iterator();
 
-        ownerGroupNames.forEach(getAttributeAssignments::addOwnerGroupName);
+        for (int i = 0; i < ownerGroupNames.size(); i += ATTRIBUTES_ASSIGN_ID_SIZE) {
+            GcGetAttributeAssignments attributeAssignments = new GcGetAttributeAssignments()
+                    .addAttributeDefNameName(attributeDefNameName)
+                    .assignAttributeAssignType(assignType);
 
-        return getAttributeAssignments.execute();
+            for (int j = 0; j < ATTRIBUTES_ASSIGN_ID_SIZE; j++) {
+                if (iterator.hasNext()) {
+                    attributeAssignments.addOwnerGroupName(iterator.next().toString());
+                } else {
+                    break;
+                }
+            }
+            attributeAssignmentsResultList.add(attributeAssignments.execute());
+        }
+
+        return attributeAssignmentsResultList;
     }
 
     @Override
-    public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+    public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
             String attributeDefNameName0,
             String attributeDefNameName1,
             List<String> ownerGroupNames) {
+        List<WsGetAttributeAssignmentsResults> attributeAssignmentsResultList = new ArrayList<>();
+        Iterator iterator = ownerGroupNames.iterator();
 
-        GcGetAttributeAssignments getAttributeAssignments = new GcGetAttributeAssignments()
-                .addAttributeDefNameName(attributeDefNameName0)
-                .addAttributeDefNameName(attributeDefNameName1)
-                .assignAttributeAssignType(assignType);
+        for (int i = 0; i < ownerGroupNames.size(); i += ATTRIBUTES_ASSIGN_ID_SIZE) {
+            GcGetAttributeAssignments attributeAssignments = new GcGetAttributeAssignments()
+                    .addAttributeDefNameName(attributeDefNameName0)
+                    .addAttributeDefNameName(attributeDefNameName1)
+                    .assignAttributeAssignType(assignType);
 
-        ownerGroupNames.forEach(getAttributeAssignments::addOwnerGroupName);
+            for (int j = 0; j < ATTRIBUTES_ASSIGN_ID_SIZE; j++) {
+                if (iterator.hasNext()) {
+                    attributeAssignments.addOwnerGroupName(iterator.next().toString());
+                } else {
+                    break;
+                }
+            }
+            attributeAssignmentsResultList.add(attributeAssignments.execute());
+        }
 
-        return getAttributeAssignments.execute();
+        return attributeAssignmentsResultList;
     }
 
     @Override
@@ -388,4 +414,10 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     public WsAttributeAssign[] makeEmptyWsAttributeAssignArray() {
         return new WsAttributeAssign[0];
     }
+
+    @Override
+    public String toString() {
+        return "GrouperFactoryServiceImpl";
+    }
+
 }
