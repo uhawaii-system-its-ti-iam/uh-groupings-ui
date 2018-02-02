@@ -24,7 +24,7 @@ body {
     background-color: white;
 }
 
-h1{
+/*h1{
     color:#1995AD;
 }
 h2, h3, h4 {
@@ -41,7 +41,7 @@ h2, h3, h4 {
 
 #defMem{
     color: #c4dfe6;
-}
+}*/
 
 .loader {
     border: 16px solid white; /* Black */
@@ -81,7 +81,7 @@ h2, h3, h4 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    /*background: rgba(0, 0, 0, 0.5);*/
     z-index: 9999;
 }
 
@@ -95,12 +95,12 @@ h2, h3, h4 {
 }
 
 a {
-    color: #0275d8;
+    /*color: #0275d8;*/
     text-decoration: none;
 }
 
 a:hover {
-    color: #0275d8;
+    /*color: #0275d8;*/
     text-decoration: underline;
 }
 
@@ -170,12 +170,12 @@ td.uh-pre {
     font-size: 25px;
 }
 
-.navbar-default .navbar-nav > .open > a,
+/*.navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:focus,
 .navbar-default .navbar-nav > .open > a:hover {
     color: #555;
     background-color: white;
-}
+}*/
 
 .app-logout {
     height: 50px;
@@ -268,9 +268,9 @@ td.uh-pre {
     padding: 10px;
 }
 
-.dropshadow {
+/*.dropshadow {
     text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
-}
+}*/
 
 .panel{
     background-color: #f1f1f1f2;
@@ -441,14 +441,14 @@ td.uh-pre {
     .collapse.in{
         display:block !important;
     }
-
+/*
     .navbar-brand.uh-nav-app-name {
         color: #BD9319;
     }
 
     .navbar-brand.uh-nav-app-name:hover {
         color: #B08A17;
-    }
+    }*/
 
     .nav.navbar-nav {
         padding-top: 0px;
@@ -465,24 +465,24 @@ td.uh-pre {
     }
 }
 
-.opt-button[disabled], .opt-button:disabled, .opt-button[disabled]:active, .opt-button:disabled:active {
+/*.opt-button[disabled], .opt-button:disabled, .opt-button[disabled]:active, .opt-button:disabled:active {
     color: #C2C2C2;
-}
+}*/
 
 .nav.nav-tabs {
     border-bottom: none;
 }
 
-.panel-tab-content .panel-heading {
+/*.panel-tab-content .panel-heading {
     border-radius: 0px 3px 0px 0px;
     -webkit-border-radius: 0px 3px 0px 0px;
     -moz-border-radius: 0px 3px 0px 0px;
     background-color: #07575b;
-}
+}*/
 
-.panel-default > .panel-heading{
+/*.panel-default > .panel-heading{
     background-color: #07575b;
-}
+}*/
 
 .nav.nav-tabs > li.active > a {
     border-bottom: none;

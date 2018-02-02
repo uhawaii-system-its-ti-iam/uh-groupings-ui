@@ -1,4 +1,7 @@
 (function () {
+
+    // BIG QUESTIONS: why is there so much output for the URL?
+
     /**
      * Membership controller for the whole memberships page
      *
@@ -21,7 +24,7 @@
         $scope.pagedItemsOptInList = [];
         $scope.gap = 2;
 
-        $scope.itemsPerPage = 20;
+        $scope.itemsPerPage = 2;
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
 
@@ -47,6 +50,7 @@
              *takes all of that data and puts them into pages as called by "groupToPages"
              **/
             dataProvider.loadData(function (d) {
+                console.log(d);
                 if(typeof d.groupingsIn === 'undefined') {
                     $scope.loading = false;
                     $scope.errorModal();
@@ -138,10 +142,13 @@
          *
          */
         $scope.optOut = function (index) {
+            console.log(index);
             var optOutURL = "api/groupings/" + $scope.pagedItemsMembersList[$scope.currentPageOptOut][index].path + "/optOut";
             $scope.loading = true;
             dataProvider.updateData(function (d) {
+                console.log(d);
                 if (d[0].resultCode.indexOf("FAILURE") > -1) {
+                    console.log("Failed to opt out");
                     alert("Failed to opt out");
                     $scope.loading = false;
                 }
@@ -157,10 +164,18 @@
          */
         $scope.optIn = function (index) {
             var optInURL = "api/groupings/" + $scope.pagedItemsOptInList[$scope.currentPageOptIn][index].path + "/optIn";
+            console.log(optInURL);
             $scope.loading = true;
             dataProvider.updateData(function (d) {
                 $scope.init();
             }, optInURL);
+        };
+
+        var searchMatch = function (haystack, needle) {
+            if (!needle) {
+                return true;
+            }
+            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
         };
 
         /**searches through the array to find matches and then fixes the list
@@ -171,6 +186,7 @@
         $scope.search = function (list, whatList, whatQuery) {
             var query = "";
             query = $scope[whatQuery];
+            console.log(query);
             $scope.filteredItems = [];
             $scope.filteredItems = $filter('filter')(list, function (item) {
                 // Filter by path name for groups in Available Groupings tab
@@ -224,16 +240,92 @@
          * @returns {boolean} - if there is a match then return true inorder enable button.
          */
 
-        $scope.required = function(index)
-        {
-            for (var i = 0; i < $scope.optOutList.length; i++) {
-                if ($scope.pagedItemsMembersList[$scope.currentPageOptOut][index].name === $scope.optOutList[i].name) {
-                    return false;
+        // $scope.required = function(index)
+        // {
+        //     for (var i = 0; i < $scope.optOutList.length; i++) {
+        //         if ($scope.pagedItemsMembersList[$scope.currentPageOptOut][index].name === $scope.optOutList[i].name) {
+        //             return false;
+        //         }
+        //     }
+        //     return true;
+        // };
+
+        /**groups all the items to pages
+         have separate arrays (hopefully)
+         @param theList - .
+         @param pagedList - .
+         **/
+        $scope.groupToPages = function (theList, pagedList) {
+            var pagedList = [];
+            for (var i = 0; i < theList.length; i++) {
+                if (i % $scope.itemsPerPage === 0) {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [theList[i]];
+                } else {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)].push(theList[i]);
                 }
             }
-            return true;
+            return pagedList;
         };
 
+
+        /**shows the range between the start and end
+         *checks for negative numbers
+         *
+         * @param size
+         * @param start
+         * @param end
+         *  all the param are self explanatory
+         * @return ret
+         *     everything within the range of start,
+         *       end, and making sure it's that size
+         **/
+        $scope.range = function (size, start, end) {
+            var ret = [];
+
+            if (size < end) {
+                end = size;
+                // start = size - $scope.gap;
+            }
+            if (start < 0) {
+                start = 0;
+            }
+            for (var i = start; i < end; i++) {
+                ret.push(i);
+            }
+            return ret;
+        };
+
+
+        //might make this into my one function
+        $scope.currentPage = function (pages, whatList, whatPage) {
+            switch (pages) {
+                case 'Next':
+                    if ($scope[whatPage] < $scope[whatList].length - 1) {
+                        $scope[whatPage] = $scope[whatPage] + 1;
+                    }
+                    break;
+
+                case 'Set':
+                    $scope[whatPage] = this.n;
+                    break;
+
+                case 'Prev':
+                    if ($scope[whatPage] > 0) {
+                        $scope[whatPage]--;
+                    }
+                    break;
+                case 'First':
+                    if ($scope[whatPage] > 0) {
+                        $scope[whatPage] = 0;
+                    }
+                    break;
+                case 'Last':
+                    if ($scope[whatPage] >= 0) {
+                        $scope[whatPage] = $scope[whatList].length - 1;
+                    }
+                    break;
+            }
+        };
 
     }
 

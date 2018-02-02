@@ -1,0 +1,90 @@
+h1{
+    color:#1995AD;
+}
+h2, h3, h4 {
+    color: #c4dfe6;
+}
+
+#uh-nav-name{
+    color:#1995AD;
+}
+
+.members-tab-title{
+    color: #1995AD;
+}
+
+#defMem{
+    color: #c4dfe6;
+}
+
+
+#overlay{
+    background: rgba(0, 0, 0, 0.5);
+}
+
+
+a {
+    color: #0275d8;
+}
+
+a:hover {
+    color: #0275d8;
+}
+
+.uh-branding-one {
+    color: #777;
+}
+
+.uh-branding-two {
+    color: #777;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:focus,
+.navbar-default .navbar-nav > .open > a:hover {
+    color: #555;
+    background-color: white;
+}
+
+.dropshadow {
+    text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
+}
+
+
+.navbar-brand.uh-nav-app-name {
+    color: #BD9319;
+    background-color: transparent;
+}
+
+.navbar-brand.uh-nav-app-name:hover {
+    color: #B08A17;
+}
+
+.uh-branding-one {
+    color: #777;
+}
+
+.uh-branding-two {
+    color: #777;
+}
+
+.navbar-brand.uh-nav-app-name {
+    color: #BD9319;
+}
+
+.navbar-brand.uh-nav-app-name:hover {
+    color: #B08A17;
+}
+
+.opt-button[disabled], .opt-button:disabled, .opt-button[disabled]:active, .opt-button:disabled:active {
+    color: #C2C2C2;
+}
+
+.panel-tab-content .panel-heading {
+    background-color: #07575b;
+}
+
+
+.panel-default > .panel-heading{
+    background-color: #07575b;
+}
