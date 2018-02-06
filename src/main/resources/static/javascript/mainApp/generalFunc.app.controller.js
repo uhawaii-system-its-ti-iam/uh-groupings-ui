@@ -574,30 +574,6 @@
         };
 
         /**
-         * Resets the arrays containing the members of each grouping and their page numbers.
-         */
-        $scope.resetGroupingInformation = function () {
-            // Reset grouping member data for next load
-            $scope.groupingMembers = [];
-            $scope.groupingBasis = [];
-            $scope.groupingInclude = [];
-            $scope.groupingExclude = [];
-            $scope.groupingOwners = [];
-            // Reset paged items
-            $scope.pagedItemsMembers = [];
-            $scope.pagedItemsBasis = [];
-            $scope.pagedItemsInclude = [];
-            $scope.pagedItemsExclude = [];
-            $scope.pagedItemsOwners = [];
-            // Reset page numbers
-            $scope.currentPageMembers = 0;
-            $scope.currentPageBasis = 0;
-            $scope.currentPageInclude = 0;
-            $scope.currentPageExclude = 0;
-            $scope.currentPageOwners = 0;
-        };
-
-        /**
          * Exports data in a table to a CSV file
          * @param {object[]} table - the table to export
          * @param name - the name of the group (i.e. include or exclude)
