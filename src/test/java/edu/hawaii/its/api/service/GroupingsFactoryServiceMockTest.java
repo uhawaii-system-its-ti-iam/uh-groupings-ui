@@ -5,10 +5,7 @@ import org.junit.runner.RunWith;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.util.Dates;
 
-import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssignValue;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsStemLookup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+import edu.internet2.middleware.grouperClient.ws.beans.*;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -16,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -147,7 +145,7 @@ public class GroupingsFactoryServiceMockTest {
 //        membersToDelete.forEach(deleteMember::addSubjectIdentifier);
 //
 //        return deleteMember.execute();
-}
+    }
 
     @Test
     public void makeWsGetAttributeAssignmentsResultsTest() {
@@ -171,8 +169,8 @@ public class GroupingsFactoryServiceMockTest {
 //                .execute();
     }
 
-@Test
-public void makeWsGetAttributeAssignmentsResultsTrioWithListTest() {
+    @Test
+    public void makeWsGetAttributeAssignmentsResultsTrioWithListTest() {
 //    public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
 //String attributeDefNameName,
 //        List<String>ownerGroupNames){
@@ -196,10 +194,10 @@ public void makeWsGetAttributeAssignmentsResultsTrioWithListTest() {
 //        }
 //
 //        return attributeAssignmentsResultList;
-}
+    }
 
-@Test
-public void makeWsGetAttributeAssignmentsResultsTrioWithTwoAttributeDefNamesTest() {
+    @Test
+    public void makeWsGetAttributeAssignmentsResultsTrioWithTwoAttributeDefNamesTest() {
 //public List<WsGetAttributeAssignmentsResults>makeWsGetAttributeAssignmentsResultsTrio(String assignType,
 //        String attributeDefNameName0,
 //        String attributeDefNameName1,
@@ -224,10 +222,10 @@ public void makeWsGetAttributeAssignmentsResultsTrioWithTwoAttributeDefNamesTest
 //        }
 //
 //        return attributeAssignmentsResultList;
-        }
+    }
 
-@Test
-public void makeWsGetAttributeAssignmentsResultsForMembershipTest() {
+    @Test
+    public void makeWsGetAttributeAssignmentsResultsForMembershipTest() {
 //public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForMembership(String assignType,
 //        String attributeDefNameName,
 //        String membershipId){
@@ -236,9 +234,9 @@ public void makeWsGetAttributeAssignmentsResultsForMembershipTest() {
 //                .addOwnerMembershipId(membershipId)
 //                .assignAttributeAssignType(assignType)
 //                .execute();
-        }
+    }
 
-@Test
+    @Test
     public void makeWsGetAttributeAssignmentsResultsForGroupTest() {
 //public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType,
 //        String group){
@@ -246,9 +244,9 @@ public void makeWsGetAttributeAssignmentsResultsForMembershipTest() {
 //                .addOwnerGroupName(group)
 //                .assignAttributeAssignType(assignType)
 //                .execute();
-        }
+    }
 
-@Test
+    @Test
     public void makeWsGetAttributeAssignmentsResultsForGroupWithAttributeDefNameTest() {
 //public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType,
 //        String attributeDefNameName,
@@ -258,9 +256,9 @@ public void makeWsGetAttributeAssignmentsResultsForMembershipTest() {
 //                .addOwnerGroupName(group)
 //                .assignAttributeAssignType(assignType)
 //                .execute();
-        }
+    }
 
-@Test
+    @Test
     public void makeWsHasMemberResultsTest() {
 //public WsHasMemberResults makeWsHasMemberResults(String group,String username){
 
@@ -268,9 +266,9 @@ public void makeWsGetAttributeAssignmentsResultsForMembershipTest() {
 //                .assignGroupName(group)
 //                .addSubjectIdentifier(username)
 //                .execute();
-        }
+    }
 
-@Test
+    @Test
     public void makeWsAssignAttributesReultsTest() {
 //public WsAssignAttributesResults makeWsAssignAttributesResults(String attributeAssignType,
 //        String attributeAssignOperation,
@@ -287,10 +285,10 @@ public void makeWsGetAttributeAssignmentsResultsForMembershipTest() {
 //                .assignAttributeAssignValueOperation(attributeAssignValueOperation)
 //                .addValue(value)
 //                .execute();
-        }
+    }
 
-@Test
-public void makeWsAssignAttributesResultsForMembershipTest() {
+    @Test
+    public void makeWsAssignAttributesResultsForMembershipTest() {
 //public WsAssignAttributesResults makeWsAssignAttributesResultsForMembership(String attributeAssignType,
 //        String attributeAssignOperation,
 //        String attributeDefNameName,
@@ -302,10 +300,10 @@ public void makeWsAssignAttributesResultsForMembershipTest() {
 //                .addAttributeDefNameName(attributeDefNameName)
 //                .addOwnerMembershipId(ownerMembershipId)
 //                .execute();
-        }
+    }
 
-@Test
-public void makeWsAssignAttributesResultsForGroupTest() {
+    @Test
+    public void makeWsAssignAttributesResultsForGroupTest() {
 //public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(String attributeAssingType,
 //        String attributeAssignOperation,
 //        String attributeDefNameName,
@@ -316,10 +314,10 @@ public void makeWsAssignAttributesResultsForGroupTest() {
 //                .addAttributeDefNameName(attributeDefNameName)
 //                .addOwnerGroupName(ownerGroupName)
 //                .execute();
-        }
+    }
 
-@Test
-public void makeWsAssignAttributesResultsForGroup() {
+    @Test
+    public void makeWsAssignAttributesResultsForGroup() {
 //public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(WsSubjectLookup lookup,
 //        String attributeAssingType,
 //        String attributeAssignOperation,
@@ -332,10 +330,10 @@ public void makeWsAssignAttributesResultsForGroup() {
 //                .addAttributeDefNameName(attributeDefNameName)
 //                .addOwnerGroupName(ownerGroupName)
 //                .execute();
-        }
+    }
 
-@Test
-public void makeWsAssignGrouperPrivilegesLiteResult() {
+    @Test
+    public void makeWsAssignGrouperPrivilegesLiteResult() {
 //public WsAssignGrouperPrivilegesLiteResult makeWsAssignGrouperPrivilegesLiteResult(String groupName,
 //        String privilegeName,
 //        WsSubjectLookup lookup,
@@ -347,10 +345,10 @@ public void makeWsAssignGrouperPrivilegesLiteResult() {
 //                .assignSubjectLookup(lookup)
 //                .assignAllowed(allowed)
 //                .execute();
-        }
+    }
 
-@Test
-public void makeWsGetGrouperPrivilegesLiteResult() {
+    @Test
+    public void makeWsGetGrouperPrivilegesLiteResult() {
 //public WsGetGrouperPrivilegesLiteResult makeWsGetGrouperPrivilegesLiteResult(String groupName,
 //        String privilegeName,
 //        WsSubjectLookup lookup){
@@ -360,11 +358,11 @@ public void makeWsGetGrouperPrivilegesLiteResult() {
 //                .assignPrivilegeName(privilegeName)
 //                .assignSubjectLookup(lookup)
 //                .execute();
-        }
+    }
 
 
-@Test
-public void makeWsGetMembershipsResults() {
+    @Test
+    public void makeWsGetMembershipsResults() {
 //public WsGetMembershipsResults makeWsGetMembershipsResults(String groupName,
 //        WsSubjectLookup lookup){
 
@@ -372,11 +370,11 @@ public void makeWsGetMembershipsResults() {
 //                .addGroupName(groupName)
 //                .addWsSubjectLookup(lookup)
 //                .execute();
-        }
+    }
 
 
-@Test
-public void makeWsGetMembersResults() {
+    @Test
+    public void makeWsGetMembersResults() {
 //public WsGetMembersResults makeWsGetMembersResults(String subjectAttributeName,
 //        WsSubjectLookup lookup,
 //        String groupName){
@@ -387,11 +385,11 @@ public void makeWsGetMembersResults() {
 //                .addGroupName(groupName)
 //                .assignIncludeSubjectDetail(true)
 //                .execute();
-        }
+    }
 
 
-@Test
-public void makeWsGetGroupsResults() {
+    @Test
+    public void makeWsGetGroupsResults() {
 //public WsGetGroupsResults makeWsGetGroupsResults(String username,
 //        WsStemLookup stemLookup,
 //        StemScope stemScope){
@@ -401,19 +399,18 @@ public void makeWsGetGroupsResults() {
 //                .assignWsStemLookup(stemLookup)
 //                .assignStemScope(stemScope)
 //                .execute();
-        }
+    }
 
 
-@Test
-public void makeEmptyWsAttributeAssignArrayTest(){
-//public WsAttributeAssign[]makeEmptyWsAttributeAssignArray(){
-//        return new WsAttributeAssign[0];
-        }
+    @Test
+    public void makeEmptyWsAttributeAssignArrayTest() {
+        WsAttributeAssign[] emptyAttributeAssigns = new WsAttributeAssign[0];
+        assertTrue(Arrays.equals(emptyAttributeAssigns, gfs.makeEmptyWsAttributeAssignArray()));
+    }
 
 
-@Test
-public void toStringTest(){
-//    public String toString(){
-//        return "GrouperFactoryServiceImpl";
-        }
-        }
+    @Test
+    public void toStringTest() {
+        assertEquals("GrouperFactoryServiceImpl", gfs.toString());
+    }
+}
