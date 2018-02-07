@@ -608,7 +608,7 @@
          * @returns the table in CSV format
          */
         $scope.convertArrayOfObjectsToCSV = function (table) {
-            var str = "Name, Username, Email\r\n";
+            var str = "Name,Username,Email\r\n";
             for (var i = 0; i < table.length; i++) {
                 var line = '';
                 line += table[i].name + ',';
