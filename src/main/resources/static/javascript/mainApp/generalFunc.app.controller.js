@@ -549,10 +549,13 @@
             }
 
             $scope.basisQuery = "";
-            $scope.queryGroupings = "";
             $scope.excludeQuery = "";
             $scope.includeQuery = "";
             $scope.membersQuery = "";
+
+            $scope.queryGroupings = "";
+            // Ensure the groupings list is reset with the now-blank filter
+            $scope.filter($scope.groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', 'queryGroupings');
 
         };
 
