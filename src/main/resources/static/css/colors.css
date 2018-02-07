@@ -1,20 +1,20 @@
 h1{
-    color:#1995AD;
+    color:#BD9319;
 }
 h2, h3, h4 {
-    color: #c4dfe6;
+    color: #9B7506;
 }
 
 #uh-nav-name{
-    color:#1995AD;
+    color:#BD9319;
 }
 
 .members-tab-title{
-    color: #1995AD;
+    color: #9B7506;
 }
 
 #defMem{
-    color: #c4dfe6;
+    color: #9B7506;
 }
 
 
@@ -37,6 +37,11 @@ a:hover {
 
 .uh-branding-two {
     color: #777;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover{
+    background-color: #2C658D;
+    border-color: #477A9E;
 }
 
 .navbar-default .navbar-nav > .open > a,
@@ -80,11 +85,25 @@ a:hover {
     color: #C2C2C2;
 }
 
-.panel-tab-content .panel-heading {
-    background-color: #07575b;
+.btn-primary{
+    background-color: #2C658D;
+    border-color: #477A9E;
 }
 
+.panel-tab-content .panel-heading {
+    background-color: #175079;
+}
+
+#optOutButton{
+    background-color: #2C658D;
+    border-color: #477A9E;
+}
+
+#side-nav-color{
+    background-color: #2C658D;
+    border-color: #477A9E;
+}
 
 .panel-default > .panel-heading{
-    background-color: #07575b;
+    background-color: #175079;
 }
