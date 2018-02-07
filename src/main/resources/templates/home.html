@@ -15,7 +15,7 @@
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <h1 class="dropshadow">UH Groupings</h1>
                 <p class="lead">
-                    Manage your Groupings in one place, use them in many.
+                    Manage your groupings in one place, use them in many.
                 </p>
                 <div>
                     <div sec:authorize="!isAuthenticated()">
@@ -34,11 +34,11 @@
     <div class="row" style="margin-left: inherit; margin-right: inherit">
         <span class="h4">What is a UH Grouping?</span>
         <p>
-            A "Grouping" is a collection of members (e.g., all full-time Hilo faculty).  UH Groupings allows you to create groupings, manage grouping memberships,
+            A "grouping" is a collection of members (e.g., all full-time Hilo faculty).  UH Groupings allows you to create groupings, manage grouping memberships,
             control members' self-service options, designate grouping integrations, and more.
         </p>
         <p>
-            Groupings can be synchornized with one or more of the following: email LISTSERV lists, attribute assignments for access control via CAS and LDAP, etc.
+            Groupings can be synchronized with one or more of the following: email LISTSERV lists, attribute assignments for access control via CAS and LDAP, etc.
             Additionally, UH Groupings allows you to leverage existing membership collections, which can substantially reduce the manual overhead of membership management.
         </p>
         <p>
@@ -66,7 +66,7 @@
                 <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
                     <p class="h4" style="margin-top: 0;">My Groupings</p>
                     <p>
-                        View and manage Groupings I own.  Manage members, configure grouping options and integration destinations.
+                        View and manage groupings I own.  Manage members, configure grouping options and integration destinations.
                     </p>
                     <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">Groupings</a></p>
                 </div>
