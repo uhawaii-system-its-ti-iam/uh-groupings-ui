@@ -17,7 +17,7 @@
             var errors = 0;
             var onlyMail = 0;
             var onlyFT = 0;
-            var URL = "http://localhost:8080/uhgroupings/feedback/sendMail/";
+            var URL = "https://www.test.hawaii.edu/uhgroupings/feedback/sendMail";
             $scope.data = [];
             var optionVal = document.getElementById("feedback_type");
             var feedVal = optionVal.options[optionVal.selectedIndex].value;
