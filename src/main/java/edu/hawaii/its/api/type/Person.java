@@ -18,6 +18,12 @@ public class Person implements Comparable<Person> {
     @Column(name = "FullName")
     private String name;
 
+    @Column(name = "FirstName")
+    private String firstName;
+
+    @Column(name = "LastName")
+    private String lastName;
+
     @Column
     private String uuid;
 
@@ -37,6 +43,15 @@ public class Person implements Comparable<Person> {
         this(name);
         this.uuid = uuid;
         this.username = username;
+    }
+
+    // Constructor.
+    public Person(String name, String uuid, String username, String firstName, String lastName) {
+        this(name);
+        this.uuid = uuid;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public String getUsername() {
@@ -61,6 +76,22 @@ public class Person implements Comparable<Person> {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override

@@ -796,6 +796,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
             String groupName) {
 
         WsGetMembersResults wsGetMembersResults = new WsGetMembersResults();
+        // todo add string to config file
+        String[] attributeNames = new String[] {"uid"};
+        wsGetMembersResults.setSubjectAttributeNames(attributeNames);
         WsGetMembersResult wsGetMembersResult = new WsGetMembersResult();
         WsSubject[] subjects;
 

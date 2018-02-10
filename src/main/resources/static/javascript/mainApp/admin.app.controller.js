@@ -92,7 +92,7 @@
                 var successful = false;
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                } else if (d.resultCode === 'SUCCESS') {
+                } else if (d.resultCode.indexOf('SUCCESS') === 0) {
                     successful = true;
                     console.log("Success In Adding");
                 }

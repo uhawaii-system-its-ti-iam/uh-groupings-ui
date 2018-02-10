@@ -549,10 +549,13 @@
             }
 
             $scope.basisQuery = "";
-            $scope.queryGroupings = "";
             $scope.excludeQuery = "";
             $scope.includeQuery = "";
             $scope.membersQuery = "";
+
+            $scope.queryGroupings = "";
+            // Ensure the groupings list is reset with the now-blank filter
+            $scope.filter($scope.groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', 'queryGroupings');
 
         };
 
@@ -571,30 +574,6 @@
             } else {
                 $scope.showGrouping = false;
             }
-        };
-
-        /**
-         * Resets the arrays containing the members of each grouping and their page numbers.
-         */
-        $scope.resetGroupingInformation = function () {
-            // Reset grouping member data for next load
-            $scope.groupingMembers = [];
-            $scope.groupingBasis = [];
-            $scope.groupingInclude = [];
-            $scope.groupingExclude = [];
-            $scope.groupingOwners = [];
-            // Reset paged items
-            $scope.pagedItemsMembers = [];
-            $scope.pagedItemsBasis = [];
-            $scope.pagedItemsInclude = [];
-            $scope.pagedItemsExclude = [];
-            $scope.pagedItemsOwners = [];
-            // Reset page numbers
-            $scope.currentPageMembers = 0;
-            $scope.currentPageBasis = 0;
-            $scope.currentPageInclude = 0;
-            $scope.currentPageExclude = 0;
-            $scope.currentPageOwners = 0;
         };
 
         /**
@@ -629,7 +608,7 @@
          * @returns the table in CSV format
          */
         $scope.convertArrayOfObjectsToCSV = function (table) {
-            var str = "Name, Username, Email\r\n";
+            var str = "Name,Username,Email\r\n";
             for (var i = 0; i < table.length; i++) {
                 var line = '';
                 line += table[i].name + ',';
