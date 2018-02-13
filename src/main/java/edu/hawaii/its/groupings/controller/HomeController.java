@@ -51,7 +51,7 @@ public class HomeController {
     }
 
     @PreAuthorize("hasRole('UH')")
-    @RequestMapping(value = "/feedback/sendMail/", method = RequestMethod.POST)
+    @RequestMapping(value = "/feedback/sendMail", method = RequestMethod.POST)
     public String sendMail(HttpServletRequest request) {
         logger.info("User at feedback/sendMail.");
         emailService.send(request.getParameter("name"), request.getParameter("type"), request.getParameter("desc"), request.getParameter("email"));
