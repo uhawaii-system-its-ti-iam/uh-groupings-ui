@@ -523,7 +523,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
         WsAttributeAssign[] wsAttributeAssigns = new WsAttributeAssign[1];
         WsAttributeAssign wsAttributeAssign = new WsAttributeAssign();
-        if (membership.getSelfOpted()) {
+        if (membership.isSelfOpted()) {
             wsAttributeAssign.setAttributeDefNameName(SELF_OPTED);
         }
 
@@ -796,6 +796,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
             String groupName) {
 
         WsGetMembersResults wsGetMembersResults = new WsGetMembersResults();
+        // todo add string to config file
+        String[] attributeNames = new String[] {"uid"};
+        wsGetMembersResults.setSubjectAttributeNames(attributeNames);
         WsGetMembersResult wsGetMembersResult = new WsGetMembersResult();
         WsSubject[] subjects;
 

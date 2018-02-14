@@ -549,10 +549,13 @@
             }
 
             $scope.basisQuery = "";
-            $scope.queryGroupings = "";
             $scope.excludeQuery = "";
             $scope.includeQuery = "";
             $scope.membersQuery = "";
+
+            $scope.queryGroupings = "";
+            // Ensure the groupings list is reset with the now-blank filter
+            $scope.filter($scope.groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', 'queryGroupings');
 
         };
 
@@ -574,27 +577,50 @@
         };
 
         /**
-         * Resets the arrays containing the members of each grouping and their page numbers.
+         * Exports data in a table to a CSV file
+         * @param {object[]} table - the table to export
+         * @param name - the name of the group (i.e. include or exclude)
          */
-        $scope.resetGroupingInformation = function () {
-            // Reset grouping member data for next load
-            $scope.groupingMembers = [];
-            $scope.groupingBasis = [];
-            $scope.groupingInclude = [];
-            $scope.groupingExclude = [];
-            $scope.groupingOwners = [];
-            // Reset paged items
-            $scope.pagedItemsMembers = [];
-            $scope.pagedItemsBasis = [];
-            $scope.pagedItemsInclude = [];
-            $scope.pagedItemsExclude = [];
-            $scope.pagedItemsOwners = [];
-            // Reset page numbers
-            $scope.currentPageMembers = 0;
-            $scope.currentPageBasis = 0;
-            $scope.currentPageInclude = 0;
-            $scope.currentPageExclude = 0;
-            $scope.currentPageOwners = 0;
+        $scope.export = function (table, name) {
+            var data, filename, link;
+
+            var csv = $scope.convertArrayOfObjectsToCSV(table);
+            if (csv == null) return;
+
+            filename = name + '_export.csv';
+
+            if (!csv.match(/^data:text\/csv/i)) {
+                csv = 'data:text/csv;charset=utf-8,' + csv;
+            }
+            data = encodeURI(csv);
+
+            link = document.createElement('a');
+            link.setAttribute('href', data);
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        /**
+         * Converts the data in the table into comma-separated values.
+         * @param {object[]} table - the table to convert
+         * @returns the table in CSV format
+         */
+        $scope.convertArrayOfObjectsToCSV = function (table) {
+            var str = "Name,Username,Email\r\n";
+            for (var i = 0; i < table.length; i++) {
+                var line = '';
+                line += table[i].name + ',';
+                if (table[i].username === 'N/A') {
+                    // Leave username and email fields blank
+                    line += ',,'
+                } else {
+                    line += table[i].username + ',' + table[i].username + '@hawaii.edu,';
+                }
+                str += line + '\r\n';
+            }
+            return str;
         };
 
     }
