@@ -13,8 +13,6 @@
         $scope.pagedItemsGroupings = [];
         $scope.currentPageGroupings = 0;
 
-        $scope.basis = [];
-
         $scope.groupingBasis = [];
         $scope.pagedItemsBasis = [];
         $scope.currentPageBasis = 0;
@@ -58,13 +56,6 @@
                 if (d.path.length == 0) {
                     $scope.createApiErrorModal();
                 } else {
-                    $scope.basis = d.basis.members;
-
-                    //Gets members in grouping
-                    $scope.groupingMembers = d.composite.members;
-                    $scope.modify($scope.groupingMembers, 'members');
-                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
-
                     //Gets members in the basis group
                     $scope.groupingBasis = d.basis.members;
                     $scope.modify($scope.groupingBasis);
@@ -79,6 +70,11 @@
                     $scope.groupingExclude = d.exclude.members;
                     $scope.modify($scope.groupingExclude);
                     $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
+
+                    //Gets members in grouping
+                    $scope.groupingMembers = d.composite.members;
+                    $scope.modify($scope.groupingMembers, 'members');
+                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
 
                     //Gets owners of the grouping
                     $scope.groupingOwners = d.owners.members;
@@ -131,9 +127,9 @@
             }
 
             //Determines if member is in the basis or not
-            for (var l = 0; l < $scope.basis.length; l++) {
+            for (var l = 0; l < $scope.groupingBasis.length; l++) {
                 for (var m = 0; m < grouping.length; m++) {
-                    if ($scope.basis[l].uuid === grouping[m].uuid) {
+                    if ($scope.groupingBasis[l].uuid === grouping[m].uuid) {
                         if (list === 'members') {
                             grouping[m].basis = "Basis";
                             for (var k = 0; k < $scope.groupingInclude.length; k++) {
