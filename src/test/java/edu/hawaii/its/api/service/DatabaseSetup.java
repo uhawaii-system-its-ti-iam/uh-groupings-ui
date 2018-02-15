@@ -1,9 +1,6 @@
 package edu.hawaii.its.api.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.springframework.test.context.ActiveProfiles;
 
@@ -13,15 +10,9 @@ import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.Person;
 
 @ActiveProfiles("localTest")
-public class DatabaseSetup {
-    private int numberOfPersons = 100;
+class DatabaseSetup {
 
-    String pathRoot = "path:to:grouping";
-
-    private static String BASIS = ":basis";
-    private static String EXCLUDE = ":exclude";
-    private static String INCLUDE = ":include";
-    private static String OWNERS = ":owners";
+    private String pathRoot = "path:to:grouping";
 
     private PersonRepository personRepository;
     private GroupRepository groupRepository;
@@ -33,10 +24,10 @@ public class DatabaseSetup {
     private List<Grouping> groupings = new ArrayList<>();
 
     // Constructor.
-    public DatabaseSetup(PersonRepository personRepository,
-            GroupRepository groupRepository,
-            GroupingRepository groupingRepository,
-            MembershipRepository membershipRepository) {
+    DatabaseSetup(PersonRepository personRepository,
+                  GroupRepository groupRepository,
+                  GroupingRepository groupingRepository,
+                  MembershipRepository membershipRepository) {
         this.personRepository = personRepository;
         this.groupRepository = groupRepository;
         this.groupingRepository = groupingRepository;
@@ -56,25 +47,19 @@ public class DatabaseSetup {
     private void fillPersonRepository() {
         setUpPersons();
 
-        for (Person person : persons) {
-            personRepository.save(person);
-        }
+        personRepository.save(persons);
     }
 
     private void fillGroupRepository() {
         setUpGroups();
 
-        for (Group group : groups) {
-            groupRepository.save(group);
-        }
+        groupRepository.save(groups);
     }
 
     private void fillGroupingRepository() {
         setUpGroupings();
 
-        for (Grouping grouping : groupings) {
-            groupingRepository.save(grouping);
-        }
+        groupingRepository.save(groupings);
     }
 
     /////////////////////////////////////////////////////
@@ -82,6 +67,7 @@ public class DatabaseSetup {
     /////////////////////////////////////////////////////
 
     private void setUpPersons() {
+        int numberOfPersons = 100;
         for (int i = 0; i < numberOfPersons; i++) {
             makePerson("name" + i, "uuid" + i, "username" + i);
         }
@@ -96,14 +82,19 @@ public class DatabaseSetup {
     }
 
     private void setUpGroup(int i,
-            List<Person> basisMembers,
-            List<Person> excludeMembers,
-            List<Person> includeMembers,
-            List<Person> ownerMembers) {
+                            List<Person> basisMembers,
+                            List<Person> excludeMembers,
+                            List<Person> includeMembers,
+                            List<Person> ownerMembers) {
 
+        //todo put strings in a config file
+        String BASIS = ":basis";
         makeGroup(basisMembers, pathRoot + i + BASIS);
+        String EXCLUDE = ":exclude";
         makeGroup(excludeMembers, pathRoot + i + EXCLUDE);
+        String INCLUDE = ":include";
         makeGroup(includeMembers, pathRoot + i + INCLUDE);
+        String OWNERS = ":owners";
         makeGroup(ownerMembers, pathRoot + i + OWNERS);
 
     }
@@ -296,15 +287,21 @@ public class DatabaseSetup {
     // factory methods
     ///////////////////////////////////////////////////////////
 
+    //todo put strings in a config file
     private void makePerson(String name, String uuid, String username) {
-        persons.add(new Person(name, uuid, username));
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("cn", name);
+        attributes.put("uuid", uuid);
+        attributes.put("uid", username);
+        persons.add(new Person(attributes));
     }
 
     private void makeGroup(List<Person> members, String path) {
         groups.add(new Group(path, members));
     }
 
-    public Grouping makeGrouping(String path,
+    private void makeGrouping(
+            String path,
             Group basis,
             Group exclude,
             Group include,
@@ -328,7 +325,6 @@ public class DatabaseSetup {
         grouping.setOptOutOn(optOutOn);
 
         groupings.add(grouping);
-        return grouping;
     }
 
     ///////////////////////////////////////////////////////////
@@ -352,8 +348,7 @@ public class DatabaseSetup {
     }
 
     private Group removeExcludedMembers(Group basisPlusInclude, Group exclude) {
-        List<Person> newBasisPlusInclude = new ArrayList<>();
-        newBasisPlusInclude.addAll(basisPlusInclude.getMembers());
+        List<Person> newBasisPlusInclude = new ArrayList<>(basisPlusInclude.getMembers());
         newBasisPlusInclude.removeAll(exclude.getMembers());
 
         Group basisPlusIncludeMinusExcludeGroup = new Group();

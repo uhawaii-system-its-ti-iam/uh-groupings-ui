@@ -64,7 +64,7 @@ public class Person implements Comparable<Person> {
     }
 
     // Constructor.
-    //todo get these strings to work from a config file, or just wait until we remove the values in a week or to?
+    //todo get these strings to work from a config file, or just wait until we remove the values in a week or two?
     public Person(Map<String, String> attributes) {
         this.attributes = attributes;
         this.name = attributes.get("cn");
