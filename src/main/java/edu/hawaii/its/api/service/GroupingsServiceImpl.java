@@ -139,8 +139,24 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("${groupings.api.success_allowed}")
     private String SUCCESS_ALLOWED;
 
-    @Value("$groupings.api.stem}")
+    @Value("${groupings.api.stem}")
     private String STEM;
+
+    @Value("${groupings.api.person_attributes.uuid}")
+    private String UUID;
+
+    @Value("${groupings.api.person_attributes.username}")
+    private String UID;
+
+    @Value("${groupings.api.person_attributes.first_name}")
+    private String FIRST_NAME;
+
+    @Value("${groupings.api.person_attributes.last_name}")
+    private String LAST_NAME;
+
+    @Value("${groupings.api.person_attributes.composite_name}")
+    private String COMPOSITE_NAME;
+
 
     @Autowired
     private GrouperFactoryService gf;
@@ -1659,6 +1675,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param person:
      * @return a person made from the WsSubject
      */
+    //todo do we still need this method?
     Person makePerson(WsSubject person) {
         if (person != null) {
             String username = null;
@@ -1682,19 +1699,14 @@ public class GroupingsServiceImpl implements GroupingsService {
             return new Person();
         } else {
 
-            Attributes attributes = new Attributes();
+            Map<String, String> attributes = new HashMap<>();
             for (int i = 0; i < subject.getAttributeValues().length; i++) {
-                attributes.put(new Attributes.Name(attributeNames[i]), subject.getAttributeValue(i));
+                attributes.put(attributeNames[i], subject.getAttributeValue(i));
             }
+            //uuid is the only attribute not actually in the WsSubject attribute array
+            attributes.put(UUID, subject.getId());
 
-            //todo add strings to config file or change person to have an attribute map
-            String uuid = subject.getId();
-//            String name = attributes.getValue("cn");
-            String name = subject.getName();
-            String username = attributes.getValue("uid");
-            String firstName = attributes.getValue("givenName");
-            String lastName = attributes.getValue("sn");
-            return new Person(name, uuid, username, firstName, lastName);
+            return new Person(attributes);
         }
     }
 

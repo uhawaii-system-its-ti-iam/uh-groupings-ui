@@ -10,10 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Proxy;
+import org.springframework.beans.factory.annotation.Value;
 
 @Entity
 @Proxy(lazy = false)
 public class Person implements Comparable<Person> {
+
     @Id
     @Column
     private String username;
@@ -32,7 +34,7 @@ public class Person implements Comparable<Person> {
 
     //todo add this to the database
     @Transient
-    private Attributes attributes;
+    private Map<String, String> attributes;
 
     // Constructor.
     public Person() {
@@ -59,6 +61,17 @@ public class Person implements Comparable<Person> {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    // Constructor.
+    //todo get these strings to work from a config file, or just wait until we remove the values in a week or to?
+    public Person(Map<String, String> attributes) {
+        this.attributes = attributes;
+        this.name = attributes.get("cn");
+        this.uuid = attributes.get("uuid");
+        this.username = attributes.get("uid");
+        this.firstName = attributes.get("givenName");
+        this.lastName = attributes.get("sn");
     }
 
     public String getUsername() {
@@ -101,11 +114,11 @@ public class Person implements Comparable<Person> {
         this.lastName = lastName;
     }
 
-    public Attributes getAttributes() {
+    public Map<String, String> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Attributes attributes) {
+    public void setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
     }
 

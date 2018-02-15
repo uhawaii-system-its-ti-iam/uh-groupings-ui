@@ -797,7 +797,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
         WsGetMembersResults wsGetMembersResults = new WsGetMembersResults();
         // todo add string to config file
-        String[] attributeNames = new String[] {"uid"};
+        String[] attributeNames = new String[] {"uid", "uuid", "sn", "cn", "givenName"};
         wsGetMembersResults.setSubjectAttributeNames(attributeNames);
         WsGetMembersResult wsGetMembersResult = new WsGetMembersResult();
         WsSubject[] subjects;
@@ -810,7 +810,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
             WsSubject subject = new WsSubject();
             subject.setId(person.getUuid());
             subject.setName(person.getName());
-            subject.setAttributeValues(new String[] { person.getUsername() });
+
+            //has to be the same order as attributeNames array
+            subject.setAttributeValues(new String[] { person.getUsername(), person.getUuid(), person.getLastName(), person.getName(), person.getFirstName() });
 
             subjectList.add(subject);
         }
