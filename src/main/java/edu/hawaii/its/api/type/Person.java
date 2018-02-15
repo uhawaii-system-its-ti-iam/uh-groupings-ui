@@ -1,10 +1,13 @@
 package edu.hawaii.its.api.type;
 
 import java.util.Comparator;
+import java.util.Map;
+import java.util.jar.Attributes;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Proxy;
 
@@ -26,6 +29,10 @@ public class Person implements Comparable<Person> {
 
     @Column
     private String uuid;
+
+    //todo add this to the database
+    @Transient
+    private Attributes attributes;
 
     // Constructor.
     public Person() {
@@ -92,6 +99,14 @@ public class Person implements Comparable<Person> {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Attributes getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Attributes attributes) {
+        this.attributes = attributes;
     }
 
     @Override
