@@ -211,7 +211,7 @@ public class GroupingsServiceMockTest {
     private MembershipRepository membershipRepository;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
 
         new DatabaseSetup(personRepository, groupRepository, groupingRepository, membershipRepository);
 
@@ -668,6 +668,8 @@ public class GroupingsServiceMockTest {
     @Test
     public void groupingsToOptTest() {
         GroupingAssignment myGroupings = groupingsService.getGroupingAssignment(users.get(1).getUsername());
+
+        //todo finish
 
     }
 

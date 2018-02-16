@@ -1,6 +1,7 @@
 package edu.hawaii.its.api.type;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.Attributes;
 
@@ -15,6 +16,18 @@ import org.springframework.beans.factory.annotation.Value;
 @Entity
 @Proxy(lazy = false)
 public class Person implements Comparable<Person> {
+
+    //todo get these strings to work from a config file, or just wait until we remove the values in a week or two?
+    @Transient
+    private static String COMPOSITE_NAME = "cn";
+    @Transient
+    private static String FIRST_NAME = "givenName";
+    @Transient
+    private static String LAST_NAME = "sn";
+    @Transient
+    private static String UUID = "uuid";
+    @Transient
+    private static String USERNAME = "uid";
 
     @Id
     @Column
@@ -34,7 +47,7 @@ public class Person implements Comparable<Person> {
 
     //todo add this to the database
     @Transient
-    private Map<String, String> attributes;
+    private Map<String, String> attributes = new HashMap<>();
 
     // Constructor.
     public Person() {
@@ -45,6 +58,8 @@ public class Person implements Comparable<Person> {
     public Person(String name) {
         this();
         this.name = name;
+
+        attributes.put(COMPOSITE_NAME, name);
     }
 
     // Constructor.
@@ -52,26 +67,29 @@ public class Person implements Comparable<Person> {
         this(name);
         this.uuid = uuid;
         this.username = username;
+
+        attributes.put(UUID, uuid);
+        attributes.put(USERNAME, username);
     }
 
     // Constructor.
     public Person(String name, String uuid, String username, String firstName, String lastName) {
-        this(name);
-        this.uuid = uuid;
-        this.username = username;
+        this(name, uuid, username);
         this.firstName = firstName;
         this.lastName = lastName;
+
+        attributes.put(FIRST_NAME, firstName);
+        attributes.put(LAST_NAME, lastName);
     }
 
     // Constructor.
-    //todo get these strings to work from a config file, or just wait until we remove the values in a week or two?
     public Person(Map<String, String> attributes) {
         this.attributes = attributes;
-        this.name = attributes.get("cn");
-        this.uuid = attributes.get("uuid");
-        this.username = attributes.get("uid");
-        this.firstName = attributes.get("givenName");
-        this.lastName = attributes.get("sn");
+        this.name = attributes.get(COMPOSITE_NAME);
+        this.uuid = attributes.get(UUID);
+        this.username = attributes.get(USERNAME);
+        this.firstName = attributes.get(FIRST_NAME);
+        this.lastName = attributes.get(LAST_NAME);
     }
 
     public String getUsername() {
