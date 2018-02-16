@@ -101,10 +101,10 @@
                                 <td>{{l.name}}</td>
                                 <td>{{l.path}}</td>
                                 <td class="col-md-2 col-sm-2 col-xs-2">
-                                    <div ng-if="required($index + (currentPageOptIn * itemsPerPage))">
+                                    <div ng-if="required($index)">
                                         <p align="center">Membership Required</p>
                                     </div>
-                                    <div ng-if="!required($index + (currentPageOptIn * itemsPerPage))">
+                                    <div ng-if="!required($index)">
                                         <button id="optOutButton" class="btn btn-primary btn-block opt-button text-center"
                                                 ng-click="optOut($index)"
                                                 ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
