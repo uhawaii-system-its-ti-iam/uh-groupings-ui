@@ -7,10 +7,13 @@
                 headers : {
                     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
                 }
-            }
-            //console.log(document.getElementById("typeError").className);
-            //console.log($http);
+            };
+            $http.get('application.properties').then(function (response) {
+              //console.log(response.data);
+
+            });
         };
+
 
         $scope.submit = function() {
             var returnText = 'Please input the following missing element(s): ';
