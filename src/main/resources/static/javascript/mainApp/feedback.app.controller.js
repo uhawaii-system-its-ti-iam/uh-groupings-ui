@@ -7,10 +7,13 @@
                 headers : {
                     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
                 }
-            }
-            //console.log(document.getElementById("typeError").className);
-            //console.log($http);
+            };
+            $http.get('application.properties').then(function (response) {
+              //console.log(response.data);
+
+            });
         };
+
 
         $scope.submit = function() {
             var returnText = 'Please input the following missing element(s): ';
@@ -18,6 +21,7 @@
             var onlyMail = 0;
             var onlyFT = 0;
             var URL = "https://www.test.hawaii.edu/uhgroupings/feedback/sendMail";
+            var testURL = "http://localhost:8080/uhgroupings/feedback/sendMail"
             $scope.data = [];
             var optionVal = document.getElementById("feedback_type");
             var feedVal = optionVal.options[optionVal.selectedIndex].value;
@@ -80,7 +84,7 @@
                 });
                 //console.log(typeof data);
                 $scope.returnModal(returnText);
-                $http.post(URL, $scope.data, $scope.config);
+                $http.post(testURL, $scope.data, $scope.config);
                 document.getElementById("reqFeed").style.display = 'none';
                 document.getElementById("reqMail").style.display = 'none';
                 document.getElementById("reqFB").style.display = 'none';
