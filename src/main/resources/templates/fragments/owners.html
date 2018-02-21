@@ -18,12 +18,14 @@
             </thead>
             <tbody>
             <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
-                <td>
+                <td tabindex="0">
                     {{owner.name}}
                     <span class="glyphicon glyphicon-trash pull-right clickable"
                           data-toggle="tooltip" data-placement="top"
                           onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
+                          tabindex="0"
                           th:title="#{screen.message.common.tooltip.remove.owner}"
+                          ng-keypress="$event.keyCode === 13 ? removeOwner($index) : null"
                           ng-click="removeOwner($index)" >
                     </span>
                 </td>
