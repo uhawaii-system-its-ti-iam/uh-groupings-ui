@@ -605,7 +605,7 @@ public class GroupingsServiceMockTest {
         assertTrue(randomUserRemoves.getResultCode().startsWith(FAILURE));
 
         //add owner for owner to remove
-        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_0_OWNERS_PATH, users.get(1).getUsername());
+        groupingsService.addMemberByUsername(users.get(0).getUsername(), GROUPING_0_OWNERS_PATH, users.get(1).getUsername());
 
         //owner tries to remove other ownership
         GroupingsServiceResult ownerRemoves = groupingsService.removeOwnership(GROUPING_0_PATH, users.get(0).getUsername(), users.get(1).getUsername());
@@ -616,7 +616,7 @@ public class GroupingsServiceMockTest {
         assertEquals(SUCCESS, ownerRemovesNonOwner.getResultCode());
 
         //add owner for admin to remove
-        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_0_OWNERS_PATH, users.get(1).getUsername());
+        groupingsService.addMemberByUsername(users.get(0).getUsername(), GROUPING_0_OWNERS_PATH, users.get(1).getUsername());
 
         //admin tries to remove ownership
         GroupingsServiceResult adminRemoves = groupingsService.removeOwnership(GROUPING_0_PATH, ADMIN_USER, users.get(1).getUsername());
@@ -1023,7 +1023,7 @@ public class GroupingsServiceMockTest {
         Grouping grouping = groupingRepository.findByPath(GROUPING_1_PATH);
         assertFalse(grouping.getComposite().getMembers().contains(users.get(3)));
 
-        groupingsService.addMemberAs(users.get(0).getUsername(), GROUPING_1_INCLUDE_PATH, users.get(3).getUsername());
+        groupingsService.addMemberByUsername(users.get(0).getUsername(), GROUPING_1_INCLUDE_PATH, users.get(3).getUsername());
         grouping = groupingRepository.findByPath(GROUPING_1_PATH);
         assertTrue(grouping.getComposite().getMembers().contains(users.get(3)));
     }
@@ -1042,7 +1042,7 @@ public class GroupingsServiceMockTest {
         int numberOfBasisMembers = grouping.getBasis().getMembers().size();
 
         //try to put all users into exclude group
-        groupingsService.addMembersAs(users.get(0).getUsername(), GROUPING_3_EXCLUDE_PATH, usernames);
+        groupingsService.addMembersByUsername(users.get(0).getUsername(), GROUPING_3_EXCLUDE_PATH, usernames);
         grouping = groupingRepository.findByPath(GROUPING_3_PATH);
         //there should be no real members in composite, but it should still have the 'grouperAll' member
         assertEquals(1, grouping.getComposite().getMembers().size());
@@ -1050,7 +1050,7 @@ public class GroupingsServiceMockTest {
         assertEquals(numberOfBasisMembers, grouping.getExclude().getMembers().size());
 
         //try to put all users into the include group
-        groupingsService.addMembersAs(users.get(0).getUsername(), GROUPING_3_INCLUDE_PATH, usernames);
+        groupingsService.addMembersByUsername(users.get(0).getUsername(), GROUPING_3_INCLUDE_PATH, usernames);
         grouping = groupingRepository.findByPath(GROUPING_3_PATH);
         //all members should be in the group ( - 1 for 'grouperAll' in composite);
         assertEquals(usernames.size(), grouping.getComposite().getMembers().size() - 1);

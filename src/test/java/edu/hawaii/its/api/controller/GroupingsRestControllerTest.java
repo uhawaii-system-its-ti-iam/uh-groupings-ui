@@ -188,9 +188,9 @@ public class GroupingsRestControllerTest {
         gsrList.add(new GroupingsServiceResult("SUCCESS", "add member to include group"));
         gsrList2.add(new GroupingsServiceResult("SUCCESS", "add member to exclude group"));
 
-        given(groupingsService.addMemberAs(username, grouping + ":include", username))
+        given(groupingsService.addMemberByUsername(username, grouping + ":include", username))
                 .willReturn(gsrList);
-        given(groupingsService.addMemberAs(username, grouping + ":exclude", username))
+        given(groupingsService.addMemberByUsername(username, grouping + ":exclude", username))
                 .willReturn(gsrList2);
 
         mockMvc.perform(post("/api/groupings/grouping/user/addMemberToIncludeGroup")

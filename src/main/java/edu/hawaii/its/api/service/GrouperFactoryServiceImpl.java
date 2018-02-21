@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.hawaii.its.api.type.Person;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -130,6 +131,19 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     }
 
     @Override
+    public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, Person personToAdd) {
+        if(personToAdd.getUsername() != null) {
+            return makeWsAddMemberResults(group, lookup, personToAdd.getUsername());
+        }
+        //todo throw error if null
+        return new GcAddMember()
+                .assignActAsSubject(lookup)
+                .addSubjectId(personToAdd.getUuid())
+                .assignGroupName(group)
+                .execute();
+    }
+
+    @Override
     public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, List<String> newMembers) {
         GcAddMember addMember = new GcAddMember();
         addMember.assignActAsSubject(lookup);
@@ -161,6 +175,19 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         return new GcDeleteMember()
                 .assignActAsSubject(lookup)
                 .addSubjectIdentifier(memberToDelete)
+                .assignGroupName(group)
+                .execute();
+    }
+
+    @Override
+    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, Person personToDelete) {
+        if(personToDelete.getUsername() != null) {
+            return makeWsDeleteMemberResults(group, lookup, personToDelete.getUsername());
+        }
+        //todo throw error if null
+        return new GcDeleteMember()
+                .assignActAsSubject(lookup)
+                .addSubjectId(personToDelete.getUuid())
                 .assignGroupName(group)
                 .execute();
     }
@@ -286,6 +313,19 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         return new GcHasMember()
                 .assignGroupName(group)
                 .addSubjectIdentifier(username)
+                .execute();
+    }
+
+    @Override
+    public WsHasMemberResults makeWsHasMemberResults(String group, Person person) {
+        if(person.getUsername() != null) {
+            return makeWsHasMemberResults(group, person.getUsername());
+        }
+
+        //todo throw error if null
+        return new GcHasMember()
+                .assignGroupName(group)
+                .addSubjectId(person.getUuid())
                 .execute();
     }
 

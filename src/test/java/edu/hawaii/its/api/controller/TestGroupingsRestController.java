@@ -128,16 +128,16 @@ public class TestGroupingsRestController {
                 .build();
 
         //put in include
-        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[0]);
-        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[1]);
-        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[2]);
+        gs.addMemberByUsername(tst[0], GROUPING_INCLUDE, tst[0]);
+        gs.addMemberByUsername(tst[0], GROUPING_INCLUDE, tst[1]);
+        gs.addMemberByUsername(tst[0], GROUPING_INCLUDE, tst[2]);
 
         //add to exclude
-        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[3]);
+        gs.addMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[3]);
 
         //remove from exclude
-        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[4]);
-        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[5]);
+        gs.addMemberByUsername(tst[0], GROUPING_INCLUDE, tst[4]);
+        gs.addMemberByUsername(tst[0], GROUPING_INCLUDE, tst[5]);
 
         gs.changeOptOutStatus(GROUPING, tst[0], true);
         gs.changeOptInStatus(GROUPING, tst[0], true);

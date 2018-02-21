@@ -129,7 +129,7 @@ public class GroupingsRestController {
         logger.info("Entered REST addMemberToIncludeGroup...");
         return ResponseEntity
                 .ok()
-                .body(gs.addMemberAs(principal.getName(), grouping + INCLUDE, userToAdd));
+                .body(gs.addMemberByUsername(principal.getName(), grouping + INCLUDE, userToAdd));
     }
 
     /**
@@ -148,7 +148,7 @@ public class GroupingsRestController {
         logger.info("Entered REST addMemberToExcludeGroup...");
         return ResponseEntity
                 .ok()
-                .body(gs.addMemberAs(principal.getName(), grouping + EXCLUDE, userToAdd));
+                .body(gs.addMemberByUsername(principal.getName(), grouping + EXCLUDE, userToAdd));
     }
 
     /**

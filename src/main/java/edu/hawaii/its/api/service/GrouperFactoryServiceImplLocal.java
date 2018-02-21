@@ -169,6 +169,21 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     @Value("${groupings.api.test.uuid}")
     private String UUID;
 
+    @Value("${groupings.api.person_attributes.uuid}")
+    private String UUID_KEY;
+
+    @Value("${groupings.api.person_attributes.username}")
+    private String UID_KEY;
+
+    @Value("${groupings.api.person_attributes.first_name}")
+    private String FIRST_NAME_KEY;
+
+    @Value("${groupings.api.person_attributes.last_name}")
+    private String LAST_NAME_KEY;
+
+    @Value("${groupings.api.person_attributes.composite_name}")
+    private String COMPOSITE_NAME_KEY;
+
     @Autowired
     private GroupingRepository groupingRepository;
 
@@ -254,6 +269,18 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, String newMember) {
 
         return makeWsAddMemberResults(group, newMember);
+    }
+
+    @Override
+    public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, Person personToAdd) {
+        if(personToAdd.getUsername() != null) {
+            return makeWsAddMemberResults(group, lookup, personToAdd.getUsername());
+        }
+        //todo add a uuid version
+        //todo what happens if uuid is null?
+
+
+        return null;
     }
 
     @Override
@@ -366,6 +393,17 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     }
 
     @Override
+    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, Person personToDelete) {
+        if(personToDelete.getUsername() != null) {
+            return makeWsDeleteMemberResults(group, lookup, personToDelete.getUsername());
+        }
+        //todo add a uuid version
+        //todo what happens if uuid is null?
+
+
+        return null;
+    }
+
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, List<String> membersToDelete) {
         WsDeleteMemberResults wsDeleteMemberResults = new WsDeleteMemberResults();
         WsResultMeta wsResultMeta = new WsResultMeta();
@@ -578,6 +616,17 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         }
 
         return wsHasMemberResults;
+    }
+
+    @Override
+    public WsHasMemberResults makeWsHasMemberResults(String group, Person person) {
+        if(person.getUsername() != null) {
+            return makeWsHasMemberResults(group, person.getUsername());
+        }
+        //todo what if uuid is null?
+        //todo make uuid version
+
+        return null;
     }
 
     @Override
@@ -796,8 +845,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
             String groupName) {
 
         WsGetMembersResults wsGetMembersResults = new WsGetMembersResults();
-        // todo add string to config file
-        String[] attributeNames = new String[] {"uid", "uuid", "sn", "cn", "givenName"};
+        String[] attributeNames = new String[] {UID_KEY, UUID_KEY, LAST_NAME_KEY, COMPOSITE_NAME_KEY, FIRST_NAME_KEY};
         wsGetMembersResults.setSubjectAttributeNames(attributeNames);
         WsGetMembersResult wsGetMembersResult = new WsGetMembersResult();
         WsSubject[] subjects;

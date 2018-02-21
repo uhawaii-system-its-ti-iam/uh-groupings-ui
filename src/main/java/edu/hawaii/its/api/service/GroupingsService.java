@@ -33,9 +33,13 @@ public interface GroupingsService {
 
     public List<GroupingsServiceResult> addMemberToGrouping(String username, String groupingPath, String userToAdd);
 
-    public List<GroupingsServiceResult> addMemberAs(String username, String group, String userToAdd);
+    public List<GroupingsServiceResult> addMemberByUsername(String username, String group, String userToAddUsername);
 
-    public List<GroupingsServiceResult> addMembersAs(String username, String group, List<String> usersToAdd);
+    public List<GroupingsServiceResult> addMembersByUsername(String username, String group, List<String> usersToAddUsername);
+
+    public List<GroupingsServiceResult> addMemberByUuid(String username, String group, String userToAddUuid);
+
+    public List<GroupingsServiceResult> addMembersByUuid(String username, String group, List<String> usersToAddUuid);
 
     public List<GroupingsServiceResult> deleteMemberFromGrouping(String username, String groupingPath, String userToDelete);
 
