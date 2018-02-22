@@ -51,8 +51,10 @@ h2, h3, h4 {
     height: 150px;
     animation: spin 1s linear infinite;
     position: fixed;
-    left: 45%;
-    top: 45%;
+    left: 50%;
+    top: 50%;
+    margin-left: -5.357em;
+    margin-top: -5.357em;
 }
 
 ::-webkit-input-placeholder {

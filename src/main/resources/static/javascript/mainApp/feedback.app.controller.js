@@ -3,21 +3,20 @@
     function FeedbackJsController($scope, $window, $uibModal, $http) {
         $scope.init = function() {
             $scope.email = document.getElementById("uemail").innerHTML + "@hawaii.edu";
+            $scope.mailURL = $window.location.href+"/sendMail";
             $scope.config = {
                 headers : {
                     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
                 }
-            }
-
-            //console.log($http);
+            };
         };
+
 
         $scope.submit = function() {
             var returnText = 'Please input the following missing element(s): ';
             var errors = 0;
             var onlyMail = 0;
             var onlyFT = 0;
-            var URL = "http://localhost:8080/uhgroupings/feedback/sendMail/";
             $scope.data = [];
             var optionVal = document.getElementById("feedback_type");
             var feedVal = optionVal.options[optionVal.selectedIndex].value;
@@ -25,27 +24,39 @@
                 if (document.getElementById("reqFeed").style.display == 'none')
                 {
                     document.getElementById("reqFeed").style.display = 'inline';
+                    document.getElementById("typeError").className += ' has-error';
                 }
                 returnText += "Feedback Type, ";
                 errors = errors + 1;
                 onlyFT = onlyFT + 1;
+            } else {
+                document.getElementById("typeError").className = 'form-group';
+                document.getElementById("reqFeed").style.display = 'none';
             }
             if($scope.email === undefined || $scope.email == ''){
                 if (document.getElementById("reqMail").style.display == 'none')
                 {
                     document.getElementById("reqMail").style.display = 'inline';
+                    document.getElementById("emailError").className += ' has-error';
                 }
                 returnText += "Email, ";
                 errors = errors + 1;
                 onlyMail = onlyMail + 1;
+            } else {
+                document.getElementById("emailError").className = 'form-group';
+                document.getElementById("reqMail").style.display = 'none';
             }
             if($scope.description === undefined || $scope.description == ''){
                 if (document.getElementById("reqFB").style.display == 'none')
                 {
                     document.getElementById("reqFB").style.display = 'inline';
+                    document.getElementById("feedError").className += ' has-error';
                 }
                 returnText += "Feedback";
                 errors = errors + 1;
+            } else {
+              document.getElementById("feedError").className = 'form-group';
+              document.getElementById("reqFB").style.display = 'none';
             }
             if(errors > 0){
                 if(onlyFT == 1 && errors == 1){
@@ -68,10 +79,13 @@
                 });
                 //console.log(typeof data);
                 $scope.returnModal(returnText);
-                $http.post('https://localhost:8080/uhgroupings/feedback/sendMail/', $scope.data, $scope.config);
+                $http.post($scope.mailURL, $scope.data, $scope.config);
                 document.getElementById("reqFeed").style.display = 'none';
                 document.getElementById("reqMail").style.display = 'none';
                 document.getElementById("reqFB").style.display = 'none';
+                document.getElementById("feedError").className = 'form-group';
+                document.getElementById("typeError").className = 'form-group';
+                document.getElementById("emailError").className = 'form-group';
 
                 optionVal.value = "-- select an option --";
                 $scope.name = '';

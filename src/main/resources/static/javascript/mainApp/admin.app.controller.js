@@ -89,10 +89,8 @@
             dataProvider.updateData(function (d) {
                 var successful = false;
                 if (d.statusCode != null) {
-                    // console.log("Error, Status Code: " + d.statusCode);
-                    // Modal here?
-                    // Error catching here
-                } else if (d.resultCode === 'SUCCESS') {
+                    console.log("Error, Status Code: " + d.statusCode);
+                } else if (d.resultCode.indexOf('SUCCESS') === 0) {
                     successful = true;
                 }
                 $scope.createAddModal($scope.adminToAdd, successful);

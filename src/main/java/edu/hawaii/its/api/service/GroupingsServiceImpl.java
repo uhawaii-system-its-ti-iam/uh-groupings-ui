@@ -1,10 +1,8 @@
 package edu.hawaii.its.api.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.jar.Attributes;
 import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
@@ -24,26 +22,7 @@ import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.groupings.util.Dates;
 
 import edu.internet2.middleware.grouperClient.ws.StemScope;
-import edu.internet2.middleware.grouperClient.ws.beans.ResultMetadataHolder;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesLiteResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssignValue;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeDefName;
-import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResult;
-import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsStemLookup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+import edu.internet2.middleware.grouperClient.ws.beans.*;
 
 @Service("groupingsService")
 public class GroupingsServiceImpl implements GroupingsService {
@@ -160,8 +139,24 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("${groupings.api.success_allowed}")
     private String SUCCESS_ALLOWED;
 
-    @Value("$groupings.api.stem}")
+    @Value("${groupings.api.stem}")
     private String STEM;
+
+    @Value("${groupings.api.person_attributes.uuid}")
+    private String UUID;
+
+    @Value("${groupings.api.person_attributes.username}")
+    private String UID;
+
+    @Value("${groupings.api.person_attributes.first_name}")
+    private String FIRST_NAME;
+
+    @Value("${groupings.api.person_attributes.last_name}")
+    private String LAST_NAME;
+
+    @Value("${groupings.api.person_attributes.composite_name}")
+    private String COMPOSITE_NAME;
+
 
     @Autowired
     private GrouperFactoryService gf;
@@ -1438,11 +1433,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                 lookup,
                 group);
 
+        //todo should we use EmptyGroup?
         Group groupMembers = new Group();
         if (members.getResults() != null) {
-            groupMembers = makeGroup(members
-                    .getResults()[0]
-                    .getWsSubjects());
+            groupMembers = makeGroup(members);
         }
         return groupMembers;
     }
@@ -1657,18 +1651,21 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupings;
     }
 
-    /**
-     * @param subjects: array of WsSubjects to be made into a Group
-     * @return the Group that is made
-     */
-    Group makeGroup(WsSubject[] subjects) {
+    Group makeGroup(WsGetMembersResults membersResults) {
         Group group = new Group();
-        if (subjects != null && subjects.length > 0) {
-            for (WsSubject subject : subjects) {
-                if (subject != null) {
-                    group.addMember(makePerson(subject));
+        try {
+            WsSubject[] subjects = membersResults.getResults()[0].getWsSubjects();
+            String[] attributeNames = membersResults.getSubjectAttributeNames();
+
+            if (subjects.length > 0) {
+                for (WsSubject subject : subjects) {
+                    if (subject != null) {
+                        group.addMember(makePerson(subject, attributeNames));
+                    }
                 }
             }
+        } catch (NullPointerException npe) {
+            return new Group();
         }
 
         return group;
@@ -1678,6 +1675,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param person:
      * @return a person made from the WsSubject
      */
+    //todo do we still need this method?
     Person makePerson(WsSubject person) {
         if (person != null) {
             String username = null;
@@ -1689,6 +1687,27 @@ public class GroupingsServiceImpl implements GroupingsService {
             return new Person(name, uuid, username);
         }
         return new Person();
+    }
+
+    /**
+     * @param subject:
+     * @return a subject made from the WsSubject
+     * @Param attributeNames:
+     */
+    Person makePerson(WsSubject subject, String[] attributeNames) {
+        if (subject == null || subject.getAttributeValues() == null) {
+            return new Person();
+        } else {
+
+            Map<String, String> attributes = new HashMap<>();
+            for (int i = 0; i < subject.getAttributeValues().length; i++) {
+                attributes.put(attributeNames[i], subject.getAttributeValue(i));
+            }
+            //uuid is the only attribute not actually in the WsSubject attribute array
+            attributes.put(UUID, subject.getId());
+
+            return new Person(attributes);
+        }
     }
 
     @Override

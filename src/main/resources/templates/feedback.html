@@ -16,7 +16,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <form class="form-horizontal">
-                        <div class="form-group">
+                        <div class="form-group" id="typeError">
                             <label for="feedback_type" class="col-sm-2 control-label">Feedback type: <span style="color:red;display:none" id="reqFeed">*</span></label>
                             <div class="col-sm-10">
                                 <select class="form-control" id="feedback_type">
@@ -35,14 +35,14 @@
                                 <input ng-model="name" class="form-control" id="user_name"/>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="emailError">
                             <label for="inputEmail3" class="col-sm-2 control-label">Email: <span id="uemail" sec:authentication="name" style="display:none"></span><span style="color:red;display:none" id="reqMail">*</span></label>
 
                             <div class="col-sm-10">
                                 <input ng-model="email" class="form-control" id="inputEmail3"/>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group"  id="feedError">
                             <label for="feedback" class="col-sm-2 control-label">Your Feedback: <span style="color:red;display:none" id="reqFB">*</span></label>
 
                             <div class="col-sm-10">

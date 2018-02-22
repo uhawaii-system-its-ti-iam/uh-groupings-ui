@@ -239,16 +239,14 @@
          * @param index - table row
          * @returns {boolean} - if there is a match then return true inorder enable button.
          */
-
-        // $scope.required = function(index)
-        // {
-        //     for (var i = 0; i < $scope.optOutList.length; i++) {
-        //         if ($scope.pagedItemsMembersList[$scope.currentPageOptOut][index].name === $scope.optOutList[i].name) {
-        //             return false;
-        //         }
-        //     }
-        //     return true;
-        // };
+        $scope.required = function (index) {
+            for (var i = 0; i < $scope.optOutList.length; i++) {
+                if ($scope.pagedItemsMembersList[$scope.currentPageOptOut][index].name === $scope.optOutList[i].name) {
+                    return false;
+                }
+            }
+            return true;
+        };
 
         /**groups all the items to pages
          have separate arrays (hopefully)

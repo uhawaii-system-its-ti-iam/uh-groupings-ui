@@ -1,25 +1,31 @@
 package edu.hawaii.its.api.type;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.print.DocFlavor;
 
 import org.hibernate.annotations.Proxy;
 
 @Entity
 @Proxy(lazy = false)
 public class Person implements Comparable<Person> {
-    @Id
-    @Column
-    private String username;
 
-    @Column(name = "FullName")
-    private String name;
+    //todo get these strings to work from a config file, or just wait until we remove the values in a week or two?
+    @Transient
+    private static String COMPOSITE_NAME = "cn";
+    @Transient
+    private static String FIRST_NAME = "givenName";
+    @Transient
+    private static String LAST_NAME = "sn";
+    @Transient
+    private static String UUID = "uuid";
+    @Transient
+    private static String USERNAME = "uid";
 
-    @Column
-    private String uuid;
+    private Map<String, String> attributes = new HashMap<>();
 
     // Constructor.
     public Person() {
@@ -29,44 +35,102 @@ public class Person implements Comparable<Person> {
     // Constructor.
     public Person(String name) {
         this();
-        this.name = name;
+        attributes.put(COMPOSITE_NAME, name);
     }
 
     // Constructor.
     public Person(String name, String uuid, String username) {
         this(name);
-        this.uuid = uuid;
-        this.username = username;
+
+        attributes.put(UUID, uuid);
+        attributes.put(USERNAME, username);
     }
 
+    // Constructor.
+    public Person(String name, String uuid, String username, String firstName, String lastName) {
+        this(name, uuid, username);
+
+        attributes.put(FIRST_NAME, firstName);
+        attributes.put(LAST_NAME, lastName);
+    }
+
+    // Constructor.
+    public Person(Map<String, String> attributes) {
+        this.attributes = attributes;
+    }
+
+    @Id
+    @Column
     public String getUsername() {
-        return username;
+        return attributes.get(USERNAME);
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        attributes.put(USERNAME, username);
     }
 
+    @Column(name = "FullName")
     public String getName() {
-        return name;
+        return attributes.get(COMPOSITE_NAME);
     }
 
     public void setName(String name) {
-        this.name = name;
+        attributes.put(COMPOSITE_NAME, name);
     }
 
+    @Column
     public String getUuid() {
-        return uuid;
+        return attributes.get(UUID);
     }
 
     public void setUuid(String uuid) {
-        this.uuid = uuid;
+        attributes.put(UUID, uuid);
+    }
+
+    @Column(name = "FirstName")
+    public String getFirstName() {
+        return attributes.get(FIRST_NAME);
+    }
+
+    public void setFirstName(String firstName) {
+        attributes.put(FIRST_NAME, firstName);
+    }
+
+    @Column(name = "LastName")
+    public String getLastName() {
+        return attributes.get(LAST_NAME);
+    }
+
+    public void setLastName(String lastName) {
+        attributes.put(LAST_NAME, lastName);
+    }
+
+    @ElementCollection
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
+    }
+
+    @Transient
+    public String getAttribute(String key) {
+        return attributes.get(key);
+    }
+
+    public void setAttribute(String key, String value) {
+        attributes.put(key, value);
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        String name = getName();
+        String username = getUsername();
+        String uuid = getUuid();
+
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((username == null) ? 0 : username.hashCode());
         result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
@@ -75,6 +139,10 @@ public class Person implements Comparable<Person> {
 
     @Override
     public boolean equals(Object obj) {
+        String name = getName();
+        String username = getUsername();
+        String uuid = getUuid();
+
         if (this == obj)
             return true;
         if (obj == null)
@@ -83,21 +151,18 @@ public class Person implements Comparable<Person> {
             return false;
         Person other = (Person) obj;
         if (name == null) {
-            if (other.name != null)
+            if (other.getName() != null)
                 return false;
-        } else if (!name.equals(other.name))
+        } else if (!name.equals(other.getName()))
             return false;
         if (username == null) {
-            if (other.username != null)
+            if (other.getUsername() != null)
                 return false;
-        } else if (!username.equals(other.username))
+        } else if (!username.equals(other.getUsername()))
             return false;
         if (uuid == null) {
-            if (other.uuid != null)
-                return false;
-        } else if (!uuid.equals(other.uuid))
-            return false;
-        return true;
+            return other.getUuid() == null;
+        } else return uuid.equals(other.getUuid());
     }
 
     @Override
@@ -125,7 +190,7 @@ public class Person implements Comparable<Person> {
 
     @Override
     public String toString() {
-        return "Person [name=" + name + ", uuid=" + uuid + ", username=" + username + "]";
+        return "Person [name=" + getName() + ", uuid=" + getUuid() + ", username=" + getUsername() + "]";
     }
 
 }

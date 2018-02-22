@@ -13,8 +13,6 @@
         $scope.pagedItemsGroupings = [];
         $scope.currentPageGroupings = 0;
 
-        $scope.basis = [];
-
         $scope.groupingBasis = [];
         $scope.pagedItemsBasis = [];
         $scope.currentPageBasis = 0;
@@ -58,13 +56,6 @@
                 if (d.path.length == 0) {
                     $scope.createApiErrorModal();
                 } else {
-                    $scope.basis = d.basis.members;
-
-                    //Gets members in grouping
-                    $scope.groupingMembers = d.composite.members;
-                    $scope.modify($scope.groupingMembers, 'members');
-                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
-
                     //Gets members in the basis group
                     $scope.groupingBasis = d.basis.members;
                     $scope.modify($scope.groupingBasis);
@@ -79,6 +70,11 @@
                     $scope.groupingExclude = d.exclude.members;
                     $scope.modify($scope.groupingExclude);
                     $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
+
+                    //Gets members in grouping
+                    $scope.groupingMembers = d.composite.members;
+                    $scope.modify($scope.groupingMembers, 'members');
+                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
 
                     //Gets owners of the grouping
                     $scope.groupingOwners = d.owners.members;
@@ -122,7 +118,7 @@
         $scope.modify = function (grouping, list) {
             //Filter out names with hawaii.edu and adds basis object.
             for (var i = 0; i < grouping.length; i++) {
-                if (list === 'members') grouping[i].basis = "in Include";
+                if (list === 'members') grouping[i].basis = "Include";
                 else grouping[i].basis = "No";
                 if (grouping[i].name.indexOf("hawaii.edu") > -1) {
                     grouping.splice(i, 1);
@@ -131,14 +127,14 @@
             }
 
             //Determines if member is in the basis or not
-            for (var l = 0; l < $scope.basis.length; l++) {
+            for (var l = 0; l < $scope.groupingBasis.length; l++) {
                 for (var m = 0; m < grouping.length; m++) {
-                    if ($scope.basis[l].uuid === grouping[m].uuid) {
+                    if ($scope.groupingBasis[l].uuid === grouping[m].uuid) {
                         if (list === 'members') {
-                            grouping[m].basis = "in Basis";
+                            grouping[m].basis = "Basis";
                             for (var k = 0; k < $scope.groupingInclude.length; k++) {
                                 if ($scope.groupingInclude[k].uuid === grouping[m].uuid) {
-                                    grouping[m].basis = "in Basis / in Include";
+                                    grouping[m].basis = "Basis / Include";
                                 }
                             }
                         }
@@ -549,10 +545,13 @@
             }
 
             $scope.basisQuery = "";
-            $scope.queryGroupings = "";
             $scope.excludeQuery = "";
             $scope.includeQuery = "";
             $scope.membersQuery = "";
+
+            $scope.queryGroupings = "";
+            // Ensure the groupings list is reset with the now-blank filter
+            $scope.filter($scope.groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', 'queryGroupings');
 
         };
 
@@ -574,27 +573,50 @@
         };
 
         /**
-         * Resets the arrays containing the members of each grouping and their page numbers.
+         * Exports data in a table to a CSV file
+         * @param {object[]} table - the table to export
+         * @param name - the name of the group (i.e. include or exclude)
          */
-        $scope.resetGroupingInformation = function () {
-            // Reset grouping member data for next load
-            $scope.groupingMembers = [];
-            $scope.groupingBasis = [];
-            $scope.groupingInclude = [];
-            $scope.groupingExclude = [];
-            $scope.groupingOwners = [];
-            // Reset paged items
-            $scope.pagedItemsMembers = [];
-            $scope.pagedItemsBasis = [];
-            $scope.pagedItemsInclude = [];
-            $scope.pagedItemsExclude = [];
-            $scope.pagedItemsOwners = [];
-            // Reset page numbers
-            $scope.currentPageMembers = 0;
-            $scope.currentPageBasis = 0;
-            $scope.currentPageInclude = 0;
-            $scope.currentPageExclude = 0;
-            $scope.currentPageOwners = 0;
+        $scope.export = function (table, name) {
+            var data, filename, link;
+
+            var csv = $scope.convertArrayOfObjectsToCSV(table);
+            if (csv == null) return;
+
+            filename = name + '_export.csv';
+
+            if (!csv.match(/^data:text\/csv/i)) {
+                csv = 'data:text/csv;charset=utf-8,' + csv;
+            }
+            data = encodeURI(csv);
+
+            link = document.createElement('a');
+            link.setAttribute('href', data);
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        /**
+         * Converts the data in the table into comma-separated values.
+         * @param {object[]} table - the table to convert
+         * @returns the table in CSV format
+         */
+        $scope.convertArrayOfObjectsToCSV = function (table) {
+            var str = 'Last,First,Username,Email\r\n';
+            for (var i = 0; i < table.length; i++) {
+                var line = '';
+                // Skip over users with no UH username
+                if (table[i].username !== 'N/A') {
+                    line += table[i].lastName + ',';
+                    line += table[i].firstName + ',';
+                    line += table[i].username + ',';
+                    line += table[i].username + '@hawaii.edu,';
+                    str += line + '\r\n';
+                }
+            }
+            return str;
         };
 
     }
