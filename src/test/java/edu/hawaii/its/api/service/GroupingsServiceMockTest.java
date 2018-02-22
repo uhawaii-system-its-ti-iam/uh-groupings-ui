@@ -262,7 +262,12 @@ public class GroupingsServiceMockTest {
 
         //user is super user
         gsr = groupingsService.addAdmin(ADMIN_USER, users.get(9).getUsername());
+        assertEquals(SUCCESS, gsr.getResultCode());
+
+        //users.get(9) is already and admin
+        gsr = groupingsService.addAdmin(ADMIN_USER, users.get(9).getUsername());
         assertTrue(gsr.getResultCode().startsWith(SUCCESS));
+
     }
 
     @Test
@@ -964,12 +969,24 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void inGroupTest() {
-        assertFalse(groupingsService.inGroup(GROUPING_0_PATH, users.get(2).getUsername()));
-        assertTrue(groupingsService.inGroup(GROUPING_0_PATH, users.get(5).getUsername()));
+        //test with username
+        Person person2 = users.get(2);
+        Person person5 = users.get(5);
+
+        assertFalse(groupingsService.inGroup(GROUPING_0_PATH, person2));
+        assertTrue(groupingsService.inGroup(GROUPING_0_PATH, person5));
+
+        //test with uuid
+        person2.setUsername(null);
+        person5.setUsername(null);
+
+        assertFalse(groupingsService.inGroup(GROUPING_0_PATH, person2));
+        assertTrue(groupingsService.inGroup(GROUPING_0_PATH, person5));
     }
 
     @Test
     public void isOwnerTest() {
+
         assertFalse(groupingsService.isOwner(GROUPING_0_PATH, users.get(1).getUsername()));
         assertTrue(groupingsService.isOwner(GROUPING_0_PATH, users.get(0).getUsername()));
 
@@ -1019,7 +1036,7 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
-    public void addMemberAsTest() {
+    public void addMemberByUsernameTest() {
         Grouping grouping = groupingRepository.findByPath(GROUPING_1_PATH);
         assertFalse(grouping.getComposite().getMembers().contains(users.get(3)));
 
@@ -1029,7 +1046,48 @@ public class GroupingsServiceMockTest {
     }
 
     @Test
-    public void addMemberAsTest2() {
+    public void addMembersByUsername() {
+        //add all usernames
+        List<String> usernames = new ArrayList<>();
+        for (Person user : users) {
+            usernames.add(user.getUsername());
+        }
+
+        Grouping grouping = groupingRepository.findByPath(GROUPING_3_PATH);
+
+        //check how many members are in the basis
+        int numberOfBasisMembers = grouping.getBasis().getMembers().size();
+
+        //try to put all users into exclude group
+        groupingsService.addMembersByUsername(users.get(0).getUsername(), GROUPING_3_EXCLUDE_PATH, usernames);
+        grouping = groupingRepository.findByPath(GROUPING_3_PATH);
+        //there should be no real members in composite, but it should still have the 'grouperAll' member
+        assertEquals(1, grouping.getComposite().getMembers().size());
+        //only the users in the basis should have been added to the exclude group
+        assertEquals(numberOfBasisMembers, grouping.getExclude().getMembers().size());
+
+        //try to put all users into the include group
+        groupingsService.addMembersByUsername(users.get(0).getUsername(), GROUPING_3_INCLUDE_PATH, usernames);
+        grouping = groupingRepository.findByPath(GROUPING_3_PATH);
+        //all members should be in the group ( - 1 for 'grouperAll' in composite);
+        assertEquals(usernames.size(), grouping.getComposite().getMembers().size() - 1);
+        //members in basis should not have been added to the include group ( + 2 for 'grouperAll' in both groups)
+        assertEquals(usernames.size() - numberOfBasisMembers + 2, grouping.getInclude().getMembers().size());
+    }
+
+    @Test
+    public void addMemberByUuidTest() {
+        Grouping grouping = groupingRepository.findByPath(GROUPING_1_PATH);
+        assertFalse(grouping.getComposite().getMembers().contains(users.get(3)));
+
+        groupingsService.addMemberByUuid(users.get(0).getUsername(), GROUPING_1_INCLUDE_PATH, users.get(3).getUuid());
+        grouping = groupingRepository.findByPath(GROUPING_1_PATH);
+        assertTrue(grouping.getComposite().getMembers().contains(users.get(3)));
+    }
+
+    @Test
+    public void addMembersByUuid() {
+        //todo change to uuid
         //add all usernames
         List<String> usernames = new ArrayList<>();
         for (Person user : users) {

@@ -1,9 +1,6 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingAssignment;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.*;
 
 import java.util.List;
 
@@ -24,6 +21,8 @@ public interface GroupingsService {
     public List<Grouping> groupingsOptedOutOf(String username, List<String> groupPaths);
 
     public boolean inGroup(String group, String username);
+
+    public boolean inGroup(String group, Person person);
 
     public boolean checkSelfOpted(String group, String username);
 

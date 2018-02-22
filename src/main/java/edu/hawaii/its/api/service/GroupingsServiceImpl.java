@@ -833,6 +833,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return false;
     }
 
+    @Override
     public boolean inGroup(String groupPath, Person person) {
         if(person.getUsername() != null) {
             return inGroup(groupPath, person.getUsername());
@@ -1198,7 +1199,6 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
         String action = "add users to " + groupPath;
 
-        //todo what happens when personToAdd.getUsername() is null?
         if (isOwner(parentGroupingPath(groupPath), username) || isSuperuser(username) || personToAdd.getUsername().equals(username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
             String composite = parentGroupingPath(groupPath);
