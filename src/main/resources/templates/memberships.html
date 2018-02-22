@@ -40,7 +40,7 @@
                         <div class="panel-heading">
                             <div class="row" style="margin: inherit">
                                 <div class="col-md-6 col-sm-7" style="padding: 0px;">
-                                    <h3 style="padding: 2.5px 0px; margin: inherit;">My Grouping Memberships</h3>
+                                    <h2 style="padding: 2.5px 0px; margin: inherit;">My Grouping Memberships</h2>
                                     <span>Some memberships are optional, and some are required.</span>
                                 </div>
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
@@ -101,10 +101,10 @@
                                 <td>{{l.name}}</td>
                                 <td>{{l.path}}</td>
                                 <td class="col-md-2 col-sm-2 col-xs-2">
-                                    <div ng-if="required($index + (currentPageOptIn * itemsPerPage))">
+                                    <div ng-if="required($index+(currentPageOptIn * itemsPerPage))">
                                         <p align="center">Membership Required</p>
                                     </div>
-                                    <div ng-if="!required($index + (currentPageOptIn * itemsPerPage))">
+                                    <div ng-if="!required($index+(currentPageOptIn * itemsPerPage))">
                                         <button id="optOutButton" class="btn btn-primary btn-block opt-button text-center"
                                                 ng-click="optOut($index)"
                                                 ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
@@ -126,7 +126,7 @@
                         <div class="panel-heading">
                             <div class="row" style="margin: inherit;">
                                 <div class="col-md-6 col-sm-7" style="padding: 0px;">
-                                    <h3 style="padding: 2.5px 0px; margin: inherit;">Available Groupings</h3>
+                                    <h2 style="padding: 2.5px 0px; margin: inherit;">Available Groupings</h2>
                                     <span>You may opt in to any of these groupings to become a member.</span>
                                 </div>
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">

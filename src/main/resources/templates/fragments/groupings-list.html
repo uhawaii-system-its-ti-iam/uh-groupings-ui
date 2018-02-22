@@ -4,7 +4,7 @@
         <div class="panel-heading">
             <div class="row" style="margin: inherit">
                 <div class="col-md-6 col-sm-7" style="padding: 0px;">
-                    <h3 style="padding: 2.5px 0px; margin: inherit;" th:text="${title}"></h3>
+                    <h2 style="padding: 2.5px 0px; margin: inherit;" th:text="${title}"></h2>
                 </div>
                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
                     <input class="form-control" placeholder="Filter Groupings..." type="text"
@@ -29,7 +29,8 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                    <td class="clickable" ng-click="showData($index)">
+                    <td class="clickable" tabindex="0" ng-keypress="$event.keyCode === 13 ? showData($index) : null"
+                        ng-click="showData($index)">
                         {{l.name}}
                         <span class="pull-right glyphicon glyphicon-edit" style="margin-right: 5px;"></span>
                     </td>

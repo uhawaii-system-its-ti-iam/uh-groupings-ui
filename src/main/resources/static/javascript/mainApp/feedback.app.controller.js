@@ -3,15 +3,12 @@
     function FeedbackJsController($scope, $window, $uibModal, $http) {
         $scope.init = function() {
             $scope.email = document.getElementById("uemail").innerHTML + "@hawaii.edu";
+            $scope.mailURL = $window.location.href+"/sendMail";
             $scope.config = {
                 headers : {
                     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
                 }
             };
-            $http.get('application.properties').then(function (response) {
-              //console.log(response.data);
-
-            });
         };
 
 
@@ -20,8 +17,6 @@
             var errors = 0;
             var onlyMail = 0;
             var onlyFT = 0;
-            var URL = "https://www.test.hawaii.edu/uhgroupings/feedback/sendMail";
-            var testURL = "http://localhost:8080/uhgroupings/feedback/sendMail"
             $scope.data = [];
             var optionVal = document.getElementById("feedback_type");
             var feedVal = optionVal.options[optionVal.selectedIndex].value;
@@ -84,7 +79,7 @@
                 });
                 //console.log(typeof data);
                 $scope.returnModal(returnText);
-                $http.post(testURL, $scope.data, $scope.config);
+                $http.post($scope.mailURL, $scope.data, $scope.config);
                 document.getElementById("reqFeed").style.display = 'none';
                 document.getElementById("reqMail").style.display = 'none';
                 document.getElementById("reqFB").style.display = 'none';
