@@ -30,19 +30,23 @@ public interface GroupingsService {
 
     public GroupingsServiceResult deleteAdmin(String username, String adminToDelete);
 
-    public List<GroupingsServiceResult> addMemberToGrouping(String username, String groupingPath, String userToAdd);
+    public List<GroupingsServiceResult> addGroupingMemberByUsername(String username, String groupingPath, String userToAddUsername);
 
-    public List<GroupingsServiceResult> addMemberByUsername(String username, String group, String userToAddUsername);
+    public List<GroupingsServiceResult> addGroupingMemberByUuid(String username, String groupingPath, String userToAddUuid);
 
-    public List<GroupingsServiceResult> addMembersByUsername(String username, String group, List<String> usersToAddUsername);
+    public List<GroupingsServiceResult> addGroupMemberByUsername(String username, String group, String userToAddUsername);
 
-    public List<GroupingsServiceResult> addMemberByUuid(String username, String group, String userToAddUuid);
+    public List<GroupingsServiceResult> addGroupMembersByUsername(String username, String group, List<String> usersToAddUsername);
 
-    public List<GroupingsServiceResult> addMembersByUuid(String username, String group, List<String> usersToAddUuid);
+    public List<GroupingsServiceResult> addGroupMemberByUuid(String username, String group, String userToAddUuid);
 
-    public List<GroupingsServiceResult> deleteMemberFromGrouping(String username, String groupingPath, String userToDelete);
+    public List<GroupingsServiceResult> addGroupMembersByUuid(String username, String group, List<String> usersToAddUuid);
 
-    public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete);
+    public List<GroupingsServiceResult> deleteGroupingMemberByUsername(String username, String groupingPath, String userToDeleteUsername);
+
+    public List<GroupingsServiceResult> deleteGroupingMemberByUuid(String username, String groupingPath, String userToDeleteUuid);
+
+    public GroupingsServiceResult deleteGroupMemberByUsername(String username, String group, String userToDeleteUsername);
 
     public GroupingsServiceResult assignOwnership(String grouping, String username, String newOwner);
 

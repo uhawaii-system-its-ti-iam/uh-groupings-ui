@@ -180,16 +180,16 @@ public class TestGroupingsService {
         gs.changeOptOutStatus(GROUPING, username[0], true);
 
         //put in include
-        gs.addMemberToGrouping(username[0], GROUPING, username[0]);
-        gs.addMemberToGrouping(username[0], GROUPING, username[1]);
-        gs.addMemberToGrouping(username[0], GROUPING, username[2]);
+        gs.addGroupingMemberByUsername(username[0], GROUPING, username[0]);
+        gs.addGroupingMemberByUsername(username[0], GROUPING, username[1]);
+        gs.addGroupingMemberByUsername(username[0], GROUPING, username[2]);
 
         //remove from exclude
-        gs.addMemberToGrouping(username[0], GROUPING, username[4]);
-        gs.addMemberToGrouping(username[0], GROUPING, username[5]);
+        gs.addGroupingMemberByUsername(username[0], GROUPING, username[4]);
+        gs.addGroupingMemberByUsername(username[0], GROUPING, username[5]);
 
         //add to exclude
-        gs.deleteMemberFromGrouping(username[0], GROUPING, username[3]);
+        gs.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
     }
 
     @Test
@@ -491,7 +491,7 @@ public class TestGroupingsService {
         assertFalse(gs.inGroup(GROUPING_INCLUDE, username[3]));
 
         //an owner adds username[3] to the include group
-        List<GroupingsServiceResult> addMember = gs.addMemberByUsername(username[0], GROUPING_INCLUDE, username[3]);
+        List<GroupingsServiceResult> addMember = gs.addGroupMemberByUsername(username[0], GROUPING_INCLUDE, username[3]);
 
         //the addition was successful
         assertTrue(addMember.get(0).getResultCode().startsWith(SUCCESS));
@@ -502,7 +502,7 @@ public class TestGroupingsService {
         assertFalse(gs.inGroup(GROUPING_EXCLUDE, username[3]));
 
         //put username[3] back in the exclude group
-        addMember = gs.addMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
+        addMember = gs.addGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
 
         //the addition was successful
         assertEquals(addMember.get(0).getResultCode(), SUCCESS);
@@ -513,7 +513,7 @@ public class TestGroupingsService {
         assertFalse(gs.inGroup(GROUPING_INCLUDE, username[3]));
 
         //test adding when already in group
-        addMember = gs.addMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
+        addMember = gs.addGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
         //the addition was successful
         assertTrue(addMember.get(0).getResultCode().startsWith(SUCCESS));
         //username[3] is in the basis and exclude, not the composite or include
@@ -551,14 +551,14 @@ public class TestGroupingsService {
         assertFalse(gs.inGroup(GROUPING_INCLUDE, username[3]));
 
         //delete username[3] from exclude
-        GroupingsServiceResult deleteMember1 = gs.deleteMemberAs(username[0], GROUPING_EXCLUDE, username[3]);
+        GroupingsServiceResult deleteMember1 = gs.deleteGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
         //deletion was successful
         assertEquals(deleteMember1.getResultCode(), SUCCESS);
         //username[3] is no longer in the exclude
         assertFalse(gs.inGroup(GROUPING_EXCLUDE, username[3]));
 
         //delete username[2] from include
-        GroupingsServiceResult deleteMember2 = gs.deleteMemberAs(username[0], GROUPING_INCLUDE, username[2]);
+        GroupingsServiceResult deleteMember2 = gs.deleteGroupMemberByUsername(username[0], GROUPING_INCLUDE, username[2]);
         //deletion was successful
         assertEquals(deleteMember2.getResultCode(), SUCCESS);
         //username[2] is no longer in composite or include
@@ -566,8 +566,8 @@ public class TestGroupingsService {
         assertFalse(gs.inGroup(GROUPING_INCLUDE, username[2]));
 
         //test when not in group
-        deleteMember1 = gs.deleteMemberAs(username[0], GROUPING_EXCLUDE, username[3]);
-        deleteMember2 = gs.deleteMemberAs(username[0], GROUPING_INCLUDE, username[2]);
+        deleteMember1 = gs.deleteGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
+        deleteMember2 = gs.deleteGroupMemberByUsername(username[0], GROUPING_INCLUDE, username[2]);
 
         //results are successful because the end result is the same
         assertTrue(deleteMember1.getResultCode().startsWith(SUCCESS));

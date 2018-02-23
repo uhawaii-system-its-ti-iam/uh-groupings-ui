@@ -128,16 +128,16 @@ public class TestGroupingsRestController {
                 .build();
 
         //put in include
-        gs.addMemberByUsername(tst[0], GROUPING_INCLUDE, tst[0]);
-        gs.addMemberByUsername(tst[0], GROUPING_INCLUDE, tst[1]);
-        gs.addMemberByUsername(tst[0], GROUPING_INCLUDE, tst[2]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[0]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[1]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[2]);
 
         //add to exclude
-        gs.addMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[3]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[3]);
 
         //remove from exclude
-        gs.addMemberByUsername(tst[0], GROUPING_INCLUDE, tst[4]);
-        gs.addMemberByUsername(tst[0], GROUPING_INCLUDE, tst[5]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[4]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[5]);
 
         gs.changeOptOutStatus(GROUPING, tst[0], true);
         gs.changeOptInStatus(GROUPING, tst[0], true);
@@ -187,7 +187,7 @@ public class TestGroupingsRestController {
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
 
         //add tst[3] to Grouping
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToGrouping");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addGroupingMemberByUsername");
         assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
         //tst[3] is in basis, so will not go into include
         assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[3]));
@@ -215,8 +215,8 @@ public class TestGroupingsRestController {
         assertTrue(gs.inGroup(GROUPING, tst[5]));
         assertTrue(gs.inGroup(GROUPING_BASIS, tst[5]));
         assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[2]));
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[2] + "/deleteMemberFromGrouping");
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[5] + "/deleteMemberFromGrouping");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[2] + "/deleteGroupingMemberByUsername");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[5] + "/deleteGroupingMemberByUsername");
 
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[5]));
         assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[2]));
@@ -377,7 +377,7 @@ public class TestGroupingsRestController {
         }
         assertTrue(optedOut);
 
-        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[5]);
+        gs.deleteGroupMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[5]);
     }
 
     @Test

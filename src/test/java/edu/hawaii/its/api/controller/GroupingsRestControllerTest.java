@@ -188,9 +188,9 @@ public class GroupingsRestControllerTest {
         gsrList.add(new GroupingsServiceResult("SUCCESS", "add member to include group"));
         gsrList2.add(new GroupingsServiceResult("SUCCESS", "add member to exclude group"));
 
-        given(groupingsService.addMemberByUsername(username, grouping + ":include", username))
+        given(groupingsService.addGroupMemberByUsername(username, grouping + ":include", username))
                 .willReturn(gsrList);
-        given(groupingsService.addMemberByUsername(username, grouping + ":exclude", username))
+        given(groupingsService.addGroupMemberByUsername(username, grouping + ":exclude", username))
                 .willReturn(gsrList2);
 
         mockMvc.perform(post("/api/groupings/grouping/user/addMemberToIncludeGroup")
@@ -214,9 +214,9 @@ public class GroupingsRestControllerTest {
         GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "delete member from include group");
         GroupingsServiceResult gsr2 = new GroupingsServiceResult("SUCCESS", "delete member from exclude group");
 
-        given(groupingsService.deleteMemberAs(username, grouping + ":include", username))
+        given(groupingsService.deleteGroupMemberByUsername(username, grouping + ":include", username))
                 .willReturn(gsr);
-        given(groupingsService.deleteMemberAs(username, grouping + ":exclude", username))
+        given(groupingsService.deleteGroupMemberByUsername(username, grouping + ":exclude", username))
                 .willReturn(gsr2);
 
         mockMvc.perform(post("/api/groupings/grouping/user/deleteMemberFromIncludeGroup")
