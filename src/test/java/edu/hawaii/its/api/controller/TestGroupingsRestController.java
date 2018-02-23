@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -275,9 +276,25 @@ public class TestGroupingsRestController {
     }
 
     @Test
+    @WithMockUhUser(username = "iamtst05")
+    public void groupingsAssignmentEmptyTest() throws Exception {
+        GroupingAssignment groupings = mapGroupingAssignment();
+
+        assertEquals(groupings.getGroupingsIn().size(), groupings.getGroupingsToOptOutOf().size());
+
+        for(Grouping grouping : groupings.getGroupingsIn()) {
+            mapGSRs("/api/groupings/" + grouping.getPath() + "/optOut");
+        }
+
+        groupings = mapGroupingAssignment();
+
+        assertEquals(0, groupings.getGroupingsIn().size());
+        assertEquals(0, groupings.getGroupingsToOptOutOf().size());
+    }
+
+    @Test
     @WithMockUhUser(username = "iamtst01")
     public void groupingAssignmentTest() throws Exception {
-        //        GroupingAssignment groupings = gc.groupingAssignment(tst[0]).getBody();
         GroupingAssignment groupings = mapGroupingAssignment();
 
         boolean inGrouping = false;

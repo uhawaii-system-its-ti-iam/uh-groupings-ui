@@ -1608,7 +1608,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                 StemScope.ALL_IN_SUBTREE);
 
         WsGetGroupsResult groupResults = wsGetGroupsResults.getResults()[0];
-        List<WsGroup> groups = Arrays.asList(groupResults.getWsGroups());
+
+        //if intellij tells you that you can replace this with a parameterized constructor call, it is a lie...
+        List<WsGroup> groups = new ArrayList<>();
+        groups.addAll(Arrays.asList(groupResults.getWsGroups()));
 
         return extractGroupPaths(groups);
     }
