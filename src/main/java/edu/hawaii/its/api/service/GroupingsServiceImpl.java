@@ -1609,9 +1609,11 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         WsGetGroupsResult groupResults = wsGetGroupsResults.getResults()[0];
 
-        //if intellij tells you that you can replace this with a parameterized constructor call, it is a lie...
         List<WsGroup> groups = new ArrayList<>();
-        groups.addAll(Arrays.asList(groupResults.getWsGroups()));
+
+        if(groupResults.getWsGroups() != null) {
+            groups = new ArrayList<>(Arrays.asList(groupResults.getWsGroups()));
+        }
 
         return extractGroupPaths(groups);
     }
