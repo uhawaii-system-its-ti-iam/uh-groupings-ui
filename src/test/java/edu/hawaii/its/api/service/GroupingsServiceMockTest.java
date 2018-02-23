@@ -943,6 +943,14 @@ public class GroupingsServiceMockTest {
         assertFalse(groupingsService.checkSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername()));
         groupingsService.addSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername());
         assertTrue(groupingsService.checkSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername()));
+
+        //try to add self-opted when the user is not in the group
+        try {
+            groupingsService.addSelfOpted(GROUPING_2_INCLUDE_PATH, users.get(4).getUsername());
+        }catch (GroupingsServiceResultException gsre) {
+            GroupingsServiceResult gsr = gsre.getGsr();
+            assertTrue(gsr.getResultCode().startsWith(FAILURE));
+        }
     }
 
     @Test
@@ -1087,11 +1095,10 @@ public class GroupingsServiceMockTest {
 
     @Test
     public void addMembersByUuid() {
-        //todo change to uuid
-        //add all usernames
-        List<String> usernames = new ArrayList<>();
+        //add all uuids
+        List<String> uuids = new ArrayList<>();
         for (Person user : users) {
-            usernames.add(user.getUsername());
+            uuids.add(user.getUuid());
         }
 
         Grouping grouping = groupingRepository.findByPath(GROUPING_3_PATH);
@@ -1100,7 +1107,7 @@ public class GroupingsServiceMockTest {
         int numberOfBasisMembers = grouping.getBasis().getMembers().size();
 
         //try to put all users into exclude group
-        groupingsService.addMembersByUsername(users.get(0).getUsername(), GROUPING_3_EXCLUDE_PATH, usernames);
+        groupingsService.addMembersByUuid(users.get(0).getUsername(), GROUPING_3_EXCLUDE_PATH, uuids);
         grouping = groupingRepository.findByPath(GROUPING_3_PATH);
         //there should be no real members in composite, but it should still have the 'grouperAll' member
         assertEquals(1, grouping.getComposite().getMembers().size());
@@ -1108,12 +1115,12 @@ public class GroupingsServiceMockTest {
         assertEquals(numberOfBasisMembers, grouping.getExclude().getMembers().size());
 
         //try to put all users into the include group
-        groupingsService.addMembersByUsername(users.get(0).getUsername(), GROUPING_3_INCLUDE_PATH, usernames);
+        groupingsService.addMembersByUuid(users.get(0).getUsername(), GROUPING_3_INCLUDE_PATH, uuids);
         grouping = groupingRepository.findByPath(GROUPING_3_PATH);
         //all members should be in the group ( - 1 for 'grouperAll' in composite);
-        assertEquals(usernames.size(), grouping.getComposite().getMembers().size() - 1);
+        assertEquals(uuids.size(), grouping.getComposite().getMembers().size() - 1);
         //members in basis should not have been added to the include group ( + 2 for 'grouperAll' in both groups)
-        assertEquals(usernames.size() - numberOfBasisMembers + 2, grouping.getInclude().getMembers().size());
+        assertEquals(uuids.size() - numberOfBasisMembers + 2, grouping.getInclude().getMembers().size());
     }
 
     @Test

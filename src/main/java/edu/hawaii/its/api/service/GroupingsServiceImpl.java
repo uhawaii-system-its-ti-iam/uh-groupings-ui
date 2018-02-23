@@ -624,11 +624,10 @@ public class GroupingsServiceImpl implements GroupingsService {
     private List<Grouping> groupingsOpted(String includeOrrExclude, String username, List<String> groupPaths) {
         logger.info("groupingsOpted; includeOrrExclude: " + includeOrrExclude + "; username: " + username + ";");
 
-        List<String> groupsOpted = new ArrayList<>();
         List<String> groupingsOpted = new ArrayList<>();
 
-        groupsOpted.addAll(groupPaths.stream().filter(group -> group.endsWith(includeOrrExclude)
-                && checkSelfOpted(group, username)).map(this::parentGroupingPath).collect(Collectors.toList()));
+        List<String> groupsOpted = groupPaths.stream().filter(group -> group.endsWith(includeOrrExclude)
+                && checkSelfOpted(group, username)).map(this::parentGroupingPath).collect(Collectors.toList());
 
         if (groupsOpted.size() > 0) {
 
@@ -657,7 +656,6 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<Grouping> groupings;
 
         if (isSuperuser(username)) {
-            List<String> groupPaths = new ArrayList<>();
 
             WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
@@ -665,7 +663,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
             List<WsGroup> groups = new ArrayList<>(Arrays.asList(attributeAssignmentsResults.getWsGroups()));
 
-            groupPaths.addAll(groups.stream().map(WsGroup::getName).collect(Collectors.toList()));
+            List<String> groupPaths = groups.stream().map(WsGroup::getName).collect(Collectors.toList());
 
             Group admin = getMembers(username, GROUPING_ADMINS);
             groupings = makeGroupings(groupPaths);
@@ -1193,7 +1191,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return makeGroupingsServiceResult("FAILURE: " + username + " is not an admin", action);
     }
 
-    public List<GroupingsServiceResult> addMemberHelper(String username, String groupPath, Person personToAdd){
+    private List<GroupingsServiceResult> addMemberHelper(String username, String groupPath, Person personToAdd){
         logger.info("addMemberHelper; user: " + username + "; group: " + groupPath + "; personToAdd: " + personToAdd + ";");
 
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
@@ -1664,7 +1662,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupingsServiceResult;
     }
 
-    GroupingsServiceResult makeGroupingsServiceResult(String resultCode, String action) {
+    private GroupingsServiceResult makeGroupingsServiceResult(String resultCode, String action) {
         GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();
         groupingsServiceResult.setAction(action);
         groupingsServiceResult.setResultCode(resultCode);
@@ -1732,12 +1730,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new Person();
     }
 
-    /**
-     * @param subject:
-     * @return a subject made from the WsSubject
-     * @Param attributeNames:
-     */
-    Person makePerson(WsSubject subject, String[] attributeNames) {
+    private Person makePerson(WsSubject subject, String[] attributeNames) {
         if (subject == null || subject.getAttributeValues() == null) {
             return new Person();
         } else {
