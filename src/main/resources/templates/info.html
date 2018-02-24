@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:substituteby="header :: copy"></head>
+<head th:replace="header :: copy(headingTitle='UH Groupings Info')"></head>
 <body>
     <nav th:substituteby="menubar :: copy"></nav>
 

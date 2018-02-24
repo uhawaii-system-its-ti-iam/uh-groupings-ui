@@ -1,12 +1,11 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:substituteby="header :: copy"></head>
+<head th:replace="header :: copy(headingTitle='UH Groupings Admin')"></head>
 <body ng-app="UHGroupingsApp">
 <nav th:substituteby="menubar :: copy"></nav>
 <!--  Content container -->
 <div class='container'>
-  <div th:replace="header :: copy(headingTitle='Admin')"></div>
     <div class='row'>
         <div class="container-fluid">
 
