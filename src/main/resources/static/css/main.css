@@ -27,22 +27,13 @@ h2 {
   font-size: 25px;
 }
 
-
-/*h1{
-    color:#1995AD;
+h3{
+  font-size: 20px;
 }
 
-#uh-nav-name{
-    color:#1995AD;
+.panel-title{
+  font-size: 25px;
 }
-
-.members-tab-title{
-    color: #1995AD;
-}
-
-#defMem{
-    color: #c4dfe6;
-}*/
 
 .loader {
     border: 16px solid white; /* Black */
@@ -173,12 +164,7 @@ td.uh-pre {
     font-size: 25px;
 }
 
-/*.navbar-default .navbar-nav > .open > a,
-.navbar-default .navbar-nav > .open > a:focus,
-.navbar-default .navbar-nav > .open > a:hover {
-    color: #555;
-    background-color: white;
-}*/
+
 
 .app-logout {
     height: 50px;
@@ -271,9 +257,7 @@ td.uh-pre {
     padding: 10px;
 }
 
-/*.dropshadow {
-    text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
-}*/
+
 
 .panel{
     background-color: #f1f1f1f2;
@@ -444,15 +428,6 @@ td.uh-pre {
     .collapse.in{
         display:block !important;
     }
-/*
-    .navbar-brand.uh-nav-app-name {
-        color: #BD9319;
-    }
-
-    .navbar-brand.uh-nav-app-name:hover {
-        color: #B08A17;
-    }*/
-
     .nav.navbar-nav {
         padding-top: 0px;
     }
@@ -468,9 +443,6 @@ td.uh-pre {
     }
 }
 
-/*.opt-button[disabled], .opt-button:disabled, .opt-button[disabled]:active, .opt-button:disabled:active {
-    color: #C2C2C2;
-}*/
 
 .nav.nav-tabs {
     border-bottom: none;
@@ -483,9 +455,6 @@ td.uh-pre {
     background-color: #07575b;
 }*/
 
-/*.panel-default > .panel-heading{
-    background-color: #07575b;
-}*/
 
 .nav.nav-tabs > li.active > a {
     border-bottom: none;
