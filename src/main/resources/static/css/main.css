@@ -23,12 +23,13 @@ body {
     padding-bottom: 50px;
     background-color: white;
 }
+h2 {
+  font-size: 25px;
+}
+
 
 /*h1{
     color:#1995AD;
-}
-h2, h3, h4 {
-    color: #c4dfe6;
 }
 
 #uh-nav-name{
