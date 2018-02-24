@@ -7,6 +7,7 @@
 
 <!--  Content container -->
 <div class="container">
+  <div th:replace="header :: copy(headingTitle='Membership')"></div>
     <div class='row'>
         <div class='container-fluid' ng-controller="MembershipJsController" data-ng-init="init()">
             <h1 class="text-left">Manage My Memberships</h1>
