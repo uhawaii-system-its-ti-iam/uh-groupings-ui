@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -128,16 +129,16 @@ public class TestGroupingsRestController {
                 .build();
 
         //put in include
-        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[0]);
-        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[1]);
-        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[2]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[0]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[1]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[2]);
 
         //add to exclude
-        gs.addMemberAs(tst[0], GROUPING_EXCLUDE, tst[3]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[3]);
 
         //remove from exclude
-        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[4]);
-        gs.addMemberAs(tst[0], GROUPING_INCLUDE, tst[5]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[4]);
+        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[5]);
 
         gs.changeOptOutStatus(GROUPING, tst[0], true);
         gs.changeOptInStatus(GROUPING, tst[0], true);
@@ -187,7 +188,7 @@ public class TestGroupingsRestController {
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
 
         //add tst[3] to Grouping
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToGrouping");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addGroupingMemberByUsername");
         assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
         //tst[3] is in basis, so will not go into include
         assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[3]));
@@ -215,8 +216,8 @@ public class TestGroupingsRestController {
         assertTrue(gs.inGroup(GROUPING, tst[5]));
         assertTrue(gs.inGroup(GROUPING_BASIS, tst[5]));
         assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[2]));
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[2] + "/deleteMemberFromGrouping");
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[5] + "/deleteMemberFromGrouping");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[2] + "/deleteGroupingMemberByUsername");
+        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[5] + "/deleteGroupingMemberByUsername");
 
         assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[5]));
         assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[2]));
@@ -275,9 +276,25 @@ public class TestGroupingsRestController {
     }
 
     @Test
+    @WithMockUhUser(username = "iamtst05")
+    public void groupingsAssignmentEmptyTest() throws Exception {
+        GroupingAssignment groupings = mapGroupingAssignment();
+
+        assertEquals(groupings.getGroupingsIn().size(), groupings.getGroupingsToOptOutOf().size());
+
+        for(Grouping grouping : groupings.getGroupingsIn()) {
+            mapGSRs("/api/groupings/" + grouping.getPath() + "/optOut");
+        }
+
+        groupings = mapGroupingAssignment();
+
+        assertEquals(0, groupings.getGroupingsIn().size());
+        assertEquals(0, groupings.getGroupingsToOptOutOf().size());
+    }
+
+    @Test
     @WithMockUhUser(username = "iamtst01")
     public void groupingAssignmentTest() throws Exception {
-        //        GroupingAssignment groupings = gc.groupingAssignment(tst[0]).getBody();
         GroupingAssignment groupings = mapGroupingAssignment();
 
         boolean inGrouping = false;
@@ -377,7 +394,7 @@ public class TestGroupingsRestController {
         }
         assertTrue(optedOut);
 
-        gs.deleteMemberAs(tst[0], GROUPING_EXCLUDE, tst[5]);
+        gs.deleteGroupMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[5]);
     }
 
     @Test
