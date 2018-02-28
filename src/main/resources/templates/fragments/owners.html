@@ -44,21 +44,21 @@
             <td colspan="6">
                 <ul class="pagination pull-right">
                     <li ng-class="{disabled: (currentPageOwners) == 0 }">
-                        <a ng-click="currentPage('First','currentPageOwners','pagedItemsOwners')">«« First</a>
+                        <a class="clickable" ng-click="currentPage('First','currentPageOwners','pagedItemsOwners')">«« First</a>
                     </li>
                     <li ng-class="{disabled: (currentPageOwners) == 0 }">
-                        <a ng-click="currentPage('Prev','currentPageOwners','pagedItemsOwners')">« Prev</a>
+                        <a class="clickable" ng-click="currentPage('Prev','currentPageOwners','pagedItemsOwners')">« Prev</a>
                     </li>
                     <li ng-repeat="n in range(pagedItemsOwners.length, currentPageOwners - gap, currentPageOwners + gap + 1) "
                         ng-class="{active: n == currentPageOwners}"
                         ng-click="currentPage('Set','currentPageOwners','pagedItemsOwners')">
-                        <a ng-bind="n + 1"></a>
+                        <a class="clickable" ng-bind="n + 1"></a>
                     </li>
                     <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
-                        <a ng-click="currentPage('Next','currentPageOwners','pagedItemsOwners')">Next »</a>
+                        <a class="clickable" ng-click="currentPage('Next','currentPageOwners','pagedItemsOwners')">Next »</a>
                     </li>
                     <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
-                        <a ng-click="currentPage('Last','currentPageOwners','pagedItemsOwners')">Last »»</a>
+                        <a class="clickable" ng-click="currentPage('Last','currentPageOwners','pagedItemsOwners')">Last »»</a>
                     </li>
                 </ul>
             </td>

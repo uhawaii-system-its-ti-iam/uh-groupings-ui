@@ -42,21 +42,21 @@
                 <td colspan="6">
                     <ul class="pagination pull-right">
                         <li ng-class="{disabled: (currentPageGroupings) == 0}">
-                            <a ng-click="currentPage('First','currentPageGroupings','pagedItemsGroupings')">«« First</a>
+                            <a class="clickable" ng-click="currentPage('First','currentPageGroupings','pagedItemsGroupings')">«« First</a>
                         </li>
                         <li ng-class="{disabled: (currentPageGroupings) == 0 }">
-                            <a ng-click="currentPage('Prev','currentPageGroupings','pagedItemsGroupings')">« Prev</a>
+                            <a class="clickable" ng-click="currentPage('Prev','currentPageGroupings','pagedItemsGroupings')">« Prev</a>
                         </li>
                         <li ng-repeat="n in range(pagedItemsGroupings.length, currentPageGroupings - gap, currentPageGroupings + gap + 1)"
                             ng-class="{active: n == currentPageGroupings}"
                             ng-click="currentPage('Set','currentPageGroupings','pagedItemsGroupings')">
-                            <a ng-bind="n + 1"></a>
+                            <a class="clickable" ng-bind="n + 1"></a>
                         </li>
                         <li ng-class="{disabled: (currentPageGroupings) == pagedItemsGroupings.length - 1 || pagedItemsGroupings.length == 0}">
-                            <a ng-click="currentPage('Next','currentPageGroupings','pagedItemsGroupings')">Next »</a>
+                            <a class="clickable" ng-click="currentPage('Next','currentPageGroupings','pagedItemsGroupings')">Next »</a>
                         </li>
                         <li ng-class="{disabled: (currentPageGroupings) == pagedItemsGroupings.length - 1 || pagedItemsGroupings.length == 0}">
-                            <a ng-click="currentPage('Last','currentPageGroupings','pagedItemsGroupings')">Last »»</a>
+                            <a class="clickable" ng-click="currentPage('Last','currentPageGroupings','pagedItemsGroupings')">Last »»</a>
                         </li>
                     </ul>
                 </td>
