@@ -92,21 +92,21 @@
                                     <td colspan="6">
                                         <ul class="pagination pull-right">
                                             <li ng-class="{disabled: (currentPageAdmins) == 0}">
-                                                <a href="" ng-click="currentPage('First','currentPageAdmins','pagedItemsAdmins')">«« First</a>
+                                                <a ng-click="currentPage('First','currentPageAdmins','pagedItemsAdmins')">«« First</a>
                                             </li>
                                             <li ng-class="{disabled: (currentPageAdmins) == 0}">
-                                                <a href="" ng-click="currentPage('Prev','currentPageAdmins','pagedItemsAdmins')">« Prev</a>
+                                                <a ng-click="currentPage('Prev','currentPageAdmins','pagedItemsAdmins')">« Prev</a>
                                             </li>
                                             <li ng-repeat="n in range(pagedItemsAdmins.length, currentPageAdmins - gap, currentPageAdmins + gap + 1) "
                                                 ng-class="{active: n == currentPageAdmins}"
-                                                ng-click="currentPage('Set','currentPageAdmins','pagedItemsAdmins')"
-                                            ><a href="" ng-bind="n + 1">1</a>
+                                                ng-click="currentPage('Set','currentPageAdmins','pagedItemsAdmins')">
+                                                <a ng-bind="n + 1">1</a>
                                             </li>
                                             <li ng-class="{disabled: ((currentPageAdmins) == pagedItemsAdmins.length - 1) || pagedItemsAdmins.length == 0 }">
-                                                <a href="" ng-click="currentPage('Next','currentPageAdmins','pagedItemsAdmins')">Next »</a>
+                                                <a ng-click="currentPage('Next','currentPageAdmins','pagedItemsAdmins')">Next »</a>
                                             </li>
                                             <li ng-class="{disabled: ((currentPageAdmins) == pagedItemsAdmins.length - 1) || pagedItemsAdmins.length == 0 }">
-                                                <a href="" ng-click="currentPage('Last','currentPageAdmins','pagedItemsAdmins')">Last »»</a>
+                                                <a ng-click="currentPage('Last','currentPageAdmins','pagedItemsAdmins')">Last »»</a>
                                             </li>
                                         </ul>
                                         <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group input-inline-pagination">

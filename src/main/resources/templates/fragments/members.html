@@ -63,21 +63,21 @@
             <td colspan="6">
                 <ul class="pagination pull-right">
                     <li ng-class="{disabled: (currentPageMembers) == 0}">
-                        <a href="" ng-click="currentPage('First','currentPageMembers','pagedItemsMembers')">«« First</a>
+                        <a ng-click="currentPage('First','currentPageMembers','pagedItemsMembers')">«« First</a>
                     </li>
                     <li ng-class="{disabled: (currentPageMembers) == 0 }">
-                        <a href="" ng-click="currentPage('Prev','currentPageMembers','pagedItemsMembers')">« Prev</a>
+                        <a ng-click="currentPage('Prev','currentPageMembers','pagedItemsMembers')">« Prev</a>
                     </li>
                     <li ng-repeat="n in range(pagedItemsMembers.length, currentPageMembers - gap, currentPageMembers + gap + 1) "
                         ng-class="{active: n == currentPageMembers}"
                         ng-click="currentPage('Set','currentPageMembers','pagedItemsMembers')">
-                        <a href="" ng-bind="n + 1"></a>
+                        <a ng-bind="n + 1"></a>
                     </li>
                     <li ng-class="{disabled: ((currentPageMembers) == pagedItemsMembers.length - 1) || pagedItemsMembers.length == 0}">
-                        <a href="" ng-click="currentPage('Next','currentPageMembers','pagedItemsMembers')">Next »</a>
+                        <a ng-click="currentPage('Next','currentPageMembers','pagedItemsMembers')">Next »</a>
                     </li>
                     <li ng-class="{disabled: ((currentPageMembers) == pagedItemsMembers.length - 1) || pagedItemsMembers.length == 0}">
-                        <a href="" ng-click="currentPage('Last','currentPageMembers','pagedItemsMembers')">Last »»</a>
+                        <a ng-click="currentPage('Last','currentPageMembers','pagedItemsMembers')">Last »»</a>
                     </li>
                 </ul>
             </td>
