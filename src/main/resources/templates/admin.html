@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:substituteby="header :: copy"></head>
+<head th:replace="header :: copy(headingTitle='UH Groupings Admin')"></head>
 <body ng-app="UHGroupingsApp">
 <nav th:substituteby="menubar :: copy"></nav>
 <!--  Content container -->
@@ -42,7 +42,8 @@
                                 <div class="panel-heading">
                                     <div class="row" style="margin: inherit">
                                         <div class="col-md-6 col-sm-7" style="padding: 0px;">
-                                            <h2 style="padding: 2.5px 0px; margin: inherit;">Designate Admins</h2>
+                                            <h2 class = "panel-title" style="padding: 2.5px 0px; margin: inherit;">Designate Admins</h2>
+
                                         </div>
                                         <div class="col-md-push-4 col-md-2 col-sm-push-2 col-sm-3" style="padding: 0px;">
                                             <input placeholder="Filter Admins..." type="text"
@@ -133,7 +134,7 @@
 
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h2 style="margin-top: 0px; margin-bottom: 0px;">Manage Grouping</h2>
+                            <h2 class = "panel-title" style="margin-top: 0px; margin-bottom: 0px;">Manage Grouping</h2>
                         </div>
                         <div class="panel-body" style="min-height: 450px;">
                             <div class="row" style="margin: inherit;">
