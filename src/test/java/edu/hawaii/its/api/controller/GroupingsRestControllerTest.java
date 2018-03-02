@@ -179,6 +179,19 @@ public class GroupingsRestControllerTest {
     }
 
     @Test
+    @WithMockUhUser(username = "admin")
+    public void deleteAdminTest() throws Exception{
+        given(groupingsService.deleteAdmin("admin", "newAdmin"))
+               .willReturn(new GroupingsServiceResult("SUCCESS", "delete admin"));
+
+        mockMvc.perform(post("/api/groupings/newAdmin/deleteAdmin")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("action").value("delete admin"));
+    }
+
+    @Test
     @WithMockUhUser
     public void getAddMember() throws Exception {
         final String grouping = "grouping";
