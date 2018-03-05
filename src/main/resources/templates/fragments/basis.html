@@ -60,21 +60,21 @@
             <td colspan="6">
                 <ul class="pagination pull-right">
                     <li ng-class="{disabled: (currentPageBasis) == 0}">
-                        <a href="" ng-click="currentPage('First','currentPageBasis','pagedItemsBasis')">«« First</a>
+                        <a class="clickable" ng-click="currentPage('First','currentPageBasis','pagedItemsBasis')">«« First</a>
                     </li>
                     <li ng-class="{disabled: (currentPageBasis) == 0}">
-                        <a href="" ng-click="currentPage('Prev','currentPageBasis','pagedItemsBasis')">« Prev</a>
+                        <a class="clickable" ng-click="currentPage('Prev','currentPageBasis','pagedItemsBasis')">« Prev</a>
                     </li>
                     <li ng-repeat="n in range(pagedItemsBasis.length, currentPageBasis - gap, currentPageBasis + gap + 1) "
                         ng-class="{active: n == currentPageBasis}"
                         ng-click="currentPage('Set','currentPageBasis','pagedItemsBasis')">
-                        <a href="" ng-bind="n + 1"></a>
+                        <a class="clickable" ng-bind="n + 1"></a>
                     </li>
                     <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 || pagedItemsBasis.length == 0}">
-                        <a href="" ng-click="currentPage('Next','currentPageBasis','pagedItemsBasis')">Next »</a>
+                        <a class="clickable" ng-click="currentPage('Next','currentPageBasis','pagedItemsBasis')">Next »</a>
                     </li>
                     <li ng-class="{disabled: (currentPageBasis) == pagedItemsBasis.length - 1 || pagedItemsBasis.length == 0}">
-                        <a href="" ng-click="currentPage('Last','currentPageBasis','pagedItemsBasis')">Last »»</a>
+                        <a class="clickable" ng-click="currentPage('Last','currentPageBasis','pagedItemsBasis')">Last »»</a>
                     </li>
                 </ul>
             </td>
