@@ -15,7 +15,8 @@
             <!-- Filter bar -->
             <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                 <div class="xs-left-sm-right">
-                    <input class="form-control" placeholder="Filter Members..." type="text"
+                  <label for ="basisQuery"></label>
+                    <input name = "basisQuery" class="form-control" placeholder="Filter Members..." type="text"
                            ng-model="basisQuery"
                            ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', 'basisQuery')"/>
                 </div>
