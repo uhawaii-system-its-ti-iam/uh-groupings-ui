@@ -15,6 +15,7 @@
             <!-- Filter bar -->
             <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                 <div class="xs-left-sm-right">
+                  <label for ="excludeQuery"></label>
                     <input class="form-control" placeholder="Filter Members..." type="text"
                            ng-model="excludeQuery"
                            ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', 'excludeQuery')"/>
@@ -75,21 +76,21 @@
             <td colspan="6">
                 <ul class="pagination pull-right">
                     <li ng-class="{disabled: (currentPageExclude) == 0 }">
-                        <a href="" ng-click="currentPage('First','currentPageExclude','pagedItemsExclude')">«« First</a>
+                        <a class="clickable" ng-click="currentPage('First','currentPageExclude','pagedItemsExclude')">«« First</a>
                     </li>
                     <li ng-class="{disabled: (currentPageExclude) == 0 }">
-                        <a href="" ng-click="currentPage('Prev','currentPageExclude','pagedItemsExclude')">« Prev</a>
+                        <a class="clickable" ng-click="currentPage('Prev','currentPageExclude','pagedItemsExclude')">« Prev</a>
                     </li>
                     <li ng-repeat="n in range(pagedItemsExclude.length, currentPageExclude - gap, currentPageExclude + gap + 1) "
                         ng-class="{active: n == currentPageExclude}"
                         ng-click="currentPage('Set','currentPageExclude','pagedItemsExclude')">
-                        <a href="" ng-bind="n + 1"></a>
+                        <a class="clickable" ng-bind="n + 1"></a>
                     </li>
                     <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
-                        <a href="" ng-click="currentPage('Next','currentPageExclude','pagedItemsExclude')">Next »</a>
+                        <a class="clickable" ng-click="currentPage('Next','currentPageExclude','pagedItemsExclude')">Next »</a>
                     </li>
                     <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
-                        <a href="" ng-click="currentPage('Last','currentPageExclude','pagedItemsExclude')">Last »»</a>
+                        <a class="clickable" ng-click="currentPage('Last','currentPageExclude','pagedItemsExclude')">Last »»</a>
                     </li>
                 </ul>
             </td>
@@ -100,7 +101,7 @@
     <div class="col-lg-4 col-md-6" style="padding: inherit;">
         <form ng-submit="addMember('Exclude')">
             <div class="input-group">
-                <input class="form-control" type="text" placeholder="Add user to exclude"
+                <input class="form-control" type="text" placeholder="Enter UH username to exclude"
                        ng-model="addUser"/>
                 <div class="input-group-btn">
                     <button class="btn btn-primary" type="submit">Add</button>

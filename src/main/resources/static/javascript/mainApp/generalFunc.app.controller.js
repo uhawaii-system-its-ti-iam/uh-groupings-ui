@@ -607,14 +607,11 @@
             var str = 'Last,First,Username,Email\r\n';
             for (var i = 0; i < table.length; i++) {
                 var line = '';
-                // Skip over users with no UH username
-                if (table[i].username !== 'N/A') {
-                    line += table[i].lastName + ',';
-                    line += table[i].firstName + ',';
-                    line += table[i].username + ',';
-                    line += table[i].username + '@hawaii.edu,';
-                    str += line + '\r\n';
-                }
+                line += table[i].lastName + ',';
+                line += table[i].firstName + ',';
+                line += table[i].username + ',';
+                line += table[i].username + '@hawaii.edu,';
+                str += line + '\r\n';
             }
             return str;
         };
