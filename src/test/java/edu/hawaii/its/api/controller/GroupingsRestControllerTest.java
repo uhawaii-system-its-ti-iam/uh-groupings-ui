@@ -275,6 +275,25 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
+    public void deleteByUuIDTest() throws Exception {
+
+        List<GroupingsServiceResult> gsrList = new ArrayList<>();
+        gsrList.add(new GroupingsServiceResult("SUCCESS", "delete grouping member by uuid"));
+
+        //new GroupingsServiceResult("SUCCESS", "delete grouping member by username")
+
+        given(groupingsService.deleteGroupingMemberByUuid("user", "grouping", "user"))
+                .willReturn(gsrList);
+
+        mockMvc.perform(post("/api/groupings/grouping/user/deleteGroupingMemberByUuid")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("delete grouping member by uuid"));
+    }
+
+    @Test
+    @WithMockUhUser
     public void getDeleteMember() throws Exception {
         final String grouping = "grouping";
         final String username = "user";
