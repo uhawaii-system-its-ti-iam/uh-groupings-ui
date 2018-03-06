@@ -9,12 +9,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 import edu.hawaii.its.groupings.service.EmailService;
+import edu.hawaii.its.groupings.type.Feedback;
 
 @Controller
 public class HomeController {
@@ -25,13 +30,13 @@ public class HomeController {
     private EmailService emailService;
 
     // Mapping to home.
-    @RequestMapping(value = { "/", "/home" }, method = { RequestMethod.GET })
+    @RequestMapping(value = {"/", "/home"}, method = {RequestMethod.GET})
     public String home(Map<String, Object> model, Locale locale) {
         logger.info("User at home. The client locale is " + locale);
         return "home";
     }
 
-    @GetMapping(value = { "/campus", "/campuses" })
+    @GetMapping(value = {"/campus", "/campuses"})
     public String campus() {
         logger.debug("User at campus.");
         return "campus";
@@ -43,20 +48,13 @@ public class HomeController {
         return "info";
     }
 
-    @PreAuthorize("hasRole('UH')")
-    @RequestMapping(value = "/feedback", method = RequestMethod.GET)
-    public String feedback(Locale locale, Model model) {
-        logger.info("User at feedback.");
-        return "feedback";
-    }
-
-    @PreAuthorize("hasRole('UH')")
+    /*@PreAuthorize("hasRole('UH')")
     @RequestMapping(value = "/feedback/sendMail", method = RequestMethod.POST)
     public String sendMail(HttpServletRequest request) {
         logger.info("User at feedback/sendMail.");
         emailService.send(request.getParameter("name"), request.getParameter("type"), request.getParameter("desc"), request.getParameter("email"));
         return "feedback";
-    }
+    }*/
 
     @RequestMapping(value = "/404", method = RequestMethod.GET)
     public String invalid() {
@@ -90,7 +88,25 @@ public class HomeController {
         return "redirect:home";
     }
 
-    /** Modal Pages */
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/feedback")
+    public String feedbackForm(Model model) {
+        model.addAttribute("feedback", new Feedback());
+        return "feedback";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/feedback")
+    public String feedbackSubmit(@ModelAttribute Feedback feedback) {
+        logger.debug("feedback: " + feedback);
+        emailService.send(feedback.getType(), feedback.getName(), feedback.getEmail(), feedback.getMessage());
+        return "feedback";
+    }
+
+
+    /**
+     * Modal Pages
+     */
     @RequestMapping(value = "/modal/infoModal", method = RequestMethod.GET)
     public String infoModal(Locale locale, Model model) {
         return "modal/infoModal";

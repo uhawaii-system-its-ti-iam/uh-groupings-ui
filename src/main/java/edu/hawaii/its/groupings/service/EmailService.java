@@ -16,7 +16,7 @@ public class EmailService {
     @Value("${email.send.to}")
     private String to;
 
-    @Value("${email.send.from}")
+    @Value("${app.mail.from:no-reply}")
     private String from;
 
     @Value("${email.is.enabled}")
@@ -31,15 +31,17 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void send(String name, String head, String body, String email) {
+    public void send(String type, String name, String email, String body) {
         if(isEnabled){
-            logger.info("Sending email!");
+            logger.info("\n/********************************************************************************************/" +
+                    "\n\nSending email!\n\n" +
+                    "/********************************************************************************************/\n");
             SimpleMailMessage msg = new SimpleMailMessage();
             msg.setTo(to);
             msg.setFrom(from);
             String text = "";
-
-            String header = "Feedback Type: " + head;
+           // String header = "Aaron is testing emailing stuffs";
+            String header = "Feedback Type: " + type;
             text += "Feedback reported by " + name + " using email " + email + "\n\n";
             text += "Feedback: " + body;
         //  text += data;
