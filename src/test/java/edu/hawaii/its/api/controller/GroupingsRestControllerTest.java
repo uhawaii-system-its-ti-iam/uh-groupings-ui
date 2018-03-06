@@ -192,17 +192,22 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("action").value("delete admin"));
     }
 
-    @Test
-    @WithMockUhUser(username = "user")
-    public void addByUsernameTest() throws Exception {
-        given(groupingsService.addGroupingMemberByUsername("user", "grouping", "myName"))
-                .willReturn(new GroupingsServiceResult("SUCCESS", "add user"));
 
-        mockMvc.perform(post("/api/groupings/user/addUser")
+    @Test
+    @WithMockUhUser
+    public void addByUsernameTest() throws Exception {
+
+        List<GroupingsServiceResult> gsrList = new ArrayList<>();
+        gsrList.add(new GroupingsServiceResult("SUCCESS", "add grouping member by username"));
+
+        given(groupingsService.addGroupingMemberByUsername("user", "grouping", "user"))
+                .willReturn(gsrList);
+
+        mockMvc.perform(post("/api/groupings/grouping/user/addGroupingMemberByUsername")
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("action").value("add user"));
+                .andExpect(jsonPath("$[0].resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$[0].action").value("add grouping member by username"));
     }
 
     @Test
