@@ -2,7 +2,6 @@ package edu.hawaii.its.api.service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.jar.Attributes;
 import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
@@ -139,8 +138,24 @@ public class GroupingsServiceImpl implements GroupingsService {
     @Value("${groupings.api.success_allowed}")
     private String SUCCESS_ALLOWED;
 
-    @Value("$groupings.api.stem}")
+    @Value("${groupings.api.stem}")
     private String STEM;
+
+    @Value("${groupings.api.person_attributes.uuid}")
+    private String UUID;
+
+    @Value("${groupings.api.person_attributes.username}")
+    private String UID;
+
+    @Value("${groupings.api.person_attributes.first_name}")
+    private String FIRST_NAME;
+
+    @Value("${groupings.api.person_attributes.last_name}")
+    private String LAST_NAME;
+
+    @Value("${groupings.api.person_attributes.composite_name}")
+    private String COMPOSITE_NAME;
+
 
     @Autowired
     private GrouperFactoryService gf;
@@ -214,11 +229,11 @@ public class GroupingsServiceImpl implements GroupingsService {
         //            addGroupingResults.add(updateLastModified(path));
         //
         //            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
-        //                addGroupingResults.add(addMembersAs(username, path + entry.getKey(), entry.getValue()));
+        //                addGroupingResults.add(addGroupMembersByUsername(username, path + entry.getKey(), entry.getValue()));
         //                addGroupingResults.add(updateLastModified(path + entry.getKey()));
         //            }
         //
-        //            addGroupingResults.add(addMembersAs(username, GROUPING_OWNERS, memberLists.get(OWNERS)));
+        //            addGroupingResults.add(addGroupMembersByUsername(username, GROUPING_OWNERS, memberLists.get(OWNERS)));
         //            addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
         //
         //        } else {
@@ -480,12 +495,12 @@ public class GroupingsServiceImpl implements GroupingsService {
 
             switch (outOrrIn) {
                 case "out ":
-                    results.addAll(deleteMemberFromGrouping(username, grouping, username));
+                    results.addAll(deleteGroupingMemberByUsername(username, grouping, username));
 
                     break;
 
                 case "in ":
-                    results.addAll(addMemberToGrouping(username, grouping, username));
+                    results.addAll(addGroupingMemberByUsername(username, grouping, username));
                     break;
             }
 
@@ -609,11 +624,10 @@ public class GroupingsServiceImpl implements GroupingsService {
     private List<Grouping> groupingsOpted(String includeOrrExclude, String username, List<String> groupPaths) {
         logger.info("groupingsOpted; includeOrrExclude: " + includeOrrExclude + "; username: " + username + ";");
 
-        List<String> groupsOpted = new ArrayList<>();
         List<String> groupingsOpted = new ArrayList<>();
 
-        groupsOpted.addAll(groupPaths.stream().filter(group -> group.endsWith(includeOrrExclude)
-                && checkSelfOpted(group, username)).map(this::parentGroupingPath).collect(Collectors.toList()));
+        List<String> groupsOpted = groupPaths.stream().filter(group -> group.endsWith(includeOrrExclude)
+                && checkSelfOpted(group, username)).map(this::parentGroupingPath).collect(Collectors.toList());
 
         if (groupsOpted.size() > 0) {
 
@@ -642,7 +656,6 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<Grouping> groupings;
 
         if (isSuperuser(username)) {
-            List<String> groupPaths = new ArrayList<>();
 
             WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
@@ -650,7 +663,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
             List<WsGroup> groups = new ArrayList<>(Arrays.asList(attributeAssignmentsResults.getWsGroups()));
 
-            groupPaths.addAll(groups.stream().map(WsGroup::getName).collect(Collectors.toList()));
+            List<String> groupPaths = groups.stream().map(WsGroup::getName).collect(Collectors.toList());
 
             Group admin = getMembers(username, GROUPING_ADMINS);
             groupings = makeGroupings(groupPaths);
@@ -798,15 +811,15 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     /**
-     * @param group:    group to search through (include extension of Grouping ie. ":include" or ":exclude")
+     * @param groupPath:    groupPath to search through (include extension of Grouping ie. ":include" or ":exclude")
      * @param username: subjectIdentifier of user to be searched for
-     * @return true if username is a member of group
+     * @return true if username is a member of groupPath
      */
     @Override
-    public boolean inGroup(String group, String username) {
-        logger.info("inGroup; group: " + group + "; username: " + username + ";");
+    public boolean inGroup(String groupPath, String username) {
+        logger.info("inGroup; groupPath: " + groupPath + "; username: " + username + ";");
 
-        WsHasMemberResults memberResults = gf.makeWsHasMemberResults(group, username);
+        WsHasMemberResults memberResults = gf.makeWsHasMemberResults(groupPath, username);
 
         WsHasMemberResult[] memberResultArray = memberResults.getResults();
 
@@ -816,6 +829,25 @@ public class GroupingsServiceImpl implements GroupingsService {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean inGroup(String groupPath, Person person) {
+        if(person.getUsername() != null) {
+            return inGroup(groupPath, person.getUsername());
+        }
+
+        WsHasMemberResults memberResults = gf.makeWsHasMemberResults(groupPath, person);
+
+        WsHasMemberResult[] memberResultArray = memberResults.getResults();
+
+        for (WsHasMemberResult hasMember : memberResultArray) {
+            if (hasMember.getResultMetadata().getResultCode().equals(IS_MEMBER)) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     /**
@@ -1159,16 +1191,15 @@ public class GroupingsServiceImpl implements GroupingsService {
         return makeGroupingsServiceResult("FAILURE: " + username + " is not an admin", action);
     }
 
-    @Override
-    public List<GroupingsServiceResult> addMemberAs(String username, String group, String userToAdd) {
-        logger.info("addMemberToGroup; user: " + username + "; group: " + group + "; userToAdd: " + userToAdd + ";");
+    private List<GroupingsServiceResult> addMemberHelper(String username, String groupPath, Person personToAdd){
+        logger.info("addMemberHelper; user: " + username + "; group: " + groupPath + "; personToAdd: " + personToAdd + ";");
 
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
-        String action = "add users to " + group;
+        String action = "add users to " + groupPath;
 
-        if (isOwner(parentGroupingPath(group), username) || isSuperuser(username) || userToAdd.equals(username)) {
+        if (isOwner(parentGroupingPath(groupPath), username) || isSuperuser(username) || personToAdd.getUsername().equals(username)) {
             WsSubjectLookup user = gf.makeWsSubjectLookup(username);
-            String composite = parentGroupingPath(group);
+            String composite = parentGroupingPath(groupPath);
             String exclude = composite + EXCLUDE;
             String include = composite + INCLUDE;
             String owners = composite + OWNERS;
@@ -1179,71 +1210,71 @@ public class GroupingsServiceImpl implements GroupingsService {
             boolean updateOwners = false;
 
             //check to see if it is the include, exclude or owners
-            if (group.endsWith(INCLUDE)) {
-                //if userToAdd is in exclude, get them out
-                if (inGroup(exclude, userToAdd)) {
+            if (groupPath.endsWith(INCLUDE)) {
+                //if personToAdd is in exclude, get them out
+                if (inGroup(exclude, personToAdd)) {
                     WsDeleteMemberResults wsDeleteMemberResults = gf.makeWsDeleteMemberResults(
                             exclude,
                             user,
-                            userToAdd);
+                            personToAdd);
 
                     updateExclude = true;
 
-                    gsrList.add(makeGroupingsServiceResult(wsDeleteMemberResults, "delete " + userToAdd + " from " + exclude));
+                    gsrList.add(makeGroupingsServiceResult(wsDeleteMemberResults, "delete " + personToAdd.toString() + " from " + exclude));
                 }
-                //check to see if userToAdd is already in include
-                if (!inGroup(include, userToAdd)) {
+                //check to see if personToAdd is already in include
+                if (!inGroup(include, personToAdd)) {
                     //add to include
-                    WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(include, user, userToAdd);
+                    WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(include, user, personToAdd);
 
                     updateInclude = true;
 
                     gsrList.add(makeGroupingsServiceResult(addMemberResults, action));
                 } else {
                     //They are already in the group, so just return SUCCESS
-                    gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
+                    gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + personToAdd.toString() + " was already in " + groupPath, action));
                 }
             }
 
-            //if exclude check if userToAdd is in the include
-            else if (group.endsWith(EXCLUDE)) {
-                //if userToAdd is in include, get them out
-                if (inGroup(include, userToAdd)) {
+            //if exclude check if personToAdd is in the include
+            else if (groupPath.endsWith(EXCLUDE)) {
+                //if personToAdd is in include, get them out
+                if (inGroup(include, personToAdd)) {
                     WsDeleteMemberResults wsDeleteMemberResults = gf.makeWsDeleteMemberResults(
                             include,
                             user,
-                            userToAdd);
+                            personToAdd);
 
                     updateInclude = true;
 
-                    gsrList.add(makeGroupingsServiceResult(wsDeleteMemberResults, "delete " + userToAdd + " from " + include));
+                    gsrList.add(makeGroupingsServiceResult(wsDeleteMemberResults, "delete " + personToAdd.toString() + " from " + include));
                 }
                 //check to see if userToAdd is already in exclude
-                if (!inGroup(exclude, userToAdd)) {
+                if (!inGroup(exclude, personToAdd)) {
                     //add to exclude
-                    WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(exclude, user, userToAdd);
+                    WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(exclude, user, personToAdd);
 
                     updateExclude = true;
 
                     gsrList.add(makeGroupingsServiceResult(addMemberResults, action));
                 }
                 //They are already in the group, so just return SUCCESS
-                gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
+                gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + personToAdd.toString() + " was already in " + groupPath, action));
 
             }
             //if owners check to see if the user is already in owners
-            else if (group.endsWith(OWNERS)) {
+            else if (groupPath.endsWith(OWNERS)) {
                 //check to see if userToAdd is already in owners
-                if (!inGroup(owners, userToAdd)) {
+                if (!inGroup(owners, personToAdd)) {
                     //add userToAdd to owners
-                    WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(owners, user, userToAdd);
+                    WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(owners, user, personToAdd);
 
                     updateOwners = true;
 
                     gsrList.add(makeGroupingsServiceResult(addMemberResults, action));
                 }
                 //They are already in the group, so just return SUCCESS
-                gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was already in " + group, action));
+                gsrList.add(makeGroupingsServiceResult(SUCCESS + ": " + personToAdd.toString() + " was already in " + groupPath, action));
             }
             //Owners can only change include, exclude and owners groups
             else {
@@ -1266,31 +1297,57 @@ public class GroupingsServiceImpl implements GroupingsService {
                 updateLastModified(owners);
             }
         } else {
-            gsrList.add(makeGroupingsServiceResult(FAILURE + ": " + username + "does not have permission to edit " + group, action));
+            gsrList.add(makeGroupingsServiceResult(FAILURE + ": " + username + "does not have permission to edit " + groupPath, action));
         }
 
         return gsrList;
+    }
+
+    @Override
+    public List<GroupingsServiceResult> addGroupMemberByUsername(String username, String groupPath, String userToAdd) {
+        logger.info("addGroupMemberByUsername; user: " + username + "; groupPath: " + groupPath + "; userToAdd: " + userToAdd + ";");
+
+        Person personToAdd = new Person(null, null, userToAdd);
+        return addMemberHelper(username, groupPath, personToAdd);
     }
 
     /**
      * @param username:   username of owner adding member
      * @param group:      path to group the user to be added will be added to
-     * @param usersToAdd: list of usernames to be added to group
+     * @param usersToAddUsername: list of usernames to be added to group
      * @return information about success of action
      */
     @Override
-    public List<GroupingsServiceResult> addMembersAs(String username, String group, List<String> usersToAdd) {
-        logger.info("addMembersAs; user: " + username + "; group: " + group + "; usersToAdd: " + usersToAdd + ";");
+    public List<GroupingsServiceResult> addGroupMembersByUsername(String username, String group, List<String> usersToAddUsername) {
+        logger.info("addGroupMembersByUsername; user: " + username + "; group: " + group + "; usersToAddUsername: " + usersToAddUsername + ";");
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
-        for (String userToAdd : usersToAdd) {
-            gsrList.addAll(addMemberAs(username, group, userToAdd));
+        for (String userToAdd : usersToAddUsername) {
+            gsrList.addAll(addGroupMemberByUsername(username, group, userToAdd));
         }
         return gsrList;
     }
 
     @Override
-    public List<GroupingsServiceResult> addMemberToGrouping(String username, String groupingPath, String userToAdd) {
-        logger.info("addMemberToGrouping; user: " + username + "; group: " + groupingPath + "; usersToAdd: " + userToAdd + ";");
+    public List<GroupingsServiceResult> addGroupMemberByUuid(String username, String groupPath, String userToAddUuid) {
+        logger.info("addGroupMemberByUuid; user: " + username + "; groupPath: " + groupPath + "; userToAdd: " + userToAddUuid + ";");
+
+        Person personToAdd = new Person(null, userToAddUuid, null);
+        return addMemberHelper(username, groupPath, personToAdd);
+    }
+
+    @Override
+    public List<GroupingsServiceResult> addGroupMembersByUuid(String username, String groupPath, List<String> usersToAddUuid) {
+        logger.info("addGroupMembersByUuid; user: " + username + "; groupPath: " + groupPath + "; usersToAddUuid: " + usersToAddUuid + ";");
+        List<GroupingsServiceResult> gsrList = new ArrayList<>();
+        for (String userToAdd : usersToAddUuid) {
+            gsrList.addAll(addGroupMemberByUuid(username, groupPath, userToAdd));
+        }
+        return gsrList;
+    }
+
+    @Override
+    public List<GroupingsServiceResult> addGroupingMemberByUsername(String username, String groupingPath, String userToAdd) {
+        logger.info("addGroupingMemberByUsername; user: " + username + "; group: " + groupingPath + "; usersToAdd: " + userToAdd + ";");
 
         List<GroupingsServiceResult> gsrs = new ArrayList<>();
 
@@ -1306,10 +1363,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         //check to see if they are already in the grouping
         if (!inComposite) {
             //get them out of the exclude
-            gsrs.add(deleteMemberAs(username, exclude, userToAdd));
+            gsrs.add(deleteGroupMemberByUsername(username, exclude, userToAdd));
             //only add them to the include if they are not in the basis
             if (!inBasis) {
-                gsrs.addAll(addMemberAs(username, include, userToAdd));
+                gsrs.addAll(addGroupMemberByUsername(username, include, userToAdd));
             } else {
                 gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAdd + " was in " + basis, action));
             }
@@ -1318,15 +1375,54 @@ public class GroupingsServiceImpl implements GroupingsService {
         }
         //should only be in one or the other
         if (inBasis && inInclude) {
-            gsrs.add(deleteMemberAs(username, include, userToAdd));
+            gsrs.add(deleteGroupMemberByUsername(username, include, userToAdd));
         }
 
         return gsrs;
     }
 
     @Override
-    public List<GroupingsServiceResult> deleteMemberFromGrouping(String username, String groupingPath, String userToDelete) {
-        logger.info("deleteMemberFromGrouping; username: "
+    public List<GroupingsServiceResult> addGroupingMemberByUuid(String username, String groupingPath, String userToAddUuid) {
+//        logger.info("addGroupingMemberByUuid; user: " + username + "; group: " + groupingPath + "; usersToAdd: " + userToAddUuid + ";");
+//
+//        List<GroupingsServiceResult> gsrs = new ArrayList<>();
+//
+//        String action = "add user to " + groupingPath;
+//        String basis = groupingPath + BASIS;
+//        String exclude = groupingPath + EXCLUDE;
+//        String include = groupingPath + INCLUDE;
+//
+//        Person personToAdd = new Person(null, userToAddUuid, null);
+//
+//        boolean inBasis = inGroup(basis, personToAdd);
+//        boolean inComposite = inGroup(groupingPath, personToAdd);
+//        boolean inInclude = inGroup(include, personToAdd);
+//
+//        //check to see if they are already in the grouping
+//        if (!inComposite) {
+//            //get them out of the exclude
+//            gsrs.add(deleteGroupMemberByUsername(username, exclude, personToAdd));
+//            //only add them to the include if they are not in the basis
+//            if (!inBasis) {
+//                gsrs.addAll(addGroupMemberByUuid(username, include, userToAddUuid));
+//            } else {
+//                gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAddUuid + " was in " + basis, action));
+//            }
+//        } else {
+//            gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAddUuid + " was already in " + groupingPath, action));
+//        }
+//        //should only be in one or the other
+//        if (inBasis && inInclude) {
+//            gsrs.add(deleteGroupMemberByUsername(username, include, personToAdd));
+//        }
+//
+//        return gsrs;
+        return null;
+    }
+
+    @Override
+    public List<GroupingsServiceResult> deleteGroupingMemberByUsername(String username, String groupingPath, String userToDelete) {
+        logger.info("deleteGroupingMemberByUsername; username: "
                 + username
                 + "; groupingPath: "
                 + groupingPath + "; userToDelete: "
@@ -1345,13 +1441,13 @@ public class GroupingsServiceImpl implements GroupingsService {
         boolean inExclude = inGroup(exclude, userToDelete);
 
         //if they are in the include group, get them out
-        gsrList.add(deleteMemberAs(username, include, userToDelete));
+        gsrList.add(deleteGroupMemberByUsername(username, include, userToDelete));
 
         //make sure userToDelete is actually in the Grouping
         if (inComposite) {
             //if they are not in the include group, then they are in the basis, so add them to the exclude group
             if (inBasis) {
-                gsrList.addAll(addMemberAs(username, exclude, userToDelete));
+                gsrList.addAll(addGroupMemberByUsername(username, exclude, userToDelete));
             }
         }
         //since they are not in the Grouping, do nothing, but return SUCCESS
@@ -1361,10 +1457,54 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         //should not be in exclude if not in basis
         if (!inBasis && inExclude) {
-            gsrList.add(deleteMemberAs(username, exclude, userToDelete));
+            gsrList.add(deleteGroupMemberByUsername(username, exclude, userToDelete));
         }
 
         return gsrList;
+    }
+
+    @Override
+    public List<GroupingsServiceResult> deleteGroupingMemberByUuid(String username, String groupingPath, String userToDelete) {
+//        logger.info("deleteGroupingMemberByUsername; username: "
+//                + username
+//                + "; groupingPath: "
+//                + groupingPath + "; userToDelete: "
+//                + userToDelete
+//                + ";");
+//
+//        List<GroupingsServiceResult> gsrList = new ArrayList<>();
+//
+//        String action = username + " deletes " + userToDelete + " from " + groupingPath;
+//        String basis = groupingPath + BASIS;
+//        String exclude = groupingPath + EXCLUDE;
+//        String include = groupingPath + INCLUDE;
+//
+//        boolean inBasis = inGroup(basis, userToDelete);
+//        boolean inComposite = inGroup(groupingPath, userToDelete);
+//        boolean inExclude = inGroup(exclude, userToDelete);
+//
+//        //if they are in the include group, get them out
+//        gsrList.add(deleteGroupMemberByUsername(username, include, userToDelete));
+//
+//        //make sure userToDelete is actually in the Grouping
+//        if (inComposite) {
+//            //if they are not in the include group, then they are in the basis, so add them to the exclude group
+//            if (inBasis) {
+//                gsrList.addAll(addGroupMemberByUsername(username, exclude, userToDelete));
+//            }
+//        }
+//        //since they are not in the Grouping, do nothing, but return SUCCESS
+//        else {
+//            gsrList.add(makeGroupingsServiceResult(SUCCESS + userToDelete + " was not in " + groupingPath, action));
+//        }
+//
+//        //should not be in exclude if not in basis
+//        if (!inBasis && inExclude) {
+//            gsrList.add(deleteGroupMemberByUsername(username, exclude, userToDelete));
+//        }
+//
+//        return gsrList;
+        return null;
     }
 
     /**
@@ -1374,8 +1514,8 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @return information about success of action
      */
     @Override
-    public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete) {
-        logger.info("deleteMemberAs; user: "
+    public GroupingsServiceResult deleteGroupMemberByUsername(String username, String group, String userToDelete) {
+        logger.info("deleteGroupMemberByUsername; user: "
                 + username
                 + "; group: "
                 + group + "; userToDelete: "
@@ -1468,7 +1608,12 @@ public class GroupingsServiceImpl implements GroupingsService {
                 StemScope.ALL_IN_SUBTREE);
 
         WsGetGroupsResult groupResults = wsGetGroupsResults.getResults()[0];
-        List<WsGroup> groups = Arrays.asList(groupResults.getWsGroups());
+
+        List<WsGroup> groups = new ArrayList<>();
+
+        if(groupResults.getWsGroups() != null) {
+            groups = new ArrayList<>(Arrays.asList(groupResults.getWsGroups()));
+        }
 
         return extractGroupPaths(groups);
     }
@@ -1605,7 +1750,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupingsServiceResult;
     }
 
-    GroupingsServiceResult makeGroupingsServiceResult(String resultCode, String action) {
+    private GroupingsServiceResult makeGroupingsServiceResult(String resultCode, String action) {
         GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();
         groupingsServiceResult.setAction(action);
         groupingsServiceResult.setResultCode(resultCode);
@@ -1659,6 +1804,7 @@ public class GroupingsServiceImpl implements GroupingsService {
      * @param person:
      * @return a person made from the WsSubject
      */
+    //todo do we still need this method?
     Person makePerson(WsSubject person) {
         if (person != null) {
             String username = null;
@@ -1672,29 +1818,19 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new Person();
     }
 
-    /**
-     * @param subject:
-     * @return a subject made from the WsSubject
-     * @Param attributeNames:
-     */
-    Person makePerson(WsSubject subject, String[] attributeNames) {
+    private Person makePerson(WsSubject subject, String[] attributeNames) {
         if (subject == null || subject.getAttributeValues() == null) {
             return new Person();
         } else {
 
-            Attributes attributes = new Attributes();
+            Map<String, String> attributes = new HashMap<>();
             for (int i = 0; i < subject.getAttributeValues().length; i++) {
-                attributes.put(new Attributes.Name(attributeNames[i]), subject.getAttributeValue(i));
+                attributes.put(attributeNames[i], subject.getAttributeValue(i));
             }
+            //uuid is the only attribute not actually in the WsSubject attribute array
+            attributes.put(UUID, subject.getId());
 
-            //todo add strings to config file or change person to have an attribute map
-            String uuid = subject.getId();
-//            String name = attributes.getValue("cn");
-            String name = subject.getName();
-            String username = attributes.getValue("uid");
-            String firstName = attributes.getValue("givenName");
-            String lastName = attributes.getValue("sn");
-            return new Person(name, uuid, username, firstName, lastName);
+            return new Person(attributes);
         }
     }
 

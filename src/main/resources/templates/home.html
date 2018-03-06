@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="header :: copy"></head>
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<head th:replace="header :: copy(headingTitle='UH Groupings Home')"></head>
 <body>
 <nav th:replace="menubar :: copy"></nav>
 
@@ -10,7 +11,8 @@
     <div class="jumbotron">
         <div class="row">
             <div class = "col-md-2 col-lg-2 hidden-xs hidden-sm" id = "iconTop">
-                <i class="fa fa-users fa-5x" aria-hidden="true" ></i>
+              <i class="fa fa-users fa-5x" aria-hidden="true" ></i>
+              <!-- <img class="img-responsive" th:src="@{/images/grouper-users-icon.png}" src="images/grouper-users-icon.png" alt="" id = "iconImage"></img> -->
             </div>
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <h1 class="dropshadow">UH Groupings</h1>

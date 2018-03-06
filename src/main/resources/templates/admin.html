@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:substituteby="header :: copy"></head>
+<head th:replace="header :: copy(headingTitle='UH Groupings Admin')"></head>
 <body ng-app="UHGroupingsApp">
 <nav th:substituteby="menubar :: copy"></nav>
 <!--  Content container -->
@@ -19,14 +19,13 @@
                 </div>
 
                 <ul class="nav nav-tabs">
-                    <li role="presentation" class="active" data-toggle="tooltip" data-placement="top"
-                        th:title="#{screen.message.admin.tooltip.nav.groupings}">
+                    <li role="presentation" class="active" data-toggle="tooltip" data-placement="top">
                         <a href="#grouping" data-toggle="tab" role="tab">
                             Manage Groupings
                         </a>
                     </li>
                     <li role="presentation" data-toggle="tooltip" data-placement="top"
-                        th:title="#{screen.message.admin.tooltip.nav.admin}" ng-click="change()">
+                        ng-click="change()">
                         <a href="#list" data-toggle="tab" role="tab">
                             Manage Admins
                         </a>
@@ -43,10 +42,12 @@
                                 <div class="panel-heading">
                                     <div class="row" style="margin: inherit">
                                         <div class="col-md-6 col-sm-7" style="padding: 0px;">
-                                            <h3 style="padding: 2.5px 0px; margin: inherit;">Designate Admins</h3>
+                                            <h2 class = "panel-title" style="padding: 2.5px 0px; margin: inherit;">Designate Admins</h2>
+
                                         </div>
                                         <div class="col-md-push-4 col-md-2 col-sm-push-2 col-sm-3" style="padding: 0px;">
-                                            <input placeholder="Filter Admins..." type="text"
+                                           <label for = "FilterAdmins"></label>
+                                            <input name="FilterAdmins" placeholder="Filter Admins..." type="text"
                                                    ng-model="ListQuery" class="form-control"
                                                    ng-change="filter(adminsList, 'pagedItemsAdmins', 'currentPageAdmins', 'ListQuery')"/>
                                         </div>
@@ -73,13 +74,15 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]">
-                                        <td>
+                                        <td tabindex="0">
                                             {{l.name}}
                                             <span class="glyphicon glyphicon-trash pull-right clickable"
-                                                  data-toggle="tooltip"
-                                                  data-placement="top" onmouseover="$(this).tooltip('show')"
+                                                  data-toggle="tooltip" data-placement="top"
+                                                  tabindex="0"
+                                                  onmouseover="$(this).tooltip('show')"
                                                   th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
                                                   ng-click="removeAdmin($index + (currentPageAdmins * itemsPerPage))"
+                                                  ng-keypress="$event.keyCode === 13 ? removeAdmin($index + (currentPageAdmins * itemsPerPage)) : null"
                                                   style="margin-right: 10px;"></span>
                                         </td>
                                         <td>{{l.uuid}}</td>
@@ -90,27 +93,28 @@
                                     <td colspan="6">
                                         <ul class="pagination pull-right">
                                             <li ng-class="{disabled: (currentPageAdmins) == 0}">
-                                                <a href="" ng-click="currentPage('First','currentPageAdmins','pagedItemsAdmins')">«« First</a>
+                                                <a class="clickable" ng-click="currentPage('First','currentPageAdmins','pagedItemsAdmins')">«« First</a>
                                             </li>
                                             <li ng-class="{disabled: (currentPageAdmins) == 0}">
-                                                <a href="" ng-click="currentPage('Prev','currentPageAdmins','pagedItemsAdmins')">« Prev</a>
+                                                <a class="clickable" ng-click="currentPage('Prev','currentPageAdmins','pagedItemsAdmins')">« Prev</a>
                                             </li>
                                             <li ng-repeat="n in range(pagedItemsAdmins.length, currentPageAdmins - gap, currentPageAdmins + gap + 1) "
                                                 ng-class="{active: n == currentPageAdmins}"
-                                                ng-click="currentPage('Set','currentPageAdmins','pagedItemsAdmins')"
-                                            ><a href="" ng-bind="n + 1">1</a>
+                                                ng-click="currentPage('Set','currentPageAdmins','pagedItemsAdmins')">
+                                                <a class="clickable" ng-bind="n + 1">1</a>
                                             </li>
                                             <li ng-class="{disabled: ((currentPageAdmins) == pagedItemsAdmins.length - 1) || pagedItemsAdmins.length == 0 }">
-                                                <a href="" ng-click="currentPage('Next','currentPageAdmins','pagedItemsAdmins')">Next »</a>
+                                                <a class="clickable" ng-click="currentPage('Next','currentPageAdmins','pagedItemsAdmins')">Next »</a>
                                             </li>
                                             <li ng-class="{disabled: ((currentPageAdmins) == pagedItemsAdmins.length - 1) || pagedItemsAdmins.length == 0 }">
-                                                <a href="" ng-click="currentPage('Last','currentPageAdmins','pagedItemsAdmins')">Last »»</a>
+                                                <a class="clickable" ng-click="currentPage('Last','currentPageAdmins','pagedItemsAdmins')">Last »»</a>
                                             </li>
                                         </ul>
                                         <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group input-inline-pagination">
                                             <form ng-submit="addAdmin()">
                                                 <div class="input-group">
-                                                    <input class="form-control" type="text"
+                                                  <label for="addingToAdmin"></label>
+                                                    <input name = "addingToAdmin" class="form-control" type="text"
                                                            placeholder="UH Username" ng-model="adminToAdd"/>
                                                     <div class="input-group-btn">
                                                         <button class="btn btn-primary" type="submit">Add</button>
@@ -132,7 +136,7 @@
 
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 style="margin-top: 0px; margin-bottom: 0px;">Manage Grouping</h3>
+                            <h2 class = "panel-title" style="margin-top: 0px; margin-bottom: 0px;">Manage Grouping</h2>
                         </div>
                         <div class="panel-body" style="min-height: 450px;">
                             <div class="row" style="margin: inherit;">

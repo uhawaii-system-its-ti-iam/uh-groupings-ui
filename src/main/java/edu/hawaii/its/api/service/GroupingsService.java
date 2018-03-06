@@ -1,9 +1,6 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingAssignment;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.*;
 
 import java.util.List;
 
@@ -25,21 +22,31 @@ public interface GroupingsService {
 
     public boolean inGroup(String group, String username);
 
+    public boolean inGroup(String group, Person person);
+
     public boolean checkSelfOpted(String group, String username);
 
     public GroupingsServiceResult addAdmin(String username, String adminToAdd);
 
     public GroupingsServiceResult deleteAdmin(String username, String adminToDelete);
 
-    public List<GroupingsServiceResult> addMemberToGrouping(String username, String groupingPath, String userToAdd);
+    public List<GroupingsServiceResult> addGroupingMemberByUsername(String username, String groupingPath, String userToAddUsername);
 
-    public List<GroupingsServiceResult> addMemberAs(String username, String group, String userToAdd);
+    public List<GroupingsServiceResult> addGroupingMemberByUuid(String username, String groupingPath, String userToAddUuid);
 
-    public List<GroupingsServiceResult> addMembersAs(String username, String group, List<String> usersToAdd);
+    public List<GroupingsServiceResult> addGroupMemberByUsername(String username, String group, String userToAddUsername);
 
-    public List<GroupingsServiceResult> deleteMemberFromGrouping(String username, String groupingPath, String userToDelete);
+    public List<GroupingsServiceResult> addGroupMembersByUsername(String username, String group, List<String> usersToAddUsername);
 
-    public GroupingsServiceResult deleteMemberAs(String username, String group, String userToDelete);
+    public List<GroupingsServiceResult> addGroupMemberByUuid(String username, String group, String userToAddUuid);
+
+    public List<GroupingsServiceResult> addGroupMembersByUuid(String username, String group, List<String> usersToAddUuid);
+
+    public List<GroupingsServiceResult> deleteGroupingMemberByUsername(String username, String groupingPath, String userToDeleteUsername);
+
+    public List<GroupingsServiceResult> deleteGroupingMemberByUuid(String username, String groupingPath, String userToDeleteUuid);
+
+    public GroupingsServiceResult deleteGroupMemberByUsername(String username, String group, String userToDeleteUsername);
 
     public GroupingsServiceResult assignOwnership(String grouping, String username, String newOwner);
 

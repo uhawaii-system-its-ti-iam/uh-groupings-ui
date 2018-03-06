@@ -24,7 +24,6 @@
 
             dataProvider.loadData(function (d) {
                 var temp = [];
-                console.log(d);
                 if (typeof d.groupingsIn === 'undefined') {
                     $scope.createApiErrorModal();
                 } else {
@@ -219,7 +218,6 @@
         $scope.createAddModal = function (user, wasSuccessful, path) {
             $scope.user = user;
             $scope.wasSuccessful = wasSuccessful;
-            console.log(wasSuccessful);
 
             $scope.addModalInstance = $uibModal.open({
                 templateUrl: 'modal/addModal.html',

@@ -2,6 +2,7 @@ package edu.hawaii.its.api.service;
 
 import java.util.List;
 
+import edu.hawaii.its.api.type.Person;
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
@@ -38,6 +39,8 @@ public interface GrouperFactoryService {
 
     public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, String newMember);
 
+    public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, Person personToAdd);
+
     public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, List<String> newMembers);
 
     public WsAddMemberResults makeWsAddMemberResults(String group, String newMember);
@@ -45,6 +48,8 @@ public interface GrouperFactoryService {
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, String memberToDelete);
 
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, String memberToDelete);
+
+    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, Person personToDelete);
 
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, List<String> membersToDelete);
 
@@ -76,6 +81,8 @@ public interface GrouperFactoryService {
             String group);
 
     public WsHasMemberResults makeWsHasMemberResults(String group, String username);
+
+    public WsHasMemberResults makeWsHasMemberResults(String group, Person person);
 
     public WsAssignAttributesResults makeWsAssignAttributesResults(String attributeAssignType,
             String attributeAssignOperation,
