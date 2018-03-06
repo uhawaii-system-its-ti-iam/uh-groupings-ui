@@ -76,21 +76,21 @@
             <td colspan="6">
                 <ul class="pagination pull-right">
                     <li ng-class="{disabled: (currentPageExclude) == 0 }">
-                        <a href="" ng-click="currentPage('First','currentPageExclude','pagedItemsExclude')">«« First</a>
+                        <a class="clickable" ng-click="currentPage('First','currentPageExclude','pagedItemsExclude')">«« First</a>
                     </li>
                     <li ng-class="{disabled: (currentPageExclude) == 0 }">
-                        <a href="" ng-click="currentPage('Prev','currentPageExclude','pagedItemsExclude')">« Prev</a>
+                        <a class="clickable" ng-click="currentPage('Prev','currentPageExclude','pagedItemsExclude')">« Prev</a>
                     </li>
                     <li ng-repeat="n in range(pagedItemsExclude.length, currentPageExclude - gap, currentPageExclude + gap + 1) "
                         ng-class="{active: n == currentPageExclude}"
                         ng-click="currentPage('Set','currentPageExclude','pagedItemsExclude')">
-                        <a href="" ng-bind="n + 1"></a>
+                        <a class="clickable" ng-bind="n + 1"></a>
                     </li>
                     <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
-                        <a href="" ng-click="currentPage('Next','currentPageExclude','pagedItemsExclude')">Next »</a>
+                        <a class="clickable" ng-click="currentPage('Next','currentPageExclude','pagedItemsExclude')">Next »</a>
                     </li>
                     <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
-                        <a href="" ng-click="currentPage('Last','currentPageExclude','pagedItemsExclude')">Last »»</a>
+                        <a class="clickable" ng-click="currentPage('Last','currentPageExclude','pagedItemsExclude')">Last »»</a>
                     </li>
                 </ul>
             </td>
