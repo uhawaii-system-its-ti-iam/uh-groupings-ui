@@ -136,4 +136,9 @@ public class HomeController {
     public String removeModal(Locale locale, Model model) {
         return "modal/removeModal";
     }
+
+    @RequestMapping(value = "/modal/optModal", method = RequestMethod.GET)
+    public String optModal(Locale locale, Model model) {
+        return "modal/optModal";
+    }
 }

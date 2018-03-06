@@ -78,6 +78,108 @@
                     $scope.symbol.basis = '\u21c5';
             }
         };
+        /**
+         * Retrieves information about the grouping.
+         */
+        $scope.getData = function () {
+            $scope.loading = true;
+            var groupingDataUrl = "api/groupings/" + $scope.selectedGrouping.path + "/grouping";
+
+            dataProvider.loadData(function (d) {
+                console.log(d);
+                if (d.path.length == 0) {
+                    $scope.createApiErrorModal();
+                } else {
+                    $scope.basis = d.basis.members;
+
+                    //Gets members in grouping
+                    $scope.groupingMembers = d.composite.members;
+                    $scope.modify($scope.groupingMembers, 'members');
+                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
+
+                    //Gets members in the basis group
+                    $scope.groupingBasis = d.basis.members;
+                    $scope.modify($scope.groupingBasis);
+                    $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis, $scope.pagedItemsBasis);
+
+                    //Gets members in the include group
+                    $scope.groupingInclude = d.include.members;
+                    $scope.modify($scope.groupingInclude);
+                    $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude, $scope.pagedItemsInclude);
+
+                    //Gets members in the exclude group
+                    $scope.groupingExclude = d.exclude.members;
+                    $scope.modify($scope.groupingExclude);
+                    $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
+
+                    //Gets owners of the grouping
+                    $scope.groupingOwners = d.owners.members;
+                    $scope.modify($scope.groupingOwners);
+                    $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners, $scope.pagedItemsOwners);
+
+                    $scope.allowOptIn = d.optInOn;
+                    $scope.allowOptOut = d.optOutOn;
+                    $scope.listserv = d.listservOn;
+
+                    //Stop loading spinner
+                    $scope.loading = false;
+                    $scope.showGrouping = true;
+                }
+            }, groupingDataUrl);
+        };
+
+        /**
+         * Modify the data from the grouping to be sorted, filter out hawaii.edu
+         * and determines if a user is in the basis group or not.
+         *
+         * @param grouping - The name of the grouping of which its data will be modified.
+         *
+         * @returns returns
+         *                1 for ascending
+         *                -1 for descending
+         *                0 for failed attempt
+         */
+        $scope.modify = function (grouping, list) {
+            //Filter out names with hawaii.edu and adds basis object.
+            for (var i = 0; i < grouping.length; i++) {
+                if (list === 'members') grouping[i].basis = "Include";
+                else grouping[i].basis = "No";
+                if (grouping[i].name.indexOf("hawaii.edu") > -1) {
+                    grouping.splice(i, 1);
+                    i--;
+                }
+            }
+
+            //Determines if member is in the basis or not
+            for (var l = 0; l < $scope.basis.length; l++) {
+                for (var m = 0; m < grouping.length; m++) {
+                    if ($scope.basis[l].uuid === grouping[m].uuid) {
+                        if (list === 'members') {
+                            grouping[m].basis = "Basis";
+                            for (var k = 0; k < $scope.groupingInclude.length; k++) {
+                                if ($scope.groupingInclude[k].uuid === grouping[m].uuid) {
+                                    grouping[m].basis = "Basis / Include";
+                                }
+                            }
+                        }
+                        else grouping[m].basis = "Yes";
+                    }
+                }
+            }
+
+            //sorts data in alphabetic order
+            grouping.sort(function (a, b) {
+                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                if (nameA < nameB) //sort string ascending
+                    return -1;
+                if (nameA > nameB)
+                    return 1;
+                return 0
+            });
+
+            $scope.replaceBlankUsernames(grouping);
+
+        };
 
         // TODO: Find a way to make the 3 adds into a more singular function.
 
