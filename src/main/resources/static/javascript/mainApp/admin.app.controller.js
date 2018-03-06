@@ -27,7 +27,7 @@
             $scope.loading = true;
 
             var url = "api/groupings/adminLists";
-
+            //$scope.loading = false;
             dataProvider.loadData(function (d) {
                 if (d.allGroupings.length == 0) {
                     $scope.createApiErrorModal();
@@ -41,7 +41,10 @@
                     $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
                 }
                 $scope.loading = false;
-            }, url);
+            }, function (error) {
+                console.log(error);
+                console.log('Error in loadData; status: ' + error.status);
+            },url);
         };
 
         $scope.change = function () {
@@ -240,6 +243,19 @@
 
             $scope.createRemoveModal(deleteUser, deleteUrl);
         };
+
+        $scope.emailAdmins = function(user) {
+            var URL = "http://localhost:8080/uhgroupings/admin/sendMail/";
+
+            $scope.description = user + "has been added/removed as an Admin for UH Groupings.";
+
+            $scope.data = [{
+                "desc": $scope.description,
+                "email:": $scope.email
+            }];
+
+        };
+
 
         /**
          * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then

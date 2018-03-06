@@ -2,6 +2,11 @@
 
     function FeedbackJsController($scope, $window, $uibModal, $http) {
         $scope.init = function() {
+
+            //Grabs JAVA
+            $scope.name = "";
+            $scope.email = "";
+            $scope.feedback = "";
             $scope.email = document.getElementById("uemail").innerHTML + "@hawaii.edu";
             $scope.mailURL = $window.location.href+"/sendMail";
             $scope.config = {
@@ -13,7 +18,10 @@
 
 
         $scope.submit = function() {
-            var returnText = 'Please input the following missing element(s): ';
+            console.log($scope.name);
+
+
+            /*var returnText = 'Please input the following missing element(s): ';
             var errors = 0;
             var onlyMail = 0;
             var onlyFT = 0;
@@ -90,7 +98,7 @@
                 optionVal.value = "-- select an option --";
                 $scope.name = '';
                 $scope.description = '';
-            }
+            }*/
         };
 
         $scope.returnModal = function (message) {

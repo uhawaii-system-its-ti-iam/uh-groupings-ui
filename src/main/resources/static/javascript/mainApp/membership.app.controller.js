@@ -78,7 +78,10 @@
 
                     $scope.loading = false;
                 }
-            }, groupingURL);
+            } , function (error) {
+                console.log(error);
+                console.log('Error in loadData; status: ' + error.status);
+            },groupingURL);
         };
 
         $scope.errorModal = function () {

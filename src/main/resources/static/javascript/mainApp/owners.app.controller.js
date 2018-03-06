@@ -7,20 +7,20 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function OwnerJsController($scope, $controller, $uibModal, dataProvider) {
+    function OwnerJsController($scope, $window, $controller, $uibModal, dataProvider) {
 
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
 
         // Allow this controller to use functions from the General Controller
-        angular.extend(this, $controller('GeneralJsController', { $scope: $scope }));
+        angular.extend(this, $controller('GeneralJsController', {$scope: $scope}));
 
         /**
          * Initialize function that retrieves the groupings you own.
          */
         $scope.init = function () {
             $scope.loading = true;
-            var groupingsOwned = "api/groupings/groupingAssignment";
+            var groupingsOwned = "api/groupings/groupingAssignments";
 
             dataProvider.loadData(function (d) {
                 var temp = [];
@@ -36,7 +36,17 @@
                     }
                     $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
                 }
+                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
+
                 $scope.loading = false;
+            }, function (error) {
+                console.log(error);
+                console.log('Error in loadData; status: ' + error.status);
+
+                //Sends JAVA
+
+
+                //$window.location.href = 'feedback';
             }, groupingsOwned);
         };
 
@@ -115,6 +125,14 @@
 
                 //Stop loading spinner
                 $scope.loading = false;
+            }, function (error) {
+                console.log(error);
+                console.log('Error in loadData; status: ' + error.status);
+
+                //Sends JAVA
+
+
+                $window.location.href = 'feedback';
             }, getUrl);
         };
 
@@ -147,8 +165,8 @@
                     if ($scope.basis[l].uuid === grouping[m].uuid) {
                         if (list === 'members') {
                             grouping[m].basis = "Basis";
-                            for (var k = 0; k <  $scope.groupingInclude.length;k++) {
-                                if ($scope.groupingInclude[k].uuid === grouping[m].uuid){
+                            for (var k = 0; k < $scope.groupingInclude.length; k++) {
+                                if ($scope.groupingInclude[k].uuid === grouping[m].uuid) {
                                     grouping[m].basis = "Basis / Include";
                                 }
                             }
@@ -224,7 +242,7 @@
                 scope: $scope,
             });
 
-            $scope.addModalInstance.result.finally(function() {
+            $scope.addModalInstance.result.finally(function () {
                 if (wasSuccessful) {
                     $scope.loading = true;
                     $scope.getData(path);

@@ -11,12 +11,10 @@
              * @param {string} url - the URL to perform the request on
              * @param {function} callback - the function to perform on a successful request (200)
              */
-            loadData: function(callback, url) {
+            loadData: function(callback, errorcall, url) {
                 $http.get(encodeURI(url))
                     .success(callback)
-                    .error(function(data, status) {
-                        console.log('Error in dataProvider; status: ', status);
-                    });
+                    .error(errorcall);
             },
 
             /**
@@ -30,7 +28,7 @@
                     .error(callback, function(data, status) {
                         console.log('Error in dataUpdater; status: ', status);
                     });
-            },
+            }
         };
     });
 
