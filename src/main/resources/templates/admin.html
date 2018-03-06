@@ -46,7 +46,8 @@
 
                                         </div>
                                         <div class="col-md-push-4 col-md-2 col-sm-push-2 col-sm-3" style="padding: 0px;">
-                                            <input placeholder="Filter Admins..." type="text"
+                                           <label for = "FilterAdmins"></label>
+                                            <input name="FilterAdmins" placeholder="Filter Admins..." type="text"
                                                    ng-model="ListQuery" class="form-control"
                                                    ng-change="filter(adminsList, 'pagedItemsAdmins', 'currentPageAdmins', 'ListQuery')"/>
                                         </div>
@@ -92,27 +93,28 @@
                                     <td colspan="6">
                                         <ul class="pagination pull-right">
                                             <li ng-class="{disabled: (currentPageAdmins) == 0}">
-                                                <a href="" ng-click="currentPage('First','currentPageAdmins','pagedItemsAdmins')">«« First</a>
+                                                <a class="clickable" ng-click="currentPage('First','currentPageAdmins','pagedItemsAdmins')">«« First</a>
                                             </li>
                                             <li ng-class="{disabled: (currentPageAdmins) == 0}">
-                                                <a href="" ng-click="currentPage('Prev','currentPageAdmins','pagedItemsAdmins')">« Prev</a>
+                                                <a class="clickable" ng-click="currentPage('Prev','currentPageAdmins','pagedItemsAdmins')">« Prev</a>
                                             </li>
                                             <li ng-repeat="n in range(pagedItemsAdmins.length, currentPageAdmins - gap, currentPageAdmins + gap + 1) "
                                                 ng-class="{active: n == currentPageAdmins}"
-                                                ng-click="currentPage('Set','currentPageAdmins','pagedItemsAdmins')"
-                                            ><a href="" ng-bind="n + 1">1</a>
+                                                ng-click="currentPage('Set','currentPageAdmins','pagedItemsAdmins')">
+                                                <a class="clickable" ng-bind="n + 1">1</a>
                                             </li>
                                             <li ng-class="{disabled: ((currentPageAdmins) == pagedItemsAdmins.length - 1) || pagedItemsAdmins.length == 0 }">
-                                                <a href="" ng-click="currentPage('Next','currentPageAdmins','pagedItemsAdmins')">Next »</a>
+                                                <a class="clickable" ng-click="currentPage('Next','currentPageAdmins','pagedItemsAdmins')">Next »</a>
                                             </li>
                                             <li ng-class="{disabled: ((currentPageAdmins) == pagedItemsAdmins.length - 1) || pagedItemsAdmins.length == 0 }">
-                                                <a href="" ng-click="currentPage('Last','currentPageAdmins','pagedItemsAdmins')">Last »»</a>
+                                                <a class="clickable" ng-click="currentPage('Last','currentPageAdmins','pagedItemsAdmins')">Last »»</a>
                                             </li>
                                         </ul>
                                         <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group input-inline-pagination">
                                             <form ng-submit="addAdmin()">
                                                 <div class="input-group">
-                                                    <input class="form-control" type="text"
+                                                  <label for="addingToAdmin"></label>
+                                                    <input name = "addingToAdmin" class="form-control" type="text"
                                                            placeholder="UH Username" ng-model="adminToAdd"/>
                                                     <div class="input-group-btn">
                                                         <button class="btn btn-primary" type="submit">Add</button>
