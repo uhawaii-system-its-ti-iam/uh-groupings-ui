@@ -88,9 +88,13 @@ h3{
     }
 }
 
+label{
+  color:black;
+}
+
 a {
     /*color: #0275d8;*/
-    text-decoration: none;
+    /* text-decoration:underline; */
 }
 
 a:hover {

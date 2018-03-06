@@ -44,7 +44,9 @@
                                     <span>Some memberships are optional, and some are required.</span>
                                 </div>
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
-                                    <input placeholder="Filter Groupings..." type="text"
+                                  <label for = "memberFilt">
+                                    <!--need to figure this out by the end of today-->
+                                  </label>   <input name = "memberFilt" placeholder="Filter Groupings..." type="text"
                                            ng-model="queryMembers" class="form-control"
                                            ng-change="search(membersList, 'pagedItemsMembersList', 'queryMembers')"
                                            id="members"/>
@@ -67,7 +69,7 @@
 
                             <!-- Top part of the two parts  -->
                             <td colspan="6">
-                                <ul class="pagination pull-right">
+                                <ul class="pagination pull-right" aria-live = "assertive">
                                     <li ng-class="{disabled: (currentPageOptOut) == 0}">
                                         <a class="clickable" ng-click="currentPage('First','pagedItemsMembersList','currentPageOptOut')">«« First</a>
                                     </li>
@@ -123,7 +125,9 @@
                                     <span>You may opt in to any of these groupings to become a member.</span>
                                 </div>
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
-                                    <input placeholder="Filter Groupings..." type="text"
+                                      <label for = "optIn">
+                                        <!--need to figure this out by the end of today-->
+                                      </label><input name = "optIn" placeholder="Filter Groupings..." type="text"
                                            ng-model="queryOptIn" class="form-control"
                                            ng-change="search(optInList, 'pagedItemsOptInList', 'queryOptIn')"
                                            id="optIn"/>
