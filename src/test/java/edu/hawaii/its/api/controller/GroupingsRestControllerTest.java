@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +34,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingAssignment;
@@ -582,6 +584,78 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[4].action").value("update last-modified attribute for include group"))
                 .andExpect(jsonPath("$[5].resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$[5].action").value("update last-modified attribute for exclude group"));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void adminListsTest() throws Exception {
+        ObjectMapper om = new ObjectMapper();
+        final String username = "user";
+        List<AdminListsHolder> adminLists = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            adminLists.add(grouping());
+            adminLists.get(i).setPath("grouping" + i);
+        }
+
+        given(groupingsService.adminLists(username))
+                .willReturn(myGroupings());
+
+        String mvcResult = mockMvc.perform(get("/api/groupings/adminLists"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        GroupingAssignment mg = om.readValue(mvcResult, GroupingAssignment.class);
+
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(
+                mg.getGroupingsIn().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsIn().get(0).getOwners().getUsernames()
+                .equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(
+                mg.getGroupingsIn().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(
+                mg.getGroupingsOwned().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsOwned().get(0).getOwners().getUsernames()
+                .equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(
+                mg.getGroupingsOwned().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getNames()
+                .equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getUsernames()
+                .equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getUuids()
+                .equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getNames()
+                .equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getUsernames()
+                .equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getUuids()
+                .equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getNames()
+                .equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getUsernames()
+                .equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getUuids()
+                .equals(groupings.get(0).getOwners().getUuids()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getName().equals(groupings.get(0).getName()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getPath().equals(groupings.get(0).getPath()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getNames()
+                .equals(groupings.get(0).getOwners().getNames()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getUsernames()
+                .equals(groupings.get(0).getOwners().getUsernames()));
+        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getUuids()
+                .equals(groupings.get(0).getOwners().getUuids()));
     }
 
     @Test
