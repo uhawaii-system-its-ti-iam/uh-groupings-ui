@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -586,19 +587,10 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[5].action").value("update last-modified attribute for exclude group"));
     }
 
-    @Test
-    @WithMockUhUser
-    public void adminListsTest() throws Exception {
-        ObjectMapper om = new ObjectMapper();
-        final String username = "user";
-        List<AdminListsHolder> adminLists = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            adminLists.add(grouping());
-            adminLists.get(i).setPath("grouping" + i);
-        }
 
-        given(groupingsService.adminLists(username))
-                .willReturn(myGroupings());
+    @Test
+    @WithMockUhUser(username = "admin")
+    public void adminListsTest() throws Exception {
 
         String mvcResult = mockMvc.perform(get("/api/groupings/adminLists"))
                 .andExpect(status().isOk())
@@ -606,56 +598,6 @@ public class GroupingsRestControllerTest {
                 .getResponse()
                 .getContentAsString();
 
-        GroupingAssignment mg = om.readValue(mvcResult, GroupingAssignment.class);
-
-        Assert.assertTrue(mg.getGroupingsIn().get(0).getName().equals(groupings.get(0).getName()));
-        Assert.assertTrue(mg.getGroupingsIn().get(0).getPath().equals(groupings.get(0).getPath()));
-        Assert.assertTrue(
-                mg.getGroupingsIn().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
-        Assert.assertTrue(mg.getGroupingsIn().get(0).getOwners().getUsernames()
-                .equals(groupings.get(0).getOwners().getUsernames()));
-        Assert.assertTrue(
-                mg.getGroupingsIn().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
-        Assert.assertTrue(mg.getGroupingsOwned().get(0).getName().equals(groupings.get(0).getName()));
-        Assert.assertTrue(mg.getGroupingsOwned().get(0).getPath().equals(groupings.get(0).getPath()));
-        Assert.assertTrue(
-                mg.getGroupingsOwned().get(0).getOwners().getNames().equals(groupings.get(0).getOwners().getNames()));
-        Assert.assertTrue(mg.getGroupingsOwned().get(0).getOwners().getUsernames()
-                .equals(groupings.get(0).getOwners().getUsernames()));
-        Assert.assertTrue(
-                mg.getGroupingsOwned().get(0).getOwners().getUuids().equals(groupings.get(0).getOwners().getUuids()));
-        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getName().equals(groupings.get(0).getName()));
-        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getPath().equals(groupings.get(0).getPath()));
-        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getNames()
-                .equals(groupings.get(0).getOwners().getNames()));
-        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getUsernames()
-                .equals(groupings.get(0).getOwners().getUsernames()));
-        Assert.assertTrue(mg.getGroupingsToOptInTo().get(0).getOwners().getUuids()
-                .equals(groupings.get(0).getOwners().getUuids()));
-        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getName().equals(groupings.get(0).getName()));
-        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getPath().equals(groupings.get(0).getPath()));
-        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getNames()
-                .equals(groupings.get(0).getOwners().getNames()));
-        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getUsernames()
-                .equals(groupings.get(0).getOwners().getUsernames()));
-        Assert.assertTrue(mg.getGroupingsToOptOutOf().get(0).getOwners().getUuids()
-                .equals(groupings.get(0).getOwners().getUuids()));
-        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getName().equals(groupings.get(0).getName()));
-        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getPath().equals(groupings.get(0).getPath()));
-        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getNames()
-                .equals(groupings.get(0).getOwners().getNames()));
-        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getUsernames()
-                .equals(groupings.get(0).getOwners().getUsernames()));
-        Assert.assertTrue(mg.getGroupingsOptedInTo().get(0).getOwners().getUuids()
-                .equals(groupings.get(0).getOwners().getUuids()));
-        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getName().equals(groupings.get(0).getName()));
-        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getPath().equals(groupings.get(0).getPath()));
-        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getNames()
-                .equals(groupings.get(0).getOwners().getNames()));
-        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getUsernames()
-                .equals(groupings.get(0).getOwners().getUsernames()));
-        Assert.assertTrue(mg.getGroupingsOptedOutOf().get(0).getOwners().getUuids()
-                .equals(groupings.get(0).getOwners().getUuids()));
     }
 
     @Test
@@ -670,7 +612,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getDeleteGrouping() throws Exception {
-        mockMvc.perform(get("/api/groupings/fakeGroup/deleteGrouping")
+        mockMvc.perform(delete("/api/groupings/fakeGroup/deleteGrouping")
                 .with(csrf()))
                 .andExpect(status().is5xxServerError());
     }
