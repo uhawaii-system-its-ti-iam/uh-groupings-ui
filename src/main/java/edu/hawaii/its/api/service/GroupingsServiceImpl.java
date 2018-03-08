@@ -158,7 +158,10 @@ public class GroupingsServiceImpl implements GroupingsService {
 
 
     @Autowired
-    private GrouperFactoryService gf;
+    private GrouperFactoryService grouperFS;
+
+    @Autowired
+    private GroupingFactoryService groupingFS;
 
     // Constructor.
     public GroupingsServiceImpl() {
@@ -167,82 +170,84 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     // Constructor.
     public GroupingsServiceImpl(GrouperFactoryService grouperFactory) {
-        gf = grouperFactory;
+        grouperFS = grouperFactory;
     }
 
     public GrouperFactoryService getGrouperFactoryService() {
-        return gf;
+        return grouperFS;
     }
 
     public void setGrouperFactoryService(GrouperFactoryService gf) {
-        this.gf = gf;
+        this.grouperFS = gf;
     }
 
+    //todo start creating real basis group
     @Override
     public List<GroupingsServiceResult> addGrouping(
             String username,
-            String path,
+            String groupingPath,
             List<String> basis,
             List<String> include,
             List<String> exclude,
             List<String> owners) {
 
-        //This method will not work until Grouper is updated
+                List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
+                String action = username + "is adding a Grouping: " + groupingPath;
 
-        //        List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
-        //        String action = username + "is adding a Grouping located at path " + path;
-        //
-        //        //todo consider changing this to isAdmin. Will an app account ever need to make a Grouping?
-        //        if (isSuperuser(username)) {
-        //
-        //            List<Group> groups = new ArrayList<>();
-        //
-        //            List<String> basisPlusInclude = unionMemberLists(basis, include);
-        //
-        //            Map<String, List<String>> memberLists = new HashMap<>();
-        //            memberLists.put("", new ArrayList<>());
-        //            memberLists.put(BASIS, basis);
-        //            memberLists.put(INCLUDE, include);
-        //            memberLists.put(BASIS_PLUS_INCLUDE, basisPlusInclude);
-        //            memberLists.put(EXCLUDE, exclude);
-        //            memberLists.put(OWNERS, owners);
-        //
-        //
-        //            //todo check about making folders
-        //            //todo is a folder the same as a stem?
-        //            gf.makeWsStemSaveResults(username, path);
-        //
-        //            //todo always create a basis folder?
-        //            gf.makeWsStemSaveResults(username, path + BASIS);
-        //
-        //            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
-        //                Group group = makeGroup(path + entry.getKey(), entry.getValue());
-        //                groups.add(group);
-        //            }
-        //
-        //            for (Group group : groups) {
-        //                GroupingsServiceResult result = makeGroupingsServiceResult(
-        //                        gf.addEmptyGroup(username, group.getPath()),
-        //                        action);
-        //                addGroupingResults.add(result);
-        //            }
-        //            addGroupingResults.add(updateLastModified(path));
-        //
-        //            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
-        //                addGroupingResults.add(addGroupMembersByUsername(username, path + entry.getKey(), entry.getValue()));
-        //                addGroupingResults.add(updateLastModified(path + entry.getKey()));
-        //            }
-        //
-        //            addGroupingResults.add(addGroupMembersByUsername(username, GROUPING_OWNERS, memberLists.get(OWNERS)));
-        //            addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
-        //
-        //        } else {
-        //            GroupingsServiceResult gsr = makeGroupingsServiceResult(FAILURE, action);
-        //            addGroupingResults.add(gsr);
-        //        }
-        //
-        //        return addGroupingResults;\
-        throw new UnsupportedOperationException();
+
+
+                //todo consider changing this to isAdmin. Will an app account ever need to make a Grouping?
+                if (isSuperuser(username)) {
+
+                    return groupingFS.makeGrouping(username, groupingPath, basis, include, exclude, owners);
+
+//                    List<Group> groups = new ArrayList<>();
+//
+//                    List<String> basisPlusInclude = unionMemberLists(basis, include);
+//
+//                    Map<String, List<String>> memberLists = new HashMap<>();
+//                    memberLists.put("", new ArrayList<>());
+//                    memberLists.put(BASIS, basis);
+//                    memberLists.put(INCLUDE, include);
+//                    memberLists.put(BASIS_PLUS_INCLUDE, basisPlusInclude);
+//                    memberLists.put(EXCLUDE, exclude);
+//                    memberLists.put(OWNERS, owners);
+//
+//
+//                    //todo check about making folders
+//                    //todo is a folder the same as a stem?
+//                    grouperFS.makeWsStemSaveResults(username, groupingPath);
+//
+//                    //todo always create a basis folder?
+//                    grouperFS.makeWsStemSaveResults(username, groupingPath + BASIS);
+//
+//                    for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
+//                        Group group = makeGroup(groupingPath + entry.getKey(), entry.getValue());
+//                        groups.add(group);
+//                    }
+//
+//                    for (Group group : groups) {
+//                        GroupingsServiceResult result = makeGroupingsServiceResult(
+//                                grouperFS.addEmptyGroup(username, group.getPath()),
+//                                action);
+//                        addGroupingResults.add(result);
+//                    }
+//                    addGroupingResults.add(updateLastModified(groupingPath));
+//
+//                    for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
+//                        addGroupingResults.add(addGroupMembersByUsername(username, groupingPath + entry.getKey(), entry.getValue()));
+//                        addGroupingResults.add(updateLastModified(groupingPath + entry.getKey()));
+//                    }
+//
+//                    addGroupingResults.add(addGroupMembersByUsername(username, GROUPING_OWNERS, memberLists.get(OWNERS)));
+//                    addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
+//
+                } else {
+                    GroupingsServiceResult gsr = makeGroupingsServiceResult(FAILURE + ": " + username + " does not have permission to add this grouping", action);
+                    addGroupingResults.add(gsr);
+                }
+
+                return addGroupingResults;
     }
 
     @Override
@@ -288,8 +293,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         GroupingsServiceResult ownershipResult;
 
         if (isOwner(grouping, username) || isAdmin(username)) {
-            WsSubjectLookup user = gf.makeWsSubjectLookup(username);
-            WsAddMemberResults amr = gf.makeWsAddMemberResults(grouping + OWNERS, user, newOwner);
+            WsSubjectLookup user = grouperFS.makeWsSubjectLookup(username);
+            WsAddMemberResults amr = grouperFS.makeWsAddMemberResults(grouping + OWNERS, user, newOwner);
             ownershipResult = makeGroupingsServiceResult(amr, action);
 
             return ownershipResult;
@@ -379,8 +384,8 @@ public class GroupingsServiceImpl implements GroupingsService {
         String action = "remove ownership of " + grouping + " from " + ownerToRemove;
 
         if (isOwner(grouping, username) || isAdmin(username)) {
-            WsSubjectLookup lookup = gf.makeWsSubjectLookup(username);
-            WsDeleteMemberResults memberResults = gf.makeWsDeleteMemberResults(
+            WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(username);
+            WsDeleteMemberResults memberResults = grouperFS.makeWsDeleteMemberResults(
                     grouping + OWNERS,
                     lookup,
                     ownerToRemove);
@@ -631,7 +636,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (groupsOpted.size() > 0) {
 
-            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
                     TRIO,
                     groupsOpted);
@@ -657,7 +662,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (isSuperuser(username)) {
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
                     TRIO);
 
@@ -683,7 +688,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> opts = new ArrayList<>();
         List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
 
-        List<WsGetAttributeAssignmentsResults> assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+        List<WsGetAttributeAssignmentsResults> assignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
                 ASSIGN_TYPE_GROUP,
                 TRIO,
                 OPT_OUT,
@@ -719,7 +724,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         List<String> opts = new ArrayList<>();
         List<String> excludes = groupPaths.stream().map(group -> group + EXCLUDE).collect(Collectors.toList());
 
-        WsGetAttributeAssignmentsResults assignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+        WsGetAttributeAssignmentsResults assignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
                 ASSIGN_TYPE_GROUP,
                 TRIO,
                 OPT_IN);
@@ -819,7 +824,7 @@ public class GroupingsServiceImpl implements GroupingsService {
     public boolean inGroup(String groupPath, String username) {
         logger.info("inGroup; groupPath: " + groupPath + "; username: " + username + ";");
 
-        WsHasMemberResults memberResults = gf.makeWsHasMemberResults(groupPath, username);
+        WsHasMemberResults memberResults = grouperFS.makeWsHasMemberResults(groupPath, username);
 
         WsHasMemberResult[] memberResultArray = memberResults.getResults();
 
@@ -837,7 +842,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             return inGroup(groupPath, person.getUsername());
         }
 
-        WsHasMemberResults memberResults = gf.makeWsHasMemberResults(groupPath, person);
+        WsHasMemberResults memberResults = grouperFS.makeWsHasMemberResults(groupPath, person);
 
         WsHasMemberResult[] memberResultArray = memberResults.getResults();
 
@@ -981,9 +986,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     public GroupingsServiceResult updateLastModified(String group) {
         logger.info("updateLastModified; group: " + group + ";");
         String time = wsDateTime();
-        WsAttributeAssignValue dateTimeValue = gf.makeWsAttributeAssignValue(time);
+        WsAttributeAssignValue dateTimeValue = grouperFS.makeWsAttributeAssignValue(time);
 
-        WsAssignAttributesResults assignAttributesResults = gf.makeWsAssignAttributesResults(
+        WsAssignAttributesResults assignAttributesResults = grouperFS.makeWsAssignAttributesResults(
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
                 group,
@@ -1011,7 +1016,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + membershipID
                 + ";");
 
-        return gf.makeWsAssignAttributesResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, operation, uuid, membershipID);
+        return grouperFS.makeWsAssignAttributesResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, operation, uuid, membershipID);
     }
 
     /**
@@ -1029,14 +1034,14 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + membershipID
                 + ";");
 
-        WsGetAttributeAssignmentsResults attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsForMembership(
+        WsGetAttributeAssignmentsResults attributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsForMembership(
                 assignType,
                 name,
                 membershipID);
 
         WsAttributeAssign[] wsAttributes = attributeAssignmentsResults.getWsAttributeAssigns();
 
-        return wsAttributes != null ? wsAttributes : gf.makeEmptyWsAttributeAssignArray();
+        return wsAttributes != null ? wsAttributes : grouperFS.makeEmptyWsAttributeAssignArray();
     }
 
     /**
@@ -1054,7 +1059,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + group
                 + ";");
 
-        WsAssignAttributesResults attributesResults = gf.makeWsAssignAttributesResultsForGroup(
+        WsAssignAttributesResults attributesResults = grouperFS.makeWsAssignAttributesResultsForGroup(
                 ASSIGN_TYPE_GROUP,
                 attributeOperation,
                 attributeName,
@@ -1078,7 +1083,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + nameName
                 + ";");
 
-        return gf.makeWsGetAttributeAssignmentsResultsForGroup(assignType, nameName, group);
+        return grouperFS.makeWsGetAttributeAssignmentsResultsForGroup(assignType, nameName, group);
     }
 
     /**
@@ -1096,9 +1101,9 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + privilegeName
                 + ";");
 
-        WsSubjectLookup lookup = gf.makeWsSubjectLookup(username);
+        WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(username);
 
-        return gf.makeWsGetGrouperPrivilegesLiteResult(group, privilegeName, lookup);
+        return grouperFS.makeWsGetGrouperPrivilegesLiteResult(group, privilegeName, lookup);
     }
 
     private GroupingsServiceResult assignGrouperPrivilege(
@@ -1117,10 +1122,10 @@ public class GroupingsServiceImpl implements GroupingsService {
                 + set
                 + ";");
 
-        WsSubjectLookup lookup = gf.makeWsSubjectLookup(username);
+        WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(username);
         String action = "set " + privilegeName + " " + set + " for " + username + " in " + group;
 
-        WsAssignGrouperPrivilegesLiteResult grouperPrivilegesLiteResult = gf.makeWsAssignGrouperPrivilegesLiteResult(
+        WsAssignGrouperPrivilegesLiteResult grouperPrivilegesLiteResult = grouperFS.makeWsAssignGrouperPrivilegesLiteResult(
                 group,
                 privilegeName,
                 lookup,
@@ -1137,9 +1142,9 @@ public class GroupingsServiceImpl implements GroupingsService {
     private WsGetMembershipsResults membershipsResults(String username, String group) {
         logger.info("membershipResults; username: " + username + "; group: " + group + ";");
 
-        WsSubjectLookup lookup = gf.makeWsSubjectLookup(username);
+        WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(username);
 
-        return gf.makeWsGetMembershipsResults(group, lookup);
+        return grouperFS.makeWsGetMembershipsResults(group, lookup);
     }
 
     /**
@@ -1157,7 +1162,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             if (isAdmin(newAdmin)) {
                 return makeGroupingsServiceResult("SUCCESS: " + newAdmin + " was already in" + GROUPING_ADMINS, action);
             }
-            WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(
+            WsAddMemberResults addMemberResults = grouperFS.makeWsAddMemberResults(
                     GROUPING_ADMINS,
                     newAdmin);
 
@@ -1179,9 +1184,9 @@ public class GroupingsServiceImpl implements GroupingsService {
         String action = "delete " + adminToDelete + " from " + GROUPING_ADMINS;
 
         if (isSuperuser(username)) {
-            WsSubjectLookup user = gf.makeWsSubjectLookup(username);
+            WsSubjectLookup user = grouperFS.makeWsSubjectLookup(username);
 
-            WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(
+            WsDeleteMemberResults deleteMemberResults = grouperFS.makeWsDeleteMemberResults(
                     GROUPING_ADMINS,
                     user,
                     adminToDelete);
@@ -1198,7 +1203,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         String action = "add users to " + groupPath;
 
         if (isOwner(parentGroupingPath(groupPath), username) || isSuperuser(username) || personToAdd.getUsername().equals(username)) {
-            WsSubjectLookup user = gf.makeWsSubjectLookup(username);
+            WsSubjectLookup user = grouperFS.makeWsSubjectLookup(username);
             String composite = parentGroupingPath(groupPath);
             String exclude = composite + EXCLUDE;
             String include = composite + INCLUDE;
@@ -1213,7 +1218,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             if (groupPath.endsWith(INCLUDE)) {
                 //if personToAdd is in exclude, get them out
                 if (inGroup(exclude, personToAdd)) {
-                    WsDeleteMemberResults wsDeleteMemberResults = gf.makeWsDeleteMemberResults(
+                    WsDeleteMemberResults wsDeleteMemberResults = grouperFS.makeWsDeleteMemberResults(
                             exclude,
                             user,
                             personToAdd);
@@ -1225,7 +1230,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 //check to see if personToAdd is already in include
                 if (!inGroup(include, personToAdd)) {
                     //add to include
-                    WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(include, user, personToAdd);
+                    WsAddMemberResults addMemberResults = grouperFS.makeWsAddMemberResults(include, user, personToAdd);
 
                     updateInclude = true;
 
@@ -1240,7 +1245,7 @@ public class GroupingsServiceImpl implements GroupingsService {
             else if (groupPath.endsWith(EXCLUDE)) {
                 //if personToAdd is in include, get them out
                 if (inGroup(include, personToAdd)) {
-                    WsDeleteMemberResults wsDeleteMemberResults = gf.makeWsDeleteMemberResults(
+                    WsDeleteMemberResults wsDeleteMemberResults = grouperFS.makeWsDeleteMemberResults(
                             include,
                             user,
                             personToAdd);
@@ -1252,7 +1257,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 //check to see if userToAdd is already in exclude
                 if (!inGroup(exclude, personToAdd)) {
                     //add to exclude
-                    WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(exclude, user, personToAdd);
+                    WsAddMemberResults addMemberResults = grouperFS.makeWsAddMemberResults(exclude, user, personToAdd);
 
                     updateExclude = true;
 
@@ -1267,7 +1272,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 //check to see if userToAdd is already in owners
                 if (!inGroup(owners, personToAdd)) {
                     //add userToAdd to owners
-                    WsAddMemberResults addMemberResults = gf.makeWsAddMemberResults(owners, user, personToAdd);
+                    WsAddMemberResults addMemberResults = grouperFS.makeWsAddMemberResults(owners, user, personToAdd);
 
                     updateOwners = true;
 
@@ -1527,10 +1532,10 @@ public class GroupingsServiceImpl implements GroupingsService {
         String composite = parentGroupingPath(group);
 
         if (isOwner(composite, username) || isSuperuser(username) || userToDelete.equals(username)) {
-            WsSubjectLookup user = gf.makeWsSubjectLookup(username);
+            WsSubjectLookup user = grouperFS.makeWsSubjectLookup(username);
             if (group.endsWith(EXCLUDE) || group.endsWith(INCLUDE) || group.endsWith(OWNERS)) {
                 if (inGroup(group, userToDelete)) {
-                    WsDeleteMemberResults deleteMemberResults = gf.makeWsDeleteMemberResults(group, user, userToDelete);
+                    WsDeleteMemberResults deleteMemberResults = grouperFS.makeWsDeleteMemberResults(group, user, userToDelete);
 
                     updateLastModified(composite);
                     updateLastModified(group);
@@ -1551,8 +1556,8 @@ public class GroupingsServiceImpl implements GroupingsService {
     Group getMembers(String username, String group) {
         logger.info("getMembers; user: " + username + "; group: " + group + ";");
 
-        WsSubjectLookup lookup = gf.makeWsSubjectLookup(username);
-        WsGetMembersResults members = gf.makeWsGetMembersResults(
+        WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(username);
+        WsGetMembersResults members = grouperFS.makeWsGetMembersResults(
                 SUBJECT_ATTRIBUTE_NAME_UID,
                 lookup,
                 group);
@@ -1577,7 +1582,7 @@ public class GroupingsServiceImpl implements GroupingsService {
 
         if (groupPaths.size() > 0) {
 
-            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsTrio(
+            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
                     ASSIGN_TYPE_GROUP,
                     TRIO,
                     groupPaths);
@@ -1600,9 +1605,9 @@ public class GroupingsServiceImpl implements GroupingsService {
      */
     List<String> getGroupPaths(String username) {
         logger.info("getGroupPaths; username: " + username + ";");
-        WsStemLookup stemLookup = gf.makeWsStemLookup(STEM);
+        WsStemLookup stemLookup = grouperFS.makeWsStemLookup(STEM);
 
-        WsGetGroupsResults wsGetGroupsResults = gf.makeWsGetGroupsResults(
+        WsGetGroupsResults wsGetGroupsResults = grouperFS.makeWsGetGroupsResults(
                 username,
                 stemLookup,
                 StemScope.ALL_IN_SUBTREE);
@@ -1624,7 +1629,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         boolean optInOn = false;
         boolean optOutOn = false;
 
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = gf.makeWsGetAttributeAssignmentsResultsForGroup(
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsForGroup(
                 ASSIGN_TYPE_GROUP,
                 grouping.getPath());
 
