@@ -100,6 +100,7 @@
                                     </div>
                                     <div ng-if="!required($index+(currentPageOptIn * itemsPerPage))">
                                         <button id="optOutButton" class="btn btn-primary btn-block opt-button text-center"
+                                                tabindex="0"
                                                 ng-click="optOut($index)"
                                                 ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
                                             Opt Out
@@ -134,7 +135,7 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-condensed table-hover">
+                            <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
                                 <thead>
                                 <tr>
                                     <th ng-click="sort(optInList, 'name', 'pagedItemsOptInList', 'symbolOptIn')"
@@ -153,6 +154,7 @@
                                     <td id = "groupingOptInPath">{{o.path}}</td>
                                     <td class="col-md-2">
                                         <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-primary btn-block opt-button"
+                                                tabindex="0"
                                                 ng-click="optIn($index)">Opt In
                                         </button>
                                     </td>
