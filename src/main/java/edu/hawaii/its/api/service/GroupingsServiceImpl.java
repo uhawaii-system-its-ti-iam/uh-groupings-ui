@@ -271,122 +271,94 @@ public class GroupingsServiceImpl implements GroupingsService {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * gives a user ownership permissions for a Grouping
-     *
-     * @param grouping: the Grouping that the user will get ownership permissions for
-     * @param username: the owner of the Grouping who will give ownership permissions to the new owner
-     * @param newOwner: the user that will become an owner of the Grouping
-     * @return information about the success of the operation
-     */
+    //give ownership to a new user
     @Override
-    public GroupingsServiceResult assignOwnership(String grouping, String username, String newOwner) {
-        logger.info("assignOwnership; grouping: "
-                + grouping
-                + "; username: "
-                + username
-                + "; newOwner: "
-                + newOwner
+    public GroupingsServiceResult assignOwnership(String groupingPath, String ownerUsername, String newOwnerUsername) {
+        logger.info("assignOwnership; groupingPath: "
+                + groupingPath
+                + "; ownerUsername: "
+                + ownerUsername
+                + "; newOwnerUsername: "
+                + newOwnerUsername
                 + ";");
 
-        String action = "give " + newOwner + " ownership of " + grouping;
+        String action = "give " + newOwnerUsername + " ownership of " + groupingPath;
         GroupingsServiceResult ownershipResult;
 
-        if (isOwner(grouping, username) || isAdmin(username)) {
-            WsSubjectLookup user = grouperFS.makeWsSubjectLookup(username);
-            WsAddMemberResults amr = grouperFS.makeWsAddMemberResults(grouping + OWNERS, user, newOwner);
+        if (isOwner(groupingPath, ownerUsername) || isAdmin(ownerUsername)) {
+            WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
+            WsAddMemberResults amr = grouperFS.makeWsAddMemberResults(groupingPath + OWNERS, user, newOwnerUsername);
             ownershipResult = makeGroupingsServiceResult(amr, action);
 
             return ownershipResult;
         }
 
-        ownershipResult = makeGroupingsServiceResult(FAILURE + ", " + username + " does not own " + grouping, action);
+        ownershipResult = makeGroupingsServiceResult(FAILURE + ", " + ownerUsername + " does not own " + groupingPath, action);
         return ownershipResult;
     }
 
-    /**
-     * @param grouping:   the path of the Grouping that will have its listserv status changed
-     * @param username:   username of the Grouping Owner preforming the action
-     * @param listservOn: true if the listserv should be turned on, false if it should be turned off
-     * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
-     */
+    //turn the listserv for a grouping on or off
     @Override
-    public GroupingsServiceResult changeListservStatus(String grouping, String username, boolean listservOn) {
-        return changeGroupAttributeStatus(grouping, username, LISTSERV, listservOn);
+    public GroupingsServiceResult changeListservStatus(String groupingPath, String owenerUsername, boolean listservOn) {
+        return changeGroupAttributeStatus(groupingPath, owenerUsername, LISTSERV, listservOn);
     }
 
-    /**
-     * @param grouping: the path of the Grouping that will have its optIn permission changed
-     * @param username: username of the Grouping Owner preforming the action
-     * @param set:      true if the optIn permission should be turned on, false if it should be turned off
-     * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
-     */
+    //turn the ability for users to opt-in to a grouping on or off
     @Override
-    public List<GroupingsServiceResult> changeOptInStatus(String grouping, String username, boolean set) {
+    public List<GroupingsServiceResult> changeOptInStatus(String groupingPath, String ownerUsername, boolean optInOn) {
         List<GroupingsServiceResult> results = new ArrayList<>();
-        if (isOwner(grouping, username) || isAdmin(username)) {
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, grouping + INCLUDE, set));
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + EXCLUDE, set));
-            results.add(changeGroupAttributeStatus(grouping, username, OPT_IN, set));
+        if (isOwner(groupingPath, ownerUsername) || isAdmin(ownerUsername)) {
+            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, groupingPath + INCLUDE, optInOn));
+            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, groupingPath + EXCLUDE, optInOn));
+            results.add(changeGroupAttributeStatus(groupingPath, ownerUsername, OPT_IN, optInOn));
         } else {
 
             GroupingsServiceResult failure = makeGroupingsServiceResult(
-                    FAILURE + ", " + username + " does not own " + grouping,
-                    "change opt in status for " + grouping + " to " + set);
+                    FAILURE + ", " + ownerUsername + " does not own " + groupingPath,
+                    "change opt in status for " + groupingPath + " to " + optInOn);
             results.add(failure);
         }
         return results;
     }
 
-    /**
-     * @param grouping: the path of the Grouping that will have its optOut permission changed
-     * @param username: username of the Grouping Owner preforming the action
-     * @param set:      true if the optOut permission should be turned on, false if it should be turned off
-     * @return "SUCCESS" if the action succeeds or "FAILURE" if it does not.
-     */
+    //turn the ability for users to opt-out of a grouping on or off
     @Override
-    public List<GroupingsServiceResult> changeOptOutStatus(String grouping, String username, boolean set) {
+    public List<GroupingsServiceResult> changeOptOutStatus(String groupingPath, String ownerUsername, boolean optOutOn) {
         List<GroupingsServiceResult> results = new ArrayList<>();
-        if (isOwner(grouping, username) || isAdmin(username)) {
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, grouping + EXCLUDE, set));
-            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, grouping + INCLUDE, set));
-            results.add(changeGroupAttributeStatus(grouping, username, OPT_OUT, set));
+        if (isOwner(groupingPath, ownerUsername) || isAdmin(ownerUsername)) {
+            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, groupingPath + EXCLUDE, optOutOn));
+            results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_OUT, groupingPath + INCLUDE, optOutOn));
+            results.add(changeGroupAttributeStatus(groupingPath, ownerUsername, OPT_OUT, optOutOn));
         } else {
 
             GroupingsServiceResult failure = makeGroupingsServiceResult(
-                    FAILURE + ", " + username + " does not own " + grouping,
-                    "change opt out status for " + grouping + " to " + set);
+                    FAILURE + ", " + ownerUsername + " does not own " + groupingPath,
+                    "change opt out status for " + groupingPath + " to " + optOutOn);
 
             results.add(failure);
         }
         return results;
     }
 
-    /**
-     * removes ownership permissions from a user
-     *
-     * @param grouping:      the Grouping for which the user's ownership will be removed
-     * @param username:      the owner of the Grouping who will be removing ownership from the owner to be removed
-     * @param ownerToRemove: the owner who will have ownership privileges removed
-     * @return information about the success of the operation
-     */
+    //remove ownership of a grouping from a current owner
+    //todo change ownerUsername to "actor"?
     @Override
-    public GroupingsServiceResult removeOwnership(String grouping, String username, String ownerToRemove) {
+    public GroupingsServiceResult removeOwnership(String groupingPath, String ownerUsername, String ownerToRemove) {
         logger.info("removeOwnership; grouping: "
-                + grouping
+                + groupingPath
                 + "; username: "
-                + username
+                + ownerUsername
                 + "; ownerToRemove: "
                 + ownerToRemove
                 + ";");
 
         GroupingsServiceResult ownershipResults;
-        String action = "remove ownership of " + grouping + " from " + ownerToRemove;
+        String action = "remove ownership of " + groupingPath + " from " + ownerToRemove;
 
-        if (isOwner(grouping, username) || isAdmin(username)) {
-            WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(username);
+        if (isOwner(groupingPath, ownerUsername) || isAdmin(ownerUsername)) {
+            WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(ownerUsername);
             WsDeleteMemberResults memberResults = grouperFS.makeWsDeleteMemberResults(
-                    grouping + OWNERS,
+                    groupingPath + OWNERS,
                     lookup,
                     ownerToRemove);
             ownershipResults = makeGroupingsServiceResult(memberResults, action);
@@ -394,30 +366,26 @@ public class GroupingsServiceImpl implements GroupingsService {
         }
 
         ownershipResults = makeGroupingsServiceResult(
-                FAILURE + ", " + username + " does not own " + grouping,
+                FAILURE + ", " + ownerUsername + " does not own " + groupingPath,
                 action);
         return ownershipResults;
     }
 
-    /**
-     * @param grouping: the path of the Grouping to be searched for
-     * @param username: the user who is doing the search
-     * @return a Grouping Object containing information about the Grouping
-     */
+    //fetch a grouping from Grouper or the database
     @Override
-    public Grouping getGrouping(String grouping, String username) {
-        logger.info("getGrouping; grouping: " + grouping + "; username: " + username + ";");
+    public Grouping getGrouping(String groupingPath, String ownerUsername) {
+        logger.info("getGrouping; grouping: " + groupingPath + "; username: " + ownerUsername + ";");
 
         Grouping compositeGrouping = new Grouping();
 
-        if (isOwner(grouping, username) || isAdmin(username)) {
-            compositeGrouping = new Grouping(grouping);
+        if (isOwner(groupingPath, ownerUsername) || isAdmin(ownerUsername)) {
+            compositeGrouping = new Grouping(groupingPath);
 
-            Group include = getMembers(username, grouping + INCLUDE);
-            Group exclude = getMembers(username, grouping + EXCLUDE);
-            Group basis = getMembers(username, grouping + BASIS);
-            Group composite = getMembers(username, grouping);
-            Group owners = getMembers(username, grouping + OWNERS);
+            Group include = getMembers(ownerUsername, groupingPath + INCLUDE);
+            Group exclude = getMembers(ownerUsername, groupingPath + EXCLUDE);
+            Group basis = getMembers(ownerUsername, groupingPath + BASIS);
+            Group composite = getMembers(ownerUsername, groupingPath);
+            Group owners = getMembers(ownerUsername, groupingPath + OWNERS);
 
             compositeGrouping = setGroupingAttributes(compositeGrouping);
 
@@ -431,16 +399,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return compositeGrouping;
     }
 
-    /**
-     * @param username: username of the user to display Groupings for
-     * @return the Groupings that the user
-     * is in
-     * owns
-     * can opt into
-     * can opt out of
-     * has opted into
-     * has opted out of
-     */
+    //get a GroupingAssignment object containing the groups that a user is in and can opt into
     @Override
     public GroupingAssignment getGroupingAssignment(String username) {
         GroupingAssignment groupingAssignment = new GroupingAssignment();
@@ -456,40 +415,24 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupingAssignment;
     }
 
-    /**
-     * if a user has permission to opt into a Grouping
-     * this will put them in the include group
-     * if they are in the exclude group, they will be removed from it
-     *
-     * @param username: user to be opting in
-     * @param grouping: Grouping the user will opt into
-     * @return information about the success of the operation
-     */
+    //user adds them self to the group if they have permission
     @Override
-    public List<GroupingsServiceResult> optIn(String username, String grouping) {
+    public List<GroupingsServiceResult> optIn(String optInUsername, String groupingPath) {
         String outOrrIn = "in ";
         String preposition = "to ";
-        String addGroup = grouping + INCLUDE;
+        String addGroup = groupingPath + INCLUDE;
 
-        return opt(username, grouping, addGroup, outOrrIn, preposition);
+        return opt(optInUsername, groupingPath, addGroup, outOrrIn, preposition);
     }
 
-    /**
-     * if a user has permission to opt out of a Grouping
-     * this will put them in the exclude group
-     * if they are in the include group, they will be removed from it
-     *
-     * @param username: user to be opting out
-     * @param grouping: Grouping the user will opt out of
-     * @return information about the success of the operation
-     */
+    //user removes them self from the group if they have permission
     @Override
-    public List<GroupingsServiceResult> optOut(String username, String grouping) {
+    public List<GroupingsServiceResult> optOut(String optOutUsername, String groupingPath) {
         String outOrrIn = "out ";
         String preposition = "from ";
-        String addGroup = grouping + EXCLUDE;
+        String addGroup = groupingPath + EXCLUDE;
 
-        return opt(username, grouping, addGroup, outOrrIn, preposition);
+        return opt(optOutUsername, groupingPath, addGroup, outOrrIn, preposition);
     }
 
     private List<GroupingsServiceResult> opt(String username, String grouping, String addGroup, String outOrrIn, String preposition) {
@@ -527,39 +470,29 @@ public class GroupingsServiceImpl implements GroupingsService {
         return results;
     }
 
-    /**
-     * @param grouping: path to the Grouping that will have its permissions checked
-     * @return true if the Grouping is allowed to be opted out of and false if not
-     */
+    //returns true if the grouping allows the user to opt out, false otherwise
     @Override
-    public boolean optOutPermission(String grouping) {
-        return groupHasAttribute(grouping, OPT_OUT);
+    public boolean optOutPermission(String groupingPath) {
+        return groupHasAttribute(groupingPath, OPT_OUT);
     }
 
-    /**
-     * @param grouping: path to the Grouping that will have its permissions checked
-     * @return true if the Grouping is allowed to be opted into and false if not
-     */
+    //returns true if the grouping allows the user to opt in, false otherwise
     @Override
-    public boolean optInPermission(String grouping) {
-        return groupHasAttribute(grouping, OPT_IN);
+    public boolean optInPermission(String groupingPath) {
+        return groupHasAttribute(groupingPath, OPT_IN);
     }
 
-    /**
-     * @param grouping: path to Grouping that will have its attributes checked
-     * @param nameName: name of attribute to be checked for
-     * @return true if that attribute exists in that Grouping
-     */
+    //returns true if the group has the attribute with that name
     @Override
-    public boolean groupHasAttribute(String grouping, String nameName) {
+    public boolean groupHasAttribute(String groupPath, String attributeName) {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = attributeAssignmentsResults(
                 ASSIGN_TYPE_GROUP,
-                grouping,
-                nameName);
+                groupPath,
+                attributeName);
 
         if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign attribute : wsGetAttributeAssignmentsResults.getWsAttributeAssigns()) {
-                if (attribute.getAttributeDefNameName() != null && attribute.getAttributeDefNameName().equals(nameName)) {
+                if (attribute.getAttributeDefNameName() != null && attribute.getAttributeDefNameName().equals(attributeName)) {
                     return true;
                 }
             }
@@ -567,9 +500,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return false;
     }
 
-    /**
-     * @return a list of all of the Groupings that the user is in
-     */
+    // returns a list of all of the groups in groupPaths that are also groupings
     @Override
     public List<Grouping> groupingsIn(List<String> groupPaths) {
         List<String> groupingsIn = extractGroupings(groupPaths);
@@ -577,18 +508,13 @@ public class GroupingsServiceImpl implements GroupingsService {
         return makeGroupings(groupingsIn);
     }
 
-    /**
-     * @param grouping: path to the Grouping that will have its listserv attribute checked
-     * @return true if the Grouping has a listserv attribute false if not
-     */
+    //returns true if the grouping has a listserv, false otherwise
     @Override
-    public boolean hasListserv(String grouping) {
-        return groupHasAttribute(grouping, LISTSERV);
+    public boolean hasListserv(String groupingPath) {
+        return groupHasAttribute(groupingPath, LISTSERV);
     }
 
-    /**
-     * @return a list of all of the Groupings that the user owns
-     */
+    //returns a list of groupings that corresponds to all of the owner groups in groupPaths
     @Override
     public List<Grouping> groupingsOwned(List<String> groupPaths) {
         List<String> ownerGroups = groupPaths
@@ -602,30 +528,22 @@ public class GroupingsServiceImpl implements GroupingsService {
         return makeGroupings(ownedGroupings);
     }
 
-    /**
-     * @param username: username of the user who's groupings will be looked for
-     * @return a list of all of the Groupings that the user is opted into
-     */
+    //returns a list of all of the groupings corresponding to the include groups in groupPaths that have the self-opted attribute
+    //set in the membership
     @Override
     public List<Grouping> groupingsOptedInto(String username, List<String> groupPaths) {
         return groupingsOpted(INCLUDE, username, groupPaths);
     }
 
-    /**
-     * @param username: username of the user who's groupings will be looked for
-     * @return a list of all of the Groupings that the user is opted out of
-     */
+    //returns a list of all of the groupings corresponding to the exclude groups in groupPaths that have the self-opted attribute
+    //set in the membership
     @Override
     public List<Grouping> groupingsOptedOutOf(String username, List<String> groupPaths) {
         return groupingsOpted(EXCLUDE, username, groupPaths);
     }
 
-    /**
-     * @param includeOrrExclude: ":include" for the include group ":exclude" for the exclude group
-     * @param username:          username of the user who's groupings will be looked for
-     * @return a list of all of the groups that the user is opted into that end
-     * with the suffix defined in includeOrrExclude
-     */
+    //returns a list of groupings corresponding to the include group orr exclude group (includeOrrExclude) in groupPaths that
+    //have the self-opted attribute set in the membership
     private List<Grouping> groupingsOpted(String includeOrrExclude, String username, List<String> groupPaths) {
         logger.info("groupingsOpted; includeOrrExclude: " + includeOrrExclude + "; username: " + username + ";");
 
