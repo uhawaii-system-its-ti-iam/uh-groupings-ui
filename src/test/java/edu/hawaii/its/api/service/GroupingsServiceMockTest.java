@@ -1139,18 +1139,8 @@ public class GroupingsServiceMockTest {
         groupingsService.deleteGrouping(users.get(0).getUsername(), GROUPING_4_PATH);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    //todo fill this in after changes to addGrouping method
+    @Test
     public void addGrouping() {
-        List<String> basis = new ArrayList<>();
-        List<String> exclude = new ArrayList<>();
-        List<String> include = new ArrayList<>();
-        List<String> owners = new ArrayList<>();
-        groupingsService.addGrouping(
-                users.get(0).getUsername(),
-                "newGroupingPath",
-                basis,
-                include,
-                exclude,
-                owners);
     }
 }
