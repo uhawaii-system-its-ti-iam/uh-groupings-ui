@@ -431,6 +431,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GroupingsServiceResult>> addGrouping(Principal principal,
             @PathVariable String grouping,
+            //todo when fully implemented, basis will be changed to a string that contains the set theory logic for the
+            // groups that it will be comprised of
             @PathVariable List<String> basis,
             @PathVariable List<String> include,
             @PathVariable List<String> exclude,
