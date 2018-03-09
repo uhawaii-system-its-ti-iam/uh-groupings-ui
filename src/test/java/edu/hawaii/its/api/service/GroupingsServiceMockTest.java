@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
@@ -249,8 +250,19 @@ public class GroupingsServiceMockTest {
         assertNotNull(groupingsServiceOther);
     }
 
+    // Debug statement to look at contents of database
+    // Delete user from include group to remove them
+    // Use user number not slot in array
+    @Test
+    public void deleteGroupingMemberByUuidTest() {
+        Iterable<Grouping> group = groupingRepository.findAll();
+        List<GroupingsServiceResult> deleteGroup = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH, users.get(5).getUuid());
+
+    }
+
     @Test
     public void addAdminTest() {
+
         GroupingsServiceResult gsr;
         try {
             //user is not super user
