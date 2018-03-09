@@ -1400,10 +1400,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupMembers;
     }
 
-    /**
-     * @param groupPaths: list of group paths
-     * @return a list of Grouping paths that were is the list group paths
-     */
+    //returns the list of all of the groups in groupPaths that are also groupings
     private List<String> extractGroupings(List<String> groupPaths) {
         logger.info("extractGroupings; groupPaths: " + groupPaths + ";");
 
@@ -1429,10 +1426,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupings;
     }
 
-    /**
-     * @param username: username of user who's groups will be searched for
-     * @return a list of all groups that the user is a member of
-     */
+    //returns the list of groups that a user is in
     List<String> getGroupPaths(String username) {
         logger.info("getGroupPaths; username: " + username + ";");
         WsStemLookup stemLookup = grouperFS.makeWsStemLookup(STEM);
@@ -1453,6 +1447,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return extractGroupPaths(groups);
     }
 
+    //sets the attributes of a grouping in grouper or the database to match the attributes of the supplied grouping
     private Grouping setGroupingAttributes(Grouping grouping) {
         logger.info("setGroupingAttributes; grouping: " + grouping + ";");
         boolean listservOn = false;
@@ -1484,10 +1479,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return grouping;
     }
 
-    /**
-     * @param group: path of group to be checked
-     * @return the parent Grouping of the group
-     */
+    //removes one of the words (:exclude, :include, :owners ...) from the end of the string
     @Override
     public String parentGroupingPath(String group) {
         if (group != null) {
@@ -1507,10 +1499,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return "";
     }
 
-    /**
-     * @param groups: list of WsGroups
-     * @return a list of the names of the groups in the WsGroups
-     */
+    //take a list of WsGroups ans return a list of the paths for all of those groups
     List<String> extractGroupPaths(List<WsGroup> groups) {
         List<String> names = new ArrayList<>();
         if (groups != null) {
@@ -1521,27 +1510,21 @@ public class GroupingsServiceImpl implements GroupingsService {
         return names;
     }
 
-    /**
-     * @param group:         path to group who's attributes will be changed
-     * @param username:      username of user preforming action
-     * @param attributeName; name of attribute to be changed
-     * @param attributeOn:   on if the attribute should exist false otherwise
-     * @return information about success of the action
-     */
-    private GroupingsServiceResult changeGroupAttributeStatus(String group, String username, String attributeName, boolean attributeOn) {
+    //turns the attribute on or off in a group
+    private GroupingsServiceResult changeGroupAttributeStatus(String groupPath, String ownerUsername, String attributeName, boolean attributeOn) {
         GroupingsServiceResult gsr;
 
         String verb = "removed from ";
         if (attributeOn) {
             verb = "added to ";
         }
-        String action = attributeName + " has been " + verb + group + " by " + username;
+        String action = attributeName + " has been " + verb + groupPath + " by " + ownerUsername;
 
-        if (isOwner(group, username) || isAdmin(username)) {
-            boolean hasAttribute = groupHasAttribute(group, attributeName);
+        if (isOwner(groupPath, ownerUsername) || isAdmin(ownerUsername)) {
+            boolean hasAttribute = groupHasAttribute(groupPath, attributeName);
             if (attributeOn) {
                 if (!hasAttribute) {
-                    assignGroupAttributes(attributeName, OPERATION_ASSIGN_ATTRIBUTE, group);
+                    assignGroupAttributes(attributeName, OPERATION_ASSIGN_ATTRIBUTE, groupPath);
 
                     gsr = makeGroupingsServiceResult(SUCCESS, action);
                 } else {
@@ -1549,7 +1532,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 }
             } else {
                 if (hasAttribute) {
-                    assignGroupAttributes(attributeName, OPERATION_REMOVE_ATTRIBUTE, group);
+                    assignGroupAttributes(attributeName, OPERATION_REMOVE_ATTRIBUTE, groupPath);
 
                     gsr = makeGroupingsServiceResult(SUCCESS, action);
                 } else {
@@ -1557,22 +1540,23 @@ public class GroupingsServiceImpl implements GroupingsService {
                 }
             }
         } else {
-            gsr = makeGroupingsServiceResult(FAILURE + ", " + username + "does not have permission to set " + attributeName
-                    + " because " + username + " does not own " + group, action);
+            gsr = makeGroupingsServiceResult(FAILURE + ", " + ownerUsername + "does not have permission to set " + attributeName
+                    + " because " + ownerUsername + " does not own " + groupPath, action);
         }
 
         return gsr;
+    }
+
+    @Override
+    public String toString() {
+        return "GroupingsServiceImpl [SETTINGS=" + SETTINGS + "]";
     }
 
     /////////////////////////////////////////////////////
     ////Factory Methods
     /////////////////////////////////////////////////////
 
-    /**
-     * @param resultMetadataHolder: ResultMetadataHolder that will be turned into GroupingsServiceResult
-     * @param action:               the action being preformed in the resultMetadataHolder
-     * @return a GroupingsServiceResult made from the ResultMetadataHolder and the action
-     */
+    //makes a groupingsServiceResult with the result code from the metadataHolder and the action string
     GroupingsServiceResult makeGroupingsServiceResult(ResultMetadataHolder resultMetadataHolder, String action) {
         GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();
         groupingsServiceResult.setAction(action);
@@ -1585,6 +1569,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupingsServiceResult;
     }
 
+    //makes a groupingsServiceResult with the resultCode and the action string
     private GroupingsServiceResult makeGroupingsServiceResult(String resultCode, String action) {
         GroupingsServiceResult groupingsServiceResult = new GroupingsServiceResult();
         groupingsServiceResult.setAction(action);
@@ -1597,10 +1582,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupingsServiceResult;
     }
 
-    /**
-     * @param groupingPaths: list of paths to groups that are Groupings
-     * @return a list of Grouping Objects made from the list of Grouping paths
-     */
+    //makes a list of groupings each with a path fro the list
     List<Grouping> makeGroupings(List<String> groupingPaths) {
         logger.info("makeGroupings; groupingPaths: " + groupingPaths + ";");
 
@@ -1615,6 +1597,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return groupings;
     }
 
+    //makes a group filled with members from membersResults
     Group makeGroup(WsGetMembersResults membersResults) {
         Group group = new Group();
         try {
@@ -1635,10 +1618,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return group;
     }
 
-    /**
-     * @param person:
-     * @return a person made from the WsSubject
-     */
+    //makes a person from a WsSubject
     //todo do we still need this method?
     Person makePerson(WsSubject person) {
         if (person != null) {
@@ -1653,6 +1633,7 @@ public class GroupingsServiceImpl implements GroupingsService {
         return new Person();
     }
 
+    //makes a person with all attributes in attributeNames
     private Person makePerson(WsSubject subject, String[] attributeNames) {
         if (subject == null || subject.getAttributeValues() == null) {
             return new Person();
@@ -1667,10 +1648,5 @@ public class GroupingsServiceImpl implements GroupingsService {
 
             return new Person(attributes);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "GroupingsServiceImpl [SETTINGS=" + SETTINGS + "]";
     }
 }
