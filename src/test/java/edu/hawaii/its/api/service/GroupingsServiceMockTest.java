@@ -253,10 +253,37 @@ public class GroupingsServiceMockTest {
     // Debug statement to look at contents of database
     // Delete user from include group to remove them
     // Use user number not slot in array
+    // Use assert to check if it worked
     @Test
     public void deleteGroupingMemberByUuidTest() {
         Iterable<Grouping> group = groupingRepository.findAll();
-        List<GroupingsServiceResult> deleteGroup = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH, users.get(5).getUuid());
+        List<GroupingsServiceResult> listGsr;
+        GroupingsServiceResult gsr;
+        //gsrList.add(deleteGroupMemberByUuid(ownerUsername, include, userToDeleteUuid));
+
+        listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(5).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        // Test if removed is not in include group
+        // Test if user is not an owner
+        // Test if user is admin
+
+        //assertTrue(turnOffWhenOnRandom.get(0).getResultCode().startsWith(FAILURE));
+        //assertEquals(SUCCESS, turnOffWhenOnOwner.get(0).getResultCode());
+
+        listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(5).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        try {
+            listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                    users.get(5).getUuid());
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
+
+
 
     }
 
