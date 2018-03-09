@@ -1224,41 +1224,40 @@ public class GroupingsServiceImpl implements GroupingsService {
     //find a user by a uuid and add them to a grouping
     @Override
     public List<GroupingsServiceResult> addGroupingMemberByUuid(String username, String groupingPath, String userToAddUuid) {
-//        logger.info("addGroupingMemberByUuid; user: " + username + "; group: " + groupingPath + "; usersToAdd: " + userToAddUuid + ";");
-//
-//        List<GroupingsServiceResult> gsrs = new ArrayList<>();
-//
-//        String action = "add user to " + groupingPath;
-//        String basis = groupingPath + BASIS;
-//        String exclude = groupingPath + EXCLUDE;
-//        String include = groupingPath + INCLUDE;
-//
-//        Person personToAdd = new Person(null, userToAddUuid, null);
-//
-//        boolean inBasis = inGroup(basis, personToAdd);
-//        boolean inComposite = inGroup(groupingPath, personToAdd);
-//        boolean inInclude = inGroup(include, personToAdd);
-//
-//        //check to see if they are already in the grouping
-//        if (!inComposite) {
-//            //get them out of the exclude
-//            gsrs.add(deleteGroupMemberByUsername(username, exclude, personToAdd));
-//            //only add them to the include if they are not in the basis
-//            if (!inBasis) {
-//                gsrs.addAll(addGroupMemberByUuid(username, include, userToAddUuid));
-//            } else {
-//                gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAddUuid + " was in " + basis, action));
-//            }
-//        } else {
-//            gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAddUuid + " was already in " + groupingPath, action));
-//        }
-//        //should only be in one or the other
-//        if (inBasis && inInclude) {
-//            gsrs.add(deleteGroupMemberByUsername(username, include, personToAdd));
-//        }
-//
-//        return gsrs;
-        return null;
+        logger.info("addGroupingMemberByUuid; user: " + username + "; grouping: " + groupingPath + "; userToAdd: " + userToAddUuid + ";");
+
+        List<GroupingsServiceResult> gsrs = new ArrayList<>();
+
+        String action = "add user to " + groupingPath;
+        String basis = groupingPath + BASIS;
+        String exclude = groupingPath + EXCLUDE;
+        String include = groupingPath + INCLUDE;
+
+        Person personToAdd = new Person(null, userToAddUuid, null);
+
+        boolean inBasis = inGroup(basis, personToAdd);
+        boolean inComposite = inGroup(groupingPath, personToAdd);
+        boolean inInclude = inGroup(include, personToAdd);
+
+        //check to see if they are already in the grouping
+        if (!inComposite) {
+            //get them out of the exclude
+            gsrs.add(deleteGroupMemberByUuid(username, exclude, userToAddUuid));
+            //only add them to the include if they are not in the basis
+            if (!inBasis) {
+                gsrs.addAll(addGroupMemberByUuid(username, include, userToAddUuid));
+            } else {
+                gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAddUuid + " was in " + basis, action));
+            }
+        } else {
+            gsrs.add(makeGroupingsServiceResult(SUCCESS + ": " + userToAddUuid + " was already in " + groupingPath, action));
+        }
+        //should only be in one or the other
+        if (inBasis && inInclude) {
+            gsrs.add(deleteGroupMemberByUuid(username, include, userToAddUuid));
+        }
+
+        return gsrs;
     }
 
     //find a user by a username and remove them from the grouping
@@ -1308,57 +1307,56 @@ public class GroupingsServiceImpl implements GroupingsService {
     //todo
     //finds a user by a uuid and remove them from a grouping
     @Override
-    public List<GroupingsServiceResult> deleteGroupingMemberByUuid(String username, String groupingPath, String userToDelete) {
-//        logger.info("deleteGroupingMemberByUsername; username: "
-//                + username
-//                + "; groupingPath: "
-//                + groupingPath + "; userToDelete: "
-//                + userToDelete
-//                + ";");
-//
-//        List<GroupingsServiceResult> gsrList = new ArrayList<>();
-//
-//        String action = username + " deletes " + userToDelete + " from " + groupingPath;
-//        String basis = groupingPath + BASIS;
-//        String exclude = groupingPath + EXCLUDE;
-//        String include = groupingPath + INCLUDE;
-//
-//        boolean inBasis = inGroup(basis, userToDelete);
-//        boolean inComposite = inGroup(groupingPath, userToDelete);
-//        boolean inExclude = inGroup(exclude, userToDelete);
-//
-//        //if they are in the include group, get them out
-//        gsrList.add(deleteGroupMemberByUsername(username, include, userToDelete));
-//
-//        //make sure userToDelete is actually in the Grouping
-//        if (inComposite) {
-//            //if they are not in the include group, then they are in the basis, so add them to the exclude group
-//            if (inBasis) {
-//                gsrList.addAll(addGroupMemberByUsername(username, exclude, userToDelete));
-//            }
-//        }
-//        //since they are not in the Grouping, do nothing, but return SUCCESS
-//        else {
-//            gsrList.add(makeGroupingsServiceResult(SUCCESS + userToDelete + " was not in " + groupingPath, action));
-//        }
-//
-//        //should not be in exclude if not in basis
-//        if (!inBasis && inExclude) {
-//            gsrList.add(deleteGroupMemberByUsername(username, exclude, userToDelete));
-//        }
-//
-//        return gsrList;
-        return null;
+    public List<GroupingsServiceResult> deleteGroupingMemberByUuid(String ownerUsername, String groupingPath, String userToDeleteUuid) {
+        logger.info("deleteGroupingMemberByUuid; ownerUsername: "
+                + ownerUsername
+                + "; groupingPath: "
+                + groupingPath + "; userToDelete: "
+                + userToDeleteUuid
+                + ";");
+
+        List<GroupingsServiceResult> gsrList = new ArrayList<>();
+
+        String action = ownerUsername + " deletes " + userToDeleteUuid + " from " + groupingPath;
+        String basis = groupingPath + BASIS;
+        String exclude = groupingPath + EXCLUDE;
+        String include = groupingPath + INCLUDE;
+
+        Person personToDelete = new Person(null, userToDeleteUuid, null);
+
+        boolean inBasis = inGroup(basis, personToDelete);
+        boolean inComposite = inGroup(groupingPath, personToDelete);
+        boolean inExclude = inGroup(exclude, personToDelete);
+
+        //if they are in the include group, get them out
+        gsrList.add(deleteGroupMemberByUuid(ownerUsername, include, userToDeleteUuid));
+
+        //make sure userToDelete is actually in the Grouping
+        if (inComposite) {
+            //if they are not in the include group, then they are in the basis, so add them to the exclude group
+            if (inBasis) {
+                gsrList.addAll(addGroupMemberByUuid(ownerUsername, exclude, userToDeleteUuid));
+            }
+        }
+        //since they are not in the Grouping, do nothing, but return SUCCESS
+        else {
+            gsrList.add(makeGroupingsServiceResult(SUCCESS + userToDeleteUuid + " was not in " + groupingPath, action));
+        }
+
+        //should not be in exclude if not in basis
+        if (!inBasis && inExclude) {
+            gsrList.add(deleteGroupMemberByUuid(ownerUsername, exclude, userToDeleteUuid));
+        }
+
+        return gsrList;
     }
 
     //find a user by a username and remove them from a group
     @Override
     public GroupingsServiceResult deleteGroupMemberByUsername(String ownerUsername, String groupPath, String userToDeleteUsername) {
-        logger.info("deleteGroupMemberByUsername; user: "
-                + ownerUsername
-                + "; group: "
-                + groupPath + "; userToDelete: "
-                + userToDeleteUsername
+        logger.info("deleteGroupMemberByUsername; user: " + ownerUsername
+                + "; group: " + groupPath
+                + "; userToDelete: " + userToDeleteUsername
                 + ";");
 
         String action = "delete " + userToDeleteUsername + " from " + groupPath;
@@ -1370,6 +1368,35 @@ public class GroupingsServiceImpl implements GroupingsService {
             if (groupPath.endsWith(EXCLUDE) || groupPath.endsWith(INCLUDE) || groupPath.endsWith(OWNERS)) {
                 if (inGroup(groupPath, userToDeleteUsername)) {
                     WsDeleteMemberResults deleteMemberResults = grouperFS.makeWsDeleteMemberResults(groupPath, user, userToDeleteUsername);
+
+                    updateLastModified(composite);
+                    updateLastModified(groupPath);
+                    return makeGroupingsServiceResult(deleteMemberResults, action);
+                }
+                return makeGroupingsServiceResult(SUCCESS + ": " + ownerUsername + " was not in " + groupPath, action);
+            }
+            return makeGroupingsServiceResult(FAILURE + ": " + ownerUsername + " may only delete from exclude, include or owner group", action);
+        }
+        return makeGroupingsServiceResult(FAILURE + ": " + ownerUsername + " does not have permission to edit " + groupPath, action);
+    }
+
+    @Override
+    public GroupingsServiceResult deleteGroupMemberByUuid(String ownerUsername, String groupPath, String userToDeleteUuid) {
+        logger.info("deleteGroupMemberByUuid; user: " + ownerUsername
+                + "; group: " + groupPath
+                + "; userToDelete: " + userToDeleteUuid
+                + ";");
+
+        String action = "delete " + userToDeleteUuid + " from " + groupPath;
+        Person personToDelete = new Person(null, userToDeleteUuid, null);
+
+        String composite = parentGroupingPath(groupPath);
+
+        if (isOwner(composite, ownerUsername) || isSuperuser(ownerUsername)) {
+            WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
+            if (groupPath.endsWith(EXCLUDE) || groupPath.endsWith(INCLUDE) || groupPath.endsWith(OWNERS)) {
+                if (inGroup(groupPath, personToDelete)) {
+                    WsDeleteMemberResults deleteMemberResults = grouperFS.makeWsDeleteMemberResults(groupPath, user, personToDelete);
 
                     updateLastModified(composite);
                     updateLastModified(groupPath);
