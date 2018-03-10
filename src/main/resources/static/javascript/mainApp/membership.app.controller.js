@@ -98,8 +98,8 @@
         /**
          * Sorts a table by a given property.
          * @param {string} tableName - the variable name of the table to sort
-         * @param pagedTableName - the variable name of the paginated table
-         * @param propertyName - the property to sort by
+         * @param {string} pagedTableName - the variable name of the paginated table
+         * @param {string} propertyName - the property to sort by
          */
         $scope.sortBy = function (tableName, pagedTableName, propertyName) {
             if (!$scope.columnSort[tableName]) {
