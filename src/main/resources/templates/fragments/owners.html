@@ -6,13 +6,13 @@
         <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortCol(groupingOwners, 'name', 'pagedItemsOwners', 'symbolOwners')"
-                    class="clickable">
-                    Owner Name {{symbol.name}}
+                <th ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'name')" class="clickable">
+                    Owner Name
+                    <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners" ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingOwners, 'username', 'pagedItemsOwners', 'currentPageOwners', 'symbolOwners')"
-                    class="clickable">
-                    UH Username {{symbol.username}}
+                <th ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'username')" class="clickable">
+                    UH Username
+                    <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'username'" ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                 </th>
             </tr>
             </thead>

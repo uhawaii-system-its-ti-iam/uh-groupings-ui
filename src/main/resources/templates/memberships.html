@@ -58,11 +58,14 @@
                         <table class="table table-responsive table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th ng-click="sort(membersList, 'name', 'pagedItemsMembersList', 'symbolList')"
-                                    class="clickable">
-                                    Grouping Name {{symbol.member}}
+                                <th ng-click="sortBy('membersList', 'pagedItemsMembersList', 'name')" class="clickable">
+                                    Grouping Name
+                                    <i class="fa sort-icon" ng-show="columnSort.membersList.property === 'name' || !columnSort.membersList" ng-class="{ reverse: columnSort.membersList.reverse }"></i>
                                 </th>
-                                <th>Grouping Path</th>
+                                <th ng-click="sortBy('membersList', 'pagedItemsMembersList', 'path')" class="clickable">
+                                    Grouping Path
+                                    <i class="fa sort-icon" ng-show="columnSort.membersList.property === 'path'" ng-class="{ reverse: columnSort.membersList.reverse }"></i>
+                                </th>
                                 <th class="col-md-2 text-center" style="vertical-align: middle;">Opt Out?</th>
                             </tr>
                             </thead>
@@ -139,13 +142,14 @@
                             <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
                                 <thead>
                                 <tr>
-                                    <th ng-click="sort(optInList, 'name', 'pagedItemsOptInList', 'symbolOptIn')"
-                                        class="clickable">
-                                        Grouping Name {{symbol.optInName}}
+                                    <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'name')" class="clickable">
+                                        Grouping Name
+                                        <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'name' || !columnSort.optInList" ng-class="{ reverse: columnSort.optInList.reverse }"></i>
                                     </th>
-                                    <th ng-click="sort(optInList, 'path', 'pagedItemsOptInList', 'symbolOptIn')"
-                                        class="clickable">
-                                        Grouping Path {{symbol.optInPath}}</th>
+                                    <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'path')" class="clickable">
+                                        Grouping Path
+                                        <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'path'" ng-class="{ reverse: columnSort.optInList.reverse }"></i>
+                                        </th>
                                     <th class="col-md-2 text-center" style="vertical-align: middle;">Opt In?</th>
                                 </tr>
                                 </thead>

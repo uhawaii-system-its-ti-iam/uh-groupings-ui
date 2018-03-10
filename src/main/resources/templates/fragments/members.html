@@ -24,21 +24,23 @@
         <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortCol(groupingMembers, 'name', 'pagedItemsMembers', 'symbolList')"
-                    class="clickable">
-                    Member Name {{symbol.name}}
+                <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" class="clickable">
+                    Member Name
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingMembers, 'uuid', 'pagedItemsMembers', 'symbolList')"
-                    class="clickable">
-                    UH Number {{symbol.uuid}}
+                <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uuid')" class="clickable">
+                    UH Number
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uuid'" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingMembers, 'username', 'pagedItemsMembers', 'symbolList')"
+                <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'username')"
                     class="clickable">
-                    UH Username {{symbol.username}}
+                    UH Username
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
                 <th style="vertical-align: middle;" class="clickable"
-                    ng-click="sortCol(groupingMembers, 'basis', 'pagedItemsMembers', 'symbolList')">
-                    Where Listed? {{symbol.basis}}
+                    ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'basis')">
+                    Where Listed?
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'basis'" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
             </tr>
             </thead>

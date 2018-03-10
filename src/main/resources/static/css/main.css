@@ -483,3 +483,11 @@ td.uh-pre {
 .clickable {
     cursor: pointer;
 }
+
+.sort-icon:after {
+    content: '\f107';
+}
+
+.sort-icon.reverse:after {
+    content: '\f106';
+}

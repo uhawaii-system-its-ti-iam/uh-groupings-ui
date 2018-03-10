@@ -44,6 +44,8 @@
 
         $scope.loading = false;
 
+        $scope.columnSort = {};
+
         /**
          * Retrieves information about the grouping.
          */
@@ -341,6 +343,8 @@
             $scope.currentPageInclude = 0;
             $scope.currentPageExclude = 0;
             $scope.currentPageOwners = 0;
+            // Reset column sorting
+            $scope.columnSort = {};
         };
 
         /**
@@ -618,6 +622,37 @@
                 str += line + '\r\n';
             }
             return str;
+        };
+
+        /**
+         * Sorts a table by a given property.
+         * @param {string} tableName - the variable name of the table to sort
+         * @param pagedTableName - the variable name of the paginated table
+         * @param propertyName - the property to sort by
+         */
+        $scope.sortBy = function (tableName, pagedTableName, propertyName) {
+            if (!$scope.columnSort[tableName]) {
+                // If the user sorts by name property (typically the first column), then just reverse the direction
+                if (propertyName === 'name') {
+                    $scope.columnSort[tableName] = { property: 'name', reverse: true };
+                } else {
+                    // Otherwise, set the new property and sort in ascending order
+                    $scope.columnSort[tableName] = { property: propertyName, reverse: false };
+                }
+            } else {
+                // If the property to sort by is the same as what is already stored, then just invert the direction
+                if (propertyName === $scope.columnSort[tableName].property) {
+                    $scope.columnSort[tableName].reverse = !$scope.columnSort[tableName].reverse;
+                } else {
+                    // Otherwise, set the new property and sort in ascending order
+                    $scope.columnSort[tableName].property = propertyName;
+                    $scope.columnSort[tableName].reverse = false;
+                }
+            }
+            var reverse = $scope.columnSort[tableName].reverse;
+            $scope[tableName] = $filter('orderBy')($scope[tableName], propertyName, reverse);
+            // Paginate the table again
+            $scope[pagedTableName] = $scope.groupToPages($scope[tableName], []);
         };
 
     }

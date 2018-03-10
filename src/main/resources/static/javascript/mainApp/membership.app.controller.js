@@ -28,6 +28,8 @@
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
 
+        $scope.columnSort = {};
+
         $scope.initCurrentUsername = function () {
             $scope.currentUsername = $window.document.getElementById("name").innerHTML;
         };
@@ -94,35 +96,34 @@
         };
 
         /**
-         *  Sorts the data in the table in ascending or descending order based on
-         *  the list and column being sorted.
-         *
-         * @param list - The data list to which will be sorted
-         * @param col - The object to name to determine how it will be sorted by.
-         * @param listPaged - The paged data list to which the sorted list will go into.
-         * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
+         * Sorts a table by a given property.
+         * @param {string} tableName - the variable name of the table to sort
+         * @param pagedTableName - the variable name of the paginated table
+         * @param propertyName - the property to sort by
          */
-        $scope.sort = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'member': '', 'optInName': '', 'optInPath': ''};
-            if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
-                list = $scope.sortOrder(list, col);
-                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = '\u25BC';
+        $scope.sortBy = function (tableName, pagedTableName, propertyName) {
+            if (!$scope.columnSort[tableName]) {
+                // If the user sorts by name property (typically the first column), then just reverse the direction
+                if (propertyName === 'name') {
+                    $scope.columnSort[tableName] = { property: 'name', reverse: true };
+                } else {
+                    // Otherwise, set the new property and sort in ascending order
+                    $scope.columnSort[tableName] = { property: propertyName, reverse: false };
+                }
+            } else {
+                // If the property to sort by is the same as what is already stored, then just invert the direction
+                if (propertyName === $scope.columnSort[tableName].property) {
+                    $scope.columnSort[tableName].reverse = !$scope.columnSort[tableName].reverse;
+                } else {
+                    // Otherwise, set the new property and sort in ascending order
+                    $scope.columnSort[tableName].property = propertyName;
+                    $scope.columnSort[tableName].reverse = false;
+                }
             }
-            else {
-                list = $scope.sortOrder(list, col).reverse();
-                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = '\u25B2';
-            }
-            switch (listPaged) {
-                case 'pagedItemsMembersList' :
-                    $scope.symbol.member = '\u21c5';
-                    break;
-                case 'pagedItemsOptInList' :
-                    if(col == "name") $scope.symbol.optInName = '\u21c5';
-                    else $scope.symbol.optInPath = '\u21c5';
-                    break;
-            }
+            var reverse = $scope.columnSort[tableName].reverse;
+            $scope[tableName] = $filter('orderBy')($scope[tableName], propertyName, reverse);
+            // Paginate the table again
+            $scope[pagedTableName] = $scope.groupToPages($scope[tableName], []);
         };
 
         /**

@@ -59,17 +59,17 @@
                                 <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
                                     <thead>
                                     <tr>
-                                        <th ng-click="sortCol(adminsList, 'name', 'pagedItemsAdmins', 'symbolAdmin')"
-                                            class="clickable">
-                                            Admin Name {{symbol.name}}
+                                        <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'name')" class="clickable">
+                                            Admin Name
+                                            <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'name' || !columnSort.adminsList" ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
                                         </th>
-                                        <th ng-click="sortCol(adminsList, 'uuid', 'pagedItemsAdmins', 'symbolAdmin')"
-                                            class="clickable">
-                                            UH Number {{symbol.uuid}}
+                                        <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'uuid')" class="clickable">
+                                            UH Number
+                                            <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'uuid'" ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
                                         </th>
-                                        <th ng-click="sortCol(adminsList, 'username', 'pagedItemsAdmins', 'symbolAdmin')"
-                                            class="clickable">
-                                            UH Username {{symbol.username}}
+                                        <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'username')" class="clickable">
+                                            UH Username
+                                            <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'username'" ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
                                         </th>
                                     </tr>
                                     </thead>

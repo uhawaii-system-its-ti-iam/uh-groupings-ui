@@ -49,36 +49,6 @@
             $scope.resetGroupingInformation();
         };
 
-        $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'path': '', 'uuid': '', 'username': ''};
-
-            if ($scope[symbol] === 'ascend' || typeof $scope[symbol] == 'undefined') {
-                list = _.sortBy(list, col);
-                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = 'descend';
-            } else {
-                list = _.sortBy(list, col).reverse();
-                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = 'ascend';
-            }
-            switch (col) {
-                case 'name':
-                    $scope.symbol.name = '\u21c5';
-                    break;
-                case 'path':
-                    $scope.symbol.path = '\u21c5';
-                    break;
-                case 'uuid':
-                    $scope.symbol.uuid = '\u21c5';
-                    break;
-                case 'username':
-                    $scope.symbol.username = '\u21c5';
-                    break;
-                case 'basis':
-                    $scope.symbol.basis = '\u21c5';
-            }
-        };
-
         // TODO: Find a way to make the 3 adds into a more singular function.
 
         /**
