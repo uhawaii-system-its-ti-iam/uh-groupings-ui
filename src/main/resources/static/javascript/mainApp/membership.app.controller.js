@@ -6,18 +6,15 @@
      * Membership controller for the whole memberships page
      *
      * @param $scope - binding between controller and HTML page
-     * @param $window - reference to the browser's window
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function MembershipJsController($scope, $window, $uibModal, $filter, dataProvider) {
+    function MembershipJsController($scope, $uibModal, $controller, dataProvider) {
 
         $scope.currentUsername = "";
         $scope.membersList = [];
         $scope.optInList = [];
         $scope.optOutList = [];
         $scope.loading = true;
-
-        $scope.symbol = {'member': '', 'optInName': '', 'optInPath': ''};
 
         //these will be place holders for now
         $scope.pagedItemsMembersList = [];
@@ -30,19 +27,12 @@
 
         $scope.columnSort = {};
 
-        $scope.initCurrentUsername = function () {
-            $scope.currentUsername = $window.document.getElementById("name").innerHTML;
-        };
-
-        $scope.getCurrentUsername = function () {
-            return $scope.currentUsername;
-        };
+        angular.extend(this, $controller('TableJsController', { $scope: $scope }));
 
         /**init is something that is usually called at the start of something
          * so calling init would be called at the start
          **/
         $scope.init = function () {
-            $scope.initCurrentUsername();
             var groupingURL = "api/groupings/groupingAssignment";
             /**Loads Data into a membersList
              *                  optOutList
@@ -64,12 +54,6 @@
 
                     $scope.membersList = $scope.sortOrder($scope.membersList, 'name');
                     $scope.optInList = $scope.sortOrder($scope.optInList, 'name');
-
-                    //Sorts tables by name
-                    $scope.symbol.member = '\u21c5';
-                    $scope.symbolList = '\u25BC';
-                    $scope.symbol.optInName = '\u21c5';
-                    $scope.symbolOptIn = '\u25BC';
 
                     if ($scope.optInList.length === 0) {
                         $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
@@ -93,37 +77,6 @@
 
         $scope.errorDismiss = function() {
             $scope.errorModalInstance.dismiss();
-        };
-
-        /**
-         * Sorts a table by a given property.
-         * @param {string} tableName - the variable name of the table to sort
-         * @param {string} pagedTableName - the variable name of the paginated table
-         * @param {string} propertyName - the property to sort by
-         */
-        $scope.sortBy = function (tableName, pagedTableName, propertyName) {
-            if (!$scope.columnSort[tableName]) {
-                // If the user sorts by name property (typically the first column), then just reverse the direction
-                if (propertyName === 'name') {
-                    $scope.columnSort[tableName] = { property: 'name', reverse: true };
-                } else {
-                    // Otherwise, set the new property and sort in ascending order
-                    $scope.columnSort[tableName] = { property: propertyName, reverse: false };
-                }
-            } else {
-                // If the property to sort by is the same as what is already stored, then just invert the direction
-                if (propertyName === $scope.columnSort[tableName].property) {
-                    $scope.columnSort[tableName].reverse = !$scope.columnSort[tableName].reverse;
-                } else {
-                    // Otherwise, set the new property and sort in ascending order
-                    $scope.columnSort[tableName].property = propertyName;
-                    $scope.columnSort[tableName].reverse = false;
-                }
-            }
-            var reverse = $scope.columnSort[tableName].reverse;
-            $scope[tableName] = $filter('orderBy')($scope[tableName], propertyName, reverse);
-            // Paginate the table again
-            $scope[pagedTableName] = $scope.groupToPages($scope[tableName], []);
         };
 
         /**
@@ -172,54 +125,6 @@
             }, optInURL);
         };
 
-        var searchMatch = function (haystack, needle) {
-            if (!needle) {
-                return true;
-            }
-            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
-        };
-
-        /**searches through the array to find matches and then fixes the list
-         **@param list - gives the whole list to sort out
-         **@param whatList - it gives you the list you need to search through
-         **@param whatQuery - it gives the search bar its seperate search function.
-         **/
-        $scope.search = function (list, whatList, whatQuery) {
-            var query = "";
-            query = $scope[whatQuery];
-            console.log(query);
-            $scope.filteredItems = [];
-            $scope.filteredItems = $filter('filter')(list, function (item) {
-                // Filter by path name for groups in Available Groupings tab
-                if (list === $scope.optInList) {
-                    if (searchMatch(item.path, query)) {
-                        return true;
-                    }
-                } else {
-                    // Otherwise filter by name of grouping for My Grouping Memberships tab
-                    if (searchMatch(item.name, query)) {
-                        return true;
-                    }
-                }
-            });
-            page = 0;
-            // now group by pages
-            var emptyList = [];
-            $scope[whatList] = $scope.groupToPagesChanged(emptyList);
-        };
-
-
-        $scope.groupToPagesChanged = function (pagedList) {
-            var pagedList = [];
-            for (var i = 0; i < $scope.filteredItems.length; i++) {
-                if (i % $scope.itemsPerPage === 0) {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
-                } else {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
-                }
-            }
-            return pagedList;
-        };
         //Disables opt in button if there are no groupings to opt into.
         $scope.disableOptIn = function (index) {
             for (var i = 0; i < $scope.membersList.length; i++) {
@@ -249,84 +154,8 @@
             return true;
         };
 
-        /**groups all the items to pages
-         have separate arrays (hopefully)
-         @param theList - .
-         @param pagedList - .
-         **/
-        $scope.groupToPages = function (theList, pagedList) {
-            var pagedList = [];
-            for (var i = 0; i < theList.length; i++) {
-                if (i % $scope.itemsPerPage === 0) {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [theList[i]];
-                } else {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)].push(theList[i]);
-                }
-            }
-            return pagedList;
-        };
-
-
-        /**shows the range between the start and end
-         *checks for negative numbers
-         *
-         * @param size
-         * @param start
-         * @param end
-         *  all the param are self explanatory
-         * @return ret
-         *     everything within the range of start,
-         *       end, and making sure it's that size
-         **/
-        $scope.range = function (size, start, end) {
-            var ret = [];
-
-            if (size < end) {
-                end = size;
-                // start = size - $scope.gap;
-            }
-            if (start < 0) {
-                start = 0;
-            }
-            for (var i = start; i < end; i++) {
-                ret.push(i);
-            }
-            return ret;
-        };
-
-
-        //might make this into my one function
-        $scope.currentPage = function (pages, whatList, whatPage) {
-            switch (pages) {
-                case 'Next':
-                    if ($scope[whatPage] < $scope[whatList].length - 1) {
-                        $scope[whatPage] = $scope[whatPage] + 1;
-                    }
-                    break;
-
-                case 'Set':
-                    $scope[whatPage] = this.n;
-                    break;
-
-                case 'Prev':
-                    if ($scope[whatPage] > 0) {
-                        $scope[whatPage]--;
-                    }
-                    break;
-                case 'First':
-                    if ($scope[whatPage] > 0) {
-                        $scope[whatPage] = 0;
-                    }
-                    break;
-                case 'Last':
-                    if ($scope[whatPage] >= 0) {
-                        $scope[whatPage] = $scope[whatList].length - 1;
-                    }
-                    break;
-            }
-        };
-
     }
 
     UHGroupingsApp.controller("MembershipJsController", MembershipJsController);
+
 })();
