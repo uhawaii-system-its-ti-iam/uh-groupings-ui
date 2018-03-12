@@ -31,12 +31,14 @@
                 </td>
                 <td>
                     {{owner.username}}
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       onmouseover="$(this).tooltip('show')"
-                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
-                       ng-if="owner.username === 'N/A'">
-                    </i>
+                    <div ng-if="owner.username === ''">
+                        <span>N/A</span>
+                        <i class="fa fa-question-circle clickable" aria-hidden="true"
+                           data-toggle="tooltip" data-placement="right"
+                           onmouseover="$(this).tooltip('show')"
+                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                        </i>
+                    </div>
                 </td>
             </tr>
             </tbody>

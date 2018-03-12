@@ -50,12 +50,14 @@
                 <td>{{b.uuid}}</td>
                 <td>
                     {{b.username}}
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       onmouseover="$(this).tooltip('show')"
-                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
-                       ng-if="b.username === 'N/A'">
-                    </i>
+                    <div ng-if="b.username === ''">
+                        <span>N/A</span>
+                        <i class="fa fa-question-circle clickable" aria-hidden="true"
+                           data-toggle="tooltip" data-placement="right"
+                           onmouseover="$(this).tooltip('show')"
+                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                        </i>
+                    </div>
                 </td>
             </tr>
             </tbody>
