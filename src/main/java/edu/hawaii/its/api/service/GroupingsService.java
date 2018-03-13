@@ -54,6 +54,9 @@ public interface GroupingsService {
     public GroupingsServiceResult deleteGroupMemberByUuid(String ownerUsername, String groupPath,
             String userToDeleteUuid);
 
+    //todo deleteGroupMembersByUuid
+    //todo deleteGroupMembersByUsername
+
     public GroupingsServiceResult addAdmin(String adminUsername, String adminToAddUsername);
 
     public GroupingsServiceResult deleteAdmin(String adminUsername, String adminToDeleteUsername);
@@ -80,23 +83,34 @@ public interface GroupingsService {
 
     public boolean optInPermission(String groupingPath);
 
+
+
     //////////////////////////////////////////
     //  member attributes   //////////////////
     //////////////////////////////////////////
-
-
 
     public GroupingsServiceResult assignOwnership(String groupingPath, String ownerUsername, String newOwnerUsername);
 
     public GroupingsServiceResult removeOwnership(String groupingPath, String username, String ownerToRemoveUsername);
 
+    public boolean isMember(String groupPath, String username);
+
+    public boolean isMember(String groupPath, Person person);
+
     public boolean isOwner(String groupingPath, String username);
 
     public boolean isAdmin(String username);
 
+    public boolean isApp(String username);
+
+    public boolean isSuperuser(String username);
+
+    public boolean isSelfOpted(String groupPath, String username);
+
     public boolean groupOptInPermission(String username, String groupPath);
 
     public boolean groupOptOutPermission(String username, String groupPath);
+
 
 
 
@@ -117,31 +131,4 @@ public interface GroupingsService {
     public GroupingAssignment getGroupingAssignment(String username);
 
     public AdminListsHolder adminLists(String adminUsername);
-
-
-
-    ///////////////////////////////////////
-    //todo probably remove these
-    ///////////////////////////////////////
-
-//    public String parentGroupingPath(String groupPath);
-//
-//    public boolean groupHasAttribute(String groupingPath, String nameName);
-//
-//    public GroupingsServiceResult updateLastModified(String groupPath);
-
-    public boolean checkSelfOpted(String groupPath, String username);
-
-//    public GroupingsServiceResult addSelfOpted(String groupPath, String username);
-//
-//    public GroupingsServiceResult removeSelfOpted(String groupPath, String username);
-
-    public boolean isApp(String username);
-
-    public boolean isSuperuser(String username);
-
-    public boolean inGroup(String groupPath, String username);
-
-    public boolean inGroup(String groupPath, Person person);
-
 }
