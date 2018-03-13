@@ -6,6 +6,8 @@
      * @param $filter - service for filtering and sorting
      */
     function TableJsController($scope, $filter) {
+        
+        $scope.columnSort = {};
 
         /**
          * Paginates a list of items.

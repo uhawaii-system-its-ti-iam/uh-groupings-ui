@@ -37,13 +37,9 @@
         $scope.listserv = false;
         $scope.LDAP = false;
 
-        $scope.symbol = {};
-
         $scope.showGrouping = false;
 
         $scope.loading = false;
-
-        $scope.columnSort = {};
 
         angular.extend(this, $controller('TableJsController', { $scope: $scope }));
 

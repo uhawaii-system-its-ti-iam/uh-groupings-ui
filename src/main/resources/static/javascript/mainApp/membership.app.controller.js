@@ -25,8 +25,6 @@
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
 
-        $scope.columnSort = {};
-
         angular.extend(this, $controller('TableJsController', { $scope: $scope }));
 
         /**init is something that is usually called at the start of something
