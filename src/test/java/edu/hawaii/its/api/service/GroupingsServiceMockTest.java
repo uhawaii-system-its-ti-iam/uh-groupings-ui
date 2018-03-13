@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
@@ -249,8 +250,69 @@ public class GroupingsServiceMockTest {
         assertNotNull(groupingsServiceOther);
     }
 
+    // Debug statement to look at contents of database
+    // Delete user from include group to remove them
+    // Use user number not slot in array
+    // Use assert to check if it worked
+    @Test
+    public void deleteGroupingMemberByUuidTest() {
+        Iterable<Grouping> group = groupingRepository.findAll();
+        List<GroupingsServiceResult> listGsr;
+        GroupingsServiceResult gsr;
+        //gsrList.add(deleteGroupMemberByUuid(ownerUsername, include, userToDeleteUuid));
+
+        // Base test
+        // Remove person from include and composite
+        listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(5).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        // If person is in composite and basis, add to exclude group
+        listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(1).getUuid());
+        for (GroupingsServiceResult gsrFor : listGsr){
+            assertTrue(gsrFor.getResultCode().startsWith(SUCCESS));
+        }
+
+        // Not in composite, do nothing but return success
+        listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(2).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        // Not in basis, but in exclude
+        // Can't happen with current database
+        // Currently does nothing useful
+        /*
+        listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(1).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+        */
+
+        // Test if user is not an owner
+        try {
+            listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(5).getUsername(), GROUPING_3_PATH,
+                    users.get(6).getUuid());
+            assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
+
+        // Test if user is admin
+        listGsr = groupingsService.deleteGroupingMemberByUuid(ADMIN_USER, GROUPING_3_PATH,
+                users.get(6).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        // Test if removed is not in include group
+        // Test if user is not an owner
+        // Test if user is admin
+
+        //assertTrue(turnOffWhenOnRandom.get(0).getResultCode().startsWith(FAILURE));
+        //assertEquals(SUCCESS, turnOffWhenOnOwner.get(0).getResultCode());
+    }
+
     @Test
     public void addAdminTest() {
+
         GroupingsServiceResult gsr;
         try {
             //user is not super user
