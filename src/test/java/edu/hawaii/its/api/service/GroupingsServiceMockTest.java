@@ -261,8 +261,45 @@ public class GroupingsServiceMockTest {
         GroupingsServiceResult gsr;
         //gsrList.add(deleteGroupMemberByUuid(ownerUsername, include, userToDeleteUuid));
 
+        // Base test
+        // Remove person from include and composite
         listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
                 users.get(5).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        // If person is in composite and basis, add to exclude group
+        listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(1).getUuid());
+        for (GroupingsServiceResult gsrFor : listGsr){
+            assertTrue(gsrFor.getResultCode().startsWith(SUCCESS));
+        }
+
+        // Not in composite, do nothing but return success
+        listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(2).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        // Not in basis, but in exclude
+        // Can't happen with current database
+        // Currently does nothing useful
+        /*
+        listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(1).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+        */
+
+        // Test if user is not an owner
+        try {
+            listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(5).getUsername(), GROUPING_3_PATH,
+                    users.get(6).getUuid());
+            assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
+
+        // Test if user is admin
+        listGsr = groupingsService.deleteGroupingMemberByUuid(ADMIN_USER, GROUPING_3_PATH,
+                users.get(6).getUuid());
         assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
 
         // Test if removed is not in include group
@@ -271,20 +308,6 @@ public class GroupingsServiceMockTest {
 
         //assertTrue(turnOffWhenOnRandom.get(0).getResultCode().startsWith(FAILURE));
         //assertEquals(SUCCESS, turnOffWhenOnOwner.get(0).getResultCode());
-
-        listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
-                users.get(5).getUuid());
-        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
-
-        try {
-            listGsr = groupingsService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
-                    users.get(5).getUuid());
-        } catch (GroupingsServiceResultException gsre) {
-            gsr = gsre.getGsr();
-        }
-
-
-
     }
 
     @Test
