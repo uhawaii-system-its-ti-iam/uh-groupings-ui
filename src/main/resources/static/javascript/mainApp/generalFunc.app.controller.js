@@ -609,8 +609,12 @@
                 var line = '';
                 line += table[i].lastName + ',';
                 line += table[i].firstName + ',';
-                line += table[i].username + ',';
-                line += table[i].username + '@hawaii.edu,';
+                if (table[i].username !== 'N/A') {
+                    line += table[i].username + ',';
+                    line += table[i].username + '@hawaii.edu,';
+                } else {
+                    line += ',,';
+                }
                 str += line + '\r\n';
             }
             return str;

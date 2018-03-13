@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Info')"></head>
 <body>
     <nav th:substituteby="menubar :: copy"></nav>
@@ -10,7 +11,7 @@
         <div class='row'>
             <div>
                 <h1>General Information</h1>
-                <table class='table table-bordered'>
+                <table class='table table-bordered' role = "presentation">
                     <tbody>
                     <tr>
                         <td align="left" valign="top" width="450em">How do I request a new grouping?</td>
