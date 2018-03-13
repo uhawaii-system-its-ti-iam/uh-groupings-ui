@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="table-responsive">
-        <table class="table table-bordered table-condensed table-hover">
+        <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
             <thead>
             <tr>
                 <th ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')"
@@ -47,7 +47,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]">
-                <td>
+                <td tabindex="0">
                     {{e.name}}
                     <span class="glyphicon glyphicon-trash pull-right clickable"
                           data-toggle="tooltip" data-placement="top"

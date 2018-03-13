@@ -1,9 +1,11 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="header :: copy"></head>
-<body>
-<nav th:replace="menubar :: copy"></nav>
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<head th:replace="header :: copy(headingTitle='UH Groupings Feedback')"></head>
+<body ng-app="UHGroupingsApp">
+<nav th:substituteby="menubar :: copy"></nav>
+
 
 <!--   Content container -->
 <div class='container'>

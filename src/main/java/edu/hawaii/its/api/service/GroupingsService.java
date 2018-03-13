@@ -6,11 +6,117 @@ import java.util.List;
 
 public interface GroupingsService {
 
-    public List<GroupingsServiceResult> addGrouping(String username, String path, List<String> basis, List<String> include, List<String> exclude, List<String> owners);
+    /////////////////////////////////////////////
+    //  add or remove groupings /////////////////
+    /////////////////////////////////////////////
 
-    public List<GroupingsServiceResult> deleteGrouping(String username, String groupingPath);
+    public List<GroupingsServiceResult> addGrouping(String adminUsername,
+            String groupingPath,
+            List<String> basis,
+            List<String> include,
+            List<String> exclude,
+            List<String> owners);
 
-    public boolean hasListserv(String grouping);
+    public List<GroupingsServiceResult> deleteGrouping(String adminUsername, String groupingPath);
+
+
+
+
+    /////////////////////////////////////////////
+    //  add or remove members   /////////////////
+    /////////////////////////////////////////////
+
+    public List<GroupingsServiceResult> addGroupingMemberByUsername(String ownerUsername, String groupingPath, String userToAddUsername);
+
+    public List<GroupingsServiceResult> addGroupingMemberByUuid(String ownerUsername, String groupingPath, String userToAddUuid);
+
+    public List<GroupingsServiceResult> addGroupMemberByUsername(String ownersername, String groupPath, String userToAddUsername);
+
+    public List<GroupingsServiceResult> addGroupMembersByUsername(String ownerUsername, String group, List<String> usersToAddUsername);
+
+    public List<GroupingsServiceResult> addGroupMemberByUuid(String ownerUsername, String group, String userToAddUuid);
+
+    public List<GroupingsServiceResult> addGroupMembersByUuid(String ownerUsername, String group, List<String> usersToAddUuid);
+
+    public List<GroupingsServiceResult> deleteGroupingMemberByUsername(String ownerUsername, String groupingPath, String userToDeleteUsername);
+
+    public List<GroupingsServiceResult> deleteGroupingMemberByUuid(String ownerUsername, String groupingPath, String userToDeleteUuid);
+
+    public GroupingsServiceResult deleteGroupMemberByUsername(String ownerUsername, String groupPath, String userToDeleteUsername);
+
+    public GroupingsServiceResult deleteGroupMemberByUuid(String ownerUsername, String groupPath, String userToDeleteUuid);
+
+    public GroupingsServiceResult addAdmin(String adminUsername, String adminToAddUsername);
+
+    public GroupingsServiceResult deleteAdmin(String adminUsername, String adminToDeleteUsername);
+
+    public List<GroupingsServiceResult> optIn(String username, String groupingPath);
+
+    public List<GroupingsServiceResult> optOut(String username, String groupingPath);
+
+
+
+
+    //////////////////////////////////////////
+    //  group attributes //////////////////
+    //////////////////////////////////////////
+
+    public boolean hasListserv(String groupingPath);
+
+    public GroupingsServiceResult changeListservStatus(String groupingPath, String ownerUsername, boolean listservOn);
+
+    public List<GroupingsServiceResult> changeOptInStatus(String groupingPath, String ownerUsername, boolean optInOn);
+
+    public List<GroupingsServiceResult> changeOptOutStatus(String groupingPath, String ownerUsername, boolean optOutOn);
+
+    public boolean optOutPermission(String groupingPath);
+
+    public boolean optInPermission(String groupingPath);
+
+    public boolean groupHasAttribute(String groupingPath, String nameName);
+
+    public GroupingsServiceResult updateLastModified(String groupPath);
+
+
+
+
+    //////////////////////////////////////////
+    //  member attributes   //////////////////
+    //////////////////////////////////////////
+
+    public GroupingsServiceResult assignOwnership(String groupingPath, String ownerUsername, String newOwnerUsername);
+
+    public GroupingsServiceResult removeOwnership(String groupingPath, String username, String ownerToRemoveUsername);
+
+    public boolean checkSelfOpted(String groupPath, String username);
+
+    public GroupingsServiceResult addSelfOpted(String groupPath, String username);
+
+    public GroupingsServiceResult removeSelfOpted(String groupPath, String username);
+
+    public boolean isOwner(String groupingPath, String username);
+
+    public boolean isAdmin(String username);
+
+    public boolean isApp(String username);
+
+    public boolean isSuperuser(String username);
+
+    public boolean inGroup(String groupPath, String username);
+
+    public boolean inGroup(String groupPath, Person person);
+
+    public boolean groupOptInPermission(String username, String groupPath);
+
+    public boolean groupOptOutPermission(String username, String groupPath);
+
+
+
+
+
+    //////////////////////////////////////////
+    //  fetch groups    //////////////////////
+    //////////////////////////////////////////
 
     public List<Grouping> groupingsIn(List<String> groupPaths);
 
@@ -20,78 +126,26 @@ public interface GroupingsService {
 
     public List<Grouping> groupingsOptedOutOf(String username, List<String> groupPaths);
 
-    public boolean inGroup(String group, String username);
-
-    public boolean inGroup(String group, Person person);
-
-    public boolean checkSelfOpted(String group, String username);
-
-    public GroupingsServiceResult addAdmin(String username, String adminToAdd);
-
-    public GroupingsServiceResult deleteAdmin(String username, String adminToDelete);
-
-    public List<GroupingsServiceResult> addGroupingMemberByUsername(String username, String groupingPath, String userToAddUsername);
-
-    public List<GroupingsServiceResult> addGroupingMemberByUuid(String username, String groupingPath, String userToAddUuid);
-
-    public List<GroupingsServiceResult> addGroupMemberByUsername(String username, String group, String userToAddUsername);
-
-    public List<GroupingsServiceResult> addGroupMembersByUsername(String username, String group, List<String> usersToAddUsername);
-
-    public List<GroupingsServiceResult> addGroupMemberByUuid(String username, String group, String userToAddUuid);
-
-    public List<GroupingsServiceResult> addGroupMembersByUuid(String username, String group, List<String> usersToAddUuid);
-
-    public List<GroupingsServiceResult> deleteGroupingMemberByUsername(String username, String groupingPath, String userToDeleteUsername);
-
-    public List<GroupingsServiceResult> deleteGroupingMemberByUuid(String username, String groupingPath, String userToDeleteUuid);
-
-    public GroupingsServiceResult deleteGroupMemberByUsername(String username, String group, String userToDeleteUsername);
-
-    public GroupingsServiceResult assignOwnership(String grouping, String username, String newOwner);
-
-    public GroupingsServiceResult removeOwnership(String grouping, String username, String ownerToRemove);
-
-    public Grouping getGrouping(String grouping, String username);
+    public Grouping getGrouping(String groupingPath, String ownerUsername);
 
     public GroupingAssignment getGroupingAssignment(String username);
 
-    public List<GroupingsServiceResult> optIn(String username, String grouping);
+    public AdminListsHolder adminLists(String adminUsername);
 
-    public List<GroupingsServiceResult> optOut(String username, String grouping);
 
-    public GroupingsServiceResult changeListservStatus(String grouping, String username, boolean listservOn);
 
-    public List<GroupingsServiceResult> changeOptInStatus(String grouping, String username, boolean optInOn);
 
-    public List<GroupingsServiceResult> changeOptOutStatus(String grouping, String username, boolean optOutOn);
 
-    public boolean isOwner(String grouping, String username);
 
-    public boolean isAdmin(String username);
 
-    public boolean isApp(String username);
 
-    public boolean isSuperuser(String username);
 
-    public boolean groupOptInPermission(String username, String group);
 
-    public GroupingsServiceResult addSelfOpted(String group, String username);
 
-    public GroupingsServiceResult removeSelfOpted(String group, String username);
 
-    public boolean groupOptOutPermission(String username, String group);
 
-    public GroupingsServiceResult updateLastModified(String group);
 
-    public boolean groupHasAttribute(String grouping, String nameName);
-
-    public boolean optOutPermission(String grouping);
-
-    public boolean optInPermission(String grouping);
-
-    public AdminListsHolder adminLists(String username);
-
-    public String parentGroupingPath(String group);
+    //todo probably remove this
+    public String parentGroupingPath(String groupPath);
 
 }
