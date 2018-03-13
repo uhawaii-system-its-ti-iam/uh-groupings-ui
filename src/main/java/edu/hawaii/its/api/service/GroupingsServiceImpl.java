@@ -483,7 +483,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     //returns true if the group has the attribute with that name
-    @Override
     public boolean groupHasAttribute(String groupPath, String attributeName) {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = attributeAssignmentsResults(
                 ASSIGN_TYPE_GROUP,
@@ -668,7 +667,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     //adds the self-opted attribute to the membership between the group and user
-    @Override
     public GroupingsServiceResult addSelfOpted(String groupPath, String username) {
         logger.info("addSelfOpted; group: " + groupPath + "; username: " + username + ";");
 
@@ -778,7 +776,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     //removes the self-opted attribute from the membership that corresponds to the user and group
-    @Override
     public GroupingsServiceResult removeSelfOpted(String groupPath, String username) {
         logger.info("removeSelfOpted; group: " + groupPath + "; username: " + username + ";");
 
@@ -851,7 +848,6 @@ public class GroupingsServiceImpl implements GroupingsService {
 
 
     //updates the last modified attribute of the group to the current date and time
-    @Override
     public GroupingsServiceResult updateLastModified(String groupPath) {
         logger.info("updateLastModified; group: " + groupPath + ";");
         String time = wsDateTime();
@@ -1507,7 +1503,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     }
 
     //removes one of the words (:exclude, :include, :owners ...) from the end of the string
-    @Override
     public String parentGroupingPath(String group) {
         if (group != null) {
             if (group.endsWith(EXCLUDE)) {
