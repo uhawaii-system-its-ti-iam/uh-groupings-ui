@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
@@ -1004,9 +1003,9 @@ public class GroupingsServiceMockTest {
     /*
     @Test
     public void addSelfOptedTest() {
-        assertFalse(groupingsService.checkSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername()));
+        assertFalse(groupingsService.isSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername()));
         groupingsService.addSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername());
-        assertTrue(groupingsService.checkSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername()));
+        assertTrue(groupingsService.isSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername()));
 
         //try to add self-opted when the user is not in the group
         try {
@@ -1021,11 +1020,11 @@ public class GroupingsServiceMockTest {
     public void checkSelfOptedTest() {
 
         //user is not in group
-        boolean selfOpted = groupingsService.checkSelfOpted(GROUPING_0_INCLUDE_PATH, users.get(2).getUsername());
+        boolean selfOpted = groupingsService.isSelfOpted(GROUPING_0_INCLUDE_PATH, users.get(2).getUsername());
         assertFalse(selfOpted);
 
         //user has not self opted
-        selfOpted = groupingsService.checkSelfOpted(GROUPING_0_INCLUDE_PATH, users.get(5).getUsername());
+        selfOpted = groupingsService.isSelfOpted(GROUPING_0_INCLUDE_PATH, users.get(5).getUsername());
         assertFalse(selfOpted);
 
         //user has self opted
@@ -1035,7 +1034,7 @@ public class GroupingsServiceMockTest {
         membership.setSelfOpted(true);
         membershipRepository.save(membership);
 
-        selfOpted = groupingsService.checkSelfOpted(GROUPING_0_INCLUDE_PATH, users.get(5).getUsername());
+        selfOpted = groupingsService.isSelfOpted(GROUPING_0_INCLUDE_PATH, users.get(5).getUsername());
         assertTrue(selfOpted);
     }
 
@@ -1045,15 +1044,15 @@ public class GroupingsServiceMockTest {
         Person person2 = users.get(2);
         Person person5 = users.get(5);
 
-        assertFalse(groupingsService.inGroup(GROUPING_0_PATH, person2));
-        assertTrue(groupingsService.inGroup(GROUPING_0_PATH, person5));
+        assertFalse(groupingsService.isMember(GROUPING_0_PATH, person2));
+        assertTrue(groupingsService.isMember(GROUPING_0_PATH, person5));
 
         //test with uuid
         person2.setUsername(null);
         person5.setUsername(null);
 
-        assertFalse(groupingsService.inGroup(GROUPING_0_PATH, person2));
-        assertTrue(groupingsService.inGroup(GROUPING_0_PATH, person5));
+        assertFalse(groupingsService.isMember(GROUPING_0_PATH, person2));
+        assertTrue(groupingsService.isMember(GROUPING_0_PATH, person5));
     }
 
     @Test
