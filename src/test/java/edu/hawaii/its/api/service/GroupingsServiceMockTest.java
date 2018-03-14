@@ -1119,7 +1119,7 @@ public class GroupingsServiceMockTest {
         groupingsService.addGroupMemberByUsername(users.get(0).getUsername(), GROUPING_1_INCLUDE_PATH, users.get(3).getUsername());
         grouping = groupingRepository.findByPath(GROUPING_1_PATH);
         assertTrue(grouping.getComposite().getMembers().contains(users.get(3)));
-        //todo Cases (inBasis && inInclude) and (!inComposite && inBasis) not reachable w/ current DB
+        //todo Cases (inBasis && inInclude) and (!inComposite && !inBasis) not reachable w/ current DB
     }
 
     @Test
