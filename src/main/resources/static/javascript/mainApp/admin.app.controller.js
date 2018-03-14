@@ -36,7 +36,6 @@
                     $scope.groupingsList = d.allGroupings;
                     $scope.groupingsList = _.sortBy($scope.groupingsList, 'name');
                     $scope.modify($scope.adminsList);
-                    $scope.symbol.name = '\u21c5';
                     $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList, $scope.pagedItemsAdmins);
                     $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
                 }
@@ -49,35 +48,6 @@
             $scope.resetGroupingInformation();
         };
 
-        $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'path': '', 'uuid': '', 'username': ''};
-
-            if ($scope[symbol] === 'ascend' || typeof $scope[symbol] == 'undefined') {
-                list = _.sortBy(list, col);
-                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = 'descend';
-            } else {
-                list = _.sortBy(list, col).reverse();
-                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = 'ascend';
-            }
-            switch (col) {
-                case 'name':
-                    $scope.symbol.name = '\u21c5';
-                    break;
-                case 'path':
-                    $scope.symbol.path = '\u21c5';
-                    break;
-                case 'uuid':
-                    $scope.symbol.uuid = '\u21c5';
-                    break;
-                case 'username':
-                    $scope.symbol.username = '\u21c5';
-                    break;
-                case 'basis':
-                    $scope.symbol.basis = '\u21c5';
-            }
-        };
         /**
          * Retrieves information about the grouping.
          */
@@ -176,9 +146,6 @@
                     return 1;
                 return 0
             });
-
-            $scope.replaceBlankUsernames(grouping);
-
         };
 
         // TODO: Find a way to make the 3 adds into a more singular function.
