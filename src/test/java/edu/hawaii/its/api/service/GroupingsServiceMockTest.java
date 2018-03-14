@@ -282,6 +282,7 @@ public class GroupingsServiceMockTest {
                 users.get(2).getUuid());
         assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
 
+        // todo Can't test with current database setup
         // Not in basis, but in exclude
         // Can't happen with current database
         // Currently does nothing useful
@@ -1118,6 +1119,7 @@ public class GroupingsServiceMockTest {
         groupingsService.addGroupMemberByUsername(users.get(0).getUsername(), GROUPING_1_INCLUDE_PATH, users.get(3).getUsername());
         grouping = groupingRepository.findByPath(GROUPING_1_PATH);
         assertTrue(grouping.getComposite().getMembers().contains(users.get(3)));
+        //todo Cases (inBasis && inInclude) and (!inComposite && inBasis) not reachable w/ current DB
     }
 
     @Test
