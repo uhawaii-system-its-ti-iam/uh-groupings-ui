@@ -201,7 +201,7 @@ public class GroupingsServiceImpl implements GroupingsService {
                 //todo consider changing this to isAdmin. Will an app account ever need to make a Grouping?
                 if (isSuperuser(username)) {
 
-                    return groupingFS.makeGrouping(username, groupingPath, basis, include, exclude, owners);
+                    return groupingFS.addGrouping(username, groupingPath, basis, include, exclude, owners);
 
 //                    List<Group> groups = new ArrayList<>();
 //

@@ -18,9 +18,14 @@ public class GroupingFactoryServiceImplLocal implements GroupingFactoryService {
     private GrouperFactoryService gfs;
 
     @Override
-    public List<GroupingsServiceResult> makeGrouping(String username, String groupingPath, List<String> basis,
+    public List<GroupingsServiceResult> addGrouping(String username, String groupingPath, List<String> basis,
             List<String> include,
             List<String> exclude, List<String> owners) {
+        return null;
+    }
+
+    @Override public List<GroupingsServiceResult> deleteGrouping(String adminUsername, String groupingPath) {
+        //todo
         return null;
     }
 
