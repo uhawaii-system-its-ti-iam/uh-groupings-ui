@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -89,6 +91,14 @@ public class HomeController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/feedback/{error}")
+    public String feedbackError(RedirectAttributes redirectAttributes, @PathVariable String error) {
+        Feedback feedback = new Feedback(new Exception(error));
+        redirectAttributes.addFlashAttribute("feedback", feedback);
+        return "redirect:/feedback";
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/feedback")
     public String feedbackForm(Model model) {
         model.addAttribute("feedback", new Feedback());
@@ -99,7 +109,7 @@ public class HomeController {
     @PostMapping("/feedback")
     public String feedbackSubmit(@ModelAttribute Feedback feedback) {
         logger.debug("feedback: " + feedback);
-        emailService.send(feedback.getType(), feedback.getName(), feedback.getEmail(), feedback.getMessage());
+        emailService.send(feedback);
         return "feedback";
     }
 

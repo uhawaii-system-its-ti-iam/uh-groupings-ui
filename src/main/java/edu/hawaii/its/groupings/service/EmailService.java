@@ -8,6 +8,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import edu.hawaii.its.groupings.type.Feedback;
 
 
 @Service
@@ -31,7 +32,7 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void send(String type, String name, String email, String body) {
+    public void send(Feedback feedback) {
         if(isEnabled){
             logger.info("\n/********************************************************************************************/" +
                     "\n\nSending email!\n\n" +
@@ -41,9 +42,14 @@ public class EmailService {
             msg.setFrom(from);
             String text = "";
            // String header = "Aaron is testing emailing stuffs";
-            String header = "Feedback Type: " + type;
-            text += "Feedback reported by " + name + " using email " + email + "\n\n";
-            text += "Feedback: " + body;
+            String header = "Feedback Type: " + feedback.getType();
+            text += "Feedback reported by " + feedback.getName() + " using email " + feedback.getEmail() + "\n\n";
+            text += "Feedback: " + feedback.getMessage()    ;
+
+            if(feedback.getExceptionError() != null)
+            {
+                text += "Stacktrace: " + feedback.getExceptionError();
+            }
         //  text += data;
         //  for(int i = 0; i < data.length; i++){
         //    text += data[i];
