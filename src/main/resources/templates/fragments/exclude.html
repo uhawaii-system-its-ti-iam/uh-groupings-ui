@@ -24,30 +24,30 @@
         </div>
     </div>
     <div class="table-responsive">
-        <table class="table table-bordered table-condensed table-hover">
+        <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')"
-                    class="clickable">
-                    Name {{symbol.name}}
+                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'name')" class="clickable">
+                    Name
+                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'name' || !columnSort.groupingExclude" ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingExclude, 'uuid', 'pagedItemsExclude', 'symbolExclude')"
-                    class="clickable">
-                    UH Number {{symbol.uuid}}
+                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'uuid')" class="clickable">
+                    UH Number
+                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'uuid'" ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')"
-                    class="clickable">
-                    Username {{symbol.username}}
+                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'username')" class="clickable">
+                    Username
+                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'username'" ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingExclude, 'basis', 'pagedItemsExclude', 'symbolExclude')"
-                    class="clickable">
-                    In Basis? {{symbol.basis}}
+                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'basis')" class="clickable">
+                    In Basis?
+                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'basis'" ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]">
-                <td>
+                <td tabindex="0">
                     {{e.name}}
                     <span class="glyphicon glyphicon-trash pull-right clickable"
                           data-toggle="tooltip" data-placement="top"
@@ -61,12 +61,14 @@
                 <td>{{e.uuid}}</td>
                 <td>
                     {{e.username}}
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       onmouseover="$(this).tooltip('show')"
-                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
-                       ng-if="e.username === 'N/A'">
-                    </i>
+                    <div ng-if="e.username === ''">
+                        <span>N/A</span>
+                        <i class="fa fa-question-circle clickable" aria-hidden="true"
+                           data-toggle="tooltip" data-placement="right"
+                           onmouseover="$(this).tooltip('show')"
+                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                        </i>
+                    </div>
                 </td>
                 <td class="text-center" style="width: 3%">{{e.basis}}</td>
             </tr>

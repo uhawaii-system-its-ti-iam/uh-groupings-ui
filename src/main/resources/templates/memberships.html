@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Membership')"></head>
 <body ng-app="UHGroupingsApp">
 <nav th:substituteby="menubar :: copy"></nav>
@@ -48,7 +49,7 @@
                                     <!--need to figure this out by the end of today-->
                                   </label>   <input name = "memberFilt" placeholder="Filter Groupings..." type="text"
                                            ng-model="queryMembers" class="form-control"
-                                           ng-change="search(membersList, 'pagedItemsMembersList', 'queryMembers', 'currentPageOptOut')"
+                                           ng-change="filter(membersList, 'pagedItemsMembersList', 'currentPageOptOut', 'queryMembers')"
                                            id="members"/>
                                 </div>
                             </div>
@@ -57,11 +58,14 @@
                         <table class="table table-responsive table-bordered table-condensed table-hover">
                             <thead>
                             <tr>
-                                <th ng-click="sort(membersList, 'name', 'pagedItemsMembersList', 'symbolList')"
-                                    class="clickable">
-                                    Grouping Name {{symbol.member}}
+                                <th ng-click="sortBy('membersList', 'pagedItemsMembersList', 'name')" class="clickable">
+                                    Grouping Name
+                                    <i class="fa sort-icon" ng-show="columnSort.membersList.property === 'name' || !columnSort.membersList" ng-class="{ reverse: columnSort.membersList.reverse }"></i>
                                 </th>
-                                <th>Grouping Path</th>
+                                <th ng-click="sortBy('membersList', 'pagedItemsMembersList', 'path')" class="clickable">
+                                    Grouping Path
+                                    <i class="fa sort-icon" ng-show="columnSort.membersList.property === 'path'" ng-class="{ reverse: columnSort.membersList.reverse }"></i>
+                                </th>
                                 <th class="col-md-2 text-center" style="vertical-align: middle;">Opt Out?</th>
                             </tr>
                             </thead>
@@ -100,6 +104,7 @@
                                     </div>
                                     <div ng-if="!required($index+(currentPageOptIn * itemsPerPage))">
                                         <button id="optOutButton" class="btn btn-primary btn-block opt-button text-center"
+                                                tabindex="0"
                                                 ng-click="optOut($index)"
                                                 ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
                                             Opt Out
@@ -128,22 +133,27 @@
                                         <!--need to figure this out by the end of today-->
                                       </label><input name = "optIn" placeholder="Filter Groupings..." type="text"
                                            ng-model="queryOptIn" class="form-control"
+<<<<<<< HEAD
                                            ng-change="search(optInList, 'pagedItemsOptInList', 'queryOptIn', 'currentPageOptIn')"
+=======
+                                           ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', 'queryOptIn')"
+>>>>>>> e8f0afc437fbcc8dab0af038d6a2893b732213e3
                                            id="optIn"/>
                                 </div>
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-condensed table-hover">
+                            <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
                                 <thead>
                                 <tr>
-                                    <th ng-click="sort(optInList, 'name', 'pagedItemsOptInList', 'symbolOptIn')"
-                                        class="clickable">
-                                        Grouping Name {{symbol.optInName}}
+                                    <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'name')" class="clickable">
+                                        Grouping Name
+                                        <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'name' || !columnSort.optInList" ng-class="{ reverse: columnSort.optInList.reverse }"></i>
                                     </th>
-                                    <th ng-click="sort(optInList, 'path', 'pagedItemsOptInList', 'symbolOptIn')"
-                                        class="clickable">
-                                        Grouping Path {{symbol.optInPath}}</th>
+                                    <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'path')" class="clickable">
+                                        Grouping Path
+                                        <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'path'" ng-class="{ reverse: columnSort.optInList.reverse }"></i>
+                                        </th>
                                     <th class="col-md-2 text-center" style="vertical-align: middle;">Opt In?</th>
                                 </tr>
                                 </thead>
@@ -153,6 +163,7 @@
                                     <td id = "groupingOptInPath">{{o.path}}</td>
                                     <td class="col-md-2">
                                         <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))" class="btn btn-primary btn-block opt-button"
+                                                tabindex="0"
                                                 ng-click="optIn($index)">Opt In
                                         </button>
                                     </td>

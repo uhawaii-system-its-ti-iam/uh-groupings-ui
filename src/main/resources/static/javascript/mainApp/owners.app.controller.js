@@ -7,7 +7,7 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function OwnerJsController($scope, $window, $controller, $uibModal, dataProvider) {
+    function OwnerJsController($scope, $controller, $window, $uibModal, dataProvider) {
 
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
@@ -39,15 +39,13 @@
                 $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
 
                 $scope.loading = false;
-            }, function (error) {
-                console.log(error);
-                console.log('Error in loadData; status: ' + error.status);
-
-                //Sends JAVA
-
-
-                //$window.location.href = 'feedback';
-            }, groupingsOwned);
+            }, function(d){
+                    console.log("error has occured");
+                    console.log(d);
+                    var error = encodeURI(d);
+                    $window.location.href = "/uhgroupings/feedback/" + error;
+                }
+                ,groupingsOwned);
         };
 
         /**
@@ -125,14 +123,11 @@
 
                 //Stop loading spinner
                 $scope.loading = false;
-            }, function (error) {
-                console.log(error);
-                console.log('Error in loadData; status: ' + error.status);
-
-                //Sends JAVA
-
-
-                $window.location.href = 'feedback';
+            }, function(d){
+                console.log("error has occured");
+                console.log(d);
+                var error = encodeURI(d);
+                $window.location.href = "/uhgroupings/feedback/" + error;
             }, getUrl);
         };
 

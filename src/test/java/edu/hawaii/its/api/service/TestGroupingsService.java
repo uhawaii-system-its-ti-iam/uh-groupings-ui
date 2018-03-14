@@ -359,6 +359,14 @@ public class TestGroupingsService {
         GroupingsServiceResult removeOwnershipSuccess = gs.removeOwnership(GROUPING, username[0], username[1]);
         assertFalse(gs.isOwner(GROUPING, username[1]));
         assertTrue(removeOwnershipSuccess.getResultCode().startsWith(SUCCESS));
+
+
+        //have an owner remove itself
+        assignOwnershipSuccess = gs.assignOwnership(GROUPING, username[0], username[1]);
+        assertTrue(gs.isOwner(GROUPING, username[1]));
+        removeOwnershipSuccess = gs.removeOwnership(GROUPING, username[1], username[1]);
+        assertFalse(gs.isOwner(GROUPING, username[1]));
+
     }
 
     @Test

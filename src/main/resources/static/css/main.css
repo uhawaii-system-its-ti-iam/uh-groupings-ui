@@ -198,6 +198,13 @@ td.uh-pre {
     overflow-y: auto;
 }
 
+#iconImage{
+  max-width: 8em;
+  max-height: 8em;
+  height: auto;
+  width: auto;
+}
+
 #iconTop{
     display:flex;
     margin-top: 20px;
@@ -482,4 +489,12 @@ td.uh-pre {
 
 .clickable {
     cursor: pointer;
+}
+
+.sort-icon:after {
+    content: '\f107';
+}
+
+.sort-icon.reverse:after {
+    content: '\f106';
 }
