@@ -58,27 +58,27 @@
                     //Gets members in the basis group
                     $scope.groupingBasis = d.basis.members;
                     $scope.modify($scope.groupingBasis);
-                    $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis, $scope.pagedItemsBasis);
+                    $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis);
 
                     //Gets members in the include group
                     $scope.groupingInclude = d.include.members;
                     $scope.modify($scope.groupingInclude);
-                    $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude, $scope.pagedItemsInclude);
+                    $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude);
 
                     //Gets members in the exclude group
                     $scope.groupingExclude = d.exclude.members;
                     $scope.modify($scope.groupingExclude);
-                    $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude, $scope.pagedItemsExclude);
+                    $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude);
 
                     //Gets members in grouping
                     $scope.groupingMembers = d.composite.members;
                     $scope.modify($scope.groupingMembers, 'members');
-                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers, $scope.pagedItemsMembers);
+                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers);
 
                     //Gets owners of the grouping
                     $scope.groupingOwners = d.owners.members;
                     $scope.modify($scope.groupingOwners);
-                    $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners, $scope.pagedItemsOwners);
+                    $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
                     $scope.allowOptIn = d.optInOn;
                     $scope.allowOptOut = d.optOutOn;

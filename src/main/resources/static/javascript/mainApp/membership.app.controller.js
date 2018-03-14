@@ -57,8 +57,8 @@
                         $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
                     }
 
-                    $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList, $scope.pagedItemsMembersList);
-                    $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
+                    $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList);
+                    $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList);
 
                     $scope.loading = false;
                 }

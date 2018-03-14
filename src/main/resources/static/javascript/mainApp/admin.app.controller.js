@@ -36,8 +36,8 @@
                     $scope.groupingsList = d.allGroupings;
                     $scope.groupingsList = _.sortBy($scope.groupingsList, 'name');
                     $scope.modify($scope.adminsList);
-                    $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList, $scope.pagedItemsAdmins);
-                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
+                    $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
+                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
                 }
                 $scope.loading = false;
             }, url);

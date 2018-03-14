@@ -34,49 +34,10 @@
                             'path': d.groupingsOwned[i].path
                         });
                     }
-                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
+                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
                 }
                 $scope.loading = false;
             }, groupingsOwned);
-        };
-
-        /**
-         *  Sorts the data in the table in ascending or descending order based on
-         *  the list and column being sorted.
-         *
-         * @param list - The data list to which will be sorted
-         * @param col - The object to name to determine how it will be sorted by.
-         * @param listPaged - The paged data list to which the sorted list will go into.
-         * @param symbol - The symbol to tell user if they are sorting in ascending or descending order.
-         */
-        $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'url': '', 'uuid': '', 'username': ''};
-
-            if ($scope[symbol] === '\u25B2' || typeof $scope[symbol] == 'undefined') {
-                list = _.sortBy(list, col);
-                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = '\u25BC';
-            } else {
-                list = _.sortBy(list, col).reverse();
-                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = '\u25B2';
-            }
-            switch (col) {
-                case 'name':
-                    $scope.symbol.name = '\u21c5';
-                    break;
-                case 'url':
-                    $scope.symbol.url = '\u21c5';
-                    break;
-                case 'uuid':
-                    $scope.symbol.uuid = '\u21c5';
-                    break;
-                case 'username':
-                    $scope.symbol.username = '\u21c5';
-                    break;
-                case 'basis':
-                    $scope.symbol.basis = '\u21c5';
-            }
         };
 
         /**
