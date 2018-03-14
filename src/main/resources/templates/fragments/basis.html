@@ -27,17 +27,20 @@
         <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortCol(groupingBasis, 'name', 'pagedItemsBasis', 'symbolBasis')"
+                <th ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'name')"
                     class="clickable">
-                    Name {{symbol.name}}
+                    Name
+                    <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'name' || !columnSort.groupingBasis" ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingBasis, 'uuid', 'pagedItemsBasis', 'symbolBasis')"
+                <th ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'uuid')"
                     class="clickable">
-                    UH Number {{symbol.uuid}}
+                    UH Number
+                    <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'uuid'" ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingBasis, 'username', 'pagedItemsBasis', 'symbolBasis')"
+                <th ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'username')"
                     class="clickable">
-                    Username {{symbol.username}}
+                    Username
+                    <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'username'" ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                 </th>
             </tr>
             </thead>
@@ -47,12 +50,14 @@
                 <td>{{b.uuid}}</td>
                 <td>
                     {{b.username}}
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       onmouseover="$(this).tooltip('show')"
-                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
-                       ng-if="b.username === 'N/A'">
-                    </i>
+                    <div ng-if="b.username === ''">
+                        <span>N/A</span>
+                        <i class="fa fa-question-circle clickable" aria-hidden="true"
+                           data-toggle="tooltip" data-placement="right"
+                           onmouseover="$(this).tooltip('show')"
+                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                        </i>
+                    </div>
                 </td>
             </tr>
             </tbody>
