@@ -26,21 +26,21 @@
         <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortCol(groupingInclude, 'name', 'pagedItemsInclude', 'symbolInclude')"
-                    class="clickable">
-                    Name {{symbol.name}}
+                <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'name')" class="clickable">
+                    Name
+                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'name' || !columnSort.groupingInclude" ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingInclude, 'uuid', 'pagedItemsInclude', 'symbolInclude')"
-                    class="clickable">
-                    UH Number {{symbol.uuid}}
+                <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'uuid')" class="clickable">
+                    UH Number
+                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'uuid'" ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingInclude, 'username', 'pagedItemsInclude', 'symbolInclude')"
-                    class="clickable">
-                    Username {{symbol.username}}
+                <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'username')" class="clickable">
+                    Username
+                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'username'" ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingInclude, 'basis', 'pagedItemsInclude', 'symbolInclude')"
-                    class="clickable">
-                    In Basis? {{symbol.basis}}
+                <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'basis')" class="clickable">
+                    In Basis?
+                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'basis'" ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
             </tr>
             </thead>
@@ -60,12 +60,14 @@
                 <td>{{i.uuid}}</td>
                 <td>
                     {{i.username}}
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       onmouseover="$(this).tooltip('show')"
-                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
-                       ng-if="i.username === 'N/A'">
-                    </i>
+                    <div ng-if="i.username === ''">
+                        <span>N/A</span>
+                        <i class="fa fa-question-circle clickable" aria-hidden="true"
+                           data-toggle="tooltip" data-placement="right"
+                           onmouseover="$(this).tooltip('show')"
+                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                        </i>
+                    </div>
                 </td>
                 <td class="text-center" style="width: 3%">{{i.basis}}</td>
             </tr>

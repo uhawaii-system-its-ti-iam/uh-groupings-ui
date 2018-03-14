@@ -6,13 +6,13 @@
         <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortCol(groupingOwners, 'name', 'pagedItemsOwners', 'symbolOwners')"
-                    class="clickable">
-                    Owner Name {{symbol.name}}
+                <th ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'name')" class="clickable">
+                    Owner Name
+                    <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners" ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingOwners, 'username', 'pagedItemsOwners', 'currentPageOwners', 'symbolOwners')"
-                    class="clickable">
-                    UH Username {{symbol.username}}
+                <th ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'username')" class="clickable">
+                    UH Username
+                    <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'username'" ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                 </th>
             </tr>
             </thead>
@@ -31,12 +31,14 @@
                 </td>
                 <td>
                     {{owner.username}}
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       onmouseover="$(this).tooltip('show')"
-                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
-                       ng-if="owner.username === 'N/A'">
-                    </i>
+                    <div ng-if="owner.username === ''">
+                        <span>N/A</span>
+                        <i class="fa fa-question-circle clickable" aria-hidden="true"
+                           data-toggle="tooltip" data-placement="right"
+                           onmouseover="$(this).tooltip('show')"
+                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                        </i>
+                    </div>
                 </td>
             </tr>
             </tbody>
