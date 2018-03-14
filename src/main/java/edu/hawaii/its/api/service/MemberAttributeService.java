@@ -22,7 +22,4 @@ public interface MemberAttributeService {
 
     public boolean isSelfOpted(String groupPath, String username);
 
-    public boolean groupOptInPermission(String username, String groupPath);
-
-    public boolean groupOptOutPermission(String username, String groupPath);
 }
