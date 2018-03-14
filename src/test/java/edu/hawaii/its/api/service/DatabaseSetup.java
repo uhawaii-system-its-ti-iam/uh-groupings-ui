@@ -4,6 +4,10 @@ import java.util.*;
 
 import org.springframework.test.context.ActiveProfiles;
 
+import edu.hawaii.its.api.repository.GroupRepository;
+import edu.hawaii.its.api.repository.GroupingRepository;
+import edu.hawaii.its.api.repository.MembershipRepository;
+import edu.hawaii.its.api.repository.PersonRepository;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.Membership;

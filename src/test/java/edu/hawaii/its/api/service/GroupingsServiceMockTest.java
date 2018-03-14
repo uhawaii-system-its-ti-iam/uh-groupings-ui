@@ -20,6 +20,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import edu.hawaii.its.api.repository.GroupRepository;
+import edu.hawaii.its.api.repository.GroupingRepository;
+import edu.hawaii.its.api.repository.MembershipRepository;
+import edu.hawaii.its.api.repository.PersonRepository;
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;

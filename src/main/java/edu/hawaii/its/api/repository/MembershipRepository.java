@@ -1,4 +1,4 @@
-package edu.hawaii.its.api.service;
+package edu.hawaii.its.api.repository;
 
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Membership;
