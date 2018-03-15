@@ -44,6 +44,21 @@ a:hover {
     border-color: #477A9E;
 }
 
+/* navbar color */
+.navbar-default .navbar-nav > li > a{
+  color: #000000;
+}
+.navbar-default .navbar-nav > li > a:hover{
+  color: blue;
+}
+.navbar-default .btn-link{
+  color: #000000;
+}
+
+.navbar-default .btn-link:hover{
+  color:blue;
+}
+
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:focus,
 .navbar-default .navbar-nav > .open > a:hover {
