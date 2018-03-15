@@ -129,7 +129,7 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GroupingsServiceResult>> addGroupingMemberByUuid(Principal principal, @PathVariable String grouping,
                                                                             @PathVariable String userToAdd) {
-        logger.info("Entered REST addGroupingMemberByUsername...");
+        logger.info("Entered REST addGroupingMemberByUuid...");
         return ResponseEntity
                 .ok()
                 .body(gs.addGroupingMemberByUuid(principal.getName(), grouping, userToAdd));

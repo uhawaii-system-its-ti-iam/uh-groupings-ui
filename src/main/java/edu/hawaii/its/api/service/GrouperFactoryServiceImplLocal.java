@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import edu.hawaii.its.api.repository.GroupRepository;
+import edu.hawaii.its.api.repository.GroupingRepository;
+import edu.hawaii.its.api.repository.MembershipRepository;
+import edu.hawaii.its.api.repository.PersonRepository;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.Membership;
