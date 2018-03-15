@@ -310,8 +310,45 @@ public class GroupingsServiceMockTest {
         // Test if user is not an owner
         // Test if user is admin
 
+        // I don't remember writing this but keep it I guess?
         //assertTrue(turnOffWhenOnRandom.get(0).getResultCode().startsWith(FAILURE));
         //assertEquals(SUCCESS, turnOffWhenOnOwner.get(0).getResultCode());
+    }
+
+    @Test
+    public void addGroupingMemberbyUuidTest() {
+        Iterable<Grouping> group = groupingRepository.findAll();
+        List<GroupingsServiceResult> listGsr;
+        GroupingsServiceResult gsr;
+
+        // Base test
+        // Remove person who's not in composite from exclude and return SUCCESS
+        listGsr = groupingsService.addGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(3).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        //todo Case where !inComposite && !inBasis is impossible w/ current db
+
+        // In composite
+        listGsr = groupingsService.addGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(5).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        //todo Case where inBasis && inInclude is impossible w/ current db
+
+        // User is not an owner
+        try {
+            listGsr = groupingsService.addGroupingMemberByUuid(users.get(5).getUsername(), GROUPING_3_PATH,
+                    users.get(3).getUuid());
+            assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
+
+        // Test if user is admin
+        listGsr = groupingsService.addGroupingMemberByUuid(ADMIN_USER, GROUPING_3_PATH,
+                users.get(3).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
     }
 
     @Test
