@@ -262,7 +262,6 @@ public class GroupingsServiceMockTest {
         Iterable<Grouping> group = groupingRepository.findAll();
         List<GroupingsServiceResult> listGsr;
         GroupingsServiceResult gsr;
-        //gsrList.add(deleteGroupMemberByUuid(ownerUsername, include, userToDeleteUuid));
 
         // Base test
         // Remove person from include and composite
@@ -336,7 +335,7 @@ public class GroupingsServiceMockTest {
 
         //todo Case where inBasis && inInclude is impossible w/ current db
 
-        // User is not an owner
+        // Test if user is not an owner
         try {
             listGsr = groupingsService.addGroupingMemberByUuid(users.get(5).getUsername(), GROUPING_3_PATH,
                     users.get(3).getUuid());
