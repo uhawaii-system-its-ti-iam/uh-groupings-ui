@@ -737,6 +737,7 @@ public class MembershipServiceImpl implements MembershipService{
     }
 
     //updates the last modified attribute of the group to the current date and time
+    @Override
     public GroupingsServiceResult updateLastModified(String groupPath) {
         logger.info("updateLastModified; group: " + groupPath + ";");
         String time = wsDateTime();

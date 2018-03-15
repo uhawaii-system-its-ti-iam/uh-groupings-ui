@@ -3,16 +3,10 @@ info:
   version: '2.0'
   title: 'UH Groupings API'
 paths:
-  '/{username}/{adminToAdd}/addAdmin':
+  '/{adminToAdd}/addAdmin':
     post:
-      description: Adds an admin to the group of admins
+      description: Adds a member to the admin group
       parameters:
-        - name: username
-          in: path
-          description: username of the user adding the admin
-          required: true
-          schema:
-            type: string
         - name: adminToAdd
           in: path
           description: username of the user becoming an admin
@@ -34,16 +28,10 @@ paths:
             permission to add admins
         '404':
           description: User with username  does not exist
-  '/{username}/{adminToDelete}/deleteAdmin':
+  '/{adminToDelete}/deleteAdmin':
     post:
-      description: Deletes an admin from the group of admins
+      description: Deletes a member from the group of admins
       parameters:
-        - name: username
-          in: path
-          description: username of the user doing the deletion
-          required: true
-          schema:
-            type: string
         - name: adminToDelete
           in: path
           description: username of the user being deleted from the admin list
@@ -59,7 +47,7 @@ paths:
             permission to delete admins
         '404':
           description: User with username  is not in the list of admins
-  '/{grouping}/{username}/{userToAdd}/addMemberToIncludeGroup':
+  '/{grouping}/{userToAdd}/addMemberToIncludeGroup':
     post:
       description: Adds a member to the include group of a grouping
       parameters:
@@ -69,12 +57,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: username
-          in: path
-          description: username of the user doing the addition
-          required: true
-          schema:
-            type: string
         - name: userToAdd
           in: path
           description: username of the user who is being added
@@ -94,7 +76,7 @@ paths:
             permission to add users to that Grouping
         '404':
           description: user with the username  does not exist
-  '/{grouping}/{username}/{userToAdd}/addMemberToExcludeGroup':
+  '/{grouping}/{userToAdd}/addMemberToExcludeGroup':
     post:
       description: Adds a member to the exclude group of a grouping
       parameters:
@@ -104,12 +86,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: username
-          in: path
-          description: username of the user doing the addition
-          required: true
-          schema:
-            type: string
         - name: userToAdd
           in: path
           description: username of the user who is being added
@@ -129,7 +105,7 @@ paths:
             permission to add users to that Grouping
         '404':
           description: user with the username  does not exist
-  '/{grouping}/{username}/{userToDelete}/deleteMemberFromIncludeGroup':
+  '/{grouping}/{userToDelete}/deleteMemberFromIncludeGroup':
     post:
       description: removes a member from the include group of a Grouping
       parameters:
@@ -139,12 +115,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: username
-          in: path
-          description: username of the user doing the deletion
-          required: true
-          schema:
-            type: string
         - name: userToDelete
           in: path
           description: username of the user who is being deleted
@@ -160,7 +130,7 @@ paths:
             permission to delete users from that Grouping
         '404':
           description: user with the username  is not in the include group
-  '/{grouping}/{username}/{userToDelete}/deleteMemberFromExcludeGroup':
+  '/{grouping}/{userToDelete}/deleteMemberFromExcludeGroup':
     post:
       description: removes a member from the exclude group of a Grouping
       parameters:
@@ -170,12 +140,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: username
-          in: path
-          description: username of the user doing the deletion
-          required: true
-          schema:
-            type: string
         - name: userToDelete
           in: path
           description: username of the user who is being deleted
@@ -191,7 +155,7 @@ paths:
             permission to delete users from that Grouping
         '404':
           description: user with the username  is not in the include group
-  '/{grouping}/{username}/{newOwner}/assignOwnership':
+  '/{grouping}/{newOwner}/assignOwnership':
     post:
       description: >-
         add a user to the owners group of a Grouping, giving them owner
@@ -200,12 +164,6 @@ paths:
         - name: grouping
           in: path
           description: path to the Grouping
-          required: true
-          schema:
-            type: string
-        - name: username
-          in: path
-          description: username of the user doing the addition
           required: true
           schema:
             type: string
@@ -228,7 +186,7 @@ paths:
             permission to add users to that Grouping
         '404':
           description: user with the username  does not exist
-  '/{grouping}/{username}/{ownerToRemove}/removeOwnership':
+  '/{grouping}/{ownerToRemove}/removeOwnership':
     post:
       description: >-
         remove a user from the owners group of a Grouping, removing their owner
@@ -237,12 +195,6 @@ paths:
         - name: grouping
           in: path
           description: path to the Grouping
-          required: true
-          schema:
-            type: string
-        - name: username
-          in: path
-          description: username of the user doing the removal
           required: true
           schema:
             type: string
@@ -263,19 +215,13 @@ paths:
           description: >-
             user with the username  is not in the owners group of
             that Grouping
-  '/{grouping}/{username}/grouping':
+  '/{grouping}/grouping':
     get:
       description: returns a Grouping object
       parameters:
         - name: grouping
           in: path
           description: path to the Grouping
-          required: true
-          schema:
-            type: string
-        - name: username
-          in: path
-          description: username of the user getting the Grouping
           required: true
           schema:
             type: string
@@ -292,18 +238,11 @@ paths:
             permission to view that Grouping
         '404':
           description: Grouping with the path  does not exist
-  '/{username}/groupingAssignment':
+  '/groupingAssignment':
     get:
       description: >-
         get the Groupings that a user is in, owns, can opt into and can opt out
         of
-      parameters:
-        - name: username
-          in: path
-          description: username of the user whos Groupings are being retrieved
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Successful retrival
@@ -313,19 +252,13 @@ paths:
                 $ref: '#/components/schemas/Grouping'
         '404':
           description: user with the username  does not exist
-  '/{grouping}/{username}/optIn':
+  '/{grouping}/optIn':
     post:
       description: allows a user to become a member of a Grouping
       parameters:
         - name: grouping
           in: path
           description: path to the Grouping
-          required: true
-          schema:
-            type: string
-        - name: username
-          in: path
-          description: username of the user who is opting in
           required: true
           schema:
             type: string
@@ -336,19 +269,13 @@ paths:
           description: user does not have permission to opt into the Grouping
         '404':
           description: Grouping does not exist
-  '/{grouping}/{username}/optOut':
+  '/{grouping}/optOut':
     post:
       description: allows a user to remove themselves from a Grouping
       parameters:
         - name: grouping
           in: path
           description: path to the Grouping
-          required: true
-          schema:
-            type: string
-        - name: username
-          in: path
-          description: username of the user who is opting out
           required: true
           schema:
             type: string
@@ -359,19 +286,13 @@ paths:
           description: user does not have permission to opt out of the Grouping
         '404':
           description: Grouping does not exist
-  '/{grouping}/{username}/{listservOn}/setListserv':
+  '/{grouping}/{listservOn}/setListserv':
     post:
       description: allows an owner to turn the publication destination "listserv" on or off
       parameters:
         - name: grouping
           in: path
           description: path to the Grouping
-          required: true
-          schema:
-            type: string
-        - name: username
-          in: path
-          description: username of the user who modifying the listserv status
           required: true
           schema:
             type: string
@@ -388,19 +309,13 @@ paths:
           description: user does not have permission to modify the listserv status
         '404':
           description: Grouping does not exist
-  '/{grouping}/{username}/{optInOn}/setOptIn':
+  '/{grouping}/{optInOn}/setOptIn':
     post:
       description: allows an owner to allow/disallow users to opt into a Grouping
       parameters:
         - name: grouping
           in: path
           description: path to the Grouping
-          required: true
-          schema:
-            type: string
-        - name: username
-          in: path
-          description: username of the user who modifying the opt-in status
           required: true
           schema:
             type: string
@@ -419,19 +334,13 @@ paths:
           description: user does not have permission to modify the opt-in status
         '404':
           description: Grouping does not exist
-  '/{grouping}/{username}/{optOutOn}/setOptOut':
+  '/{grouping}/{optOutOn}/setOptOut':
     post:
       description: allows an owner to allow/disallow users to opt out of a Grouping
       parameters:
         - name: grouping
           in: path
           description: path to the Grouping
-          required: true
-          schema:
-            type: string
-        - name: username
-          in: path
-          description: username of the user who modifying the opt-out status
           required: true
           schema:
             type: string
@@ -450,38 +359,21 @@ paths:
           description: user does not have permission to modify the opt-out status
         '404':
           description: Grouping does not exist
-  '/{username}/adminLists':
+  '/adminLists':
     get:
       description: gets a list of all Groupings and all Admins
-      parameters:
-        - name: username
-          in: path
-          description: >-
-            username of the user who is retrieving the adminLists (must be an
-            admin)
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Successful retrieval of adminLists
         '403':
           description: user is not an admin
-  '/{grouping}/{username}/{basis}/{include}/{exclude}/{owners}/addGrouping':
+  '/{grouping}/{basis}/{include}/{exclude}/{owners}/addGrouping':
     post:
       description: creates a new Grouping
       parameters:
         - name: grouping
           in: path
           description: path to the Grouping
-          required: true
-          schema:
-            type: string
-        - name: username
-          in: path
-          description: >-
-            username of the user who is retrieving the adminLists (must be an
-            admin)
           required: true
           schema:
             type: string
@@ -522,19 +414,13 @@ paths:
           description: >-
             user is not allowed to create a Grouping or a Grouping with that
             path aready exist
-  '/{grouping}/{username}/deleteGrouping':
+  '/{grouping}/deleteGrouping':
     delete:
       description: removes a Grouping
       parameters:
         - name: grouping
           in: path
           description: path to the Grouping
-          required: true
-          schema:
-            type: string
-        - name: username
-          in: path
-          description: username of the user who is deleting the Grouping
           required: true
           schema:
             type: string

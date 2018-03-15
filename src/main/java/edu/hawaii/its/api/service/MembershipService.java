@@ -49,4 +49,7 @@ public interface MembershipService {
     public boolean groupOptInPermission(String username, String groupPath);
 
     public boolean groupOptOutPermission(String username, String groupPath);
+
+    //does not need to be included in the REST controller
+    public GroupingsServiceResult updateLastModified(String groupPath);
 }
