@@ -166,63 +166,74 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
     private MembershipService ms;
 
     @Override
-    public List<GroupingsServiceResult> addGrouping(String username, String groupingPath, List<String> basis,
+    //todo change basis to a String
+    public List<GroupingsServiceResult> addGrouping(
+            String username,
+            String groupingPath,
+            List<String> basis,
             List<String> include,
-            List<String> exclude, List<String> owners) {
+            List<String> exclude,
+            List<String> owners) {
+
         List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
         String action = username + "is adding a Grouping: " + groupingPath;
 
+        if (mas.isAdmin(username) && pathIsEmpty(groupingPath)) {
 
+            if (basis == null)
+                basis = new ArrayList<>();
+            if (include == null)
+                include = new ArrayList<>();
+            if (exclude == null)
+                exclude = new ArrayList<>();
+            if (owners == null)
+                owners = new ArrayList<>();
 
-        //todo consider changing this to isAdmin. Will an app account ever need to make a Grouping?
-        if (mas.isSuperuser(username)) {
+            List<Group> groups = new ArrayList<>();
 
+            List<String> basisPlusInclude = union(basis, include);
 
-                                List<Group> groups = new ArrayList<>();
+            Map<String, List<String>> memberLists = new HashMap<>();
+            memberLists.put("", new ArrayList<>());
+            memberLists.put(BASIS, basis);
+            memberLists.put(INCLUDE, include);
+            memberLists.put(BASIS_PLUS_INCLUDE, basisPlusInclude);
+            memberLists.put(EXCLUDE, exclude);
+            memberLists.put(OWNERS, owners);
 
-                                List<String> basisPlusInclude = union(basis, include);
+            //todo check about making folders
+            //todo is a folder the same as a stem?
+            gfs.makeWsStemSaveResults(username, groupingPath);
 
-                                Map<String, List<String>> memberLists = new HashMap<>();
-                                memberLists.put("", new ArrayList<>());
-                                memberLists.put(BASIS, basis);
-                                memberLists.put(INCLUDE, include);
-                                memberLists.put(BASIS_PLUS_INCLUDE, basisPlusInclude);
-                                memberLists.put(EXCLUDE, exclude);
-                                memberLists.put(OWNERS, owners);
+            //todo always create a basis folder?
+            gfs.makeWsStemSaveResults(username, groupingPath + BASIS);
 
+            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
+                Group group = makeGroup(groupingPath + entry.getKey(), entry.getValue());
+                groups.add(group);
+            }
 
-                                //todo check about making folders
-                                //todo is a folder the same as a stem?
-                                gfs.makeWsStemSaveResults(username, groupingPath);
+            for (Group group : groups) {
+                GroupingsServiceResult result = hs.makeGroupingsServiceResult(
+                        gfs.addEmptyGroup(username, group.getPath()),
+                        action);
+                addGroupingResults.add(result);
+            }
+            addGroupingResults.add(ms.updateLastModified(groupingPath));
 
-                                //todo always create a basis folder?
-                                gfs.makeWsStemSaveResults(username, groupingPath + BASIS);
+            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
+                addGroupingResults.addAll(ms.addGroupMembersByUsername(username,
+                        groupingPath + entry.getKey(), entry.getValue()));
+                addGroupingResults.add(ms.updateLastModified(groupingPath + entry.getKey()));
+            }
 
-                                for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
-                                    Group group = makeGroup(groupingPath + entry.getKey(), entry.getValue());
-                                    groups.add(group);
-                                }
-
-                                for (Group group : groups) {
-                                    GroupingsServiceResult result = hs.makeGroupingsServiceResult(
-                                            gfs.addEmptyGroup(username, group.getPath()),
-                                            action);
-                                    addGroupingResults.add(result);
-                                }
-                                addGroupingResults.add(ms.updateLastModified(groupingPath));
-
-                                for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
-                                    addGroupingResults.addAll(ms.addGroupMembersByUsername(username,
-                                            groupingPath + entry.getKey(), entry.getValue()));
-                                    addGroupingResults.add(ms.updateLastModified(groupingPath + entry.getKey()));
-                                }
-
-                                addGroupingResults.addAll(ms.addGroupMembersByUsername(username, GROUPING_OWNERS,
-                                        memberLists.get(OWNERS)));
-                                addGroupingResults.add(ms.updateLastModified(GROUPING_OWNERS));
+            addGroupingResults.addAll(ms.addGroupMembersByUsername(username, GROUPING_OWNERS,
+                    memberLists.get(OWNERS)));
+            addGroupingResults.add(ms.updateLastModified(GROUPING_OWNERS));
 
         } else {
-            GroupingsServiceResult gsr = hs.makeGroupingsServiceResult(FAILURE + ": " + username + " does not have permission to add this grouping", action);
+            GroupingsServiceResult gsr = hs.makeGroupingsServiceResult(
+                    FAILURE + ": " + username + " does not have permission to add this grouping", action);
             addGroupingResults.add(gsr);
         }
 
@@ -292,11 +303,15 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
     private Group makeGroup(String groupPath, List<String> usernames) {
         List<Person> people = new ArrayList<>();
 
-        for(String username : usernames) {
+        for (String username : usernames) {
             people.add(new Person(null, null, username));
         }
 
         return new Group(groupPath, people);
     }
 
+    private boolean pathIsEmpty(String groupingPath){
+        //todo check if there is anything already at that path
+        return true;
+    }
 }
