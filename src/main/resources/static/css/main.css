@@ -19,25 +19,34 @@ html {
 }
 
 body {
-    padding-top: 4.286em; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-    padding-bottom: 3.571em;
+    padding-top: 60px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    padding-bottom: 50px;
     background-color: white;
 }
+h2 {
+  font-size: 25px;
+}
 
-h1, h2, h3, h4 {
-    color: #BD9319;
+h3{
+  font-size: 20px;
+}
+
+.panel-title{
+  font-size: 25px;
 }
 
 .loader {
-    border: 1.143em solid white; /* Black */
-    border-top: 1.143em solid black; /* Blue */
+    border: 16px solid white; /* Black */
+    border-top: 16px solid black; /* Blue */
     border-radius: 50%;
-    width: 10.714em;
-    height: 10.714em;
+    width: 150px;
+    height: 150px;
     animation: spin 1s linear infinite;
     position: fixed;
-    left: 45%;
-    top: 45%;
+    left: 50%;
+    top: 50%;
+    margin-left: -5.357em;
+    margin-top: -5.357em;
 }
 
 ::-webkit-input-placeholder {
@@ -66,7 +75,7 @@ h1, h2, h3, h4 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    /*background: rgba(0, 0, 0, 0.5);*/
     z-index: 9999;
 }
 
@@ -79,13 +88,17 @@ h1, h2, h3, h4 {
     }
 }
 
+label{
+  color:black;
+}
+
 a {
-    color: #0275d8;
-    text-decoration: none;
+    /*color: #0275d8;*/
+    /* text-decoration:underline; */
 }
 
 a:hover {
-    color: #0275d8;
+    /*color: #0275d8;*/
     text-decoration: underline;
 }
 
@@ -122,32 +135,32 @@ td.uh-pre {
 }
 
 .navbar-fixed-top .nav {
-    padding-top: 2.857em;
-    padding-bottom: 0em;
-    padding-left: 0em;
-    padding-right: 0em;
+    padding-top: 40px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
     background-color: white;
 }
 
 .navbar-fixed-top .navbar-brand {
-    padding-left: 1.111em;
-    padding-right: 0em;
-    padding-top: 0em;
-    padding-bottom: 0em;
-    min-height: 2.778em;
-    min-width: 2.778em;
+    padding-left: 20px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    min-height: 50px;
+    min-width: 50px;
 }
 
 .navbar-fixed-top .navbar-brand > img {
-    height: 2.778em;
-    width: 2.778em;
+    height: 50px;
+    width: 50px;
     background-color: transparent;
 }
 
 .navbar-brand.uh-nav-app-name {
-    height: 2.00em;
+    height: 50px;
     width: auto;
-    padding-top: 0.8em;
+    padding-top: 20px;
     background-color: transparent;
 
     font-family: alegreyasans-regular, opensans-regular, serif;
@@ -155,17 +168,12 @@ td.uh-pre {
     font-size: 25px;
 }
 
-.navbar-default .navbar-nav > .open > a,
-.navbar-default .navbar-nav > .open > a:focus,
-.navbar-default .navbar-nav > .open > a:hover {
-    color: #555;
-    background-color: white;
-}
+
 
 .app-logout {
-    height: 3.571em;
-    padding-top: 0.607em;
-    padding-bottom: 1.071em;
+    height: 50px;
+    padding-top: 8.5px;
+    padding-bottom: 15px;
     vertical-align: text-middle;
 }
 
@@ -188,6 +196,13 @@ td.uh-pre {
 #all{
     overflow-x: auto;
     overflow-y: auto;
+}
+
+#iconImage{
+  max-width: 8em;
+  max-height: 8em;
+  height: auto;
+  width: auto;
 }
 
 #iconTop{
@@ -253,10 +268,11 @@ td.uh-pre {
     padding: 10px;
 }
 
-.dropshadow {
-    text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
-}
 
+
+.panel{
+    background-color: #f1f1f1f2;
+}
 .panel.panel-tab-content {
     border-radius: 0px 3px 3px 3px;
     -webkit-border-radius: 0px 3px 3px 3px;
@@ -423,15 +439,6 @@ td.uh-pre {
     .collapse.in{
         display:block !important;
     }
-
-    .navbar-brand.uh-nav-app-name {
-        color: #BD9319;
-    }
-
-    .navbar-brand.uh-nav-app-name:hover {
-        color: #B08A17;
-    }
-
     .nav.navbar-nav {
         padding-top: 0px;
     }
@@ -447,19 +454,18 @@ td.uh-pre {
     }
 }
 
-.opt-button[disabled], .opt-button:disabled, .opt-button[disabled]:active, .opt-button:disabled:active {
-    color: #C2C2C2;
-}
 
 .nav.nav-tabs {
     border-bottom: none;
 }
 
-.panel-tab-content .panel-heading {
+/*.panel-tab-content .panel-heading {
     border-radius: 0px 3px 0px 0px;
     -webkit-border-radius: 0px 3px 0px 0px;
     -moz-border-radius: 0px 3px 0px 0px;
-}
+    background-color: #07575b;
+}*/
+
 
 .nav.nav-tabs > li.active > a {
     border-bottom: none;
@@ -483,4 +489,12 @@ td.uh-pre {
 
 .clickable {
     cursor: pointer;
+}
+
+.sort-icon:after {
+    content: '\f107';
+}
+
+.sort-icon.reverse:after {
+    content: '\f106';
 }

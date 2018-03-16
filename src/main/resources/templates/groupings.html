@@ -1,12 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:substituteby="header :: copy"></head>
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<head th:replace="header :: copy(headingTitle='UH Groupings Owners')"></head>
 <body ng-app="UHGroupingsApp">
 <nav th:substituteby="menubar :: copy"></nav>
 
 <!--  Content container -->
 <div class="container">
+    <!-- <div ></div> -->
     <div class='row'>
         <div class='container-fluid'>
             <h1 class="text-left">Manage My Groupings</h1>
@@ -25,9 +27,9 @@
                 <div ng-show="showGrouping">
                     <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=false)"></div>
 
-                    <div class="panel panel-default panel-tab-content">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 style="margin: inherit;">Manage Grouping</h3>
+                            <h2 class = "panel-title" style="margin: inherit;">Manage Grouping</h2>
                         </div>
                         <div class="panel-body" style="min-height: 400px;">
                             <div class="row" style="margin: inherit;">

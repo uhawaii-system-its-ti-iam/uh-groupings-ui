@@ -13,22 +13,24 @@
                         themselves to this group
                     </label>
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip"
-                       data-placement="right"
+                       data-toggle="tooltip" data-placement="right"
+                       tabindex="0"
                        th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
-                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\')'"></i>
+                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\')',
+                                ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\') : null'"></i>
                 </div>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" ng-model="allowOptOut" ng-change="updateAllowOptOut()"/>
                         Allow people to remove
-                        themselves to this group
+                        themselves from this group
                     </label>
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip"
-                       data-placement="right"
+                       data-toggle="tooltip" data-placement="right"
+                       tabindex="0"
                        th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
-                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')'"></i>
+                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
+                                ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'"></i>
                 </div>
             </div>
             <div>
@@ -40,10 +42,11 @@
                         Email list: &lt;{{ selectedGrouping.name }}@lists.hawaii.edu&gt;
                     </label>
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip"
-                       data-placement="right"
+                       data-toggle="tooltip" data-placement="right"
+                       tabindex="0"
                        th:title="#{screen.message.common.tooltip.preference.listserv}"
-                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\')'"></i>
+                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\')',
+                                ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\') : null'"></i>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -51,10 +54,11 @@
                         CAS/LDAP: uhReleasedGroupings
                     </label>
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip"
-                       data-placement="right"
+                       data-toggle="tooltip" data-placement="right"
+                       tabindex="0"
                        th:title="#{screen.message.common.tooltip.preference.ldap}"
-                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\')'"></i>
+                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\')',
+                                ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\') : null'"></i>
                 </div>
             </div>
         </div>

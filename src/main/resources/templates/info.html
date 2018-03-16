@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:substituteby="header :: copy"></head>
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<head th:replace="header :: copy(headingTitle='UH Groupings Info')"></head>
 <body>
     <nav th:substituteby="menubar :: copy"></nav>
 
@@ -9,8 +10,8 @@
     <div class='container'>
         <div class='row'>
             <div>
-                <h3>General Information</h3>
-                <table class='table table-bordered'>
+                <h1>General Information</h1>
+                <table class='table table-bordered' role = "presentation">
                     <tbody>
                     <tr>
                         <td align="left" valign="top" width="450em">How do I request a new grouping?</td>
@@ -30,7 +31,7 @@
                     </tr>
                     <tr>
                         <td align="left" valign="top">What is the Exclude members list?</td>
-                        <td align="left" valign="top">A grouping's Exclude overrides automatic and manual membership by explicity not including anyone listed here.  It may be empty.</td>
+                        <td align="left" valign="top">A grouping's Exclude overrides automatic and manual membership by explicitly not including anyone listed here.  It may be empty.</td>
                     </tr>
                     <tr>
                         <td align="left" valign="top">For general help/how-to questions:</td>
@@ -39,60 +40,58 @@
                     </tbody>
                 </table>
 
-                <div sec:authorize="hasRole('ROLE_ADMIN')">
-                    <h3>Technical Information</h3>
-                    <table class='table table-bordered'>
-                        <tbody>
-                        <tr>
-                            <td colspan="2" align="left" valign="top"><b>Resources</b></td>
-                        </tr>
-                        <tr>
-                            <td align="left" valign="top">Source code</td>
-                            <td align="left" valign="top">It is available at this <a href="https://github.com/uhawaii-system-its-ti-iam/uhgroupings" target="_git_repo">GitHub repository</a>.</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" align="left" valign="top"><b>Technologies</b></td>
-                        </tr>
-                        <tr>
-                            <td align="left" valign="top">Technologies used to create this application:</td>
-                            <td align="left" valign="top">
-                                <ul  class="list-unstyled">
-                                    <li>Apache Maven</li>
-                                    <li>Apache Tomcat</li>
-                                    <li>Java</li>
-                                    <li>
-                                        Spring Framework
-                                        <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/spring-framework-reference/htmlsingle/" target="_sprgu">(Guide)</a>
-                                        <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/javadoc-api/" target="_sprapi">(API)</a>
-                                    </li>
-                                    <li>Spring Security</li>
-                                    <li>
-                                        Thymeleaf
-                                        <a href="http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#introducing-thymeleaf" target="_thylgu">(Guide)</a>
-                                    </li>
-                                    <li>
-                                        Bootstrap
-                                        <a href="http://getbootstrap.com/" target="_boogu">(Guide)</a>
-                                    </li>
-                                    <li>
-                                        AngularJS
-                                        <a href="https://code.angularjs.org/1.5.8/docs/guide" target="_anggu">(Guide)</a>
-                                        <a href="https://code.angularjs.org/1.5.8/docs/api" target="_angapi">(API)</a>
-                                    </li>
-                                    <li>
-                                        JQuery
-                                        <a href="http://api.jquery.com/" target="_jquapi">(API)</a>
-                                    </li>
-                                    <li>
-                                        Jasmine
-                                        <a href="https://jasmine.github.io/" target="_jasmine">(Guide)</a>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <h1>Technical Information</h1>
+                <table class='table table-bordered'>
+                    <tbody>
+                    <tr>
+                        <td colspan="2" align="left" valign="top"><b>Resources</b></td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">Source code</td>
+                        <td align="left" valign="top">It is available at this <a href="https://github.com/uhawaii-system-its-ti-iam/uhgroupings" target="_git_repo">GitHub repository</a>.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="left" valign="top"><b>Technologies</b></td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">Technologies used to create this application:</td>
+                        <td align="left" valign="top">
+                            <ul  class="list-unstyled">
+                                <li>Apache Maven</li>
+                                <li>Apache Tomcat</li>
+                                <li>Java</li>
+                                <li>
+                                    Spring Framework
+                                    <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/spring-framework-reference/htmlsingle/" target="_sprgu">(Guide)</a>
+                                    <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/javadoc-api/" target="_sprapi">(API)</a>
+                                </li>
+                                <li>Spring Security</li>
+                                <li>
+                                    Thymeleaf
+                                    <a href="http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#introducing-thymeleaf" target="_thylgu">(Guide)</a>
+                                </li>
+                                <li>
+                                    Bootstrap
+                                    <a href="http://getbootstrap.com/" target="_boogu">(Guide)</a>
+                                </li>
+                                <li>
+                                    AngularJS
+                                    <a href="https://code.angularjs.org/1.5.8/docs/guide" target="_anggu">(Guide)</a>
+                                    <a href="https://code.angularjs.org/1.5.8/docs/api" target="_angapi">(API)</a>
+                                </li>
+                                <li>
+                                    JQuery
+                                    <a href="http://api.jquery.com/" target="_jquapi">(API)</a>
+                                </li>
+                                <li>
+                                    Jasmine
+                                    <a href="https://jasmine.github.io/" target="_jasmine">(Guide)</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

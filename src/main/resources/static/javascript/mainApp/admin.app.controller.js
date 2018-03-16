@@ -7,7 +7,7 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function AdminJsController($scope, $controller, $uibModal, dataProvider) {
+    function AdminJsController($scope, $window, $controller, $uibModal, dataProvider) {
 
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
@@ -29,7 +29,6 @@
             var url = "api/groupings/adminLists";
 
             dataProvider.loadData(function (d) {
-                console.log(d.allGroupings.length);
                 if (d.allGroupings.length == 0) {
                     $scope.createApiErrorModal();
                 } else {
@@ -37,48 +36,21 @@
                     $scope.groupingsList = d.allGroupings;
                     $scope.groupingsList = _.sortBy($scope.groupingsList, 'name');
                     $scope.modify($scope.adminsList);
-                    $scope.symbol.name = '\u21c5';
                     $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList, $scope.pagedItemsAdmins);
                     $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList, $scope.pagedItemsGroupings);
-                    console.log($scope.groupingsList);
                 }
                 $scope.loading = false;
+            }, function(d){
+                console.log("error has occurred");
+                console.log(d);
+                var error = encodeURI(d.message);
+                $window.location.href = "/uhgroupings/feedback/" + error;
             }, url);
         };
 
         $scope.change = function () {
             $scope.showGrouping = false;
             $scope.resetGroupingInformation();
-        };
-
-        $scope.sortCol = function (list, col, listPaged, symbol) {
-            $scope.symbol = {'name': '', 'path': '', 'uuid': '', 'username': ''};
-
-            if ($scope[symbol] === 'ascend' || typeof $scope[symbol] == 'undefined') {
-                list = _.sortBy(list, col);
-                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = 'descend';
-            } else {
-                list = _.sortBy(list, col).reverse();
-                $scope[listPaged] = $scope.groupToPages(list, $scope[listPaged]);
-                $scope[symbol] = 'ascend';
-            }
-            switch (col) {
-                case 'name':
-                    $scope.symbol.name = '\u21c5';
-                    break;
-                case 'path':
-                    $scope.symbol.path = '\u21c5';
-                    break;
-                case 'uuid':
-                    $scope.symbol.uuid = '\u21c5';
-                    break;
-                case 'username':
-                    $scope.symbol.username = '\u21c5';
-                    break;
-                case 'basis':
-                    $scope.symbol.basis = '\u21c5';
-            }
         };
 
         // TODO: Find a way to make the 3 adds into a more singular function.
@@ -92,9 +64,8 @@
                 var successful = false;
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                } else if (d.resultCode === 'SUCCESS') {
+                } else if (d.resultCode.indexOf('SUCCESS') === 0) {
                     successful = true;
-                    console.log("Success In Adding");
                 }
                 $scope.createAddModal($scope.adminToAdd, successful);
                 $scope.adminToAdd = '';

@@ -41,16 +41,24 @@ public class Membership implements Comparable<Membership> {
         return id;
     }
 
-    public boolean getSelfOpted() {
-        return selfOpted;
-    }
-
     public Person getPerson() {
         return person;
     }
 
     public Group getGroup() {
         return group;
+    }
+
+    public boolean isSelfOpted() {
+        return selfOpted;
+    }
+
+    public boolean isOptInEnabled() {
+        return optInEnabled;
+    }
+
+    public boolean isOptOutEnabled() {
+        return optOutEnabled;
     }
 
     public void setId(String id) {
@@ -69,20 +77,8 @@ public class Membership implements Comparable<Membership> {
         this.selfOpted = selfOpted;
     }
 
-    public boolean isSelfOpted() {
-        return selfOpted;
-    }
-
-    public boolean isOptInEnabled() {
-        return optInEnabled;
-    }
-
     public void setOptInEnabled(boolean optInEnabled) {
         this.optInEnabled = optInEnabled;
-    }
-
-    public boolean isOptOutEnabled() {
-        return optOutEnabled;
     }
 
     public void setOptOutEnabled(boolean optOutEnabled) {
@@ -96,19 +92,22 @@ public class Membership implements Comparable<Membership> {
 
     @Override
     public int compareTo(Membership membership) {
-        int idComp = getId().compareTo(membership.getId());
-        int personComp = getPerson().compareTo(membership.getPerson());
-        int groupComp = getGroup().compareTo(membership.getGroup());
+        if(membership != null) {
+            int idComp = membership.getId() != null ? getId().compareTo(membership.getId()) : -1;
+            int personComp = membership.getPerson() != null ? getPerson().compareTo(membership.getPerson()) : -1;
+            int groupComp = membership.getGroup() != null ? getGroup().compareTo(membership.getGroup()) : -1;
 
-        if (idComp != 0) {
-            return idComp;
+            if (idComp != 0) {
+                return idComp;
+            }
+            if (personComp != 0) {
+                return personComp;
+            }
+            if (groupComp != 0) {
+                return groupComp;
+            }
+            return 0;
         }
-        if (personComp != 0) {
-            return personComp;
-        }
-        if (groupComp != 0) {
-            return groupComp;
-        }
-        return 0;
+        return -1;
     }
 }

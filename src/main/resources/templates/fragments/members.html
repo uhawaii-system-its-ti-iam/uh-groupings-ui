@@ -21,24 +21,26 @@
         </div>
     </div>
     <div class="table-responsive">
-        <table class="table table-bordered table-condensed table-hover">
+        <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortCol(groupingMembers, 'name', 'pagedItemsMembers', 'symbolList')"
-                    class="clickable">
-                    Member Name {{symbol.name}}
+                <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" class="clickable">
+                    Member Name
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingMembers, 'uuid', 'pagedItemsMembers', 'symbolList')"
-                    class="clickable">
-                    UH Number {{symbol.uuid}}
+                <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uuid')" class="clickable">
+                    UH Number
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uuid'" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingMembers, 'username', 'pagedItemsMembers', 'symbolList')"
+                <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'username')"
                     class="clickable">
-                    UH Username {{symbol.username}}
+                    UH Username
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
                 <th style="vertical-align: middle;" class="clickable"
-                    ng-click="sortCol(groupingMembers, 'basis', 'pagedItemsMembers', 'symbolList')">
-                    Where Listed? {{symbol.basis}}
+                    ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'basis')">
+                    Where Listed?
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'basis'" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
             </tr>
             </thead>
@@ -48,12 +50,14 @@
                 <td>{{g.uuid}}</td>
                 <td>
                     {{g.username}}
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       onmouseover="$(this).tooltip('show')"
-                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
-                       ng-if="g.username === 'N/A'">
-                    </i>
+                    <div ng-if="g.username === ''">
+                        <span>N/A</span>
+                        <i class="fa fa-question-circle clickable" aria-hidden="true"
+                           data-toggle="tooltip" data-placement="right"
+                           onmouseover="$(this).tooltip('show')"
+                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                        </i>
+                    </div>
                 </td>
                 <td class="text-center" style="width: 3%">{{g.basis}}</td>
             </tr>
@@ -63,21 +67,21 @@
             <td colspan="6">
                 <ul class="pagination pull-right">
                     <li ng-class="{disabled: (currentPageMembers) == 0}">
-                        <a href="" ng-click="currentPage('First','currentPageMembers','pagedItemsMembers')">«« First</a>
+                        <a class="clickable" ng-click="currentPage('First','currentPageMembers','pagedItemsMembers')">«« First</a>
                     </li>
                     <li ng-class="{disabled: (currentPageMembers) == 0 }">
-                        <a href="" ng-click="currentPage('Prev','currentPageMembers','pagedItemsMembers')">« Prev</a>
+                        <a class="clickable" ng-click="currentPage('Prev','currentPageMembers','pagedItemsMembers')">« Prev</a>
                     </li>
                     <li ng-repeat="n in range(pagedItemsMembers.length, currentPageMembers - gap, currentPageMembers + gap + 1) "
                         ng-class="{active: n == currentPageMembers}"
                         ng-click="currentPage('Set','currentPageMembers','pagedItemsMembers')">
-                        <a href="" ng-bind="n + 1"></a>
+                        <a class="clickable" ng-bind="n + 1"></a>
                     </li>
                     <li ng-class="{disabled: ((currentPageMembers) == pagedItemsMembers.length - 1) || pagedItemsMembers.length == 0}">
-                        <a href="" ng-click="currentPage('Next','currentPageMembers','pagedItemsMembers')">Next »</a>
+                        <a class="clickable" ng-click="currentPage('Next','currentPageMembers','pagedItemsMembers')">Next »</a>
                     </li>
                     <li ng-class="{disabled: ((currentPageMembers) == pagedItemsMembers.length - 1) || pagedItemsMembers.length == 0}">
-                        <a href="" ng-click="currentPage('Last','currentPageMembers','pagedItemsMembers')">Last »»</a>
+                        <a class="clickable" ng-click="currentPage('Last','currentPageMembers','pagedItemsMembers')">Last »»</a>
                     </li>
                 </ul>
             </td>

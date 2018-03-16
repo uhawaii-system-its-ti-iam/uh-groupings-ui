@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import edu.hawaii.its.api.repository.GroupRepository;
+import edu.hawaii.its.api.repository.GroupingRepository;
+import edu.hawaii.its.api.repository.MembershipRepository;
+import edu.hawaii.its.api.repository.PersonRepository;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.Membership;
@@ -46,7 +50,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @Service("grouperFactoryService")
-@Profile(value = { "default", "dev", "localTest" })
+@Profile(value = {"default", "dev", "localTest"})
 public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Value("${groupings.api.settings}")
@@ -169,6 +173,21 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     @Value("${groupings.api.test.uuid}")
     private String UUID;
 
+    @Value("${groupings.api.person_attributes.uuid}")
+    private String UUID_KEY;
+
+    @Value("${groupings.api.person_attributes.username}")
+    private String UID_KEY;
+
+    @Value("${groupings.api.person_attributes.first_name}")
+    private String FIRST_NAME_KEY;
+
+    @Value("${groupings.api.person_attributes.last_name}")
+    private String LAST_NAME_KEY;
+
+    @Value("${groupings.api.person_attributes.composite_name}")
+    private String COMPOSITE_NAME_KEY;
+
     @Autowired
     private GroupingRepository groupingRepository;
 
@@ -237,7 +256,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         wsResultMeta.setResultCode(SUCCESS);
         wsStemSaveResult.setResultMetadata(wsResultMeta);
         wsStemSaveResults.setResultMetadata(wsResultMeta);
-        wsStemSaveResults.setResults(new WsStemSaveResult[] { wsStemSaveResult });
+        wsStemSaveResults.setResults(new WsStemSaveResult[]{wsStemSaveResult});
 
         return wsStemSaveResults;
     }
@@ -253,36 +272,26 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     @Override
     public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, String newMember) {
 
-        return makeWsAddMemberResults(group, newMember);
+        return makeWsAddMemberResults(group, lookup, new Person(null, null, newMember));
     }
 
     @Override
-    public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, List<String> newMembers) {
-        WsAddMemberResults wsAddMemberResults = new WsAddMemberResults();
-        WsResultMeta wsResultMeta = new WsResultMeta();
-        wsResultMeta.setResultCode(SUCCESS);
+    public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, Person personToAdd) {
+        Person newGroupMember;
 
-        for (String username : newMembers) {
-            WsResultMeta wsResultMetaData = makeWsAddMemberResults(group, lookup, username).getResultMetadata();
-            if (wsResultMetaData.getResultCode().equals(FAILURE)) {
-                wsResultMeta = wsResultMetaData;
-            }
-        }
-
-        wsAddMemberResults.setResultMetadata(wsResultMeta);
-
-        return wsAddMemberResults;
-    }
-
-    @Override
-    public WsAddMemberResults makeWsAddMemberResults(String group, String newMember) {
         WsAddMemberResults wsAddMemberResults = new WsAddMemberResults();
         WsResultMeta wsResultMeta = new WsResultMeta();
         wsResultMeta.setResultCode(SUCCESS);
         wsAddMemberResults.setResultMetadata(wsResultMeta);
 
         Grouping grouping = groupingRepository.findByIncludePathOrExcludePathOrCompositePathOrOwnersPath(group, group, group, group);
-        Person newGroupMember = personRepository.findByUsername(newMember);
+
+        if (personToAdd.getUsername() != null) {
+            newGroupMember = personRepository.findByUsername(personToAdd.getUsername());
+        }
+        else {
+            newGroupMember = personRepository.findByUuid(personToAdd.getUuid());
+        }
 
         if (grouping == null) {
             Group groupToAddTo = groupRepository.findByPath(group);
@@ -323,14 +332,54 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     }
 
     @Override
+    public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, List<String> newMembers) {
+        WsAddMemberResults wsAddMemberResults = new WsAddMemberResults();
+        WsResultMeta wsResultMeta = new WsResultMeta();
+        wsResultMeta.setResultCode(SUCCESS);
+
+        for (String username : newMembers) {
+            WsResultMeta wsResultMetaData = makeWsAddMemberResults(group, lookup, username).getResultMetadata();
+            if (wsResultMetaData.getResultCode().equals(FAILURE)) {
+                wsResultMeta = wsResultMetaData;
+            }
+        }
+
+        wsAddMemberResults.setResultMetadata(wsResultMeta);
+
+        return wsAddMemberResults;
+    }
+
+    @Override
+    public WsAddMemberResults makeWsAddMemberResults(String group, String newMember) {
+        return makeWsAddMemberResults(group, null, new Person(null, null, newMember));
+    }
+
+    @Override
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, String memberToDelete) {
+        return makeWsDeleteMemberResults(group, null, new Person(null, null, memberToDelete));
+    }
+
+    @Override
+    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, String memberToDelete) {
+
+        Person personToDelete = new Person(null, null, memberToDelete);
+        return makeWsDeleteMemberResults(group, lookup, personToDelete);
+    }
+
+    @Override
+    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, Person personToDelete) {
         WsDeleteMemberResults wsDeleteMemberResults = new WsDeleteMemberResults();
         WsResultMeta wsResultMeta = new WsResultMeta();
         wsResultMeta.setResultCode(SUCCESS);
         wsDeleteMemberResults.setResultMetadata(wsResultMeta);
 
         Grouping grouping = groupingRepository.findByIncludePathOrExcludePathOrCompositePathOrOwnersPath(group, group, group, group);
-        Person personToDelete = personRepository.findByUsername(memberToDelete);
+
+        if(personToDelete.getUsername() != null) {
+            personToDelete = personRepository.findByUsername(personToDelete.getUsername());
+        }else if(personToDelete.getUuid() != null) {
+            personToDelete = personRepository.findByUuid(personToDelete.getUuid());
+        }
 
         if (grouping == null) {
             Group groupToDeleteFrom = groupRepository.findByPath(group);
@@ -359,13 +408,6 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         return wsDeleteMemberResults;
     }
 
-    @Override
-    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, String memberToDelete) {
-
-        return makeWsDeleteMemberResults(group, memberToDelete);
-    }
-
-    @Override
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, List<String> membersToDelete) {
         WsDeleteMemberResults wsDeleteMemberResults = new WsDeleteMemberResults();
         WsResultMeta wsResultMeta = new WsResultMeta();
@@ -385,7 +427,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
-            String attributeDefNameName) {
+                                                                                     String attributeDefNameName) {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
         WsResultMeta wsResultMeta = new WsResultMeta();
         wsResultMeta.setResultCode(SUCCESS);
@@ -420,8 +462,8 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
-            String attributeDefNameName0,
-            String attributeDefNameName1) {
+                                                                                     String attributeDefNameName0,
+                                                                                     String attributeDefNameName1) {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = makeWsGetAttributeAssignmentsResultsTrio(assignType, attributeDefNameName0);
 
         List<WsAttributeAssign> attributeAssigns = new ArrayList<>();
@@ -479,8 +521,8 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
-            String attributeDefNameName,
-            List<String> ownerGroupNames) {
+                                                                                           String attributeDefNameName,
+                                                                                           List<String> ownerGroupNames) {
         List<WsGetAttributeAssignmentsResults> resultsList = new ArrayList<>();
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = makeWsGetAttributeAssignmentsResultsTrio(
                 assignType,
@@ -494,9 +536,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public List<WsGetAttributeAssignmentsResults> makeWsGetAttributeAssignmentsResultsTrio(String assignType,
-            String attributeDefNameName0,
-            String attributeDefNameName1,
-            List<String> ownerGroupNames) {
+                                                                                           String attributeDefNameName0,
+                                                                                           String attributeDefNameName1,
+                                                                                           List<String> ownerGroupNames) {
         List<WsGetAttributeAssignmentsResults> resultsList = new ArrayList<>();
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = makeWsGetAttributeAssignmentsResultsTrio(
@@ -512,8 +554,8 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForMembership(String assignType,
-            String attributeDefNameName,
-            String membershipId) {
+                                                                                              String attributeDefNameName,
+                                                                                              String membershipId) {
         Membership membership = membershipRepository.findById(membershipId);
 
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
@@ -523,7 +565,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
         WsAttributeAssign[] wsAttributeAssigns = new WsAttributeAssign[1];
         WsAttributeAssign wsAttributeAssign = new WsAttributeAssign();
-        if (membership.getSelfOpted()) {
+        if (membership.isSelfOpted()) {
             wsAttributeAssign.setAttributeDefNameName(SELF_OPTED);
         }
 
@@ -536,7 +578,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType,
-            String group) {
+                                                                                         String group) {
         WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = new WsGetAttributeAssignmentsResults();
 
         Grouping grouping = groupingRepository.findByPath(group);
@@ -555,38 +597,58 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType,
-            String attributeDefNameName,
-            String group) {
+                                                                                         String attributeDefNameName,
+                                                                                         String group) {
         return makeWsGetAttributeAssignmentsResultsForGroup(assignType, group);
     }
 
     @Override
     public WsHasMemberResults makeWsHasMemberResults(String group, String username) {
+        Person person = new Person(null, null, username);
+        return makeWsHasMemberResults(group, person);
+    }
+
+    @Override
+    public WsHasMemberResults makeWsHasMemberResults(String group, Person person) {
         WsHasMemberResults wsHasMemberResults = new WsHasMemberResults();
         WsHasMemberResult wsHasMemberResult = new WsHasMemberResult();
         WsResultMeta wsResultMeta = new WsResultMeta();
         wsHasMemberResult.setResultMetadata(wsResultMeta);
-        wsHasMemberResults.setResults(new WsHasMemberResult[] { wsHasMemberResult });
+        wsHasMemberResults.setResults(new WsHasMemberResult[]{wsHasMemberResult});
+        wsResultMeta.setResultCode("not member");
 
         Group groupToCheck = groupRepository.findByPath(group);
-        Person person = personRepository.findByUsername(username);
 
-        if (groupToCheck.isMember(person)) {
-            wsResultMeta.setResultCode(IS_MEMBER);
-        } else {
-            wsResultMeta.setResultCode("not member");
+        // first try username
+        if (person.getUsername() != null) {
+
+            person = personRepository.findByUsername(person.getUsername());
+
+            if (groupToCheck.isMember(person)) {
+                wsResultMeta.setResultCode(IS_MEMBER);
+            }
+
+            //if username is null, try uuid
+        } else if (person.getUuid() != null) {
+
+            Person person0 = personRepository.findByUuid(person.getUuid());
+
+            if (groupToCheck.isMember(person0)) {
+                wsResultMeta.setResultCode(IS_MEMBER);
+            }
         }
+        // if they are username and uuid are both null, return that the person is not a member
 
         return wsHasMemberResults;
     }
 
     @Override
     public WsAssignAttributesResults makeWsAssignAttributesResults(String attributeAssignType,
-            String attributeAssignOperation,
-            String ownerGroupName,
-            String attributeDefNameName,
-            String attributeAssignValueOperation,
-            WsAttributeAssignValue value) {
+                                                                   String attributeAssignOperation,
+                                                                   String ownerGroupName,
+                                                                   String attributeDefNameName,
+                                                                   String attributeAssignValueOperation,
+                                                                   WsAttributeAssignValue value) {
 
         WsAssignAttributesResults wsAssignAttributesResults = new WsAssignAttributesResults();
         WsResultMeta wsResultMeta = new WsResultMeta();
@@ -626,9 +688,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsAssignAttributesResults makeWsAssignAttributesResultsForMembership(String attributeAssignType,
-            String attributeAssignOperation,
-            String attributeDefNameName,
-            String ownerMembershipId) {
+                                                                                String attributeAssignOperation,
+                                                                                String attributeDefNameName,
+                                                                                String ownerMembershipId) {
 
         WsAssignAttributesResults wsAssignAttributesResults = new WsAssignAttributesResults();
         WsResultMeta wsResultMeta = new WsResultMeta();
@@ -650,9 +712,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(String attributeAssingType,
-            String attributeAssignOperation,
-            String attributeDefNameName,
-            String ownerGroupName) {
+                                                                           String attributeAssignOperation,
+                                                                           String attributeDefNameName,
+                                                                           String ownerGroupName) {
         WsAssignAttributesResults wsAssignAttributesResults = new WsAssignAttributesResults();
         WsResultMeta wsResultMeta = new WsResultMeta();
         wsResultMeta.setResultCode(FAILURE);
@@ -675,10 +737,10 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(WsSubjectLookup lookup,
-            String attributeAssingType,
-            String attributeAssignOperation,
-            String attributeDefNameName,
-            String ownerGroupName) {
+                                                                           String attributeAssingType,
+                                                                           String attributeAssignOperation,
+                                                                           String attributeDefNameName,
+                                                                           String ownerGroupName) {
         WsAssignAttributesResults wsAssignAttributesResults;
 
         Grouping grouping = groupingRepository.findByPath(ownerGroupName);
@@ -700,9 +762,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsAssignGrouperPrivilegesLiteResult makeWsAssignGrouperPrivilegesLiteResult(String groupName,
-            String privilegeName,
-            WsSubjectLookup lookup,
-            boolean allowed) {
+                                                                                       String privilegeName,
+                                                                                       WsSubjectLookup lookup,
+                                                                                       boolean allowed) {
 
         WsAssignGrouperPrivilegesLiteResult wsAssignGrouperPrivilegsLiteResult = new WsAssignGrouperPrivilegesLiteResult();
         WsResultMeta wsResultMeta = new WsResultMeta();
@@ -729,8 +791,8 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsGetGrouperPrivilegesLiteResult makeWsGetGrouperPrivilegesLiteResult(String groupName,
-            String privilegeName,
-            WsSubjectLookup lookup) {
+                                                                                 String privilegeName,
+                                                                                 WsSubjectLookup lookup) {
 
         WsGetGrouperPrivilegesLiteResult wsGetGrouperPrivilegesLiteResult = new WsGetGrouperPrivilegesLiteResult();
         WsResultMeta wsResultMeta = new WsResultMeta();
@@ -767,7 +829,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsGetMembershipsResults makeWsGetMembershipsResults(String groupName,
-            WsSubjectLookup lookup) {
+                                                               WsSubjectLookup lookup) {
 
         Person person = personRepository.findByUsername(lookup.getSubjectIdentifier());
         Group group = groupRepository.findByPath(groupName);
@@ -792,10 +854,12 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsGetMembersResults makeWsGetMembersResults(String subjectAttributeName,
-            WsSubjectLookup lookup,
-            String groupName) {
+                                                       WsSubjectLookup lookup,
+                                                       String groupName) {
 
         WsGetMembersResults wsGetMembersResults = new WsGetMembersResults();
+        String[] attributeNames = new String[]{UID_KEY, UUID_KEY, LAST_NAME_KEY, COMPOSITE_NAME_KEY, FIRST_NAME_KEY};
+        wsGetMembersResults.setSubjectAttributeNames(attributeNames);
         WsGetMembersResult wsGetMembersResult = new WsGetMembersResult();
         WsSubject[] subjects;
 
@@ -807,7 +871,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
             WsSubject subject = new WsSubject();
             subject.setId(person.getUuid());
             subject.setName(person.getName());
-            subject.setAttributeValues(new String[] { person.getUsername() });
+
+            //has to be the same order as attributeNames array
+            subject.setAttributeValues(new String[]{person.getUsername(), person.getUuid(), person.getLastName(), person.getName(), person.getFirstName()});
 
             subjectList.add(subject);
         }
@@ -815,15 +881,15 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         subjects = subjectList.toArray(new WsSubject[subjectList.size()]);
 
         wsGetMembersResult.setWsSubjects(subjects);
-        wsGetMembersResults.setResults(new WsGetMembersResult[] { wsGetMembersResult });
+        wsGetMembersResults.setResults(new WsGetMembersResult[]{wsGetMembersResult});
 
         return wsGetMembersResults;
     }
 
     @Override
     public WsGetGroupsResults makeWsGetGroupsResults(String username,
-            WsStemLookup stemLookup,
-            StemScope stemScope) {
+                                                     WsStemLookup stemLookup,
+                                                     StemScope stemScope) {
 
         WsGetGroupsResults wsGetGroupsResults = new WsGetGroupsResults();
         WsGetGroupsResult wsGetGroupsResult = new WsGetGroupsResult();
@@ -841,7 +907,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         groups = wsGroupList.toArray(new WsGroup[wsGroupList.size()]);
 
         wsGetGroupsResult.setWsGroups(groups);
-        wsGetGroupsResults.setResults(new WsGetGroupsResult[] { wsGetGroupsResult });
+        wsGetGroupsResults.setResults(new WsGetGroupsResult[]{wsGetGroupsResult});
 
         return wsGetGroupsResults;
     }

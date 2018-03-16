@@ -1,66 +1,70 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:substituteby="header :: copy"></head>
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<head th:replace="header :: copy(headingTitle='UH Groupings Feedback')"></head>
 <body ng-app="UHGroupingsApp">
 <nav th:substituteby="menubar :: copy"></nav>
 
-<!--  Content container -->
+
+<!--   Content container -->
 <div class='container'>
-    <div class='row'>
-        <div class='container-fluid' ng-controller="FeedbackJsController" data-ng-init="init()">
-            <h3>Feedback</h3>
+   <div class="row">
+       <div class='container-fluid'>
+           <h1>Feedback</h1>
 
-            <p>Feedback helps us to understand where improvements are needed. Please let us know.</p>
+           <p>Feedback helps us to understand where improvements are needed. Please let us know.</p>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label for="feedback_type" class="col-sm-2 control-label">Feedback type: <span style="color:red;display:none" id="reqFeed">*</span></label>
-                            <div class="col-sm-10">
-                                <select class="form-control" id="feedback_type">
-                                    <option style="display: none">-- select an option --</option>
-                                    <option value="problem">PROBLEM</option>
-                                    <option value="feature">FEATURE</option>
-                                    <option value="question">QUESTION</option>
-                                    <option value="general">GENERAL</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="user_name" class="col-sm-2 control-label">Your Name (Optional): </label>
+           <div class="panel panel-default">
+               <div class="panel-body">
+                   <form class="form-horizontal" action="#" th:action="@{/feedback}" th:object="${feedback}" method="post">
+                       <div class="form-group">
+                           <label for="typeField" class="col-sm-2 control-label">Feedback Type:</label>
+                           <div class="col-sm-10">
+                               <select class="form-control" id="typeField" name="type">
+                                   <option value="problem">PROBLEM</option>
+                                   <option value="feature">FEATURE</option>
+                                   <option value="question">QUESTION</option>
+                                   <option value="general">GENERAL</option>
+                               </select>
+                           </div>
+                       </div>
+                       <div class="form-group">
+                           <label for="nameField" class="col-sm-2 control-label">Your Name (Optional):</label>
+                           <div class="col-sm-10">
+                               <input th:field="*{name}" type="text" class="form-control" id="nameField" placeholder="Name"
+                                      required="true"/>
+                           </div>
+                       </div>
+                       <div class="form-group">
+                           <label for="emailField" class="col-sm-2 control-label">Email:</label>
+                           <div class="col-sm-10">
+                               <input th:field="*{email}" type="email" class="form-control" id="emailField"
+                                      placeholder="Email"
+                                      required="true"/>
+                           </div>
+                       </div>
+                       <div class="form-group">
+                           <label for="messageField" class="col-sm-2 control-label">Your Feedback:</label>
+                           <div class="col-sm-10">
+                               <input th:field="*{message}" type="text" class="form-control" id="messageField"
+                                      required="true"/>
+                           </div>
+                       </div>
+                       <div>
+                           <br/>
+                           <button type="reset"  class="btn btn-default">Reset</button>&nbsp;&nbsp;
+                           <button type="submit" class="btn btn-default">Email Form Data to Me</button>
+                       </div>
+                   </form>
+                   <br/>
+               </div>
+           </div>
+       </div>
+   </div>
 
-                            <div class="col-sm-10">
-                                <input ng-model="name" class="form-control" id="user_name"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-2 control-label">Email: <span id="uemail" sec:authentication="name" style="display:none"></span><span style="color:red;display:none" id="reqMail">*</span></label>
-
-                            <div class="col-sm-10">
-                                <input ng-model="email" class="form-control" id="inputEmail3"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="feedback" class="col-sm-2 control-label">Your Feedback: <span style="color:red;display:none" id="reqFB">*</span></label>
-
-                            <div class="col-sm-10">
-                                <textarea ng-model="description" class="form-control" id="feedback" rows="8"></textarea>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-default btn-primary" ng-click="submit()">Submit</button>
-            <p style="margin-top: 1em">Thank you. Your feedback is important to us.</p>
-
-
-        </div>
-    </div>
 </div>
 <!-- / Content container. -->
 
-<div th:substituteby="footer :: copy"></div>
 </body>
 </html>

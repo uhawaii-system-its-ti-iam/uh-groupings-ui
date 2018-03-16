@@ -15,6 +15,7 @@
             <!-- Filter bar -->
             <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                 <div class="xs-left-sm-right">
+                  <label for ="excludeQuery"></label>
                     <input class="form-control" placeholder="Filter Members..." type="text"
                            ng-model="excludeQuery"
                            ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', 'excludeQuery')"/>
@@ -23,47 +24,51 @@
         </div>
     </div>
     <div class="table-responsive">
-        <table class="table table-bordered table-condensed table-hover">
+        <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortCol(groupingExclude, 'name', 'pagedItemsExclude', 'symbolExclude')"
-                    class="clickable">
-                    Name {{symbol.name}}
+                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'name')" class="clickable">
+                    Name
+                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'name' || !columnSort.groupingExclude" ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingExclude, 'uuid', 'pagedItemsExclude', 'symbolExclude')"
-                    class="clickable">
-                    UH ID {{symbol.uuid}}
+                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'uuid')" class="clickable">
+                    UH Number
+                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'uuid'" ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingExclude, 'username', 'pagedItemsExclude', 'symbolExclude')"
-                    class="clickable">
-                    Username {{symbol.username}}
+                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'username')" class="clickable">
+                    Username
+                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'username'" ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
-                <th ng-click="sortCol(groupingExclude, 'basis', 'pagedItemsExclude', 'symbolExclude')"
-                    class="clickable">
-                    In Basis? {{symbol.basis}}
+                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'basis')" class="clickable">
+                    In Basis?
+                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'basis'" ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]">
-                <td>
+                <td tabindex="0">
                     {{e.name}}
                     <span class="glyphicon glyphicon-trash pull-right clickable"
                           data-toggle="tooltip" data-placement="top"
                           onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
+                          tabindex="0"
                           th:title="#{screen.message.common.tooltip.remove.exclude}"
+                          ng-keypress="$event.keyCode === 13 ? removeMember('Exclude', $index) : null"
                           ng-click="removeMember('Exclude', $index)">
                     </span>
                 </td>
                 <td>{{e.uuid}}</td>
                 <td>
                     {{e.username}}
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       onmouseover="$(this).tooltip('show')"
-                       th:title="#{screen.message.common.tooltip.username.notApplicable}"
-                       ng-if="e.username === 'N/A'">
-                    </i>
+                    <div ng-if="e.username === ''">
+                        <span>N/A</span>
+                        <i class="fa fa-question-circle clickable" aria-hidden="true"
+                           data-toggle="tooltip" data-placement="right"
+                           onmouseover="$(this).tooltip('show')"
+                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                        </i>
+                    </div>
                 </td>
                 <td class="text-center" style="width: 3%">{{e.basis}}</td>
             </tr>
@@ -73,21 +78,21 @@
             <td colspan="6">
                 <ul class="pagination pull-right">
                     <li ng-class="{disabled: (currentPageExclude) == 0 }">
-                        <a href="" ng-click="currentPage('First','currentPageExclude','pagedItemsExclude')">«« First</a>
+                        <a class="clickable" ng-click="currentPage('First','currentPageExclude','pagedItemsExclude')">«« First</a>
                     </li>
                     <li ng-class="{disabled: (currentPageExclude) == 0 }">
-                        <a href="" ng-click="currentPage('Prev','currentPageExclude','pagedItemsExclude')">« Prev</a>
+                        <a class="clickable" ng-click="currentPage('Prev','currentPageExclude','pagedItemsExclude')">« Prev</a>
                     </li>
                     <li ng-repeat="n in range(pagedItemsExclude.length, currentPageExclude - gap, currentPageExclude + gap + 1) "
                         ng-class="{active: n == currentPageExclude}"
                         ng-click="currentPage('Set','currentPageExclude','pagedItemsExclude')">
-                        <a href="" ng-bind="n + 1"></a>
+                        <a class="clickable" ng-bind="n + 1"></a>
                     </li>
                     <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
-                        <a href="" ng-click="currentPage('Next','currentPageExclude','pagedItemsExclude')">Next »</a>
+                        <a class="clickable" ng-click="currentPage('Next','currentPageExclude','pagedItemsExclude')">Next »</a>
                     </li>
                     <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
-                        <a href="" ng-click="currentPage('Last','currentPageExclude','pagedItemsExclude')">Last »»</a>
+                        <a class="clickable" ng-click="currentPage('Last','currentPageExclude','pagedItemsExclude')">Last »»</a>
                     </li>
                 </ul>
             </td>
@@ -98,7 +103,7 @@
     <div class="col-lg-4 col-md-6" style="padding: inherit;">
         <form ng-submit="addMember('Exclude')">
             <div class="input-group">
-                <input class="form-control" type="text" placeholder="Add user to exclude"
+                <input class="form-control" type="text" placeholder="Enter UH username to exclude"
                        ng-model="addUser"/>
                 <div class="input-group-btn">
                     <button class="btn btn-primary" type="submit">Add</button>

@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="header :: copy"></head>
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<head th:replace="header :: copy(headingTitle='UH Groupings Home')"></head>
 <body>
 <nav th:replace="menubar :: copy"></nav>
 
@@ -10,12 +11,13 @@
     <div class="jumbotron">
         <div class="row">
             <div class = "col-md-2 col-lg-2 hidden-xs hidden-sm" id = "iconTop">
-                <i class="fa fa-users fa-5x" aria-hidden="true" ></i>
+              <i class="fa fa-users fa-5x" aria-hidden="true" ></i>
+              <!-- <img class="img-responsive" th:src="@{/images/grouper-users-icon-02.png}" src="images/grouper-users-icon-02.png" alt="" id = "iconImage"></img> -->
             </div>
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <h1 class="dropshadow">UH Groupings</h1>
                 <p class="lead">
-                    Manage your Groupings in one place, use them in many.
+                    Manage your groupings in one place, use them in many.
                 </p>
                 <div>
                     <div sec:authorize="!isAuthenticated()">
@@ -38,7 +40,7 @@
             control members' self-service options, designate grouping integrations, and more.
         </p>
         <p>
-            Groupings can be synchornized with one or more of the following: email LISTSERV lists, attribute assignments for access control via CAS and LDAP, etc.
+            Groupings can be synchronized with one or more of the following: email LISTSERV lists, attribute assignments for access control via CAS and LDAP, etc.
             Additionally, UH Groupings allows you to leverage existing membership collections, which can substantially reduce the manual overhead of membership management.
         </p>
         <p>
@@ -66,7 +68,7 @@
                 <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
                     <p class="h4" style="margin-top: 0;">My Groupings</p>
                     <p>
-                        View and manage Groupings I own.  Manage members, configure grouping options and integration destinations.
+                        View and manage groupings I own.  Manage members, configure grouping options and integration destinations.
                     </p>
                     <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">Groupings</a></p>
                 </div>

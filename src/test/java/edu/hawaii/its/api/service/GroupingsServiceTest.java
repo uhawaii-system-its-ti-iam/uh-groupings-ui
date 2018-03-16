@@ -24,13 +24,8 @@ import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsMembership;
-import edu.internet2.middleware.grouperClient.ws.beans.WsResultMeta;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
+
+import edu.internet2.middleware.grouperClient.ws.beans.*;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("localTest")
@@ -224,19 +219,32 @@ public class GroupingsServiceTest {
 
     @Test
     public void makeGroup() {
+        WsGetMembersResults getMembersResults = new WsGetMembersResults();
+        WsGetMembersResult[] getMembersResult = new WsGetMembersResult[1];
+        WsGetMembersResult getMembersResult1 = new WsGetMembersResult();
         WsSubject[] subjects = new WsSubject[0];
-        assertNotNull(gs.makeGroup(subjects));
+        getMembersResult1.setWsSubjects(subjects);
+        getMembersResult[0] = getMembersResult1;
+        getMembersResults.setResults(getMembersResult);
+        assertNotNull(gs.makeGroup(getMembersResults));
+
 
         subjects = new WsSubject[1];
-        assertNotNull(gs.makeGroup(subjects));
+        getMembersResults.getResults()[0].setWsSubjects(subjects);
+        assertNotNull(gs.makeGroup(getMembersResults));
 
         subjects[0] = new WsSubject();
-        assertNotNull(gs.makeGroup(subjects));
+        getMembersResults.getResults()[0].setWsSubjects(subjects);
+        assertNotNull(gs.makeGroup(getMembersResults));
 
     }
 
     @Test
     public void makeGroupTest() {
+        WsGetMembersResults getMembersResults = new WsGetMembersResults();
+        WsGetMembersResult[] getMembersResult = new WsGetMembersResult[1];
+        WsGetMembersResult getMembersResult1 = new WsGetMembersResult();
+
         WsSubject[] list = new WsSubject[3];
         for (int i = 0; i < 3; i++) {
             list[i] = new WsSubject();
@@ -245,7 +253,11 @@ public class GroupingsServiceTest {
             list[i].setAttributeValues(new String[] { "testSubject_username_" + i });
         }
 
-        Group group = gs.makeGroup(list);
+        getMembersResult1.setWsSubjects(list);
+        getMembersResult[0] = getMembersResult1;
+        getMembersResults.setResults(getMembersResult);
+
+        Group group = gs.makeGroup(getMembersResults);
 
         for (int i = 0; i < group.getMembers().size(); i++) {
             assertTrue(group.getMembers().get(i).getName().equals("testSubject_" + i));
