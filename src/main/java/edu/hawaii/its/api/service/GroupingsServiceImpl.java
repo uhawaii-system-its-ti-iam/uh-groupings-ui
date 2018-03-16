@@ -193,84 +193,12 @@ public class GroupingsServiceImpl implements GroupingsService {
             List<String> exclude,
             List<String> owners) {
 
-                List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
-                String action = username + "is adding a Grouping: " + groupingPath;
-
-
-
-                //todo consider changing this to isAdmin. Will an app account ever need to make a Grouping?
-                if (isSuperuser(username)) {
-
-                    return groupingFS.addGrouping(username, groupingPath, basis, include, exclude, owners);
-
-//                    List<Group> groups = new ArrayList<>();
-//
-//                    List<String> basisPlusInclude = unionMemberLists(basis, include);
-//
-//                    Map<String, List<String>> memberLists = new HashMap<>();
-//                    memberLists.put("", new ArrayList<>());
-//                    memberLists.put(BASIS, basis);
-//                    memberLists.put(INCLUDE, include);
-//                    memberLists.put(BASIS_PLUS_INCLUDE, basisPlusInclude);
-//                    memberLists.put(EXCLUDE, exclude);
-//                    memberLists.put(OWNERS, owners);
-//
-//
-//                    //todo check about making folders
-//                    //todo is a folder the same as a stem?
-//                    grouperFS.makeWsStemSaveResults(username, groupingPath);
-//
-//                    //todo always create a basis folder?
-//                    grouperFS.makeWsStemSaveResults(username, groupingPath + BASIS);
-//
-//                    for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
-//                        Group group = makeGroup(groupingPath + entry.getKey(), entry.getValue());
-//                        groups.add(group);
-//                    }
-//
-//                    for (Group group : groups) {
-//                        GroupingsServiceResult result = makeGroupingsServiceResult(
-//                                grouperFS.addEmptyGroup(username, group.getPath()),
-//                                action);
-//                        addGroupingResults.add(result);
-//                    }
-//                    addGroupingResults.add(updateLastModified(groupingPath));
-//
-//                    for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
-//                        addGroupingResults.add(addGroupMembersByUsername(username, groupingPath + entry.getKey(), entry.getValue()));
-//                        addGroupingResults.add(updateLastModified(groupingPath + entry.getKey()));
-//                    }
-//
-//                    addGroupingResults.add(addGroupMembersByUsername(username, GROUPING_OWNERS, memberLists.get(OWNERS)));
-//                    addGroupingResults.add(updateLastModified(GROUPING_OWNERS));
-//
-                } else {
-                    GroupingsServiceResult gsr = makeGroupingsServiceResult(FAILURE + ": " + username + " does not have permission to add this grouping", action);
-                    addGroupingResults.add(gsr);
-                }
-
-                return addGroupingResults;
+        return groupingFS.addGrouping(username, groupingPath, basis, include, exclude, owners);
     }
 
     @Override
     public List<GroupingsServiceResult> deleteGrouping(String username, String groupingPath) {
-
-        //this method will not work until Grouper is updated
-
-        //        List<GroupingsServiceResult> deleteGroupingResults = new ArrayList<>();
-        //        if (isAdmin(username)) {
-        //            deleteGroupingResults.add(assignGroupAttributes(username, PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
-        //            deleteGroupingResults.add(assignGroupAttributes(username, TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
-        //        } else if (isApp(username)) {
-        //            deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
-        //            deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
-        //        } else {
-        //            GroupingsServiceResult failureResult = makeGroupingsServiceResult(FAILURE, "delete grouping" + groupingPath);
-        //
-        //            deleteGroupingResults.add(failureResult);
-        //        }
-        //        return deleteGroupingResults;
-        throw new UnsupportedOperationException();
+        return groupingFS.deleteGrouping(username, groupingPath);
     }
 
     //give ownership to a new user
@@ -301,8 +229,8 @@ public class GroupingsServiceImpl implements GroupingsService {
 
     //turn the listserv for a grouping on or off
     @Override
-    public GroupingsServiceResult changeListservStatus(String groupingPath, String owenerUsername, boolean listservOn) {
-        return changeGroupAttributeStatus(groupingPath, owenerUsername, LISTSERV, listservOn);
+    public GroupingsServiceResult changeListservStatus(String groupingPath, String ownerUsername, boolean listservOn) {
+        return changeGroupAttributeStatus(groupingPath, ownerUsername, LISTSERV, listservOn);
     }
 
     //turn the ability for users to opt-in to a grouping on or off
