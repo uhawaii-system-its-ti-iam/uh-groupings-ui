@@ -8,6 +8,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import edu.hawaii.its.groupings.type.Feedback;
 
 
 @Service
@@ -16,7 +17,7 @@ public class EmailService {
     @Value("${email.send.to}")
     private String to;
 
-    @Value("${email.send.from}")
+    @Value("${app.mail.from:no-reply}")
     private String from;
 
     @Value("${email.is.enabled}")
@@ -31,21 +32,20 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void send(String name, String head, String body, String email) {
+    public void send(Feedback feedback) {
         if(isEnabled){
-            logger.info("Sending email!");
+            logger.info("\n/********************************************************************************************/" +
+                    "\n\nSending email!\n\n" +
+                    "/********************************************************************************************/\n");
             SimpleMailMessage msg = new SimpleMailMessage();
             msg.setTo(to);
             msg.setFrom(from);
             String text = "";
+            String header = "Feedback Type: " + feedback.getType();
+            text += "Feedback reported by " + feedback.getName() + " using email " + feedback.getEmail() + "\n\n";
+            text += "Feedback: " + feedback.getMessage();
+            text += "Stacktrace: " + feedback.getExceptionError();
 
-            String header = "Feedback Type: " + head;
-            text += "Feedback reported by " + name + " using email " + email + "\n\n";
-            text += "Feedback: " + body;
-        //  text += data;
-        //  for(int i = 0; i < data.length; i++){
-        //    text += data[i];
-        //  }
             msg.setText(text);
             msg.setSubject(header);
             try {

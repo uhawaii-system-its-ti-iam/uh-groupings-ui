@@ -88,6 +88,11 @@
                     $scope.loading = false;
                     $scope.showGrouping = true;
                 }
+            },  function(d){
+                console.log("error has occured");
+                console.log(d);
+                var error = encodeURI(d);
+                $window.location.href = "/uhgroupings/feedback/" + error;
             }, groupingDataUrl);
         };
 
