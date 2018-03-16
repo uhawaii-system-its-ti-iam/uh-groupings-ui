@@ -20,7 +20,7 @@
          */
         $scope.init = function () {
             $scope.loading = true;
-            var groupingsOwned = "api/groupings/groupingAssignments";
+            var groupingsOwned = "api/groupings/groupingAssignment";
 
             dataProvider.loadData(function (d) {
                 var temp = [];
@@ -38,12 +38,11 @@
                 }
                 $scope.loading = false;
             }, function(d){
-                    console.log("error has occured");
+                    console.log("error has occurred");
                     console.log(d);
-                    var error = encodeURI(d);
+                    var error = encodeURI(d.message);
                     $window.location.href = "/uhgroupings/feedback/" + error;
-                }
-                ,groupingsOwned);
+                }, groupingsOwned);
         };
 
         /**
@@ -179,7 +178,6 @@
                 return 0
             });
 
-            $scope.replaceBlankUsernames(grouping);
         };
 
         /**
