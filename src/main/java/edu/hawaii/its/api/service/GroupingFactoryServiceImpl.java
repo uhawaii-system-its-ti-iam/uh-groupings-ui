@@ -4,6 +4,13 @@ import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
 
+import edu.internet2.middleware.grouperClient.ws.StemScope;
+import edu.internet2.middleware.grouperClient.ws.beans.WsFindGroupsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsStemLookup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -168,7 +175,7 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
     @Override
     //todo change basis to a String
     public List<GroupingsServiceResult> addGrouping(
-            String username,
+            String adminUsername,
             String groupingPath,
             List<String> basis,
             List<String> include,
@@ -176,66 +183,87 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
             List<String> owners) {
 
         List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
-        String action = username + "is adding a Grouping: " + groupingPath;
+        String action = adminUsername + "is adding a Grouping: " + groupingPath;
 
-        if (mas.isAdmin(username) && pathIsEmpty(groupingPath)) {
-
-            if (basis == null)
-                basis = new ArrayList<>();
-            if (include == null)
-                include = new ArrayList<>();
-            if (exclude == null)
-                exclude = new ArrayList<>();
-            if (owners == null)
-                owners = new ArrayList<>();
-
-            List<Group> groups = new ArrayList<>();
-
-            List<String> basisPlusInclude = union(basis, include);
-
-            Map<String, List<String>> memberLists = new HashMap<>();
-            memberLists.put("", new ArrayList<>());
-            memberLists.put(BASIS, basis);
-            memberLists.put(INCLUDE, include);
-            memberLists.put(BASIS_PLUS_INCLUDE, basisPlusInclude);
-            memberLists.put(EXCLUDE, exclude);
-            memberLists.put(OWNERS, owners);
-
-            //todo check about making folders
-            //todo is a folder the same as a stem?
-            gfs.makeWsStemSaveResults(username, groupingPath);
-
-            //todo always create a basis folder?
-            gfs.makeWsStemSaveResults(username, groupingPath + BASIS);
-
-            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
-                Group group = makeGroup(groupingPath + entry.getKey(), entry.getValue());
-                groups.add(group);
-            }
-
-            for (Group group : groups) {
-                GroupingsServiceResult result = hs.makeGroupingsServiceResult(
-                        gfs.addEmptyGroup(username, group.getPath()),
-                        action);
-                addGroupingResults.add(result);
-            }
-            addGroupingResults.add(ms.updateLastModified(groupingPath));
-
-            for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
-                addGroupingResults.addAll(ms.addGroupMembersByUsername(username,
-                        groupingPath + entry.getKey(), entry.getValue()));
-                addGroupingResults.add(ms.updateLastModified(groupingPath + entry.getKey()));
-            }
-
-            addGroupingResults.addAll(ms.addGroupMembersByUsername(username, GROUPING_OWNERS,
-                    memberLists.get(OWNERS)));
-            addGroupingResults.add(ms.updateLastModified(GROUPING_OWNERS));
-
-        } else {
+        //make sure that adminUsername is actually an admin
+        if (!mas.isAdmin(adminUsername)) {
             GroupingsServiceResult gsr = hs.makeGroupingsServiceResult(
-                    FAILURE + ": " + username + " does not have permission to add this grouping", action);
+                    FAILURE + ": " + adminUsername + " does not have permission to add this grouping", action);
             addGroupingResults.add(gsr);
+            return addGroupingResults;
         }
+
+        //make sure that there is not already a group there
+        if (!pathIsEmpty(adminUsername, groupingPath)) {
+            GroupingsServiceResult gsr = hs.makeGroupingsServiceResult(
+                    FAILURE + ": a group already exists at " + groupingPath, action);
+            addGroupingResults.add(gsr);
+            return addGroupingResults;
+        }
+
+        Map<String, List<String>> memberLists = new HashMap<>();
+        memberLists.put("", new ArrayList<>());
+        memberLists.put(BASIS_PLUS_INCLUDE, new ArrayList<>());
+        memberLists.put(BASIS, new ArrayList<>());
+        memberLists.put(INCLUDE, include);
+        memberLists.put(EXCLUDE, exclude);
+        memberLists.put(OWNERS, owners);
+
+        //todo check about making folders
+        //todo is a folder the same as a stem?
+        gfs.makeWsStemSaveResults(adminUsername, groupingPath);
+
+        //todo always create a basis folder?
+        gfs.makeWsStemSaveResults(adminUsername, groupingPath + BASIS);
+
+        for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
+            String groupPath = groupingPath + entry.getKey();
+
+            //make the groups in grouper
+            addGroupingResults.add(hs.makeGroupingsServiceResult(
+                    gfs.addEmptyGroup(adminUsername, groupPath),
+                    action));
+
+            //add members to the groups
+            addGroupingResults.addAll(ms.addGroupMembersByUsername(adminUsername,
+                    groupPath, entry.getValue()));
+
+            //update the last modified values of those groups
+            addGroupingResults.add(ms.updateLastModified(groupPath));
+        }
+
+        WsSubjectLookup lookup = gfs.makeWsSubjectLookup(adminUsername);
+        WsStemLookup stemLookup = gfs.makeWsStemLookup(STEM);
+        String basisUid = getGroupId(groupingPath + BASIS);
+        String includeUid = getGroupId(groupingPath + INCLUDE);
+        String excludeUid = getGroupId(groupingPath + EXCLUDE);
+        String basisPlusIncludeUid = getGroupId(groupingPath + BASIS_PLUS_INCLUDE);
+
+        //add memberships for BASIS_PLUS_INCLUDE (basis group and include group)
+        addGroupingResults.add(
+                hs.makeGroupingsServiceResult(
+                        gfs.makeWsAddMemberResultsGroup(groupingPath + BASIS_PLUS_INCLUDE, lookup, basisUid),
+                        "add " + groupingPath + BASIS + " to " + groupingPath + BASIS_PLUS_INCLUDE));
+        addGroupingResults.add(
+                hs.makeGroupingsServiceResult(
+                        gfs.makeWsAddMemberResultsGroup(groupingPath + BASIS_PLUS_INCLUDE, lookup, includeUid),
+                        "add " + groupingPath + INCLUDE + " to " + groupingPath + BASIS_PLUS_INCLUDE));
+
+        //add members for the composite (basisPlusInclude group complement exclude group)
+        addGroupingResults.add(
+                hs.makeGroupingsServiceResult(
+                        gfs.makeWsAddMemberResultsGroup(groupingPath, lookup, basisPlusIncludeUid),
+                        "add " + groupingPath + BASIS_PLUS_INCLUDE + " to " + groupingPath));
+        //todo figure out how to do a complement
+
+        //add the isTrio attribute to the grouping
+        gfs.makeWsAssignAttributesResultsForGroup(
+                lookup,
+                ASSIGN_TYPE_GROUP,
+                OPERATION_ASSIGN_ATTRIBUTE,
+                TRIO,
+                groupingPath
+        );
 
         return addGroupingResults;
     }
@@ -300,6 +328,8 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
 
     }
 
+    //returns a group of Persons that have usernames from usernames
+    //all other values will be left null
     private Group makeGroup(String groupPath, List<String> usernames) {
         List<Person> people = new ArrayList<>();
 
@@ -310,8 +340,23 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
         return new Group(groupPath, people);
     }
 
-    private boolean pathIsEmpty(String groupingPath){
+    //returns true if there is not a group at groupingPath
+    private boolean pathIsEmpty(String adminUsername, String groupingPath) {
         //todo check if there is anything already at that path
-        return true;
+        WsStemLookup stemLookup = gfs.makeWsStemLookup(STEM);
+
+        WsGetGroupsResults wsGetGroupsResults = gfs.makeWsGetGroupsResults(
+                adminUsername,
+                stemLookup,
+                StemScope.ALL_IN_SUBTREE);
+
+        return wsGetGroupsResults.getResults()[0].getWsGroups().length == 0;
+    }
+
+    //returns the uid for a group in grouper
+    private String getGroupId(String groupPath) {
+        WsFindGroupsResults results = gfs.makeWsFindGroupsResults(groupPath);
+        WsGroup result = results.getGroupResults()[0];
+        return result.getUuid();
     }
 }
