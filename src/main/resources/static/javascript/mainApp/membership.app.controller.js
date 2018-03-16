@@ -8,7 +8,7 @@
      * @param $scope - binding between controller and HTML page
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function MembershipJsController($scope, $uibModal, $controller, dataProvider) {
+    function MembershipJsController($scope, $uibModal, $window, $controller, dataProvider) {
 
         $scope.currentUsername = "";
         $scope.membersList = [];
@@ -62,6 +62,11 @@
 
                     $scope.loading = false;
                 }
+            }, function(d){
+                console.log("error has occurred");
+                console.log(d);
+                var error = encodeURI(d.message);
+                $window.location.href = "/uhgroupings/feedback/" + error;
             }, groupingURL);
         };
 

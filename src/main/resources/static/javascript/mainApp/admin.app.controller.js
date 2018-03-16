@@ -7,7 +7,7 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function AdminJsController($scope, $controller, $uibModal, dataProvider) {
+    function AdminJsController($scope, $window, $controller, $uibModal, dataProvider) {
 
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
@@ -40,6 +40,11 @@
                     $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
                 }
                 $scope.loading = false;
+            }, function(d){
+                console.log("error has occurred");
+                console.log(d);
+                var error = encodeURI(d.message);
+                $window.location.href = "/uhgroupings/feedback/" + error;
             }, url);
         };
 

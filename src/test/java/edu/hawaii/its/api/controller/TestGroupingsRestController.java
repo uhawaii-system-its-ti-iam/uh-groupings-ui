@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -175,23 +174,23 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst01")
     public void addMemberTest() throws Exception {
 
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(gs.isMember(GROUPING_EXCLUDE, tst[3]));
 
         mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToIncludeGroup");
 
-        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+        assertFalse(gs.isMember(GROUPING_EXCLUDE, tst[3]));
         //tst[3] is in basis and will go into include
-        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[3]));
+        assertTrue(gs.isMember(GROUPING_INCLUDE, tst[3]));
 
         //add tst[3] back to exclude
         mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(gs.isMember(GROUPING_EXCLUDE, tst[3]));
 
         //add tst[3] to Grouping
         mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addGroupingMemberByUsername");
-        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+        assertFalse(gs.isMember(GROUPING_EXCLUDE, tst[3]));
         //tst[3] is in basis, so will not go into include
-        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[3]));
+        assertFalse(gs.isMember(GROUPING_INCLUDE, tst[3]));
 
         //todo add other test cases
     }
@@ -200,27 +199,27 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst01")
     public void deleteMemberTest() throws Exception {
 
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(gs.isMember(GROUPING_EXCLUDE, tst[3]));
         mapGSR("/api/groupings/" + GROUPING + "/" + tst[3] + "/deleteMemberFromExcludeGroup");
 
-        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
-        assertTrue(gs.inGroup(GROUPING, tst[3]));
+        assertFalse(gs.isMember(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(gs.isMember(GROUPING, tst[3]));
 
-        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[1]));
+        assertTrue(gs.isMember(GROUPING_INCLUDE, tst[1]));
         mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/deleteMemberFromIncludeGroup");
 
-        assertFalse(gs.inGroup(GROUPING_EXCLUDE, tst[1]));
-        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[1]));
+        assertFalse(gs.isMember(GROUPING_EXCLUDE, tst[1]));
+        assertFalse(gs.isMember(GROUPING_INCLUDE, tst[1]));
 
-        assertTrue(gs.inGroup(GROUPING, tst[2]));
-        assertTrue(gs.inGroup(GROUPING, tst[5]));
-        assertTrue(gs.inGroup(GROUPING_BASIS, tst[5]));
-        assertTrue(gs.inGroup(GROUPING_INCLUDE, tst[2]));
+        assertTrue(gs.isMember(GROUPING, tst[2]));
+        assertTrue(gs.isMember(GROUPING, tst[5]));
+        assertTrue(gs.isMember(GROUPING_BASIS, tst[5]));
+        assertTrue(gs.isMember(GROUPING_INCLUDE, tst[2]));
         mapGSRs("/api/groupings/" + GROUPING + "/" + tst[2] + "/deleteGroupingMemberByUsername");
         mapGSRs("/api/groupings/" + GROUPING + "/" + tst[5] + "/deleteGroupingMemberByUsername");
 
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[5]));
-        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[2]));
+        assertTrue(gs.isMember(GROUPING_EXCLUDE, tst[5]));
+        assertFalse(gs.isMember(GROUPING_INCLUDE, tst[2]));
     }
 
     @Test
@@ -401,33 +400,33 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst04")
     public void optInTest() throws Exception {
         //tst[3] is not in Grouping, but is in basis and exclude
-        assertFalse(gs.inGroup(GROUPING, tst[3]));
-        assertTrue(gs.inGroup(GROUPING_BASIS, tst[3]));
-        assertTrue(gs.inGroup(GROUPING_EXCLUDE, tst[3]));
+        assertFalse(gs.isMember(GROUPING, tst[3]));
+        assertTrue(gs.isMember(GROUPING_BASIS, tst[3]));
+        assertTrue(gs.isMember(GROUPING_EXCLUDE, tst[3]));
 
         //tst[3] opts into Grouping
         mapGSRs("/api/groupings/" + GROUPING + "/optIn");
 
         //tst[3] is now in composite, still in basis and not in exclude
-        assertTrue(gs.inGroup(GROUPING, tst[3]));
-        assertTrue(gs.inGroup(GROUPING_BASIS, tst[3]));
-        assertFalse(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(gs.isMember(GROUPING, tst[3]));
+        assertTrue(gs.isMember(GROUPING_BASIS, tst[3]));
+        assertFalse(gs.isSelfOpted(GROUPING_EXCLUDE, tst[3]));
     }
 
     @Test
     @WithMockUhUser(username = "iamtst06")
     public void optOutTest() throws Exception {
         //tst[5] is in the Grouping and in the basis
-        assertTrue(gs.inGroup(GROUPING, tst[5]));
-        assertTrue(gs.inGroup(GROUPING_BASIS, tst[5]));
+        assertTrue(gs.isMember(GROUPING, tst[5]));
+        assertTrue(gs.isMember(GROUPING_BASIS, tst[5]));
 
         //tst[5] opts out of Grouping
         mapGSRs("/api/groupings/" + GROUPING + "/optOut");
 
         //tst[5] is now in exclude, not in include or Grouping
-        assertTrue(gs.checkSelfOpted(GROUPING_EXCLUDE, tst[5]));
-        assertFalse(gs.inGroup(GROUPING_INCLUDE, tst[5]));
-        assertFalse(gs.inGroup(GROUPING, tst[5]));
+        assertTrue(gs.isSelfOpted(GROUPING_EXCLUDE, tst[5]));
+        assertFalse(gs.isMember(GROUPING_INCLUDE, tst[5]));
+        assertFalse(gs.isMember(GROUPING, tst[5]));
     }
 
     @Test
