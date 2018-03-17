@@ -1,7 +1,10 @@
 package edu.hawaii.its.api.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.util.Dates;
 
@@ -113,9 +116,10 @@ public class GroupingsFactoryServiceMockTest {
         WsAddMemberResults results;
         List<String> members = new ArrayList<>();
         members.add("username");
-        WsSubjectLookup lookup = new WsSubjectLookup();
+        WsSubjectLookup lookup = new WsSubjectLookup(null, null, "username");
 
-        results = gfs.makeWsAddMemberResults(GROUPING_3_INCLUDE_PATH, lookup, members);
+        //todo java.lang.IllegalArgumentException: host parameter is null (Net says "http://" is missing, but how does that apply)
+        results = gfs.makeWsAddMemberResults(GROUPING_3_PATH, lookup, members);
         assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
     }
 
