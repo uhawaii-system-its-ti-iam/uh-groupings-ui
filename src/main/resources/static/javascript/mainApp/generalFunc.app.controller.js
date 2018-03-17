@@ -6,7 +6,7 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function GeneralJsController($scope, $uibModal, $controller, dataProvider) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, dataProvider) {
 
         $scope.groupingsList = [];
         $scope.pagedItemsGroupings = [];
@@ -48,7 +48,7 @@
          */
         $scope.getData = function () {
             $scope.loading = true;
-            var groupingDataUrl = "api/groupings/" + $scope.selectedGrouping.path + "/grouping";
+            var groupingDataUrl = "api/groupings/" + $scope.selectedGrouping.path + "fafaf/grouping";
 
             dataProvider.loadData(function (d) {
                 console.log(d);
