@@ -47,6 +47,31 @@ paths:
             permission to delete admins
         '404':
           description: User with username  is not in the list of admins
+  '/{grouping}/{userToAdd}/addGroupingMemberByUsername':
+    post:
+      description: Adds a member to a grouping via username
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: userToAdd
+          in: path
+          description: username of the use who is being added
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful addition
+        '403':
+          description: >-
+            User with username  does not exist or user adding to group does not have
+            permission to add users
+        '404':
+          description: User with username does not exist
   '/{grouping}/{userToAdd}/addMemberToIncludeGroup':
     post:
       description: Adds a member to the include group of a grouping
@@ -105,6 +130,56 @@ paths:
             permission to add users to that Grouping
         '404':
           description: user with the username  does not exist
+  '/{grouping}/{userToDelete}/deleteGroupingMemberByUsername':
+    post:
+      description: Removes a member from a grouping via username
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: userToDelete
+          in: path
+          description: user to be removed
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful removal
+        '403':
+          description: >-
+            User with username does not exist or user modifying the group does not have
+            permission
+        '404':
+          description: User with username does not exist
+  '/{grouping}/{userToDelete}/deleteGroupingMemberByUuid':
+    post:
+      description: Removes a member from a grouping via Uuid
+      parameters:
+        - name: grouping
+          in: path
+          description: path to the Grouping
+          required: true
+          schema:
+            type: string
+        - name: userToDelete
+          in: path
+          description: user to be removed
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful removal
+        '403':
+          description: >-
+            User with Uuid does not exist or user modifying the group does not have
+            permission
+        '404':
+          description: User with username does not exist
   '/{grouping}/{userToDelete}/deleteMemberFromIncludeGroup':
     post:
       description: removes a member from the include group of a Grouping
@@ -413,7 +488,7 @@ paths:
         '403':
           description: >-
             user is not allowed to create a Grouping or a Grouping with that
-            path aready exist
+            path already exist
   '/{grouping}/deleteGrouping':
     delete:
       description: removes a Grouping
