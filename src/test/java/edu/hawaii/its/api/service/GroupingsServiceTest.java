@@ -142,6 +142,21 @@ public class GroupingsServiceTest {
     @Value("$groupings.api.stem}")
     private String STEM;
 
+    @Value("${groupings.api.person_attributes.uuid}")
+    private String UUID_KEY;
+
+    @Value("${groupings.api.person_attributes.username}")
+    private String UID_KEY;
+
+    @Value("${groupings.api.person_attributes.first_name}")
+    private String FIRST_NAME_KEY;
+
+    @Value("${groupings.api.person_attributes.last_name}")
+    private String LAST_NAME_KEY;
+
+    @Value("${groupings.api.person_attributes.composite_name}")
+    private String COMPOSITE_NAME_KEY;
+
     String grouping = "grouping";
 
     @Autowired
@@ -306,14 +321,16 @@ public class GroupingsServiceTest {
         String name = "name";
         String id = "uuid";
         String identifier = "username";
+        String[] attributeNames = new String[]{UID_KEY, UUID_KEY, LAST_NAME_KEY, COMPOSITE_NAME_KEY, FIRST_NAME_KEY};
+        String[] attributeValues = new String[] {identifier, id, null, name, null};
 
         WsSubject subject = new WsSubject();
         subject.setName(name);
         subject.setId(id);
-        subject.setAttributeValues(new String[] { identifier });
+        subject.setAttributeValues(attributeValues);
 
         //todo we should have a @Value for this "uid"
-        Person person = gas.makePerson(subject, new String[] {"uid"});
+        Person person = gas.makePerson(subject, attributeNames);
 
         assertTrue(person.getName().equals(name));
         assertTrue(person.getUuid().equals(id));

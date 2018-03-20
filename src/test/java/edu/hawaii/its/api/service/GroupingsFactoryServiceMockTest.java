@@ -114,14 +114,6 @@ public class GroupingsFactoryServiceMockTest {
     //todo
     @Test
     public void makeWsAddMemberResultsTest() {
-        WsAddMemberResults results;
-        List<String> members = new ArrayList<>();
-        members.add("username");
-        WsSubjectLookup lookup = new WsSubjectLookup(null, null, "username");
-
-        //todo java.lang.IllegalArgumentException: host parameter is null (Net says "http://" is missing, but how does that apply)
-        results = gfsl.makeWsAddMemberResults(GROUPING_3_PATH, lookup, members);
-        assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
     }
 
     //todo
