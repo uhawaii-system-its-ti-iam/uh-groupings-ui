@@ -214,6 +214,9 @@ public class GroupingsServiceMockTest {
     @Autowired
     private MembershipRepository membershipRepository;
 
+    @Autowired
+    private HelperService hs;
+
     @Before
     public void setup() {
 
@@ -242,7 +245,6 @@ public class GroupingsServiceMockTest {
         }
     }
 
-    //todo fix
 //    @Test
 //    public void construction() {
 //        //autowired
@@ -867,21 +869,6 @@ public class GroupingsServiceMockTest {
         assertEquals(false, permission);
     }
 
-
-    //todo fix
-    /*
-    @Test
-    public void groupHasAttributeTest() {
-
-        //group does not have the attribute
-        boolean hasAttribute = groupingsService.groupHasAttribute(GROUPING_0_PATH, OPT_OUT);
-        assertFalse(hasAttribute);
-
-        //group has the attribute
-        hasAttribute = groupingsService.groupHasAttribute(GROUPING_0_PATH, OPT_IN);
-        assertTrue(hasAttribute);
-    }
-*/
     @Test
     public void groupingsInTest() {
 
@@ -1044,23 +1031,6 @@ public class GroupingsServiceMockTest {
         assertEquals(emptyAdminListHolder.getAdminGroup().getMembers().size(), 0);
     }
 
-    //todo fix
-    /*
-    @Test
-    public void addSelfOptedTest() {
-        assertFalse(groupingsService.isSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername()));
-        groupingsService.addSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername());
-        assertTrue(groupingsService.isSelfOpted(GROUPING_2_EXCLUDE_PATH, users.get(4).getUsername()));
-
-        //try to add self-opted when the user is not in the group
-        try {
-            groupingsService.addSelfOpted(GROUPING_2_INCLUDE_PATH, users.get(4).getUsername());
-        }catch (GroupingsServiceResultException gsre) {
-            GroupingsServiceResult gsr = gsre.getGsr();
-            assertTrue(gsr.getResultCode().startsWith(FAILURE));
-        }
-    }
-*/
     @Test
     public void checkSelfOptedTest() {
 
@@ -1234,18 +1204,16 @@ public class GroupingsServiceMockTest {
         assertEquals(uuids.size() - numberOfBasisMembers + 2, grouping.getInclude().getMembers().size());
     }
 
-
-    //todo fix
-//    @Test
-//    public void parentGroupingPathTest() {
-//        assertEquals(GROUPING_2_PATH, groupingsService.parentGroupingPath(GROUPING_2_BASIS_PATH));
-//        assertEquals(GROUPING_2_PATH, groupingsService.parentGroupingPath(GROUPING_2_PATH + BASIS_PLUS_INCLUDE));
-//        assertEquals(GROUPING_2_PATH, groupingsService.parentGroupingPath(GROUPING_2_EXCLUDE_PATH));
-//        assertEquals(GROUPING_2_PATH, groupingsService.parentGroupingPath(GROUPING_2_INCLUDE_PATH));
-//        assertEquals(GROUPING_2_PATH, groupingsService.parentGroupingPath(GROUPING_2_OWNERS_PATH));
-//        assertEquals(GROUPING_APPS, groupingsService.parentGroupingPath(GROUPING_APPS));
-//        assertEquals("", groupingsService.parentGroupingPath(null));
-//    }
+    @Test
+    public void parentGroupingPathTest() {
+        assertEquals(GROUPING_2_PATH, hs.parentGroupingPath(GROUPING_2_BASIS_PATH));
+        assertEquals(GROUPING_2_PATH, hs.parentGroupingPath(GROUPING_2_PATH + BASIS_PLUS_INCLUDE));
+        assertEquals(GROUPING_2_PATH, hs.parentGroupingPath(GROUPING_2_EXCLUDE_PATH));
+        assertEquals(GROUPING_2_PATH, hs.parentGroupingPath(GROUPING_2_INCLUDE_PATH));
+        assertEquals(GROUPING_2_PATH, hs.parentGroupingPath(GROUPING_2_OWNERS_PATH));
+        assertEquals(GROUPING_APPS, hs.parentGroupingPath(GROUPING_APPS));
+        assertEquals("", hs.parentGroupingPath(null));
+    }
 
     @Test(expected = UnsupportedOperationException.class)
     public void deleteGroupingTest() {
