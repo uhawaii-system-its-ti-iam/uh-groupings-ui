@@ -325,6 +325,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
     }
 
     //makes a group filled with members from membersResults
+    @Override
     public Group makeGroup(WsGetMembersResults membersResults) {
         Group group = new Group();
         try {
@@ -345,23 +346,8 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
         return group;
     }
 
-
-    //makes a person from a WsSubject
-    //todo do we still need this method?
-    public Person makePerson(WsSubject person) {
-        if (person != null) {
-            String username = null;
-            String name = person.getName();
-            String uuid = person.getId();
-            if (person.getAttributeValues() != null) {
-                username = person.getAttributeValue(0);
-            }
-            return new Person(name, uuid, username);
-        }
-        return new Person();
-    }
-
     //makes a person with all attributes in attributeNames
+    @Override
     public Person makePerson(WsSubject subject, String[] attributeNames) {
         if (subject == null || subject.getAttributeValues() == null) {
             return new Person();
@@ -430,6 +416,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
         return extractGroupPaths(groups);
     }
 
+    @Override
     //take a list of WsGroups ans return a list of the paths for all of those groups
     public List<String> extractGroupPaths(List<WsGroup> groups) {
         List<String> names = new ArrayList<>();
