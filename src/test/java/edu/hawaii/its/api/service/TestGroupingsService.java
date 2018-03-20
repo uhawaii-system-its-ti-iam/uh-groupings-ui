@@ -158,7 +158,7 @@ public class TestGroupingsService {
     private String FAILURE;
 
     @Autowired
-    private GroupingsServiceImpl gs;
+    private GroupingsService gs;
 
     @Autowired
     public Environment env; // Just for the settings check.

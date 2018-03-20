@@ -245,16 +245,11 @@ public class GroupingsServiceMockTest {
         }
     }
 
-//    @Test
-//    public void construction() {
-//        //autowired
-//        assertNotNull(groupingsService);
-//
-//        //constructed normally
-//        GrouperFactoryService grouperFactoryOther = new GrouperFactoryServiceImplLocal();
-//        GroupingsService groupingsServiceOther = new GroupingsServiceImpl(grouperFactoryOther);
-//        assertNotNull(groupingsServiceOther);
-//    }
+    @Test
+    public void construction() {
+        //autowired
+        assertNotNull(groupingsService);
+    }
 
     // Debug statement to look at contents of database
     // Delete user from include group to remove them
