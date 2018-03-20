@@ -73,4 +73,20 @@ public class GroupingsFactoryServiceTest {
         assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
     }
 
+    //todo
+    public void makeWsDeleteMemberResultsTest() {
+
+    }
+
+    //todo
+    public void makeWsAssignAttributesResultsForGroupTest() {
+
+    }
+
+    //todo
+    public void removeGroupsWithoutOptOut() {
+
+    }
+
+
 }
