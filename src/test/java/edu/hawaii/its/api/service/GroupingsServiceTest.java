@@ -145,6 +145,9 @@ public class GroupingsServiceTest {
     String grouping = "grouping";
 
     @Autowired
+    GroupingAssignmentService gas;
+
+    @Autowired
     GroupingsService gs;
 
     @Autowired
@@ -171,50 +174,48 @@ public class GroupingsServiceTest {
         assertEquals("", hs.parentGroupingPath(null));
     }
 
-    //todo fix
-//    @Test
-//    public void extractGroupPaths() {
-//        List<WsGroup> groups = null;
-//        //List<String> groupNames = gs.extractGroupPaths(groups);
-//        List<String> groupNames = gs.extractGroupPaths(groups);
-//        assertThat(groupNames.size(), equalTo(0));
-//
-//        groups = new ArrayList<>();
-//        final int size = 300;
-//
-//        for (int i = 0; i < size; i++) {
-//            WsGroup w = new WsGroup();
-//            w.setName("testName_" + i);
-//            groups.add(w);
-//        }
-//        assertThat(groups.size(), equalTo(size));
-//
-//        groupNames = gs.extractGroupPaths(groups);
-//        for (int i = 0; i < size; i++) {
-//            assertTrue(groupNames.contains("testName_" + i));
-//        }
-//        assertThat(groupNames.size(), equalTo(size));
-//
-//        // Create some duplicates.
-//        groups = new ArrayList<>();
-//        for (int j = 0; j < 3; j++) {
-//            for (int i = 0; i < size; i++) {
-//                WsGroup w = new WsGroup();
-//                w.setName("testName_" + i);
-//                groups.add(w);
-//            }
-//        }
-//        assertThat(groups.size(), equalTo(3 * size));
-//
-//        // Duplicates should not be in groupNames list.
-//        groupNames = gs.extractGroupPaths(groups);
-//        assertThat(groupNames.size(), equalTo(size));
-//        for (int i = 0; i < size; i++) {
-//            assertTrue(groupNames.contains("testName_" + i));
-//        }
-//    }
+    @Test
+    public void extractGroupPaths() {
+        List<WsGroup> groups = null;
+        //List<String> groupNames = gs.extractGroupPaths(groups);
+        List<String> groupNames = gas.extractGroupPaths(groups);
+        assertThat(groupNames.size(), equalTo(0));
 
-    //todo fix
+        groups = new ArrayList<>();
+        final int size = 300;
+
+        for (int i = 0; i < size; i++) {
+            WsGroup w = new WsGroup();
+            w.setName("testName_" + i);
+            groups.add(w);
+        }
+        assertThat(groups.size(), equalTo(size));
+
+        groupNames = gas.extractGroupPaths(groups);
+        for (int i = 0; i < size; i++) {
+            assertTrue(groupNames.contains("testName_" + i));
+        }
+        assertThat(groupNames.size(), equalTo(size));
+
+        // Create some duplicates.
+        groups = new ArrayList<>();
+        for (int j = 0; j < 3; j++) {
+            for (int i = 0; i < size; i++) {
+                WsGroup w = new WsGroup();
+                w.setName("testName_" + i);
+                groups.add(w);
+            }
+        }
+        assertThat(groups.size(), equalTo(3 * size));
+
+        // Duplicates should not be in groupNames list.
+        groupNames = gas.extractGroupPaths(groups);
+        assertThat(groupNames.size(), equalTo(size));
+        for (int i = 0; i < size; i++) {
+            assertTrue(groupNames.contains("testName_" + i));
+        }
+    }
+
     @Test
     public void extractFirstMembershipID() {
         WsGetMembershipsResults mr = new WsGetMembershipsResults();
@@ -228,59 +229,57 @@ public class GroupingsServiceTest {
         assertEquals("membershipID_0", hs.extractFirstMembershipID(mr));
     }
 
-    //todo fix
-//    @Test
-//    public void makeGroup() {
-//        WsGetMembersResults getMembersResults = new WsGetMembersResults();
-//        WsGetMembersResult[] getMembersResult = new WsGetMembersResult[1];
-//        WsGetMembersResult getMembersResult1 = new WsGetMembersResult();
-//        WsSubject[] subjects = new WsSubject[0];
-//        getMembersResult1.setWsSubjects(subjects);
-//        getMembersResult[0] = getMembersResult1;
-//        getMembersResults.setResults(getMembersResult);
-//        assertNotNull(gs.makeGroup(getMembersResults));
-//
-//
-//        subjects = new WsSubject[1];
-//        getMembersResults.getResults()[0].setWsSubjects(subjects);
-//        assertNotNull(gs.makeGroup(getMembersResults));
-//
-//        subjects[0] = new WsSubject();
-//        getMembersResults.getResults()[0].setWsSubjects(subjects);
-//        assertNotNull(gs.makeGroup(getMembersResults));
-//
-//    }
+    @Test
+    public void makeGroup() {
+        WsGetMembersResults getMembersResults = new WsGetMembersResults();
+        WsGetMembersResult[] getMembersResult = new WsGetMembersResult[1];
+        WsGetMembersResult getMembersResult1 = new WsGetMembersResult();
+        WsSubject[] subjects = new WsSubject[0];
+        getMembersResult1.setWsSubjects(subjects);
+        getMembersResult[0] = getMembersResult1;
+        getMembersResults.setResults(getMembersResult);
+        assertNotNull(gas.makeGroup(getMembersResults));
 
-//    //todo fix
-//    @Test
-//    public void makeGroupTest() {
-//        WsGetMembersResults getMembersResults = new WsGetMembersResults();
-//        WsGetMembersResult[] getMembersResult = new WsGetMembersResult[1];
-//        WsGetMembersResult getMembersResult1 = new WsGetMembersResult();
-//
-//        WsSubject[] list = new WsSubject[3];
-//        for (int i = 0; i < 3; i++) {
-//            list[i] = new WsSubject();
-//            list[i].setName("testSubject_" + i);
-//            list[i].setId("testSubject_uuid_" + i);
-//            list[i].setAttributeValues(new String[] { "testSubject_username_" + i });
-//        }
-//
-//        getMembersResult1.setWsSubjects(list);
-//        getMembersResult[0] = getMembersResult1;
-//        getMembersResults.setResults(getMembersResult);
-//
-//        Group group = gs.makeGroup(getMembersResults);
-//
-//        for (int i = 0; i < group.getMembers().size(); i++) {
-//            assertTrue(group.getMembers().get(i).getName().equals("testSubject_" + i));
-//            assertTrue(group.getNames().contains("testSubject_" + i));
-//            assertTrue(group.getMembers().get(i).getUuid().equals("testSubject_uuid_" + i));
-//            assertTrue(group.getUuids().contains("testSubject_uuid_" + i));
-//            assertTrue(group.getMembers().get(i).getUsername().equals("testSubject_username_" + i));
-//            assertTrue(group.getUsernames().contains("testSubject_username_" + i));
-//        }
-//    }
+
+        subjects = new WsSubject[1];
+        getMembersResults.getResults()[0].setWsSubjects(subjects);
+        assertNotNull(gas.makeGroup(getMembersResults));
+
+        subjects[0] = new WsSubject();
+        getMembersResults.getResults()[0].setWsSubjects(subjects);
+        assertNotNull(gas.makeGroup(getMembersResults));
+
+    }
+
+    @Test
+    public void makeGroupTest() {
+        WsGetMembersResults getMembersResults = new WsGetMembersResults();
+        WsGetMembersResult[] getMembersResult = new WsGetMembersResult[1];
+        WsGetMembersResult getMembersResult1 = new WsGetMembersResult();
+
+        WsSubject[] list = new WsSubject[3];
+        for (int i = 0; i < 3; i++) {
+            list[i] = new WsSubject();
+            list[i].setName("testSubject_" + i);
+            list[i].setId("testSubject_uuid_" + i);
+            list[i].setAttributeValues(new String[] { "testSubject_username_" + i });
+        }
+
+        getMembersResult1.setWsSubjects(list);
+        getMembersResult[0] = getMembersResult1;
+        getMembersResults.setResults(getMembersResult);
+
+        Group group = gas.makeGroup(getMembersResults);
+
+        for (int i = 0; i < group.getMembers().size(); i++) {
+            assertTrue(group.getMembers().get(i).getName().equals("testSubject_" + i));
+            assertTrue(group.getNames().contains("testSubject_" + i));
+            assertTrue(group.getMembers().get(i).getUuid().equals("testSubject_uuid_" + i));
+            assertTrue(group.getUuids().contains("testSubject_uuid_" + i));
+            assertTrue(group.getMembers().get(i).getUsername().equals("testSubject_username_" + i));
+            assertTrue(group.getUsernames().contains("testSubject_username_" + i));
+        }
+    }
 
     //todo fix
     @Test
@@ -302,106 +301,27 @@ public class GroupingsServiceTest {
         }
     }
 
-    //todo fix
-//    @Test
-//    public void makeGroupingsWithAttributes() {
-//        GrouperFactoryService gfs = gs.getGrouperFactoryService();
-//        GrouperFactoryService obj = new GrouperFactoryServiceImpl() {
-//            @Override
-//            public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType, String group) {
-//                return new WsGetAttributeAssignmentsResults();
-//            }
-//        };
-//        gs.setGrouperFactoryService(obj);
-//
-//        List<String> groupPaths = new ArrayList<>();
-//        groupPaths.add(null);
-//        List<Grouping> groupings = hs.makeGroupings(groupPaths);
-//        assertThat(groupings.size(), equalTo(1));
-//        for (int i = 0; i < groupings.size(); i++) {
-//            Grouping g = groupings.get(i);
-//            assertThat(g.getName(), equalTo(""));
-//            assertThat(g.getPath(), equalTo(""));
-//            assertTrue(g.getBasis() instanceof EmptyGroup);
-//            assertTrue(g.getExclude() instanceof EmptyGroup);
-//            assertTrue(g.getInclude() instanceof EmptyGroup);
-//            assertTrue(g.getComposite() instanceof EmptyGroup);
-//            assertTrue(g.getOwners() instanceof EmptyGroup);
-//            assertFalse(g.isListservOn());
-//            assertFalse(g.isOptInOn());
-//            assertFalse(g.isOptOutOn());
-//        }
-//
-//        final int SIZE = 50;
-//        groupPaths = new ArrayList<>();
-//        for (int i = 0; i < SIZE; i++) {
-//            groupPaths.add("memo:path:grouping_" + i);
-//        }
-//
-//        groupings = gs.makeGroupings(groupPaths);
-//        assertThat(groupings.size(), equalTo(SIZE));
-//
-//        for (int i = 0; i < groupings.size(); i++) {
-//            Grouping g = groupings.get(i);
-//            assertThat(g.getName(), equalTo("grouping_" + i));
-//            assertThat(g.getPath(), equalTo("memo:path:grouping_" + i));
-//            assertTrue(g.getBasis() instanceof EmptyGroup);
-//            assertTrue(g.getExclude() instanceof EmptyGroup);
-//            assertTrue(g.getInclude() instanceof EmptyGroup);
-//            assertTrue(g.getComposite() instanceof EmptyGroup);
-//            assertTrue(g.getOwners() instanceof EmptyGroup);
-//            assertFalse(g.isListservOn());
-//            assertFalse(g.isOptInOn());
-//            assertFalse(g.isOptOutOn());
-//        }
-//
-//        groupPaths = new ArrayList<>();
-//        for (int i = 0; i < SIZE; i++) {
-//            groupPaths.add("grouping_" + i);
-//        }
-//
-//        groupings = hs.makeGroupings(groupPaths);
-//        assertThat(groupings.size(), equalTo(SIZE));
-//
-//        for (int i = 0; i < groupings.size(); i++) {
-//            Grouping g = groupings.get(i);
-//            assertThat(g.getName(), equalTo("grouping_" + i));
-//            assertThat(g.getPath(), equalTo("grouping_" + i));
-//            assertTrue(g.getBasis() instanceof EmptyGroup);
-//            assertTrue(g.getExclude() instanceof EmptyGroup);
-//            assertTrue(g.getInclude() instanceof EmptyGroup);
-//            assertTrue(g.getComposite() instanceof EmptyGroup);
-//            assertTrue(g.getOwners() instanceof EmptyGroup);
-//            assertFalse(g.isListservOn());
-//            assertFalse(g.isOptInOn());
-//            assertFalse(g.isOptOutOn());
-//        }
-//
-//        gs.setGrouperFactoryService(gfs);
-//    }
+    @Test
+    public void makePerson() {
+        String name = "name";
+        String id = "uuid";
+        String identifier = "username";
 
-    //todo fix
-//    @Test
-//    public void makePerson() {
-//        String name = "name";
-//        String id = "uuid";
-//        String identifier = "username";
-//
-//        WsSubject subject = new WsSubject();
-//        subject.setName(name);
-//        subject.setId(id);
-//        subject.setAttributeValues(new String[] { identifier });
-//
-//        Person person = gs.makePerson(subject);
-//
-//        assertTrue(person.getName().equals(name));
-//        assertTrue(person.getUuid().equals(id));
-//        assertTrue(person.getUsername().equals(identifier));
-//
-//        assertNotNull(gs.makePerson(null));
-//    }
+        WsSubject subject = new WsSubject();
+        subject.setName(name);
+        subject.setId(id);
+        subject.setAttributeValues(new String[] { identifier });
 
-    //todo fix
+        //todo we should have a @Value for this "uid"
+        Person person = gas.makePerson(subject, new String[] {"uid"});
+
+        assertTrue(person.getName().equals(name));
+        assertTrue(person.getUuid().equals(id));
+        assertTrue(person.getUsername().equals(identifier));
+
+        assertNotNull(gas.makePerson(new WsSubject(), new String[]{}));
+    }
+
     @Test
     public void makeGroupingsServiceResult() {
         String action = "add a member";
@@ -417,7 +337,6 @@ public class GroupingsServiceTest {
         assertEquals(resultCode, gsr.getResultCode());
     }
 
-    //todo fix
     @Test
     public void extractFirstMembershipIDTest() {
         WsGetMembershipsResults membershipsResults = null;
