@@ -161,6 +161,9 @@ public class TestGroupingsService {
     private GroupingsService gs;
 
     @Autowired
+    private HelperService hs;
+
+    @Autowired
     public Environment env; // Just for the settings check.
 
     @PostConstruct
@@ -626,7 +629,8 @@ public class TestGroupingsService {
 //        assertFalse(groups2.contains(GROUPING_STORE_EMPTY_OWNERS));
 //        assertFalse(groups2.contains(GROUPING_TRUE_EMPTY_OWNERS));
 //    }
-//
+
+    //todo fix
 //    @Test
 //    public void grouperTest() {
 //        List<String> groupPaths = gs.getGroupPaths(username[0]);
@@ -844,16 +848,15 @@ public class TestGroupingsService {
     }
 
 
-    //todo fix
-//    @Test
-//    public void makeGroupingsTest() {
-//        List<String> groupingPaths = new ArrayList<>();
-//        groupingPaths.add(GROUPING);
-//        groupingPaths.add(GROUPING_STORE_EMPTY);
-//        groupingPaths.add(GROUPING_TRUE_EMPTY);
-//
-//        List<Grouping> groupings = gs.makeGroupings(groupingPaths);
-//
-//        assertTrue(groupings.size() == 3);
-//    }
+    @Test
+    public void makeGroupingsTest() {
+        List<String> groupingPaths = new ArrayList<>();
+        groupingPaths.add(GROUPING);
+        groupingPaths.add(GROUPING_STORE_EMPTY);
+        groupingPaths.add(GROUPING_TRUE_EMPTY);
+
+        List<Grouping> groupings = hs.makeGroupings(groupingPaths);
+
+        assertTrue(groupings.size() == 3);
+    }
 }
