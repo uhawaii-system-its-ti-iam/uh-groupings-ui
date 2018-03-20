@@ -147,32 +147,35 @@ public class GroupingsServiceTest {
     @Autowired
     GroupingsService gs;
 
+    @Autowired
+    HelperService hs;
+
     @Test
     public void constructorTest() {
         assertNotNull(gs);
     }
 
-    //todo fix
-//    @Test
-//    public void groupingParentPath() {
-//        String[] groups = new String[] { grouping + EXCLUDE,
-//                grouping + INCLUDE,
-//                grouping + OWNERS,
-//                grouping + BASIS,
-//                grouping + BASIS_PLUS_INCLUDE,
-//                grouping };
-//
-//        for (String g : groups) {
-//            assertEquals(grouping, gs.parentGroupingPath(g));
-//        }
-//
-//        assertEquals("", gs.parentGroupingPath(null));
-//    }
+    @Test
+    public void groupingParentPath() {
+        String[] groups = new String[] { grouping + EXCLUDE,
+                grouping + INCLUDE,
+                grouping + OWNERS,
+                grouping + BASIS,
+                grouping + BASIS_PLUS_INCLUDE,
+                grouping };
+
+        for (String g : groups) {
+            assertEquals(grouping, hs.parentGroupingPath(g));
+        }
+
+        assertEquals("", hs.parentGroupingPath(null));
+    }
 
     //todo fix
 //    @Test
 //    public void extractGroupPaths() {
 //        List<WsGroup> groups = null;
+//        //List<String> groupNames = gs.extractGroupPaths(groups);
 //        List<String> groupNames = gs.extractGroupPaths(groups);
 //        assertThat(groupNames.size(), equalTo(0));
 //
@@ -212,18 +215,18 @@ public class GroupingsServiceTest {
 //    }
 
     //todo fix
-//    @Test
-//    public void extractFirstMembershipID() {
-//        WsGetMembershipsResults mr = new WsGetMembershipsResults();
-//        WsMembership[] memberships = new WsMembership[3];
-//        for (int i = 0; i < 3; i++) {
-//            memberships[i] = new WsMembership();
-//            memberships[i].setMembershipId("membershipID_" + i);
-//        }
-//        mr.setWsMemberships(memberships);
-//
-//        assertEquals("membershipID_0", gs.extractFirstMembershipID(mr));
-//    }
+    @Test
+    public void extractFirstMembershipID() {
+        WsGetMembershipsResults mr = new WsGetMembershipsResults();
+        WsMembership[] memberships = new WsMembership[3];
+        for (int i = 0; i < 3; i++) {
+            memberships[i] = new WsMembership();
+            memberships[i].setMembershipId("membershipID_" + i);
+        }
+        mr.setWsMemberships(memberships);
+
+        assertEquals("membershipID_0", hs.extractFirstMembershipID(mr));
+    }
 
     //todo fix
 //    @Test
@@ -248,7 +251,7 @@ public class GroupingsServiceTest {
 //
 //    }
 
-    //todo fix
+//    //todo fix
 //    @Test
 //    public void makeGroupTest() {
 //        WsGetMembersResults getMembersResults = new WsGetMembersResults();
@@ -280,24 +283,24 @@ public class GroupingsServiceTest {
 //    }
 
     //todo fix
-//    @Test
-//    public void makeGroupingsNoAttributes() {
-//        List<String> groupPaths = new ArrayList<>();
-//
-//        for (int i = 0; i < 5; i++) {
-//            groupPaths.add("grouping_" + i);
-//        }
-//        for (int i = 0; i < 5; i++) {
-//            groupPaths.add("path:grouping_" + (i + 5));
-//        }
-//
-//        List<Grouping> groupings = gs.makeGroupings(groupPaths);
-//
-//        for (int i = 5; i < 10; i++) {
-//            assertEquals("path:grouping_" + i, groupings.get(i).getPath());
-//            assertEquals("grouping_" + i, groupings.get(i).getName());
-//        }
-//    }
+    @Test
+    public void makeGroupingsNoAttributes() {
+        List<String> groupPaths = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            groupPaths.add("grouping_" + i);
+        }
+        for (int i = 0; i < 5; i++) {
+            groupPaths.add("path:grouping_" + (i + 5));
+        }
+
+        List<Grouping> groupings = hs.makeGroupings(groupPaths);
+
+        for (int i = 5; i < 10; i++) {
+            assertEquals("path:grouping_" + i, groupings.get(i).getPath());
+            assertEquals("grouping_" + i, groupings.get(i).getName());
+        }
+    }
 
     //todo fix
 //    @Test
@@ -313,7 +316,7 @@ public class GroupingsServiceTest {
 //
 //        List<String> groupPaths = new ArrayList<>();
 //        groupPaths.add(null);
-//        List<Grouping> groupings = gs.makeGroupings(groupPaths);
+//        List<Grouping> groupings = hs.makeGroupings(groupPaths);
 //        assertThat(groupings.size(), equalTo(1));
 //        for (int i = 0; i < groupings.size(); i++) {
 //            Grouping g = groupings.get(i);
@@ -357,7 +360,7 @@ public class GroupingsServiceTest {
 //            groupPaths.add("grouping_" + i);
 //        }
 //
-//        groupings = gs.makeGroupings(groupPaths);
+//        groupings = hs.makeGroupings(groupPaths);
 //        assertThat(groupings.size(), equalTo(SIZE));
 //
 //        for (int i = 0; i < groupings.size(); i++) {
@@ -399,53 +402,53 @@ public class GroupingsServiceTest {
 //    }
 
     //todo fix
-//    @Test
-//    public void makeGroupingsServiceResult() {
-//        String action = "add a member";
-//        String resultCode = "successfully added member";
-//        WsAddMemberResults gr = new WsAddMemberResults();
-//        WsResultMeta resultMeta = new WsResultMeta();
-//        resultMeta.setResultCode(resultCode);
-//        gr.setResultMetadata(resultMeta);
-//
-//        GroupingsServiceResult gsr = gs.makeGroupingsServiceResult(gr, action);
-//
-//        assertEquals(action, gsr.getAction());
-//        assertEquals(resultCode, gsr.getResultCode());
-//    }
+    @Test
+    public void makeGroupingsServiceResult() {
+        String action = "add a member";
+        String resultCode = "successfully added member";
+        WsAddMemberResults gr = new WsAddMemberResults();
+        WsResultMeta resultMeta = new WsResultMeta();
+        resultMeta.setResultCode(resultCode);
+        gr.setResultMetadata(resultMeta);
+
+        GroupingsServiceResult gsr = hs.makeGroupingsServiceResult(gr, action);
+
+        assertEquals(action, gsr.getAction());
+        assertEquals(resultCode, gsr.getResultCode());
+    }
 
     //todo fix
-//    @Test
-//    public void extractFirstMembershipIDTest() {
-//        WsGetMembershipsResults membershipsResults = null;
-//        String firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
-//        assertEquals(firstMembershipId, "");
-//
-//        membershipsResults = new WsGetMembershipsResults();
-//        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
-//        assertEquals(firstMembershipId, "");
-//
-//        WsMembership[] memberships = null;
-//        membershipsResults.setWsMemberships(memberships);
-//        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
-//        assertEquals(firstMembershipId, "");
-//
-//        memberships = new WsMembership[] { null };
-//        membershipsResults.setWsMemberships(memberships);
-//        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
-//        assertEquals(firstMembershipId, "");
-//
-//        WsMembership membership = new WsMembership();
-//        memberships = new WsMembership[] { membership };
-//        membershipsResults.setWsMemberships(memberships);
-//        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
-//        assertEquals(firstMembershipId, "");
-//
-//        membership.setMembershipId("1234");
-//        memberships = new WsMembership[] { membership };
-//        membershipsResults.setWsMemberships(memberships);
-//        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
-//        assertEquals(firstMembershipId, "1234");
-//    }
+    @Test
+    public void extractFirstMembershipIDTest() {
+        WsGetMembershipsResults membershipsResults = null;
+        String firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "");
+
+        membershipsResults = new WsGetMembershipsResults();
+        firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "");
+
+        WsMembership[] memberships = null;
+        membershipsResults.setWsMemberships(memberships);
+        firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "");
+
+        memberships = new WsMembership[] { null };
+        membershipsResults.setWsMemberships(memberships);
+        firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "");
+
+        WsMembership membership = new WsMembership();
+        memberships = new WsMembership[] { membership };
+        membershipsResults.setWsMemberships(memberships);
+        firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "");
+
+        membership.setMembershipId("1234");
+        memberships = new WsMembership[] { membership };
+        membershipsResults.setWsMemberships(memberships);
+        firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
+        assertEquals(firstMembershipId, "1234");
+    }
 
 }
