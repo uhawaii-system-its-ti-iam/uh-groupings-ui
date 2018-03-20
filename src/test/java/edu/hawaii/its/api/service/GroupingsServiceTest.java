@@ -2,7 +2,6 @@ package edu.hawaii.its.api.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -12,13 +11,13 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.hawaii.its.api.type.EmptyGroup;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
@@ -31,59 +30,6 @@ import edu.internet2.middleware.grouperClient.ws.beans.*;
 @ActiveProfiles("localTest")
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class GroupingsServiceTest {
-    @Value("${groupings.api.settings}")
-    private String SETTINGS;
-
-    @Value("${groupings.api.grouping_admins}")
-    private String GROUPING_ADMINS;
-
-    @Value("${groupings.api.grouping_apps}")
-    private String GROUPING_APPS;
-
-    @Value("${groupings.api.grouping_owners}")
-    private String GROUPING_OWNERS;
-
-    @Value("${groupings.api.grouping_superusers}")
-    private String GROUPING_SUPERUSERS;
-
-    @Value("${groupings.api.attributes}")
-    private String ATTRIBUTES;
-
-    @Value("${groupings.api.for_groups}")
-    private String FOR_GROUPS;
-
-    @Value("${groupings.api.for_memberships}")
-    private String FOR_MEMBERSHIPS;
-
-    @Value("${groupings.api.last_modified}")
-    private String LAST_MODIFIED;
-
-    @Value("${groupings.api.yyyymmddThhmm}")
-    private String YYYYMMDDTHHMM;
-
-    @Value("${groupings.api.uhgrouping}")
-    private String UHGROUPING;
-
-    @Value("${groupings.api.destinations}")
-    private String DESTINATIONS;
-
-    @Value("${groupings.api.listserv}")
-    private String LISTSERV;
-
-    @Value("${groupings.api.trio}")
-    private String TRIO;
-
-    @Value("${groupings.api.self_opted}")
-    private String SELF_OPTED;
-
-    @Value("${groupings.api.anyone_can}")
-    private String ANYONE_CAN;
-
-    @Value("${groupings.api.opt_in}")
-    private String OPT_IN;
-
-    @Value("${groupings.api.opt_out}")
-    private String OPT_OUT;
 
     @Value("${groupings.api.basis}")
     private String BASIS;
@@ -99,48 +45,6 @@ public class GroupingsServiceTest {
 
     @Value("${groupings.api.owners}")
     private String OWNERS;
-
-    @Value("${groupings.api.assign_type_group}")
-    private String ASSIGN_TYPE_GROUP;
-
-    @Value("${groupings.api.assign_type_immediate_membership}")
-    private String ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP;
-
-    @Value("${groupings.api.subject_attribute_name_uuid}")
-    private String SUBJECT_ATTRIBUTE_NAME_UID;
-
-    @Value("${groupings.api.operation_assign_attribute}")
-    private String OPERATION_ASSIGN_ATTRIBUTE;
-
-    @Value("${groupings.api.operation_remove_attribute}")
-    private String OPERATION_REMOVE_ATTRIBUTE;
-
-    @Value("${groupings.api.operation_replace_values}")
-    private String OPERATION_REPLACE_VALUES;
-
-    @Value("${groupings.api.privilege_opt_out}")
-    private String PRIVILEGE_OPT_OUT;
-
-    @Value("${groupings.api.privilege_opt_in}")
-    private String PRIVILEGE_OPT_IN;
-
-    @Value("${groupings.api.every_entity}")
-    private String EVERY_ENTITY;
-
-    @Value("${groupings.api.is_member}")
-    private String IS_MEMBER;
-
-    @Value("${groupings.api.success}")
-    private String SUCCESS;
-
-    @Value("${groupings.api.failure}")
-    private String FAILURE;
-
-    @Value("${groupings.api.success_allowed}")
-    private String SUCCESS_ALLOWED;
-
-    @Value("$groupings.api.stem}")
-    private String STEM;
 
     @Value("${groupings.api.person_attributes.uuid}")
     private String UUID_KEY;
@@ -255,7 +159,6 @@ public class GroupingsServiceTest {
         getMembersResults.setResults(getMembersResult);
         assertNotNull(gas.makeGroup(getMembersResults));
 
-
         subjects = new WsSubject[1];
         getMembersResults.getResults()[0].setWsSubjects(subjects);
         assertNotNull(gas.makeGroup(getMembersResults));
@@ -296,7 +199,6 @@ public class GroupingsServiceTest {
         }
     }
 
-    //todo fix
     @Test
     public void makeGroupingsNoAttributes() {
         List<String> groupPaths = new ArrayList<>();
@@ -321,22 +223,21 @@ public class GroupingsServiceTest {
         String name = "name";
         String id = "uuid";
         String identifier = "username";
-        String[] attributeNames = new String[]{UID_KEY, UUID_KEY, LAST_NAME_KEY, COMPOSITE_NAME_KEY, FIRST_NAME_KEY};
-        String[] attributeValues = new String[] {identifier, id, null, name, null};
+        String[] attributeNames = new String[] { UID_KEY, UUID_KEY, LAST_NAME_KEY, COMPOSITE_NAME_KEY, FIRST_NAME_KEY };
+        String[] attributeValues = new String[] { identifier, id, null, name, null };
 
         WsSubject subject = new WsSubject();
         subject.setName(name);
         subject.setId(id);
         subject.setAttributeValues(attributeValues);
 
-        //todo we should have a @Value for this "uid"
         Person person = gas.makePerson(subject, attributeNames);
 
         assertTrue(person.getName().equals(name));
         assertTrue(person.getUuid().equals(id));
         assertTrue(person.getUsername().equals(identifier));
 
-        assertNotNull(gas.makePerson(new WsSubject(), new String[]{}));
+        assertNotNull(gas.makePerson(new WsSubject(), new String[] {}));
     }
 
     @Test
