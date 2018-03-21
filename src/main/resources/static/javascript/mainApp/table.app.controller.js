@@ -12,10 +12,9 @@
         /**
          * Paginates a list of items.
          * @param {object[]} list - the unpaginated list
-         * @param {object[]} pagedList - the paginated list
-         * @returns {object[]} list (the first parameter), paginated
+         * @returns {object[]} a paginated list
          */
-        $scope.groupToPages = function (list, pagedList) {
+        $scope.groupToPages = function (list) {
             var pagedList = [];
             if (list === null) {
                 console.log("I AM NULL ... WHY?!");
@@ -63,7 +62,7 @@
             // Resets the page number
             $scope[pageVar] = 0;
             // Paginates the filtered items
-            $scope[pagedListVar] = $scope.groupToPages(filteredItems, []);
+            $scope[pagedListVar] = $scope.groupToPages(filteredItems);
         };
 
         /**
@@ -147,7 +146,7 @@
             var reverse = $scope.columnSort[tableName].reverse;
             $scope[tableName] = $filter('orderBy')($scope[tableName], propertyName, reverse);
             // Paginate the table again
-            $scope[pagedTableName] = $scope.groupToPages($scope[tableName], []);
+            $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
         };
 
     }

@@ -41,19 +41,11 @@ public class EmailService {
             msg.setTo(to);
             msg.setFrom(from);
             String text = "";
-           // String header = "Aaron is testing emailing stuffs";
             String header = "Feedback Type: " + feedback.getType();
             text += "Feedback reported by " + feedback.getName() + " using email " + feedback.getEmail() + "\n\n";
-            text += "Feedback: " + feedback.getMessage()    ;
+            text += "Feedback: " + feedback.getMessage();
+            text += "Stacktrace: " + feedback.getExceptionError();
 
-            if(feedback.getExceptionError() != null)
-            {
-                text += "Stacktrace: " + feedback.getExceptionError();
-            }
-        //  text += data;
-        //  for(int i = 0; i < data.length; i++){
-        //    text += data[i];
-        //  }
             msg.setText(text);
             msg.setSubject(header);
             try {

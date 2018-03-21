@@ -20,7 +20,7 @@ import org.springframework.util.Assert;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {
-        "edu.hawaii.its.api.service", "edu.hawaii.its.groupings.repository"
+        "edu.hawaii.its.api.repository", "edu.hawaii.its.groupings.repository"
 })
 @EnableTransactionManagement
 public class DatabaseConfig {

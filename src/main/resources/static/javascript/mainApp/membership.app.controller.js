@@ -8,7 +8,7 @@
      * @param $scope - binding between controller and HTML page
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function MembershipJsController($scope, $uibModal, $controller, dataProvider) {
+    function MembershipJsController($scope, $uibModal, $window, $controller, dataProvider) {
 
         $scope.currentUsername = "";
         $scope.membersList = [];
@@ -57,15 +57,17 @@
                         $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
                     }
 
-                    $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList, $scope.pagedItemsMembersList);
-                    $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList, $scope.pagedItemsOptInList);
+                    $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList);
+                    $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList);
 
                     $scope.loading = false;
                 }
-            } , function (error) {
-                console.log(error);
-                console.log('Error in loadData; status: ' + error.status);
-            },groupingURL);
+            }, function(d){
+                console.log("error has occurred");
+                console.log(d);
+                var error = encodeURI(d.message);
+                $window.location.href = "/uhgroupings/feedback/" + error;
+            }, groupingURL);
         };
 
         $scope.errorModal = function () {
@@ -102,9 +104,9 @@
             $scope.loading = true;
             dataProvider.updateData(function (d) {
                 console.log(d);
-                if (d.statusCode != null) {
+                if (d[0].resultCode.indexOf("FAILURE") > -1) {
                     console.log("Failed to opt out");
-                    $scope.optModalError();
+                    alert("Failed to opt out");
                     $scope.loading = false;
                 }
                 else {
@@ -122,15 +124,7 @@
             console.log(optInURL);
             $scope.loading = true;
             dataProvider.updateData(function (d) {
-                console.log(d);
-                if (d.statusCode != null) {
-                    console.log("Failed to opt out");
-                    $scope.optModalError();
-                    $scope.loading = false;
-                }
-                else {
-                    $scope.init();
-                }
+                $scope.init();
             }, optInURL);
         };
 

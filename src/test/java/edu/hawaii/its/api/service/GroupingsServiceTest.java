@@ -142,10 +142,36 @@ public class GroupingsServiceTest {
     @Value("$groupings.api.stem}")
     private String STEM;
 
+    @Value("${groupings.api.person_attributes.uuid}")
+    private String UUID_KEY;
+
+    @Value("${groupings.api.person_attributes.username}")
+    private String UID_KEY;
+
+    @Value("${groupings.api.person_attributes.first_name}")
+    private String FIRST_NAME_KEY;
+
+    @Value("${groupings.api.person_attributes.last_name}")
+    private String LAST_NAME_KEY;
+
+    @Value("${groupings.api.person_attributes.composite_name}")
+    private String COMPOSITE_NAME_KEY;
+
     String grouping = "grouping";
 
     @Autowired
-    GroupingsServiceImpl gs;
+    GroupingAssignmentService gas;
+
+    @Autowired
+    GroupingsService gs;
+
+    @Autowired
+    HelperService hs;
+
+    @Test
+    public void constructorTest() {
+        assertNotNull(gs);
+    }
 
     @Test
     public void groupingParentPath() {
@@ -157,16 +183,17 @@ public class GroupingsServiceTest {
                 grouping };
 
         for (String g : groups) {
-            assertEquals(grouping, gs.parentGroupingPath(g));
+            assertEquals(grouping, hs.parentGroupingPath(g));
         }
 
-        assertEquals("", gs.parentGroupingPath(null));
+        assertEquals("", hs.parentGroupingPath(null));
     }
 
     @Test
     public void extractGroupPaths() {
         List<WsGroup> groups = null;
-        List<String> groupNames = gs.extractGroupPaths(groups);
+        //List<String> groupNames = gs.extractGroupPaths(groups);
+        List<String> groupNames = gas.extractGroupPaths(groups);
         assertThat(groupNames.size(), equalTo(0));
 
         groups = new ArrayList<>();
@@ -179,7 +206,7 @@ public class GroupingsServiceTest {
         }
         assertThat(groups.size(), equalTo(size));
 
-        groupNames = gs.extractGroupPaths(groups);
+        groupNames = gas.extractGroupPaths(groups);
         for (int i = 0; i < size; i++) {
             assertTrue(groupNames.contains("testName_" + i));
         }
@@ -197,7 +224,7 @@ public class GroupingsServiceTest {
         assertThat(groups.size(), equalTo(3 * size));
 
         // Duplicates should not be in groupNames list.
-        groupNames = gs.extractGroupPaths(groups);
+        groupNames = gas.extractGroupPaths(groups);
         assertThat(groupNames.size(), equalTo(size));
         for (int i = 0; i < size; i++) {
             assertTrue(groupNames.contains("testName_" + i));
@@ -214,7 +241,7 @@ public class GroupingsServiceTest {
         }
         mr.setWsMemberships(memberships);
 
-        assertEquals("membershipID_0", gs.extractFirstMembershipID(mr));
+        assertEquals("membershipID_0", hs.extractFirstMembershipID(mr));
     }
 
     @Test
@@ -226,16 +253,16 @@ public class GroupingsServiceTest {
         getMembersResult1.setWsSubjects(subjects);
         getMembersResult[0] = getMembersResult1;
         getMembersResults.setResults(getMembersResult);
-        assertNotNull(gs.makeGroup(getMembersResults));
+        assertNotNull(gas.makeGroup(getMembersResults));
 
 
         subjects = new WsSubject[1];
         getMembersResults.getResults()[0].setWsSubjects(subjects);
-        assertNotNull(gs.makeGroup(getMembersResults));
+        assertNotNull(gas.makeGroup(getMembersResults));
 
         subjects[0] = new WsSubject();
         getMembersResults.getResults()[0].setWsSubjects(subjects);
-        assertNotNull(gs.makeGroup(getMembersResults));
+        assertNotNull(gas.makeGroup(getMembersResults));
 
     }
 
@@ -257,7 +284,7 @@ public class GroupingsServiceTest {
         getMembersResult[0] = getMembersResult1;
         getMembersResults.setResults(getMembersResult);
 
-        Group group = gs.makeGroup(getMembersResults);
+        Group group = gas.makeGroup(getMembersResults);
 
         for (int i = 0; i < group.getMembers().size(); i++) {
             assertTrue(group.getMembers().get(i).getName().equals("testSubject_" + i));
@@ -269,6 +296,7 @@ public class GroupingsServiceTest {
         }
     }
 
+    //todo fix
     @Test
     public void makeGroupingsNoAttributes() {
         List<String> groupPaths = new ArrayList<>();
@@ -280,7 +308,7 @@ public class GroupingsServiceTest {
             groupPaths.add("path:grouping_" + (i + 5));
         }
 
-        List<Grouping> groupings = gs.makeGroupings(groupPaths);
+        List<Grouping> groupings = hs.makeGroupings(groupPaths);
 
         for (int i = 5; i < 10; i++) {
             assertEquals("path:grouping_" + i, groupings.get(i).getPath());
@@ -289,100 +317,26 @@ public class GroupingsServiceTest {
     }
 
     @Test
-    public void makeGroupingsWithAttributes() {
-        GrouperFactoryService gfs = gs.getGrouperFactoryService();
-        GrouperFactoryService obj = new GrouperFactoryServiceImpl() {
-            @Override
-            public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsForGroup(String assignType, String group) {
-                return new WsGetAttributeAssignmentsResults();
-            }
-        };
-        gs.setGrouperFactoryService(obj);
-
-        List<String> groupPaths = new ArrayList<>();
-        groupPaths.add(null);
-        List<Grouping> groupings = gs.makeGroupings(groupPaths);
-        assertThat(groupings.size(), equalTo(1));
-        for (int i = 0; i < groupings.size(); i++) {
-            Grouping g = groupings.get(i);
-            assertThat(g.getName(), equalTo(""));
-            assertThat(g.getPath(), equalTo(""));
-            assertTrue(g.getBasis() instanceof EmptyGroup);
-            assertTrue(g.getExclude() instanceof EmptyGroup);
-            assertTrue(g.getInclude() instanceof EmptyGroup);
-            assertTrue(g.getComposite() instanceof EmptyGroup);
-            assertTrue(g.getOwners() instanceof EmptyGroup);
-            assertFalse(g.isListservOn());
-            assertFalse(g.isOptInOn());
-            assertFalse(g.isOptOutOn());
-        }
-
-        final int SIZE = 50;
-        groupPaths = new ArrayList<>();
-        for (int i = 0; i < SIZE; i++) {
-            groupPaths.add("memo:path:grouping_" + i);
-        }
-
-        groupings = gs.makeGroupings(groupPaths);
-        assertThat(groupings.size(), equalTo(SIZE));
-
-        for (int i = 0; i < groupings.size(); i++) {
-            Grouping g = groupings.get(i);
-            assertThat(g.getName(), equalTo("grouping_" + i));
-            assertThat(g.getPath(), equalTo("memo:path:grouping_" + i));
-            assertTrue(g.getBasis() instanceof EmptyGroup);
-            assertTrue(g.getExclude() instanceof EmptyGroup);
-            assertTrue(g.getInclude() instanceof EmptyGroup);
-            assertTrue(g.getComposite() instanceof EmptyGroup);
-            assertTrue(g.getOwners() instanceof EmptyGroup);
-            assertFalse(g.isListservOn());
-            assertFalse(g.isOptInOn());
-            assertFalse(g.isOptOutOn());
-        }
-
-        groupPaths = new ArrayList<>();
-        for (int i = 0; i < SIZE; i++) {
-            groupPaths.add("grouping_" + i);
-        }
-
-        groupings = gs.makeGroupings(groupPaths);
-        assertThat(groupings.size(), equalTo(SIZE));
-
-        for (int i = 0; i < groupings.size(); i++) {
-            Grouping g = groupings.get(i);
-            assertThat(g.getName(), equalTo("grouping_" + i));
-            assertThat(g.getPath(), equalTo("grouping_" + i));
-            assertTrue(g.getBasis() instanceof EmptyGroup);
-            assertTrue(g.getExclude() instanceof EmptyGroup);
-            assertTrue(g.getInclude() instanceof EmptyGroup);
-            assertTrue(g.getComposite() instanceof EmptyGroup);
-            assertTrue(g.getOwners() instanceof EmptyGroup);
-            assertFalse(g.isListservOn());
-            assertFalse(g.isOptInOn());
-            assertFalse(g.isOptOutOn());
-        }
-
-        gs.setGrouperFactoryService(gfs);
-    }
-
-    @Test
     public void makePerson() {
         String name = "name";
         String id = "uuid";
         String identifier = "username";
+        String[] attributeNames = new String[]{UID_KEY, UUID_KEY, LAST_NAME_KEY, COMPOSITE_NAME_KEY, FIRST_NAME_KEY};
+        String[] attributeValues = new String[] {identifier, id, null, name, null};
 
         WsSubject subject = new WsSubject();
         subject.setName(name);
         subject.setId(id);
-        subject.setAttributeValues(new String[] { identifier });
+        subject.setAttributeValues(attributeValues);
 
-        Person person = gs.makePerson(subject);
+        //todo we should have a @Value for this "uid"
+        Person person = gas.makePerson(subject, attributeNames);
 
         assertTrue(person.getName().equals(name));
         assertTrue(person.getUuid().equals(id));
         assertTrue(person.getUsername().equals(identifier));
 
-        assertNotNull(gs.makePerson(null));
+        assertNotNull(gas.makePerson(new WsSubject(), new String[]{}));
     }
 
     @Test
@@ -394,7 +348,7 @@ public class GroupingsServiceTest {
         resultMeta.setResultCode(resultCode);
         gr.setResultMetadata(resultMeta);
 
-        GroupingsServiceResult gsr = gs.makeGroupingsServiceResult(gr, action);
+        GroupingsServiceResult gsr = hs.makeGroupingsServiceResult(gr, action);
 
         assertEquals(action, gsr.getAction());
         assertEquals(resultCode, gsr.getResultCode());
@@ -403,33 +357,33 @@ public class GroupingsServiceTest {
     @Test
     public void extractFirstMembershipIDTest() {
         WsGetMembershipsResults membershipsResults = null;
-        String firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        String firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "");
 
         membershipsResults = new WsGetMembershipsResults();
-        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "");
 
         WsMembership[] memberships = null;
         membershipsResults.setWsMemberships(memberships);
-        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "");
 
         memberships = new WsMembership[] { null };
         membershipsResults.setWsMemberships(memberships);
-        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "");
 
         WsMembership membership = new WsMembership();
         memberships = new WsMembership[] { membership };
         membershipsResults.setWsMemberships(memberships);
-        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "");
 
         membership.setMembershipId("1234");
         memberships = new WsMembership[] { membership };
         membershipsResults.setWsMemberships(memberships);
-        firstMembershipId = gs.extractFirstMembershipID(membershipsResults);
+        firstMembershipId = hs.extractFirstMembershipID(membershipsResults);
         assertEquals(firstMembershipId, "1234");
     }
 

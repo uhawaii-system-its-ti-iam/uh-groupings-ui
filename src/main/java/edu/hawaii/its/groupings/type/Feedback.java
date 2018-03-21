@@ -11,15 +11,16 @@ public class Feedback {
     private String message;
     private Throwable exception;
     private String exceptionError;
+    private Boolean error = false;
 
     // Constructor.
     public Feedback() {
         // Empty.
     }
 
-    public Feedback(Throwable exception) {
-        this.exception = exception;
-        updateExceptionStr(exception);
+    public Feedback(String exceptionError) {
+        this.exceptionError = exceptionError;
+        error = true;
     }
 
     public String getName() {
@@ -84,8 +85,9 @@ public class Feedback {
         return "Feedback [email=" + email
                 + ", message=" + message
                 + ", name=" + name
-                + ", type=" + type +
-                "]";
+                + ", type=" + type
+                + ", error=" + exceptionError
+                + "]";
     }
 
 }

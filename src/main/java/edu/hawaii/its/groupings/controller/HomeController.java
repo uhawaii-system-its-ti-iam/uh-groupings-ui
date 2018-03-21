@@ -50,14 +50,6 @@ public class HomeController {
         return "info";
     }
 
-    /*@PreAuthorize("hasRole('UH')")
-    @RequestMapping(value = "/feedback/sendMail", method = RequestMethod.POST)
-    public String sendMail(HttpServletRequest request) {
-        logger.info("User at feedback/sendMail.");
-        emailService.send(request.getParameter("name"), request.getParameter("type"), request.getParameter("desc"), request.getParameter("email"));
-        return "feedback";
-    }*/
-
     @RequestMapping(value = "/404", method = RequestMethod.GET)
     public String invalid() {
         return "redirect:/";
@@ -93,7 +85,7 @@ public class HomeController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/feedback/{error}")
     public String feedbackError(RedirectAttributes redirectAttributes, @PathVariable String error) {
-        Feedback feedback = new Feedback(new Exception(error));
+        Feedback feedback = new Feedback(error);
         redirectAttributes.addFlashAttribute("feedback", feedback);
         return "redirect:/feedback";
     }
