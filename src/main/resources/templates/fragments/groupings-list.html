@@ -7,8 +7,8 @@
                     <h2 style="padding: 2.5px 0px; margin: inherit;" th:text="${title}"></h2>
                 </div>
                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
-                  <label for = "FilterGroupings"></label>
-                    <input name="FilterGroupings" class="form-control" placeholder="Filter Groupings..." type="text"
+                    <input class="form-control" placeholder="Filter Groupings..." type="text"
+                           title="Filter Groupings"
                            ng-model="queryGroupings"
                            ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', 'queryGroupings')"/>
                 </div>

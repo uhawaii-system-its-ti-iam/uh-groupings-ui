@@ -15,8 +15,8 @@
             <!-- Filter bar -->
             <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                 <div class="xs-left-sm-right">
-                  <label for ="excludeQuery"></label>
                     <input class="form-control" placeholder="Filter Members..." type="text"
+                           title="Filter Members"
                            ng-model="excludeQuery"
                            ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', 'excludeQuery')"/>
                 </div>
@@ -104,6 +104,7 @@
         <form ng-submit="addMember('Exclude')">
             <div class="input-group">
                 <input class="form-control" type="text" placeholder="Enter UH username to exclude"
+                       title="Enter UH username to exclude"
                        ng-model="addUser"/>
                 <div class="input-group-btn">
                     <button class="btn btn-primary" type="submit">Add</button>

@@ -16,6 +16,7 @@
             <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                 <div class="xs-left-sm-right">
                     <input class="form-control" placeholder="Filter Members..." type="text"
+                           title="Filter Members"
                            ng-model="includeQuery"
                            ng-change="filter(groupingInclude, 'pagedItemsInclude', 'currentPageInclude', 'includeQuery')"/>
                 </div>
@@ -103,6 +104,7 @@
         <form ng-submit="addMember('Include')">
             <div class="input-group">
                 <input class="form-control" type="text" placeholder="Enter UH username to include"
+                       title="Enter UH username to include"
                        ng-model="addUser"/>
                 <div class="input-group-btn">
                     <button class="btn btn-primary" type="submit">Add</button>
