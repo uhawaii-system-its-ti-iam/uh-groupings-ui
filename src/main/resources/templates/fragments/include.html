@@ -15,7 +15,7 @@
             <!-- Filter bar -->
             <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                 <div class="xs-left-sm-right">
-                    <input class="form-control" placeholder="Filter Members..." type="text"
+                    <input class="form-control" placeholder="Filter Members..." type="text" title = "Filter Admins"
                            ng-model="includeQuery"
                            ng-change="filter(groupingInclude, 'pagedItemsInclude', 'currentPageInclude', 'includeQuery')"/>
                 </div>
@@ -102,7 +102,7 @@
     <div class="col-lg-4 col-md-6" style="padding: inherit;">
         <form ng-submit="addMember('Include')">
             <div class="input-group">
-                <input class="form-control" type="text" placeholder="Enter UH username to include"
+                <input class="form-control" type="text" placeholder="Enter UH username to include" title="Adding a person to the include"
                        ng-model="addUser"/>
                 <div class="input-group-btn">
                     <button class="btn btn-primary" type="submit">Add</button>

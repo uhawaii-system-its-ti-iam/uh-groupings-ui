@@ -29,6 +29,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssignValue;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeDefName;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsFindGroupsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResult;
@@ -224,6 +225,18 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         wsSubjectLookup.setSubjectIdentifier(username);
 
         return wsSubjectLookup;
+    }
+
+    @Override
+    //todo
+    public WsAddMemberResults makeWsAddMemberResultsGroup(String groupPath, WsSubjectLookup lookup, String groupUid) {
+        return null;
+    }
+
+    @Override
+    //todo
+    public WsFindGroupsResults makeWsFindGroupsResults(String groupPath) {
+        return null;
     }
 
     /**
