@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.hawaii.its.api.type.Person;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -131,7 +132,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     }
 
     @Override
-    public WsAddMemberResults makeWsAddMemberResultsGroup(String groupPath, WsSubjectLookup lookup, String groupUid){
+    public WsAddMemberResults makeWsAddMemberResultsGroup(String groupPath, WsSubjectLookup lookup, String groupUid) {
         return new GcAddMember()
                 .assignActAsSubject(lookup)
                 .addSubjectId(groupUid)
@@ -150,7 +151,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
 
     @Override
     public WsAddMemberResults makeWsAddMemberResults(String group, WsSubjectLookup lookup, Person personToAdd) {
-        if(personToAdd.getUsername() != null) {
+        if (personToAdd.getUsername() != null) {
             return makeWsAddMemberResults(group, lookup, personToAdd.getUsername());
         }
         //todo throw error if null
@@ -189,7 +190,8 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     }
 
     @Override
-    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, String memberToDelete) {
+    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup,
+            String memberToDelete) {
         return new GcDeleteMember()
                 .assignActAsSubject(lookup)
                 .addSubjectIdentifier(memberToDelete)
@@ -198,8 +200,9 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     }
 
     @Override
-    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, Person personToDelete) {
-        if(personToDelete.getUsername() != null) {
+    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup,
+            Person personToDelete) {
+        if (personToDelete.getUsername() != null) {
             return makeWsDeleteMemberResults(group, lookup, personToDelete.getUsername());
         }
         //todo throw error if null
@@ -211,7 +214,8 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
     }
 
     @Override
-    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, List<String> membersToDelete) {
+    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup,
+            List<String> membersToDelete) {
         GcDeleteMember deleteMember = new GcDeleteMember();
         deleteMember.assignActAsSubject(lookup);
         deleteMember.assignGroupName(group);
@@ -336,7 +340,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
 
     @Override
     public WsHasMemberResults makeWsHasMemberResults(String group, Person person) {
-        if(person.getUsername() != null) {
+        if (person.getUsername() != null) {
             return makeWsHasMemberResults(group, person.getUsername());
         }
 

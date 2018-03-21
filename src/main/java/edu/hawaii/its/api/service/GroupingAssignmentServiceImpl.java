@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service("groupingAssignmentService")
-public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
+public class GroupingAssignmentServiceImpl implements GroupingAssignmentService {
 
     @Value("${groupings.api.settings}")
     private String SETTINGS;
@@ -263,9 +263,10 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
 
         if (mas.isSuperuser(adminUsername)) {
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
-                    ASSIGN_TYPE_GROUP,
-                    TRIO);
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults =
+                    grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
+                            ASSIGN_TYPE_GROUP,
+                            TRIO);
 
             List<WsGroup> groups = new ArrayList<>(Arrays.asList(attributeAssignmentsResults.getWsGroups()));
 
@@ -291,10 +292,11 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
 
         if (groupsOpted.size() > 0) {
 
-            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
-                    ASSIGN_TYPE_GROUP,
-                    TRIO,
-                    groupsOpted);
+            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults =
+                    grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
+                            ASSIGN_TYPE_GROUP,
+                            TRIO,
+                            groupsOpted);
 
             List<WsGroup> triosList = new ArrayList<>();
             for (WsGetAttributeAssignmentsResults results : attributeAssignmentsResults) {
@@ -371,9 +373,10 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
         boolean optInOn = false;
         boolean optOutOn = false;
 
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsForGroup(
-                ASSIGN_TYPE_GROUP,
-                grouping.getPath());
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
+                grouperFS.makeWsGetAttributeAssignmentsResultsForGroup(
+                        ASSIGN_TYPE_GROUP,
+                        grouping.getPath());
 
         WsAttributeDefName[] attributeDefNames = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
         if (attributeDefNames != null && attributeDefNames.length > 0) {
@@ -411,7 +414,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
 
         List<WsGroup> groups = new ArrayList<>();
 
-        if(groupResults.getWsGroups() != null) {
+        if (groupResults.getWsGroups() != null) {
             groups = new ArrayList<>(Arrays.asList(groupResults.getWsGroups()));
         }
 
