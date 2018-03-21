@@ -45,9 +45,7 @@
                                     <span>Some memberships are optional, and some are required.</span>
                                 </div>
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
-                                    <label for = "memberFilt">
-                                        <!--need to figure this out by the end of today-->
-                                    </label>   <input name = "memberFilt" placeholder="Filter Groupings..." type="text"
+                                   <input name = "memberFilt" placeholder="Filter Groupings..." type="text" title ="Filter Groupings"
                                                       ng-model="queryMembers" class="form-control"
                                                       ng-change="filter(membersList, 'pagedItemsMembersList', 'currentPageOptOut', 'queryMembers')"
                                                       id="members"/>
@@ -129,9 +127,7 @@
                                     <span>You may opt in to any of these groupings to become a member.</span>
                                 </div>
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
-                                    <label for = "optIn">
-                                        <!--need to figure this out by the end of today-->
-                                    </label><input name = "optIn" placeholder="Filter Groupings..." type="text"
+                                  <input name = "optIn" placeholder="Filter Groupings..." type="text" title="Filter Groupings"
                                                    ng-model="queryOptIn" class="form-control"
                                                    ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', 'queryOptIn')"
                                                    id="optIn"/>

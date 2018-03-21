@@ -47,8 +47,7 @@
 
                                         </div>
                                         <div class="col-md-push-4 col-md-2 col-sm-push-2 col-sm-3" style="padding: 0px;">
-                                           <label for = "FilterAdmins"></label>
-                                            <input name="FilterAdmins" placeholder="Filter Admins..." type="text"
+                                            <input name="FilterAdmins" placeholder="Filter Admins..." type="text" title="Filter Admins"
                                                    ng-model="ListQuery" class="form-control"
                                                    ng-change="filter(adminsList, 'pagedItemsAdmins', 'currentPageAdmins', 'ListQuery')"/>
                                         </div>
@@ -114,8 +113,7 @@
                                         <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group input-inline-pagination">
                                             <form ng-submit="addAdmin()">
                                                 <div class="input-group">
-                                                  <label for="addingToAdmin"></label>
-                                                    <input name = "addingToAdmin" class="form-control" type="text"
+                                                    <input name = "addingToAdmin" class="form-control" type="text" title = "Adding people to admin list"
                                                            placeholder="UH Username" ng-model="adminToAdd"/>
                                                     <div class="input-group-btn">
                                                         <button class="btn btn-primary" type="submit">Add</button>
