@@ -567,6 +567,7 @@ public class MembershipServiceImpl implements MembershipService{
     }
 
     //adds the self-opted attribute to the membership between the group and user
+    @Override
     public GroupingsServiceResult addSelfOpted(String groupPath, String username) {
         logger.info("addSelfOpted; group: " + groupPath + "; username: " + username + ";");
 
@@ -592,6 +593,7 @@ public class MembershipServiceImpl implements MembershipService{
     }
 
     //removes the self-opted attribute from the membership that corresponds to the user and group
+    @Override
     public GroupingsServiceResult removeSelfOpted(String groupPath, String username) {
         logger.info("removeSelfOpted; group: " + groupPath + "; username: " + username + ";");
 
