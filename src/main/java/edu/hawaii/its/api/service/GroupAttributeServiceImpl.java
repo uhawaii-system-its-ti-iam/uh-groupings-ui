@@ -292,6 +292,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService{
     }
 
     //checks to see if a group has an attribute of a specific type and returns the list if it does
+    @Override
     public WsGetAttributeAssignmentsResults attributeAssignmentsResults(String assignType, String groupPath, String attributeName) {
         logger.info("attributeAssignmentsResults; assignType: "
                 + assignType

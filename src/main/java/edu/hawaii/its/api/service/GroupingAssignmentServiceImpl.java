@@ -307,10 +307,10 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
     }
 
     //returns a group from grouper or the database
-    Group getMembers(String owenrUsername, String groupPath) {
-        logger.info("getMembers; user: " + owenrUsername + "; group: " + groupPath + ";");
+    @Override public Group getMembers(String ownerUsername, String groupPath) {
+        logger.info("getMembers; user: " + ownerUsername + "; group: " + groupPath + ";");
 
-        WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(owenrUsername);
+        WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(ownerUsername);
         WsGetMembersResults members = grouperFS.makeWsGetMembersResults(
                 SUBJECT_ATTRIBUTE_NAME_UID,
                 lookup,
@@ -396,6 +396,8 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
         return grouping;
     }
 
+    //returns the list of groups that the user is in
+    @Override
     public List<String> getGroupPaths(String username) {
         logger.info("getGroupPaths; username: " + username + ";");
         WsStemLookup stemLookup = grouperFS.makeWsStemLookup(STEM);

@@ -1,10 +1,34 @@
 package edu.hawaii.its.api.service;
 
-import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.util.Dates;
 
+import edu.internet2.middleware.grouperClient.ws.beans.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+@ActiveProfiles("localTest")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = { SpringBootWebApplication.class })
+@WebAppConfiguration
 
 public class GroupingsFactoryServiceTest {
 
@@ -32,14 +56,37 @@ public class GroupingsFactoryServiceTest {
 
     private static final String GROUPING_4_EXCLUDE_PATH = GROUPING_4_PATH + ":exclude";
 
+    @Autowired
+    private GrouperFactoryServiceImplLocal gfsl = new GrouperFactoryServiceImplLocal();
 
-//    WsAddMemberResults results;
-//    List<String> members = new ArrayList<>();
-//        members.add("username");
-//    WsSubjectLookup lookup = new WsSubjectLookup(null, null, "username");
-//
-//    //todo java.lang.IllegalArgumentException: host parameter is null (Net says "http://" is missing, but how does that apply)
-//    results = gfsl.makeWsAddMemberResults(GROUPING_3_PATH, lookup, members);
-//    assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
+    //todo
+    @Test
+    public void makeWsAddMemberResultsTest() {
+        WsAddMemberResults results;
+        List<String> members = new ArrayList<>();
+        members.add("username");
+        // WsSubjectLookup lookup = new WsSubjectLookup(null, null, "username");
+        WsSubjectLookup lookup = gfsl.makeWsSubjectLookup("username");
+
+        //todo Java NPE
+        results = gfsl.makeWsAddMemberResults(GROUPING_3_PATH, lookup, members);
+        assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
+    }
+
+    //todo
+    public void makeWsDeleteMemberResultsTest() {
+
+    }
+
+    //todo
+    public void makeWsAssignAttributesResultsForGroupTest() {
+
+    }
+
+    //todo
+    public void removeGroupsWithoutOptOut() {
+
+    }
+
 
 }

@@ -50,6 +50,10 @@ public interface MembershipService {
 
     public boolean groupOptOutPermission(String username, String groupPath);
 
-    //does not need to be included in the REST controller
+    //do not include in REST controller
     public GroupingsServiceResult updateLastModified(String groupPath);
+
+    public GroupingsServiceResult addSelfOpted(String groupPath, String username);
+
+    public GroupingsServiceResult removeSelfOpted(String groupPath, String username);
 }
