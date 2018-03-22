@@ -37,6 +37,21 @@ import static org.junit.Assert.assertTrue;
 
 public class GroupingsFactoryServiceTest {
 
+    @Value("${groupings.api.operation_assign_attribute}")
+    private String OPERATION_ASSIGN_ATTRIBUTE;
+
+    @Value("${groupings.api.operation_remove_attribute}")
+    private String OPERATION_REMOVE_ATTRIBUTE;
+
+    @Value("${groupings.api.listserv}")
+    private String LISTSERV;
+
+    @Value("${groupings.api.opt_in}")
+    private String OPT_IN;
+
+    @Value("${groupings.api.opt_out}")
+    private String OPT_OUT;
+
     @Value("${groupings.api.grouping_admins}")
     private String GROUPING_ADMINS;
 
@@ -157,10 +172,33 @@ public class GroupingsFactoryServiceTest {
         assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
     }
 
-    //todo
+    // This test also takes care of setGroupingAttribute(grouping, attributeName, on)
     @Test
     public void makeWsAssignAttributesResultsForGroupTest() {
+        WsAssignAttributesResults results;
 
+        String assignType = "type";
+        String assignOperation = OPERATION_ASSIGN_ATTRIBUTE;
+        String removeOperation = OPERATION_REMOVE_ATTRIBUTE;
+        String defName = LISTSERV;
+        String defName2 = OPT_IN;
+        String defName3 = OPT_OUT;
+        String groupName = GROUPING_3_PATH;
+
+        results = gfsl.makeWsAssignAttributesResultsForGroup(assignType, assignOperation, defName, groupName);
+        assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
+
+        results = gfsl.makeWsAssignAttributesResultsForGroup(assignType, assignOperation, defName2, groupName);
+        assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
+
+        results = gfsl.makeWsAssignAttributesResultsForGroup(assignType, assignOperation, defName3, groupName);
+        assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
+
+        results = gfsl.makeWsAssignAttributesResultsForGroup(assignType, assignOperation, "nothing", groupName);
+        assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
+
+        results = gfsl.makeWsAssignAttributesResultsForGroup(assignType, removeOperation, defName, groupName);
+        assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
     }
 
     //todo
