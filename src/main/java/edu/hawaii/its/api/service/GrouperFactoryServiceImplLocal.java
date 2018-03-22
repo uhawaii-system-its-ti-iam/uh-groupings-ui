@@ -732,7 +732,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     }
 
     @Override
-    public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(String attributeAssingType,
+    public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(String attributeAssignType,
             String attributeAssignOperation,
             String attributeDefNameName,
             String ownerGroupName) {
