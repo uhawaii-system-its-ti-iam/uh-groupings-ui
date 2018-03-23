@@ -72,6 +72,31 @@ paths:
             permission to add users
         '404':
           description: User with username does not exist
+  '/{grouping}/{userToAdd}/addGroupingMemberByUuid':
+      post:
+        description: Adds a member to a grouping via Uid
+        parameters:
+          - name: grouping
+            in: path
+            description: path to the Grouping
+            required: true
+            schema:
+              type: string
+          - name: userToAdd
+            in: path
+            description: Uuid of the user to be added
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Successful addition
+          '403':
+            description: >-
+              User with Uuid  does not exist or user adding to group does not have
+              permission to add users
+          '404':
+            description: User with Uuid does not exist
   '/{grouping}/{userToAdd}/addMemberToIncludeGroup':
     post:
       description: Adds a member to the include group of a grouping
