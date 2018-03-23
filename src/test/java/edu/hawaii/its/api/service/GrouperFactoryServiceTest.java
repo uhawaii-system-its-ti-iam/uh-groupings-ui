@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -34,6 +35,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 @WebAppConfiguration
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 
 public class GroupingsFactoryServiceTest {
 
@@ -195,21 +197,50 @@ public class GroupingsFactoryServiceTest {
         assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
 
         results = gfsl.makeWsAssignAttributesResultsForGroup(assignType, assignOperation, "nothing", groupName);
-        assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
+        assertTrue(results.getResultMetadata().getResultCode().startsWith("FAILURE"));
 
         results = gfsl.makeWsAssignAttributesResultsForGroup(assignType, removeOperation, defName, groupName);
         assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
     }
 
-    //todo
     @Test
-    public void makeWsAssignAttributesResultsForGroupTestTwo() {
+    public void makeWsAssignAttributesResultsForGroupLookupVersionTest() {
+        WsAssignAttributesResults results;
 
+        WsSubjectLookup lookup = gfsl.makeWsSubjectLookup(users.get(0).getUsername());
+        WsSubjectLookup lookup2 = gfsl.makeWsSubjectLookup(users.get(3).getUsername());
+
+        String assignType = "type";
+        String assignOperation = OPERATION_ASSIGN_ATTRIBUTE;
+        String removeOperation = OPERATION_REMOVE_ATTRIBUTE;
+        String defName = LISTSERV;
+        String defName2 = OPT_IN;
+        String defName3 = OPT_OUT;
+        String groupName = GROUPING_3_PATH;
+
+        results = gfsl.makeWsAssignAttributesResultsForGroup(lookup, assignType, assignOperation, defName, groupName);
+        assertTrue(results.getResultMetadata().getResultCode().startsWith("SUCCESS"));
+
+        results = gfsl.makeWsAssignAttributesResultsForGroup(lookup2, assignType, assignOperation, defName, groupName);
+        assertTrue(results.getResultMetadata().getResultCode().startsWith("FAILURE"));
     }
 
     //todo
     @Test
     public void removeGroupsWithoutOptOut() {
+
+        String assignType = "type";
+        String assignOperation = OPERATION_ASSIGN_ATTRIBUTE;
+        String removeOperation = OPERATION_REMOVE_ATTRIBUTE;
+        String defName = LISTSERV;
+        String defName2 = OPT_IN;
+        String defName3 = OPT_OUT;
+        String groupName = GROUPING_3_PATH;
+
+        WsGetAttributeAssignmentsResults remResults;
+        WsGetAttributeAssignmentsResults results;
+
+        remResults = removeGroupsWithoutOptOut(results);
 
     }
 
