@@ -1,29 +1,8 @@
 package edu.hawaii.its.api.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Assert;
-
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
@@ -34,6 +13,25 @@ import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.Assert;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
@@ -85,13 +83,13 @@ public class TestGroupingAssignmentService {
     GroupAttributeService groupAttributeService;
 
     @Autowired
-    GroupingAssignmentService gas;
+    GroupingAssignmentService groupingAssignmentService;
 
     @Autowired
-    private MembershipService ms;
+    private MembershipService membershipService;
 
     @Autowired
-    private HelperService hs;
+    private HelperService helperService;
 
     @Autowired
     public Environment env; // Just for the settings check.
@@ -113,21 +111,21 @@ public class TestGroupingAssignmentService {
         groupAttributeService.changeOptOutStatus(GROUPING, username[0], true);
 
         //put in include
-        ms.addGroupingMemberByUsername(username[0], GROUPING, username[0]);
-        ms.addGroupingMemberByUsername(username[0], GROUPING, username[1]);
-        ms.addGroupingMemberByUsername(username[0], GROUPING, username[2]);
+        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[0]);
+        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[1]);
+        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[2]);
 
         //remove from exclude
-        ms.addGroupingMemberByUsername(username[0], GROUPING, username[4]);
-        ms.addGroupingMemberByUsername(username[0], GROUPING, username[5]);
+        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[4]);
+        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[5]);
 
         //add to exclude
-        ms.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
+        membershipService.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
     }
 
     @Test
     public void adminInfoTest() {
-        AdminListsHolder info = gas.adminLists(username[0]);
+        AdminListsHolder info = groupingAssignmentService.adminLists(username[0]);
         assertNotNull(info);
         assertEquals(info.getAllGroupings().size(), 0);
         assertEquals(info.getAdminGroup().getMembers().size(), 0);
@@ -146,7 +144,7 @@ public class TestGroupingAssignmentService {
 
         final String group = GROUPING_INCLUDE;
 
-        GroupingsServiceResult gsr = ms.updateLastModified(group);
+        GroupingsServiceResult gsr = membershipService.updateLastModified(group);
         String dateStr = gsr.getAction().split(" to time ")[1];
 
         WsGetAttributeAssignmentsResults assignments =
@@ -158,7 +156,7 @@ public class TestGroupingAssignmentService {
 
     @Test
     public void getGroupingTest() {
-        Grouping grouping = gas.getGrouping(GROUPING, username[4]);
+        Grouping grouping = groupingAssignmentService.getGrouping(GROUPING, username[4]);
         assertEquals(grouping.getPath(), "");
         assertEquals(grouping.getName(), "");
         assertEquals(grouping.getOwners().getMembers().size(), 0);
@@ -167,7 +165,7 @@ public class TestGroupingAssignmentService {
         assertEquals(grouping.getBasis().getMembers().size(), 0);
         assertEquals(grouping.getComposite().getMembers().size(), 0);
 
-        grouping = gas.getGrouping(GROUPING, username[0]);
+        grouping = groupingAssignmentService.getGrouping(GROUPING, username[0]);
 
         assertEquals(grouping.getPath(), GROUPING);
 
@@ -192,7 +190,7 @@ public class TestGroupingAssignmentService {
 
     @Test
     public void groupingsInTest() {
-        GroupingAssignment groupingAssignment = gas.getGroupingAssignment(username[0]);
+        GroupingAssignment groupingAssignment = groupingAssignmentService.getGroupingAssignment(username[0]);
         boolean inGrouping = false;
 
         for (Grouping grouping : groupingAssignment.getGroupingsIn()) {
@@ -204,7 +202,7 @@ public class TestGroupingAssignmentService {
         assertTrue(inGrouping);
 
         inGrouping = false;
-        groupingAssignment = gas.getGroupingAssignment(username[3]);
+        groupingAssignment = groupingAssignmentService.getGroupingAssignment(username[3]);
         for (Grouping grouping : groupingAssignment.getGroupingsIn()) {
             if (grouping.getPath().contains(GROUPING)) {
                 inGrouping = true;
@@ -216,7 +214,7 @@ public class TestGroupingAssignmentService {
 
     @Test
     public void groupingsOwnedTest() {
-        GroupingAssignment groupingAssignment = gas.getGroupingAssignment(username[0]);
+        GroupingAssignment groupingAssignment = groupingAssignmentService.getGroupingAssignment(username[0]);
         boolean ownsGrouping = false;
 
         for (Grouping grouping : groupingAssignment.getGroupingsOwned()) {
@@ -228,7 +226,7 @@ public class TestGroupingAssignmentService {
         assertTrue(ownsGrouping);
 
         ownsGrouping = false;
-        groupingAssignment = gas.getGroupingAssignment(username[4]);
+        groupingAssignment = groupingAssignmentService.getGroupingAssignment(username[4]);
         for (Grouping grouping : groupingAssignment.getGroupingsOwned()) {
             if (grouping.getPath().contains(GROUPING)) {
                 ownsGrouping = true;
@@ -240,7 +238,7 @@ public class TestGroupingAssignmentService {
 
     @Test
     public void groupingsToOptTest() {
-        GroupingAssignment groupingAssignment = gas.getGroupingAssignment(username[0]);
+        GroupingAssignment groupingAssignment = groupingAssignmentService.getGroupingAssignment(username[0]);
 
         boolean canOptIn = false;
         for (Grouping grouping : groupingAssignment.getGroupingsToOptInTo()) {
@@ -263,7 +261,7 @@ public class TestGroupingAssignmentService {
 
     @Test
     public void getMembersTest() {
-        Group group = gas.getMembers(username[0], GROUPING);
+        Group group = groupingAssignmentService.getMembers(username[0], GROUPING);
         List<String> usernames = group.getUsernames();
 
         assertTrue(usernames.contains(username[0]));
@@ -276,8 +274,8 @@ public class TestGroupingAssignmentService {
 
     @Test
     public void getGroupNamesTest() {
-        List<String> groupNames1 = gas.getGroupPaths(username[1]);
-        List<String> groupNames3 = gas.getGroupPaths(username[3]);
+        List<String> groupNames1 = groupingAssignmentService.getGroupPaths(username[1]);
+        List<String> groupNames3 = groupingAssignmentService.getGroupPaths(username[3]);
 
         //username[1] should be in the composite and the include, not basis or exclude
         assertTrue(groupNames1.contains(GROUPING));
@@ -294,13 +292,13 @@ public class TestGroupingAssignmentService {
 
     @Test
     public void getGroupNames() {
-        List<String> groups = gas.getGroupPaths(username[0]);
+        List<String> groups = groupingAssignmentService.getGroupPaths(username[0]);
 
         assertTrue(groups.contains(GROUPING_OWNERS));
         assertTrue(groups.contains(GROUPING_STORE_EMPTY_OWNERS));
         assertTrue(groups.contains(GROUPING_TRUE_EMPTY_OWNERS));
 
-        List<String> groups2 = gas.getGroupPaths(username[1]);
+        List<String> groups2 = groupingAssignmentService.getGroupPaths(username[1]);
 
         assertFalse(groups2.contains(GROUPING_OWNERS));
         assertFalse(groups2.contains(GROUPING_STORE_EMPTY_OWNERS));
@@ -309,7 +307,7 @@ public class TestGroupingAssignmentService {
 
     @Test
     public void grouperTest() {
-        List<String> groupPaths = gas.getGroupPaths(username[0]);
+        List<String> groupPaths = groupingAssignmentService.getGroupPaths(username[0]);
 
         List<String> groupings = new ArrayList<>();
         List<String> groupings2 = new ArrayList<>();
@@ -369,7 +367,7 @@ public class TestGroupingAssignmentService {
         groupingPaths.add(GROUPING_STORE_EMPTY);
         groupingPaths.add(GROUPING_TRUE_EMPTY);
 
-        List<Grouping> groupings = hs.makeGroupings(groupingPaths);
+        List<Grouping> groupings = helperService.makeGroupings(groupingPaths);
 
         assertTrue(groupings.size() == 3);
     }

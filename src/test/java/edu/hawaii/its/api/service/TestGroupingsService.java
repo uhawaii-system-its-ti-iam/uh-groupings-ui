@@ -1,28 +1,8 @@
 package edu.hawaii.its.api.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Assert;
-
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
@@ -34,6 +14,24 @@ import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.Assert;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
@@ -69,89 +67,17 @@ public class TestGroupingsService {
     @Value("${groupings.api.test.grouping_true_empty_owners}")
     private String GROUPING_TRUE_EMPTY_OWNERS;
 
-    @Value("${groupings.api.settings}")
-    private String SETTINGS;
-
-    @Value("${groupings.api.attributes}")
-    private String ATTRIBUTES;
-
     @Value("${groupings.api.success}")
     private String SUCCESS;
-
-    @Value("${groupings.api.for_groups}")
-    private String FOR_GROUPS;
-
-    @Value("${groupings.api.for_memberships}")
-    private String FOR_MEMBERSHIPS;
-
-    @Value("${groupings.api.last_modified}")
-    private String LAST_MODIFIED;
 
     @Value("${groupings.api.yyyymmddThhmm}")
     private String YYYYMMDDTHHMM;
 
-    @Value("${groupings.api.uhgrouping}")
-    private String UHGROUPING;
-
-    @Value("${groupings.api.destinations}")
-    private String DESTINATIONS;
-
-    @Value("${groupings.api.listserv}")
-    private String LISTSERV;
-
     @Value("${groupings.api.trio}")
     private String TRIO;
 
-    @Value("${groupings.api.self_opted}")
-    private String SELF_OPTED;
-
-    @Value("${groupings.api.anyone_can}")
-    private String ANYONE_CAN;
-
-    @Value("${groupings.api.opt_in}")
-    private String OPT_IN;
-
-    @Value("${groupings.api.opt_out}")
-    private String OPT_OUT;
-
-    @Value("${groupings.api.basis}")
-    private String BASIS;
-
-    @Value("${groupings.api.basis_plus_include}")
-    private String BASIS_PLUS_INCLUDE;
-
-    @Value("${groupings.api.exclude}")
-    private String EXCLUDE;
-
-    @Value("${groupings.api.include}")
-    private String INCLUDE;
-
-    @Value("${groupings.api.owners}")
-    private String OWNERS;
-
     @Value("${groupings.api.assign_type_group}")
     private String ASSIGN_TYPE_GROUP;
-
-    @Value("${groupings.api.assign_type_immediate_membership}")
-    private String ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP;
-
-    @Value("${groupings.api.subject_attribute_name_uuid}")
-    private String SUBJECT_ATTRIBUTE_NAME_UID;
-
-    @Value("${groupings.api.operation_assign_attribute}")
-    private String OPERATION_ASSIGN_ATTRIBUTE;
-
-    @Value("${groupings.api.operation_remove_attribute}")
-    private String OPERATION_REMOVE_ATTRIBUTE;
-
-    @Value("${groupings.api.operation_replace_values}")
-    private String OPERATION_REPLACE_VALUES;
-
-    @Value("${groupings.api.privilege_opt_out}")
-    private String PRIVILEGE_OPT_OUT;
-
-    @Value("${groupings.api.privilege_opt_in}")
-    private String PRIVILEGE_OPT_IN;
 
     @Value("${groupings.api.test.usernames}")
     private String[] username;
@@ -163,16 +89,16 @@ public class TestGroupingsService {
     GroupAttributeService groupAttributeService;
 
     @Autowired
-    GroupingAssignmentService gas;
+    GroupingAssignmentService groupingAssignmentService;
 
     @Autowired
-    private GroupingsService gs;
+    private GroupingsService groupingsService;
 
     @Autowired
-    private MembershipService ms;
+    private MembershipService membershipService;
 
     @Autowired
-    private HelperService hs;
+    private HelperService helperService;
 
     @Autowired
     public Environment env; // Just for the settings check.
@@ -189,43 +115,43 @@ public class TestGroupingsService {
 
     @Before
     public void setUp() {
-        gs.changeListservStatus(GROUPING, username[0], true);
-        gs.changeOptInStatus(GROUPING, username[0], true);
-        gs.changeOptOutStatus(GROUPING, username[0], true);
+        groupingsService.changeListservStatus(GROUPING, username[0], true);
+        groupingsService.changeOptInStatus(GROUPING, username[0], true);
+        groupingsService.changeOptOutStatus(GROUPING, username[0], true);
 
         //put in include
-        gs.addGroupingMemberByUsername(username[0], GROUPING, username[0]);
-        gs.addGroupingMemberByUsername(username[0], GROUPING, username[1]);
-        gs.addGroupingMemberByUsername(username[0], GROUPING, username[2]);
+        groupingsService.addGroupingMemberByUsername(username[0], GROUPING, username[0]);
+        groupingsService.addGroupingMemberByUsername(username[0], GROUPING, username[1]);
+        groupingsService.addGroupingMemberByUsername(username[0], GROUPING, username[2]);
 
         //remove from exclude
-        gs.addGroupingMemberByUsername(username[0], GROUPING, username[4]);
-        gs.addGroupingMemberByUsername(username[0], GROUPING, username[5]);
+        groupingsService.addGroupingMemberByUsername(username[0], GROUPING, username[4]);
+        groupingsService.addGroupingMemberByUsername(username[0], GROUPING, username[5]);
 
         //add to exclude
-        gs.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
+        groupingsService.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
     }
 
     @Test
     public void isOwnerTest() {
-        assertTrue(gs.isOwner(GROUPING, username[0]));
+        assertTrue(groupingsService.isOwner(GROUPING, username[0]));
     }
 
     @Test
     public void groupOptInPermissionTest() {
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_EXCLUDE));
     }
 
     @Test
     public void groupOptOutPermissionTest() {
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
     }
 
     @Test
     public void adminInfoTest() {
-        AdminListsHolder info = gs.adminLists(username[0]);
+        AdminListsHolder info = groupingsService.adminLists(username[0]);
         assertNotNull(info);
         assertEquals(info.getAllGroupings().size(), 0);
         assertEquals(info.getAdminGroup().getMembers().size(), 0);
@@ -235,79 +161,79 @@ public class TestGroupingsService {
 
     }
 
-        @Test
-        public void updateLastModifiedTest() {
-            // Test is accurate to the minute, and if checks to see if the current
-            // time gets added to the lastModified attribute of a group if the
-            // minute happens to change in between getting the time and setting
-            // the time, the test will fail.
+    @Test
+    public void updateLastModifiedTest() {
+        // Test is accurate to the minute, and if checks to see if the current
+        // time gets added to the lastModified attribute of a group if the
+        // minute happens to change in between getting the time and setting
+        // the time, the test will fail.
 
-            final String group = GROUPING_INCLUDE;
+        final String group = GROUPING_INCLUDE;
 
-            GroupingsServiceResult gsr = ms.updateLastModified(group);
-            String dateStr = gsr.getAction().split(" to time ")[1];
+        GroupingsServiceResult gsr = membershipService.updateLastModified(group);
+        String dateStr = gsr.getAction().split(" to time ")[1];
 
-            WsGetAttributeAssignmentsResults assignments =
-                    groupAttributeService.attributeAssignmentsResults(ASSIGN_TYPE_GROUP, group, YYYYMMDDTHHMM);
-            String assignedValue = assignments.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
+        WsGetAttributeAssignmentsResults assignments =
+                groupAttributeService.attributeAssignmentsResults(ASSIGN_TYPE_GROUP, group, YYYYMMDDTHHMM);
+        String assignedValue = assignments.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
 
-            assertEquals(dateStr, assignedValue);
-        }
+        assertEquals(dateStr, assignedValue);
+    }
 
     @Test
     public void optOutPermissionTest() {
-        assertTrue(gs.optOutPermission(GROUPING));
+        assertTrue(groupingsService.optOutPermission(GROUPING));
     }
 
     @Test
     public void optInPermissionTest() {
-        assertTrue(gs.optInPermission(GROUPING));
+        assertTrue(groupingsService.optInPermission(GROUPING));
     }
 
     @Test
     public void hasListservTest() {
-        assertTrue(gs.hasListserv(GROUPING));
+        assertTrue(groupingsService.hasListserv(GROUPING));
     }
 
-        @Test
-        public void optTest() {
+    @Test
+    public void optTest() {
 
-            //tst[3] is not in the composite or include, but is in the basis and exclude
-            //tst[3] is not self opted into the exclude
-            assertFalse(gs.isMember(GROUPING_INCLUDE, username[3]));
-            assertFalse(gs.isMember(GROUPING, username[3]));
-            assertTrue(gs.isMember(GROUPING_BASIS, username[3]));
-            assertTrue(gs.isMember(GROUPING_EXCLUDE, username[3]));
-            assertFalse(gs.isSelfOpted(GROUPING_EXCLUDE, username[3]));
+        //tst[3] is not in the composite or include, but is in the basis and exclude
+        //tst[3] is not self opted into the exclude
+        assertFalse(groupingsService.isMember(GROUPING_INCLUDE, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_BASIS, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_EXCLUDE, username[3]));
+        assertFalse(groupingsService.isSelfOpted(GROUPING_EXCLUDE, username[3]));
 
-            //tst[3] opts in to the Grouping
-            gs.optIn(username[3], GROUPING);
-            //tst[3] should still be in the basis and now also in the Grouping
-            assertTrue(gs.isMember(GROUPING_BASIS, username[3]));
-            assertTrue(gs.isMember(GROUPING, username[3]));
-            //tst[3] is no longer in the exclude, and because tst[3] is in the basis,
-            //tst[3] does not get added to the include
-            assertFalse(gs.isMember(GROUPING_INCLUDE, username[3]));
-            assertFalse(gs.isMember(GROUPING_EXCLUDE, username[3]));
+        //tst[3] opts in to the Grouping
+        groupingsService.optIn(username[3], GROUPING);
+        //tst[3] should still be in the basis and now also in the Grouping
+        assertTrue(groupingsService.isMember(GROUPING_BASIS, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING, username[3]));
+        //tst[3] is no longer in the exclude, and because tst[3] is in the basis,
+        //tst[3] does not get added to the include
+        assertFalse(groupingsService.isMember(GROUPING_INCLUDE, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING_EXCLUDE, username[3]));
 
-            //tst[3] opts out of the Grouping
-            gs.optOut(username[3], GROUPING);
-            //tst[3] is still in basis, now in exclude and not in Grouping or include
-            assertTrue(gs.isMember(GROUPING_BASIS, username[3]));
-            assertTrue(gs.isMember(GROUPING_EXCLUDE, username[3]));
-            assertFalse(gs.isMember(GROUPING, username[3]));
-            assertFalse(gs.isMember(GROUPING_INCLUDE, username[3]));
-            //tst[3] is now self opted into exclude
-            assertTrue(gs.isSelfOpted(GROUPING_EXCLUDE, username[3]));
+        //tst[3] opts out of the Grouping
+        groupingsService.optOut(username[3], GROUPING);
+        //tst[3] is still in basis, now in exclude and not in Grouping or include
+        assertTrue(groupingsService.isMember(GROUPING_BASIS, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_EXCLUDE, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING_INCLUDE, username[3]));
+        //tst[3] is now self opted into exclude
+        assertTrue(groupingsService.isSelfOpted(GROUPING_EXCLUDE, username[3]));
 
-            //reset group
-            ms.removeSelfOpted(GROUPING_EXCLUDE, username[3]);
-            assertFalse(gs.isSelfOpted(GROUPING_EXCLUDE, username[3]));
-        }
+        //reset group
+        membershipService.removeSelfOpted(GROUPING_EXCLUDE, username[3]);
+        assertFalse(groupingsService.isSelfOpted(GROUPING_EXCLUDE, username[3]));
+    }
 
     @Test
     public void getGroupingTest() {
-        Grouping grouping = gs.getGrouping(GROUPING, username[4]);
+        Grouping grouping = groupingsService.getGrouping(GROUPING, username[4]);
         assertEquals(grouping.getPath(), "");
         assertEquals(grouping.getName(), "");
         assertEquals(grouping.getOwners().getMembers().size(), 0);
@@ -316,7 +242,7 @@ public class TestGroupingsService {
         assertEquals(grouping.getBasis().getMembers().size(), 0);
         assertEquals(grouping.getComposite().getMembers().size(), 0);
 
-        grouping = gs.getGrouping(GROUPING, username[0]);
+        grouping = groupingsService.getGrouping(GROUPING, username[0]);
 
         assertEquals(grouping.getPath(), GROUPING);
 
@@ -345,46 +271,46 @@ public class TestGroupingsService {
         GroupingsServiceResult assignOwnershipFail;
         GroupingsServiceResult removeOwnershipFail;
 
-        assertTrue(gs.isOwner(GROUPING, username[0]));
-        assertFalse(gs.isOwner(GROUPING, username[1]));
-        assertFalse(gs.isOwner(GROUPING, username[2]));
+        assertTrue(groupingsService.isOwner(GROUPING, username[0]));
+        assertFalse(groupingsService.isOwner(GROUPING, username[1]));
+        assertFalse(groupingsService.isOwner(GROUPING, username[2]));
 
         try {
-            assignOwnershipFail = gs.assignOwnership(GROUPING, username[1], username[1]);
+            assignOwnershipFail = groupingsService.assignOwnership(GROUPING, username[1], username[1]);
         } catch (GroupingsServiceResultException gsre) {
             assignOwnershipFail = gsre.getGsr();
         }
-        assertFalse(gs.isOwner(GROUPING, username[1]));
+        assertFalse(groupingsService.isOwner(GROUPING, username[1]));
         assertTrue(assignOwnershipFail.getResultCode().startsWith(FAILURE));
 
-        GroupingsServiceResult assignOwnershipSuccess = gs.assignOwnership(GROUPING, username[0], username[1]);
-        assertTrue(gs.isOwner(GROUPING, username[1]));
+        GroupingsServiceResult assignOwnershipSuccess = groupingsService.assignOwnership(GROUPING, username[0], username[1]);
+        assertTrue(groupingsService.isOwner(GROUPING, username[1]));
         assertTrue(assignOwnershipSuccess.getResultCode().startsWith(SUCCESS));
 
         try {
-            removeOwnershipFail = gs.removeOwnership(GROUPING, username[2], username[1]);
+            removeOwnershipFail = groupingsService.removeOwnership(GROUPING, username[2], username[1]);
         } catch (GroupingsServiceResultException gsre) {
             removeOwnershipFail = gsre.getGsr();
         }
 
-        assertTrue(gs.isOwner(GROUPING, username[1]));
+        assertTrue(groupingsService.isOwner(GROUPING, username[1]));
         assertTrue(removeOwnershipFail.getResultCode().startsWith(FAILURE));
 
-        GroupingsServiceResult removeOwnershipSuccess = gs.removeOwnership(GROUPING, username[0], username[1]);
-        assertFalse(gs.isOwner(GROUPING, username[1]));
+        GroupingsServiceResult removeOwnershipSuccess = groupingsService.removeOwnership(GROUPING, username[0], username[1]);
+        assertFalse(groupingsService.isOwner(GROUPING, username[1]));
         assertTrue(removeOwnershipSuccess.getResultCode().startsWith(SUCCESS));
 
         //have an owner remove itself
-        assignOwnershipSuccess = gs.assignOwnership(GROUPING, username[0], username[1]);
-        assertTrue(gs.isOwner(GROUPING, username[1]));
-        removeOwnershipSuccess = gs.removeOwnership(GROUPING, username[1], username[1]);
-        assertFalse(gs.isOwner(GROUPING, username[1]));
+        assignOwnershipSuccess = groupingsService.assignOwnership(GROUPING, username[0], username[1]);
+        assertTrue(groupingsService.isOwner(GROUPING, username[1]));
+        removeOwnershipSuccess = groupingsService.removeOwnership(GROUPING, username[1], username[1]);
+        assertFalse(groupingsService.isOwner(GROUPING, username[1]));
 
     }
 
     @Test
     public void groupingsInTest() {
-        GroupingAssignment groupingAssignment = gs.getGroupingAssignment(username[0]);
+        GroupingAssignment groupingAssignment = groupingsService.getGroupingAssignment(username[0]);
         boolean inGrouping = false;
 
         for (Grouping grouping : groupingAssignment.getGroupingsIn()) {
@@ -396,7 +322,7 @@ public class TestGroupingsService {
         assertTrue(inGrouping);
 
         inGrouping = false;
-        groupingAssignment = gs.getGroupingAssignment(username[3]);
+        groupingAssignment = groupingsService.getGroupingAssignment(username[3]);
         for (Grouping grouping : groupingAssignment.getGroupingsIn()) {
             if (grouping.getPath().contains(GROUPING)) {
                 inGrouping = true;
@@ -408,7 +334,7 @@ public class TestGroupingsService {
 
     @Test
     public void groupingsOwnedTest() {
-        GroupingAssignment groupingAssignment = gs.getGroupingAssignment(username[0]);
+        GroupingAssignment groupingAssignment = groupingsService.getGroupingAssignment(username[0]);
         boolean ownsGrouping = false;
 
         for (Grouping grouping : groupingAssignment.getGroupingsOwned()) {
@@ -420,7 +346,7 @@ public class TestGroupingsService {
         assertTrue(ownsGrouping);
 
         ownsGrouping = false;
-        groupingAssignment = gs.getGroupingAssignment(username[4]);
+        groupingAssignment = groupingsService.getGroupingAssignment(username[4]);
         for (Grouping grouping : groupingAssignment.getGroupingsOwned()) {
             if (grouping.getPath().contains(GROUPING)) {
                 ownsGrouping = true;
@@ -432,7 +358,7 @@ public class TestGroupingsService {
 
     @Test
     public void groupingsToOptTest() {
-        GroupingAssignment groupingAssignment = gs.getGroupingAssignment(username[0]);
+        GroupingAssignment groupingAssignment = groupingsService.getGroupingAssignment(username[0]);
 
         boolean canOptIn = false;
         for (Grouping grouping : groupingAssignment.getGroupingsToOptInTo()) {
@@ -453,270 +379,270 @@ public class TestGroupingsService {
         assertTrue(canOptOut);
     }
 
-        @Test
-        public void addRemoveSelfOptedTest() {
+    @Test
+    public void addRemoveSelfOptedTest() {
 
-            //username[2] is not in the include, but not self opted
-            assertTrue(gs.isMember(GROUPING_INCLUDE, username[2]));
-            assertFalse(gs.isSelfOpted(GROUPING_INCLUDE, username[2]));
+        //username[2] is not in the include, but not self opted
+        assertTrue(groupingsService.isMember(GROUPING_INCLUDE, username[2]));
+        assertFalse(groupingsService.isSelfOpted(GROUPING_INCLUDE, username[2]));
 
-            //add the self opted attribute for username[2]'s membership for the include group
-            ms.addSelfOpted(GROUPING_INCLUDE, username[2]);
+        //add the self opted attribute for username[2]'s membership for the include group
+        membershipService.addSelfOpted(GROUPING_INCLUDE, username[2]);
 
-            //username[2] should now be self opted
-            assertTrue(gs.isSelfOpted(GROUPING_INCLUDE, username[2]));
+        //username[2] should now be self opted
+        assertTrue(groupingsService.isSelfOpted(GROUPING_INCLUDE, username[2]));
 
-            //remove the self opted attribute for username[2]'s membership from the include group
-            ms.removeSelfOpted(GROUPING_INCLUDE, username[2]);
+        //remove the self opted attribute for username[2]'s membership from the include group
+        membershipService.removeSelfOpted(GROUPING_INCLUDE, username[2]);
 
-            //username[2] should no longer be self opted into the include
-            assertFalse(gs.isSelfOpted(GROUPING_INCLUDE, username[2]));
+        //username[2] should no longer be self opted into the include
+        assertFalse(groupingsService.isSelfOpted(GROUPING_INCLUDE, username[2]));
 
-            //try to add self opted attribute when not in the group
-            GroupingsServiceResult groupingsServiceResult;
+        //try to add self opted attribute when not in the group
+        GroupingsServiceResult groupingsServiceResult;
 
-            try {
-                groupingsServiceResult = ms.addSelfOpted(GROUPING_EXCLUDE, username[2]);
-            } catch (GroupingsServiceResultException gsre) {
-                groupingsServiceResult = gsre.getGsr();
-            }
-            assertTrue(groupingsServiceResult.getResultCode().startsWith(FAILURE));
-            assertFalse(gs.isSelfOpted(GROUPING_EXCLUDE, username[2]));
+        try {
+            groupingsServiceResult = membershipService.addSelfOpted(GROUPING_EXCLUDE, username[2]);
+        } catch (GroupingsServiceResultException gsre) {
+            groupingsServiceResult = gsre.getGsr();
         }
+        assertTrue(groupingsServiceResult.getResultCode().startsWith(FAILURE));
+        assertFalse(groupingsService.isSelfOpted(GROUPING_EXCLUDE, username[2]));
+    }
 
     @Test
     public void inGroupTest() {
-        assertTrue(gs.isMember(GROUPING_INCLUDE, username[1]));
-        assertFalse(gs.isMember(GROUPING_INCLUDE, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_INCLUDE, username[1]));
+        assertFalse(groupingsService.isMember(GROUPING_INCLUDE, username[3]));
 
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, username[3]));
-        assertFalse(gs.isMember(GROUPING_EXCLUDE, username[1]));
+        assertTrue(groupingsService.isMember(GROUPING_EXCLUDE, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING_EXCLUDE, username[1]));
     }
 
     @Test
     public void groupOptPermissionTest() {
-        assertTrue(gs.groupOptOutPermission(username[0], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptOutPermission(username[0], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.groupOptOutPermission(username[0], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptOutPermission(username[0], GROUPING_EXCLUDE));
 
-        assertTrue(gs.groupOptInPermission(username[0], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptInPermission(username[0], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[0], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[0], GROUPING_EXCLUDE));
     }
 
     @Test
     public void addMemberAsTest() {
 
         //username[3] is in the basis and exclude, not the composite or include
-        assertTrue(gs.isMember(GROUPING_BASIS, username[3]));
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, username[3]));
-        assertFalse(gs.isMember(GROUPING, username[3]));
-        assertFalse(gs.isMember(GROUPING_INCLUDE, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_BASIS, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_EXCLUDE, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING_INCLUDE, username[3]));
 
         //an owner adds username[3] to the include group
         List<GroupingsServiceResult> addMember =
-                gs.addGroupMemberByUsername(username[0], GROUPING_INCLUDE, username[3]);
+                groupingsService.addGroupMemberByUsername(username[0], GROUPING_INCLUDE, username[3]);
 
         //the addition was successful
         assertTrue(addMember.get(0).getResultCode().startsWith(SUCCESS));
         //username[3] is in the basis, include and composite, not the exclude
-        assertTrue(gs.isMember(GROUPING_BASIS, username[3]));
-        assertTrue(gs.isMember(GROUPING, username[3]));
-        assertTrue(gs.isMember(GROUPING_INCLUDE, username[3]));
-        assertFalse(gs.isMember(GROUPING_EXCLUDE, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_BASIS, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_INCLUDE, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING_EXCLUDE, username[3]));
 
         //put username[3] back in the exclude group
-        addMember = gs.addGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
+        addMember = groupingsService.addGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
 
         //the addition was successful
         assertEquals(addMember.get(0).getResultCode(), SUCCESS);
         //username[3] is in the basis and exclude, not the composite or include
-        assertTrue(gs.isMember(GROUPING_BASIS, username[3]));
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, username[3]));
-        assertFalse(gs.isMember(GROUPING, username[3]));
-        assertFalse(gs.isMember(GROUPING_INCLUDE, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_BASIS, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_EXCLUDE, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING_INCLUDE, username[3]));
 
         //test adding when already in group
-        addMember = gs.addGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
+        addMember = groupingsService.addGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
         //the addition was successful
         assertTrue(addMember.get(0).getResultCode().startsWith(SUCCESS));
         //username[3] is in the basis and exclude, not the composite or include
-        assertTrue(gs.isMember(GROUPING_BASIS, username[3]));
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, username[3]));
-        assertFalse(gs.isMember(GROUPING, username[3]));
-        assertFalse(gs.isMember(GROUPING_INCLUDE, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_BASIS, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_EXCLUDE, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING_INCLUDE, username[3]));
     }
 
-        @Test
-        public void getMembersTest() {
-            Group group = gas.getMembers(username[0], GROUPING);
-            List<String> usernames = group.getUsernames();
+    @Test
+    public void getMembersTest() {
+        Group group = groupingAssignmentService.getMembers(username[0], GROUPING);
+        List<String> usernames = group.getUsernames();
 
-            assertTrue(usernames.contains(username[0]));
-            assertTrue(usernames.contains(username[1]));
-            assertTrue(usernames.contains(username[2]));
-            assertFalse(usernames.contains(username[3]));
-            assertTrue(usernames.contains(username[4]));
-            assertTrue(usernames.contains(username[5]));
-        }
+        assertTrue(usernames.contains(username[0]));
+        assertTrue(usernames.contains(username[1]));
+        assertTrue(usernames.contains(username[2]));
+        assertFalse(usernames.contains(username[3]));
+        assertTrue(usernames.contains(username[4]));
+        assertTrue(usernames.contains(username[5]));
+    }
 
     @Test
     public void deleteMemberAsTest() {
         //username[2] is in composite and include, not basis or exclude
-        assertTrue(gs.isMember(GROUPING, username[2]));
-        assertTrue(gs.isMember(GROUPING_INCLUDE, username[2]));
-        assertFalse(gs.isMember(GROUPING_BASIS, username[2]));
-        assertFalse(gs.isMember(GROUPING_EXCLUDE, username[2]));
+        assertTrue(groupingsService.isMember(GROUPING, username[2]));
+        assertTrue(groupingsService.isMember(GROUPING_INCLUDE, username[2]));
+        assertFalse(groupingsService.isMember(GROUPING_BASIS, username[2]));
+        assertFalse(groupingsService.isMember(GROUPING_EXCLUDE, username[2]));
 
         //username[3] is in basis and exclude, not composite or include
-        assertTrue(gs.isMember(GROUPING_BASIS, username[3]));
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, username[3]));
-        assertFalse(gs.isMember(GROUPING, username[3]));
-        assertFalse(gs.isMember(GROUPING_INCLUDE, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_BASIS, username[3]));
+        assertTrue(groupingsService.isMember(GROUPING_EXCLUDE, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING_INCLUDE, username[3]));
 
         //delete username[3] from exclude
         GroupingsServiceResult deleteMember1 =
-                gs.deleteGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
+                groupingsService.deleteGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
         //deletion was successful
         assertEquals(deleteMember1.getResultCode(), SUCCESS);
         //username[3] is no longer in the exclude
-        assertFalse(gs.isMember(GROUPING_EXCLUDE, username[3]));
+        assertFalse(groupingsService.isMember(GROUPING_EXCLUDE, username[3]));
 
         //delete username[2] from include
         GroupingsServiceResult deleteMember2 =
-                gs.deleteGroupMemberByUsername(username[0], GROUPING_INCLUDE, username[2]);
+                groupingsService.deleteGroupMemberByUsername(username[0], GROUPING_INCLUDE, username[2]);
         //deletion was successful
         assertEquals(deleteMember2.getResultCode(), SUCCESS);
         //username[2] is no longer in composite or include
-        assertFalse(gs.isMember(GROUPING, username[2]));
-        assertFalse(gs.isMember(GROUPING_INCLUDE, username[2]));
+        assertFalse(groupingsService.isMember(GROUPING, username[2]));
+        assertFalse(groupingsService.isMember(GROUPING_INCLUDE, username[2]));
 
         //test when not in group
-        deleteMember1 = gs.deleteGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
-        deleteMember2 = gs.deleteGroupMemberByUsername(username[0], GROUPING_INCLUDE, username[2]);
+        deleteMember1 = groupingsService.deleteGroupMemberByUsername(username[0], GROUPING_EXCLUDE, username[3]);
+        deleteMember2 = groupingsService.deleteGroupMemberByUsername(username[0], GROUPING_INCLUDE, username[2]);
 
         //results are successful because the end result is the same
         assertTrue(deleteMember1.getResultCode().startsWith(SUCCESS));
         assertTrue(deleteMember2.getResultCode().startsWith(SUCCESS));
     }
 
-        @Test
-        public void getGroupNamesTest() {
-            List<String> groupNames1 = gas.getGroupPaths(username[1]);
-            List<String> groupNames3 = gas.getGroupPaths(username[3]);
+    @Test
+    public void getGroupNamesTest() {
+        List<String> groupNames1 = groupingAssignmentService.getGroupPaths(username[1]);
+        List<String> groupNames3 = groupingAssignmentService.getGroupPaths(username[3]);
 
-            //username[1] should be in the composite and the include, not basis or exclude
-            assertTrue(groupNames1.contains(GROUPING));
-            assertTrue(groupNames1.contains(GROUPING_INCLUDE));
-            assertFalse(groupNames1.contains(GROUPING_BASIS));
-            assertFalse(groupNames1.contains(GROUPING_EXCLUDE));
+        //username[1] should be in the composite and the include, not basis or exclude
+        assertTrue(groupNames1.contains(GROUPING));
+        assertTrue(groupNames1.contains(GROUPING_INCLUDE));
+        assertFalse(groupNames1.contains(GROUPING_BASIS));
+        assertFalse(groupNames1.contains(GROUPING_EXCLUDE));
 
-            //username[3] should be in the basis and exclude, not the composite or include
-            assertTrue(groupNames3.contains(GROUPING_BASIS));
-            assertTrue(groupNames3.contains(GROUPING_EXCLUDE));
-            assertFalse(groupNames3.contains(GROUPING));
-            assertFalse(groupNames3.contains(GROUPING_INCLUDE));
-        }
+        //username[3] should be in the basis and exclude, not the composite or include
+        assertTrue(groupNames3.contains(GROUPING_BASIS));
+        assertTrue(groupNames3.contains(GROUPING_EXCLUDE));
+        assertFalse(groupNames3.contains(GROUPING));
+        assertFalse(groupNames3.contains(GROUPING_INCLUDE));
+    }
 
-        @Test
-        public void getGroupNames() {
-            List<String> groups = gas.getGroupPaths(username[0]);
+    @Test
+    public void getGroupNames() {
+        List<String> groups = groupingAssignmentService.getGroupPaths(username[0]);
 
-            assertTrue(groups.contains(GROUPING_OWNERS));
-            assertTrue(groups.contains(GROUPING_STORE_EMPTY_OWNERS));
-            assertTrue(groups.contains(GROUPING_TRUE_EMPTY_OWNERS));
+        assertTrue(groups.contains(GROUPING_OWNERS));
+        assertTrue(groups.contains(GROUPING_STORE_EMPTY_OWNERS));
+        assertTrue(groups.contains(GROUPING_TRUE_EMPTY_OWNERS));
 
-            List<String> groups2 = gas.getGroupPaths(username[1]);
+        List<String> groups2 = groupingAssignmentService.getGroupPaths(username[1]);
 
-            assertFalse(groups2.contains(GROUPING_OWNERS));
-            assertFalse(groups2.contains(GROUPING_STORE_EMPTY_OWNERS));
-            assertFalse(groups2.contains(GROUPING_TRUE_EMPTY_OWNERS));
-        }
+        assertFalse(groups2.contains(GROUPING_OWNERS));
+        assertFalse(groups2.contains(GROUPING_STORE_EMPTY_OWNERS));
+        assertFalse(groups2.contains(GROUPING_TRUE_EMPTY_OWNERS));
+    }
 
-        @Test
-        public void grouperTest() {
-            List<String> groupPaths = gas.getGroupPaths(username[0]);
+    @Test
+    public void grouperTest() {
+        List<String> groupPaths = groupingAssignmentService.getGroupPaths(username[0]);
 
-            List<String> groupings = new ArrayList<>();
-            List<String> groupings2 = new ArrayList<>();
+        List<String> groupings = new ArrayList<>();
+        List<String> groupings2 = new ArrayList<>();
 
-            if (groupPaths.size() > 0) {
+        if (groupPaths.size() > 0) {
 
-                List<WsAttributeAssign> attributes = new ArrayList<>();
+            List<WsAttributeAssign> attributes = new ArrayList<>();
 
-                for (String path : groupPaths) {
-                    WsGetAttributeAssignmentsResults trioGroups = new GcGetAttributeAssignments()
-                            .addAttributeDefNameName(TRIO)
-                            .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
-                            .addOwnerGroupName(path)
-                            .execute();
-
-                    if (trioGroups.getWsAttributeAssigns() != null) {
-                        Collections.addAll(attributes, trioGroups.getWsAttributeAssigns());
-                    }
-                }
-
-                if (attributes.size() > 0) {
-                    for (WsAttributeAssign grouping : attributes) {
-                        groupings.add(grouping.getOwnerGroupName());
-                    }
-                }
-
-                assertNotNull(groupings);
-
-                //////////////////////////////////////////////////////////////////////////////////
-
-                GcGetAttributeAssignments trioGroups2 = new GcGetAttributeAssignments()
+            for (String path : groupPaths) {
+                WsGetAttributeAssignmentsResults trioGroups = new GcGetAttributeAssignments()
                         .addAttributeDefNameName(TRIO)
-                        .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
+                        .assignAttributeAssignType(ASSIGN_TYPE_GROUP)
+                        .addOwnerGroupName(path)
+                        .execute();
 
-                groupPaths.forEach(trioGroups2::addOwnerGroupName);
-
-                WsGetAttributeAssignmentsResults attributeAssignmentsResults2 = trioGroups2.execute();
-
-                assertNotNull(attributeAssignmentsResults2);
-
-                WsAttributeAssign[] wsGroups2 = attributeAssignmentsResults2.getWsAttributeAssigns();
-
-                if (wsGroups2 != null && wsGroups2.length > 0) {
-                    for (WsAttributeAssign grouping : wsGroups2) {
-                        groupings2.add(grouping.getOwnerGroupName());
-                    }
+                if (trioGroups.getWsAttributeAssigns() != null) {
+                    Collections.addAll(attributes, trioGroups.getWsAttributeAssigns());
                 }
             }
 
-            assertNotNull(groupings2);
+            if (attributes.size() > 0) {
+                for (WsAttributeAssign grouping : attributes) {
+                    groupings.add(grouping.getOwnerGroupName());
+                }
+            }
 
+            assertNotNull(groupings);
+
+            //////////////////////////////////////////////////////////////////////////////////
+
+            GcGetAttributeAssignments trioGroups2 = new GcGetAttributeAssignments()
+                    .addAttributeDefNameName(TRIO)
+                    .assignAttributeAssignType(ASSIGN_TYPE_GROUP);
+
+            groupPaths.forEach(trioGroups2::addOwnerGroupName);
+
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults2 = trioGroups2.execute();
+
+            assertNotNull(attributeAssignmentsResults2);
+
+            WsAttributeAssign[] wsGroups2 = attributeAssignmentsResults2.getWsAttributeAssigns();
+
+            if (wsGroups2 != null && wsGroups2.length > 0) {
+                for (WsAttributeAssign grouping : wsGroups2) {
+                    groupings2.add(grouping.getOwnerGroupName());
+                }
+            }
         }
+
+        assertNotNull(groupings2);
+
+    }
 
     @Test
     public void changeListServeStatusTest() {
         GroupingsServiceResult groupingsServiceResult;
 
-        assertTrue(gs.isOwner(GROUPING, username[0]));
-        assertTrue(gs.hasListserv(GROUPING));
-        gs.changeListservStatus(GROUPING, username[0], true);
-        assertTrue(gs.hasListserv(GROUPING));
-        gs.changeListservStatus(GROUPING, username[0], false);
-        assertFalse(gs.hasListserv(GROUPING));
-        gs.changeListservStatus(GROUPING, username[0], false);
-        assertFalse(gs.hasListserv(GROUPING));
+        assertTrue(groupingsService.isOwner(GROUPING, username[0]));
+        assertTrue(groupingsService.hasListserv(GROUPING));
+        groupingsService.changeListservStatus(GROUPING, username[0], true);
+        assertTrue(groupingsService.hasListserv(GROUPING));
+        groupingsService.changeListservStatus(GROUPING, username[0], false);
+        assertFalse(groupingsService.hasListserv(GROUPING));
+        groupingsService.changeListservStatus(GROUPING, username[0], false);
+        assertFalse(groupingsService.hasListserv(GROUPING));
 
-        assertFalse(gs.isOwner(GROUPING, username[1]));
+        assertFalse(groupingsService.isOwner(GROUPING, username[1]));
         try {
-            groupingsServiceResult = gs.changeListservStatus(GROUPING, username[1], true);
+            groupingsServiceResult = groupingsService.changeListservStatus(GROUPING, username[1], true);
         } catch (GroupingsServiceResultException gsre) {
             groupingsServiceResult = gsre.getGsr();
         }
         assertTrue(groupingsServiceResult.getResultCode().startsWith(FAILURE));
-        assertFalse(gs.hasListserv(GROUPING));
-        gs.changeListservStatus(GROUPING, username[0], true);
-        assertTrue(gs.hasListserv(GROUPING));
+        assertFalse(groupingsService.hasListserv(GROUPING));
+        groupingsService.changeListservStatus(GROUPING, username[0], true);
+        assertTrue(groupingsService.hasListserv(GROUPING));
         try {
-            groupingsServiceResult = gs.changeListservStatus(GROUPING, username[1], false);
+            groupingsServiceResult = groupingsService.changeListservStatus(GROUPING, username[1], false);
         } catch (GroupingsServiceResultException gsre) {
             groupingsServiceResult = gsre.getGsr();
         }
         assertTrue(groupingsServiceResult.getResultCode().startsWith(FAILURE));
-        assertTrue(gs.hasListserv(GROUPING));
+        assertTrue(groupingsService.hasListserv(GROUPING));
     }
 
     @Test
@@ -724,62 +650,62 @@ public class TestGroupingsService {
         //expect these to fail
         List<GroupingsServiceResult> optInFail;
 
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
-        assertTrue(gs.isOwner(GROUPING, username[0]));
-        assertTrue(gs.optInPermission(GROUPING));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.isOwner(GROUPING, username[0]));
+        assertTrue(groupingsService.optInPermission(GROUPING));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
 
-        gs.changeOptInStatus(GROUPING, username[0], true);
-        assertTrue(gs.optInPermission(GROUPING));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        groupingsService.changeOptInStatus(GROUPING, username[0], true);
+        assertTrue(groupingsService.optInPermission(GROUPING));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
 
-        gs.changeOptInStatus(GROUPING, username[0], false);
-        assertFalse(gs.optInPermission(GROUPING));
-        assertFalse(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
-        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        groupingsService.changeOptInStatus(GROUPING, username[0], false);
+        assertFalse(groupingsService.optInPermission(GROUPING));
+        assertFalse(groupingsService.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(groupingsService.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
 
         try {
-            optInFail = gs.optIn(username[4], GROUPING);
+            optInFail = groupingsService.optIn(username[4], GROUPING);
         } catch (GroupingsServiceResultException gsre) {
             optInFail = new ArrayList<>();
             optInFail.add(gsre.getGsr());
         }
         assertTrue(optInFail.get(0).getResultCode().startsWith(FAILURE));
-        assertFalse(gs.isMember(GROUPING, username[3]));
-        gs.changeOptInStatus(GROUPING, username[0], false);
-        assertFalse(gs.optInPermission(GROUPING));
-        assertFalse(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
-        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        assertFalse(groupingsService.isMember(GROUPING, username[3]));
+        groupingsService.changeOptInStatus(GROUPING, username[0], false);
+        assertFalse(groupingsService.optInPermission(GROUPING));
+        assertFalse(groupingsService.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(groupingsService.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
 
-        assertFalse(gs.isOwner(GROUPING, username[1]));
+        assertFalse(groupingsService.isOwner(GROUPING, username[1]));
         try {
-            optInFail = gs.changeOptInStatus(GROUPING, username[1], true);
+            optInFail = groupingsService.changeOptInStatus(GROUPING, username[1], true);
         } catch (GroupingsServiceResultException gsre) {
             optInFail = new ArrayList<>();
             optInFail.add(gsre.getGsr());
         }
         assertTrue(optInFail.get(0).getResultCode().startsWith(FAILURE));
-        assertFalse(gs.optInPermission(GROUPING));
-        assertFalse(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
-        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
-        gs.changeOptInStatus(GROUPING, username[0], true);
-        assertTrue(gs.optInPermission(GROUPING));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        assertFalse(groupingsService.optInPermission(GROUPING));
+        assertFalse(groupingsService.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(groupingsService.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        groupingsService.changeOptInStatus(GROUPING, username[0], true);
+        assertTrue(groupingsService.optInPermission(GROUPING));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
         try {
-            optInFail = gs.changeOptInStatus(GROUPING, username[1], false);
+            optInFail = groupingsService.changeOptInStatus(GROUPING, username[1], false);
         } catch (GroupingsServiceResultException gsre) {
             optInFail = new ArrayList<>();
             optInFail.add(gsre.getGsr());
         }
         assertTrue(optInFail.get(0).getResultCode().startsWith(FAILURE));
-        assertTrue(gs.optInPermission(GROUPING));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.optInPermission(GROUPING));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_EXCLUDE));
     }
 
     @Test
@@ -787,63 +713,63 @@ public class TestGroupingsService {
         //expect this to fail
         List<GroupingsServiceResult> optOutFail;
 
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
-        assertTrue(gs.isOwner(GROUPING, username[0]));
-        assertTrue(gs.optOutPermission(GROUPING));
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.isOwner(GROUPING, username[0]));
+        assertTrue(groupingsService.optOutPermission(GROUPING));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
-        gs.changeOptOutStatus(GROUPING, username[0], true);
-        assertTrue(gs.optOutPermission(GROUPING));
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        groupingsService.changeOptOutStatus(GROUPING, username[0], true);
+        assertTrue(groupingsService.optOutPermission(GROUPING));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
-        gs.changeOptOutStatus(GROUPING, username[0], false);
-        assertFalse(gs.optOutPermission(GROUPING));
-        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
-        assertFalse(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        groupingsService.changeOptOutStatus(GROUPING, username[0], false);
+        assertFalse(groupingsService.optOutPermission(GROUPING));
+        assertFalse(groupingsService.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(groupingsService.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
         try {
-            optOutFail = gs.optOut(username[1], GROUPING);
+            optOutFail = groupingsService.optOut(username[1], GROUPING);
         } catch (GroupingsServiceResultException gsre) {
             optOutFail = new ArrayList<>();
             optOutFail.add(gsre.getGsr());
         }
 
         assertTrue(optOutFail.get(0).getResultCode().startsWith(FAILURE));
-        assertTrue(gs.isMember(GROUPING, username[1]));
-        gs.changeOptOutStatus(GROUPING, username[0], false);
-        assertFalse(gs.optOutPermission(GROUPING));
-        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
-        assertFalse(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.isMember(GROUPING, username[1]));
+        groupingsService.changeOptOutStatus(GROUPING, username[0], false);
+        assertFalse(groupingsService.optOutPermission(GROUPING));
+        assertFalse(groupingsService.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(groupingsService.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
-        assertFalse(gs.isOwner(GROUPING, username[1]));
+        assertFalse(groupingsService.isOwner(GROUPING, username[1]));
 
         try {
-            gs.changeOptOutStatus(GROUPING, username[1], true);
+            groupingsService.changeOptOutStatus(GROUPING, username[1], true);
         } catch (GroupingsServiceResultException gsre) {
             assertTrue(gsre.getGsr().getResultCode().startsWith(FAILURE));
         }
 
-        assertFalse(gs.optOutPermission(GROUPING));
-        assertFalse(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
-        assertFalse(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
-        gs.changeOptOutStatus(GROUPING, username[0], true);
-        assertTrue(gs.optOutPermission(GROUPING));
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        assertFalse(groupingsService.optOutPermission(GROUPING));
+        assertFalse(groupingsService.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertFalse(groupingsService.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        groupingsService.changeOptOutStatus(GROUPING, username[0], true);
+        assertTrue(groupingsService.optOutPermission(GROUPING));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
         try {
-            gs.changeOptOutStatus(GROUPING, username[1], false);
+            groupingsService.changeOptOutStatus(GROUPING, username[1], false);
         } catch (GroupingsServiceResultException gsre) {
             assertTrue(gsre.getGsr().getResultCode().startsWith(FAILURE));
         }
 
-        assertTrue(gs.optOutPermission(GROUPING));
-        assertTrue(gs.groupOptOutPermission(username[1], GROUPING_INCLUDE));
-        assertTrue(gs.groupOptInPermission(username[1], GROUPING_EXCLUDE));
+        assertTrue(groupingsService.optOutPermission(GROUPING));
+        assertTrue(groupingsService.groupOptOutPermission(username[1], GROUPING_INCLUDE));
+        assertTrue(groupingsService.groupOptInPermission(username[1], GROUPING_EXCLUDE));
 
     }
 
@@ -854,7 +780,7 @@ public class TestGroupingsService {
         groupingPaths.add(GROUPING_STORE_EMPTY);
         groupingPaths.add(GROUPING_TRUE_EMPTY);
 
-        List<Grouping> groupings = hs.makeGroupings(groupingPaths);
+        List<Grouping> groupings = helperService.makeGroupings(groupingPaths);
 
         assertTrue(groupings.size() == 3);
     }

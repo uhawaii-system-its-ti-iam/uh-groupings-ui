@@ -1,19 +1,11 @@
 package edu.hawaii.its.api.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.GroupingsServiceResultException;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,17 +15,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.Group;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingAssignment;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.GroupingsServiceResultException;
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import javax.annotation.PostConstruct;
 
-import edu.internet2.middleware.grouperClient.api.GcGetAttributeAssignments;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
@@ -64,13 +49,13 @@ public class TestMemberAttributeService {
     GroupAttributeService groupAttributeService;
 
     @Autowired
-    GroupingAssignmentService gas;
+    GroupingAssignmentService groupingAssignmentService;
 
     @Autowired
-    private MemberAttributeService gs;
+    private MemberAttributeService memberAttributeService;
 
     @Autowired
-    private MembershipService ms;
+    private MembershipService membershipService;
 
     @Autowired
     public Environment env; // Just for the settings check.
@@ -92,21 +77,21 @@ public class TestMemberAttributeService {
         groupAttributeService.changeOptOutStatus(GROUPING, username[0], true);
 
         //put in include
-        ms.addGroupingMemberByUsername(username[0], GROUPING, username[0]);
-        ms.addGroupingMemberByUsername(username[0], GROUPING, username[1]);
-        ms.addGroupingMemberByUsername(username[0], GROUPING, username[2]);
+        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[0]);
+        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[1]);
+        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[2]);
 
         //remove from exclude
-        ms.addGroupingMemberByUsername(username[0], GROUPING, username[4]);
-        ms.addGroupingMemberByUsername(username[0], GROUPING, username[5]);
+        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[4]);
+        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[5]);
 
         //add to exclude
-        ms.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
+        membershipService.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
     }
 
     @Test
     public void isOwnerTest() {
-        assertTrue(gs.isOwner(GROUPING, username[0]));
+        assertTrue(memberAttributeService.isOwner(GROUPING, username[0]));
     }
 
     @Test
@@ -115,50 +100,52 @@ public class TestMemberAttributeService {
         GroupingsServiceResult assignOwnershipFail;
         GroupingsServiceResult removeOwnershipFail;
 
-        assertTrue(gs.isOwner(GROUPING, username[0]));
-        assertFalse(gs.isOwner(GROUPING, username[1]));
-        assertFalse(gs.isOwner(GROUPING, username[2]));
+        assertTrue(memberAttributeService.isOwner(GROUPING, username[0]));
+        assertFalse(memberAttributeService.isOwner(GROUPING, username[1]));
+        assertFalse(memberAttributeService.isOwner(GROUPING, username[2]));
 
         try {
-            assignOwnershipFail = gs.assignOwnership(GROUPING, username[1], username[1]);
+            assignOwnershipFail = memberAttributeService.assignOwnership(GROUPING, username[1], username[1]);
         } catch (GroupingsServiceResultException gsre) {
             assignOwnershipFail = gsre.getGsr();
         }
-        assertFalse(gs.isOwner(GROUPING, username[1]));
+        assertFalse(memberAttributeService.isOwner(GROUPING, username[1]));
         assertTrue(assignOwnershipFail.getResultCode().startsWith(FAILURE));
 
-        GroupingsServiceResult assignOwnershipSuccess = gs.assignOwnership(GROUPING, username[0], username[1]);
-        assertTrue(gs.isOwner(GROUPING, username[1]));
+        GroupingsServiceResult assignOwnershipSuccess =
+                memberAttributeService.assignOwnership(GROUPING, username[0], username[1]);
+        assertTrue(memberAttributeService.isOwner(GROUPING, username[1]));
         assertTrue(assignOwnershipSuccess.getResultCode().startsWith(SUCCESS));
 
         try {
-            removeOwnershipFail = gs.removeOwnership(GROUPING, username[2], username[1]);
+            removeOwnershipFail = memberAttributeService.removeOwnership(GROUPING, username[2], username[1]);
         } catch (GroupingsServiceResultException gsre) {
             removeOwnershipFail = gsre.getGsr();
         }
 
-        assertTrue(gs.isOwner(GROUPING, username[1]));
+        assertTrue(memberAttributeService.isOwner(GROUPING, username[1]));
         assertTrue(removeOwnershipFail.getResultCode().startsWith(FAILURE));
 
-        GroupingsServiceResult removeOwnershipSuccess = gs.removeOwnership(GROUPING, username[0], username[1]);
-        assertFalse(gs.isOwner(GROUPING, username[1]));
+        GroupingsServiceResult removeOwnershipSuccess =
+                memberAttributeService.removeOwnership(GROUPING, username[0], username[1]);
+        assertFalse(memberAttributeService.isOwner(GROUPING, username[1]));
         assertTrue(removeOwnershipSuccess.getResultCode().startsWith(SUCCESS));
 
         //have an owner remove itself
-        assignOwnershipSuccess = gs.assignOwnership(GROUPING, username[0], username[1]);
-        assertTrue(gs.isOwner(GROUPING, username[1]));
-        removeOwnershipSuccess = gs.removeOwnership(GROUPING, username[1], username[1]);
-        assertFalse(gs.isOwner(GROUPING, username[1]));
+        assignOwnershipSuccess = memberAttributeService.assignOwnership(GROUPING, username[0], username[1]);
+        assertTrue(memberAttributeService.isOwner(GROUPING, username[1]));
+        removeOwnershipSuccess = memberAttributeService.removeOwnership(GROUPING, username[1], username[1]);
+        assertFalse(memberAttributeService.isOwner(GROUPING, username[1]));
 
     }
 
     @Test
     public void inGroupTest() {
-        assertTrue(gs.isMember(GROUPING_INCLUDE, username[1]));
-        assertFalse(gs.isMember(GROUPING_INCLUDE, username[3]));
+        assertTrue(memberAttributeService.isMember(GROUPING_INCLUDE, username[1]));
+        assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, username[3]));
 
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, username[3]));
-        assertFalse(gs.isMember(GROUPING_EXCLUDE, username[1]));
+        assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, username[3]));
+        assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, username[1]));
     }
 
 }
