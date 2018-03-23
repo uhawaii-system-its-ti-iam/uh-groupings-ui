@@ -37,7 +37,7 @@ import static org.junit.Assert.assertTrue;
 @WebAppConfiguration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 
-public class GroupingsFactoryServiceTest {
+public class GrouperFactoryServiceTest {
 
     @Value("${groupings.api.operation_assign_attribute}")
     private String OPERATION_ASSIGN_ATTRIBUTE;
@@ -225,23 +225,40 @@ public class GroupingsFactoryServiceTest {
         assertTrue(results.getResultMetadata().getResultCode().startsWith("FAILURE"));
     }
 
-    //todo
-    @Test
-    public void removeGroupsWithoutOptOut() {
+//    //todo
+//    // This will also test removeGroupsWithoutOptOut method
+//    @Test
+//    public void makeWsGetAttributeAssignmentsResultsTrioTest() {
+////        WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
+////        String attributeDefNameName0,
+////        String attributeDefNameName1
+//
+//        String type = "type";
+//        String defName0 = OPT_IN;
+//        String defName1 = OPT_OUT;
+//        WsGetAttributeAssignmentsResults results;
+//
+//        results = gfsl.makeWsGetAttributeAssignmentsResultsTrio(type, defName0, defName1);
+//
+//
+//    }
 
-        String assignType = "type";
-        String assignOperation = OPERATION_ASSIGN_ATTRIBUTE;
-        String removeOperation = OPERATION_REMOVE_ATTRIBUTE;
-        String defName = LISTSERV;
-        String defName2 = OPT_IN;
-        String defName3 = OPT_OUT;
-        String groupName = GROUPING_3_PATH;
-
-        WsGetAttributeAssignmentsResults remResults;
-        WsGetAttributeAssignmentsResults results;
-
-        remResults = removeGroupsWithoutOptOut(results);
-
-    }
+//    @Test
+//    public void removeGroupsWithoutOptOut() {
+//
+//        String assignType = "type";
+//        String assignOperation = OPERATION_ASSIGN_ATTRIBUTE;
+//        String removeOperation = OPERATION_REMOVE_ATTRIBUTE;
+//        String defName = LISTSERV;
+//        String defName2 = OPT_IN;
+//        String defName3 = OPT_OUT;
+//        String groupName = GROUPING_3_PATH;
+//
+//        WsGetAttributeAssignmentsResults remResults;
+//        WsGetAttributeAssignmentsResults results;
+//
+//        remResults = removeGroupsWithoutOptOut(results);
+//
+//    }
 
 }
