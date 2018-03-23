@@ -3,6 +3,7 @@ package edu.hawaii.its.api.service;
 import java.util.List;
 
 import edu.hawaii.its.api.type.Person;
+
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
@@ -56,7 +57,8 @@ public interface GrouperFactoryService {
 
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, Person personToDelete);
 
-    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup, List<String> membersToDelete);
+    public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup,
+            List<String> membersToDelete);
 
     public WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
             String attributeDefNameName);
@@ -123,7 +125,8 @@ public interface GrouperFactoryService {
 
     public WsGetMembershipsResults makeWsGetMembershipsResults(String groupName, WsSubjectLookup lookup);
 
-    public WsGetMembersResults makeWsGetMembersResults(String subjectAttributeName, WsSubjectLookup lookup, String groupName);
+    public WsGetMembersResults makeWsGetMembersResults(String subjectAttributeName, WsSubjectLookup lookup,
+            String groupName);
 
     public WsGetGroupsResults makeWsGetGroupsResults(String username, WsStemLookup stemLookup, StemScope stemScope);
 

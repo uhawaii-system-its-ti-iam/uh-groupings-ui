@@ -9,7 +9,6 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
@@ -20,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service("memberAttributeService")
-public class MemberAttributeServiceImpl implements MemberAttributeService{
+public class MemberAttributeServiceImpl implements MemberAttributeService {
 
     @Value("${groupings.api.settings}")
     private String SETTINGS;
@@ -168,7 +167,8 @@ public class MemberAttributeServiceImpl implements MemberAttributeService{
             WsGetMembershipsResults wsGetMembershipsResults = hs.membershipsResults(username, groupPath);
             String membershipID = hs.extractFirstMembershipID(wsGetMembershipsResults);
 
-            WsAttributeAssign[] wsAttributes = getMembershipAttributes(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, membershipID);
+            WsAttributeAssign[] wsAttributes =
+                    getMembershipAttributes(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, SELF_OPTED, membershipID);
 
             for (WsAttributeAssign att : wsAttributes) {
                 if (att.getAttributeDefNameName() != null) {
@@ -260,7 +260,7 @@ public class MemberAttributeServiceImpl implements MemberAttributeService{
     //returns true if the person is a member of the group
     @Override
     public boolean isMember(String groupPath, Person person) {
-        if(person.getUsername() != null) {
+        if (person.getUsername() != null) {
             return isMember(groupPath, person.getUsername());
         }
 
@@ -311,10 +311,11 @@ public class MemberAttributeServiceImpl implements MemberAttributeService{
                 + membershipID
                 + ";");
 
-        WsGetAttributeAssignmentsResults attributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsForMembership(
-                assignType,
-                attributeUuid,
-                membershipID);
+        WsGetAttributeAssignmentsResults attributeAssignmentsResults =
+                grouperFS.makeWsGetAttributeAssignmentsResultsForMembership(
+                        assignType,
+                        attributeUuid,
+                        membershipID);
 
         WsAttributeAssign[] wsAttributes = attributeAssignmentsResults.getWsAttributeAssigns();
 

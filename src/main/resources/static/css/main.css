@@ -268,11 +268,10 @@ td.uh-pre {
     padding: 10px;
 }
 
+/*.panel{*/
+    /*background-color: #f1f1f1f2;*/
+/*}*/
 
-
-.panel{
-    background-color: #f1f1f1f2;
-}
 .panel.panel-tab-content {
     border-radius: 0px 3px 3px 3px;
     -webkit-border-radius: 0px 3px 3px 3px;

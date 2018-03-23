@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("membershipService")
-public class MembershipServiceImpl implements MembershipService{
+public class MembershipServiceImpl implements MembershipService {
 
     @Value("${groupings.api.settings}")
     private String SETTINGS;
@@ -167,8 +167,11 @@ public class MembershipServiceImpl implements MembershipService{
 
     //finds a user by a username and adds them to a grouping
     @Override
-    public List<GroupingsServiceResult> addGroupingMemberByUsername(String ownerUsername, String groupingPath, String userToAddUsername) {
-        logger.info("addGroupingMemberByUsername; user: " + ownerUsername + "; group: " + groupingPath + "; usersToAdd: " + userToAddUsername + ";");
+    public List<GroupingsServiceResult> addGroupingMemberByUsername(String ownerUsername, String groupingPath,
+            String userToAddUsername) {
+        logger.info(
+                "addGroupingMemberByUsername; user: " + ownerUsername + "; group: " + groupingPath + "; usersToAdd: "
+                        + userToAddUsername + ";");
 
         List<GroupingsServiceResult> gsrs = new ArrayList<>();
 
@@ -189,7 +192,8 @@ public class MembershipServiceImpl implements MembershipService{
             if (!inBasis) {
                 gsrs.addAll(addGroupMemberByUsername(ownerUsername, include, userToAddUsername));
             } else {
-                gsrs.add(hs.makeGroupingsServiceResult(SUCCESS + ": " + userToAddUsername + " was in " + basis, action));
+                gsrs.add(
+                        hs.makeGroupingsServiceResult(SUCCESS + ": " + userToAddUsername + " was in " + basis, action));
             }
         } else {
             gsrs.add(hs.makeGroupingsServiceResult(
@@ -205,8 +209,10 @@ public class MembershipServiceImpl implements MembershipService{
 
     //find a user by a uuid and add them to a grouping
     @Override
-    public List<GroupingsServiceResult> addGroupingMemberByUuid(String username, String groupingPath, String userToAddUuid) {
-        logger.info("addGroupingMemberByUuid; user: " + username + "; grouping: " + groupingPath + "; userToAdd: " + userToAddUuid + ";");
+    public List<GroupingsServiceResult> addGroupingMemberByUuid(String username, String groupingPath,
+            String userToAddUuid) {
+        logger.info("addGroupingMemberByUuid; user: " + username + "; grouping: " + groupingPath + "; userToAdd: "
+                + userToAddUuid + ";");
 
         List<GroupingsServiceResult> gsrs = new ArrayList<>();
 
@@ -245,7 +251,8 @@ public class MembershipServiceImpl implements MembershipService{
 
     //find a user by a username and remove them from the grouping
     @Override
-    public List<GroupingsServiceResult> deleteGroupingMemberByUsername(String ownerUsername, String groupingPath, String userToDeleteUsername) {
+    public List<GroupingsServiceResult> deleteGroupingMemberByUsername(String ownerUsername, String groupingPath,
+            String userToDeleteUsername) {
         logger.info("deleteGroupingMemberByUsername; username: "
                 + ownerUsername
                 + "; groupingPath: "
@@ -291,7 +298,8 @@ public class MembershipServiceImpl implements MembershipService{
     //todo
     //finds a user by a uuid and remove them from a grouping
     @Override
-    public List<GroupingsServiceResult> deleteGroupingMemberByUuid(String ownerUsername, String groupingPath, String userToDeleteUuid) {
+    public List<GroupingsServiceResult> deleteGroupingMemberByUuid(String ownerUsername, String groupingPath,
+            String userToDeleteUuid) {
         logger.info("deleteGroupingMemberByUuid; ownerUsername: "
                 + ownerUsername
                 + "; groupingPath: "
@@ -338,8 +346,10 @@ public class MembershipServiceImpl implements MembershipService{
 
     //finds a user by a username and adds that user to the group
     @Override
-    public List<GroupingsServiceResult> addGroupMemberByUsername(String ownerUsername, String groupPath, String userToAddUsername) {
-        logger.info("addGroupMemberByUsername; user: " + ownerUsername + "; groupPath: " + groupPath + "; userToAdd: " + userToAddUsername + ";");
+    public List<GroupingsServiceResult> addGroupMemberByUsername(String ownerUsername, String groupPath,
+            String userToAddUsername) {
+        logger.info("addGroupMemberByUsername; user: " + ownerUsername + "; groupPath: " + groupPath + "; userToAdd: "
+                + userToAddUsername + ";");
 
         Person personToAdd = new Person(null, null, userToAddUsername);
         return addMemberHelper(ownerUsername, groupPath, personToAdd);
@@ -347,8 +357,11 @@ public class MembershipServiceImpl implements MembershipService{
 
     //finds all the user from a list of usernames and adds them to the group
     @Override
-    public List<GroupingsServiceResult> addGroupMembersByUsername(String ownerUsername, String groupPath, List<String> usernamesToAdd) {
-        logger.info("addGroupMembersByUsername; user: " + ownerUsername + "; group: " + groupPath + "; usersToAddUsername: " + usernamesToAdd + ";");
+    public List<GroupingsServiceResult> addGroupMembersByUsername(String ownerUsername, String groupPath,
+            List<String> usernamesToAdd) {
+        logger.info(
+                "addGroupMembersByUsername; user: " + ownerUsername + "; group: " + groupPath + "; usersToAddUsername: "
+                        + usernamesToAdd + ";");
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
         for (String userToAdd : usernamesToAdd) {
             gsrList.addAll(addGroupMemberByUsername(ownerUsername, groupPath, userToAdd));
@@ -358,8 +371,10 @@ public class MembershipServiceImpl implements MembershipService{
 
     //finds a user by a uuid and adds them to the group
     @Override
-    public List<GroupingsServiceResult> addGroupMemberByUuid(String ownerUsername, String groupPath, String userToAddUuid) {
-        logger.info("addGroupMemberByUuid; user: " + ownerUsername + "; groupPath: " + groupPath + "; userToAdd: " + userToAddUuid + ";");
+    public List<GroupingsServiceResult> addGroupMemberByUuid(String ownerUsername, String groupPath,
+            String userToAddUuid) {
+        logger.info("addGroupMemberByUuid; user: " + ownerUsername + "; groupPath: " + groupPath + "; userToAdd: "
+                + userToAddUuid + ";");
 
         Person personToAdd = new Person(null, userToAddUuid, null);
         return addMemberHelper(ownerUsername, groupPath, personToAdd);
@@ -367,8 +382,10 @@ public class MembershipServiceImpl implements MembershipService{
 
     //finds all the user from a list of uuids and adds them to the group
     @Override
-    public List<GroupingsServiceResult> addGroupMembersByUuid(String ownerUsername, String groupPath, List<String> usersToAddUuid) {
-        logger.info("addGroupMembersByUuid; user: " + ownerUsername + "; groupPath: " + groupPath + "; usersToAddUuid: " + usersToAddUuid + ";");
+    public List<GroupingsServiceResult> addGroupMembersByUuid(String ownerUsername, String groupPath,
+            List<String> usersToAddUuid) {
+        logger.info("addGroupMembersByUuid; user: " + ownerUsername + "; groupPath: " + groupPath + "; usersToAddUuid: "
+                + usersToAddUuid + ";");
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
         for (String userToAdd : usersToAddUuid) {
             gsrList.addAll(addGroupMemberByUuid(ownerUsername, groupPath, userToAdd));
@@ -378,7 +395,8 @@ public class MembershipServiceImpl implements MembershipService{
 
     //find a user by a username and remove them from a group
     @Override
-    public GroupingsServiceResult deleteGroupMemberByUsername(String ownerUsername, String groupPath, String userToDeleteUsername) {
+    public GroupingsServiceResult deleteGroupMemberByUsername(String ownerUsername, String groupPath,
+            String userToDeleteUsername) {
         logger.info("deleteGroupMemberByUsername; user: " + ownerUsername
                 + "; group: " + groupPath
                 + "; userToDelete: " + userToDeleteUsername
@@ -388,11 +406,13 @@ public class MembershipServiceImpl implements MembershipService{
 
         String composite = hs.parentGroupingPath(groupPath);
 
-        if (mas.isOwner(composite, ownerUsername) || mas.isSuperuser(ownerUsername) || userToDeleteUsername.equals(ownerUsername)) {
+        if (mas.isOwner(composite, ownerUsername) || mas.isSuperuser(ownerUsername) || userToDeleteUsername
+                .equals(ownerUsername)) {
             WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
             if (groupPath.endsWith(EXCLUDE) || groupPath.endsWith(INCLUDE) || groupPath.endsWith(OWNERS)) {
                 if (mas.isMember(groupPath, userToDeleteUsername)) {
-                    WsDeleteMemberResults deleteMemberResults = grouperFS.makeWsDeleteMemberResults(groupPath, user, userToDeleteUsername);
+                    WsDeleteMemberResults deleteMemberResults =
+                            grouperFS.makeWsDeleteMemberResults(groupPath, user, userToDeleteUsername);
 
                     updateLastModified(composite);
                     updateLastModified(groupPath);
@@ -409,7 +429,8 @@ public class MembershipServiceImpl implements MembershipService{
     }
 
     @Override
-    public GroupingsServiceResult deleteGroupMemberByUuid(String ownerUsername, String groupPath, String userToDeleteUuid) {
+    public GroupingsServiceResult deleteGroupMemberByUuid(String ownerUsername, String groupPath,
+            String userToDeleteUuid) {
         logger.info("deleteGroupMemberByUuid; user: " + ownerUsername
                 + "; group: " + groupPath
                 + "; userToDelete: " + userToDeleteUuid
@@ -424,7 +445,8 @@ public class MembershipServiceImpl implements MembershipService{
             WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
             if (groupPath.endsWith(EXCLUDE) || groupPath.endsWith(INCLUDE) || groupPath.endsWith(OWNERS)) {
                 if (mas.isMember(groupPath, personToDelete)) {
-                    WsDeleteMemberResults deleteMemberResults = grouperFS.makeWsDeleteMemberResults(groupPath, user, personToDelete);
+                    WsDeleteMemberResults deleteMemberResults =
+                            grouperFS.makeWsDeleteMemberResults(groupPath, user, personToDelete);
 
                     updateLastModified(composite);
                     updateLastModified(groupPath);
@@ -461,7 +483,7 @@ public class MembershipServiceImpl implements MembershipService{
         }
 
         //todo replace hard coded string with value from top
-      return hs.makeGroupingsServiceResult("FAILURE: " + currentAdminUsername + " is not an admin", action);
+        return hs.makeGroupingsServiceResult("FAILURE: " + currentAdminUsername + " is not an admin", action);
     }
 
     //removes a user from the admins group
@@ -530,8 +552,8 @@ public class MembershipServiceImpl implements MembershipService{
                 .equals(SUCCESS_ALLOWED);
     }
 
-
-    public List<GroupingsServiceResult> opt(String username, String grouping, String addGroup, String outOrrIn, String preposition) {
+    public List<GroupingsServiceResult> opt(String username, String grouping, String addGroup, String outOrrIn,
+            String preposition) {
 
         List<GroupingsServiceResult> results = new ArrayList<>();
 
@@ -567,6 +589,7 @@ public class MembershipServiceImpl implements MembershipService{
     }
 
     //adds the self-opted attribute to the membership between the group and user
+    @Override
     public GroupingsServiceResult addSelfOpted(String groupPath, String username) {
         logger.info("addSelfOpted; group: " + groupPath + "; username: " + username + ";");
 
@@ -592,6 +615,7 @@ public class MembershipServiceImpl implements MembershipService{
     }
 
     //removes the self-opted attribute from the membership that corresponds to the user and group
+    @Override
     public GroupingsServiceResult removeSelfOpted(String groupPath, String username) {
         logger.info("removeSelfOpted; group: " + groupPath + "; username: " + username + ";");
 
@@ -615,15 +639,16 @@ public class MembershipServiceImpl implements MembershipService{
                 action);
     }
 
-
     //logic for adding a member
-    public List<GroupingsServiceResult> addMemberHelper(String username, String groupPath, Person personToAdd){
-        logger.info("addMemberHelper; user: " + username + "; group: " + groupPath + "; personToAdd: " + personToAdd + ";");
+    public List<GroupingsServiceResult> addMemberHelper(String username, String groupPath, Person personToAdd) {
+        logger.info(
+                "addMemberHelper; user: " + username + "; group: " + groupPath + "; personToAdd: " + personToAdd + ";");
 
         List<GroupingsServiceResult> gsrList = new ArrayList<>();
         String action = "add users to " + groupPath;
 
-        if (mas.isOwner(hs.parentGroupingPath(groupPath), username) || mas.isSuperuser(username) || personToAdd.getUsername().equals(username)) {
+        if (mas.isOwner(hs.parentGroupingPath(groupPath), username) || mas.isSuperuser(username) || personToAdd
+                .getUsername().equals(username)) {
             WsSubjectLookup user = grouperFS.makeWsSubjectLookup(username);
             String composite = hs.parentGroupingPath(groupPath);
             String exclude = composite + EXCLUDE;
@@ -757,7 +782,8 @@ public class MembershipServiceImpl implements MembershipService{
     }
 
     //checks to see if the user has the privilege in that group
-    public WsGetGrouperPrivilegesLiteResult getGrouperPrivilege(String username, String privilegeName, String groupPath) {
+    public WsGetGrouperPrivilegesLiteResult getGrouperPrivilege(String username, String privilegeName,
+            String groupPath) {
         logger.info("getGrouperPrivilege; username: "
                 + username
                 + "; group: "
@@ -780,7 +806,8 @@ public class MembershipServiceImpl implements MembershipService{
     }
 
     //adds, removes, updates (operationName) the attribute for the membership
-    public WsAssignAttributesResults assignMembershipAttributes(String operationName, String attributeUuid, String membershipID) {
+    public WsAssignAttributesResults assignMembershipAttributes(String operationName, String attributeUuid,
+            String membershipID) {
         logger.info("assignMembershipAttributes; operation: "
                 + operationName
                 + "; uuid: "
@@ -789,7 +816,8 @@ public class MembershipServiceImpl implements MembershipService{
                 + membershipID
                 + ";");
 
-        return grouperFS.makeWsAssignAttributesResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, operationName, attributeUuid, membershipID);
+        return grouperFS.makeWsAssignAttributesResultsForMembership(ASSIGN_TYPE_IMMEDIATE_MEMBERSHIP, operationName,
+                attributeUuid, membershipID);
     }
 
 }
