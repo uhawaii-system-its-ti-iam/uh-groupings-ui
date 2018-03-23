@@ -732,7 +732,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     }
 
     @Override
-    public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(String attributeAssingType,
+    public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(String attributeAssignType,
             String attributeAssignOperation,
             String attributeDefNameName,
             String ownerGroupName) {
@@ -758,7 +758,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(WsSubjectLookup lookup,
-            String attributeAssingType,
+            String attributeAssignType,
             String attributeAssignOperation,
             String attributeDefNameName,
             String ownerGroupName) {
@@ -768,7 +768,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         Person person = personRepository.findByUsername(lookup.getSubjectIdentifier());
 
         if (grouping.getOwners().isMember(person)) {
-            wsAssignAttributesResults = makeWsAssignAttributesResultsForGroup(attributeAssingType,
+            wsAssignAttributesResults = makeWsAssignAttributesResultsForGroup(attributeAssignType,
                     attributeAssignOperation,
                     attributeDefNameName,
                     ownerGroupName);
