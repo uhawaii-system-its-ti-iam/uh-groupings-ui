@@ -88,7 +88,7 @@
                     $scope.loading = false;
                     $scope.showGrouping = true;
                 }
-            },  function(d){
+            },  function (d) {
                 console.log("error has occured");
                 console.log(d);
                 var error = encodeURI(d);
@@ -274,7 +274,7 @@
         /**
          * Resets the selected group to the list of all members.
          */
-        $scope.resetSelectedGroup = function() {
+        $scope.resetSelectedGroup = function () {
             var pills = $('#group-pills')[0].children;
             var tabContents = $('#pill-content')[0].children
             for (var i = 0; i < pills.length; i++) {
@@ -404,7 +404,7 @@
 
         };
 
-        $scope.resetFields = function(){
+        $scope.resetFields = function () {
             $scope.addUser = "";
         }
         /**

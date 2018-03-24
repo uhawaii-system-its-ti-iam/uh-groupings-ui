@@ -40,11 +40,11 @@
              **/
             dataProvider.loadData(function (d) {
                 console.log(d);
-                if(typeof d.groupingsIn === 'undefined') {
+                if (typeof d.groupingsIn === 'undefined') {
                     $scope.loading = false;
                     $scope.errorModal();
                 }
-                else{
+                else {
                     $scope.membersList = d.groupingsIn;
                     $scope.optOutList = d.groupingsToOptOutOf;
                     $scope.optInList = d.groupingsToOptInTo;

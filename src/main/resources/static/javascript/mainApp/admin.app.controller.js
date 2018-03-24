@@ -40,7 +40,7 @@
                     $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
                 }
                 $scope.loading = false;
-            }, function(d){
+            }, function (d) {
                 console.log("error has occurred");
                 console.log(d);
                 var error = encodeURI(d.message);

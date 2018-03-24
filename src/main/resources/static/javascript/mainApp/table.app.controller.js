@@ -71,7 +71,7 @@
          * @param {number} start - the start number
          * @param {number} end - the end number
          * @returns an array of numbers from start to end - 1.
-         **/
+         */
         $scope.range = function (size, start, end) {
             var ret = [];
             if (size < end) {
