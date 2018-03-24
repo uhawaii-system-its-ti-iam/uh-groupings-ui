@@ -20,6 +20,7 @@ public class GroupingsHTTPException extends RuntimeException{
         super(message, cause);
         this.statusCode = statusCode;
         this.string = this.toString();
+        this.setStackTrace(cause.getStackTrace());
     }
 
     public Integer getStatusCode() {
