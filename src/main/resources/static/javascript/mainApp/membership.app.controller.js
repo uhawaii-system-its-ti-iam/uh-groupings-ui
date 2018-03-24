@@ -10,7 +10,6 @@
      */
     function MembershipJsController($scope, $uibModal, $window, $controller, dataProvider) {
 
-        $scope.currentUsername = "";
         $scope.membersList = [];
         $scope.optInList = [];
         $scope.optOutList = [];
