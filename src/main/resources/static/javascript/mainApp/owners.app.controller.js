@@ -23,7 +23,6 @@
             var groupingsOwned = "api/groupings/groupingAssignment";
 
             dataProvider.loadData(function (d) {
-                var temp = [];
                 if (typeof d.groupingsIn === 'undefined') {
                     $scope.createApiErrorModal();
                 } else {
