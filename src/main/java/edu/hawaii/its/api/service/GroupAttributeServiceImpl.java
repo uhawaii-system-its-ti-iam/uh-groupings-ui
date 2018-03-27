@@ -212,19 +212,6 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         return groupHasAttribute(groupingPath, LISTSERV);
     }
 
-    //returns a list of groupings that corresponds to all of the owner groups in groupPaths
-    public List<Grouping> groupingsOwned(List<String> groupPaths) {
-        List<String> ownerGroups = groupPaths
-                .stream()
-                .filter(groupPath -> groupPath.endsWith(OWNERS))
-                .map(groupPath -> groupPath.substring(0, groupPath.length() - OWNERS.length()))
-                .collect(Collectors.toList());
-
-        List<String> ownedGroupings = hs.extractGroupings(ownerGroups);
-
-        return hs.makeGroupings(ownedGroupings);
-    }
-
     //returns true if the grouping allows the user to opt out, false otherwise
     @Override
     public boolean optOutPermission(String groupingPath) {
