@@ -224,41 +224,4 @@ public class GrouperFactoryServiceTest {
         results = gfsl.makeWsAssignAttributesResultsForGroup(lookup2, assignType, assignOperation, defName, groupName);
         assertTrue(results.getResultMetadata().getResultCode().startsWith("FAILURE"));
     }
-
-//    //todo
-//    // This will also test removeGroupsWithoutOptOut method
-//    @Test
-//    public void makeWsGetAttributeAssignmentsResultsTrioTest() {
-////        WsGetAttributeAssignmentsResults makeWsGetAttributeAssignmentsResultsTrio(String assignType,
-////        String attributeDefNameName0,
-////        String attributeDefNameName1
-//
-//        String type = "type";
-//        String defName0 = OPT_IN;
-//        String defName1 = OPT_OUT;
-//        WsGetAttributeAssignmentsResults results;
-//
-//        results = gfsl.makeWsGetAttributeAssignmentsResultsTrio(type, defName0, defName1);
-//
-//
-//    }
-
-//    @Test
-//    public void removeGroupsWithoutOptOut() {
-//
-//        String assignType = "type";
-//        String assignOperation = OPERATION_ASSIGN_ATTRIBUTE;
-//        String removeOperation = OPERATION_REMOVE_ATTRIBUTE;
-//        String defName = LISTSERV;
-//        String defName2 = OPT_IN;
-//        String defName3 = OPT_OUT;
-//        String groupName = GROUPING_3_PATH;
-//
-//        WsGetAttributeAssignmentsResults remResults;
-//        WsGetAttributeAssignmentsResults results;
-//
-//        remResults = removeGroupsWithoutOptOut(results);
-//
-//    }
-
 }
