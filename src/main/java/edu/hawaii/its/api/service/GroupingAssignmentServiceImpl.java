@@ -170,17 +170,17 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     private GrouperFactoryService grouperFS;
 
     @Autowired
-    private HelperService hs;
+    private HelperService helperService;
 
     @Autowired
-    private MemberAttributeService mas;
+    private MemberAttributeService memberAttributeService;
 
     // returns a list of all of the groups in groupPaths that are also groupings
     @Override
     public List<Grouping> groupingsIn(List<String> groupPaths) {
-        List<String> groupingsIn = hs.extractGroupings(groupPaths);
+        List<String> groupingsIn = helperService.extractGroupings(groupPaths);
 
-        return hs.makeGroupings(groupingsIn);
+        return helperService.makeGroupings(groupingsIn);
     }
 
     //returns a list of groupings that corresponds to all of the owner groups in groupPaths
@@ -192,9 +192,9 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
                 .map(groupPath -> groupPath.substring(0, groupPath.length() - OWNERS.length()))
                 .collect(Collectors.toList());
 
-        List<String> ownedGroupings = hs.extractGroupings(ownerGroups);
+        List<String> ownedGroupings = helperService.extractGroupings(ownerGroups);
 
-        return hs.makeGroupings(ownedGroupings);
+        return helperService.makeGroupings(ownedGroupings);
     }
 
     //returns a list of all of the groupings corresponding to the include groups in groupPaths that have the self-opted attribute
@@ -218,7 +218,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
         Grouping compositeGrouping = new Grouping();
 
-        if (mas.isOwner(groupingPath, ownerUsername) || mas.isAdmin(ownerUsername)) {
+        if (memberAttributeService.isOwner(groupingPath, ownerUsername) || memberAttributeService.isAdmin(ownerUsername)) {
             compositeGrouping = new Grouping(groupingPath);
 
             Group include = getMembers(ownerUsername, groupingPath + INCLUDE);
@@ -261,7 +261,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
         AdminListsHolder info = new AdminListsHolder();
         List<Grouping> groupings;
 
-        if (mas.isSuperuser(adminUsername)) {
+        if (memberAttributeService.isSuperuser(adminUsername)) {
 
             WsGetAttributeAssignmentsResults attributeAssignmentsResults =
                     grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
@@ -273,7 +273,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
             List<String> groupPaths = groups.stream().map(WsGroup::getName).collect(Collectors.toList());
 
             Group admin = getMembers(adminUsername, GROUPING_ADMINS);
-            groupings = hs.makeGroupings(groupPaths);
+            groupings = helperService.makeGroupings(groupPaths);
             info.setAdminGroup(admin);
             info.setAllGroupings(groupings);
         }
@@ -288,7 +288,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
         List<String> groupingsOpted = new ArrayList<>();
 
         List<String> groupsOpted = groupPaths.stream().filter(group -> group.endsWith(includeOrrExclude)
-                && mas.isSelfOpted(group, username)).map(hs::parentGroupingPath).collect(Collectors.toList());
+                && memberAttributeService.isSelfOpted(group, username)).map(helperService::parentGroupingPath).collect(Collectors.toList());
 
         if (groupsOpted.size() > 0) {
 
@@ -305,7 +305,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
             groupingsOpted.addAll(triosList.stream().map(WsGroup::getName).collect(Collectors.toList()));
         }
-        return hs.makeGroupings(groupingsOpted);
+        return helperService.makeGroupings(groupingsOpted);
     }
 
     //returns a group from grouper or the database
@@ -470,7 +470,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
         //get rid of duplicates
         List<String> groups = new ArrayList<>(new HashSet<>(opts));
-        return hs.makeGroupings(groups);
+        return helperService.makeGroupings(groups);
     }
 
     //returns a list of groupings that the user is allowed to opt-out of
@@ -504,7 +504,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
             opts.retainAll(trios);
         }
 
-        return hs.makeGroupings(opts);
+        return helperService.makeGroupings(opts);
     }
 
 }

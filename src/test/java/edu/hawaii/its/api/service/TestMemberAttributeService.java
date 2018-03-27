@@ -140,12 +140,40 @@ public class TestMemberAttributeService {
     }
 
     @Test
-    public void inGroupTest() {
+    public void isMemberTest() {
+        //test isMember with username
         assertTrue(memberAttributeService.isMember(GROUPING_INCLUDE, username[1]));
         assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, username[3]));
 
         assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, username[3]));
         assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, username[1]));
+
+        //todo
+        //test isMember with Person
     }
 
+    @Test
+    public void isSelfOptedTest() {
+        //todo
+    }
+
+    @Test
+    public void isAppTest() {
+        //todo
+    }
+
+    @Test
+    public void isSuperUserTest() {
+        //todo
+    }
+
+    @Test
+    public void isAmdinTest() {
+        //todo
+    }
+
+    @Test
+    public void getMembershipAttributesTest() {
+        //todo
+    }
 }

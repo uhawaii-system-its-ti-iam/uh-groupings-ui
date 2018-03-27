@@ -124,7 +124,8 @@ public class TestGroupingAssignmentService {
     }
 
     @Test
-    public void adminInfoTest() {
+    public void adminListsTest() {
+        //try with non-admin
         AdminListsHolder info = groupingAssignmentService.adminLists(username[0]);
         assertNotNull(info);
         assertEquals(info.getAllGroupings().size(), 0);
@@ -234,6 +235,11 @@ public class TestGroupingAssignmentService {
             }
         }
         assertFalse(ownsGrouping);
+    }
+
+    @Test
+    public void groupingsOptedTest() {
+        //todo
     }
 
     @Test
