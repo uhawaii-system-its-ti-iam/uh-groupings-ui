@@ -95,7 +95,7 @@ public class TestGroupingFactoryService {
     public void addGroupingTest() {
 
         //this needs to be an admin account to work
-        groupingFactoryService.addGrouping(username[0], GROUPING_NEW, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+//        groupingFactoryService.addGrouping(username[0], GROUPING_NEW, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
     @Test
