@@ -15,7 +15,8 @@
             <!-- Filter bar -->
             <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                 <div class="xs-left-sm-right">
-                    <input class="form-control" placeholder="Filter Members..." type="text" title = "Filter Admins"
+                    <input class="form-control" placeholder="Filter Members..." type="text"
+                           title="Filter Members"
                            ng-model="includeQuery"
                            ng-change="filter(groupingInclude, 'pagedItemsInclude', 'currentPageInclude', 'includeQuery')"/>
                 </div>
@@ -35,7 +36,7 @@
                     <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'uuid'" ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
                 <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'username')" class="clickable">
-                    Username
+                    UH Username
                     <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'username'" ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
                 <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'basis')" class="clickable">
@@ -102,7 +103,8 @@
     <div class="col-lg-4 col-md-6" style="padding: inherit;">
         <form ng-submit="addMember('Include')">
             <div class="input-group">
-                <input class="form-control" type="text" placeholder="Enter UH username to include" title="Adding a person to the include"
+                <input class="form-control" type="text" placeholder="Enter UH username to include"
+                       title="Enter UH username to include"
                        ng-model="addUser"/>
                 <div class="input-group-btn">
                     <button class="btn btn-primary" type="submit">Add</button>

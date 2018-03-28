@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service("groupingAssignmentService")
-public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
+public class GroupingAssignmentServiceImpl implements GroupingAssignmentService {
 
     @Value("${groupings.api.settings}")
     private String SETTINGS;
@@ -170,17 +170,17 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
     private GrouperFactoryService grouperFS;
 
     @Autowired
-    private HelperService hs;
+    private HelperService helperService;
 
     @Autowired
-    private MemberAttributeService mas;
+    private MemberAttributeService memberAttributeService;
 
     // returns a list of all of the groups in groupPaths that are also groupings
     @Override
     public List<Grouping> groupingsIn(List<String> groupPaths) {
-        List<String> groupingsIn = hs.extractGroupings(groupPaths);
+        List<String> groupingsIn = helperService.extractGroupings(groupPaths);
 
-        return hs.makeGroupings(groupingsIn);
+        return helperService.makeGroupings(groupingsIn);
     }
 
     //returns a list of groupings that corresponds to all of the owner groups in groupPaths
@@ -192,9 +192,9 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
                 .map(groupPath -> groupPath.substring(0, groupPath.length() - OWNERS.length()))
                 .collect(Collectors.toList());
 
-        List<String> ownedGroupings = hs.extractGroupings(ownerGroups);
+        List<String> ownedGroupings = helperService.extractGroupings(ownerGroups);
 
-        return hs.makeGroupings(ownedGroupings);
+        return helperService.makeGroupings(ownedGroupings);
     }
 
     //returns a list of all of the groupings corresponding to the include groups in groupPaths that have the self-opted attribute
@@ -218,7 +218,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
 
         Grouping compositeGrouping = new Grouping();
 
-        if (mas.isOwner(groupingPath, ownerUsername) || mas.isAdmin(ownerUsername)) {
+        if (memberAttributeService.isOwner(groupingPath, ownerUsername) || memberAttributeService.isAdmin(ownerUsername)) {
             compositeGrouping = new Grouping(groupingPath);
 
             Group include = getMembers(ownerUsername, groupingPath + INCLUDE);
@@ -261,18 +261,19 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
         AdminListsHolder info = new AdminListsHolder();
         List<Grouping> groupings;
 
-        if (mas.isSuperuser(adminUsername)) {
+        if (memberAttributeService.isSuperuser(adminUsername)) {
 
-            WsGetAttributeAssignmentsResults attributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
-                    ASSIGN_TYPE_GROUP,
-                    TRIO);
+            WsGetAttributeAssignmentsResults attributeAssignmentsResults =
+                    grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
+                            ASSIGN_TYPE_GROUP,
+                            TRIO);
 
             List<WsGroup> groups = new ArrayList<>(Arrays.asList(attributeAssignmentsResults.getWsGroups()));
 
             List<String> groupPaths = groups.stream().map(WsGroup::getName).collect(Collectors.toList());
 
             Group admin = getMembers(adminUsername, GROUPING_ADMINS);
-            groupings = hs.makeGroupings(groupPaths);
+            groupings = helperService.makeGroupings(groupPaths);
             info.setAdminGroup(admin);
             info.setAllGroupings(groupings);
         }
@@ -287,14 +288,15 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
         List<String> groupingsOpted = new ArrayList<>();
 
         List<String> groupsOpted = groupPaths.stream().filter(group -> group.endsWith(includeOrrExclude)
-                && mas.isSelfOpted(group, username)).map(hs::parentGroupingPath).collect(Collectors.toList());
+                && memberAttributeService.isSelfOpted(group, username)).map(helperService::parentGroupingPath).collect(Collectors.toList());
 
         if (groupsOpted.size() > 0) {
 
-            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
-                    ASSIGN_TYPE_GROUP,
-                    TRIO,
-                    groupsOpted);
+            List<WsGetAttributeAssignmentsResults> attributeAssignmentsResults =
+                    grouperFS.makeWsGetAttributeAssignmentsResultsTrio(
+                            ASSIGN_TYPE_GROUP,
+                            TRIO,
+                            groupsOpted);
 
             List<WsGroup> triosList = new ArrayList<>();
             for (WsGetAttributeAssignmentsResults results : attributeAssignmentsResults) {
@@ -303,14 +305,14 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
 
             groupingsOpted.addAll(triosList.stream().map(WsGroup::getName).collect(Collectors.toList()));
         }
-        return hs.makeGroupings(groupingsOpted);
+        return helperService.makeGroupings(groupingsOpted);
     }
 
     //returns a group from grouper or the database
-    Group getMembers(String owenrUsername, String groupPath) {
-        logger.info("getMembers; user: " + owenrUsername + "; group: " + groupPath + ";");
+    @Override public Group getMembers(String ownerUsername, String groupPath) {
+        logger.info("getMembers; user: " + ownerUsername + "; group: " + groupPath + ";");
 
-        WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(owenrUsername);
+        WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(ownerUsername);
         WsGetMembersResults members = grouperFS.makeWsGetMembersResults(
                 SUBJECT_ATTRIBUTE_NAME_UID,
                 lookup,
@@ -325,6 +327,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
     }
 
     //makes a group filled with members from membersResults
+    @Override
     public Group makeGroup(WsGetMembersResults membersResults) {
         Group group = new Group();
         try {
@@ -345,23 +348,8 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
         return group;
     }
 
-
-    //makes a person from a WsSubject
-    //todo do we still need this method?
-    public Person makePerson(WsSubject person) {
-        if (person != null) {
-            String username = null;
-            String name = person.getName();
-            String uuid = person.getId();
-            if (person.getAttributeValues() != null) {
-                username = person.getAttributeValue(0);
-            }
-            return new Person(name, uuid, username);
-        }
-        return new Person();
-    }
-
     //makes a person with all attributes in attributeNames
+    @Override
     public Person makePerson(WsSubject subject, String[] attributeNames) {
         if (subject == null || subject.getAttributeValues() == null) {
             return new Person();
@@ -385,9 +373,10 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
         boolean optInOn = false;
         boolean optOutOn = false;
 
-        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults = grouperFS.makeWsGetAttributeAssignmentsResultsForGroup(
-                ASSIGN_TYPE_GROUP,
-                grouping.getPath());
+        WsGetAttributeAssignmentsResults wsGetAttributeAssignmentsResults =
+                grouperFS.makeWsGetAttributeAssignmentsResultsForGroup(
+                        ASSIGN_TYPE_GROUP,
+                        grouping.getPath());
 
         WsAttributeDefName[] attributeDefNames = wsGetAttributeAssignmentsResults.getWsAttributeDefNames();
         if (attributeDefNames != null && attributeDefNames.length > 0) {
@@ -410,6 +399,8 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
         return grouping;
     }
 
+    //returns the list of groups that the user is in
+    @Override
     public List<String> getGroupPaths(String username) {
         logger.info("getGroupPaths; username: " + username + ";");
         WsStemLookup stemLookup = grouperFS.makeWsStemLookup(STEM);
@@ -423,13 +414,14 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
 
         List<WsGroup> groups = new ArrayList<>();
 
-        if(groupResults.getWsGroups() != null) {
+        if (groupResults.getWsGroups() != null) {
             groups = new ArrayList<>(Arrays.asList(groupResults.getWsGroups()));
         }
 
         return extractGroupPaths(groups);
     }
 
+    @Override
     //take a list of WsGroups ans return a list of the paths for all of those groups
     public List<String> extractGroupPaths(List<WsGroup> groups) {
         List<String> names = new ArrayList<>();
@@ -478,7 +470,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
 
         //get rid of duplicates
         List<String> groups = new ArrayList<>(new HashSet<>(opts));
-        return hs.makeGroupings(groups);
+        return helperService.makeGroupings(groups);
     }
 
     //returns a list of groupings that the user is allowed to opt-out of
@@ -512,7 +504,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService{
             opts.retainAll(trios);
         }
 
-        return hs.makeGroupings(opts);
+        return helperService.makeGroupings(opts);
     }
 
 }
