@@ -14,11 +14,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
-public class TestGroupingsFactoryService {
+public class TestGroupingFactoryService {
 
     @Value("${groupings.api.test.grouping_many}")
     private String GROUPING;
@@ -30,6 +31,18 @@ public class TestGroupingsFactoryService {
     private String GROUPING_EXCLUDE;
     @Value("${groupings.api.test.grouping_many_owners}")
     private String GROUPING_OWNERS;
+
+
+    @Value("${groupings.api.test.grouping_new}")
+    private String GROUPING_NEW;
+    @Value("${groupings.api.test.grouping_new_basis}")
+    private String GROUPING_NEW_BASIS;
+    @Value("${groupings.api.test.grouping_new_include}")
+    private String GROUPING_NEW_INCLUDE;
+    @Value("${groupings.api.test.grouping_new_exclude}")
+    private String GROUPING_NEW_EXCLUDE;
+    @Value("${groupings.api.test.grouping_new_owners}")
+    private String GROUPING_NEW_OWNERS;
 
     @Value("${groupings.api.test.usernames}")
     private String[] username;
@@ -81,7 +94,8 @@ public class TestGroupingsFactoryService {
     @Test
     public void addGroupingTest() {
 
-        //todo
+        //this needs to be an admin account to work
+        groupingFactoryService.addGrouping(username[0], GROUPING_NEW, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
     @Test

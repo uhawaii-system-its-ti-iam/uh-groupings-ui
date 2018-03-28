@@ -183,7 +183,7 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
             List<String> owners) {
 
         List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
-        String action = adminUsername + "is adding a Grouping: " + groupingPath;
+        String action = adminUsername + " is adding a Grouping: " + groupingPath;
 
         //make sure that adminUsername is actually an admin
         if (!memberAttributeService.isAdmin(adminUsername)) {
@@ -228,6 +228,7 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
             addGroupingResults.addAll(membershipService.addGroupMembersByUsername(adminUsername,
                     groupPath, entry.getValue()));
 
+            //todo this needs to be created not updated
             //update the last modified values of those groups
             addGroupingResults.add(membershipService.updateLastModified(groupPath));
         }
@@ -342,15 +343,10 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
 
     //returns true if there is not a group at groupingPath
     private boolean pathIsEmpty(String adminUsername, String groupingPath) {
-        //todo check if there is anything already at that path
-        WsStemLookup stemLookup = grouperFactoryService.makeWsStemLookup(STEM);
 
-        WsGetGroupsResults wsGetGroupsResults = grouperFactoryService.makeWsGetGroupsResults(
-                adminUsername,
-                stemLookup,
-                StemScope.ALL_IN_SUBTREE);
+        WsFindGroupsResults wsFindGroupsResults = grouperFactoryService.makeWsFindGroupsResults(groupingPath);
 
-        return wsGetGroupsResults.getResults()[0].getWsGroups().length == 0;
+        return wsFindGroupsResults.getGroupResults() == null;
     }
 
     //returns the uid for a group in grouper
