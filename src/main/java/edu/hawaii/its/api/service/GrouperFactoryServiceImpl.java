@@ -37,6 +37,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupDetail;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupSaveResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupToSave;
@@ -64,6 +65,29 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
         WsGroupToSave groupToSave = new WsGroupToSave();
         WsGroup group = new WsGroup();
         group.setName(path);
+        groupToSave.setWsGroup(group);
+
+        WsSubjectLookup lookup = makeWsSubjectLookup(username);
+
+        return new GcGroupSave().addGroupToSave(groupToSave).assignActAsSubject(lookup).execute();
+    }
+
+    @Override
+    public WsGroupSaveResults addCompositeGroup(String username, String parentGroupPath, String compositeType, String leftGroupPath, String rightGroupPath) {
+        WsGroupToSave groupToSave = new WsGroupToSave();
+        WsGroup group = new WsGroup();
+        WsGroupDetail wsGroupDetail = new WsGroupDetail();
+
+        //get the left and right groups from the database/grouper
+        WsGroup leftGroup = makeWsFindGroupsResults(leftGroupPath).getGroupResults()[0];
+        WsGroup rightGroup = makeWsFindGroupsResults(rightGroupPath).getGroupResults()[0];
+
+        wsGroupDetail.setCompositeType(compositeType);
+        wsGroupDetail.setLeftGroup(leftGroup);
+        wsGroupDetail.setRightGroup(rightGroup);
+
+        group.setName(parentGroupPath);
+        group.setDetail(wsGroupDetail);
         groupToSave.setWsGroup(group);
 
         WsSubjectLookup lookup = makeWsSubjectLookup(username);
