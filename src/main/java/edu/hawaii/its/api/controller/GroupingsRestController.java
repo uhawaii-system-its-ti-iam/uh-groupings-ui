@@ -21,7 +21,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import edu.hawaii.its.api.service.GroupAttributeService;
 import edu.hawaii.its.api.service.GroupingAssignmentService;
 import edu.hawaii.its.api.service.GroupingFactoryService;
-import edu.hawaii.its.api.service.GroupingsService;
 import edu.hawaii.its.api.service.HelperService;
 import edu.hawaii.its.api.service.MemberAttributeService;
 import edu.hawaii.its.api.service.MembershipService;
