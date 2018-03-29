@@ -1144,4 +1144,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         return "GrouperFactoryServiceImplLocal [SETTINGS=" + SETTINGS + "]";
     }
 
+    @Override public WsGroupSaveResults addCompositeGroup(String username, String parentGroupPath, String compositeType,
+            String leftGroupPath, String rightGroupPath) {
+        //todo
+        return null;
+    }
 }
