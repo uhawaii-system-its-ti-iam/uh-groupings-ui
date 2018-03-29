@@ -1,7 +1,7 @@
 package edu.hawaii.its.groupings.type;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class Feedback {
 
@@ -9,9 +9,9 @@ public class Feedback {
     private String email;
     private String type;
     private String message;
-    private Throwable exception;
     private String exceptionError;
-    private Boolean error = false;
+
+    private static final Log logger = LogFactory.getLog(Feedback.class);
 
     // Constructor.
     public Feedback() {
@@ -20,7 +20,6 @@ public class Feedback {
 
     public Feedback(String exceptionError) {
         this.exceptionError = exceptionError;
-        error = true;
     }
 
     public String getName() {
@@ -55,29 +54,8 @@ public class Feedback {
         this.message = message;
     }
 
-    public Throwable getException() {
-        return exception;
-    }
-
-    public void setException(Throwable exception) {
-        this.exception = exception;
-    }
-
     public String getExceptionError() {
         return exceptionError;
-    }
-
-    public void setExceptionError(String exceptionError) {
-        this.exceptionError = exceptionError;
-    }
-
-    private void updateExceptionStr(Throwable exception) {
-        this.exceptionError = null;
-        if(exception != null) {
-            StringWriter sw = new StringWriter();
-            exception.printStackTrace(new PrintWriter(sw));
-            this.exceptionError = sw.toString();
-        }
     }
 
     @Override
@@ -86,7 +64,7 @@ public class Feedback {
                 + ", message=" + message
                 + ", name=" + name
                 + ", type=" + type
-                + ", error=" + exceptionError
+                + ", exceptionError=" + exceptionError
                 + "]";
     }
 

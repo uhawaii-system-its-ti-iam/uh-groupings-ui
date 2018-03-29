@@ -1,5 +1,6 @@
 package edu.hawaii.its.groupings.controller;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -14,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -83,17 +83,17 @@ public class HomeController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/feedback/{error}")
-    public String feedbackError(RedirectAttributes redirectAttributes, @PathVariable String error) {
-        Feedback feedback = new Feedback(error);
-        redirectAttributes.addFlashAttribute("feedback", feedback);
-        return "redirect:/feedback";
-    }
-
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/feedback")
-    public String feedbackForm(Model model) {
-        model.addAttribute("feedback", new Feedback());
+    public String feedbackForm(Model model, HttpSession session) {
+        Feedback sessionFeedback = (Feedback) session.getAttribute("feedback");
+        if (sessionFeedback != null) {
+            model.addAttribute("feedback", sessionFeedback);
+            session.removeAttribute("feedback");
+            logger.error("feedback is not null: " + sessionFeedback);
+        } else {
+            logger.error("feedback is null");
+            model.addAttribute("feedback", new Feedback());
+        }
         return "feedback";
     }
 

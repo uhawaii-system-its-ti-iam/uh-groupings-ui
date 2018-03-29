@@ -38,13 +38,14 @@ public class EmailService {
                     "\n\nSending email!\n\n" +
                     "/********************************************************************************************/\n");
             SimpleMailMessage msg = new SimpleMailMessage();
+            logger.error("Feedback: " + feedback);
             msg.setTo(to);
             msg.setFrom(from);
             String text = "";
             String header = "Feedback Type: " + feedback.getType();
             text += "Feedback reported by " + feedback.getName() + " using email " + feedback.getEmail() + "\n\n";
             text += "Feedback: " + feedback.getMessage();
-            text += "Stacktrace: " + feedback.getExceptionError();
+            text += "Stack Trace: " + feedback.getExceptionError();
 
             msg.setText(text);
             msg.setSubject(header);

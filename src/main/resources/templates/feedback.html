@@ -51,6 +51,12 @@
                                       required="true"/>
                            </div>
                        </div>
+                       <div class="form-group">
+                           <label for="errorField" class="col-sm-2 control-label">Exception Error</label>
+                           <div class="col-sm-10">
+                               <textarea th:if="*{exceptionError != null}" th:field="*{exceptionError}" type="text" class="form-control" id="errorField"/>
+                           </div>
+                       </div>
                        <div>
                            <br/>
                            <button type="reset"  class="btn btn-default">Reset</button>&nbsp;&nbsp;
