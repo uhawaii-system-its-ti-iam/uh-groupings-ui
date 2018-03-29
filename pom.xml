@@ -155,6 +155,11 @@
             <version>${bootstrap-version}</version>
         </dependency>
         <dependency>
+            <groupId>org.lesscss</groupId>
+            <artifactId>lesscss-maven-plugin</artifactId>
+            <version>1.7.0.1.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>${jquery-version}</version>
@@ -274,7 +279,7 @@
                                 <echo>$ mvn clean test jacoco:report</echo>
                                 <echo></echo>
                                 <echo>To run the integrations tests with your Grouper server:</echo>
-                                <echo>$ mvn -Dtest=TestGroupingsService,TestGroupingsRestController test</echo>
+                                <echo>$ mvn -Dtest=TestGroupAttributeService,TestGroupingAssignmentService,TestGroupingFactoryService,TestHelperService,TestMemberAttributeService,TestMembershipService,TestGroupingsRestController test</echo>
                                 <echo></echo>
                                 <echo>To run UH Groupings locally:</echo>
                                 <echo>$ mvn clean spring-boot:run</echo>

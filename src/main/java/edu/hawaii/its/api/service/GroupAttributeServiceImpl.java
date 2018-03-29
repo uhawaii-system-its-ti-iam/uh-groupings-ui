@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("groupAttributeService")
-public class GroupAttributeServiceImpl implements GroupAttributeService{
+public class GroupAttributeServiceImpl implements GroupAttributeService {
 
     @Value("${groupings.api.settings}")
     private String SETTINGS;
@@ -188,7 +188,8 @@ public class GroupAttributeServiceImpl implements GroupAttributeService{
 
     //turn the ability for users to opt-out of a grouping on or off
     @Override
-    public List<GroupingsServiceResult> changeOptOutStatus(String groupingPath, String ownerUsername, boolean optOutOn) {
+    public List<GroupingsServiceResult> changeOptOutStatus(String groupingPath, String ownerUsername,
+            boolean optOutOn) {
         List<GroupingsServiceResult> results = new ArrayList<>();
         if (mas.isOwner(groupingPath, ownerUsername) || mas.isAdmin(ownerUsername)) {
             results.add(assignGrouperPrivilege(EVERY_ENTITY, PRIVILEGE_OPT_IN, groupingPath + EXCLUDE, optOutOn));
@@ -211,19 +212,6 @@ public class GroupAttributeServiceImpl implements GroupAttributeService{
         return groupHasAttribute(groupingPath, LISTSERV);
     }
 
-    //returns a list of groupings that corresponds to all of the owner groups in groupPaths
-    public List<Grouping> groupingsOwned(List<String> groupPaths) {
-        List<String> ownerGroups = groupPaths
-                .stream()
-                .filter(groupPath -> groupPath.endsWith(OWNERS))
-                .map(groupPath -> groupPath.substring(0, groupPath.length() - OWNERS.length()))
-                .collect(Collectors.toList());
-
-        List<String> ownedGroupings = hs.extractGroupings(ownerGroups);
-
-        return hs.makeGroupings(ownedGroupings);
-    }
-
     //returns true if the grouping allows the user to opt out, false otherwise
     @Override
     public boolean optOutPermission(String groupingPath) {
@@ -237,7 +225,8 @@ public class GroupAttributeServiceImpl implements GroupAttributeService{
     }
 
     //turns the attribute on or off in a group
-    public GroupingsServiceResult changeGroupAttributeStatus(String groupPath, String ownerUsername, String attributeName, boolean attributeOn) {
+    public GroupingsServiceResult changeGroupAttributeStatus(String groupPath, String ownerUsername,
+            String attributeName, boolean attributeOn) {
         GroupingsServiceResult gsr;
 
         String verb = "removed from ";
@@ -283,7 +272,8 @@ public class GroupAttributeServiceImpl implements GroupAttributeService{
 
         if (wsGetAttributeAssignmentsResults.getWsAttributeAssigns() != null) {
             for (WsAttributeAssign attribute : wsGetAttributeAssignmentsResults.getWsAttributeAssigns()) {
-                if (attribute.getAttributeDefNameName() != null && attribute.getAttributeDefNameName().equals(attributeName)) {
+                if (attribute.getAttributeDefNameName() != null && attribute.getAttributeDefNameName()
+                        .equals(attributeName)) {
                     return true;
                 }
             }
@@ -292,7 +282,9 @@ public class GroupAttributeServiceImpl implements GroupAttributeService{
     }
 
     //checks to see if a group has an attribute of a specific type and returns the list if it does
-    public WsGetAttributeAssignmentsResults attributeAssignmentsResults(String assignType, String groupPath, String attributeName) {
+    @Override
+    public WsGetAttributeAssignmentsResults attributeAssignmentsResults(String assignType, String groupPath,
+            String attributeName) {
         logger.info("attributeAssignmentsResults; assignType: "
                 + assignType
                 + "; group: "
@@ -305,7 +297,8 @@ public class GroupAttributeServiceImpl implements GroupAttributeService{
     }
 
     //adds, removes, updates (operationName) the attribute for the group
-    public GroupingsServiceResult assignGroupAttributes(String attributeName, String attributeOperation, String groupPath) {
+    public GroupingsServiceResult assignGroupAttributes(String attributeName, String attributeOperation,
+            String groupPath) {
         logger.info("assignGroupAttributes; "
                 + "; attributeName: "
                 + attributeName
@@ -345,11 +338,12 @@ public class GroupAttributeServiceImpl implements GroupAttributeService{
         WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(username);
         String action = "set " + privilegeName + " " + set + " for " + username + " in " + groupPath;
 
-        WsAssignGrouperPrivilegesLiteResult grouperPrivilegesLiteResult = grouperFS.makeWsAssignGrouperPrivilegesLiteResult(
-                groupPath,
-                privilegeName,
-                lookup,
-                set);
+        WsAssignGrouperPrivilegesLiteResult grouperPrivilegesLiteResult =
+                grouperFS.makeWsAssignGrouperPrivilegesLiteResult(
+                        groupPath,
+                        privilegeName,
+                        lookup,
+                        set);
 
         return hs.makeGroupingsServiceResult(grouperPrivilegesLiteResult, action);
     }

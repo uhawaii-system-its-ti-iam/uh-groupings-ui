@@ -1,18 +1,17 @@
 package edu.hawaii.its.api.service;
 
-import java.util.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingAssignment;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("groupingsService")
 public class GroupingsServiceImpl implements GroupingsService {
@@ -37,21 +36,6 @@ public class GroupingsServiceImpl implements GroupingsService {
     public GroupingsServiceImpl() {
         // Empty.
     }
-
-//    // Constructor.
-//    public GroupingsServiceImpl(GrouperFactoryService grouperFactory) {
-//        grouperFactoryService = grouperFactory;
-//    }
-//
-//    //todo this is only for testing. can we find a better way to do this?
-//    public GrouperFactoryService getGrouperFactoryService() {
-//        return grouperFactoryService;
-//    }
-//
-//    //todo this is only for testing. can we find a better way to do this?
-//    public void setGrouperFactoryService(GrouperFactoryService gf) {
-//        this.grouperFactoryService = gf;
-//    }
 
     @Override
     public List<GroupingsServiceResult> addGrouping(String adminUsername, String groupingPath, List<String> basis,

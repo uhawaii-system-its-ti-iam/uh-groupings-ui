@@ -161,16 +161,16 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
     private String COMPOSITE_NAME_KEY;
 
     @Autowired
-    private GrouperFactoryService gfs;
+    private GrouperFactoryService grouperFactoryService;
 
     @Autowired
-    private MemberAttributeService mas;
+    private MemberAttributeService memberAttributeService;
 
     @Autowired
-    private HelperService hs;
+    private HelperService helperService;
 
     @Autowired
-    private MembershipService ms;
+    private MembershipService membershipService;
 
     @Override
     //todo change basis to a String
@@ -183,11 +183,11 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
             List<String> owners) {
 
         List<GroupingsServiceResult> addGroupingResults = new ArrayList<>();
-        String action = adminUsername + "is adding a Grouping: " + groupingPath;
+        String action = adminUsername + " is adding a Grouping: " + groupingPath;
 
         //make sure that adminUsername is actually an admin
-        if (!mas.isAdmin(adminUsername)) {
-            GroupingsServiceResult gsr = hs.makeGroupingsServiceResult(
+        if (!memberAttributeService.isAdmin(adminUsername)) {
+            GroupingsServiceResult gsr = helperService.makeGroupingsServiceResult(
                     FAILURE + ": " + adminUsername + " does not have permission to add this grouping", action);
             addGroupingResults.add(gsr);
             return addGroupingResults;
@@ -195,7 +195,7 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
 
         //make sure that there is not already a group there
         if (!pathIsEmpty(adminUsername, groupingPath)) {
-            GroupingsServiceResult gsr = hs.makeGroupingsServiceResult(
+            GroupingsServiceResult gsr = helperService.makeGroupingsServiceResult(
                     FAILURE + ": a group already exists at " + groupingPath, action);
             addGroupingResults.add(gsr);
             return addGroupingResults;
@@ -209,31 +209,36 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
         memberLists.put(EXCLUDE, exclude);
         memberLists.put(OWNERS, owners);
 
-        //todo check about making folders
-        //todo is a folder the same as a stem?
-        gfs.makeWsStemSaveResults(adminUsername, groupingPath);
+        // a stem the same as a folder
+        //create main stem
+        grouperFactoryService.makeWsStemSaveResults(adminUsername, groupingPath);
 
-        //todo always create a basis folder?
-        gfs.makeWsStemSaveResults(adminUsername, groupingPath + BASIS);
+        //create basis stem
+        grouperFactoryService.makeWsStemSaveResults(adminUsername, groupingPath + BASIS);
 
         for (Map.Entry<String, List<String>> entry : memberLists.entrySet()) {
             String groupPath = groupingPath + entry.getKey();
 
             //make the groups in grouper
-            addGroupingResults.add(hs.makeGroupingsServiceResult(
-                    gfs.addEmptyGroup(adminUsername, groupPath),
+            addGroupingResults.add(helperService.makeGroupingsServiceResult(
+                    grouperFactoryService.addEmptyGroup(adminUsername, groupPath),
                     action));
 
             //add members to the groups
-            addGroupingResults.addAll(ms.addGroupMembersByUsername(adminUsername,
+            addGroupingResults.addAll(membershipService.addGroupMembersByUsername(adminUsername,
                     groupPath, entry.getValue()));
 
+            if(groupingPath.equals(groupPath)) {
+                //todo create is-trio attribute
+            }
+
+            //todo this needs to be created not updated
             //update the last modified values of those groups
-            addGroupingResults.add(ms.updateLastModified(groupPath));
+            addGroupingResults.add(membershipService.updateLastModified(groupPath));
         }
 
-        WsSubjectLookup lookup = gfs.makeWsSubjectLookup(adminUsername);
-        WsStemLookup stemLookup = gfs.makeWsStemLookup(STEM);
+        WsSubjectLookup lookup = grouperFactoryService.makeWsSubjectLookup(adminUsername);
+        WsStemLookup stemLookup = grouperFactoryService.makeWsStemLookup(STEM);
         String basisUid = getGroupId(groupingPath + BASIS);
         String includeUid = getGroupId(groupingPath + INCLUDE);
         String excludeUid = getGroupId(groupingPath + EXCLUDE);
@@ -241,23 +246,23 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
 
         //add memberships for BASIS_PLUS_INCLUDE (basis group and include group)
         addGroupingResults.add(
-                hs.makeGroupingsServiceResult(
-                        gfs.makeWsAddMemberResultsGroup(groupingPath + BASIS_PLUS_INCLUDE, lookup, basisUid),
+                helperService.makeGroupingsServiceResult(
+                        grouperFactoryService.makeWsAddMemberResultsGroup(groupingPath + BASIS_PLUS_INCLUDE, lookup, basisUid),
                         "add " + groupingPath + BASIS + " to " + groupingPath + BASIS_PLUS_INCLUDE));
         addGroupingResults.add(
-                hs.makeGroupingsServiceResult(
-                        gfs.makeWsAddMemberResultsGroup(groupingPath + BASIS_PLUS_INCLUDE, lookup, includeUid),
+                helperService.makeGroupingsServiceResult(
+                        grouperFactoryService.makeWsAddMemberResultsGroup(groupingPath + BASIS_PLUS_INCLUDE, lookup, includeUid),
                         "add " + groupingPath + INCLUDE + " to " + groupingPath + BASIS_PLUS_INCLUDE));
 
         //add members for the composite (basisPlusInclude group complement exclude group)
         addGroupingResults.add(
-                hs.makeGroupingsServiceResult(
-                        gfs.makeWsAddMemberResultsGroup(groupingPath, lookup, basisPlusIncludeUid),
+                helperService.makeGroupingsServiceResult(
+                        grouperFactoryService.makeWsAddMemberResultsGroup(groupingPath, lookup, basisPlusIncludeUid),
                         "add " + groupingPath + BASIS_PLUS_INCLUDE + " to " + groupingPath));
-        //todo figure out how to do a complement
+        //todo do a complement
 
         //add the isTrio attribute to the grouping
-        gfs.makeWsAssignAttributesResultsForGroup(
+        grouperFactoryService.makeWsAssignAttributesResultsForGroup(
                 lookup,
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
@@ -342,20 +347,15 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
 
     //returns true if there is not a group at groupingPath
     private boolean pathIsEmpty(String adminUsername, String groupingPath) {
-        //todo check if there is anything already at that path
-        WsStemLookup stemLookup = gfs.makeWsStemLookup(STEM);
 
-        WsGetGroupsResults wsGetGroupsResults = gfs.makeWsGetGroupsResults(
-                adminUsername,
-                stemLookup,
-                StemScope.ALL_IN_SUBTREE);
+        WsFindGroupsResults wsFindGroupsResults = grouperFactoryService.makeWsFindGroupsResults(groupingPath);
 
-        return wsGetGroupsResults.getResults()[0].getWsGroups().length == 0;
+        return wsFindGroupsResults.getGroupResults() == null;
     }
 
     //returns the uid for a group in grouper
     private String getGroupId(String groupPath) {
-        WsFindGroupsResults results = gfs.makeWsFindGroupsResults(groupPath);
+        WsFindGroupsResults results = grouperFactoryService.makeWsFindGroupsResults(groupPath);
         WsGroup result = results.getGroupResults()[0];
         return result.getUuid();
     }
