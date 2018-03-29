@@ -203,7 +203,7 @@ public class MemberAttributeServiceTest {
 
         //try to remove ownership from user that is not an owner
         GroupingsServiceResult ownerRemovesNonOwner = memberAttributeService
-                .removeOwnership(GROUPING_0_PATH, users.get(0).getUsername(), users.get(1).getUsername());
+                    .removeOwnership(GROUPING_0_PATH, users.get(0).getUsername(), users.get(1).getUsername());
         assertEquals(SUCCESS, ownerRemovesNonOwner.getResultCode());
 
         //add owner for admin to remove
@@ -267,6 +267,23 @@ public class MemberAttributeServiceTest {
     public void isAdminTest() {
         assertFalse(memberAttributeService.isAdmin(users.get(1).getUsername()));
         assertTrue(memberAttributeService.isAdmin(ADMIN_USER));
+    }
+
+    @Test
+    public void isAppTest() {
+       assertFalse(memberAttributeService.isApp(users.get(2).getUsername()));
+
+       //todo Should return TRUE but returns FALSE don't know why
+       assertTrue(memberAttributeService.isApp(APP_USER));
+    }
+
+    @Test
+    public void isSuperuserTest() {
+        assertFalse(memberAttributeService.isSuperuser(users.get(2).getUsername()));
+        assertTrue(memberAttributeService.isSuperuser(ADMIN_USER));
+
+        //todo Should return TRUE but returns FALSE don't know why
+        assertTrue(memberAttributeService.isSuperuser(APP_USER));
     }
 
 }
