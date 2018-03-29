@@ -230,6 +230,85 @@ public class MembershipServiceTest {
     }
 
     @Test
+    public void addGroupingMemberbyUsernameTest() {
+        Iterable<Grouping> group = groupingRepository.findAll();
+        List<GroupingsServiceResult> listGsr;
+        GroupingsServiceResult gsr;
+
+        // Base test
+        // Remove person who's not in composite from exclude and return SUCCESS
+        listGsr = membershipService.addGroupingMemberByUsername(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(2).getUsername());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        //todo Case where !inComposite && !inBasis is impossible w/ current db
+
+        // In composite
+        listGsr = membershipService.addGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(5).getUsername());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        //todo Case where inBasis && inInclude is impossible w/ current db
+
+        // Test if user is not an owner
+        try {
+            listGsr = membershipService.addGroupingMemberByUuid(users.get(5).getUsername(), GROUPING_3_PATH,
+                    users.get(3).getUsername());
+            assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
+
+        // Test if user is admin
+        listGsr = membershipService.addGroupingMemberByUuid(ADMIN_USER, GROUPING_3_PATH,
+                users.get(3).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+    }
+
+    @Test
+    public void deleteGroupingMemberbyUsernameTest() {
+        Iterable<Grouping> group = groupingRepository.findAll();
+        List<GroupingsServiceResult> listGsr;
+        GroupingsServiceResult gsr;
+
+        // Base test
+        // Remove person from include and composite
+        listGsr = membershipService.deleteGroupingMemberByUsername(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(5).getUsername());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        // If person is in composite and basis, add to exclude group
+        listGsr = membershipService.deleteGroupingMemberByUsername(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(1).getUsername());
+        for (GroupingsServiceResult gsrFor : listGsr) {
+            assertTrue(gsrFor.getResultCode().startsWith(SUCCESS));
+        }
+
+        // Not in composite, do nothing but return success
+        listGsr = membershipService.deleteGroupingMemberByUuid(users.get(0).getUsername(), GROUPING_3_PATH,
+                users.get(2).getUsername());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+
+        // todo Can't test with current database setup
+        // Not in basis, but in exclude
+        // Can't happen with current database
+
+        // Test if user is not an owner
+        try {
+            listGsr = membershipService.deleteGroupingMemberByUuid(users.get(5).getUsername(), GROUPING_3_PATH,
+                    users.get(6).getUuid());
+            assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
+        }
+
+        // Test if user is admin
+        listGsr = membershipService.deleteGroupingMemberByUuid(ADMIN_USER, GROUPING_3_PATH,
+                users.get(6).getUuid());
+        assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
+    }
+
+    @Test
     public void addAdminTest() {
 
         GroupingsServiceResult gsr;
@@ -341,8 +420,8 @@ public class MembershipServiceTest {
 
     }
 
-        @Test
-        public void removeSelfOptedTest() {
+    @Test
+    public void removeSelfOptedTest() {
             Group group = groupRepository.findByPath(GROUPING_4_EXCLUDE_PATH);
 
             GroupingsServiceResult gsr;
