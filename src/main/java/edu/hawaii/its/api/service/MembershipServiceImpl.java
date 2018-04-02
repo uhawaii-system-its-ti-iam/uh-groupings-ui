@@ -163,7 +163,7 @@ public class MembershipServiceImpl implements MembershipService {
     @Autowired
     private MemberAttributeService mas;
 
-    public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
+    public static final Log logger = LogFactory.getLog(MembershipServiceImpl.class);
 
     //finds a user by a username and adds them to a grouping
     @Override

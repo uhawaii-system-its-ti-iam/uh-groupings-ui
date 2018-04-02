@@ -10,12 +10,13 @@ import edu.hawaii.its.api.repository.PersonRepository;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-import edu.hawaii.its.groupings.util.Dates;
 
-import edu.internet2.middleware.grouperClient.ws.beans.*;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -23,12 +24,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("localTest")
@@ -108,9 +106,6 @@ public class GrouperFactoryServiceTest {
 
     @Autowired
     private GrouperFactoryServiceImplLocal gfsl = new GrouperFactoryServiceImplLocal();
-
-    @Autowired
-    private GroupingsService groupingsService;
 
     @Autowired
     private GroupingRepository groupingRepository;
