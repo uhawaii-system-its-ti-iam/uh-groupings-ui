@@ -151,7 +151,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     @Value("${groupings.api.person_attributes.composite_name}")
     private String COMPOSITE_NAME;
 
-    public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
+    public static final Log logger = LogFactory.getLog(GroupAttributeServiceImpl.class);
 
     @Autowired
     private GrouperFactoryService grouperFS;

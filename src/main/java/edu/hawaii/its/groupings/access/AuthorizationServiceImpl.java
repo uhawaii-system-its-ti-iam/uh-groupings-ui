@@ -1,20 +1,20 @@
 package edu.hawaii.its.groupings.access;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import edu.hawaii.its.api.service.GroupingAssignmentService;
+import edu.hawaii.its.api.service.MemberAttributeService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.api.service.GroupingsService;
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
@@ -29,7 +29,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private Map<String, List<Role>> userMap = new HashMap<>();
 
     @Autowired
-    private GroupingsService gs;
+    private MemberAttributeService memberAttributeService;
+
+    @Autowired
+    private GroupingAssignmentService groupingAssignmentService;
 
     private static final Log logger = LogFactory.getLog(AuthorizationServiceImpl.class);
 
@@ -55,7 +58,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     /**
      * Assigns roles to user
      *
-     * @param uhuuid : The UH uuid of the user.
+     * @param uhuuid   : The UH uuid of the user.
      * @param username : The username of the person to find the user.
      * @return : Returns an array list of roles assigned to the user.
      */
@@ -93,7 +96,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public boolean fetchOwner(String username) {
         try {
             logger.info("//////////////////////////////");
-            if (!gs.getGroupingAssignment(username).getGroupingsOwned().isEmpty()) {
+            if (!groupingAssignmentService.getGroupingAssignment(username).getGroupingsOwned().isEmpty()) {
                 logger.info("This person is an owner");
                 return true;
             } else {
@@ -114,7 +117,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public boolean fetchAdmin(String username) {
         logger.info("//////////////////////////////");
         try {
-            if (gs.isAdmin(username)) {
+            if (memberAttributeService.isAdmin(username)) {
                 logger.info("this person is an admin");
                 return true;
             } else {

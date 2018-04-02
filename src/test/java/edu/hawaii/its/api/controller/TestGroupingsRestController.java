@@ -31,7 +31,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.service.GroupAttributeService;
+import edu.hawaii.its.api.service.GroupingAssignmentService;
+import edu.hawaii.its.api.service.GroupingFactoryService;
+import edu.hawaii.its.api.service.HelperService;
+import edu.hawaii.its.api.service.MemberAttributeService;
+import edu.hawaii.its.api.service.MembershipService;
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
@@ -98,7 +103,22 @@ public class TestGroupingsRestController {
     private String API_ACCOUNT;
 
     @Autowired
-    private GroupingsService gs;
+    private GroupAttributeService groupAttributeService;
+
+    @Autowired
+    private GroupingAssignmentService groupingAssignmentService;
+
+    @Autowired
+    private GroupingFactoryService groupingFactoryService;
+
+    @Autowired
+    private HelperService helperService;
+
+    @Autowired
+    private MemberAttributeService memberAttributeService;
+
+    @Autowired
+    private MembershipService membershipService;
 
     @Autowired
     private GroupingsRestController gc;
@@ -128,24 +148,29 @@ public class TestGroupingsRestController {
                 .build();
 
         //put in include
-        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[0]);
-        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[1]);
-        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[2]);
+        membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[0]);
+        membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[1]);
+        membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[2]);
 
         //add to exclude
-        gs.addGroupMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[3]);
+        membershipService.addGroupMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[3]);
 
         //remove from exclude
-        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[4]);
-        gs.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[5]);
+        membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[4]);
+        membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[5]);
 
-        gs.changeOptOutStatus(GROUPING, tst[0], true);
-        gs.changeOptInStatus(GROUPING, tst[0], true);
+        groupAttributeService.changeOptOutStatus(GROUPING, tst[0], true);
+        groupAttributeService.changeOptInStatus(GROUPING, tst[0], true);
     }
 
     @Test
     public void testConstruction() {
-        assertNotNull(gs);
+        assertNotNull(groupAttributeService);
+        assertNotNull(groupingAssignmentService);
+        assertNotNull(groupingFactoryService);
+        assertNotNull(helperService);
+        assertNotNull(memberAttributeService);
+        assertNotNull(membershipService);
         assertNotNull(gc);
     }
 
@@ -174,23 +199,23 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst01")
     public void addMemberTest() throws Exception {
 
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
 
         mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToIncludeGroup");
 
-        assertFalse(gs.isMember(GROUPING_EXCLUDE, tst[3]));
+        assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
         //tst[3] is in basis and will go into include
-        assertTrue(gs.isMember(GROUPING_INCLUDE, tst[3]));
+        assertTrue(memberAttributeService.isMember(GROUPING_INCLUDE, tst[3]));
 
         //add tst[3] back to exclude
         mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
 
         //add tst[3] to Grouping
         mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addGroupingMemberByUsername");
-        assertFalse(gs.isMember(GROUPING_EXCLUDE, tst[3]));
+        assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
         //tst[3] is in basis, so will not go into include
-        assertFalse(gs.isMember(GROUPING_INCLUDE, tst[3]));
+        assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, tst[3]));
 
         //todo add other test cases
     }
@@ -199,27 +224,27 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst01")
     public void deleteMemberTest() throws Exception {
 
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
         mapGSR("/api/groupings/" + GROUPING + "/" + tst[3] + "/deleteMemberFromExcludeGroup");
 
-        assertFalse(gs.isMember(GROUPING_EXCLUDE, tst[3]));
-        assertTrue(gs.isMember(GROUPING, tst[3]));
+        assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(memberAttributeService.isMember(GROUPING, tst[3]));
 
-        assertTrue(gs.isMember(GROUPING_INCLUDE, tst[1]));
+        assertTrue(memberAttributeService.isMember(GROUPING_INCLUDE, tst[1]));
         mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/deleteMemberFromIncludeGroup");
 
-        assertFalse(gs.isMember(GROUPING_EXCLUDE, tst[1]));
-        assertFalse(gs.isMember(GROUPING_INCLUDE, tst[1]));
+        assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[1]));
+        assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, tst[1]));
 
-        assertTrue(gs.isMember(GROUPING, tst[2]));
-        assertTrue(gs.isMember(GROUPING, tst[5]));
-        assertTrue(gs.isMember(GROUPING_BASIS, tst[5]));
-        assertTrue(gs.isMember(GROUPING_INCLUDE, tst[2]));
+        assertTrue(memberAttributeService.isMember(GROUPING, tst[2]));
+        assertTrue(memberAttributeService.isMember(GROUPING, tst[5]));
+        assertTrue(memberAttributeService.isMember(GROUPING_BASIS, tst[5]));
+        assertTrue(memberAttributeService.isMember(GROUPING_INCLUDE, tst[2]));
         mapGSRs("/api/groupings/" + GROUPING + "/" + tst[2] + "/deleteGroupingMemberByUsername");
         mapGSRs("/api/groupings/" + GROUPING + "/" + tst[5] + "/deleteGroupingMemberByUsername");
 
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, tst[5]));
-        assertFalse(gs.isMember(GROUPING_INCLUDE, tst[2]));
+        assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[5]));
+        assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, tst[2]));
     }
 
     @Test
@@ -393,77 +418,77 @@ public class TestGroupingsRestController {
         }
         assertTrue(optedOut);
 
-        gs.deleteGroupMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[5]);
+        membershipService.deleteGroupMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[5]);
     }
 
     @Test
     @WithMockUhUser(username = "iamtst04")
     public void optInTest() throws Exception {
         //tst[3] is not in Grouping, but is in basis and exclude
-        assertFalse(gs.isMember(GROUPING, tst[3]));
-        assertTrue(gs.isMember(GROUPING_BASIS, tst[3]));
-        assertTrue(gs.isMember(GROUPING_EXCLUDE, tst[3]));
+        assertFalse(memberAttributeService.isMember(GROUPING, tst[3]));
+        assertTrue(memberAttributeService.isMember(GROUPING_BASIS, tst[3]));
+        assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
 
         //tst[3] opts into Grouping
         mapGSRs("/api/groupings/" + GROUPING + "/optIn");
 
         //tst[3] is now in composite, still in basis and not in exclude
-        assertTrue(gs.isMember(GROUPING, tst[3]));
-        assertTrue(gs.isMember(GROUPING_BASIS, tst[3]));
-        assertFalse(gs.isSelfOpted(GROUPING_EXCLUDE, tst[3]));
+        assertTrue(memberAttributeService.isMember(GROUPING, tst[3]));
+        assertTrue(memberAttributeService.isMember(GROUPING_BASIS, tst[3]));
+        assertFalse(memberAttributeService.isSelfOpted(GROUPING_EXCLUDE, tst[3]));
     }
 
     @Test
     @WithMockUhUser(username = "iamtst06")
     public void optOutTest() throws Exception {
         //tst[5] is in the Grouping and in the basis
-        assertTrue(gs.isMember(GROUPING, tst[5]));
-        assertTrue(gs.isMember(GROUPING_BASIS, tst[5]));
+        assertTrue(memberAttributeService.isMember(GROUPING, tst[5]));
+        assertTrue(memberAttributeService.isMember(GROUPING_BASIS, tst[5]));
 
         //tst[5] opts out of Grouping
         mapGSRs("/api/groupings/" + GROUPING + "/optOut");
 
         //tst[5] is now in exclude, not in include or Grouping
-        assertTrue(gs.isSelfOpted(GROUPING_EXCLUDE, tst[5]));
-        assertFalse(gs.isMember(GROUPING_INCLUDE, tst[5]));
-        assertFalse(gs.isMember(GROUPING, tst[5]));
+        assertTrue(memberAttributeService.isSelfOpted(GROUPING_EXCLUDE, tst[5]));
+        assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, tst[5]));
+        assertFalse(memberAttributeService.isMember(GROUPING, tst[5]));
     }
 
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void changeListservStatusTest() throws Exception {
-        assertTrue(gs.hasListserv(GROUPING));
+        assertTrue(groupAttributeService.hasListserv(GROUPING));
 
         mapGSR("/api/groupings/" + GROUPING + "/false/setListserv");
 
-        assertFalse(gs.hasListserv(GROUPING));
+        assertFalse(groupAttributeService.hasListserv(GROUPING));
 
         mapGSR("/api/groupings/" + GROUPING + "/true/setListserv");
-        assertTrue(gs.hasListserv(GROUPING));
+        assertTrue(groupAttributeService.hasListserv(GROUPING));
     }
 
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void changeOptInTest() throws Exception {
-        assertTrue(gs.optInPermission(GROUPING));
+        assertTrue(groupAttributeService.optInPermission(GROUPING));
 
         mapGSRs("/api/groupings/" + GROUPING + "/false/setOptIn");
-        assertFalse(gs.optInPermission(GROUPING));
+        assertFalse(groupAttributeService.optInPermission(GROUPING));
 
         mapGSRs("/api/groupings/" + GROUPING + "/true/setOptIn");
-        assertTrue(gs.optInPermission(GROUPING));
+        assertTrue(groupAttributeService.optInPermission(GROUPING));
     }
 
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void changeOptOutTest() throws Exception {
-        assertTrue(gs.optOutPermission(GROUPING));
+        assertTrue(groupAttributeService.optOutPermission(GROUPING));
 
         mapGSRs("/api/groupings/" + GROUPING + "/false/setOptOut");
-        assertFalse(gs.optOutPermission(GROUPING));
+        assertFalse(groupAttributeService.optOutPermission(GROUPING));
 
         mapGSRs("/api/groupings/" + GROUPING + "/true/setOptOut");
-        assertTrue(gs.optOutPermission(GROUPING));
+        assertTrue(groupAttributeService.optOutPermission(GROUPING));
     }
 
     @Test
