@@ -6,7 +6,7 @@
      * @param $filter - service for filtering and sorting
      */
     function TableJsController($scope, $filter) {
-        
+
         $scope.columnSort = {};
 
         /**
@@ -27,6 +27,7 @@
                     }
                 }
             }
+            console.log(pagedList.length);
             return pagedList;
         };
 
@@ -93,6 +94,7 @@
          * @param {string} listVar - the name of the variable contaning the paginated list
          */
         $scope.currentPage = function (action, pageVar, listVar) {
+          console.log(action+" "+pageVar+" "+listVar);
             switch (action) {
                 case 'Next':
                     if ($scope[pageVar] < $scope[listVar].length - 1) {
