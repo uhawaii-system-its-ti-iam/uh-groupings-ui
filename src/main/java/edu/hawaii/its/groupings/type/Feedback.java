@@ -58,6 +58,10 @@ public class Feedback {
         return exceptionError;
     }
 
+    public void setExceptionError(String exceptionError) {
+        this.exceptionError = exceptionError;
+    }
+
     @Override
     public String toString() {
         return "Feedback [email=" + email

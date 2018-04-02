@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -85,13 +84,12 @@ public class HomeController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/feedback")
     public String feedbackForm(Model model, HttpSession session) {
+        logger.info("User has entered feedback page.");
         Feedback sessionFeedback = (Feedback) session.getAttribute("feedback");
         if (sessionFeedback != null) {
             model.addAttribute("feedback", sessionFeedback);
             session.removeAttribute("feedback");
-            logger.error("feedback is not null: " + sessionFeedback);
         } else {
-            logger.error("feedback is null");
             model.addAttribute("feedback", new Feedback());
         }
         return "feedback";
@@ -99,8 +97,8 @@ public class HomeController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/feedback")
-    public String feedbackSubmit(@ModelAttribute Feedback feedback) {
-        logger.debug("feedback: " + feedback);
+    public String feedbackSubmit(@ModelAttribute("feedback") Feedback feedback) {
+        logger.info("User has submitted feedback.");
         emailService.send(feedback);
         return "feedback";
     }

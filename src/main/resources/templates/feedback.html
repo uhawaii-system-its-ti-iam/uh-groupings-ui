@@ -17,7 +17,7 @@
 
            <div class="panel panel-default">
                <div class="panel-body">
-                   <form class="form-horizontal" action="#" th:action="@{/feedback}" th:object="${feedback}" method="post">
+                   <form class="form-horizontal" action="#" th:action="@{/feedback}" th:object="${feedback}" method="POST">
                        <div class="form-group">
                            <label for="typeField" class="col-sm-2 control-label">Feedback Type:</label>
                            <div class="col-sm-10">
@@ -54,7 +54,7 @@
                        <div class="form-group">
                            <label for="errorField" class="col-sm-2 control-label">Exception Error</label>
                            <div class="col-sm-10">
-                               <textarea th:if="*{exceptionError != null}" th:field="*{exceptionError}" type="text" class="form-control" id="errorField"/>
+                               <textarea th:field="*{exceptionError}" type="text" class="form-control" id="errorField"/>
                            </div>
                        </div>
                        <div>
