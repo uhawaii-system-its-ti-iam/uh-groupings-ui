@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -97,10 +98,13 @@ public class HomeController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/feedback")
-    public String feedbackSubmit(@ModelAttribute("feedback") Feedback feedback) {
+    public String feedbackSubmit(@ModelAttribute Feedback feedback, Model model, RedirectAttributes redirectAttributes) {
         logger.info("User has submitted feedback.");
         emailService.send(feedback);
-        return "feedback";
+        // Ensure the feedback form is reset after submission.
+        model.addAttribute("feedback", new Feedback());
+        redirectAttributes.addFlashAttribute("success", true);
+        return "redirect:/feedback";
     }
 
 
