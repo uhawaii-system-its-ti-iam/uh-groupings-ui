@@ -53,9 +53,6 @@
                     $scope.membersList = $scope.sortOrder($scope.membersList, 'name');
                     $scope.optInList = $scope.sortOrder($scope.optInList, 'name');
 
-                    for(var i = $scope.membersList.length ; i < 21; i++){
-                      $scope.membersList.push("Member "+ i);
-                    }
                     if ($scope.optInList.length === 0) {
                         $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
                     }
@@ -137,7 +134,7 @@
         $scope.disableOptIn = function (index) {
           console.log(index);
             for (var i = 0; i < $scope.membersList.length; i++) {
-              //TODO have a better fix to catch if there is no items to opt into. 
+              //TODO have a better fix to catch if there is no items to opt into.
                 if($scope.optInList[index] == null){
                     return false;
                 }else if ($scope.membersList[i].name === $scope.optInList[index].name) {
