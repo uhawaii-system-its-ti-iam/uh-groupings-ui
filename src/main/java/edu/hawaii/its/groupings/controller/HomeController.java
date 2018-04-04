@@ -1,6 +1,5 @@
 package edu.hawaii.its.groupings.controller;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -17,8 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpSession;
 
 import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.groupings.type.Feedback;
