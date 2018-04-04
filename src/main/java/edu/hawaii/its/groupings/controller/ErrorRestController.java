@@ -22,7 +22,7 @@ public class ErrorRestController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/feedback/error")
-    public ResponseEntity<> feedbackError(@RequestBody Map<String, String> body, HttpSession session) {
+    public ResponseEntity<Void> feedbackError(@RequestBody Map<String, String> body, HttpSession session) {
         logger.info("Entered feedback error...");
         String exceptionError = body.get("exceptionError");
         session.setAttribute("feedback", new Feedback(exceptionError));
