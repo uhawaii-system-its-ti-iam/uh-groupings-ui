@@ -129,11 +129,8 @@
 
         //Disables opt in button if there are no groupings to opt into.
         $scope.disableOptIn = function (index) {
-            for (var i = 0; i < $scope.membersList.length; i++) {
-              //TODO refine this catch
-                if($scope.optInList[index] == null){
-                    return false;
-                }else if ($scope.membersList[i].name === $scope.optInList[index].name) {
+            for(grouping in $scope.membersList) {
+                if (grouping.name === $scope.optInList[index].name) {
                     return true;
                 }
             }
@@ -152,10 +149,7 @@
          */
         $scope.required = function (index) {
             for (var i = 0; i < $scope.optOutList.length; i++) {
-              //TODO refine this catch
-                if($scope.pagedItemsMembersList[$scope.currentPageOptOut][index]==null){
-                  return true;
-                } else if ($scope.pagedItemsMembersList[$scope.currentPageOptOut][index].name === $scope.optOutList[i].name) {
+                if ($scope.pagedItemsMembersList[$scope.currentPageOptOut][index].name === $scope.optOutList[i].name) {
                     return false;
                 }
             }
