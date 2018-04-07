@@ -455,7 +455,7 @@
                 var line = "";
                 line += table[i].lastName + ",";
                 line += table[i].firstName + ",";
-                if (table[i].username !== "N/A") {
+                if (table[i].username) {
                     line += table[i].username + ",";
                     line += table[i].username + "@hawaii.edu,";
                 } else {
