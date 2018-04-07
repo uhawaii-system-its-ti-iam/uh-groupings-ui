@@ -72,6 +72,7 @@
 
                                 <!-- Top part of the two parts  -->
                                 <td colspan="6">
+                                  <!-- <div th:substituteby="pagination :: paginationbar"></div> -->
                                     <ul class="pagination pull-right" aria-live = "assertive">
                                         <li ng-class="{disabled: (currentPageOptOut) == 0}">
                                             <a class="clickable" ng-click="currentPage('First','currentPageOptOut','pagedItemsMembersList')">«« First</a>
@@ -167,21 +168,21 @@
                                 <td colspan="6">
                                     <ul class="pagination pull-right">
                                         <li ng-class="{disabled: (currentPageOptIn) == 0 }">
-                                            <a class="clickable" ng-click="currentPage('First','pagedItemsOptInList','currentPageOptIn')">«« First</a>
+                                            <a class="clickable" ng-click="currentPage('First','currentPageOptIn','pagedItemsOptInList')">«« First</a>
                                         </li>
                                         <li ng-class="{disabled: (currentPageOptIn) == 0}">
-                                            <a class="clickable" ng-click="currentPage('Prev','pagedItemsOptInList','currentPageOptIn')">« Prev</a>
+                                            <a class="clickable" ng-click="currentPage('Prev','currentPageOptIn','pagedItemsOptInList')">« Prev</a>
                                         </li>
                                         <li ng-repeat="n in range(pagedItemsOptInList.length, currentPageOptIn - gap, currentPageOptIn + gap + 1) "
                                             ng-class="{active: n == currentPageOptIn}"
-                                            ng-click="currentPage('Set','pagedItemsOptInList','currentPageOptIn')">
+                                            ng-click="currentPage('Set','currentPageOptIn','pagedItemsOptInList')">
                                             <a class="clickable" ng-bind="n + 1">1</a>
                                         </li>
                                         <li ng-class="{disabled: ((currentPageOptIn) == pagedItemsOptInList.length - 1) || pagedItemsOptInList.length == 0}">
-                                            <a class="clickable" ng-click="currentPage('Next','pagedItemsOptInList','currentPageOptIn')">Next »</a>
+                                            <a class="clickable" ng-click="currentPage('Next','currentPageOptIn','pagedItemsOptInList')">Next »</a>
                                         </li>
                                         <li ng-class="{disabled: ((currentPageOptIn) == pagedItemsOptInList.length - 1) || pagedItemsOptInList.length == 0}">
-                                            <a class="clickable" ng-click="currentPage('Last','pagedItemsOptInList','currentPageOptIn')">Last »»</a>
+                                            <a class="clickable" ng-click="currentPage('Last','currentPageOptIn','pagedItemsOptInList')">Last »»</a>
                                         </li>
                                     </ul>
                                 </td>
