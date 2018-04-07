@@ -496,7 +496,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
         if (attributeDefNameName1.equals(OPT_IN)) {
             wsGetAttributeAssignmentsResults = removeGroupsWithoutOptIn(wsGetAttributeAssignmentsResults);
-        } else if (attributeDefNameName1.equals(OPT_IN)) {
+        } else if (attributeDefNameName1.equals(OPT_OUT)) {
             wsGetAttributeAssignmentsResults = removeGroupsWithoutOptOut(wsGetAttributeAssignmentsResults);
         }
 
@@ -732,7 +732,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     }
 
     @Override
-    public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(String attributeAssingType,
+    public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(String attributeAssignType,
             String attributeAssignOperation,
             String attributeDefNameName,
             String ownerGroupName) {
@@ -758,7 +758,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
 
     @Override
     public WsAssignAttributesResults makeWsAssignAttributesResultsForGroup(WsSubjectLookup lookup,
-            String attributeAssingType,
+            String attributeAssignType,
             String attributeAssignOperation,
             String attributeDefNameName,
             String ownerGroupName) {
@@ -768,7 +768,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         Person person = personRepository.findByUsername(lookup.getSubjectIdentifier());
 
         if (grouping.getOwners().isMember(person)) {
-            wsAssignAttributesResults = makeWsAssignAttributesResultsForGroup(attributeAssingType,
+            wsAssignAttributesResults = makeWsAssignAttributesResultsForGroup(attributeAssignType,
                     attributeAssignOperation,
                     attributeDefNameName,
                     ownerGroupName);
@@ -1086,26 +1086,28 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         List<WsGroup> wsGroupList = Arrays.asList(wsGetAttributeAssignmentsResults.getWsGroups());
         List<WsAttributeAssign> wsAttributeAssignList =
                 Arrays.asList(wsGetAttributeAssignmentsResults.getWsAttributeAssigns());
+        List<WsGroup> newWsGroupList = new ArrayList<>();
+        List<WsAttributeAssign> newWsAttributeAssignList = new ArrayList<>();
 
         for (WsGroup wsGroup : wsGroupList) {
             Grouping grouping = groupingRepository.findByPath(wsGroup.getName());
 
-            if (!grouping.isOptOutOn()) {
-                wsGroupList.remove(wsGroup);
+            if (grouping.isOptOutOn()) {
+                newWsGroupList.add(wsGroup);
             }
         }
 
         for (WsAttributeAssign wsAttributeAssign : wsAttributeAssignList) {
             Grouping grouping = groupingRepository.findByPath(wsAttributeAssign.getOwnerGroupName());
 
-            if (!grouping.isOptOutOn()) {
-                wsAttributeAssignList.remove(wsAttributeAssign);
+            if (grouping.isOptOutOn()) {
+                newWsAttributeAssignList.add(wsAttributeAssign);
             }
         }
 
         wsGetAttributeAssignmentsResults.setWsAttributeAssigns(
-                wsAttributeAssignList.toArray(new WsAttributeAssign[wsAttributeAssignList.size()]));
-        wsGetAttributeAssignmentsResults.setWsGroups(wsGroupList.toArray(new WsGroup[wsGroupList.size()]));
+                newWsAttributeAssignList.toArray(new WsAttributeAssign[newWsAttributeAssignList.size()]));
+        wsGetAttributeAssignmentsResults.setWsGroups(newWsGroupList.toArray(new WsGroup[newWsGroupList.size()]));
 
         return wsGetAttributeAssignmentsResults;
 
@@ -1142,4 +1144,9 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         return "GrouperFactoryServiceImplLocal [SETTINGS=" + SETTINGS + "]";
     }
 
+    @Override public WsGroupSaveResults addCompositeGroup(String username, String parentGroupPath, String compositeType,
+            String leftGroupPath, String rightGroupPath) {
+        //todo
+        return null;
+    }
 }

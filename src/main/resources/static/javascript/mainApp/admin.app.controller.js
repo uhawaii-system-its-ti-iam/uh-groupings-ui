@@ -17,7 +17,7 @@
         $scope.itemsPerPage = 20;
 
         // Allow this controller to use functions from the General Controller
-        angular.extend(this, $controller('GeneralJsController', { $scope: $scope }));
+        angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
         /**
          * Initializes the page, displaying the list of groupings to administer and the list of admins to manage.
@@ -34,17 +34,14 @@
                 } else {
                     $scope.adminsList = d.adminGroup.members;
                     $scope.groupingsList = d.allGroupings;
-                    $scope.groupingsList = _.sortBy($scope.groupingsList, 'name');
+                    $scope.groupingsList = _.sortBy($scope.groupingsList, "name");
                     $scope.modify($scope.adminsList);
                     $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
                     $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
                 }
                 $scope.loading = false;
             }, function (d) {
-                console.log("error has occurred");
-                console.log(d);
-                var error = encodeURI(d.message);
-                $window.location.href = "/uhgroupings/feedback/" + error;
+                dataProvider.handleException({ exceptionError: d.string }, "feedback/error", "feedback");
             }, url);
         };
 
@@ -64,11 +61,11 @@
                 var successful = false;
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                } else if (d.resultCode.indexOf('SUCCESS') === 0) {
+                } else if (d.resultCode.indexOf("SUCCESS") === 0) {
                     successful = true;
                 }
                 $scope.createAddModal($scope.adminToAdd, successful);
-                $scope.adminToAdd = '';
+                $scope.adminToAdd = "";
             }, addUrl);
         };
 
@@ -83,11 +80,11 @@
             $scope.wasSuccessful = wasSuccessful;
 
             $scope.addModalInstance = $uibModal.open({
-                templateUrl: 'modal/addModal.html',
-                scope: $scope,
+                templateUrl: "modal/addModal.html",
+                scope: $scope
             });
 
-            $scope.addModalInstance.result.finally(function() {
+            $scope.addModalInstance.result.finally(function () {
                 if (wasSuccessful) {
                     $scope.loading = true;
                     // If no path was specified, then refresh the admin list. Otherwise, refresh the grouping
@@ -123,7 +120,7 @@
             $scope.userToDelete = user;
 
             $scope.removeModalInstance = $uibModal.open({
-                templateUrl: 'modal/removeModal.html',
+                templateUrl: "modal/removeModal.html",
                 scope: $scope
             });
 
@@ -143,6 +140,6 @@
 
     }
 
-    UHGroupingsApp.controller('AdminJsController', AdminJsController);
+    UHGroupingsApp.controller("AdminJsController", AdminJsController);
 
 })();

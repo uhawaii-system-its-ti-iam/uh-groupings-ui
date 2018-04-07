@@ -151,7 +151,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     @Value("${groupings.api.person_attributes.composite_name}")
     private String COMPOSITE_NAME;
 
-    public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
+    public static final Log logger = LogFactory.getLog(GroupAttributeServiceImpl.class);
 
     @Autowired
     private GrouperFactoryService grouperFS;
@@ -210,19 +210,6 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     @Override
     public boolean hasListserv(String groupingPath) {
         return groupHasAttribute(groupingPath, LISTSERV);
-    }
-
-    //returns a list of groupings that corresponds to all of the owner groups in groupPaths
-    public List<Grouping> groupingsOwned(List<String> groupPaths) {
-        List<String> ownerGroups = groupPaths
-                .stream()
-                .filter(groupPath -> groupPath.endsWith(OWNERS))
-                .map(groupPath -> groupPath.substring(0, groupPath.length() - OWNERS.length()))
-                .collect(Collectors.toList());
-
-        List<String> ownedGroupings = hs.extractGroupings(ownerGroups);
-
-        return hs.makeGroupings(ownedGroupings);
     }
 
     //returns true if the grouping allows the user to opt out, false otherwise

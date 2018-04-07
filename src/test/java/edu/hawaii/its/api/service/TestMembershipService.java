@@ -302,4 +302,44 @@ public class TestMembershipService {
         assertTrue(deleteMember1.getResultCode().startsWith(SUCCESS));
         assertTrue(deleteMember2.getResultCode().startsWith(SUCCESS));
     }
+
+    @Test
+    public void addGroupingMemberByUuidTest(){
+        //todo
+    }
+
+    @Test
+    public void deleteGroupingMemberByUuidTest(){
+        //todo
+    }
+
+    @Test
+    public void addGroupMembersByUsernameTest(){
+        //todo
+    }
+
+    @Test
+    public void addGroupMemberByUuidTest(){
+        //todo
+    }
+
+    @Test
+    public void addGroupMembersByUuidTest(){
+        //todo
+    }
+
+    @Test
+    public void deleteGroupMemberByUuidTest(){
+        //todo
+    }
+
+    @Test
+    public void addAdminTest(){
+        //todo
+    }
+
+    @Test
+    public void deleteAdminTest(){
+        //todo
+    }
 }
