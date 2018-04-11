@@ -41,6 +41,7 @@
              **/
             dataProvider.loadData(function (d) {
                 console.log(d);
+
                 if (typeof d.groupingsIn === "undefined") {
                     $scope.loading = false;
                     $scope.errorModal();
@@ -52,10 +53,6 @@
 
                     $scope.membersList = $scope.sortOrder($scope.membersList, "name");
                     $scope.optInList = $scope.sortOrder($scope.optInList, "name");
-
-                    if ($scope.optInList.length === 0) {
-                        $scope.optInList.push({ "name": "NO GROUPINGS TO OPT IN TO" });
-                    }
 
                     $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList);
                     $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList);
