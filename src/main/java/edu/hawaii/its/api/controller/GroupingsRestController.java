@@ -18,7 +18,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import edu.hawaii.its.api.service.GroupingsService;
+import edu.hawaii.its.api.service.GroupAttributeService;
+import edu.hawaii.its.api.service.GroupingAssignmentService;
+import edu.hawaii.its.api.service.GroupingFactoryService;
+import edu.hawaii.its.api.service.HelperService;
+import edu.hawaii.its.api.service.MemberAttributeService;
+import edu.hawaii.its.api.service.MembershipService;
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingAssignment;
@@ -43,7 +48,22 @@ public class GroupingsRestController {
     private String INCLUDE;
 
     @Autowired
-    private GroupingsService gs;
+    private GroupAttributeService groupAttributeService;
+
+    @Autowired
+    private GroupingAssignmentService groupingAssignmentService;
+
+    @Autowired
+    private GroupingFactoryService groupingFactoryService;
+
+    @Autowired
+    private HelperService helperService;
+
+    @Autowired
+    private MemberAttributeService memberAttributeService;
+
+    @Autowired
+    private MembershipService membershipService;
 
     @PostConstruct
     public void init() {
@@ -73,7 +93,7 @@ public class GroupingsRestController {
         logger.info("Entered REST addAdmin...");
         return ResponseEntity
                 .ok()
-                .body(gs.addAdmin(principal.getName(), adminToAdd));
+                .body(membershipService.addAdmin(principal.getName(), adminToAdd));
     }
 
     /**
@@ -89,7 +109,7 @@ public class GroupingsRestController {
         logger.info("Entered REST deleteAdmin...");
         return ResponseEntity
                 .ok()
-                .body(gs.deleteAdmin(principal.getName(), adminToDelete));
+                .body(membershipService.deleteAdmin(principal.getName(), adminToDelete));
     }
 
     /**
@@ -110,7 +130,7 @@ public class GroupingsRestController {
         logger.info("Entered REST addGroupingMemberByUsername...");
         return ResponseEntity
                 .ok()
-                .body(gs.addGroupingMemberByUsername(principal.getName(), grouping, userToAdd));
+                .body(membershipService.addGroupingMemberByUsername(principal.getName(), grouping, userToAdd));
     }
 
 
@@ -132,7 +152,7 @@ public class GroupingsRestController {
         logger.info("Entered REST addGroupingMemberByUuid...");
         return ResponseEntity
                 .ok()
-                .body(gs.addGroupingMemberByUuid(principal.getName(), grouping, userToAdd));
+                .body(membershipService.addGroupingMemberByUuid(principal.getName(), grouping, userToAdd));
     }
 
     /**
@@ -151,7 +171,7 @@ public class GroupingsRestController {
         logger.info("Entered REST addMemberToIncludeGroup...");
         return ResponseEntity
                 .ok()
-                .body(gs.addGroupMemberByUsername(principal.getName(), grouping + INCLUDE, userToAdd));
+                .body(membershipService.addGroupMemberByUsername(principal.getName(), grouping + INCLUDE, userToAdd));
     }
 
     /**
@@ -170,7 +190,7 @@ public class GroupingsRestController {
         logger.info("Entered REST addMemberToExcludeGroup...");
         return ResponseEntity
                 .ok()
-                .body(gs.addGroupMemberByUsername(principal.getName(), grouping + EXCLUDE, userToAdd));
+                .body(membershipService.addGroupMemberByUsername(principal.getName(), grouping + EXCLUDE, userToAdd));
     }
 
     /**
@@ -187,7 +207,7 @@ public class GroupingsRestController {
         logger.info("Entered REST deleteGroupingMemberByUsername...");
         return ResponseEntity
                 .ok()
-                .body(gs.deleteGroupingMemberByUsername(principal.getName(), grouping, userToDelete));
+                .body(membershipService.deleteGroupingMemberByUsername(principal.getName(), grouping, userToDelete));
     }
 
     /**
@@ -204,7 +224,7 @@ public class GroupingsRestController {
         logger.info("Entered REST deleteGroupingMemberByUsername...");
         return ResponseEntity
                 .ok()
-                .body(gs.deleteGroupingMemberByUuid(principal.getName(), grouping, userToDelete));
+                .body(membershipService.deleteGroupingMemberByUuid(principal.getName(), grouping, userToDelete));
     }
 
     /**
@@ -222,7 +242,7 @@ public class GroupingsRestController {
         logger.info("Entered REST deleteMemberFromIncludeGroup...");
         return ResponseEntity
                 .ok()
-                .body(gs.deleteGroupMemberByUsername(principal.getName(), grouping + INCLUDE, userToDelete));
+                .body(membershipService.deleteGroupMemberByUsername(principal.getName(), grouping + INCLUDE, userToDelete));
     }
 
     /**
@@ -240,7 +260,7 @@ public class GroupingsRestController {
         logger.info("Entered REST deleteMemberFromExcludeGroup...");
         return ResponseEntity
                 .ok()
-                .body(gs.deleteGroupMemberByUsername(principal.getName(), grouping + EXCLUDE, userToDelete));
+                .body(membershipService.deleteGroupMemberByUsername(principal.getName(), grouping + EXCLUDE, userToDelete));
     }
 
     /**
@@ -260,7 +280,7 @@ public class GroupingsRestController {
         logger.info("Entered REST assignOwnership...");
         return ResponseEntity
                 .ok()
-                .body(gs.assignOwnership(grouping, principal.getName(), newOwner));
+                .body(memberAttributeService.assignOwnership(grouping, principal.getName(), newOwner));
     }
 
     /**
@@ -281,7 +301,7 @@ public class GroupingsRestController {
         logger.info("Entered REST removeOwnership...");
         return ResponseEntity
                 .ok()
-                .body(gs.removeOwnership(grouping, principal.getName(), ownerToRemove));
+                .body(memberAttributeService.removeOwnership(grouping, principal.getName(), ownerToRemove));
     }
 
     /**
@@ -303,7 +323,7 @@ public class GroupingsRestController {
         logger.info("Entered REST grouping...");
         return ResponseEntity
                 .ok()
-                .body(gs.getGrouping(grouping, principal.getName()));
+                .body(groupingAssignmentService.getGrouping(grouping, principal.getName()));
     }
 
     /**
@@ -320,7 +340,7 @@ public class GroupingsRestController {
         logger.info("Entered REST GroupingAssingment...");
         return ResponseEntity
                 .ok()
-                .body(gs.getGroupingAssignment(principal.getName()));
+                .body(groupingAssignmentService.getGroupingAssignment(principal.getName()));
     }
 
     /**
@@ -338,7 +358,7 @@ public class GroupingsRestController {
         logger.info("Entered REST optIn...");
         return ResponseEntity
                 .ok()
-                .body(gs.optIn(principal.getName(), grouping));
+                .body(membershipService.optIn(principal.getName(), grouping));
     }
 
     /**
@@ -356,7 +376,7 @@ public class GroupingsRestController {
         logger.info("Entered REST optOut...");
         return ResponseEntity
                 .ok()
-                .body(gs.optOut(principal.getName(), grouping));
+                .body(membershipService.optOut(principal.getName(), grouping));
     }
 
     /**
@@ -373,7 +393,7 @@ public class GroupingsRestController {
         logger.info("Entered REST setListserv...");
         return ResponseEntity
                 .ok()
-                .body(gs.changeListservStatus(grouping, principal.getName(), listservOn));
+                .body(groupAttributeService.changeListservStatus(grouping, principal.getName(), listservOn));
     }
 
     /**
@@ -390,7 +410,7 @@ public class GroupingsRestController {
         logger.info("Entered REST setOptIn...");
         return ResponseEntity
                 .ok()
-                .body(gs.changeOptInStatus(grouping, principal.getName(), optInOn));
+                .body(groupAttributeService.changeOptInStatus(grouping, principal.getName(), optInOn));
     }
 
     /**
@@ -407,7 +427,7 @@ public class GroupingsRestController {
         logger.info("Entered REST setOptOut...");
         return ResponseEntity
                 .ok()
-                .body(gs.changeOptOutStatus(grouping, principal.getName(), optOutOn));
+                .body(groupAttributeService.changeOptOutStatus(grouping, principal.getName(), optOutOn));
     }
 
     @RequestMapping(value = "/adminLists",
@@ -417,7 +437,7 @@ public class GroupingsRestController {
         logger.info("Entered REST adminListHolder...");
         return ResponseEntity
                 .ok()
-                .body(gs.adminLists(principal.getName()));
+                .body(groupingAssignmentService.adminLists(principal.getName()));
     }
 
     /**
@@ -444,7 +464,7 @@ public class GroupingsRestController {
         //todo implement method
         //        return ResponseEntity
         //                .ok()
-        //                .body(gs.addGrouping(username, grouping, basis, include, exclude, owners));
+        //                .body(groupingFactoryService.addGrouping(username, grouping, basis, include, exclude, owners));
     }
 
     /**
@@ -463,6 +483,6 @@ public class GroupingsRestController {
         //todo implement method
         //        return ResponseEntity
         //                .ok()
-        //                .body(gs.deleteGrouping(username, grouping));
+        //                .body(groupingFactoryService.deleteGrouping(username, grouping));
     }
 }

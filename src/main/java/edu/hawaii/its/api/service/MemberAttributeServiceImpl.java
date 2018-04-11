@@ -156,7 +156,7 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
     @Autowired
     private HelperService hs;
 
-    public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
+    public static final Log logger = LogFactory.getLog(MemberAttributeServiceImpl.class);
 
     //return true if the membership between the group and user has the self-opted attribute, false otherwise
     @Override

@@ -269,34 +269,4 @@ public class MemberAttributeServiceTest {
         assertTrue(memberAttributeService.isAdmin(ADMIN_USER));
     }
 
-    @Test
-    public void makeGroupTest() {
-        WsGetMembersResults getMembersResults = new WsGetMembersResults();
-        WsGetMembersResult[] getMembersResult = new WsGetMembersResult[1];
-        WsGetMembersResult getMembersResult1 = new WsGetMembersResult();
-
-        WsSubject[] list = new WsSubject[3];
-        for (int i = 0; i < 3; i++) {
-            list[i] = new WsSubject();
-            list[i].setName("testSubject_" + i);
-            list[i].setId("testSubject_uuid_" + i);
-            list[i].setAttributeValues(new String[] { "testSubject_username_" + i });
-        }
-
-        getMembersResult1.setWsSubjects(list);
-        getMembersResult[0] = getMembersResult1;
-        getMembersResults.setResults(getMembersResult);
-
-        Group group = groupingAssignmentService.makeGroup(getMembersResults);
-
-        for (int i = 0; i < group.getMembers().size(); i++) {
-            assertTrue(group.getMembers().get(i).getName().equals("testSubject_" + i));
-            assertTrue(group.getNames().contains("testSubject_" + i));
-            assertTrue(group.getMembers().get(i).getUuid().equals("testSubject_uuid_" + i));
-            assertTrue(group.getUuids().contains("testSubject_uuid_" + i));
-            assertTrue(group.getMembers().get(i).getUsername().equals("testSubject_username_" + i));
-            assertTrue(group.getUsernames().contains("testSubject_username_" + i));
-        }
-    }
-
 }

@@ -154,7 +154,7 @@ public class HelperServiceImpl implements HelperService {
     @Value("${groupings.api.person_attributes.composite_name}")
     private String COMPOSITE_NAME;
 
-    public static final Log logger = LogFactory.getLog(GroupingsServiceImpl.class);
+    public static final Log logger = LogFactory.getLog(HelperServiceImpl.class);
 
     @Autowired
     private GrouperFactoryService grouperFS;
@@ -214,7 +214,7 @@ public class HelperServiceImpl implements HelperService {
 
     @Override
     public String toString() {
-        return "GroupingsServiceImpl [SETTINGS=" + SETTINGS + "]";
+        return "HelperServiceImpl [SETTINGS=" + SETTINGS + "]";
     }
 
     //makes a groupingsServiceResult with the result code from the metadataHolder and the action string

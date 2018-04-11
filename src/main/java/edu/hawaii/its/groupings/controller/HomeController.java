@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpSession;
 
 import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.groupings.type.Feedback;
@@ -83,26 +81,28 @@ public class HomeController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/feedback/{error}")
-    public String feedbackError(RedirectAttributes redirectAttributes, @PathVariable String error) {
-        Feedback feedback = new Feedback(error);
-        redirectAttributes.addFlashAttribute("feedback", feedback);
-        return "redirect:/feedback";
-    }
-
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/feedback")
-    public String feedbackForm(Model model) {
-        model.addAttribute("feedback", new Feedback());
+    public String feedbackForm(Model model, HttpSession session) {
+        logger.info("User has entered feedback page.");
+        Feedback sessionFeedback = (Feedback) session.getAttribute("feedback");
+        if (sessionFeedback != null) {
+            model.addAttribute("feedback", sessionFeedback);
+            session.removeAttribute("feedback");
+        } else {
+            model.addAttribute("feedback", new Feedback());
+        }
         return "feedback";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/feedback")
-    public String feedbackSubmit(@ModelAttribute Feedback feedback) {
-        logger.debug("feedback: " + feedback);
+    public String feedbackSubmit(@ModelAttribute Feedback feedback, Model model, RedirectAttributes redirectAttributes) {
+        logger.info("User has submitted feedback.");
         emailService.send(feedback);
-        return "feedback";
+        // Ensure the feedback form is reset after submission.
+        model.addAttribute("feedback", new Feedback());
+        redirectAttributes.addFlashAttribute("success", true);
+        return "redirect:/feedback";
     }
 
 

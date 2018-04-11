@@ -6,7 +6,7 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function GeneralJsController($scope, $window, $uibModal, $controller, dataProvider) {
+    function GeneralJsController($scope, $http, $window, $uibModal, $controller, dataProvider) {
 
         $scope.groupingsList = [];
         $scope.pagedItemsGroupings = [];
@@ -41,7 +41,7 @@
 
         $scope.loading = false;
 
-        angular.extend(this, $controller('TableJsController', { $scope: $scope }));
+        angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
         /**
          * Retrieves information about the grouping.
@@ -72,7 +72,7 @@
 
                     //Gets members in grouping
                     $scope.groupingMembers = d.composite.members;
-                    $scope.modify($scope.groupingMembers, 'members');
+                    $scope.modify($scope.groupingMembers, "members");
                     $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers);
 
                     //Gets owners of the grouping
@@ -88,11 +88,8 @@
                     $scope.loading = false;
                     $scope.showGrouping = true;
                 }
-            },  function(d){
-                console.log("error has occured");
-                console.log(d);
-                var error = encodeURI(d);
-                $window.location.href = "/uhgroupings/feedback/" + error;
+            }, function (d) {
+                dataProvider.handleException({ exceptionError: d.string }, "feedback/error", "feedback");
             }, groupingDataUrl);
         };
 
@@ -101,7 +98,7 @@
          */
         $scope.createApiErrorModal = function () {
             $scope.apiErrorModalInstance = $uibModal.open({
-                templateUrl: 'modal/apiError.html',
+                templateUrl: "modal/apiError.html",
                 scope: $scope
             });
         };
@@ -122,7 +119,7 @@
         $scope.modify = function (grouping, list) {
             //Filter out names with hawaii.edu and adds basis object.
             for (var i = 0; i < grouping.length; i++) {
-                if (list === 'members') grouping[i].basis = "Include";
+                if (list === "members") grouping[i].basis = "Include";
                 else grouping[i].basis = "No";
                 if (grouping[i].name.indexOf("hawaii.edu") > -1) {
                     grouping.splice(i, 1);
@@ -134,7 +131,7 @@
             for (var l = 0; l < $scope.groupingBasis.length; l++) {
                 for (var m = 0; m < grouping.length; m++) {
                     if ($scope.groupingBasis[l].uuid === grouping[m].uuid) {
-                        if (list === 'members') {
+                        if (list === "members") {
                             grouping[m].basis = "Basis";
                             for (var k = 0; k < $scope.groupingInclude.length; k++) {
                                 if ($scope.groupingInclude[k].uuid === grouping[m].uuid) {
@@ -154,7 +151,7 @@
                     return -1;
                 if (nameA > nameB)
                     return 1;
-                return 0
+                return 0;
             });
         };
 
@@ -169,11 +166,11 @@
                 var responseLength = d.length;
                 if (responseLength === undefined || d[responseLength - 1].statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                } else if (d[responseLength - 1].resultCode.indexOf('SUCCESS' === 0)) {
+                } else if (d[responseLength - 1].resultCode.indexOf("SUCCESS" === 0)) {
                     successful = true;
                 }
                 $scope.createAddModal($scope.addUser, successful, $scope.selectedGrouping.path);
-                $scope.addUser = '';
+                $scope.addUser = "";
             }, addUrl);
         };
 
@@ -191,7 +188,7 @@
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
                 }
                 $scope.createAddModal($scope.ownerUser, successful, $scope.selectedGrouping.path);
-                $scope.ownerUser = '';
+                $scope.ownerUser = "";
             }, addOwnerUrl);
         };
 
@@ -210,9 +207,9 @@
          */
         $scope.removeMember = function (type, index) {
             var user;
-            if (type === 'Include') {
+            if (type === "Include") {
                 user = $scope.pagedItemsInclude[$scope.currentPageInclude][index].username;
-            } else if (type === 'Exclude') {
+            } else if (type === "Exclude") {
                 user = $scope.pagedItemsExclude[$scope.currentPageExclude][index].username;
             }
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
@@ -274,16 +271,16 @@
         /**
          * Resets the selected group to the list of all members.
          */
-        $scope.resetSelectedGroup = function() {
-            var pills = $('#group-pills')[0].children;
-            var tabContents = $('#pill-content')[0].children
+        $scope.resetSelectedGroup = function () {
+            var pills = $("#group-pills")[0].children;
+            var tabContents = $("#pill-content")[0].children;
             for (var i = 0; i < pills.length; i++) {
-                if (i === 0 && !$(pills[i]).hasClass('active')) {
-                    $(pills[i]).addClass('active');
-                    $(tabContents[i]).addClass('in active');
-                } else if (i !== 0 && $(pills[i]).hasClass('active')) {
-                    $(pills[i]).removeClass('active');
-                    $(tabContents[i]).removeClass('in active');
+                if (i === 0 && !$(pills[i]).hasClass("active")) {
+                    $(pills[i]).addClass("active");
+                    $(tabContents[i]).addClass("in active");
+                } else if (i !== 0 && $(pills[i]).hasClass("active")) {
+                    $(pills[i]).removeClass("active");
+                    $(tabContents[i]).removeClass("in active");
                 }
             }
         };
@@ -296,8 +293,8 @@
             $scope.preferenceInfo = desc;
 
             $scope.infoModalInstance = $uibModal.open({
-                templateUrl: 'modal/infoModal.html',
-                scope: $scope,
+                templateUrl: "modal/infoModal.html",
+                scope: $scope
             });
         };
 
@@ -312,7 +309,7 @@
          * Toggles the grouping preference which allows users to opt out of a grouping.
          */
         $scope.updateAllowOptOut = function () {
-            var url = "api/groupings/" + $scope.selectedGrouping.path + "/"  + $scope.allowOptOut + "/setOptOut";
+            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (d) {
                 console.log(d);
                 if (d.statusCode != null) {
@@ -369,7 +366,7 @@
          */
         $scope.createPreferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
-                templateUrl: 'modal/preferenceErrorModal.html',
+                templateUrl: "modal/preferenceErrorModal.html",
                 scope: $scope
             });
         };
@@ -400,13 +397,13 @@
 
             $scope.queryGroupings = "";
             // Ensure the groupings list is reset with the now-blank filter
-            $scope.filter($scope.groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', 'queryGroupings');
+            $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", "queryGroupings");
 
         };
 
-        $scope.resetFields = function(){
+        $scope.resetFields = function () {
             $scope.addUser = "";
-        }
+        };
         /**
          * Gets information about the grouping clicked by the user.
          * @param {number} index - the index of the grouping clicked by the user
@@ -432,16 +429,16 @@
             var csv = $scope.convertArrayOfObjectsToCSV(table);
             if (csv == null) return;
 
-            filename = name + '_export.csv';
+            filename = name + "_export.csv";
 
             if (!csv.match(/^data:text\/csv/i)) {
-                csv = 'data:text/csv;charset=utf-8,' + csv;
+                csv = "data:text/csv;charset=utf-8," + csv;
             }
             data = encodeURI(csv);
 
-            link = document.createElement('a');
-            link.setAttribute('href', data);
-            link.setAttribute('download', filename);
+            link = document.createElement("a");
+            link.setAttribute("href", data);
+            link.setAttribute("download", filename);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -453,24 +450,24 @@
          * @returns the table in CSV format
          */
         $scope.convertArrayOfObjectsToCSV = function (table) {
-            var str = 'Last,First,Username,Email\r\n';
+            var str = "Last,First,Username,Email\r\n";
             for (var i = 0; i < table.length; i++) {
-                var line = '';
-                line += table[i].lastName + ',';
-                line += table[i].firstName + ',';
-                if (table[i].username !== 'N/A') {
-                    line += table[i].username + ',';
-                    line += table[i].username + '@hawaii.edu,';
+                var line = "";
+                line += table[i].lastName + ",";
+                line += table[i].firstName + ",";
+                if (table[i].username) {
+                    line += table[i].username + ",";
+                    line += table[i].username + "@hawaii.edu,";
                 } else {
-                    line += ',,';
+                    line += ",,";
                 }
-                str += line + '\r\n';
+                str += line + "\r\n";
             }
             return str;
         };
 
     }
 
-    UHGroupingsApp.controller('GeneralJsController', GeneralJsController);
+    UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
 
 })();

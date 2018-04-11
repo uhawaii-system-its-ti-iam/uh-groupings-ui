@@ -25,7 +25,7 @@
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
 
-        angular.extend(this, $controller('TableJsController', { $scope: $scope }));
+        angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
         /**init is something that is usually called at the start of something
          * so calling init would be called at the start
@@ -41,20 +41,20 @@
              **/
             dataProvider.loadData(function (d) {
                 console.log(d);
-                if(typeof d.groupingsIn === 'undefined') {
+                if (typeof d.groupingsIn === "undefined") {
                     $scope.loading = false;
                     $scope.errorModal();
                 }
-                else{
+                else {
                     $scope.membersList = d.groupingsIn;
                     $scope.optOutList = d.groupingsToOptOutOf;
                     $scope.optInList = d.groupingsToOptInTo;
 
-                    $scope.membersList = $scope.sortOrder($scope.membersList, 'name');
-                    $scope.optInList = $scope.sortOrder($scope.optInList, 'name');
+                    $scope.membersList = $scope.sortOrder($scope.membersList, "name");
+                    $scope.optInList = $scope.sortOrder($scope.optInList, "name");
 
                     if ($scope.optInList.length === 0) {
-                        $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
+                        $scope.optInList.push({ "name": "NO GROUPINGS TO OPT IN TO" });
                     }
 
                     $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList);
@@ -62,23 +62,20 @@
 
                     $scope.loading = false;
                 }
-            }, function(d){
-                console.log("error has occurred");
-                console.log(d);
-                var error = encodeURI(d.message);
-                $window.location.href = "/uhgroupings/feedback/" + error;
+            }, function (d) {
+                dataProvider.handleException({ exceptionError: d.string }, "feedback/error", "feedback");
             }, groupingURL);
         };
 
         $scope.errorModal = function () {
             $scope.errorModalInstance = $uibModal.open({
-                templateUrl: 'modal/apiError.html',
-                windowClass: 'center-modal',
+                templateUrl: "modal/apiError.html",
+                windowClass: "center-modal",
                 scope: $scope
             });
         };
 
-        $scope.errorDismiss = function() {
+        $scope.errorDismiss = function () {
             $scope.errorModalInstance.dismiss();
         };
 
@@ -108,8 +105,7 @@
                     console.log("Failed to opt out");
                     alert("Failed to opt out");
                     $scope.loading = false;
-                }
-                else {
+                } else {
                     $scope.init();
                 }
             }, optOutURL);
@@ -130,8 +126,8 @@
 
         //Disables opt in button if there are no groupings to opt into.
         $scope.disableOptIn = function (index) {
-            for (var i = 0; i < $scope.membersList.length; i++) {
-                if ($scope.membersList[i].name === $scope.optInList[index].name) {
+            for(grouping in $scope.membersList) {
+                if (grouping.name === $scope.optInList[index].name) {
                     return true;
                 }
             }
