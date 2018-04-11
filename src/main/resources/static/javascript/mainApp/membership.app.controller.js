@@ -10,13 +10,11 @@
      */
     function MembershipJsController($scope, $uibModal, $window, $controller, dataProvider) {
 
-        $scope.currentUsername = "";
         $scope.membersList = [];
         $scope.optInList = [];
         $scope.optOutList = [];
         $scope.loading = true;
 
-        //these will be place holders for now
         $scope.pagedItemsMembersList = [];
         $scope.pagedItemsOptInList = [];
         $scope.gap = 2;
@@ -27,38 +25,25 @@
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
-        /**init is something that is usually called at the start of something
-         * so calling init would be called at the start
-         **/
+        /**
+         * Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
+         * is able to opt out of.
+         */
         $scope.init = function () {
-            var groupingURL = "api/groupings/groupingAssignment";
-            /**Loads Data into a membersList
-             *                  optOutList
-             *                  optInList
-             *                  optedIn
-             *                  optedOut
-             *takes all of that data and puts them into pages as called by "groupToPages"
-             **/
+            var groupingURL = "api/groupings/groupingAssignment/";
+
             dataProvider.loadData(function (d) {
-                console.log(d);
+                $scope.membersList = d.groupingsIn;
+                $scope.optOutList = d.groupingsToOptOutOf;
+                $scope.optInList = d.groupingsToOptInTo;
 
-                if (typeof d.groupingsIn === "undefined") {
-                    $scope.loading = false;
-                    $scope.errorModal();
-                }
-                else {
-                    $scope.membersList = d.groupingsIn;
-                    $scope.optOutList = d.groupingsToOptOutOf;
-                    $scope.optInList = d.groupingsToOptInTo;
+                $scope.membersList = $scope.sortOrder($scope.membersList, "name");
+                $scope.optInList = $scope.sortOrder($scope.optInList, "name");
 
-                    $scope.membersList = $scope.sortOrder($scope.membersList, "name");
-                    $scope.optInList = $scope.sortOrder($scope.optInList, "name");
+                $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList);
+                $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList);
 
-                    $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList);
-                    $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList);
-
-                    $scope.loading = false;
-                }
+                $scope.loading = false;
             }, function (d) {
                 dataProvider.handleException({ exceptionError: d.string }, "feedback/error", "feedback");
             }, groupingURL);
@@ -90,7 +75,6 @@
         /**
          * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
          * @param {number} index - the index of the grouping clicked by the user
-         *
          */
         $scope.optOut = function (index) {
             console.log(index);
@@ -123,7 +107,7 @@
 
         //Disables opt in button if there are no groupings to opt into.
         $scope.disableOptIn = function (index) {
-            for(grouping in $scope.membersList) {
+            for (grouping in $scope.membersList) {
                 if (grouping.name === $scope.optInList[index].name) {
                     return true;
                 }
