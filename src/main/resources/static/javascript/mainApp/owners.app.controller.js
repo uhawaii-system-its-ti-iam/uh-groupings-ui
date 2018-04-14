@@ -35,11 +35,13 @@
          * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
          * @param {string} user - the user being added
          * @param {boolean} wasSuccessful - whether or not the user was successfully added
+         * @param {string} listName - where the user is being added to
          * @param {string} path - the path to the grouping
          */
-        $scope.createAddModal = function (user, wasSuccessful, path) {
+        $scope.createAddModal = function (user, wasSuccessful, listName, path) {
             $scope.user = user;
             $scope.wasSuccessful = wasSuccessful;
+            $scope.listName = listName;
 
             $scope.addModalInstance = $uibModal.open({
                 templateUrl: "modal/addModal.html",
@@ -59,10 +61,13 @@
          * a request is made to delete the user.
          * @param {string} user - the user to delete
          * @param {string} url - the URL used to make the request
+         * @param {string} listName - where the user is being removed from
          * @param {string} path - the path to the grouping
          */
-        $scope.createRemoveModal = function (user, url, path) {
+        $scope.createRemoveModal = function (user, url, listName, path) {
             $scope.userToDelete = user;
+            $scope.listName = listName;
+
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
                 scope: $scope

@@ -169,7 +169,8 @@
                 } else if (d[responseLength - 1].resultCode.indexOf("SUCCESS" === 0)) {
                     successful = true;
                 }
-                $scope.createAddModal($scope.addUser, successful, $scope.selectedGrouping.path);
+                var listName = type + " list";
+                $scope.createAddModal($scope.addUser, successful, listName, $scope.selectedGrouping.path);
                 $scope.addUser = "";
             }, addUrl);
         };
@@ -187,7 +188,8 @@
                     successful = true;
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
                 }
-                $scope.createAddModal($scope.ownerUser, successful, $scope.selectedGrouping.path);
+                var listName = "owners list";
+                $scope.createAddModal($scope.ownerUser, successful, listName, $scope.selectedGrouping.path);
                 $scope.ownerUser = "";
             }, addOwnerUrl);
         };
@@ -213,7 +215,8 @@
                 user = $scope.pagedItemsExclude[$scope.currentPageExclude][index].username;
             }
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
-            $scope.createRemoveModal(user, url, $scope.selectedGrouping.path);
+            var listName = type + " list";
+            $scope.createRemoveModal(user, url, listName, $scope.selectedGrouping.path);
         };
 
         /**
@@ -224,7 +227,8 @@
             var removeOwner = $scope.pagedItemsOwners[$scope.currentPageOwners][index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
-                $scope.createRemoveModal(removeOwner, removeOwnerUrl, $scope.selectedGrouping.path);
+                var listName = "owners list";
+                $scope.createRemoveModal(removeOwner, removeOwnerUrl, listName, $scope.selectedGrouping.path);
             }
         };
 
