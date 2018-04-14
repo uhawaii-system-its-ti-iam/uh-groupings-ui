@@ -210,7 +210,6 @@
             <artifactId>webjars-locator</artifactId>
             <version>0.32</version>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
