@@ -56,7 +56,8 @@
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            var addUrl = "api/groupings/" + $scope.adminToAdd + "/addAdmin";
+            var adminToAdd = $scope.adminToAdd;
+            var addUrl = "api/groupings/" + adminToAdd + "/addAdmin";
             dataProvider.updateData(function (d) {
                 var successful = false;
                 if (d.statusCode != null) {
@@ -65,7 +66,7 @@
                     successful = true;
                 }
                 var listName = "admins list";
-                $scope.createAddModal($scope.adminToAdd, successful, listName);
+                $scope.createAddModal(adminToAdd, successful, listName);
                 $scope.adminToAdd = "";
             }, addUrl);
         };
