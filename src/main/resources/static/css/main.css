@@ -199,10 +199,11 @@ td.uh-pre {
 }
 
 #iconImage{
-  max-width: 8em;
-  max-height: 8em;
+  max-width: 5.8em;
+  max-height: 5.8em;
   height: auto;
   width: auto;
+  padding-top: 0.3em;
 }
 
 #iconTop{
