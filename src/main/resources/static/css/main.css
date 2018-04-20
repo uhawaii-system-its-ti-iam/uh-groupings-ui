@@ -198,11 +198,12 @@ td.uh-pre {
     overflow-y: auto;
 }
 
-#iconImage{
-  max-width: 8em;
-  max-height: 8em;
+#groupings-icon{
+  max-width: 5.36em;
+  max-height: 5em;
   height: auto;
   width: auto;
+  /* padding-top: 0.3em; */
 }
 
 #iconTop{
