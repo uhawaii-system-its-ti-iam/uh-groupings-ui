@@ -38,12 +38,16 @@ public class FeedbackTest {
         feedback.setEmail("test@hawaii.edu");
         feedback.setType("Problem");
         feedback.setMessage("Test Message");
+        feedback.setExceptionMessage("Exception Message");
 
         assertThat(feedback.getName(), equalTo("Test User"));
         assertThat(feedback.getEmail(), equalTo("test@hawaii.edu"));
         assertThat(feedback.getType(), equalTo("Problem"));
-        assertThat(feedback.getMessage(),equalTo("Test Message"));
-        assertNull(feedback.getExceptionMessage());
+        assertThat(feedback.getMessage(), equalTo("Test Message"));
+        assertThat(feedback.getExceptionMessage(), equalTo("Exception Message"));
+
+        assertThat(feedback.toString(), containsString("email=test@hawaii.edu"));
+        assertThat(feedback.toString(), containsString("exceptionMessage=Exception Message"));
     }
 
     @Test
@@ -56,5 +60,8 @@ public class FeedbackTest {
         assertNull(feedback.getType());
         assertNull(feedback.getMessage());
         assertThat(feedback.getExceptionMessage(), equalTo("Test Exception Stack Trace"));
+
+        assertThat(feedback.toString(), containsString("exceptionMessage=Test Exception Stack Trace"));
     }
+
 }
