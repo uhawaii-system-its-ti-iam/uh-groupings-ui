@@ -24,8 +24,8 @@ public class ErrorRestController {
     @PostMapping("/feedback/error")
     public ResponseEntity<Void> feedbackError(@RequestBody Map<String, String> body, HttpSession session) {
         logger.info("Entered feedback error...");
-        String exceptionError = body.get("exceptionError");
-        session.setAttribute("feedback", new Feedback(exceptionError));
+        String exceptionMessage = body.get("exceptionMessage");
+        session.setAttribute("feedback", new Feedback(exceptionMessage));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

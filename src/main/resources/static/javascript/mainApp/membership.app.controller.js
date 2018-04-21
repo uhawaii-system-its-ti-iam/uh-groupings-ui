@@ -45,7 +45,7 @@
 
                 $scope.loading = false;
             }, function (d) {
-                dataProvider.handleException({ exceptionError: d.string }, "feedback/error", "feedback");
+                dataProvider.handleException({ exceptionMessage: d.exceptionMessage }, "feedback/error", "feedback");
             }, groupingURL);
         };
 

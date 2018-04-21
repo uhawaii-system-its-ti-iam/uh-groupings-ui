@@ -9,7 +9,7 @@ public class Feedback {
     private String email;
     private String type;
     private String message;
-    private String exceptionError;
+    private String exceptionMessage;
 
     private static final Log logger = LogFactory.getLog(Feedback.class);
 
@@ -18,8 +18,8 @@ public class Feedback {
         // Empty.
     }
 
-    public Feedback(String exceptionError) {
-        this.exceptionError = exceptionError;
+    public Feedback(String exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
     }
 
     public String getName() {
@@ -54,12 +54,12 @@ public class Feedback {
         this.message = message;
     }
 
-    public String getExceptionError() {
-        return exceptionError;
+    public String getExceptionMessage() {
+        return exceptionMessage;
     }
 
-    public void setExceptionError(String exceptionError) {
-        this.exceptionError = exceptionError;
+    public void setExceptionMessage(String exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class Feedback {
                 + ", message=" + message
                 + ", name=" + name
                 + ", type=" + type
-                + ", exceptionError=" + exceptionError
+                + ", exceptionMessage=" + exceptionMessage
                 + "]";
     }
 

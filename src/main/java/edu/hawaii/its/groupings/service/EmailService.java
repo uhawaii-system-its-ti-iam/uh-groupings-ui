@@ -45,7 +45,7 @@ public class EmailService {
             String header = "Feedback Type: " + feedback.getType();
             text += "Feedback reported by " + feedback.getName() + " using email " + feedback.getEmail() + "\n\n";
             text += "Feedback: " + feedback.getMessage() + "\n\n";
-            text += "Stack Trace: " + feedback.getExceptionError();
+            text += "Stack Trace:\n" + feedback.getExceptionMessage();
 
             msg.setText(text);
             msg.setSubject(header);

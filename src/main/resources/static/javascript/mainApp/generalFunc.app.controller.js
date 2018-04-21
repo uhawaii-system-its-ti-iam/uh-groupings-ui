@@ -48,7 +48,7 @@
          */
         $scope.getData = function () {
             $scope.loading = true;
-            var groupingDataUrl = "api/groupings/" + $scope.selectedGrouping.path + "/grouping";
+            var groupingDataUrl = "api/groupings/" + $scope.selectedGrouping.path + "aaaa/grouping";
 
             dataProvider.loadData(function (d) {
                 console.log(d);
@@ -89,7 +89,7 @@
                     $scope.showGrouping = true;
                 }
             }, function (d) {
-                dataProvider.handleException({ exceptionError: d.string }, "feedback/error", "feedback");
+                dataProvider.handleException({ exceptionMessage: d.exceptionMessage }, "feedback/error", "feedback");
             }, groupingDataUrl);
         };
 

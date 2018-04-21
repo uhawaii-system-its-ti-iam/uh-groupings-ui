@@ -32,7 +32,7 @@ public class FeedbackTest {
         assertNull(feedback.getEmail());
         assertNull(feedback.getType());
         assertNull(feedback.getMessage());
-        assertNull(feedback.getExceptionError());
+        assertNull(feedback.getExceptionMessage());
 
         feedback.setName("Test User");
         feedback.setEmail("test@hawaii.edu");
@@ -43,18 +43,18 @@ public class FeedbackTest {
         assertThat(feedback.getEmail(), equalTo("test@hawaii.edu"));
         assertThat(feedback.getType(), equalTo("Problem"));
         assertThat(feedback.getMessage(),equalTo("Test Message"));
-        assertNull(feedback.getExceptionError());
+        assertNull(feedback.getExceptionMessage());
     }
 
     @Test
-    public void exceptionSconstruction(){
-        feedback = new Feedback("Test Expection Stack Trace");
+    public void exceptionConstruction(){
+        feedback = new Feedback("Test Exception Stack Trace");
 
         assertNotNull(feedback);
         assertNull(feedback.getName());
         assertNull(feedback.getEmail());
         assertNull(feedback.getType());
         assertNull(feedback.getMessage());
-        assertThat(feedback.getExceptionError(), equalTo("Test Expection Stack Trace"));
+        assertThat(feedback.getExceptionMessage(), equalTo("Test Exception Stack Trace"));
     }
 }

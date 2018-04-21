@@ -2,10 +2,11 @@ package edu.hawaii.its.api.type;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
-public class GroupingsHTTPException extends RuntimeException{
-    private Integer statusCode = null;
-    private String string = null;
+public class GroupingsHTTPException extends RuntimeException {
+    private int statusCode;
+    private String exceptionMessage;
 
     public GroupingsHTTPException() {
         //empty
@@ -24,18 +25,14 @@ public class GroupingsHTTPException extends RuntimeException{
         this.statusCode = statusCode;
         this.setStackTrace(cause.getStackTrace());
 
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        this.printStackTrace(pw);
-        String sStackTrace = sw.toString(); // stack trace as a string
-        this.string = sStackTrace;
+        this.exceptionMessage = ExceptionUtils.getStackTrace(cause);
     }
 
-    public Integer getStatusCode() {
+    public int getStatusCode() {
         return statusCode;
     }
 
-    public String getString() {
-        return string;
+    public String getExceptionMessage() {
+        return exceptionMessage;
     }
 }
