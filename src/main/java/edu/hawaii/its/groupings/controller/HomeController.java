@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 
 import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.groupings.type.Feedback;
+import edu.hawaii.its.groupings.access.UserContextService;
 
 @Controller
 public class HomeController {
@@ -28,6 +29,9 @@ public class HomeController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private UserContextService userContextService;
 
     // Mapping to home.
     @RequestMapping(value = {"/", "/home"}, method = {RequestMethod.GET})
@@ -86,10 +90,15 @@ public class HomeController {
         logger.info("User has entered feedback page.");
         Feedback sessionFeedback = (Feedback) session.getAttribute("feedback");
         if (sessionFeedback != null) {
+            sessionFeedback.setType("problem");
+            sessionFeedback.setEmail(userContextService.getCurrentUsername() + "@hawaii.edu");
             model.addAttribute("feedback", sessionFeedback);
             session.removeAttribute("feedback");
         } else {
-            model.addAttribute("feedback", new Feedback());
+            Feedback feedback = new Feedback();
+            feedback.setType("general");
+            feedback.setEmail(userContextService.getCurrentUsername() + "@hawaii.edu");
+            model.addAttribute("feedback", feedback);
         }
         return "feedback";
     }
