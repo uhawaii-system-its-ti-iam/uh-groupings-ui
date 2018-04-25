@@ -42,8 +42,11 @@ public class EmailService {
             msg.setTo(to);
             msg.setFrom(from);
             String text = "";
-            String header = "Feedback Type: " + feedback.getType();
-            text += "Feedback reported by " + feedback.getName() + " using email " + feedback.getEmail() + "\n\n";
+            String header = "UHGroupings service feedback [" + feedback.getType() + "]";
+            text += "Submitted name: " + feedback.getName() + "\n\n";
+            text += "Submitted email: <" + feedback.getEmail() + ">\n\n";
+            text += "Feedback type: " + feedback.getType() + "\n\n";
+            text += "--------------------------" + "\n\n";
             text += "Feedback: " + feedback.getMessage() + "\n\n";
             text += "Stack Trace:\n" + feedback.getExceptionMessage();
 
