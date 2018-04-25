@@ -160,7 +160,8 @@
          * @param {string} type - the type of group to add the user to (either Include or Exclude)
          */
         $scope.addMember = function (type) {
-            var addUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.addUser + "/addMemberTo" + type + "Group";
+            var userToAdd = $scope.addUser;
+            var addUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + userToAdd + "/addMemberTo" + type + "Group";
             dataProvider.updateData(function (d) {
                 var successful = false;
                 var responseLength = d.length;
@@ -169,7 +170,8 @@
                 } else if (d[responseLength - 1].resultCode.indexOf("SUCCESS" === 0)) {
                     successful = true;
                 }
-                $scope.createAddModal($scope.addUser, successful, $scope.selectedGrouping.path);
+                var listName = type + " list";
+                $scope.createAddModal(userToAdd, successful, listName, $scope.selectedGrouping.path);
                 $scope.addUser = "";
             }, addUrl);
         };
@@ -178,7 +180,8 @@
          * Gives a user ownership of a grouping.
          */
         $scope.addOwner = function () {
-            var addOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + $scope.ownerUser + "/assignOwnership";
+            var ownerToAdd = $scope.ownerUser;
+            var addOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + ownerToAdd + "/assignOwnership";
             dataProvider.updateData(function (d) {
                 var successful = false;
                 if (d.statusCode != null) {
@@ -187,7 +190,8 @@
                     successful = true;
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
                 }
-                $scope.createAddModal($scope.ownerUser, successful, $scope.selectedGrouping.path);
+                var listName = "owners list";
+                $scope.createAddModal(ownerToAdd, successful, listName, $scope.selectedGrouping.path);
                 $scope.ownerUser = "";
             }, addOwnerUrl);
         };
@@ -213,7 +217,8 @@
                 user = $scope.pagedItemsExclude[$scope.currentPageExclude][index].username;
             }
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
-            $scope.createRemoveModal(user, url, $scope.selectedGrouping.path);
+            var listName = type + " list";
+            $scope.createRemoveModal(user, url, listName, $scope.selectedGrouping.path);
         };
 
         /**
@@ -224,7 +229,8 @@
             var removeOwner = $scope.pagedItemsOwners[$scope.currentPageOwners][index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
-                $scope.createRemoveModal(removeOwner, removeOwnerUrl, $scope.selectedGrouping.path);
+                var listName = "owners list";
+                $scope.createRemoveModal(removeOwner, removeOwnerUrl, listName, $scope.selectedGrouping.path);
             }
         };
 

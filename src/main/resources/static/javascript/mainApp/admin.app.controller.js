@@ -27,6 +27,7 @@
             $scope.loading = true;
 
             var url = "api/groupings/adminLists";
+            $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
             dataProvider.loadData(function (d) {
                 if (d.allGroupings.length == 0) {
@@ -56,7 +57,8 @@
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            var addUrl = "api/groupings/" + $scope.adminToAdd + "/addAdmin";
+            var adminToAdd = $scope.adminToAdd;
+            var addUrl = "api/groupings/" + adminToAdd + "/addAdmin";
             dataProvider.updateData(function (d) {
                 var successful = false;
                 if (d.statusCode != null) {
@@ -64,7 +66,8 @@
                 } else if (d.resultCode.indexOf("SUCCESS") === 0) {
                     successful = true;
                 }
-                $scope.createAddModal($scope.adminToAdd, successful);
+                var listName = "admins list";
+                $scope.createAddModal(adminToAdd, successful, listName);
                 $scope.adminToAdd = "";
             }, addUrl);
         };
@@ -73,11 +76,13 @@
          * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
          * @param {string} user - the user being added
          * @param {boolean} wasSuccessful - whether or not the user was successfully added
+         * @param {string} listName - where the user is being added to
          * @param {string?} path - the path to the grouping (if adding the user to a grouping)
          */
-        $scope.createAddModal = function (user, wasSuccessful, path) {
+        $scope.createAddModal = function (user, wasSuccessful, listName, path) {
             $scope.user = user;
             $scope.wasSuccessful = wasSuccessful;
+            $scope.listName = listName;
 
             $scope.addModalInstance = $uibModal.open({
                 templateUrl: "modal/addModal.html",
@@ -105,8 +110,8 @@
         $scope.removeAdmin = function (index) {
             var deleteUser = $scope.adminsList[index].username;
             var deleteUrl = "api/groupings/" + deleteUser + "/deleteAdmin";
-
-            $scope.createRemoveModal(deleteUser, deleteUrl);
+            var listName = "admins list";
+            $scope.createRemoveModal(deleteUser, deleteUrl, listName);
         };
 
         /**
@@ -114,10 +119,12 @@
          * a request is made to delete the user.
          * @param {string} user - the user to delete
          * @param {string} url - the URL used to make the request
+         * @param {string} listName - where the user is being removed from
          * @param {string?} path - the path to the grouping (if deleting a user from a grouping)
          */
-        $scope.createRemoveModal = function (user, url, path) {
+        $scope.createRemoveModal = function (user, url, listName, path) {
             $scope.userToDelete = user;
+            $scope.listName = listName;
 
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
@@ -127,13 +134,22 @@
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
                 // Remove the user, then reload either the admin list or grouping
-                dataProvider.updateData(function () {
-                    if (path === undefined) {
-                        $scope.init();
-                    } else {
-                        $scope.getData(path);
-                    }
-                }, url);
+                if($scope.currentUser === $scope.userToDelete)
+                {
+                    dataProvider.updateData(function () {
+                        $window.location.href = "/uhgroupings/";
+                    }, url);
+                }
+                else
+                {
+                    dataProvider.updateData(function () {
+                        if (path === undefined) {
+                            $scope.init();
+                        } else {
+                            $scope.getData(path);
+                        }
+                    }, url);
+                }
 
             });
         };
