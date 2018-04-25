@@ -48,7 +48,7 @@
          */
         $scope.getData = function () {
             $scope.loading = true;
-            var groupingDataUrl = "api/groupings/" + $scope.selectedGrouping.path + "aaaa/grouping";
+            var groupingDataUrl = "api/groupings/" + $scope.selectedGrouping.path + "/grouping";
 
             dataProvider.loadData(function (d) {
                 console.log(d);
