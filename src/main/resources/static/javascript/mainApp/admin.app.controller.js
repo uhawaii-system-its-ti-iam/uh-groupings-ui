@@ -27,6 +27,7 @@
             $scope.loading = true;
 
             var url = "api/groupings/adminLists";
+            $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
             dataProvider.loadData(function (d) {
                 if (d.allGroupings.length == 0) {
@@ -133,13 +134,22 @@
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
                 // Remove the user, then reload either the admin list or grouping
-                dataProvider.updateData(function () {
-                    if (path === undefined) {
-                        $scope.init();
-                    } else {
-                        $scope.getData(path);
-                    }
-                }, url);
+                if($scope.currentUser === $scope.userToDelete)
+                {
+                    dataProvider.updateData(function () {
+                        $window.location.href = "/uhgroupings/";
+                    }, url);
+                }
+                else
+                {
+                    dataProvider.updateData(function () {
+                        if (path === undefined) {
+                            $scope.init();
+                        } else {
+                            $scope.getData(path);
+                        }
+                    }, url);
+                }
 
             });
         };
