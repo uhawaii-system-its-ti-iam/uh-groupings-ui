@@ -24,7 +24,7 @@
             $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
             dataProvider.loadData(function (d) {
-                $scope.groupingsList = d.groupingsOwned;
+                $scope.groupingsList = (_.sortBy((d.groupingsOwned),'name'));
                 $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
                 $scope.loading = false;
             }, function (d) {
