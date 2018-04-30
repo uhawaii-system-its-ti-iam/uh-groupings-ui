@@ -1,13 +1,18 @@
 package edu.hawaii.its.groupings.controller;
 
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -20,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -28,6 +34,7 @@ import edu.hawaii.its.groupings.type.Feedback;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import javax.servlet.http.HttpSession;
 
+@ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class HomeControllerTest {
@@ -181,6 +188,17 @@ public class HomeControllerTest {
                 .getRequest()
                 .getSession();
         assertNull(session.getAttribute("feedback"));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void feedbackSubmit() throws Exception {
+        mockMvc.perform(post("/feedback")
+                .with(csrf())
+                .flashAttr("feedback", new Feedback()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/feedback"))
+                .andExpect(flash().attribute("success", equalTo(true)));
     }
 
     @Test
