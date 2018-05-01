@@ -1,8 +1,18 @@
 package edu.hawaii.its.groupings.controller;
 
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -15,12 +25,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+import edu.hawaii.its.groupings.type.Feedback;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import javax.servlet.http.HttpSession;
 
+@ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class HomeControllerTest {
@@ -152,6 +166,42 @@ public class HomeControllerTest {
     }
 
     @Test
+    @WithMockUhUser
+    public void requestFeedbackWithoutException() throws Exception {
+        mockMvc.perform(get("/feedback"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("feedback", hasProperty("email", equalTo("user@hawaii.edu"))))
+                .andExpect(model().attribute("feedback", hasProperty("exceptionMessage", nullValue())))
+                .andExpect(model().attributeExists("feedback"));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void requestFeedbackWithException() throws Exception {
+        HttpSession session = mockMvc.perform(get("/feedback")
+                .sessionAttr("feedback", new Feedback("exception")))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("feedback"))
+                .andExpect(model().attribute("feedback", hasProperty("exceptionMessage", equalTo("exception"))))
+                .andExpect(model().attribute("feedback", hasProperty("email", equalTo("user@hawaii.edu"))))
+                .andReturn()
+                .getRequest()
+                .getSession();
+        assertNull(session.getAttribute("feedback"));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void feedbackSubmit() throws Exception {
+        mockMvc.perform(post("/feedback")
+                .with(csrf())
+                .flashAttr("feedback", new Feedback()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/feedback"))
+                .andExpect(flash().attribute("success", equalTo(true)));
+    }
+
+    @Test
     public void requestUrl404() throws Exception {
         mockMvc.perform(get("/404"))
                 .andExpect(status().is3xxRedirection())
@@ -163,4 +213,53 @@ public class HomeControllerTest {
         mockMvc.perform(get("/not-a-url"))
                 .andExpect(status().is3xxRedirection());
     }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestInfoModal() throws Exception {
+        mockMvc.perform(get("/modal/infoModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/infoModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestApiErrorModal() throws Exception {
+        mockMvc.perform(get("/modal/apiError"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/apiError"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestPreferenceErrorModal() throws Exception {
+        mockMvc.perform(get("/modal/preferenceErrorModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/preferenceErrorModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestAddModal() throws Exception {
+        mockMvc.perform(get("/modal/addModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/addModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestRemoveModal() throws Exception {
+        mockMvc.perform(get("/modal/removeModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/removeModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestOptModal() throws Exception {
+        mockMvc.perform(get("/modal/optModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/optModal"));
+    }
+
 }
