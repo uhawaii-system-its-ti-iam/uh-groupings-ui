@@ -65,6 +65,7 @@
                     <p>
                         View and manage my memberships.  Search for new groupings to join as a member.
                     </p>
+                  <br/>
                     <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">Memberships</a></p>
                 </div>
                 <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">

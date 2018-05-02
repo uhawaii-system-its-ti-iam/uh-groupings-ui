@@ -503,3 +503,7 @@ td.uh-pre {
 .sort-icon.reverse:after {
     content: '\f106';
 }
+
+.break{
+  '\';
+}
