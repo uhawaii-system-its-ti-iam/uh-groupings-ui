@@ -67,39 +67,9 @@
                     successful = true;
                 }
                 var listName = "admins list";
-                $scope.createAddModal(adminToAdd, successful, listName);
+                $scope.createAddModal(adminToAdd, successful, false, listName);
                 $scope.adminToAdd = "";
             }, addUrl);
-        };
-
-        /**
-         * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
-         * @param {string} user - the user being added
-         * @param {boolean} wasSuccessful - whether or not the user was successfully added
-         * @param {string} listName - where the user is being added to
-         * @param {string?} path - the path to the grouping (if adding the user to a grouping)
-         */
-        $scope.createAddModal = function (user, wasSuccessful, listName, path) {
-            $scope.user = user;
-            $scope.wasSuccessful = wasSuccessful;
-            $scope.listName = listName;
-
-            $scope.addModalInstance = $uibModal.open({
-                templateUrl: "modal/addModal.html",
-                scope: $scope
-            });
-
-            $scope.addModalInstance.result.finally(function () {
-                if (wasSuccessful) {
-                    $scope.loading = true;
-                    // If no path was specified, then refresh the admin list. Otherwise, refresh the grouping
-                    if (path === undefined) {
-                        $scope.init();
-                    } else {
-                        $scope.getData(path);
-                    }
-                }
-            });
         };
 
         /**

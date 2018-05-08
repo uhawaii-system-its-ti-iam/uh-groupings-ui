@@ -165,13 +165,20 @@
             dataProvider.updateData(function (d) {
                 var successful = false;
                 var responseLength = d.length;
+                var wasRemoved = false;
                 if (responseLength === undefined || d[responseLength - 1].statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                 } else if (d[responseLength - 1].resultCode.indexOf("SUCCESS" === 0)) {
                     successful = true;
                 }
+                // If we add a user to the include group, we want to check if they were removed from the exclude group.
+                // Similarly, if we add a user to the exclude group, we want to check if they were removed from the
+                // include group.
+                if (successful && d[0].action.indexOf("delete Person") === 0) {
+                    wasRemoved = true;
+                }
                 var listName = type + " list";
-                $scope.createAddModal(userToAdd, successful, listName, $scope.selectedGrouping.path);
+                $scope.createAddModal(userToAdd, successful, wasRemoved, listName, $scope.selectedGrouping.path);
                 $scope.addUser = "";
             }, addUrl);
         };
@@ -191,9 +198,42 @@
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
                 }
                 var listName = "owners list";
-                $scope.createAddModal(ownerToAdd, successful, listName, $scope.selectedGrouping.path);
+                $scope.createAddModal(ownerToAdd, successful, false, listName, $scope.selectedGrouping.path);
                 $scope.ownerUser = "";
             }, addOwnerUrl);
+        };
+
+        /**
+         * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
+         * @param {string} user - the user being added
+         * @param {boolean} wasSuccessful - whether or not the user was successfully added
+         * @param {boolean} wasRemoved - whether or not the user was removed from the opposite group
+         * @param {string} listName - where the user is being added to
+         * @param {string?} path - the path to the grouping (if deleting the user from a group)
+         */
+        $scope.createAddModal = function (user, wasSuccessful, wasRemoved, listName, path) {
+            $scope.user = user;
+            $scope.wasSuccessful = wasSuccessful;
+            $scope.wasRemoved = wasRemoved;
+            $scope.listName = listName;
+
+            $scope.addModalInstance = $uibModal.open({
+                templateUrl: "modal/addModal.html",
+                scope: $scope
+            });
+
+            $scope.addModalInstance.result.finally(function () {
+                if (wasSuccessful) {
+                    $scope.loading = true;
+                    // Path is only undefined if adding a user as an admin, so reload the admins list and groupings list
+                    if (path === undefined) {
+                        $scope.init();
+                    } else {
+                        // Reload the grouping data
+                        $scope.getData(path);
+                    }
+                }
+            });
         };
 
         /**
