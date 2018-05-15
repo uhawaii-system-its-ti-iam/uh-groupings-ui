@@ -234,7 +234,9 @@
          * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
          * @param {string} user - the user being added
          * @param {boolean} wasSuccessful - whether or not the user was successfully added
-         * @param {boolean} wasRemoved - whether or not the user was removed from the opposite group
+         * @param {boolean} wasRemoved - whether or not the user was removed from the opposite group (e.g. if adding a
+         *                               user to the Include list, this parameter is true if the user was automatically
+         *                               removed from the Exclude list from the addMember call)
          * @param {string} listName - where the user is being added to
          * @param {string?} path - the path to the grouping (if deleting the user from a group)
          */
