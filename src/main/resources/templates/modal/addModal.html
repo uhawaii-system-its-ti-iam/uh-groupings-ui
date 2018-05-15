@@ -6,12 +6,12 @@
 </div>
 <div class="modal-body" id="modal-body">
     <div ng-if="wasSuccessful &amp;&amp; wasRemoved">
-        <p>{{ user }} has been successfully added to the {{ listName }} and removed from the
-            {{ listName === "Include list" ? "Exclude list" : "Include list" }}.
+        <p>{{ user }} has been successfully added to the {{ listName }} list and removed from the
+            {{ listName === "Include" ? "Exclude" : "Include" }} list.
         </p>
     </div>
     <div ng-if="wasSuccessful &amp;&amp; !wasRemoved">
-        <p>{{ user }} has been successfully added to the {{ listName }}.</p>
+        <p>{{ user }} has been successfully added to the {{ listName }} list.</p>
     </div>
     <div ng-if="!wasSuccessful &amp;&amp; user.length > 0">
         <p>There was an error adding {{ user }}.</p>

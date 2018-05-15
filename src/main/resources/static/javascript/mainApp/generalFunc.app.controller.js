@@ -204,7 +204,7 @@
                 if (successful && d[0].action.indexOf("delete Person") === 0) {
                     wasRemoved = true;
                 }
-                var listName = type + " list";
+                var listName = type;
                 $scope.createAddModal(userToAdd, successful, wasRemoved, listName, $scope.selectedGrouping.path);
                 $scope.addUser = "";
             }, addUrl);
@@ -224,8 +224,9 @@
                     successful = true;
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
                 }
-                var listName = "owners list";
-                $scope.createAddModal(ownerToAdd, successful, false, listName, $scope.selectedGrouping.path);
+                var listName = "owners";
+                var wasRemoved = false;
+                $scope.createAddModal(ownerToAdd, successful, wasRemoved, listName, $scope.selectedGrouping.path);
                 $scope.ownerUser = "";
             }, addOwnerUrl);
         };

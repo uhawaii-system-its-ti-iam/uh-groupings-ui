@@ -65,8 +65,9 @@
                 } else if (d.resultCode.indexOf("SUCCESS") === 0) {
                     successful = true;
                 }
-                var listName = "admins list";
-                $scope.createAddModal(adminToAdd, successful, false, listName);
+                var listName = "admins";
+                var wasRemoved = false;
+                $scope.createAddModal(adminToAdd, successful, wasRemoved, listName);
                 $scope.adminToAdd = "";
             }, addUrl);
         };
