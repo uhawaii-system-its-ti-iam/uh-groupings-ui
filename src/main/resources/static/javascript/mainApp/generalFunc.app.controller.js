@@ -8,6 +8,8 @@
      */
     function GeneralJsController($scope, $http, $window, $uibModal, $controller, dataProvider) {
 
+        $scope.currentUser = $window.document.getElementById("name").innerHTML;
+
         $scope.groupingsList = [];
         $scope.pagedItemsGroupings = [];
         $scope.currentPageGroupings = 0;
@@ -110,6 +112,31 @@
             $scope.apiErrorModalInstance.close();
         };
 
+
+        // currently testing
+/**************************************************************************/
+        /**
+         * Creates a modal for errors in loading data from the API.
+         */
+        $scope.createRemovedFrom = function (url) {
+            $scope.RemovedFromInstance = $uibModal.open({
+                templateUrl: "modal/removedFrom.html",
+                scope: $scope
+            });
+            $scope.RemovedFromInstance.result.finally(function(){
+              dataProvider.updateData(function () {
+                  $window.location.href = "/uhgroupings/";
+              }, url);
+            });
+        };
+
+        /**
+         * Closes the API error modal.
+         */
+        $scope.closeRemovedFrom = function () {
+            $scope.RemovedFromInstance.close();
+        };
+/***************************************************************************/
         /**
          * Modifies data in a grouping by filtering out the domain name, checking the user's membership in the group,
          * and checking for blanks in the username, and sorting the members by name.

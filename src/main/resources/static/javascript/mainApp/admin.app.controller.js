@@ -25,7 +25,6 @@
         $scope.init = function () {
             // Adds the loading spinner.
             $scope.loading = true;
-
             var url = "api/groupings/adminLists";
             $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
@@ -82,6 +81,7 @@
             var deleteUrl = "api/groupings/" + deleteUser + "/deleteAdmin";
             var listName = "admins list";
             $scope.createRemoveModal(deleteUser, deleteUrl, listName);
+
         };
 
         /**
@@ -102,16 +102,14 @@
             });
 
             $scope.removeModalInstance.result.then(function () {
-                $scope.loading = true;
                 // Remove the user, then reload either the admin list or grouping
                 if($scope.currentUser === $scope.userToDelete)
                 {
-                    dataProvider.updateData(function () {
-                        $window.location.href = "/uhgroupings/";
-                    }, url);
+                    $scope.createRemovedFrom(url);
                 }
                 else
                 {
+                  $scope.loading = true;
                     dataProvider.updateData(function () {
                         if (path === undefined) {
                             $scope.init();
