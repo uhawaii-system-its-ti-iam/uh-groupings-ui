@@ -33,31 +33,6 @@
         };
 
         /**
-         * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
-         * @param {string} user - the user being added
-         * @param {boolean} wasSuccessful - whether or not the user was successfully added
-         * @param {string} listName - where the user is being added to
-         * @param {string} path - the path to the grouping
-         */
-        $scope.createAddModal = function (user, wasSuccessful, listName, path) {
-            $scope.user = user;
-            $scope.wasSuccessful = wasSuccessful;
-            $scope.listName = listName;
-
-            $scope.addModalInstance = $uibModal.open({
-                templateUrl: "modal/addModal.html",
-                scope: $scope
-            });
-
-            $scope.addModalInstance.result.finally(function () {
-                if (wasSuccessful) {
-                    $scope.loading = true;
-                    $scope.getData(path);
-                }
-            });
-        };
-
-        /**
          * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {string} user - the user to delete
