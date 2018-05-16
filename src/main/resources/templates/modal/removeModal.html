@@ -1,26 +1,26 @@
 <div class="modal-header"
-     ng-class="{ 'alert alert-danger modal-alert': userToDelete === currentUser &amp;&amp; (listName === 'owners list' || listName === 'admins list') }">
+     ng-class="{ 'alert alert-danger modal-alert': userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins') }">
     <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelRemoveUser()">
         <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title" id="modal-title">Remove User</h4>
     <!-- Warning message if users try to delete themselves from the admins or owners list -->
-    <div ng-if="userToDelete === currentUser &amp;&amp; (listName === 'owners list' || listName === 'admins list')">
+    <div ng-if="userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins')">
         <strong>Warning!</strong>
-        You are attempting to remove yourself from {{ listName }}.
-        <span ng-switch="listName" style="margin: 0;">
-            <p ng-switch-when="owners list">
-                If you remove yourself, you will no longer be able to manage {{ selectedGrouping.name }} from the
-                groupings page.
+        You are attempting to remove yourself from the {{ listName }} list.
+        <span ng-switch="listName">
+            <p ng-switch-when="owners">
+                If you remove yourself, you will no longer be able to manage this grouping ({{ selectedGrouping.name }})
+                from the groupings page.
             </p>
-            <p ng-switch-when="admins list">
+            <p ng-switch-when="admins">
                 If you remove yourself, you will no longer have access to the admin page.
             </p>
         </span>
     </div>
 </div>
 <div class="modal-body" id="modal-body">
-    <p>Are you sure you want to remove {{ userToDelete }} from the {{ listName }}?</p>
+    <p>Are you sure you want to remove {{ userToDelete }} from the {{ listName }} list?</p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedRemoveUser()">Yes</button>

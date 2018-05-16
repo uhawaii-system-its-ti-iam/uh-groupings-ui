@@ -290,7 +290,7 @@
                 user = $scope.pagedItemsExclude[$scope.currentPageExclude][index].username;
             }
             var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
-            var listName = type + " list";
+            var listName = type;
             $scope.createRemoveModal(user, url, listName, $scope.selectedGrouping.path);
         };
 
@@ -302,7 +302,7 @@
             var removeOwner = $scope.pagedItemsOwners[$scope.currentPageOwners][index].username;
             var removeOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
             if ($scope.groupingOwners.length > 1) {
-                var listName = "owners list";
+                var listName = "owners";
                 $scope.createRemoveModal(removeOwner, removeOwnerUrl, listName, $scope.selectedGrouping.path);
             }
         };

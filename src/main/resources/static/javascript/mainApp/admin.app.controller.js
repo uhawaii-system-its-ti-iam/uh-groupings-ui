@@ -80,7 +80,7 @@
         $scope.removeAdmin = function (index) {
             var deleteUser = $scope.adminsList[index].username;
             var deleteUrl = "api/groupings/" + deleteUser + "/deleteAdmin";
-            var listName = "admins list";
+            var listName = "admins";
             $scope.createRemoveModal(deleteUser, deleteUrl, listName);
 
         };
