@@ -1,8 +1,23 @@
-<div class="modal-header">
+<div class="modal-header"
+     ng-class="{ 'alert alert-danger modal-alert': userToDelete === currentUser &amp;&amp; (listName === 'owners list' || listName === 'admins list') }">
     <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelRemoveUser()">
         <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title" id="modal-title">Remove User</h4>
+    <!-- Warning message if users try to delete themselves from the admins or owners list -->
+    <div ng-if="userToDelete === currentUser &amp;&amp; (listName === 'owners list' || listName === 'admins list')">
+        <strong>Warning!</strong>
+        You are attempting to remove yourself from {{ listName }}.
+        <span ng-switch="listName" style="margin: 0;">
+            <p ng-switch-when="owners list">
+                If you remove yourself, you will no longer be able to manage {{ selectedGrouping.name }} from the
+                groupings page.
+            </p>
+            <p ng-switch-when="admins list">
+                If you remove yourself, you will no longer have access to the admin page.
+            </p>
+        </span>
+    </div>
 </div>
 <div class="modal-body" id="modal-body">
     <p>Are you sure you want to remove {{ userToDelete }} from the {{ listName }}?</p>

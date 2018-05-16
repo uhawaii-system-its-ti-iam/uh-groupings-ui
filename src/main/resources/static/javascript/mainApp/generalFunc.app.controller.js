@@ -43,6 +43,9 @@
 
         $scope.loading = false;
 
+        $scope.currentUser = $window.document.getElementById("name").innerHTML;
+
+
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
         /**
