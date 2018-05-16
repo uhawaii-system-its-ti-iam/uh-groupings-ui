@@ -21,7 +21,6 @@
         $scope.init = function () {
             $scope.loading = true;
             var groupingsOwned = "api/groupings/groupingAssignment";
-            $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
             dataProvider.loadData(function (d) {
                 $scope.groupingsList = (_.sortBy((d.groupingsOwned),'name'));
@@ -51,25 +50,18 @@
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
-                // Remove the user, then reload the grouping
-
-                if($scope.currentUser === $scope.userToDelete)
-                {
-                    if($scope.groupingsList.length == 1)
-                    {
+                if ($scope.currentUser === $scope.userToDelete && listName === 'owners') {
+                    if ($scope.groupingsList.length === 1) {
                         dataProvider.updateData(function () {
-                            $window.location.href = "/uhgroupings/home";
+                            $window.location.href = "home";
+                        }, url);
+                    } else {
+                        dataProvider.updateData(function () {
+                            $window.location.href = "groupings";
                         }, url);
                     }
-                    else
-                    {
-                        dataProvider.updateData(function () {
-                            $window.location.href = "/uhgroupings/groupings";
-                        }, url);
-                    }
-                }
-                else
-                {
+                } else {
+                    // Reload the grouping
                     dataProvider.updateData(function () {
                         $scope.getData(path);
                     }, url);
