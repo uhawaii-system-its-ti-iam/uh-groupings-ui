@@ -103,14 +103,10 @@
             });
 
             $scope.removeModalInstance.result.then(function () {
-                // Remove the user, then reload either the admin list or grouping
-                if($scope.currentUser === $scope.userToDelete)
-                {
+                if ($scope.currentUser === $scope.userToDelete && listName === 'admins') {
                     $scope.createRemovedFrom(url);
-                }
-                else
-                {
-                  $scope.loading = true;
+                } else {
+                    $scope.loading = true;
                     dataProvider.updateData(function () {
                         if (path === undefined) {
                             $scope.init();
