@@ -208,7 +208,7 @@
                     wasRemoved = true;
                 }
                 var listName = type;
-                $scope.createAddModal(userToAdd, successful, wasRemoved, listName, $scope.selectedGrouping.path);
+                $scope.createAddModal(userToAdd, successful, listName, $scope.selectedGrouping.path, wasRemoved);
                 $scope.addUser = "";
             }, addUrl);
         };
@@ -228,8 +228,7 @@
                     console.log("Assigned " + $scope.ownerUser + " as an owner");
                 }
                 var listName = "owners";
-                var wasRemoved = false;
-                $scope.createAddModal(ownerToAdd, successful, wasRemoved, listName, $scope.selectedGrouping.path);
+                $scope.createAddModal(ownerToAdd, successful, listName, $scope.selectedGrouping.path);
                 $scope.ownerUser = "";
             }, addOwnerUrl);
         };
@@ -238,13 +237,13 @@
          * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
          * @param {string} user - the user being added
          * @param {boolean} wasSuccessful - whether or not the user was successfully added
-         * @param {boolean} wasRemoved - whether or not the user was removed from the opposite group (e.g. if adding a
-         *                               user to the Include list, this parameter is true if the user was automatically
-         *                               removed from the Exclude list from the addMember call)
          * @param {string} listName - where the user is being added to
          * @param {string?} path - the path to the grouping (if deleting the user from a group)
+         * @param {boolean?} wasRemoved - whether or not the user was removed from the opposite group (e.g. if adding a
+         *                                user to the Include list, this parameter is true if the user was automatically
+         *                                removed from the Exclude list from the addMember call)
          */
-        $scope.createAddModal = function (user, wasSuccessful, wasRemoved, listName, path) {
+        $scope.createAddModal = function (user, wasSuccessful, listName, path, wasRemoved) {
             $scope.user = user;
             $scope.wasSuccessful = wasSuccessful;
             $scope.wasRemoved = wasRemoved;
