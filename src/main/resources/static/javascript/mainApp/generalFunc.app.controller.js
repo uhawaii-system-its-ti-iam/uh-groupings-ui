@@ -45,7 +45,6 @@
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
-
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
         /**
@@ -57,42 +56,38 @@
 
             dataProvider.loadData(function (d) {
                 console.log(d);
-                if (d.path.length == 0) {
-                    $scope.createApiErrorModal();
-                } else {
-                    //Gets members in the basis group
-                    $scope.groupingBasis = d.basis.members;
-                    $scope.modify($scope.groupingBasis);
-                    $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis);
+                //Gets members in the basis group
+                $scope.groupingBasis = d.basis.members;
+                $scope.modify($scope.groupingBasis);
+                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis);
 
-                    //Gets members in the include group
-                    $scope.groupingInclude = d.include.members;
-                    $scope.modify($scope.groupingInclude);
-                    $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude);
+                //Gets members in the include group
+                $scope.groupingInclude = d.include.members;
+                $scope.modify($scope.groupingInclude);
+                $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude);
 
-                    //Gets members in the exclude group
-                    $scope.groupingExclude = d.exclude.members;
-                    $scope.modify($scope.groupingExclude);
-                    $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude);
+                //Gets members in the exclude group
+                $scope.groupingExclude = d.exclude.members;
+                $scope.modify($scope.groupingExclude);
+                $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude);
 
-                    //Gets members in grouping
-                    $scope.groupingMembers = d.composite.members;
-                    $scope.modify($scope.groupingMembers, "members");
-                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers);
+                //Gets members in grouping
+                $scope.groupingMembers = d.composite.members;
+                $scope.modify($scope.groupingMembers, "members");
+                $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers);
 
-                    //Gets owners of the grouping
-                    $scope.groupingOwners = d.owners.members;
-                    $scope.modify($scope.groupingOwners);
-                    $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                //Gets owners of the grouping
+                $scope.groupingOwners = d.owners.members;
+                $scope.modify($scope.groupingOwners);
+                $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
-                    $scope.allowOptIn = d.optInOn;
-                    $scope.allowOptOut = d.optOutOn;
-                    $scope.listserv = d.listservOn;
+                $scope.allowOptIn = d.optInOn;
+                $scope.allowOptOut = d.optOutOn;
+                $scope.listserv = d.listservOn;
 
-                    //Stop loading spinner
-                    $scope.loading = false;
-                    $scope.showGrouping = true;
-                }
+                //Stop loading spinner
+                $scope.loading = false;
+                $scope.showGrouping = true;
             }, function (d) {
                 dataProvider.handleException({ exceptionMessage: d.exceptionMessage }, "feedback/error", "feedback");
             }, groupingDataUrl);

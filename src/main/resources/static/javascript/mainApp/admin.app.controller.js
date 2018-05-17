@@ -26,19 +26,14 @@
             // Adds the loading spinner.
             $scope.loading = true;
             var url = "api/groupings/adminLists";
-            $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
             dataProvider.loadData(function (d) {
-                if (d.allGroupings.length == 0) {
-                    $scope.createApiErrorModal();
-                } else {
-                    $scope.adminsList = d.adminGroup.members;
-                    $scope.groupingsList = d.allGroupings;
-                    $scope.groupingsList = _.sortBy($scope.groupingsList, "name");
-                    $scope.modify($scope.adminsList);
-                    $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
-                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
-                }
+                $scope.adminsList = d.adminGroup.members;
+                $scope.groupingsList = d.allGroupings;
+                $scope.groupingsList = _.sortBy($scope.groupingsList, "name");
+                $scope.modify($scope.adminsList);
+                $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
+                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
                 $scope.loading = false;
             }, function (d) {
                 dataProvider.handleException({ exceptionMessage: d.exceptionMessage }, "feedback/error", "feedback");
