@@ -8,15 +8,15 @@
     <div ng-if="userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins')">
         <strong>Warning!</strong>
         You are attempting to remove yourself from the {{ listName }} list.
-        <span ng-switch="listName">
-            <p ng-switch-when="owners">
+        <div ng-switch="listName">
+            <span ng-switch-when="owners">
                 If you remove yourself, you will no longer be able to manage this grouping ({{ selectedGrouping.name }})
                 from the groupings page.
-            </p>
-            <p ng-switch-when="admins">
+            </span>
+            <span ng-switch-when="admins">
                 If you remove yourself, you will no longer have access to the admin page.
-            </p>
-        </span>
+            </span>
+        </div>
     </div>
 </div>
 <div class="modal-body" id="modal-body">
