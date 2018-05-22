@@ -529,4 +529,5 @@ td.uh-pre {
     .membership-btn-alignment {
         display: none;
     }
+>>>>>>> Dev-jiaqi
 }
