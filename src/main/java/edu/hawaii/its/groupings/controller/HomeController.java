@@ -148,8 +148,4 @@ public class HomeController {
         return "modal/optModal";
     }
 
-    @RequestMapping(value = "/modal/removedFrom", method = RequestMethod.GET)
-    public String removeFrom(Locale locale, Model model) {
-      return "modal/removedFrom";
-    }
 }

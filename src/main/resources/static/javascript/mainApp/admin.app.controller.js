@@ -97,18 +97,18 @@
             });
 
             $scope.removeModalInstance.result.then(function () {
-                if ($scope.currentUser === $scope.userToDelete && listName === 'admins') {
-                    $scope.createRemovedFrom(url);
-                } else {
-                    $scope.loading = true;
-                    dataProvider.updateData(function () {
-                        if (path === undefined) {
-                            $scope.init();
+                $scope.loading = true;
+                dataProvider.updateData(function () {
+                    if (path === undefined) {
+                        if ($scope.currentUser === $scope.userToDelete) {
+                            $window.location.href = "home";
                         } else {
-                            $scope.getData(path);
+                            $scope.init();
                         }
-                    }, url);
-                }
+                    } else {
+                        $scope.getData(path);
+                    }
+                }, url);
 
             });
         };
