@@ -3,31 +3,36 @@
     <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelRemoveUser()">
         <span aria-hidden="true">&times;</span>
     </button>
-    <h4 class="modal-title" id="modal-title">Remove User</h4>
+    <h4 class="modal-title" id="modal-title"
+        ng-style="{ 'margin-bottom': userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins') ? '10px' : '0px' }">
+        Remove User
+    </h4>
     <!-- Warning message if users try to delete themselves from the admins or owners list -->
     <div ng-if="userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins')">
-        <strong>Warning!</strong>
-        You are attempting to remove yourself from the {{ listName }} list.
+        <p>
+            <strong>Warning!</strong>
+            You are attempting to remove yourself from the {{ listName }} list.
+        </p>
         <div ng-switch="listName">
             <div ng-switch-when="owners">
-                <div>
+                <p>
                     If you remove yourself, you will no longer be able to manage this grouping
                     ({{ selectedGrouping.name }}) from the groupings page.
-                </div>
-                <div ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1">
+                </p>
+                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1">
                     You will be redirected to the home page after you remove yourself.
-                </div>
-                <div ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1">
+                </p>
+                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1">
                     You will be redirected to the list of groupings you own after you remove yourself.
-                </div>
+                </p>
             </div>
             <div ng-switch-when="admins">
-                <div>
+                <p>
                     If you remove yourself, you will no longer have access to the admin page.
-                </div>
-                <div>
+                </p>
+                <p>
                     You will be redirected to the home page after you remove yourself.
-                </div>
+                </p>
             </div>
         </div>
     </div>
