@@ -58,11 +58,11 @@
                 console.log(d);
                 //Gets members in the basis group
                 $scope.groupingBasis = d.basis.members;
-                $scope.modify($scope.groupingBasis);
                 $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis);
 
                 //Gets members in the include group
                 $scope.groupingInclude = d.include.members;
+                console.log($scope.groupingInclude.length);
                 $scope.modify($scope.groupingInclude);
                 $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude);
 
@@ -187,6 +187,21 @@
         $scope.addMember = function (type) {
             var userToAdd = $scope.addUser;
             var addUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + userToAdd + "/addMemberTo" + type + "Group";
+            if($scope.userCheck(userToAdd, type))
+                $scope.createCheckModal(userToAdd, type, addUrl);
+            else
+                $scope.updateAddMember(userToAdd, type, addUrl);
+        };
+
+        /**
+         * Calls API to add the member to the grouping list
+         * and if they are already in another list, removes them from the other list.
+         *
+         * @param userToAdd - User you want to add
+         * @param type - Grouping list you are adding to.
+         * @param addUrl - Url for API call.
+         */
+        $scope.updateAddMember = function(userToAdd, type , addUrl) {
             dataProvider.updateData(function (d) {
                 var successful = false;
                 var responseLength = d.length;
@@ -209,6 +224,32 @@
         };
 
         /**
+         * Checks whether the person is already in another group
+         * @param person - the person you are checking to see if they are in another list.
+         * @param type - the list that you are comparing against.
+         * @returns {boolean} - True if the person is already in another list, else false.
+         */
+        $scope.userCheck = function(person, type)
+        {
+            if(type === "Include")
+            {
+                for(var i = 0; i < $scope.groupingExclude.length; i++) {
+                    if ($scope.groupingExclude[i].username === person)
+                        return true;
+                }
+            }
+            if(type === "Exclude")
+            {
+                for(var j = 0; j < $scope.groupingInclude.length; j++) {
+                    if ($scope.groupingInclude[j].username === person)
+                        return true;
+                }
+            }
+
+            return false;
+        };
+
+        /**
          * Gives a user ownership of a grouping.
          */
         $scope.addOwner = function () {
@@ -226,6 +267,43 @@
                 $scope.createAddModal(ownerToAdd, successful, listName, $scope.selectedGrouping.path);
                 $scope.ownerUser = "";
             }, addOwnerUrl);
+        };
+
+        /**
+         * Creates modal that ask whether or not they want to add a person that is already in another list.
+         * @param user - Username of the user they are trying to add.
+         * @param listname - name of the list they are adding to. Either Include list or Exclude list.
+         * @param addUrl - API Url that will be called to update for adding members
+         */
+        $scope.createCheckModal = function(user, listname, addUrl)
+        {
+            $scope.user = user;
+            $scope.listName = listname;
+            $scope.checkModalInstance = $uibModal.open({
+                templateUrl: "modal/checkModal.html",
+                scope: $scope
+            });
+
+            $scope.checkModalInstance.result.then(function () {
+                $scope.updateAddMember(user, listname, addUrl);
+            });
+
+        };
+
+        /**
+         * Closes CheckModal and proceeds with the checkModalInstance result.then function
+         */
+        $scope.proceedCheckModal = function()
+        {
+            $scope.checkModalInstance.close();
+        };
+
+        /**
+         * Dismisses the CheckModal and closes it with proceeding with checkModalInstance's result.then function.
+         */
+        $scope.closeCheckModal = function()
+        {
+            $scope.checkModalInstance.dismiss();
         };
 
         /**

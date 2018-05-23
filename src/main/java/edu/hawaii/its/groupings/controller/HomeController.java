@@ -123,6 +123,11 @@ public class HomeController {
         return "modal/infoModal";
     }
 
+    @RequestMapping(value = "/modal/checkModal", method = RequestMethod.GET)
+    public String checkModal(Locale locale, Model model) {
+        return "modal/checkModal";
+    }
+
     @RequestMapping(value = "/modal/apiError", method = RequestMethod.GET)
     public String apiError(Locale locale, Model model) {
         return "modal/apiError";
