@@ -547,15 +547,19 @@
         /**
          * Exports data in a table to a CSV file
          * @param {object[]} table - the table to export
-         * @param name - the name of the group (i.e. include or exclude)
+         * @param grouping - grouping name that you are exporting from
+         * @param list - grouping list (i.e. include or exclude)
          */
-        $scope.export = function (table, name) {
+        $scope.export = function (table, grouping, list) {
             var data, filename, link;
 
             var csv = $scope.convertArrayOfObjectsToCSV(table);
-            if (csv == null) return;
+            if (csv == null) {
+                $scope.createApiErrorModal();
+                return;
+            }
 
-            filename = name + "_export.csv";
+            filename = grouping + ":" + list + "_list.csv";
 
             if (!csv.match(/^data:text\/csv/i)) {
                 csv = "data:text/csv;charset=utf-8," + csv;
