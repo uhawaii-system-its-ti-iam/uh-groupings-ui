@@ -17,7 +17,7 @@
         $scope.groupToPages = function (list) {
             var pagedList = [];
             if (list === null) {
-                console.log("I AM NULL ... WHY?!");
+                console.log("There is nothing here");
             } else {
                 for (var i = 0; i < list.length; i++) {
                     if (i % $scope.itemsPerPage === 0) {
@@ -27,7 +27,6 @@
                     }
                 }
             }
-            console.log(pagedList.length);
             return pagedList;
         };
 
@@ -52,10 +51,10 @@
         $scope.filter = function (list, pagedListVar, pageVar, queryVar) {
             var query = $scope[queryVar];
             // Filters for items that match the user's query
-            var filteredItems = $filter('filter')(list, function (item) {
+            var filteredItems = $filter("filter")(list, function (item) {
                 for (var key in item) {
                     // Ignore the 'basis' and '$$hashKey' properties, as well as non-string items
-                    if (item.hasOwnProperty(key) && key !== 'basis' && key !== '$$hashKey' && typeof(item[key]) === 'string') {
+                    if (item.hasOwnProperty(key) && key !== "basis" && key !== "$$hashKey" && typeof(item[key]) === "string") {
                         if (searchMatch(item[key], query)) return true;
                     }
                 }
@@ -72,7 +71,7 @@
          * @param {number} start - the start number
          * @param {number} end - the end number
          * @returns an array of numbers from start to end - 1.
-         **/
+         */
         $scope.range = function (size, start, end) {
             var ret = [];
             if (size < end) {
@@ -94,25 +93,25 @@
          * @param {string} listVar - the name of the variable contaning the paginated list
          */
         $scope.currentPage = function (action, pageVar, listVar) {
-          console.log(action+" "+pageVar+" "+listVar);
+            console.log(action + " " + pageVar + " " + listVar);
             switch (action) {
-                case 'Next':
+                case "Next":
                     if ($scope[pageVar] < $scope[listVar].length - 1) {
                         $scope[pageVar] = $scope[pageVar] + 1;
                     }
                     break;
-                case 'Set':
+                case "Set":
                     $scope[pageVar] = this.n;
                     break;
-                case 'Prev':
+                case "Prev":
                     if ($scope[pageVar] > 0) {
                         $scope[pageVar]--;
                     }
                     break;
-                case 'First':
+                case "First":
                     $scope[pageVar] = 0;
                     break;
-                case 'Last':
+                case "Last":
                     if ($scope[pageVar] >= 0) {
                         $scope[pageVar] = $scope[listVar].length - 1;
                     }
@@ -129,8 +128,8 @@
         $scope.sortBy = function (tableName, pagedTableName, propertyName) {
             if (!$scope.columnSort[tableName]) {
                 // If the user sorts by name property (typically the first column), then just reverse the direction
-                if (propertyName === 'name') {
-                    $scope.columnSort[tableName] = { property: 'name', reverse: true };
+                if (propertyName === "name") {
+                    $scope.columnSort[tableName] = { property: "name", reverse: true };
                 } else {
                     // Otherwise, set the new property and sort in ascending order
                     $scope.columnSort[tableName] = { property: propertyName, reverse: false };
@@ -146,13 +145,13 @@
                 }
             }
             var reverse = $scope.columnSort[tableName].reverse;
-            $scope[tableName] = $filter('orderBy')($scope[tableName], propertyName, reverse);
+            $scope[tableName] = $filter("orderBy")($scope[tableName], propertyName, reverse);
             // Paginate the table again
             $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
         };
 
     }
 
-    UHGroupingsApp.controller('TableJsController', TableJsController);
+    UHGroupingsApp.controller("TableJsController", TableJsController);
 
 })();

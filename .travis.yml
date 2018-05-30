@@ -20,6 +20,5 @@ notifications:
       - duckart@hawaii.edu
       - zknoebel@hawaii.edu
       - aaronvil@hawaii.edu
-      - ksanidad@hawaii.edu
     on_success: change
     on_failure: always

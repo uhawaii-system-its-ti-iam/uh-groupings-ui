@@ -14,7 +14,7 @@
             <h1 class="text-left">Manage My Groupings</h1>
 
             <p class="text-left">View and manage groupings I own. Manage members, configure grouping options and
-                integration destinations.</p>
+                sync destinations.</p>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
                 <div id="overlay" ng-show="loading">
@@ -29,7 +29,14 @@
 
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h2 class = "panel-title" style="margin: inherit;">Manage Grouping</h2>
+                            <div class="row" style="margin: inherit;">
+                                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 pull-left" style="padding: 0;">
+                                    <h2 style="margin: inherit; padding-top: .11875em;">Manage Grouping</h2>
+                                </div>
+                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="padding: 0;">
+                                    <button ng-click="getData()" class="btn btn-primary xs-left-sm-right">Refresh</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="panel-body" style="min-height: 400px;">
                             <div class="row" style="margin: inherit;">

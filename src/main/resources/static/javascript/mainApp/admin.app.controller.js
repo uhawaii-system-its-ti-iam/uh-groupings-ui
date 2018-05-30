@@ -17,7 +17,7 @@
         $scope.itemsPerPage = 20;
 
         // Allow this controller to use functions from the General Controller
-        angular.extend(this, $controller('GeneralJsController', { $scope: $scope }));
+        angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
         /**
          * Initializes the page, displaying the list of groupings to administer and the list of admins to manage.
@@ -25,26 +25,18 @@
         $scope.init = function () {
             // Adds the loading spinner.
             $scope.loading = true;
-
             var url = "api/groupings/adminLists";
 
             dataProvider.loadData(function (d) {
-                if (d.allGroupings.length == 0) {
-                    $scope.createApiErrorModal();
-                } else {
-                    $scope.adminsList = d.adminGroup.members;
-                    $scope.groupingsList = d.allGroupings;
-                    $scope.groupingsList = _.sortBy($scope.groupingsList, 'name');
-                    $scope.modify($scope.adminsList);
-                    $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
-                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
-                }
+                $scope.adminsList = d.adminGroup.members;
+                $scope.groupingsList = d.allGroupings;
+                $scope.groupingsList = _.sortBy($scope.groupingsList, "name");
+                $scope.modify($scope.adminsList);
+                $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
+                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
                 $scope.loading = false;
-            }, function(d){
-                console.log("error has occurred");
-                console.log(d);
-                var error = encodeURI(d.message);
-                $window.location.href = "/uhgroupings/feedback/" + error;
+            }, function (d) {
+                dataProvider.handleException({ exceptionMessage: d.exceptionMessage }, "feedback/error", "feedback");
             }, url);
         };
 
@@ -59,45 +51,19 @@
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            var addUrl = "api/groupings/" + $scope.adminToAdd + "/addAdmin";
+            var adminToAdd = $scope.adminToAdd;
+            var addUrl = "api/groupings/" + adminToAdd + "/addAdmin";
             dataProvider.updateData(function (d) {
                 var successful = false;
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
-                } else if (d.resultCode.indexOf('SUCCESS') === 0) {
+                } else if (d.resultCode.indexOf("SUCCESS") === 0) {
                     successful = true;
                 }
-                $scope.createAddModal($scope.adminToAdd, successful);
-                $scope.adminToAdd = '';
+                var listName = "admins";
+                $scope.createAddModal(adminToAdd, successful, listName);
+                $scope.adminToAdd = "";
             }, addUrl);
-        };
-
-        /**
-         * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
-         * @param {string} user - the user being added
-         * @param {boolean} wasSuccessful - whether or not the user was successfully added
-         * @param {string?} path - the path to the grouping (if adding the user to a grouping)
-         */
-        $scope.createAddModal = function (user, wasSuccessful, path) {
-            $scope.user = user;
-            $scope.wasSuccessful = wasSuccessful;
-
-            $scope.addModalInstance = $uibModal.open({
-                templateUrl: 'modal/addModal.html',
-                scope: $scope,
-            });
-
-            $scope.addModalInstance.result.finally(function() {
-                if (wasSuccessful) {
-                    $scope.loading = true;
-                    // If no path was specified, then refresh the admin list. Otherwise, refresh the grouping
-                    if (path === undefined) {
-                        $scope.init();
-                    } else {
-                        $scope.getData(path);
-                    }
-                }
-            });
         };
 
         /**
@@ -108,8 +74,9 @@
         $scope.removeAdmin = function (index) {
             var deleteUser = $scope.adminsList[index].username;
             var deleteUrl = "api/groupings/" + deleteUser + "/deleteAdmin";
+            var listName = "admins";
+            $scope.createRemoveModal(deleteUser, deleteUrl, listName);
 
-            $scope.createRemoveModal(deleteUser, deleteUrl);
         };
 
         /**
@@ -117,22 +84,27 @@
          * a request is made to delete the user.
          * @param {string} user - the user to delete
          * @param {string} url - the URL used to make the request
+         * @param {string} listName - where the user is being removed from
          * @param {string?} path - the path to the grouping (if deleting a user from a grouping)
          */
-        $scope.createRemoveModal = function (user, url, path) {
+        $scope.createRemoveModal = function (user, url, listName, path) {
             $scope.userToDelete = user;
+            $scope.listName = listName;
 
             $scope.removeModalInstance = $uibModal.open({
-                templateUrl: 'modal/removeModal.html',
+                templateUrl: "modal/removeModal.html",
                 scope: $scope
             });
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
-                // Remove the user, then reload either the admin list or grouping
                 dataProvider.updateData(function () {
                     if (path === undefined) {
-                        $scope.init();
+                        if ($scope.currentUser === $scope.userToDelete) {
+                            $window.location.href = "home";
+                        } else {
+                            $scope.init();
+                        }
                     } else {
                         $scope.getData(path);
                     }
@@ -143,6 +115,6 @@
 
     }
 
-    UHGroupingsApp.controller('AdminJsController', AdminJsController);
+    UHGroupingsApp.controller("AdminJsController", AdminJsController);
 
 })();

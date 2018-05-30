@@ -6,65 +6,72 @@
 <body ng-app="UHGroupingsApp">
 <nav th:substituteby="menubar :: copy"></nav>
 
+<!--  Content container -->
+<div class="container">
+    <h1>Feedback</h1>
 
-<!--   Content container -->
-<div class='container'>
-   <div class="row">
-       <div class='container-fluid'>
-           <h1>Feedback</h1>
+    <div class="alert alert-success" role="alert" th:if="${success}">
+        <strong>Thank you.</strong> Your feedback has successfully been submitted.
+    </div>
 
-           <p>Feedback helps us to understand where improvements are needed. Please let us know.</p>
+    <p>Feedback helps us to understand where improvements are needed. Please let us know.</p>
 
-           <div class="panel panel-default">
-               <div class="panel-body">
-                   <form class="form-horizontal" action="#" th:action="@{/feedback}" th:object="${feedback}" method="post">
-                       <div class="form-group">
-                           <label for="typeField" class="col-sm-2 control-label">Feedback Type:</label>
-                           <div class="col-sm-10">
-                               <select class="form-control" id="typeField" name="type">
-                                   <option value="problem">PROBLEM</option>
-                                   <option value="feature">FEATURE</option>
-                                   <option value="question">QUESTION</option>
-                                   <option value="general">GENERAL</option>
-                               </select>
-                           </div>
-                       </div>
-                       <div class="form-group">
-                           <label for="nameField" class="col-sm-2 control-label">Your Name (Optional):</label>
-                           <div class="col-sm-10">
-                               <input th:field="*{name}" type="text" class="form-control" id="nameField" placeholder="Name"
-                                      required="true"/>
-                           </div>
-                       </div>
-                       <div class="form-group">
-                           <label for="emailField" class="col-sm-2 control-label">Email:</label>
-                           <div class="col-sm-10">
-                               <input th:field="*{email}" type="email" class="form-control" id="emailField"
-                                      placeholder="Email"
-                                      required="true"/>
-                           </div>
-                       </div>
-                       <div class="form-group">
-                           <label for="messageField" class="col-sm-2 control-label">Your Feedback:</label>
-                           <div class="col-sm-10">
-                               <input th:field="*{message}" type="text" class="form-control" id="messageField"
-                                      required="true"/>
-                           </div>
-                       </div>
-                       <div>
-                           <br/>
-                           <button type="reset"  class="btn btn-default">Reset</button>&nbsp;&nbsp;
-                           <button type="submit" class="btn btn-default">Email Form Data to Me</button>
-                       </div>
-                   </form>
-                   <br/>
-               </div>
-           </div>
-       </div>
-   </div>
-
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="form-horizontal" th:action="@{/feedback}" th:object="${feedback}" method="post">
+                <div class="form-group" id="typeError">
+                    <label for="input-type" class="col-sm-2 control-label">Feedback type:
+                        <span style="color:red;">*</span>
+                    </label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="input-type" th:field="*{type}">
+                            <option value="general">GENERAL</option>
+                            <option value="problem">PROBLEM</option>
+                            <option value="feature">FEATURE</option>
+                            <option value="question">QUESTION</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input-name" class="col-sm-2 control-label">Your Name (Optional): </label>
+                    <div class="col-sm-10">
+                        <input th:field="*{name}" class="form-control" id="input-name"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input-email" class="col-sm-2 control-label">Email:
+                        <span style="color:red;">*</span>
+                    </label>
+                    <div class="col-sm-10">
+                        <input th:field="*{email}" class="form-control" id="input-email" th:required="required"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input-feedback" class="col-sm-2 control-label">Your Feedback:
+                        <span style="color:red">*</span>
+                    </label>
+                    <div class="col-sm-10">
+                        <textarea th:field="*{message}" class="form-control" id="input-feedback" rows="8" th:required="required">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="form-group" style="display: none; visibility: hidden;">
+                    <label for="input-exception" class="col-sm-2 control-label">Exception Error</label>
+                    <div class="col-sm-10">
+                        <textarea th:field="*{exceptionMessage}" class="form-control" id="input-exception"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-push-2">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <!-- / Content container. -->
 
+<div th:substituteby="footer :: copy"></div>
 </body>
 </html>

@@ -10,13 +10,11 @@
      */
     function MembershipJsController($scope, $uibModal, $window, $controller, dataProvider) {
 
-        $scope.currentUsername = "";
         $scope.membersList = [];
         $scope.optInList = [];
         $scope.optOutList = [];
         $scope.loading = true;
 
-        //these will be place holders for now
         $scope.pagedItemsMembersList = [];
         $scope.pagedItemsOptInList = [];
         $scope.gap = 2;
@@ -25,62 +23,41 @@
         $scope.currentPageOptIn = 0;
         $scope.currentPageOptOut = 0;
 
-        angular.extend(this, $controller('TableJsController', { $scope: $scope }));
+        angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
-        /**init is something that is usually called at the start of something
-         * so calling init would be called at the start
-         **/
+        /**
+         * Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
+         * is able to opt out of.
+         */
         $scope.init = function () {
-            var groupingURL = "api/groupings/groupingAssignment";
-            /**Loads Data into a membersList
-             *                  optOutList
-             *                  optInList
-             *                  optedIn
-             *                  optedOut
-             *takes all of that data and puts them into pages as called by "groupToPages"
-             **/
+            var groupingURL = "api/groupings/groupingAssignment/";
+
             dataProvider.loadData(function (d) {
-                console.log(d);
-                if(typeof d.groupingsIn === 'undefined') {
-                    $scope.loading = false;
-                    $scope.errorModal();
-                }
-                else{
-                    $scope.membersList = d.groupingsIn;
-                    $scope.optOutList = d.groupingsToOptOutOf;
-                    $scope.optInList = d.groupingsToOptInTo;
+                $scope.membersList = d.groupingsIn;
+                $scope.optOutList = d.groupingsToOptOutOf;
+                $scope.optInList = d.groupingsToOptInTo;
 
-                    $scope.membersList = $scope.sortOrder($scope.membersList, 'name');
-                    $scope.optInList = $scope.sortOrder($scope.optInList, 'name');
+                $scope.membersList = $scope.sortOrder($scope.membersList, "name");
+                $scope.optInList = $scope.sortOrder($scope.optInList, "name");
 
-                    if ($scope.optInList.length === 0) {
-                        $scope.optInList.push({'name': "NO GROUPINGS TO OPT IN TO"});
-                    }
+                $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList);
+                $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList);
 
-                    // console.log($scope.membersList.length);
-                    // console.log($scope.pagedItemsMembersList.length);
-                    $scope.pagedItemsMembersList = $scope.groupToPages($scope.membersList);
-                    $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList);
-
-                    $scope.loading = false;
-                }
-            }, function(d){
-                console.log("error has occurred");
-                console.log(d);
-                var error = encodeURI(d.message);
-                $window.location.href = "/uhgroupings/feedback/" + error;
+                $scope.loading = false;
+            }, function (d) {
+                dataProvider.handleException({ exceptionMessage: d.exceptionMessage }, "feedback/error", "feedback");
             }, groupingURL);
         };
 
         $scope.errorModal = function () {
             $scope.errorModalInstance = $uibModal.open({
-                templateUrl: 'modal/apiError.html',
-                windowClass: 'center-modal',
+                templateUrl: "modal/apiError.html",
+                windowClass: "center-modal",
                 scope: $scope
             });
         };
 
-        $scope.errorDismiss = function() {
+        $scope.errorDismiss = function () {
             $scope.errorModalInstance.dismiss();
         };
 
@@ -98,7 +75,6 @@
         /**
          * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
          * @param {number} index - the index of the grouping clicked by the user
-         *
          */
         $scope.optOut = function (index) {
             console.log(index);
@@ -110,8 +86,7 @@
                     console.log("Failed to opt out");
                     alert("Failed to opt out");
                     $scope.loading = false;
-                }
-                else {
+                } else {
                     $scope.init();
                 }
             }, optOutURL);
@@ -132,12 +107,8 @@
 
         //Disables opt in button if there are no groupings to opt into.
         $scope.disableOptIn = function (index) {
-          console.log(index);
-            for (var i = 0; i < $scope.membersList.length; i++) {
-              //TODO have a better fix to catch if there is no items to opt into.
-                if($scope.optInList[index] == null){
-                    return false;
-                }else if ($scope.membersList[i].name === $scope.optInList[index].name) {
+            for (grouping in $scope.membersList) {
+                if (grouping.name === $scope.optInList[index].name) {
                     return true;
                 }
             }

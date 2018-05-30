@@ -34,7 +34,9 @@
                 </div>
             </div>
             <div>
-                <h4>Publication Destinations</h4>
+                <h4>Sync Destinations</h4>
+                <strong class="bg-danger text-warning col-md-12" th:text="#{screen.message.common.preference.sync.warning}"></strong>
+                <br/>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" ng-model="listserv" ng-change="updateListserv()"
@@ -48,7 +50,9 @@
                        th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\')',
                                 ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\') : null'"></i>
                 </div>
-                <div class="checkbox">
+
+                <!--Hidden until functionality is created.-->
+                <!--<div class="checkbox">
                     <label>
                         <input type="checkbox" ng-model="LDAP" ng-change="checkLDAP()"/>
                         CAS/LDAP: uhReleasedGroupings
@@ -59,7 +63,7 @@
                        th:title="#{screen.message.common.tooltip.preference.ldap}"
                        th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\')',
                                 ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\') : null'"></i>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>
