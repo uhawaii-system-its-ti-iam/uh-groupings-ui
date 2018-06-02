@@ -336,7 +336,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
             if (subjects.length > 0) {
                 for (WsSubject subject : subjects) {
-                    if (subject != null) {
+                    if (!subject.getSourceId().equals("g:gsa") && subject != null) {
                         group.addMember(makePerson(subject, attributeNames));
                     }
                 }
@@ -351,7 +351,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     //makes a person with all attributes in attributeNames
     @Override
     public Person makePerson(WsSubject subject, String[] attributeNames) {
-        if (subject == null || subject.getAttributeValues() == null) {
+        if (subject == null || subject.getAttributeValues() == null || subject.getSourceId().equals("g:gsa")) {
             return new Person();
         } else {
 
