@@ -245,18 +245,13 @@
                         <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/2.2.0/ui-bootstrap.min.js</source>
                         <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js</source>
                         <source>classpath/META-INF/resources/webjars/angular-mocks/${angular-mocks-version}/angular-mocks.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/campus/campus.app.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/campus/campus.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/campus/campus.service.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/admin/admin.app.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/admin/admin.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/admin/admin.service.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/membership/membership.app.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/membership/membership.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/membership/membership.service.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/owner/owner.app.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/owner/owner.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/owner/owner.service.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/app.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/admin.app.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/app.service.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/generalFunc.app.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.app..controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/owners.app.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/table.app.controller.js</source>
                     </preloadSources>
                     <specIncludes>
                         <include>**/**.test.js</include>
