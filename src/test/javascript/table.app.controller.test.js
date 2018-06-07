@@ -14,7 +14,7 @@ describe("TableController", function () {
 
     describe("groupToPages", function () {
 
-        it("should return four pages for a list of twenty items, given five items per page", function () {
+        it("should return three pages for a list of fifteen items, given five items per page", function () {
             var items = [];
             scope.itemsPerPage = 5;
 
@@ -114,9 +114,74 @@ describe("TableController", function () {
     });
 
     describe("filter", function () {
-        it("should be calling isFilterableColumn", function () {
 
+        beforeEach(function () {
+            scope.items = [{
+                "$$hashKey": "random",
+                basis: "Include",
+                firstName: "John",
+                lastName: "Doe",
+                username: "jdoe",
+                uuid: "12345678"
+            }, {
+                "$$hashKey": "random",
+                basis: "Exclude",
+                firstName: "Jane",
+                lastName: "Doe",
+                username: "janed",
+                uuid: "23456789"
+            }];
+            scope.itemsPerPage = 1;
+            scope.pagedItems = scope.groupToPages(scope.items);
+            scope.currentPage = 1;
         });
+
+        it("should return entries where any property value matches the query", function () {
+            scope.filter(scope.items, "pagedItems", "currentPage", "janed");
+
+            expect(scope.pagedItems.length).toEqual(1);
+
+            // Only the second item should be returned in the pagedItems
+            expect(scope.pagedItems[0][0]).toEqual(scope.items[1]);
+        });
+
+        it("should ignore the $$hashKey column", function () {
+            scope.filter(scope.items, "pagedItems", "currentPage", "random");
+
+            expect(scope.pagedItems.length).toEqual(0);
+        });
+
+        it("should ignore the basis column", function () {
+            scope.filter(scope.items, "pagedItems", "currentPage", "Exclude");
+            expect(scope.pagedItems.length).toEqual(0);
+
+            scope.filter(scope.items, "pagedItems", "currentPage", "Include");
+            expect(scope.pagedItems.length).toEqual(0);
+        });
+
+        it("should call groupToPages so the table is repaginated", function () {
+            spyOn(scope, "groupToPages").and.callThrough();
+
+            scope.filter(scope.items, "pagedItems", "currentPage", "janed");
+
+            expect(scope.groupToPages).toHaveBeenCalled();
+        });
+
+        it("should reset the page number to 0", function () {
+            scope.filter(scope.items, "pagedItems", "currentPage", "janed");
+
+            expect(scope.currentPage).toEqual(0);
+        });
+
+        it("should allow matching to be case insensitive", function () {
+            scope.filter(scope.items, "pagedItems", "currentPage", "DOE");
+
+            expect(scope.pagedItems.length).toEqual(2);
+
+            expect(scope.pagedItems[0][0]).toEqual(scope.items[0]);
+            expect(scope.pagedItems[1][0]).toEqual(scope.items[1]);
+        });
+
     });
 
 });
