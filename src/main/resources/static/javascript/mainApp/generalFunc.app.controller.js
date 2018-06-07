@@ -521,9 +521,9 @@
             $scope.includeQuery = "";
             $scope.membersQuery = "";
 
-            $scope.queryGroupings = "";
+            $scope.groupingsQuery = "";
             // Ensure the groupings list is reset with the now-blank filter
-            $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", "queryGroupings");
+            $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
 
         };
 

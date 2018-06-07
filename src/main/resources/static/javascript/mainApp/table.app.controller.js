@@ -46,10 +46,9 @@
          * @param {object[]} list - the list to filter
          * @param {string} pagedListVar - the name of the variable containing the paginated list
          * @param {string} pageVar - the name of the variable containing the current page of the list
-         * @param {string} queryVar - the name of the variable containing the user's query
+         * @param {string} query - the user's search query
          */
-        $scope.filter = function (list, pagedListVar, pageVar, queryVar) {
-            var query = $scope[queryVar];
+        $scope.filter = function (list, pagedListVar, pageVar, query) {
             // Filters for items that match the user's query
             var filteredItems = $filter("filter")(list, function (item) {
                 for (var key in item) {

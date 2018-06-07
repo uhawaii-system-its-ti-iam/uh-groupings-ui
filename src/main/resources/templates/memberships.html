@@ -48,8 +48,8 @@
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
                                     <input placeholder="Filter Groupings..." type="text"
                                            title="Filter Groupings"
-                                           ng-model="queryMembers" class="form-control"
-                                           ng-change="filter(membersList, 'pagedItemsMembersList', 'currentPageOptOut', 'queryMembers')"
+                                           ng-model="membersQuery" class="form-control"
+                                           ng-change="filter(membersList, 'pagedItemsMembersList', 'currentPageOptOut', membersQuery)"
                                            id="members"/>
                                 </div>
                             </div>
@@ -151,8 +151,8 @@
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
                                     <input placeholder="Filter Groupings..." type="text"
                                            title="Filter Groupings"
-                                           ng-model="queryOptIn" class="form-control"
-                                           ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', 'queryOptIn')"
+                                           ng-model="optInQuery" class="form-control"
+                                           ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', optInQuery)"
                                            id="optIn"/>
                                 </div>
                             </div>
