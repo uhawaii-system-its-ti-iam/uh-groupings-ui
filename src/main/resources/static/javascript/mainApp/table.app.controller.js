@@ -8,6 +8,7 @@
     function TableJsController($scope, $filter) {
 
         $scope.columnSort = {};
+        $scope.itemsPerPage = 20;
 
         /**
          * Paginates a list of items.
@@ -15,16 +16,15 @@
          * @returns {object[]} a paginated list
          */
         $scope.groupToPages = function (list) {
+            if (!_.isArray(list) || $scope.itemsPerPage < 1) {
+                return [];
+            }
             var pagedList = [];
-            if (list === null || $scope.itemsPerPage < 1) {
-                console.log("There is nothing here");
-            } else {
-                for (var i = 0; i < list.length; i++) {
-                    if (i % $scope.itemsPerPage === 0) {
-                        pagedList[Math.floor(i / $scope.itemsPerPage)] = [list[i]];
-                    } else {
-                        pagedList[Math.floor(i / $scope.itemsPerPage)].push(list[i]);
-                    }
+            for (var i = 0; i < list.length; i++) {
+                if (i % $scope.itemsPerPage === 0) {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [list[i]];
+                } else {
+                    pagedList[Math.floor(i / $scope.itemsPerPage)].push(list[i]);
                 }
             }
             return pagedList;

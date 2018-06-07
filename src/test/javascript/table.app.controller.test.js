@@ -55,7 +55,7 @@ describe("TableController", function () {
             scope.itemsPerPage = 5;
 
             var paginatedItems = scope.groupToPages(items);
-            expect(paginatedItems.length).toEqual(0)
+            expect(paginatedItems.length).toEqual(0);
         });
 
         it("should return one page for a list of four items, given five items per page", function () {
@@ -94,6 +94,14 @@ describe("TableController", function () {
             expect(paginatedItems[1][0]).toEqual(5);
         });
 
+        it("should return zero pages if a non-list is passed", function () {
+            var item = "not an array";
+
+            var paginatedItems = scope.groupToPages(item);
+
+            expect(paginatedItems.length).toEqual(0);
+        });
+
         it("should return zero pages if items per page is less than one", function () {
             var items = [0, 1, 2, 3, 4, 5];
             scope.itemsPerPage = 0;
@@ -103,6 +111,12 @@ describe("TableController", function () {
             expect(paginatedItems.length).toEqual(0);
         });
 
+    });
+
+    describe("filter", function () {
+        it("should be calling isFilterableColumn", function () {
+
+        });
     });
 
 });
