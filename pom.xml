@@ -32,6 +32,7 @@
         <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version>
         <angularjs-version>1.5.8</angularjs-version>
         <bootstrap-version>3.3.7</bootstrap-version>
+        <lodash-version>4.17.4</lodash-version>
     </properties>
 
     <dependencies>
@@ -170,9 +171,9 @@
             <version>${angularjs-version}</version>
         </dependency>
         <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>underscore</artifactId>
-            <version>1.8.3</version>
+            <groupId>org.webjars</groupId>
+            <artifactId>lodash</artifactId>
+            <version>${lodash-version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
@@ -245,6 +246,7 @@
                         <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/2.2.0/ui-bootstrap.min.js</source>
                         <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js</source>
                         <source>classpath/META-INF/resources/webjars/angular-mocks/${angular-mocks-version}/angular-mocks.js</source>
+                        <source>classpath/META-INF/resources/webjars/lodash/${lodash-version}/lodash.min.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/admin.app.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.service.js</source>
