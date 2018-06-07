@@ -14,7 +14,7 @@ describe("TableController", function () {
 
     describe("groupToPages", function () {
 
-        it("should create four pages for a list of twenty items, given five items per page", function () {
+        it("should return four pages for a list of twenty items, given five items per page", function () {
             var items = [];
             scope.itemsPerPage = 5;
 
@@ -58,7 +58,7 @@ describe("TableController", function () {
             expect(paginatedItems.length).toEqual(0)
         });
 
-        it("should create one page for a list of four items, given five items per page", function () {
+        it("should return one page for a list of four items, given five items per page", function () {
             var items = [0, 1, 2, 3];
             scope.itemsPerPage = 5;
 
@@ -74,7 +74,7 @@ describe("TableController", function () {
             expect(paginatedItems[0][3]).toEqual(3);
         });
 
-        it("should create two pages for a list of six items, given five items per page", function () {
+        it("should return two pages for a list of six items, given five items per page", function () {
             var items = [0, 1, 2, 3, 4, 5];
             scope.itemsPerPage = 5;
 
@@ -94,7 +94,7 @@ describe("TableController", function () {
             expect(paginatedItems[1][0]).toEqual(5);
         });
 
-        it("should return zero pages if items per page is less than 1", function () {
+        it("should return zero pages if items per page is less than one", function () {
             var items = [0, 1, 2, 3, 4, 5];
             scope.itemsPerPage = 0;
 
