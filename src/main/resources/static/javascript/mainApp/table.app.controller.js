@@ -16,7 +16,7 @@
          */
         $scope.groupToPages = function (list) {
             var pagedList = [];
-            if (list === null) {
+            if (list === null || $scope.itemsPerPage < 1) {
                 console.log("There is nothing here");
             } else {
                 for (var i = 0; i < list.length; i++) {
