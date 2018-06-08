@@ -8,9 +8,8 @@
     function TableJsController($scope, $filter) {
 
         $scope.columnSort = {};
-        $scope.itemsPerPage = 20;
 
-        var FILTER_COLUMNS_TO_IGNORE = ['basis', '$$hashKey'];
+        var FILTER_COLUMNS_TO_IGNORE = ["basis", "$$hashKey"];
 
         /**
          * Paginates a list of items.
@@ -97,31 +96,30 @@
          * Changes the current page for a paginated table.
          * @param {string} action - the action to take to change the page
          * @param {string} pageVar - the name of the variable containing the current page number
-         * @param {string} listVar - the name of the variable contaning the paginated list
+         * @param {string} pagedListVar - the name of the variable contaning the paginated list
          */
-        $scope.currentPage = function (action, pageVar, listVar) {
-            console.log(action + " " + pageVar + " " + listVar);
+        $scope.setPage = function (action, pageVar, pagedListVar) {
             switch (action) {
-                case "Next":
-                    if ($scope[pageVar] < $scope[listVar].length - 1) {
-                        $scope[pageVar] = $scope[pageVar] + 1;
-                    }
-                    break;
-                case "Set":
-                    $scope[pageVar] = this.n;
+                case "First":
+                    $scope[pageVar] = 0;
                     break;
                 case "Prev":
                     if ($scope[pageVar] > 0) {
                         $scope[pageVar]--;
                     }
                     break;
-                case "First":
-                    $scope[pageVar] = 0;
+                case "Set":
+                    if (this.n >= 0 && this.n <= $scope[pagedListVar].length - 1) {
+                        $scope[pageVar] = this.n;
+                    }
+                    break;
+                case "Next":
+                    if ($scope[pageVar] < $scope[pagedListVar].length - 1) {
+                        $scope[pageVar] = $scope[pageVar] + 1;
+                    }
                     break;
                 case "Last":
-                    if ($scope[pageVar] >= 0) {
-                        $scope[pageVar] = $scope[listVar].length - 1;
-                    }
+                    $scope[pageVar] = $scope[pagedListVar].length - 1;
                     break;
             }
         };

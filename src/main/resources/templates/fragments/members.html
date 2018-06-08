@@ -67,21 +67,21 @@
             <td colspan="6">
                 <ul class="pagination pull-right">
                     <li ng-class="{disabled: (currentPageMembers) == 0}">
-                        <a class="clickable" ng-click="currentPage('First','currentPageMembers','pagedItemsMembers')">«« First</a>
+                        <a class="clickable" ng-click="setPage('First','currentPageMembers','pagedItemsMembers')">«« First</a>
                     </li>
                     <li ng-class="{disabled: (currentPageMembers) == 0 }">
-                        <a class="clickable" ng-click="currentPage('Prev','currentPageMembers','pagedItemsMembers')">« Prev</a>
+                        <a class="clickable" ng-click="setPage('Prev','currentPageMembers','pagedItemsMembers')">« Prev</a>
                     </li>
                     <li ng-repeat="n in range(pagedItemsMembers.length, currentPageMembers - gap, currentPageMembers + gap + 1) "
                         ng-class="{active: n == currentPageMembers}"
-                        ng-click="currentPage('Set','currentPageMembers','pagedItemsMembers')">
+                        ng-click="setPage('Set','currentPageMembers','pagedItemsMembers')">
                         <a class="clickable" ng-bind="n + 1"></a>
                     </li>
                     <li ng-class="{disabled: ((currentPageMembers) == pagedItemsMembers.length - 1) || pagedItemsMembers.length == 0}">
-                        <a class="clickable" ng-click="currentPage('Next','currentPageMembers','pagedItemsMembers')">Next »</a>
+                        <a class="clickable" ng-click="setPage('Next','currentPageMembers','pagedItemsMembers')">Next »</a>
                     </li>
                     <li ng-class="{disabled: ((currentPageMembers) == pagedItemsMembers.length - 1) || pagedItemsMembers.length == 0}">
-                        <a class="clickable" ng-click="currentPage('Last','currentPageMembers','pagedItemsMembers')">Last »»</a>
+                        <a class="clickable" ng-click="setPage('Last','currentPageMembers','pagedItemsMembers')">Last »»</a>
                     </li>
                 </ul>
             </td>

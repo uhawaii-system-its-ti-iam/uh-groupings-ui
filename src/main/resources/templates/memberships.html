@@ -82,27 +82,27 @@
                                     <ul class="pagination pull-right" aria-live="assertive">
                                         <li ng-class="{disabled: (currentPageOptOut) == 0}">
                                             <a class="clickable"
-                                               ng-click="currentPage('First','currentPageOptOut','pagedItemsMembersList')">««
+                                               ng-click="setPage('First','currentPageOptOut','pagedItemsMembersList')">««
                                                 First</a>
                                         </li>
                                         <li ng-class="{disabled: (currentPageOptOut) == 0}">
                                             <a class="clickable"
-                                               ng-click="currentPage('Prev','currentPageOptOut','pagedItemsMembersList')">«
+                                               ng-click="setPage('Prev','currentPageOptOut','pagedItemsMembersList')">«
                                                 Prev</a>
                                         </li>
                                         <li ng-repeat="n in range(pagedItemsMembersList.length, currentPageOptOut - gap, currentPageOptOut + gap + 1) "
                                             ng-class="{active: n == currentPageOptOut}"
-                                            ng-click="currentPage('Set','currentPageOptOut','pagedItemsMembersList')">
+                                            ng-click="setPage('Set','currentPageOptOut','pagedItemsMembersList')">
                                             <a class="clickable" ng-bind="n + 1">1</a>
                                         </li>
                                         <li ng-class="{disabled: ((currentPageOptOut) == pagedItemsMembersList.length - 1) || pagedItemsMembersList.length == 0}">
                                             <a class="clickable"
-                                               ng-click="currentPage('Next','currentPageOptOut','pagedItemsMembersList')">Next
+                                               ng-click="setPage('Next','currentPageOptOut','pagedItemsMembersList')">Next
                                                 »</a>
                                         </li>
                                         <li ng-class="{disabled: ((currentPageOptOut) == pagedItemsMembersList.length - 1) || pagedItemsMembersList.length == 0}">
                                             <a class="clickable"
-                                               ng-click="currentPage('Last','currentPageOptOut','pagedItemsMembersList')">Last
+                                               ng-click="setPage('Last','currentPageOptOut','pagedItemsMembersList')">Last
                                                 »»</a>
                                         </li>
                                     </ul>
@@ -193,27 +193,27 @@
                                     <ul class="pagination pull-right">
                                         <li ng-class="{disabled: (currentPageOptIn) == 0 }">
                                             <a class="clickable"
-                                               ng-click="currentPage('First','currentPageOptIn','pagedItemsOptInList')">««
+                                               ng-click="setPage('First','currentPageOptIn','pagedItemsOptInList')">««
                                                 First</a>
                                         </li>
                                         <li ng-class="{disabled: (currentPageOptIn) == 0}">
                                             <a class="clickable"
-                                               ng-click="currentPage('Prev','currentPageOptIn','pagedItemsOptInList')">«
+                                               ng-click="setPage('Prev','currentPageOptIn','pagedItemsOptInList')">«
                                                 Prev</a>
                                         </li>
                                         <li ng-repeat="n in range(pagedItemsOptInList.length, currentPageOptIn - gap, currentPageOptIn + gap + 1) "
                                             ng-class="{active: n == currentPageOptIn}"
-                                            ng-click="currentPage('Set','currentPageOptIn','pagedItemsOptInList')">
+                                            ng-click="setPage('Set','currentPageOptIn','pagedItemsOptInList')">
                                             <a class="clickable" ng-bind="n + 1">1</a>
                                         </li>
                                         <li ng-class="{disabled: ((currentPageOptIn) == pagedItemsOptInList.length - 1) || pagedItemsOptInList.length == 0}">
                                             <a class="clickable"
-                                               ng-click="currentPage('Next','currentPageOptIn','pagedItemsOptInList')">Next
+                                               ng-click="setPage('Next','currentPageOptIn','pagedItemsOptInList')">Next
                                                 »</a>
                                         </li>
                                         <li ng-class="{disabled: ((currentPageOptIn) == pagedItemsOptInList.length - 1) || pagedItemsOptInList.length == 0}">
                                             <a class="clickable"
-                                               ng-click="currentPage('Last','currentPageOptIn','pagedItemsOptInList')">Last
+                                               ng-click="setPage('Last','currentPageOptIn','pagedItemsOptInList')">Last
                                                 »»</a>
                                         </li>
                                     </ul>
