@@ -251,7 +251,7 @@
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/admin.app.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.service.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/generalFunc.app.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.app..controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.app.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/owners.app.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/table.app.controller.js</source>
                     </preloadSources>
