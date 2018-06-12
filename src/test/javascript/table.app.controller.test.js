@@ -12,6 +12,10 @@ describe("TableController", function () {
         });
     }));
 
+    it("should define the table controller", function () {
+        expect(controller).toBeDefined();
+    });
+
     describe("groupToPages", function () {
 
         it("should return three pages for a list of fifteen items, given five items per page", function () {
@@ -180,6 +184,90 @@ describe("TableController", function () {
 
             expect(scope.pagedItems[0][0]).toEqual(scope.items[0]);
             expect(scope.pagedItems[1][0]).toEqual(scope.items[1]);
+        });
+
+    });
+
+    describe("setPage", function () {
+        beforeEach(function () {
+            scope.items = _.range(0, 30);
+            scope.itemsPerPage = 5;
+            scope.pagedItems = scope.groupToPages(scope.items);
+            scope.currentPage = 3;
+        });
+
+
+        describe("First", function () {
+            it("should go back to the first page", function () {
+                scope.setPage("First", "currentPage", "pagedItems");
+
+                expect(scope.currentPage).toEqual(0);
+            });
+        });
+
+        describe("Prev", function () {
+            it("should go back to the previous page", function () {
+                scope.setPage("Prev", "currentPage", "pagedItems");
+
+                expect(scope.currentPage).toEqual(2);
+            });
+
+            it("should not go before the first page", function () {
+                scope.currentPage = 0;
+                scope.setPage("Prev", "currentPage", "pagedItems");
+
+                expect(scope.currentPage).toEqual(0);
+            });
+        });
+
+        describe("Set", function () {
+
+            it("should go to page 3 if page 3 is clicked", function () {
+                scope.n = 2;
+
+                scope.setPage("Set", "currentPage", "pagedItems");
+
+                expect(scope.currentPage).toEqual(2);
+            });
+
+            it("should not go to a negative page number", function () {
+                scope.n = -1;
+
+                scope.setPage("Set", "currentPage", "pagedItems");
+
+                expect(scope.currentPage).toEqual(3);
+            });
+
+            it("should not go past the last page", function () {
+                scope.n = 6;
+
+                scope.setPage("Set", "currentPage", "pagedItems");
+
+                expect(scope.currentPage).toEqual(3);
+            });
+        });
+
+        describe("Next", function () {
+            it("should go to the next page", function () {
+                scope.setPage("Next", "currentPage", "pagedItems");
+
+                expect(scope.currentPage).toEqual(4);
+            });
+
+            it("should not go past the last page", function () {
+                scope.currentPage = 5;
+                scope.setPage("Next", "currentPage", "pagedItems");
+
+                expect(scope.currentPage).toEqual(5);
+            });
+        });
+
+        describe("Last", function () {
+            it("should go to the last page", function () {
+                scope.setPage("Last", "currentPage", "pagedItems");
+
+                expect(scope.currentPage).toEqual(5);
+            });
         });
 
     });
