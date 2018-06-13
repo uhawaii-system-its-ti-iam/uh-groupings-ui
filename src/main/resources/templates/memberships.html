@@ -90,7 +90,7 @@
                                                ng-click="setPage('Prev','currentPageOptOut','pagedItemsMembersList')">«
                                                 Prev</a>
                                         </li>
-                                        <li ng-repeat="n in range(pagedItemsMembersList.length, currentPageOptOut - gap, currentPageOptOut + gap + 1) "
+                                        <li ng-repeat="n in pageRange(currentPageOptOut, pagedItemsMembersList.length, gap) "
                                             ng-class="{active: n == currentPageOptOut}"
                                             ng-click="setPage('Set','currentPageOptOut','pagedItemsMembersList')">
                                             <a class="clickable" ng-bind="n + 1">1</a>
@@ -201,7 +201,7 @@
                                                ng-click="setPage('Prev','currentPageOptIn','pagedItemsOptInList')">«
                                                 Prev</a>
                                         </li>
-                                        <li ng-repeat="n in range(pagedItemsOptInList.length, currentPageOptIn - gap, currentPageOptIn + gap + 1) "
+                                        <li ng-repeat="n in pageRange(currentPageOptIn, pagedItemsOptInList.length, gap) "
                                             ng-class="{active: n == currentPageOptIn}"
                                             ng-click="setPage('Set','currentPageOptIn','pagedItemsOptInList')">
                                             <a class="clickable" ng-bind="n + 1">1</a>

@@ -48,7 +48,7 @@
                         <li ng-class="{disabled: (currentPageGroupings) == 0 }">
                             <a class="clickable" ng-click="setPage('Prev','currentPageGroupings','pagedItemsGroupings')">« Prev</a>
                         </li>
-                        <li ng-repeat="n in range(pagedItemsGroupings.length, currentPageGroupings - gap, currentPageGroupings + gap + 1)"
+                        <li ng-repeat="n in pageRange(currentPageGroupings, pagedItemsGroupings.length, gap)"
                             ng-class="{active: n == currentPageGroupings}"
                             ng-click="setPage('Set','currentPageGroupings','pagedItemsGroupings')">
                             <a class="clickable" ng-bind="n + 1"></a>

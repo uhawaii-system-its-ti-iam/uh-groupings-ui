@@ -83,7 +83,7 @@
                     <li ng-class="{disabled: (currentPageExclude) == 0 }">
                         <a class="clickable" ng-click="setPage('Prev','currentPageExclude','pagedItemsExclude')">« Prev</a>
                     </li>
-                    <li ng-repeat="n in range(pagedItemsExclude.length, currentPageExclude - gap, currentPageExclude + gap + 1) "
+                    <li ng-repeat="n in pageRange(currentPageExclude, pagedItemsExclude.length, gap)"
                         ng-class="{active: n == currentPageExclude}"
                         ng-click="setPage('Set','currentPageExclude','pagedItemsExclude')">
                         <a class="clickable" ng-bind="n + 1"></a>

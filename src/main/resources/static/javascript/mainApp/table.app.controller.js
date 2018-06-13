@@ -73,24 +73,16 @@
         }
 
         /**
-         * Creates an array of numbers in [start, end) with step 1.
-         * @param {number} size - the desired size of the array
-         * @param {number} start - the start number
-         * @param {number} end - the end number
-         * @returns an array of numbers from start to end - 1.
+         * @param {number} currentPage - the current page in the table
+         * @param {number} totalPages - the total number of pages in the table
+         * @param {number} gap - the max number of pages the user is able to see before and after the current page
+         * @returns the page numbers (zero-indexed) that the user is able to see in the pagination control
          */
-        $scope.range = function (size, start, end) {
-            var ret = [];
-            if (size < end) {
-                end = size;
-            }
-            if (start < 0) {
-                start = 0;
-            }
-            for (var i = start; i < end; i++) {
-                ret.push(i);
-            }
-            return ret;
+        $scope.pageRange = function (currentPage, totalPages, gap) {
+            // Prevent pagination from starting and ending at nonexistent pages
+            var start = (currentPage - gap < 0) ? 0 : currentPage - gap;
+            var end = (currentPage + gap + 1 > totalPages) ? totalPages : currentPage + gap + 1;
+            return _.range(start, end);
         };
 
         /**

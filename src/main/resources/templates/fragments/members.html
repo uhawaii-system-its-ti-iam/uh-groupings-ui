@@ -72,7 +72,7 @@
                     <li ng-class="{disabled: (currentPageMembers) == 0 }">
                         <a class="clickable" ng-click="setPage('Prev','currentPageMembers','pagedItemsMembers')">« Prev</a>
                     </li>
-                    <li ng-repeat="n in range(pagedItemsMembers.length, currentPageMembers - gap, currentPageMembers + gap + 1) "
+                    <li ng-repeat="n in pageRange(currentPageMembers, pagedItemsMembers.length, gap) "
                         ng-class="{active: n == currentPageMembers}"
                         ng-click="setPage('Set','currentPageMembers','pagedItemsMembers')">
                         <a class="clickable" ng-bind="n + 1"></a>
