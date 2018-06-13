@@ -218,7 +218,8 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
         Grouping compositeGrouping = new Grouping();
 
-        if (memberAttributeService.isOwner(groupingPath, ownerUsername) || memberAttributeService.isAdmin(ownerUsername)) {
+        if (memberAttributeService.isOwner(groupingPath, ownerUsername) || memberAttributeService
+                .isAdmin(ownerUsername)) {
             compositeGrouping = new Grouping(groupingPath);
 
             Group include = getMembers(ownerUsername, groupingPath + INCLUDE);
@@ -288,7 +289,8 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
         List<String> groupingsOpted = new ArrayList<>();
 
         List<String> groupsOpted = groupPaths.stream().filter(group -> group.endsWith(includeOrrExclude)
-                && memberAttributeService.isSelfOpted(group, username)).map(helperService::parentGroupingPath).collect(Collectors.toList());
+                && memberAttributeService.isSelfOpted(group, username)).map(helperService::parentGroupingPath)
+                .collect(Collectors.toList());
 
         if (groupsOpted.size() > 0) {
 
@@ -320,7 +322,9 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
 
         //todo should we use EmptyGroup?
         Group groupMembers = new Group();
-        if (members.getResults() != null) {
+        if (members.getResults() != null && groupPath.contains(BASIS)) {
+            groupMembers = makeBasisGroup(members);
+        } else if (members.getResults() != null) {
             groupMembers = makeGroup(members);
         }
         return groupMembers;
@@ -348,10 +352,34 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
         return group;
     }
 
+    public Group makeBasisGroup(WsGetMembersResults membersResults) {
+        Group group = new Group();
+        try {
+            WsSubject[] subjects = membersResults.getResults()[0].getWsSubjects();
+            String[] attributeNames = membersResults.getSubjectAttributeNames();
+
+            if (subjects.length > 0) {
+                for (WsSubject subject : subjects) {
+                    if (subject != null) {
+                        if (subject.getSourceId() == null) {
+                            group.addMember(makePerson(subject, attributeNames));
+                        } else if (!subject.getSourceId().equals("g:gsa")) {
+                            group.addMember(makePerson(subject, attributeNames));
+                        }
+                    }
+                }
+            }
+        } catch (NullPointerException npe) {
+            return new Group();
+        }
+
+        return group;
+    }
+
     //makes a person with all attributes in attributeNames
     @Override
     public Person makePerson(WsSubject subject, String[] attributeNames) {
-        if (subject == null || subject.getAttributeValues() == null) {
+        if (subject == null || subject.getAttributeValues() == null || subject.getSourceId().equals("g:gsa")) {
             return new Person();
         } else {
 
