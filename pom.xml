@@ -158,6 +158,12 @@
             <groupId>org.lesscss</groupId>
             <artifactId>lesscss-maven-plugin</artifactId>
             <version>1.7.0.1.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-simple</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
@@ -211,6 +217,7 @@
             <version>0.32</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
