@@ -10,6 +10,7 @@
         $scope.columnSort = {};
 
         var FILTER_COLUMNS_TO_IGNORE = ["basis", "$$hashKey"];
+        var DEFAULT_COLUMN_NAME = "name";
 
         /**
          * Paginates a list of items.
@@ -131,16 +132,16 @@
          * @param {string} propertyName - the property to sort by
          */
         $scope.sortBy = function (tableName, pagedTableName, propertyName) {
+            // Table has not been sorted by any column yet
             if (!$scope.columnSort[tableName]) {
-                // If the user sorts by name property (typically the first column), then just reverse the direction
-                if (propertyName === "name") {
-                    $scope.columnSort[tableName] = { property: "name", reverse: true };
+                if (propertyName === DEFAULT_COLUMN_NAME) {
+                    $scope.columnSort[tableName] = { property: DEFAULT_COLUMN_NAME, reverse: true };
                 } else {
                     // Otherwise, set the new property and sort in ascending order
                     $scope.columnSort[tableName] = { property: propertyName, reverse: false };
                 }
             } else {
-                // If the property to sort by is the same as what is already stored, then just invert the direction
+                // Clicking on the same property will just reverse the direction
                 if (propertyName === $scope.columnSort[tableName].property) {
                     $scope.columnSort[tableName].reverse = !$scope.columnSort[tableName].reverse;
                 } else {

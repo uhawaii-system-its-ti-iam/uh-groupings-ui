@@ -272,4 +272,88 @@ describe("TableController", function () {
 
     });
 
+    describe("sortBy", function () {
+        beforeEach(function () {
+            scope.items = [{
+                name: "a",
+                id: 0
+            }, {
+                name: "b",
+                id: 12
+            }, {
+                name: "c",
+                id: 4
+            }, {
+                name: "d",
+                id: 9
+            }, {
+                name: "e",
+                id: 13
+            }, {
+                name: "f",
+                id: 17
+            }];
+            scope.itemsPerPage = 2;
+            scope.pagedItems = scope.groupToPages(scope.items);
+        });
+
+        // it("should call the groupToPage", function () {
+        //
+        // });
+
+        describe("on first load, no columns were clicked yet", function () {
+            it("should sort the items in descending order by name if the name column is clicked", function () {
+                scope.sortBy("items", "pagedItems", "name");
+
+                expect(scope.items[0]).toEqual({ name: "f", id: 17 });
+                expect(scope.items[1]).toEqual({ name: "e", id: 13 });
+                expect(scope.items[2]).toEqual({ name: "d", id: 9 });
+                expect(scope.items[3]).toEqual({ name: "c", id: 4 });
+                expect(scope.items[4]).toEqual({ name: "b", id: 12 });
+                expect(scope.items[5]).toEqual({ name: "a", id: 0 });
+            });
+
+            it("should sort the items in ascending order by id if the id column is clicked", function () {
+                scope.sortBy("items", "pagedItems", "id");
+
+                expect(scope.items[0]).toEqual({ name: "a", id: 0 });
+                expect(scope.items[1]).toEqual({ name: "c", id: 4 });
+                expect(scope.items[2]).toEqual({ name: "d", id: 9 });
+                expect(scope.items[3]).toEqual({ name: "b", id: 12 });
+                expect(scope.items[4]).toEqual({ name: "e", id: 13 });
+                expect(scope.items[5]).toEqual({ name: "f", id: 17 });
+            });
+
+        });
+
+        describe("after the name property has been clicked", function () {
+            beforeEach(function () {
+                scope.sortBy("items", "pagedItems", "name");
+            });
+
+            it("should sort items back in ascending order by nameif the name clicked is clicked", function () {
+                scope.sortBy("items", "pagedItems", "name");
+
+                expect(scope.items[0]).toEqual({ name: "a", id: 0 });
+                expect(scope.items[1]).toEqual({ name: "b", id: 12 });
+                expect(scope.items[2]).toEqual({ name: "c", id: 4 });
+                expect(scope.items[3]).toEqual({ name: "d", id: 9 });
+                expect(scope.items[4]).toEqual({ name: "e", id: 13 });
+                expect(scope.items[5]).toEqual({ name: "f", id: 17 });
+            });
+
+            it("should sort items in ascending order by id if the id column is clicked", function () {
+                scope.sortBy("items", "pagedItems", "id");
+
+                expect(scope.items[0]).toEqual({ name: "a", id: 0 });
+                expect(scope.items[1]).toEqual({ name: "c", id: 4 });
+                expect(scope.items[2]).toEqual({ name: "d", id: 9 });
+                expect(scope.items[3]).toEqual({ name: "b", id: 12 });
+                expect(scope.items[4]).toEqual({ name: "e", id: 13 });
+                expect(scope.items[5]).toEqual({ name: "f", id: 17 });
+            });
+        });
+
+    });
+
 });
