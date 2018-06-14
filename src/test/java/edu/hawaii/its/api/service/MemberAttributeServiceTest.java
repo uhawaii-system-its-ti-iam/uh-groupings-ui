@@ -271,10 +271,9 @@ public class MemberAttributeServiceTest {
 
     @Test
     public void isAppTest() {
-       assertFalse(memberAttributeService.isApp(users.get(2).getUsername()));
+        assertFalse(memberAttributeService.isApp(users.get(2).getUsername()));
 
-       //todo Should return TRUE but returns FALSE don't know why
-       assertTrue(memberAttributeService.isApp(APP_USER));
+        assertTrue(memberAttributeService.isApp(APP_USER));
     }
 
     @Test
@@ -282,8 +281,8 @@ public class MemberAttributeServiceTest {
         assertFalse(memberAttributeService.isSuperuser(users.get(2).getUsername()));
         assertTrue(memberAttributeService.isSuperuser(ADMIN_USER));
 
-        //todo Should return TRUE but returns FALSE don't know why
         assertTrue(memberAttributeService.isSuperuser(APP_USER));
     }
+
 
 }
