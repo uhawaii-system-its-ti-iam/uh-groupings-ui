@@ -244,12 +244,12 @@
                         <source>classpath/META-INF/resources/webjars/angular-mocks/${angular-mocks-version}/angular-mocks.js</source>
                         <source>classpath/META-INF/resources/webjars/lodash/${lodash-version}/lodash.min.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/admin.app.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/admin.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.service.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/generalFunc.app.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.app.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/owners.app.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/table.app.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/general.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/owner.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/table.controller.js</source>
                     </preloadSources>
                     <specIncludes>
                         <include>**/**.test.js</include>
