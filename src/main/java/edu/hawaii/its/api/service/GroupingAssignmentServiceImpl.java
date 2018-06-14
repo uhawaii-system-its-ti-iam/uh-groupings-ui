@@ -379,7 +379,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     //makes a person with all attributes in attributeNames
     @Override
     public Person makePerson(WsSubject subject, String[] attributeNames) {
-        if (subject == null || subject.getAttributeValues() == null || subject.getSourceId().equals("g:gsa")) {
+        if (subject == null || subject.getAttributeValues() == null) {
             return new Person();
         } else {
 

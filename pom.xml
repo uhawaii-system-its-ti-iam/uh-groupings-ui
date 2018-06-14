@@ -156,11 +156,6 @@
             <version>${bootstrap-version}</version>
         </dependency>
         <dependency>
-            <groupId>org.lesscss</groupId>
-            <artifactId>lesscss-maven-plugin</artifactId>
-            <version>1.7.0.1.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>${jquery-version}</version>
@@ -212,6 +207,7 @@
             <version>0.32</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
