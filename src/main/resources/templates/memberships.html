@@ -49,27 +49,27 @@
                                     <input placeholder="Filter Groupings..." type="text"
                                            title="Filter Groupings"
                                            ng-model="membersQuery" class="form-control"
-                                           ng-change="filter(membersList, 'pagedItemsMembersList', 'currentPageOptOut', membersQuery)"
+                                           ng-change="filter(membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', membersQuery)"
                                            id="members"/>
                                 </div>
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table ng-if="membersList.length !== 0" class="table table-responsive table-bordered table-condensed table-hover">
+                            <table ng-if="membershipsList.length !== 0" class="table table-responsive table-bordered table-condensed table-hover">
                                 <thead>
                                 <tr>
-                                    <th ng-click="sortBy('membersList', 'pagedItemsMembersList', 'name')"
+                                    <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'name')"
                                         class="clickable">
                                         Grouping Name
                                         <i class="fa sort-icon"
-                                           ng-show="columnSort.membersList.property === 'name' || !columnSort.membersList"
-                                           ng-class="{ reverse: columnSort.membersList.reverse }"></i>
+                                           ng-show="columnSort.membershipsList.property === 'name' || !columnSort.membershipsList"
+                                           ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
                                     </th>
-                                    <th ng-click="sortBy('membersList', 'pagedItemsMembersList', 'path')"
+                                    <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'path')"
                                         class="clickable">
                                         Grouping Path
-                                        <i class="fa sort-icon" ng-show="columnSort.membersList.property === 'path'"
-                                           ng-class="{ reverse: columnSort.membersList.reverse }"></i>
+                                        <i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'path'"
+                                           ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
                                     </th>
                                     <th class="col-md-2 text-center" style="vertical-align: middle;">Opt Out?</th>
                                 </tr>
@@ -80,43 +80,43 @@
                                 <td colspan="6">
                                     <!-- <div th:substituteby="pagination :: paginationbar"></div> -->
                                     <ul class="pagination pull-right" aria-live="assertive">
-                                        <li ng-class="{disabled: (currentPageOptOut) == 0}">
+                                        <li ng-class="{disabled: (currentPageMemberships) == 0}">
                                             <a class="clickable"
-                                               ng-click="setPage('First','currentPageOptOut','pagedItemsMembersList')">««
+                                               ng-click="setPage('First', 'currentPageMemberships', 'pagedItemsMemberships')">««
                                                 First</a>
                                         </li>
-                                        <li ng-class="{disabled: (currentPageOptOut) == 0}">
+                                        <li ng-class="{disabled: (currentPageMemberships) == 0}">
                                             <a class="clickable"
-                                               ng-click="setPage('Prev','currentPageOptOut','pagedItemsMembersList')">«
+                                               ng-click="setPage('Prev', 'currentPageMemberships', 'pagedItemsMemberships')">«
                                                 Prev</a>
                                         </li>
-                                        <li ng-repeat="n in pageRange(currentPageOptOut, pagedItemsMembersList.length, gap) "
-                                            ng-class="{active: n == currentPageOptOut}"
-                                            ng-click="setPage('Set','currentPageOptOut','pagedItemsMembersList')">
+                                        <li ng-repeat="n in pageRange(currentPageMemberships, pagedItemsMemberships.length, gap) "
+                                            ng-class="{active: n == currentPageMemberships}"
+                                            ng-click="setPage('Set','currentPageMemberships','pagedItemsMemberships')">
                                             <a class="clickable" ng-bind="n + 1">1</a>
                                         </li>
-                                        <li ng-class="{disabled: ((currentPageOptOut) == pagedItemsMembersList.length - 1) || pagedItemsMembersList.length == 0}">
+                                        <li ng-class="{disabled: ((currentPageMemberships) == pagedItemsMemberships.length - 1) || pagedItemsMemberships.length == 0}">
                                             <a class="clickable"
-                                               ng-click="setPage('Next','currentPageOptOut','pagedItemsMembersList')">Next
+                                               ng-click="setPage('Next','currentPageMemberships','pagedItemsMemberships')">Next
                                                 »</a>
                                         </li>
-                                        <li ng-class="{disabled: ((currentPageOptOut) == pagedItemsMembersList.length - 1) || pagedItemsMembersList.length == 0}">
+                                        <li ng-class="{disabled: ((currentPageMemberships) == pagedItemsMemberships.length - 1) || pagedItemsMemberships.length == 0}">
                                             <a class="clickable"
-                                               ng-click="setPage('Last','currentPageOptOut','pagedItemsMembersList')">Last
+                                               ng-click="setPage('Last','currentPageMemberships','pagedItemsMemberships')">Last
                                                 »»</a>
                                         </li>
                                     </ul>
                                 </td>
                                 </tfoot>
                                 <tbody>
-                                <tr ng-repeat="l in pagedItemsMembersList[currentPageOptOut] ">
+                                <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships] ">
                                     <td>{{l.name}}</td>
                                     <td>{{l.path}}</td>
                                     <td class="col-md-2 col-sm-2 col-xs-2">
-                                        <div ng-if="required($index+(currentPageOptIn * itemsPerPage))">
+                                        <div ng-if="membershipRequired($index + (currentPageOptIn * itemsPerPage))">
                                             <p align="center">Membership Required</p>
                                         </div>
-                                        <div ng-if="!required($index+(currentPageOptIn * itemsPerPage))">
+                                        <div ng-if="!membershipRequired($index + (currentPageOptIn * itemsPerPage))">
                                             <button id="optOutButton"
                                                     class="btn btn-primary btn-block opt-button text-center"
                                                     tabindex="0"
@@ -130,8 +130,8 @@
                                 </tbody>
                             </table>
 
-                            <div ng-if="membersList.length === 0" align="center">
-                                <h3 style="color: black"><b th:text="#{screen.message.membership.empty.membersList}">No Groupings Available</b></h3>
+                            <div ng-if="membershipsList.length === 0" align="center">
+                                <h3 style="color: black"><b th:text="#{screen.message.membership.empty.membershipsList}">No Groupings Available</b></h3>
                             </div>
                         </div>
                     </div>
@@ -180,8 +180,7 @@
                                     <td>{{o.name}}</td>
                                     <td id="groupingOptInPath">{{o.path}}</td>
                                     <td class="col-md-2">
-                                        <button ng-disabled="disableOptIn($index + (currentPageOptOut * itemsPerPage))"
-                                                class="btn btn-primary btn-block opt-button"
+                                        <button class="btn btn-primary btn-block opt-button"
                                                 tabindex="0"
                                                 ng-click="optIn($index)">Opt In
                                         </button>
