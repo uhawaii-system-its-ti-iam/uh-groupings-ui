@@ -32,7 +32,7 @@
          * is able to opt out of.
          */
         $scope.init = function () {
-            var url = BASE_URL + "groupingAssignment";
+            var endpoint = BASE_URL + "groupingAssignment";
 
             dataProvider.loadData(function (res) {
                 $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
@@ -46,7 +46,7 @@
                 $scope.loading = false;
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
-            }, url);
+            }, endpoint);
         };
 
         /**
