@@ -80,27 +80,27 @@
                                 <td colspan="6">
                                     <!-- <div th:substituteby="pagination :: paginationbar"></div> -->
                                     <ul class="pagination pull-right" aria-live="assertive">
-                                        <li ng-class="{disabled: (currentPageMemberships) == 0}">
+                                        <li ng-class="{ disabled: disableFirstAndPrev(currentPageMemberships) }">
                                             <a class="clickable"
                                                ng-click="setPage('First', 'currentPageMemberships', 'pagedItemsMemberships')">««
                                                 First</a>
                                         </li>
-                                        <li ng-class="{disabled: (currentPageMemberships) == 0}">
+                                        <li ng-class="{ disabled: disableFirstAndPrev(currentPageMemberships) }">
                                             <a class="clickable"
                                                ng-click="setPage('Prev', 'currentPageMemberships', 'pagedItemsMemberships')">«
                                                 Prev</a>
                                         </li>
                                         <li ng-repeat="n in pageRange(currentPageMemberships, pagedItemsMemberships.length, gap) "
-                                            ng-class="{active: n == currentPageMemberships}"
+                                            ng-class="{ active: n === currentPageMemberships }"
                                             ng-click="setPage('Set','currentPageMemberships','pagedItemsMemberships')">
                                             <a class="clickable" ng-bind="n + 1">1</a>
                                         </li>
-                                        <li ng-class="{disabled: ((currentPageMemberships) == pagedItemsMemberships.length - 1) || pagedItemsMemberships.length == 0}">
+                                        <li ng-class="{ disabled: disableNextAndLast(pagedItemsMemberships, currentPageMemberships) }">
                                             <a class="clickable"
                                                ng-click="setPage('Next','currentPageMemberships','pagedItemsMemberships')">Next
                                                 »</a>
                                         </li>
-                                        <li ng-class="{disabled: ((currentPageMemberships) == pagedItemsMemberships.length - 1) || pagedItemsMemberships.length == 0}">
+                                        <li ng-class="{ disabled: disableNextAndLast(pagedItemsMemberships, currentPageMemberships) }">
                                             <a class="clickable"
                                                ng-click="setPage('Last','currentPageMemberships','pagedItemsMemberships')">Last
                                                 »»</a>
@@ -110,8 +110,8 @@
                                 </tfoot>
                                 <tbody>
                                 <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships] ">
-                                    <td>{{l.name}}</td>
-                                    <td>{{l.path}}</td>
+                                    <td>{{ l.name }}</td>
+                                    <td>{{ l.path }}</td>
                                     <td class="col-md-2 col-sm-2 col-xs-2">
                                         <div ng-if="membershipRequired($index + (currentPageOptIn * itemsPerPage))">
                                             <p align="center">Membership Required</p>
@@ -177,8 +177,8 @@
                                 </thead>
                                 <tbody>
                                 <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn] ">
-                                    <td>{{o.name}}</td>
-                                    <td id="groupingOptInPath">{{o.path}}</td>
+                                    <td>{{ o.name }}</td>
+                                    <td id="groupingOptInPath">{{ o.path }}</td>
                                     <td class="col-md-2">
                                         <button class="btn btn-primary btn-block opt-button"
                                                 tabindex="0"
@@ -190,27 +190,27 @@
                                 <tfoot>
                                 <td colspan="6">
                                     <ul class="pagination pull-right">
-                                        <li ng-class="{disabled: (currentPageOptIn) == 0 }">
+                                        <li ng-class="{ disabled: disableFirstAndPrev(currentPageOptIn) }">
                                             <a class="clickable"
                                                ng-click="setPage('First','currentPageOptIn','pagedItemsOptInList')">««
                                                 First</a>
                                         </li>
-                                        <li ng-class="{disabled: (currentPageOptIn) == 0}">
+                                        <li ng-class="{ disabled: disableFirstAndPrev(currentPageOptIn) }">
                                             <a class="clickable"
                                                ng-click="setPage('Prev','currentPageOptIn','pagedItemsOptInList')">«
                                                 Prev</a>
                                         </li>
-                                        <li ng-repeat="n in pageRange(currentPageOptIn, pagedItemsOptInList.length, gap) "
-                                            ng-class="{active: n == currentPageOptIn}"
+                                        <li ng-repeat="n in pageRange(currentPageOptIn, pagedItemsOptInList.length, gap)"
+                                            ng-class="{ active: n == currentPageOptIn }"
                                             ng-click="setPage('Set','currentPageOptIn','pagedItemsOptInList')">
                                             <a class="clickable" ng-bind="n + 1">1</a>
                                         </li>
-                                        <li ng-class="{disabled: ((currentPageOptIn) == pagedItemsOptInList.length - 1) || pagedItemsOptInList.length == 0}">
+                                        <li ng-class="{ disabled: disableNextAndLast(pagedItemsOptInList, currentPageOptIn) }">
                                             <a class="clickable"
                                                ng-click="setPage('Next','currentPageOptIn','pagedItemsOptInList')">Next
                                                 »</a>
                                         </li>
-                                        <li ng-class="{disabled: ((currentPageOptIn) == pagedItemsOptInList.length - 1) || pagedItemsOptInList.length == 0}">
+                                        <li ng-class="{ disabled: disableNextAndLast(pagedItemsOptInList, currentPageOptIn) }">
                                             <a class="clickable"
                                                ng-click="setPage('Last','currentPageOptIn','pagedItemsOptInList')">Last
                                                 »»</a>

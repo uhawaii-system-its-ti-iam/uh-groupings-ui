@@ -118,6 +118,25 @@
         };
 
         /**
+         * @param {number} currentPage - the current page in the table
+         * @returns {boolean} true if the First and Prev buttons in the pagination controls should be disabled,
+         * otherwise returns false
+         */
+        $scope.disableFirstAndPrev = function (currentPage) {
+            return currentPage === 0;
+        };
+
+        /**
+         * @param {object[]} pagedTable - the paginated table
+         * @param {number} currentPage - the current page in the table
+         * @returns {boolean} true if the Next and Last buttons in the pagination controls should be disabled, otherwise
+         * returns false
+         */
+        $scope.disableNextAndLast = function (pagedTable, currentPage) {
+            return (pagedTable.length === 0) || (currentPage === pagedTable.length - 1);
+        };
+
+        /**
          * Sorts a table by a given property.
          * @param {string} tableName - the variable name of the table to sort
          * @param {string} pagedTableName - the variable name of the paginated table

@@ -246,6 +246,35 @@ describe("TableController", function () {
 
     });
 
+    describe("disableFirstAndPrev", function () {
+        it("should return true if you are on the first page", function () {
+            scope.currentPage = 0;
+
+            expect(scope.disableFirstAndPrev(scope.currentPage)).toBe(true);
+        });
+
+    });
+
+    describe("disableNextAndLast", function () {
+        it("should return true if you are on the last page", function () {
+            scope.items = _.range(30);
+            scope.itemsPerPage = 5;
+            scope.pagedItems = scope.groupToPages(scope.items);
+            scope.currentPage = 5;
+
+            expect(scope.disableNextAndLast(scope.pagedItems, scope.currentPage)).toBe(true);
+        });
+
+        it("should return true if there are no pages in the table", function () {
+            scope.pagedItems = [];
+            scope.currentPage = 0;
+
+            expect(scope.disableNextAndLast(scope.pagedItems, scope.currentPage)).toBe(true);
+        });
+
+    });
+
+
     describe("sortBy", function () {
         beforeEach(function () {
             scope.items = [{
