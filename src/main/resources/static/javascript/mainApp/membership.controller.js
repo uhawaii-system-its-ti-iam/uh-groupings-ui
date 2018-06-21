@@ -51,10 +51,11 @@
 
         /**
          * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
-         * @param {number} index - the index of the grouping clicked by the user
+         * @param {number} currentPage - the current page within the table
+         * @param {number} indexClicked - the index of the grouping clicked by the user
          */
-        $scope.optOut = function (index) {
-            var groupingPath = $scope.pagedItemsMemberships[$scope.currentPageMemberships][index].path;
+        $scope.optOut = function (currentPage, indexClicked) {
+            var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
             var endpoint = BASE_URL + groupingPath + "/optOut";
 
             $scope.loading = true;
@@ -71,10 +72,11 @@
 
         /**
          * Adds the user to the include group of the grouping selected.
-         * @param {number} index - the index of the grouping clicked by the user
+         * @param {number} currentPage - the current page within the table
+         * @param {number} indexClicked - the index of the grouping clicked by the user
          */
-        $scope.optIn = function (index) {
-            var groupingPath = $scope.pagedItemsOptInList[$scope.currentPageOptIn][index].path;
+        $scope.optIn = function (currentPage, indexClicked) {
+            var groupingPath = $scope.pagedItemsOptInList[currentPage][indexClicked].path;
             var endpoint = BASE_URL + groupingPath + "/optIn";
 
             $scope.loading = true;
@@ -94,8 +96,8 @@
          * @param index - the index of the grouping in the table
          * @returns {boolean} true if membership is required, otherwise returns false
          */
-        $scope.membershipRequired = function (index) {
-            var groupingPath = $scope.pagedItemsMemberships[$scope.currentPageMemberships][index].path;
+        $scope.membershipRequired = function (currentPage, indexClicked) {
+            var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
             return !_.some(optOutList, { path: groupingPath });
         };
 

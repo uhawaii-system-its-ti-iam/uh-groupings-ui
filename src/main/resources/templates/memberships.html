@@ -113,15 +113,14 @@
                                     <td>{{ l.name }}</td>
                                     <td>{{ l.path }}</td>
                                     <td class="col-md-2 col-sm-2 col-xs-2">
-                                        <div ng-if="membershipRequired($index + (currentPageOptIn * itemsPerPage))">
+                                        <div ng-if="membershipRequired(currentPageMemberships, $index)">
                                             <p align="center">Membership Required</p>
                                         </div>
-                                        <div ng-if="!membershipRequired($index + (currentPageOptIn * itemsPerPage))">
+                                        <div ng-if="!membershipRequired(currentPageMemberships, $index)">
                                             <button id="optOutButton"
                                                     class="btn btn-primary btn-block opt-button text-center"
                                                     tabindex="0"
-                                                    ng-click="optOut($index)"
-                                                    ng-attr-title="{{ tooltipText($index + (currentPageOptIn * itemsPerPage)) }}">
+                                                    ng-click="optOut(currentPageMemberships, $index)">
                                                 Opt Out
                                             </button>
                                         </div>
@@ -182,7 +181,7 @@
                                     <td class="col-md-2">
                                         <button class="btn btn-primary btn-block opt-button"
                                                 tabindex="0"
-                                                ng-click="optIn($index)">Opt In
+                                                ng-click="optIn(currentPageOptIn, $index)">Opt In
                                         </button>
                                     </td>
                                 </tr>
