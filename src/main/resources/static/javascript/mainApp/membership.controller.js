@@ -23,7 +23,7 @@
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
 
-        var optOutList = [];
+        $scope.optOutList = [];
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
@@ -41,7 +41,7 @@
                 $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
                 $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList);
 
-                optOutList = res.groupingsToOptOutOf;
+                $scope.optOutList = res.groupingsToOptOutOf;
 
                 $scope.loading = false;
             }, function (res) {
@@ -98,7 +98,7 @@
          */
         $scope.membershipRequired = function (currentPage, indexClicked) {
             var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
-            return !_.some(optOutList, { path: groupingPath });
+            return !_.some($scope.optOutList, { path: groupingPath });
         };
 
     }
