@@ -11,10 +11,10 @@
     <h1>Feedback</h1>
 
     <div class="alert alert-success" role="alert" th:if="${success}">
-        <strong>Thank you.</strong> Your feedback has successfully been submitted.
+        <p th:utext="#{screen.message.feedback.page.alertSuccess}"> </p>
     </div>
 
-    <p>Feedback helps us to understand where improvements are needed. Please let us know.</p>
+    <p th:utext="#{screen.message.feedback.page.description}"> </p>
 
     <div class="panel panel-default">
         <div class="panel-body">
