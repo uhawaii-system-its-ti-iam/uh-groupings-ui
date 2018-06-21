@@ -17,9 +17,7 @@
             </div>
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <h1 class="dropshadow">UH Groupings</h1>
-                <p class="lead">
-                    Manage your groupings in one place, use them in many.
-                </p>
+                <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"> </p>
                 <div>
                     <div sec:authorize="!isAuthenticated()">
                         <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
@@ -36,22 +34,8 @@
 
     <div class="row" style="margin-left: inherit; margin-right: inherit">
         <span class="h4">What is a UH Grouping?</span>
-        <div id="descriptionHome">
-            <p>
-                A <i>grouping</i> is a collection of members (e.g., all full-time Hilo faculty). UH Groupings allows you
-                to create groupings, manage grouping memberships,
-                control members' self-service options, designate sync destinations, and more.
-            </p>
-            <p>
-                Groupings can be synchronized with one or more of the following: email LISTSERV lists, attributes for
-                access control via CAS and LDAP, etc.
-                Additionally, UH Groupings allows you to leverage group data from official sources, which can
-                substantially reduce the manual overhead of membership management.
-            </p>
-            <p>
-                For more information, visit &lt;<a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings</a>&gt;.
-            </p>
-        </div>
+        <div id="descriptionHome" th:utext="#{screen.message.home.page.groupingDefinition}"> </div>
+        <div id="moreInfo" style="margin-top:-16px;" th:utext="#{screen.message.home.page.moreInformation}"> </div>
     </div>
 
     <div id="footerBottom">
@@ -59,26 +43,18 @@
             <div class="row" sec:authorize="isAuthenticated()">
                 <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
                     <p class="h4" style="margin-top: 0;">Admin Functions</p>
-                    <p>
-                        Manage the list of Administrators for this service. Search for and manage any grouping on behalf
-                        of the owner.
-                    </p>
+                    <p th:utext="#{screen.message.home.page.adminInfo}"> </p>
                     <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">Admin</a></p>
                 </div>
                 <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
                     <p class="h4" style="margin-top: 0;">My Memberships</p>
-                    <p>
-                        View and manage my memberships. Search for new groupings to join as a member.
-                    </p>
+                    <p th:utext="#{screen.message.home.page.membershipInfo}"> </p>
                     <div class="membership-btn-alignment"><br/></div>
                     <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">Memberships</a></p>
                 </div>
                 <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
                     <p class="h4" style="margin-top: 0;">My Groupings</p>
-                    <p>
-                        View and manage groupings I own. Manage members, configure grouping options and sync
-                        destinations.
-                    </p>
+                    <p th:utext="#{screen.message.home.page.mygroupingsInfo}"> </p>
                     <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">Groupings</a></p>
                 </div>
             </div>

@@ -13,8 +13,7 @@
         <div class='container-fluid'>
             <h1 class="text-left">Manage My Groupings</h1>
 
-            <p class="text-left">View and manage groupings I own. Manage members, configure grouping options and
-                sync destinations.</p>
+            <p class="text-left" th:utext="#{screen.message.groupings.page.description}"> </p>
 
             <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
                 <div id="overlay" ng-show="loading">

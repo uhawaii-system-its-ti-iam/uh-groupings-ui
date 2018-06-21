@@ -14,7 +14,7 @@
 
             <!-- <p th:text="#{screen.message.home.test('{{currentUsername}}')}">Hi my name is aaron</p> -->
 
-            <p class="text-left">View and manage my memberships. Search for new groupings to join as a member.</p>
+            <p class="text-left" th:utext="#{screen.message.memberships.page.description}"> </p>
 
             <ul class="nav nav-tabs " id="memTab">
                 <li role="presentation" class="active" data-toggle="tooltip" data-placement="top">
@@ -41,9 +41,8 @@
                         <div class="panel-heading">
                             <div class="row" style="margin: inherit">
                                 <div class="col-md-6 col-sm-7" style="padding: 0px;">
-                                    <h2 class="panel-title" style="padding: 2.5px 0px; margin: inherit;">My Grouping
-                                        Memberships</h2>
-                                    <span>Some memberships are optional, and some are required.</span>
+                                    <h2 class="panel-title" style="padding: 2.5px 0px; margin: inherit;">My Grouping Memberships</h2>
+                                    <span th:utext="#{screen.message.memberships.page.currentMembershipsInfo}"> </span>
                                 </div>
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
                                     <input placeholder="Filter Groupings..." type="text"
@@ -144,9 +143,8 @@
                         <div class="panel-heading">
                             <div class="row" style="margin: inherit;">
                                 <div class="col-md-6 col-sm-7" style="padding: 0px;">
-                                    <h2 class="panel-title" style="padding: 2.5px 0px; margin: inherit;">Available
-                                        Groupings</h2>
-                                    <span>You may opt in to any of these groupings to become a member.</span>
+                                    <h2 class="panel-title" style="padding: 2.5px 0px; margin: inherit;">Available Groupings</h2>
+                                    <span th:utext="#{screen.message.memberships.page.membershipOpportunitiesInfo}"> </span>
                                 </div>
                                 <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
                                     <input placeholder="Filter Groupings..." type="text"
