@@ -40,9 +40,9 @@
             }, endpoint);
         };
 
-        $scope.change = function () {
-            $scope.showGrouping = false;
+        $scope.displayAdmins = function () {
             $scope.resetGroupingInformation();
+            $scope.showGrouping = false;
         };
 
         // TODO: Find a way to make the 3 adds into a more singular function.

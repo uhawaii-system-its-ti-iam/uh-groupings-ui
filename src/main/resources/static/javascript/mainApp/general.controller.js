@@ -359,9 +359,7 @@
          * Returns to the list of groupings available for management/administration.
          */
         $scope.returnToGroupingsList = function () {
-            resetGroupingData();
-            resetPillsToAllMembers();
-            resetFilterQueries();
+            $scope.resetGroupingInformation();
 
             // Ensure the groupings list is reset with the now-blank filter
             $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
@@ -370,9 +368,19 @@
         };
 
         /**
-         * Resets the grouping members, page numbers, and column sorting.
+         * Resets the grouping members, page numbers, filters, and columns to sort by.
          */
-        function resetGroupingData() {
+        $scope.resetGroupingInformation = function () {
+            resetGroupingMembers();
+            resetPillsToAllMembers();
+            resetFilterQueries();
+            $scope.columnSort = {};
+        }
+
+        /**
+         * Resets the grouping members and page numbers.
+         */
+        function resetGroupingMembers() {
             $scope.groupingMembers = [];
             $scope.groupingBasis = [];
             $scope.groupingInclude = [];
@@ -390,8 +398,6 @@
             $scope.currentPageInclude = 0;
             $scope.currentPageExclude = 0;
             $scope.currentPageOwners = 0;
-
-            $scope.columnSort = {};
         }
 
         /**
