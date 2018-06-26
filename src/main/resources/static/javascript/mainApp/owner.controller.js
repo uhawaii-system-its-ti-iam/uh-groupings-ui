@@ -63,7 +63,7 @@
                 } else {
                     // Reload the grouping
                     dataProvider.updateData(function () {
-                        $scope.getData(path);
+                        $scope.getGroupingInformation();
                     }, url);
                 }
             });

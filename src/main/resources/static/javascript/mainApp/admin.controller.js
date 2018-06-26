@@ -7,7 +7,7 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function AdminJsController($scope, $window, $controller, $uibModal, dataProvider) {
+    function AdminJsController($scope, $window, $controller, $uibModal, dataProvider, BASE_URL) {
 
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
@@ -25,19 +25,19 @@
         $scope.init = function () {
             // Adds the loading spinner.
             $scope.loading = true;
-            var url = "api/groupings/adminLists";
+            var endpoint = BASE_URL + "adminLists";
 
-            dataProvider.loadData(function (d) {
-                $scope.adminsList = d.adminGroup.members;
-                $scope.groupingsList = d.allGroupings;
-                $scope.groupingsList = _.sortBy($scope.groupingsList, "name");
-                $scope.modify($scope.adminsList);
+            dataProvider.loadData(function (res) {
+                $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
                 $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
+
+                $scope.groupingsList = _.sortBy(res.allGroupings, "name");
                 $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+
                 $scope.loading = false;
-            }, function (d) {
-                dataProvider.handleException({ exceptionMessage: d.exceptionMessage }, "feedback/error", "feedback");
-            }, url);
+            }, function (res) {
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+            }, endpoint);
         };
 
         $scope.change = function () {
@@ -106,7 +106,7 @@
                             $scope.init();
                         }
                     } else {
-                        $scope.getData(path);
+                        $scope.getGroupingInformation();
                     }
                 }, url);
 
