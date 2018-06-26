@@ -90,7 +90,7 @@
 
                 $scope.allowOptIn = res.optInOn;
                 $scope.allowOptOut = res.optOutOn;
-                $scope.listserv = res.istservOn;
+                $scope.listserv = res.listservOn;
 
                 //Stop loading spinner
                 $scope.loading = false;
@@ -443,18 +443,15 @@
          * Toggles the grouping preference which allows users to opt out of a grouping.
          */
         $scope.updateAllowOptOut = function () {
-            var url = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
-            dataProvider.updateData(function (d) {
-                console.log(d);
-                if (d.statusCode != null) {
-                    console.log("Error, Status Code: " + d.statusCode);
+            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
+            dataProvider.updateData(function (res) {
+                if (!_.isUndefined(res.statusCode)) {
+                    console.log("Error, Status Code: " + res.statusCode);
                     $scope.createPreferenceErrorModal();
-                } else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                } else if (_.startsWith(res[0].resultCode), "SUCCESS") {
                     console.log("success");
                 }
-            }, url);
-            console.log(url);
-
+            }, endpoint);
         };
 
         /**
@@ -462,11 +459,11 @@
          */
         $scope.updateAllowOptIn = function () {
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.allowOptIn + "/setOptIn";
-            dataProvider.updateData(function (d) {
-                if (d.statusCode != null) {
-                    console.log("Error, Status Code: " + d.statusCode);
+            dataProvider.updateData(function (res) {
+                if (!_.isUndefined(res.statusCode)) {
+                    console.log("Error, Status Code: " + res.statusCode);
                     $scope.createPreferenceErrorModal();
-                } else if (d[0].resultCode === "SUCCESS_ALLOWED" || d[0].resultCode === "SUCCESS_NOT_ALLOWED") {
+                } else if (_.startsWith(res[0].resultCode), "SUCCESS") {
                     console.log("success");
                 }
             }, endpoint);
@@ -477,12 +474,11 @@
          */
         $scope.updateListserv = function () {
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.listserv + "/setListserv";
-            dataProvider.updateData(function (d) {
-                console.log(d);
-                if (d.statusCode != null) {
-                    console.log("Error, Status Code: " + d.statusCode);
+            dataProvider.updateData(function (res) {
+                if (!_.isUndefined(res.statusCode)) {
+                    console.log("Error, Status Code: " + res.statusCode);
                     $scope.createPreferenceErrorModal();
-                } else if (d.resultCode === "SUCCESS") {
+                } else if (res.resultCode === "SUCCESS") {
                     console.log("success");
                 }
             }, endpoint);
