@@ -28,12 +28,12 @@ public class ErrorControllerAdvice {
     private UserContextService userContextService;
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<GroupingsHTTPException> handelIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
+    public ResponseEntity<GroupingsHTTPException> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
         return exceptionResponse("Resource not available", iae, 404);
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<GroupingsHTTPException> handelRuntimeException(RuntimeException re) {
+    public ResponseEntity<GroupingsHTTPException> handleRuntimeException(RuntimeException re) {
         return exceptionResponse("runtime exception", re, 500);
     }
 
@@ -48,8 +48,8 @@ public class ErrorControllerAdvice {
     }
 
     @ExceptionHandler(GroupingsServiceResultException.class)
-    public ResponseEntity<GroupingsHTTPException> handelGroupingsServiceResultException(GroupingsServiceResultException gsre) {
-        ResponseEntity re = exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
+    public ResponseEntity<GroupingsHTTPException> handleGroupingsServiceResultException(GroupingsServiceResultException gsre) {
+        ResponseEntity<GroupingsHTTPException> re = exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
         return re;
     }
 

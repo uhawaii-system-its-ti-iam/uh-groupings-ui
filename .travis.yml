@@ -16,9 +16,6 @@ after_success:
 notifications:
   email:
     recipients:
-      - its-iam-web-app-devs@lists.hawaii.edu
-      - duckart@hawaii.edu
-      - zknoebel@hawaii.edu
-      - aaronvil@hawaii.edu
+      - its-iam-web-app-dev-help-l@lists.hawaii.edu
     on_success: change
     on_failure: always

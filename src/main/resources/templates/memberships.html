@@ -129,7 +129,7 @@
                             </table>
 
                             <div ng-if="membershipsList.length === 0" align="center">
-                                <h3 style="color: black"><b th:text="#{screen.message.membership.empty.membershipsList}">No Groupings Available</b></h3>
+                                <h3 style="color: black"><b ng-hide="loading" th:text="#{screen.message.membership.empty.membershipsList}">No Groupings Available</b></h3>
                             </div>
                         </div>
                     </div>
@@ -217,7 +217,7 @@
                                 </tfoot>
                             </table>
                             <div ng-if="optInList.length === 0" align="center">
-                                <h3 style="color: black"><b th:text="#{screen.message.membership.empty.optIn}">No Groupings Available</b></h3>
+                                <h3 style="color: black"><b ng-hide="loading" th:text="#{screen.message.membership.empty.optIn}">No Groupings Available</b></h3>
                             </div>
                         </div>
                     </div>
