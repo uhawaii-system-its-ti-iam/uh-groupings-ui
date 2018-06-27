@@ -155,10 +155,11 @@
         $scope.addMember = function (type) {
             var userToAdd = $scope.addUser;
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + userToAdd + "/addMemberTo" + type + "Group";
-            if ($scope.userCheck(userToAdd, type))
+            if ($scope.isInAnotherList(userToAdd, type)) {
                 $scope.createCheckModal(userToAdd, type, endpoint);
-            else
+            } else {
                 $scope.updateAddMember(userToAdd, type, endpoint);
+            }
         };
 
         /**
@@ -192,25 +193,16 @@
         };
 
         /**
-         * Checks whether the person is already in another group
-         * @param person - the person you are checking to see if they are in another list.
-         * @param type - the list that you are comparing against.
-         * @returns {boolean} - True if the person is already in another list, else false.
+         * @param user - the user you are checking to see if they are in another list.
+         * @param list - the list the user is currently being added to
+         * @returns {boolean} - true if the person is already in another list, else false.
          */
-        $scope.userCheck = function (person, type) {
-            if (type === "Include") {
-                for (var i = 0; i < $scope.groupingExclude.length; i++) {
-                    if ($scope.groupingExclude[i].username === person)
-                        return true;
-                }
+        $scope.isInAnotherList = function (user, list) {
+            if (list === "Include") {
+                return _.some($scope.groupingExclude, { username: user });
+            } else if (list === "Exclude") {
+                return _.some($scope.groupingInclude, { username: user });
             }
-            if (type === "Exclude") {
-                for (var j = 0; j < $scope.groupingInclude.length; j++) {
-                    if ($scope.groupingInclude[j].username === person)
-                        return true;
-                }
-            }
-
             return false;
         };
 
@@ -375,7 +367,7 @@
             resetPillsToAllMembers();
             resetFilterQueries();
             $scope.columnSort = {};
-        }
+        };
 
         /**
          * Resets the grouping members and page numbers.
