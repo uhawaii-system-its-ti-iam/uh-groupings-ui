@@ -42,21 +42,21 @@
                 <!-- Top part of the two parts  -->
                 <td colspan="6">
                     <ul class="pagination pull-right">
-                        <li ng-class="{disabled: (currentPageGroupings) == 0}">
+                        <li ng-class="{ disabled: disableFirstAndPrev(currentPageGroupings) }">
                             <a class="clickable" ng-click="setPage('First','currentPageGroupings','pagedItemsGroupings')">«« First</a>
                         </li>
-                        <li ng-class="{disabled: (currentPageGroupings) == 0 }">
+                        <li ng-class="{ disabled: disableFirstAndPrev(currentPageGroupings) }">
                             <a class="clickable" ng-click="setPage('Prev','currentPageGroupings','pagedItemsGroupings')">« Prev</a>
                         </li>
                         <li ng-repeat="n in pageRange(currentPageGroupings, pagedItemsGroupings.length, gap)"
-                            ng-class="{active: n == currentPageGroupings}"
+                            ng-class="{ active: n === currentPageGroupings }"
                             ng-click="setPage('Set','currentPageGroupings','pagedItemsGroupings')">
                             <a class="clickable" ng-bind="n + 1"></a>
                         </li>
-                        <li ng-class="{disabled: (currentPageGroupings) == pagedItemsGroupings.length - 1 || pagedItemsGroupings.length == 0}">
+                        <li ng-class="{ disabled: disableNextAndLast(pagedItemsGroupings, currentPageGroupings) }">
                             <a class="clickable" ng-click="setPage('Next','currentPageGroupings','pagedItemsGroupings')">Next »</a>
                         </li>
-                        <li ng-class="{disabled: (currentPageGroupings) == pagedItemsGroupings.length - 1 || pagedItemsGroupings.length == 0}">
+                        <li ng-class="{ disabled: disableNextAndLast(pagedItemsGroupings, currentPageGroupings) }">
                             <a class="clickable" ng-click="setPage('Last','currentPageGroupings','pagedItemsGroupings')">Last »»</a>
                         </li>
                     </ul>

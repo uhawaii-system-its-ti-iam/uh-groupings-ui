@@ -78,21 +78,21 @@
             <!-- Pagination control -->
             <td colspan="6">
                 <ul class="pagination pull-right">
-                    <li ng-class="{disabled: (currentPageExclude) == 0 }">
+                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageExclude) }">
                         <a class="clickable" ng-click="setPage('First','currentPageExclude','pagedItemsExclude')">«« First</a>
                     </li>
-                    <li ng-class="{disabled: (currentPageExclude) == 0 }">
+                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageExclude) }">
                         <a class="clickable" ng-click="setPage('Prev','currentPageExclude','pagedItemsExclude')">« Prev</a>
                     </li>
                     <li ng-repeat="n in pageRange(currentPageExclude, pagedItemsExclude.length, gap)"
-                        ng-class="{active: n == currentPageExclude}"
+                        ng-class="{ active: n === currentPageExclude }"
                         ng-click="setPage('Set','currentPageExclude','pagedItemsExclude')">
                         <a class="clickable" ng-bind="n + 1"></a>
                     </li>
-                    <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
+                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsExclude, currentPageExclude) }">
                         <a class="clickable" ng-click="setPage('Next','currentPageExclude','pagedItemsExclude')">Next »</a>
                     </li>
-                    <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
+                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsExclude, currentPageExclude) }">
                         <a class="clickable" ng-click="setPage('Last','currentPageExclude','pagedItemsExclude')">Last »»</a>
                     </li>
                 </ul>

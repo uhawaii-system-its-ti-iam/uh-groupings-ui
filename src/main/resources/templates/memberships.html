@@ -198,7 +198,7 @@
                                                 Prev</a>
                                         </li>
                                         <li ng-repeat="n in pageRange(currentPageOptIn, pagedItemsOptInList.length, gap)"
-                                            ng-class="{ active: n == currentPageOptIn }"
+                                            ng-class="{ active: n === currentPageOptIn }"
                                             ng-click="setPage('Set','currentPageOptIn','pagedItemsOptInList')">
                                             <a class="clickable" ng-bind="n + 1">1</a>
                                         </li>

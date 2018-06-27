@@ -45,21 +45,21 @@
             <tfoot>
             <td colspan="6">
                 <ul class="pagination pull-right">
-                    <li ng-class="{disabled: (currentPageOwners) == 0 }">
+                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageOwners) }">
                         <a class="clickable" ng-click="setPage('First','currentPageOwners','pagedItemsOwners')">«« First</a>
                     </li>
-                    <li ng-class="{disabled: (currentPageOwners) == 0 }">
+                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageOwners) }">
                         <a class="clickable" ng-click="setPage('Prev','currentPageOwners','pagedItemsOwners')">« Prev</a>
                     </li>
                     <li ng-repeat="n in pageRange(currentPageOwners, pagedItemsOwners.length, gap) "
-                        ng-class="{active: n == currentPageOwners}"
+                        ng-class="{ active: n === currentPageOwners }"
                         ng-click="setPage('Set','currentPageOwners','pagedItemsOwners')">
                         <a class="clickable" ng-bind="n + 1"></a>
                     </li>
-                    <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
+                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsOwners, currentPageOwners) }">
                         <a class="clickable" ng-click="setPage('Next','currentPageOwners','pagedItemsOwners')">Next »</a>
                     </li>
-                    <li ng-class="{disabled: (currentPageOwners) == pagedItemsOwners.length - 1 || pagedItemsOwners.length == 0}">
+                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsOwners, currentPageOwners) }">
                         <a class="clickable" ng-click="setPage('Last','currentPageOwners','pagedItemsOwners')">Last »»</a>
                     </li>
                 </ul>
