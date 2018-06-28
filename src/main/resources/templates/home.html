@@ -34,7 +34,10 @@
 
     <div class="row" style="margin-left: inherit; margin-right: inherit">
         <span class="h4">What is a UH Grouping?</span>
-        <div id="descriptionHome" th:utext="#{screen.message.home.page.groupingDefinition}"> </div>
+        <div id="descriptionHome">
+            <p th:utext="#{screen.message.home.page.groupingDefinition}">  </p>
+            <p th:utext="#{screen.message.home.page.groupingFeatures}">  </p>
+        </div>
         <div id="moreInfo" style="margin-top:-16px;" th:utext="#{screen.message.home.page.moreInformation}"> </div>
     </div>
 
