@@ -52,18 +52,16 @@
          */
         $scope.addAdmin = function () {
             var adminToAdd = $scope.adminToAdd;
-            var addUrl = "api/groupings/" + adminToAdd + "/addAdmin";
-            dataProvider.updateData(function (d) {
-                var successful = false;
-                if (d.statusCode != null) {
-                    console.log("Error, Status Code: " + d.statusCode);
-                } else if (d.resultCode.indexOf("SUCCESS") === 0) {
-                    successful = true;
-                }
-                var listName = "admins";
-                $scope.createAddModal(adminToAdd, successful, listName);
+            var endpoint = "api/groupings/" + adminToAdd + "/addAdmin";
+
+            dataProvider.updateData(function (res) {
+                $scope.createAddModal({
+                    user: adminToAdd,
+                    response: res,
+                    listName: "admins"
+                });
                 $scope.adminToAdd = "";
-            }, addUrl);
+            }, endpoint);
         };
 
         /**
