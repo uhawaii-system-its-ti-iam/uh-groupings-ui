@@ -34,14 +34,14 @@
         /**
          * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
-         * @param {string} user - the user to delete
-         * @param {string} url - the URL used to make the request
-         * @param {string} listName - where the user is being removed from
-         * @param {string} path - the path to the grouping
+         * @param {object} options - the options object
+         * @param {string} options.user - the user being removed
+         * @param {string} options.endpoint - the endpoint used to make the request
+         * @param {string} options.listName - where the user is being removed from
          */
-        $scope.createRemoveModal = function (user, url, listName, path) {
-            $scope.userToDelete = user;
-            $scope.listName = listName;
+        $scope.createRemoveModal = function (options) {
+            $scope.userToRemove = options.user;
+            $scope.listName = options.listName;
 
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
@@ -50,22 +50,18 @@
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
-                if ($scope.currentUser === $scope.userToDelete && listName === 'owners') {
-                    if ($scope.groupingsList.length === 1) {
-                        dataProvider.updateData(function () {
+
+                dataProvider.updateData(function () {
+                    if ($scope.currentUser === $scope.userToRemove && $scope.listName === "owners") {
+                        if ($scope.groupingsList.length === 1) {
                             $window.location.href = "home";
-                        }, url);
-                    } else {
-                        dataProvider.updateData(function () {
+                        } else {
                             $window.location.href = "groupings";
-                        }, url);
-                    }
-                } else {
-                    // Reload the grouping
-                    dataProvider.updateData(function () {
+                        }
+                    } else {
                         $scope.getGroupingInformation();
-                    }, url);
-                }
+                    }
+                }, options.endpoint);
             });
         };
 

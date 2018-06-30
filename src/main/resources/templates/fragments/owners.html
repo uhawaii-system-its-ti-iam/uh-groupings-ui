@@ -25,8 +25,8 @@
                           onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
                           tabindex="0"
                           th:title="#{screen.message.common.tooltip.remove.owner}"
-                          ng-keypress="$event.keyCode === 13 ? removeOwner($index) : null"
-                          ng-click="removeOwner($index)" >
+                          ng-keypress="$event.keyCode === 13 ? removeOwner(currentPageOwners, $index) : null"
+                          ng-click="removeOwner(currentPageOwners, $index)" >
                     </span>
                 </td>
                 <td>

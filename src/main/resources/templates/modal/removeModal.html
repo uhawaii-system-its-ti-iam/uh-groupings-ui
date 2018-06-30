@@ -1,14 +1,14 @@
 <div class="modal-header"
-     ng-class="{ 'alert alert-danger modal-alert': userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins') }">
+     ng-class="{ 'alert alert-danger modal-alert': showWarningRemovingSelf() }">
     <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelRemoveUser()">
         <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title" id="modal-title"
-        ng-style="{ 'margin-bottom': userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins') ? '10px' : '0px' }">
+        ng-style="{ 'margin-bottom': showWarningRemovingSelf() ? '10px' : '0px' }">
         Remove User
     </h4>
     <!-- Warning message if users try to delete themselves from the admins or owners list -->
-    <div ng-if="userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins')">
+    <div ng-if="showWarningRemovingSelf()">
         <p>
             <strong>Warning!</strong>
             You are attempting to remove yourself from the {{ listName }} list.
@@ -38,7 +38,7 @@
     </div>
 </div>
 <div class="modal-body" id="modal-body">
-    <p>Are you sure you want to remove {{ userToDelete }} from the {{ listName }} list?</p>
+    <p>Are you sure you want to remove {{ userToRemove }} from the {{ listName }} list?</p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedRemoveUser()">Yes</button>

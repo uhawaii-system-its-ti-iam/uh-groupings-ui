@@ -82,8 +82,8 @@
                                                   tabindex="0"
                                                   onmouseover="$(this).tooltip('show')"
                                                   th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
-                                                  ng-click="removeAdmin($index + (currentPageAdmins * itemsPerPage))"
-                                                  ng-keypress="$event.keyCode === 13 ? removeAdmin($index + (currentPageAdmins * itemsPerPage)) : null"
+                                                  ng-click="removeAdmin(currentPageAdmins, $index)"
+                                                  ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null"
                                                   style="margin-right: 10px;"></span>
                                         </td>
                                         <td>{{l.uuid}}</td>

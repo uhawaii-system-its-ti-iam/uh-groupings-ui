@@ -55,8 +55,8 @@
                           onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
                           tabindex="0"
                           th:title="#{screen.message.common.tooltip.remove.include}"
-                          ng-keypress="$event.keyCode === 13 ? removeMember('Include', $index) : null"
-                          ng-click="removeMember('Include', $index)">
+                          ng-keypress="$event.keyCode === 13 ? removeMember('Include', currentPageInclude, $index) : null"
+                          ng-click="removeMember('Include', currentPageInclude, $index)">
                     </span>
                 </td>
                 <td>{{i.uuid}}</td>

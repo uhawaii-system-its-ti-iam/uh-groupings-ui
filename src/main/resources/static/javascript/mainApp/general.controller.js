@@ -294,32 +294,42 @@
 
         /**
          * Removes a user from the include or exclude group.
-         * @param {string} type - the type of group the user will be removed from (either Include or Exclude)
+         * @param {string} listName - the list to remove the user from (either Include or Exclude)
+         * @param {number} currentPage - the current page in the table
          * @param {number} index - the index of the user clicked by the user
          * account
          */
-        $scope.removeMember = function (type, index) {
-            var user;
-            if (type === "Include") {
-                user = $scope.pagedItemsInclude[$scope.currentPageInclude][index].username;
-            } else if (type === "Exclude") {
-                user = $scope.pagedItemsExclude[$scope.currentPageExclude][index].username;
+        $scope.removeMember = function (listName, currentPage, index) {
+            var userToRemove;
+            if (listName === "Include") {
+                userToRemove = $scope.pagedItemsInclude[currentPage][index].username;
+            } else if (listName === "Exclude") {
+                userToRemove = $scope.pagedItemsExclude[currentPage][index].username;
             }
-            var url = "api/groupings/" + $scope.selectedGrouping.path + "/" + user + "/deleteMemberFrom" + type + "Group";
-            var listName = type;
-            $scope.createRemoveModal(user, url, listName, $scope.selectedGrouping.path);
+            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + userToRemove + "/deleteMemberFrom" + listName + "Group";
+
+            $scope.createRemoveModal({
+                user: userToRemove,
+                endpoint: endpoint,
+                listName: listName
+            });
         };
 
         /**
          * Removes a grouping owner. There must be at least one grouping owner remaining.
+         * @param {number} currentPage - the current page in the owners table
          * @param {number} index - the index of the owner clicked by the user
          */
-        $scope.removeOwner = function (index) {
-            var removeOwner = $scope.pagedItemsOwners[$scope.currentPageOwners][index].username;
-            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + removeOwner + "/removeOwnership";
+        $scope.removeOwner = function (currentPage, index) {
+            var ownerToRemove = $scope.pagedItemsOwners[currentPage][index].username;
+            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + ownerToRemove + "/removeOwnership";
+
             if ($scope.groupingOwners.length > 1) {
-                var listName = "owners";
-                $scope.createRemoveModal(removeOwner, endpoint, listName, $scope.selectedGrouping.path);
+                $scope.createRemoveModal({
+                    user: ownerToRemove,
+                    endpoint: endpoint,
+                    listName: "owners"
+                });
             }
         };
 
@@ -545,6 +555,11 @@
                 str += line + "\r\n";
             }
             return str;
+        };
+
+        $scope.showWarningRemovingSelf = function () {
+            return $scope.currentUser === $scope.userToRemove
+                && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 
     }
