@@ -7,7 +7,7 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function OwnerJsController($scope, $controller, $window, $uibModal, dataProvider) {
+    function OwnerJsController($scope, $controller, $window, $uibModal, dataProvider, BASE_URL) {
 
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
@@ -20,7 +20,7 @@
          */
         $scope.init = function () {
             $scope.loading = true;
-            var groupingsOwned = "api/groupings/groupingAssignment";
+            var endpoint = BASE_URL + "groupingAssignment";
 
             dataProvider.loadData(function (d) {
                 $scope.groupingsList = (_.sortBy((d.groupingsOwned),'name'));
@@ -28,7 +28,7 @@
                 $scope.loading = false;
             }, function (d) {
                 dataProvider.handleException({ exceptionMessage: d.exceptionMessage }, "feedback/error", "feedback");
-            }, groupingsOwned);
+            }, endpoint);
         };
 
         /**

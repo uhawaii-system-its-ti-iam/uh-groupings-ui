@@ -52,7 +52,7 @@
          */
         $scope.addAdmin = function () {
             var adminToAdd = $scope.adminToAdd;
-            var endpoint = "api/groupings/" + adminToAdd + "/addAdmin";
+            var endpoint = BASE_URL + adminToAdd + "/addAdmin";
 
             dataProvider.updateData(function (res) {
                 $scope.createAddModal({
