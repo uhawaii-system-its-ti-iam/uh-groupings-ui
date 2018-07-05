@@ -15,7 +15,7 @@
         $scope.currentPageMemberships = 0;
 
         $scope.optInList = [];
-        $scope.pagedItemsOptIn = [];
+        $scope.pagedItemsOptInList = [];
         $scope.currentPageOptIn = 0;
 
         $scope.loading = true;
