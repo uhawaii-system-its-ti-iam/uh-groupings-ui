@@ -3,10 +3,13 @@
     /**
      * This controller contains shared functions between the admin and groupings page.
      * @param $scope - binding between controller and HTML page
+     * @param $window - the browser window object
      * @param $uibModal - the UI Bootstrap service for creating modals
+     * @param $controller - service for instantiating controllers
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
+     * @param BASE_URL - the constant base URL for endpoints
      */
-    function GeneralJsController($scope, $http, $window, $uibModal, $controller, dataProvider, BASE_URL) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, dataProvider, BASE_URL) {
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
