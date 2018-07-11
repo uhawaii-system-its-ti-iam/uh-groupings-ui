@@ -5,8 +5,8 @@
     <h4 class="modal-title" id="modal-title">Warning</h4>
 </div>
 <div class="modal-body" id="modal-body">
-    <p>{{ user }} is currently in the {{ listName }} list, are you sure you want to remove this person from
-        the {{ listName }} list and add this person to the {{ listName === "Include" ? "Exclude" : "Include" }} list?</p>
+    <p>{{ user }} is currently in the {{ listName === "Include" ? "Exclude" : "Include"  }} list, are you sure you want to remove this person from
+        the {{ listName === "Include" ? "Exclude" : "Include" }} list and add this person to the {{ listName }} list?</p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedCheckModal()">Yes</button>
