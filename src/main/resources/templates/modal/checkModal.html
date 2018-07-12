@@ -1,3 +1,7 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="closeCheckModal()">
         <span aria-hidden="true">&times;</span>
@@ -5,10 +9,21 @@
     <h4 class="modal-title" id="modal-title">Warning</h4>
 </div>
 <div class="modal-body" id="modal-body">
-    <p>{{ user }} is currently in the {{ listName === "Include" ? "Exclude" : "Include"  }} list, are you sure you want to remove this person from
-        the {{ listName === "Include" ? "Exclude" : "Include" }} list and add this person to the {{ listName }} list?</p>
+    <div ng-if="listName === 'Include'">
+        <p th:utext="#{screen.message.modal.check.exclude}">They are already in Exclude</p>
+    </div>
+    <div ng-if="listName === 'Exclude'">
+        <p th:utext="#{screen.message.modal.check.include}">They are already in Include</p>
+    </div>
+
+    <!--<p th:utext="#{screen.message.modal.check.user}">User Name</p>-->
+
 </div>
+
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedCheckModal()">Yes</button>
     <button class="btn btn-default" ng-click="closeCheckModal()">Cancel</button>
 </div>
+
+</html>
+

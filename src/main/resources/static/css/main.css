@@ -545,7 +545,7 @@ td.uh-pre {
 }
 
 /** nav-tabs on the memberships page to remove border from small screen widths */
-@media (max-width: 401px) {
+@media (max-width: 416px) {
     #memberships-tabs > li > a {
         border-color: transparent;
     }
