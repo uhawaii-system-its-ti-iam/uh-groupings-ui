@@ -228,4 +228,62 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("addMember", function () {
+        describe("user adds 'user8', who is not in any list, to the Include list", function () {
+            beforeEach(function () {
+                scope.userToAdd = "user8";
+            });
+
+            it("should call updateAddMember to add the user", function () {
+                spyOn(scope, "updateAddMember").and.callThrough();
+                scope.addMember("Include");
+
+                expect(scope.updateAddMember).toHaveBeenCalled();
+            });
+
+            it("should not create a modal asking if the user wants to remove 'user8' from a list", function () {
+                spyOn(scope, "createCheckModal").and.callThrough();
+                scope.addMember("Include");
+
+                expect(scope.createCheckModal).not.toHaveBeenCalled();
+            });
+        });
+
+        describe("user adds 'user1' to the Exclude list, who is currently in the Include list", function () {
+            beforeEach(function () {
+                scope.userToAdd = "user1";
+            });
+
+            it("should create a modal asking if the user wants to remove 'user1' from the Exclude list", function () {
+                spyOn(scope, "createCheckModal").and.callThrough();
+                scope.addMember("Exclude");
+
+                expect(scope.createCheckModal).toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe("isInAnotherList", function () {
+        describe("user tries to add 'user1', who is currently in the Include list, to the Exclude list", function () {
+            it("should return true since 'user1' is currently in the Include list", function () {
+                expect(scope.isInAnotherList("user1", "Exclude")).toBe(true);
+            });
+        });
+        describe("user tries to add 'user5', who is currently in the Exclude list, to the Include list", function () {
+            it("should return true since 'user5' is currently in the Include list", function () {
+                expect(scope.isInAnotherList("user5", "Include")).toBe(true);
+            });
+        });
+        describe("user tries to add 'user8', who is not in any list", function () {
+            it("should return false if the user tries to add 'user8' to the Include list", function () {
+                expect(scope.isInAnotherList("user8", "Include")).toBe(false);
+            });
+
+            it("should return false if the user tries to add 'user8' to the Exclude list", function () {
+                expect(scope.isInAnotherList("user8", "Exclude")).toBe(false);
+            });
+
+        });
+    });
+
 });
