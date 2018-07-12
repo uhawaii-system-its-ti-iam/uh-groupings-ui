@@ -286,4 +286,76 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("returnToGroupingsList", function () {
+        it("should call resetGroupingInformation", function () {
+            spyOn(scope, "resetGroupingInformation").and.callThrough();
+            scope.returnToGroupingsList();
+
+            expect(scope.resetGroupingInformation).toHaveBeenCalled();
+        });
+
+        it("should reset scope.columnSort to a blank object", function () {
+            scope.returnToGroupingsList();
+
+            expect(scope.columnSort).toEqual({});
+        });
+
+        it("should go back to the groupings list view", function () {
+            scope.returnToGroupingsList();
+
+            expect(scope.showGrouping).toBe(false);
+        });
+
+        it("should reset the filter on the groupings list view", function () {
+            spyOn(scope, "filter").and.callThrough();
+            scope.returnToGroupingsList();
+
+            expect(scope.groupingsQuery).toEqual("");
+            expect(scope.filter).toHaveBeenCalled();
+        });
+
+    });
+
+    describe("resetGroupingInformation", function() {
+        it("should reset every nonpaginated list pertaining to a grouping", function () {
+            scope.resetGroupingInformation();
+
+            expect(scope.groupingMembers).toEqual([]);
+            expect(scope.groupingBasis).toEqual([]);
+            expect(scope.groupingInclude).toEqual([]);
+            expect(scope.groupingExclude).toEqual([]);
+            expect(scope.groupingOwners).toEqual([]);
+        });
+
+        it("should reset every paginated list pertaining to a grouping", function () {
+            scope.resetGroupingInformation();
+
+            expect(scope.pagedItemsMembers).toEqual([]);
+            expect(scope.pagedItemsBasis).toEqual([]);
+            expect(scope.pagedItemsInclude).toEqual([]);
+            expect(scope.pagedItemsExclude).toEqual([]);
+            expect(scope.pagedItemsOwners).toEqual([]);
+        });
+
+        it("should reset all page numbers for lists pertaining to a grouping", function () {
+            scope.resetGroupingInformation();
+
+            expect(scope.currentPageMembers).toEqual(0);
+            expect(scope.currentPageBasis).toEqual(0);
+            expect(scope.currentPageInclude).toEqual(0);
+            expect(scope.currentPageExclude).toEqual(0);
+            expect(scope.currentPageOwners).toEqual(0);
+        });
+
+        it("should reset all search filters", function () {
+            scope.resetGroupingInformation();
+
+            expect(scope.basisQuery).toEqual("");
+            expect(scope.excludeQuery).toEqual("");
+            expect(scope.includeQuery).toEqual("");
+            expect(scope.membersQuery).toEqual("");
+            expect(scope.groupingsQuery).toEqual("");
+        });
+    });
+
 });
