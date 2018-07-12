@@ -33,12 +33,9 @@ public class EmailService {
     }
 
     public void send(Feedback feedback) {
+        logger.info("Feedback received in EmailService: " + feedback);
         if(isEnabled){
-            logger.info("\n/********************************************************************************************/" +
-                    "\n\nSending email!\n\n" +
-                    "/********************************************************************************************/\n");
             SimpleMailMessage msg = new SimpleMailMessage();
-            logger.error("Feedback: " + feedback);
             msg.setTo(to);
             msg.setFrom(from);
             String text = "";
@@ -48,15 +45,16 @@ public class EmailService {
             text += "Feedback type: " + feedback.getType() + "\n\n";
             text += "--------------------------" + "\n\n";
             text += "Feedback: " + feedback.getMessage() + "\n\n";
-            text += "Stack Trace: " + feedback.getExceptionMessage();
-
+            if (!feedback.getExceptionMessage().isEmpty()) {
+                text += "Stack Trace: " + feedback.getExceptionMessage();
+            }
             msg.setText(text);
             msg.setSubject(header);
             try {
                 javaMailSender.send(msg);
             } catch (MailException ex) {
                 logger.error("Error", ex);
-              }
+            }
 
         }
     }
