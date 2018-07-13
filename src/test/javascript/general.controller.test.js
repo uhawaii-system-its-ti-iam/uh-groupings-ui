@@ -358,4 +358,22 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("convertListToCsv", function () {
+        describe("user exports a list with members", function () {
+            it("should start with the correct column headers", function () {
+                var csv = scope.convertListToCsv(scope.groupingExclude);
+
+                expect(csv.indexOf("Last,First,Username,Email\r\n")).toEqual(0);
+            });
+
+            it("should contain the information of every member in the list", function () {
+                var csv = scope.convertListToCsv(scope.groupingExclude);
+
+                expect(csv).toContain("Four,User,user4,user4@hawaii.edu,\r\n");
+                expect(csv).toContain("Five,User,user5,user5@hawaii.edu,\r\n");
+            });
+        });
+
+    });
+
 });
