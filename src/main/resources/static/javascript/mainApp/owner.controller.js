@@ -43,6 +43,8 @@
             $scope.userToDelete = user;
             $scope.listName = listName;
 
+            console.log(url);
+
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
                 scope: $scope
@@ -58,13 +60,17 @@
                     } else {
                         dataProvider.updateData(function () {
                             $window.location.href = "groupings";
-                        }, url);
+                        }, function (d) {
+                            console.log("Error, Status Code: " + d);
+                        },  url);
                     }
                 } else {
                     // Reload the grouping
                     dataProvider.updateData(function () {
                         $scope.getData(path);
-                    }, url);
+                    }, function (d) {
+                        console.log("Error, Status Code: " + d);
+                    },url);
                 }
             });
         };

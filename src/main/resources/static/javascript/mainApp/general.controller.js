@@ -159,6 +159,11 @@
          */
         $scope.addMember = function (type) {
             var userToAdd = $scope.addUser;
+            if(userToAdd.length == 0) {
+                $scope.createAddModal(userToAdd, false, "");
+                return;
+            }
+
             var addUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + userToAdd + "/addMemberTo" + type + "Group";
             if($scope.userCheck(userToAdd, type))
                 $scope.createCheckModal(userToAdd, type, addUrl);
@@ -175,10 +180,10 @@
          * @param addUrl - Url for API call.
          */
         $scope.updateAddMember = function(userToAdd, type , addUrl) {
+            var wasRemoved = false;
+            var successful = false;
             dataProvider.updateData(function (d) {
-                var successful = false;
                 var responseLength = d.length;
-                var wasRemoved = false;
                 if (responseLength === undefined || d[responseLength - 1].statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                 } else if (d[responseLength - 1].resultCode.indexOf("SUCCESS" === 0)) {
@@ -193,6 +198,9 @@
                 var listName = type;
                 $scope.createAddModal(userToAdd, successful, listName, $scope.selectedGrouping.path, wasRemoved);
                 $scope.addUser = "";
+            },function (d) {
+                console.log("Error, Status Code: " + d.statusCode);
+                $scope.createAddModal(userToAdd, successful,"");
             }, addUrl);
         };
 
@@ -227,9 +235,9 @@
          */
         $scope.addOwner = function () {
             var ownerToAdd = $scope.ownerUser;
+            var successful = false;
             var addOwnerUrl = "api/groupings/" + $scope.selectedGrouping.path + "/" + ownerToAdd + "/assignOwnership";
             dataProvider.updateData(function (d) {
-                var successful = false;
                 if (d.statusCode != null) {
                     console.log("Error, Status Code: " + d.statusCode);
                 } else if (d.resultCode === "SUCCESS") {
@@ -239,7 +247,10 @@
                 var listName = "owners";
                 $scope.createAddModal(ownerToAdd, successful, listName, $scope.selectedGrouping.path);
                 $scope.ownerUser = "";
-            }, addOwnerUrl);
+            }, function (d) {
+                console.log("Error, Status Code:" + d);
+                $scope.createAddModal(ownerToAdd, successful,"");
+            },addOwnerUrl);
         };
 
         /**

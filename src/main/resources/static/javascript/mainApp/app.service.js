@@ -11,10 +11,10 @@
              * @param {string} url - the URL to perform the request on
              * @param {function} callback - the function to perform on a successful request (200)
              */
-            loadData: function (callback, callerror, url) {
+            loadData: function (callback, callError, url) {
                 $http.get(encodeURI(url))
                     .success(callback)
-                    .error(callerror, function (data, status) {
+                    .error(callError, function (data, status) {
                         console.log("Error in dataProvider; status: ", status);
                     });
             },
@@ -24,11 +24,11 @@
              * @param {string} url - the URL to perform the request on
              * @param {function} callback - the function to perform on a successful request (200)
              */
-            updateData: function (callback, url) {
+            updateData: function (callback,callError, url) {
                 $http.post(encodeURI(url))
                     .success(callback)
-                    .error(function (data, status) {
-                        console.log("Error in dataUpdater; status: ", status);
+                    .error(callError, function (data, status) {
+                        console.log("Error in dataProvider; status: ", status);
                     });
             },
 
