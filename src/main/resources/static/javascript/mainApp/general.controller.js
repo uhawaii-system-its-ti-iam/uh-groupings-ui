@@ -159,7 +159,9 @@
             var userToAdd = $scope.userToAdd;
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + userToAdd + "/addMemberTo" + list + "Group";
 
-            if ($scope.isInAnotherList(userToAdd, list)) {
+            if (_.isUndefined(userToAdd) || userToAdd.length === 0) {
+                $scope.createAddModal({ user: userToAdd });
+            } else if ($scope.isInAnotherList(userToAdd, list)) {
                 $scope.createCheckModal(userToAdd, list, endpoint);
             } else {
                 $scope.updateAddMember(userToAdd, list, endpoint);
@@ -182,6 +184,12 @@
                     listName: list
                 });
                 $scope.userToAdd = "";
+            }, function (res) {
+                $scope.createAddModal({
+                    user: userToAdd,
+                    response: res,
+                    listName: list
+                });
             }, endpoint);
         };
 
@@ -250,6 +258,12 @@
                     listName: "owners"
                 });
                 $scope.ownerToAdd = "";
+            }, function (res) {
+                $scope.createAddModal({
+                    user: ownerToAdd,
+                    response: res,
+                    listName: "owners"
+                });
             }, endpoint);
         };
 
@@ -261,16 +275,20 @@
          * @param {string} options.listName - the list where the user was being added to
          */
         $scope.createAddModal = function (options) {
-            $scope.user = options.user;
+            $scope.user = options.user || "";
             $scope.listName = options.listName;
 
-            var addResult = _.isArray(options.response)
-                ? _.last(options.response) // For adding a user to the include/exclude list
-                : options.response; // For adding a user to the admin or owner list
+            if (_.has(options, "response")) {
+                var addResult = _.isArray(options.response)
+                    ? _.last(options.response) // For adding a user to the include/exclude list
+                    : options.response; // For adding a user to the admin or owner list
 
-            $scope.wasSuccessful = _.startsWith(addResult.resultCode, "SUCCESS")
-                ? true
-                : false;
+                $scope.wasSuccessful = _.startsWith(addResult.resultCode, "SUCCESS")
+                    ? true
+                    : false;
+            } else {
+                $scope.wasSuccessful = false;
+            }
 
             $scope.addModalInstance = $uibModal.open({
                 templateUrl: "modal/addModal.html",
@@ -278,12 +296,14 @@
             });
 
             $scope.addModalInstance.result.finally(function () {
-                $scope.loading = true;
-                if ($scope.listName === "admins") {
-                    // Refreshes the groupings list and the admins list
-                    $scope.init();
-                } else {
-                    $scope.getGroupingInformation();
+                if (wasSuccessful) {
+                    $scope.loading = true;
+                    if ($scope.listName === "admins") {
+                        // Refreshes the groupings list and the admins list
+                        $scope.init();
+                    } else {
+                        $scope.getGroupingInformation();
+                    }
                 }
             });
         };
@@ -447,11 +467,13 @@
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (res) {
                 if (!_.isUndefined(res.statusCode)) {
-                    console.log("Error, Status Code: " + res.statusCode);
+                    console.log("Error, Status Code: " + res.statusCOde);
                     $scope.createPreferenceErrorModal();
                 } else if (_.startsWith(res[0].resultCode), "SUCCESS") {
                     console.log("success");
                 }
+            }, function (res) {
+                console.log("Error, Status Code: " + res);
             }, endpoint);
         };
 
@@ -467,6 +489,8 @@
                 } else if (_.startsWith(res[0].resultCode), "SUCCESS") {
                     console.log("success");
                 }
+            }, function (res) {
+                console.log("Error, Status Code: " + res);
             }, endpoint);
         };
 
@@ -482,6 +506,8 @@
                 } else if (res.resultCode === "SUCCESS") {
                     console.log("success");
                 }
+            }, function (res) {
+                console.log("Error, Status Code: " + res);
             }, endpoint);
         };
 

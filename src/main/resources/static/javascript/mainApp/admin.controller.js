@@ -63,6 +63,12 @@
                     listName: "admins"
                 });
                 $scope.adminToAdd = "";
+            }, function (res) {
+                $scope.createAddModal({
+                    user: ownerToAdd,
+                    response: res,
+                    listName: "admins"
+                });
             }, endpoint);
         };
 
@@ -115,6 +121,8 @@
                     } else {
                         $scope.getGroupingInformation();
                     }
+                }, function (res) {
+                    console.log("Error, Status Code: " + res);
                 }, options.endpoint);
 
             });

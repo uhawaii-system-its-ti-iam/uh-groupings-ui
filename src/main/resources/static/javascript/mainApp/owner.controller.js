@@ -61,26 +61,13 @@
                             $window.location.href = "home";
                         } else {
                             $window.location.href = "groupings";
-<<<<<<< HEAD
                         }
                     } else {
                         $scope.getGroupingInformation();
                     }
+                }, function (res) {
+                    console.log("Error, Status Code: " + res);
                 }, options.endpoint);
-=======
-                        }, function (d) {
-                            console.log("Error, Status Code: " + d);
-                        },  url);
-                    }
-                } else {
-                    // Reload the grouping
-                    dataProvider.updateData(function () {
-                        $scope.getData(path);
-                    }, function (d) {
-                        console.log("Error, Status Code: " + d);
-                    },url);
-                }
->>>>>>> master
             });
         };
 

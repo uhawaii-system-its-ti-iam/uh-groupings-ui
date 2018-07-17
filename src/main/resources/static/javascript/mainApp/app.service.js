@@ -24,7 +24,7 @@
              * @param {string} url - the URL to perform the request on
              * @param {function} callback - the function to perform on a successful request (200)
              */
-            updateData: function (callback,callError, url) {
+            updateData: function (callback, callError, url) {
                 $http.post(encodeURI(url))
                     .success(callback)
                     .error(callError, function (data, status) {

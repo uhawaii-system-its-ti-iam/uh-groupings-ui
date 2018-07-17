@@ -67,6 +67,8 @@
                 } else {
                     $scope.init();
                 }
+            }, function (res) {
+                console.log("Error, Status Code: " + res);
             }, endpoint);
         };
 
@@ -88,6 +90,8 @@
                 } else {
                     $scope.init();
                 }
+            }, function (res) {
+                console.log("Error, Status Code: " + res);
             }, endpoint);
         };
 
