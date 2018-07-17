@@ -45,6 +45,8 @@
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
+            console.log(url);
+
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
                 scope: $scope
@@ -59,11 +61,26 @@
                             $window.location.href = "home";
                         } else {
                             $window.location.href = "groupings";
+<<<<<<< HEAD
                         }
                     } else {
                         $scope.getGroupingInformation();
                     }
                 }, options.endpoint);
+=======
+                        }, function (d) {
+                            console.log("Error, Status Code: " + d);
+                        },  url);
+                    }
+                } else {
+                    // Reload the grouping
+                    dataProvider.updateData(function () {
+                        $scope.getData(path);
+                    }, function (d) {
+                        console.log("Error, Status Code: " + d);
+                    },url);
+                }
+>>>>>>> master
             });
         };
 
