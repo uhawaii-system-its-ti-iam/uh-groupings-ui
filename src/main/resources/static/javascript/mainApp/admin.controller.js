@@ -69,7 +69,7 @@
                 $scope.adminToAdd = "";
             }, function (res) {
                 $scope.createAddModal({
-                    user: ownerToAdd,
+                    user: adminToAdd,
                     response: res,
                     listName: "admins"
                 });
@@ -84,7 +84,7 @@
          */
         $scope.removeAdmin = function (currentPage, index) {
             var adminToRemove = $scope.pagedItemsAdmins[currentPage][index].username;
-            var endpoint = BASE_URL + deleteUser + "/deleteAdmin";
+            var endpoint = BASE_URL + adminToRemove + "/deleteAdmin";
 
             if ($scope.adminsList.length > 1) {
                 $scope.createRemoveModal({
