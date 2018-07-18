@@ -296,7 +296,7 @@
             });
 
             $scope.addModalInstance.result.finally(function () {
-                if (wasSuccessful) {
+                if ($scope.wasSuccessful) {
                     $scope.loading = true;
                     if ($scope.listName === "admins") {
                         // Refreshes the groupings list and the admins list

@@ -45,8 +45,6 @@
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
-            console.log(url);
-
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
                 scope: $scope
