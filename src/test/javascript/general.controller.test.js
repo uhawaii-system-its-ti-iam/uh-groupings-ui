@@ -316,7 +316,7 @@ describe("GeneralController", function () {
 
     });
 
-    describe("resetGroupingInformation", function() {
+    describe("resetGroupingInformation", function () {
         it("should reset every nonpaginated list pertaining to a grouping", function () {
             scope.resetGroupingInformation();
 
