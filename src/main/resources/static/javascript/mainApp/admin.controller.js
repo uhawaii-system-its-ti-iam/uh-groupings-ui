@@ -122,7 +122,7 @@
                         $scope.getGroupingInformation();
                     }
                 }, function (res) {
-                    console.log("Error, Status Code: " + res);
+                    console.log("Error, Status Code: " + res.statusCode);
                 }, options.endpoint);
 
             });

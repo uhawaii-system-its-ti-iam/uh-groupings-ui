@@ -467,13 +467,13 @@
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
             dataProvider.updateData(function (res) {
                 if (!_.isUndefined(res.statusCode)) {
-                    console.log("Error, Status Code: " + res.statusCOde);
+                    console.log("Error, Status Code: " + res.statusCode);
                     $scope.createPreferenceErrorModal();
                 } else if (_.startsWith(res[0].resultCode), "SUCCESS") {
                     console.log("success");
                 }
             }, function (res) {
-                console.log("Error, Status Code: " + res);
+                console.log("Error, Status Code: " + res.statusCode);
             }, endpoint);
         };
 
@@ -490,7 +490,7 @@
                     console.log("success");
                 }
             }, function (res) {
-                console.log("Error, Status Code: " + res);
+                console.log("Error, Status Code: " + res.statusCode);
             }, endpoint);
         };
 
@@ -507,7 +507,7 @@
                     console.log("success");
                 }
             }, function (res) {
-                console.log("Error, Status Code: " + res);
+                console.log("Error, Status Code: " + res.statusCode);
             }, endpoint);
         };
 
@@ -533,7 +533,7 @@
         };
 
         $scope.resetFields = function () {
-            $scope.addUser = "";
+            $scope.userToAdd = "";
         };
 
         /**

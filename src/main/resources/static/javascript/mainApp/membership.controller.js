@@ -68,7 +68,7 @@
                     $scope.init();
                 }
             }, function (res) {
-                console.log("Error, Status Code: " + res);
+                console.log("Error, Status Code: " + res.statusCode);
             }, endpoint);
         };
 
@@ -91,7 +91,7 @@
                     $scope.init();
                 }
             }, function (res) {
-                console.log("Error, Status Code: " + res);
+                console.log("Error, Status Code: " + res.statusCode);
             }, endpoint);
         };
 
