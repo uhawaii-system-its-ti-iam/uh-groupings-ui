@@ -7,7 +7,8 @@
             <!-- Export to CSV button -->
             <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
                 <div class="pull-left">
-                    <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"  ng-click="export(groupingExclude, selectedGrouping.name, 'exclude')">
+                    <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
+                            ng-click="exportGroupToCsv(groupingExclude, selectedGrouping.name, 'exclude')">
                         Export to CSV
                     </button>
                 </div>
@@ -54,8 +55,8 @@
                           onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
                           tabindex="0"
                           th:title="#{screen.message.common.tooltip.remove.exclude}"
-                          ng-keypress="$event.keyCode === 13 ? removeMember('Exclude', $index) : null"
-                          ng-click="removeMember('Exclude', $index)">
+                          ng-keypress="$event.keyCode === 13 ? removeMember('Exclude', currentPageExclude, $index) : null"
+                          ng-click="removeMember('Exclude', currentPageExclude, $index)">
                     </span>
                 </td>
                 <td>{{e.uuid}}</td>
@@ -70,28 +71,28 @@
                         </i>
                     </div>
                 </td>
-                <td class="text-center" style="width: 3%">{{e.basis}}</td>
+                <td class="text-center" style="width: 3%">{{e.inBasis}}</td>
             </tr>
             </tbody>
             <tfoot>
             <!-- Pagination control -->
             <td colspan="6">
                 <ul class="pagination pull-right">
-                    <li ng-class="{disabled: (currentPageExclude) == 0 }">
+                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageExclude) }">
                         <a class="clickable" ng-click="setPage('First','currentPageExclude','pagedItemsExclude')">«« First</a>
                     </li>
-                    <li ng-class="{disabled: (currentPageExclude) == 0 }">
+                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageExclude) }">
                         <a class="clickable" ng-click="setPage('Prev','currentPageExclude','pagedItemsExclude')">« Prev</a>
                     </li>
                     <li ng-repeat="n in pageRange(currentPageExclude, pagedItemsExclude.length, gap)"
-                        ng-class="{active: n == currentPageExclude}"
+                        ng-class="{ active: n === currentPageExclude }"
                         ng-click="setPage('Set','currentPageExclude','pagedItemsExclude')">
                         <a class="clickable" ng-bind="n + 1"></a>
                     </li>
-                    <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
+                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsExclude, currentPageExclude) }">
                         <a class="clickable" ng-click="setPage('Next','currentPageExclude','pagedItemsExclude')">Next »</a>
                     </li>
-                    <li ng-class="{disabled: (currentPageExclude) == pagedItemsExclude.length - 1 || pagedItemsExclude.length == 0}">
+                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsExclude, currentPageExclude) }">
                         <a class="clickable" ng-click="setPage('Last','currentPageExclude','pagedItemsExclude')">Last »»</a>
                     </li>
                 </ul>
@@ -105,7 +106,7 @@
             <div class="input-group">
                 <input class="form-control" type="text" placeholder="Enter UH username to exclude"
                        title="Enter UH username to exclude"
-                       ng-model="addUser"/>
+                       ng-model="userToAdd"/>
                 <div class="input-group-btn">
                     <button class="btn btn-primary" type="submit">Add</button>
                 </div>

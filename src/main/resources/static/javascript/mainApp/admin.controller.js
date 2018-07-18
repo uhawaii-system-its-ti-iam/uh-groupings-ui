@@ -3,11 +3,13 @@
     /**
      * This controller contains functions specific to the admin page.
      * @param $scope - binding between controller and HTML page
+     * @param $window - the browser window object
      * @param $controller - service for instantiating controllers
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
+     * @param BASE_URL - the constant base URL for endpoints
      */
-    function AdminJsController($scope, $window, $controller, $uibModal, dataProvider) {
+    function AdminJsController($scope, $window, $controller, $uibModal, dataProvider, BASE_URL) {
 
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
@@ -25,24 +27,28 @@
         $scope.init = function () {
             // Adds the loading spinner.
             $scope.loading = true;
-            var url = "api/groupings/adminLists";
+            var endpoint = BASE_URL + "adminLists";
 
-            dataProvider.loadData(function (d) {
-                $scope.adminsList = d.adminGroup.members;
-                $scope.groupingsList = d.allGroupings;
-                $scope.groupingsList = _.sortBy($scope.groupingsList, "name");
-                $scope.modify($scope.adminsList);
-                $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
-                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
-                $scope.loading = false;
-            }, function (d) {
-                dataProvider.handleException({ exceptionMessage: d.exceptionMessage }, "feedback/error", "feedback");
-            }, url);
+            dataProvider.loadData(function (res) {
+                if (_.isNull(res)) {
+                    $scope.createApiErrorModal();
+                } else {
+                    $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
+                    $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
+
+                    $scope.groupingsList = _.sortBy(res.allGroupings, "name");
+                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+
+                    $scope.loading = false;
+                }
+            }, function (res) {
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+            }, endpoint);
         };
 
-        $scope.change = function () {
-            $scope.showGrouping = false;
+        $scope.displayAdmins = function () {
             $scope.resetGroupingInformation();
+            $scope.showGrouping = false;
         };
 
         // TODO: Find a way to make the 3 adds into a more singular function.
@@ -52,44 +58,54 @@
          */
         $scope.addAdmin = function () {
             var adminToAdd = $scope.adminToAdd;
-            var addUrl = "api/groupings/" + adminToAdd + "/addAdmin";
-            dataProvider.updateData(function (d) {
-                var successful = false;
-                if (d.statusCode != null) {
-                    console.log("Error, Status Code: " + d.statusCode);
-                } else if (d.resultCode.indexOf("SUCCESS") === 0) {
-                    successful = true;
-                }
-                var listName = "admins";
-                $scope.createAddModal(adminToAdd, successful, listName);
+            var endpoint = BASE_URL + adminToAdd + "/addAdmin";
+
+            dataProvider.updateData(function (res) {
+                $scope.createAddModal({
+                    user: adminToAdd,
+                    response: res,
+                    listName: "admins"
+                });
                 $scope.adminToAdd = "";
-            }, addUrl);
+            }, function (res) {
+                $scope.createAddModal({
+                    user: ownerToAdd,
+                    response: res,
+                    listName: "admins"
+                });
+            }, endpoint);
         };
 
         /**
          * Removes an admin from the admin list. There must be at least one admin remaining.
+         * @param {number} currentPage - the current page in the admins list
          * @param {number} index - the index of the admin to delete, with the current page and items per page taken into
          * account
          */
-        $scope.removeAdmin = function (index) {
-            var deleteUser = $scope.adminsList[index].username;
-            var deleteUrl = "api/groupings/" + deleteUser + "/deleteAdmin";
-            var listName = "admins";
-            $scope.createRemoveModal(deleteUser, deleteUrl, listName);
+        $scope.removeAdmin = function (currentPage, index) {
+            var adminToRemove = $scope.pagedItemsAdmins[currentPage][index].username;
+            var endpoint = BASE_URL + deleteUser + "/deleteAdmin";
 
+            if ($scope.adminsList.length > 1) {
+                $scope.createRemoveModal({
+                    user: adminToRemove,
+                    endpoint: endpoint,
+                    listName: "admins"
+                });
+            }
         };
 
         /**
          * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
-         * @param {string} user - the user to delete
-         * @param {string} url - the URL used to make the request
-         * @param {string} listName - where the user is being removed from
-         * @param {string?} path - the path to the grouping (if deleting a user from a grouping)
+         * @param {object} options - the options object
+         * @param {string} options.user - the user being removed
+         * @param {string} options.endpoint - the endpoint used to make the request
+         * @param {string} options.listName - where the user is being removed from
          */
-        $scope.createRemoveModal = function (user, url, listName, path) {
-            $scope.userToDelete = user;
-            $scope.listName = listName;
+        $scope.createRemoveModal = function (options) {
+            $scope.userToRemove = options.user;
+            $scope.listName = options.listName;
 
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
@@ -98,17 +114,20 @@
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
+
                 dataProvider.updateData(function () {
-                    if (path === undefined) {
-                        if ($scope.currentUser === $scope.userToDelete) {
+                    if ($scope.listName === "admins") {
+                        if ($scope.currentUser === $scope.userToRemove) {
                             $window.location.href = "home";
                         } else {
                             $scope.init();
                         }
                     } else {
-                        $scope.getData(path);
+                        $scope.getGroupingInformation();
                     }
-                }, url);
+                }, function (res) {
+                    console.log("Error, Status Code: " + res.statusCode);
+                }, options.endpoint);
 
             });
         };

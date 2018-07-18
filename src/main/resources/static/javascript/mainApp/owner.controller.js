@@ -4,10 +4,12 @@
      * This controller contains functions specific to the groupings page.
      * @param $scope - binding between controller and HTML page
      * @param $controller - service for instantiating controllers
+     * @param $window - the browser window object
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
+     * @param BASE_URL - the constant base URL for endpoints
      */
-    function OwnerJsController($scope, $controller, $window, $uibModal, dataProvider) {
+    function OwnerJsController($scope, $controller, $window, $uibModal, dataProvider, BASE_URL) {
 
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
@@ -20,30 +22,32 @@
          */
         $scope.init = function () {
             $scope.loading = true;
-            var groupingsOwned = "api/groupings/groupingAssignment";
+            var endpoint = BASE_URL + "groupingAssignment";
 
-            dataProvider.loadData(function (d) {
-                $scope.groupingsList = (_.sortBy((d.groupingsOwned),'name'));
-                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+            dataProvider.loadData(function (res) {
+                if (_.isNull(res)) {
+                    $scope.createApiErrorModal();
+                } else {
+                    $scope.groupingsList = _.sortBy(res.groupingsOwned, "name");
+                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+                }
                 $scope.loading = false;
-            }, function (d) {
-                dataProvider.handleException({ exceptionMessage: d.exceptionMessage }, "feedback/error", "feedback");
-            }, groupingsOwned);
+            }, function (res) {
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+            }, endpoint);
         };
 
         /**
          * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
-         * @param {string} user - the user to delete
-         * @param {string} url - the URL used to make the request
-         * @param {string} listName - where the user is being removed from
-         * @param {string} path - the path to the grouping
+         * @param {object} options - the options object
+         * @param {string} options.user - the user being removed
+         * @param {string} options.endpoint - the endpoint used to make the request
+         * @param {string} options.listName - where the user is being removed from
          */
-        $scope.createRemoveModal = function (user, url, listName, path) {
-            $scope.userToDelete = user;
-            $scope.listName = listName;
-
-            console.log(url);
+        $scope.createRemoveModal = function (options) {
+            $scope.userToRemove = options.user;
+            $scope.listName = options.listName;
 
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
@@ -52,26 +56,20 @@
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
-                if ($scope.currentUser === $scope.userToDelete && listName === 'owners') {
-                    if ($scope.groupingsList.length === 1) {
-                        dataProvider.updateData(function () {
+
+                dataProvider.updateData(function () {
+                    if ($scope.currentUser === $scope.userToRemove && $scope.listName === "owners") {
+                        if ($scope.groupingsList.length === 1) {
                             $window.location.href = "home";
-                        }, url);
-                    } else {
-                        dataProvider.updateData(function () {
+                        } else {
                             $window.location.href = "groupings";
-                        }, function (d) {
-                            console.log("Error, Status Code: " + d);
-                        },  url);
+                        }
+                    } else {
+                        $scope.getGroupingInformation();
                     }
-                } else {
-                    // Reload the grouping
-                    dataProvider.updateData(function () {
-                        $scope.getData(path);
-                    }, function (d) {
-                        console.log("Error, Status Code: " + d);
-                    },url);
-                }
+                }, function (res) {
+                    console.log("Error, Status Code: " + res.statusCode);
+                }, options.endpoint);
             });
         };
 
