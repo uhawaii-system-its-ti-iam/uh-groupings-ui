@@ -24,6 +24,9 @@ public class GroupingsHTTPExceptionTest extends RuntimeException {
         assertNull(groupingsHTTPexception.getExceptionMessage());
         assertNull(groupingsHTTPexception.getMessage());
         assertNull(groupingsHTTPexception.getCause());
+    }
+    @Test
+    public void testGroupingsHTTPException() {
 
         Exception e = new RuntimeException("Test Case");
 
@@ -31,19 +34,14 @@ public class GroupingsHTTPExceptionTest extends RuntimeException {
         assertThat(groupingsHTTPexception.getMessage(), equalTo("Error"));
         assertThat(groupingsHTTPexception.getCause(), equalTo(e));
         assertThat(groupingsHTTPexception.getStatusCode(), equalTo(1));
-    }
 
-    @Test
-    public void testGroupings() {
-        groupingsHTTPexception = new GroupingsHTTPException("Error 1");
-        assertThat(groupingsHTTPexception.getMessage(), equalTo("Error 1"));
-    }
-
-    @Test
-    public void tester() {
         Exception e1 = new RuntimeException("File not found");
-        groupingsHTTPexception = new GroupingsHTTPException("Error 2", e1);
-        assertThat(groupingsHTTPexception.getMessage(), equalTo("Error 2"));
+
+        groupingsHTTPexception = new GroupingsHTTPException("Error 1", e1);
+        assertThat(groupingsHTTPexception.getMessage(), equalTo("Error 1"));
         assertThat(groupingsHTTPexception.getCause(), equalTo(e1));
+
+        groupingsHTTPexception = new GroupingsHTTPException("Error 2");
+        assertThat(groupingsHTTPexception.getMessage(), equalTo("Error 2"));
     }
 }
