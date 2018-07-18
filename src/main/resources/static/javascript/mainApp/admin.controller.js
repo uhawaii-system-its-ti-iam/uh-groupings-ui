@@ -30,13 +30,17 @@
             var endpoint = BASE_URL + "adminLists";
 
             dataProvider.loadData(function (res) {
-                $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
-                $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
+                if (_.isNull(res)) {
+                    $scope.createApiErrorModal();
+                } else {
+                    $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
+                    $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
 
-                $scope.groupingsList = _.sortBy(res.allGroupings, "name");
-                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+                    $scope.groupingsList = _.sortBy(res.allGroupings, "name");
+                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
 
-                $scope.loading = false;
+                    $scope.loading = false;
+                }
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             }, endpoint);

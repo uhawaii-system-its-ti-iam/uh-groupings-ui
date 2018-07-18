@@ -25,8 +25,12 @@
             var endpoint = BASE_URL + "groupingAssignment";
 
             dataProvider.loadData(function (res) {
-                $scope.groupingsList = _.sortBy(res.groupingsOwned, "name");
-                $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+                if (_.isNull(res)) {
+                    $scope.createApiErrorModal();
+                } else {
+                    $scope.groupingsList = _.sortBy(res.groupingsOwned, "name");
+                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+                }
                 $scope.loading = false;
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");

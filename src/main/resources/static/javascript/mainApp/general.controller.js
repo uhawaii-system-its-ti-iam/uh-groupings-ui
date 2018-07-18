@@ -68,33 +68,36 @@
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/grouping";
 
             dataProvider.loadData(function (res) {
-                //Gets members in the basis group
-                $scope.groupingBasis = _.sortBy(res.basis.members, "name");
-                $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis);
+                if (_.isNull(res)) {
+                    $scope.createApiErrorModal();
+                } else {
+                    //Gets members in the basis group
+                    $scope.groupingBasis = _.sortBy(res.basis.members, "name");
+                    $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis);
 
-                //Gets members in the include group
-                $scope.groupingInclude = _.sortBy(res.include.members, "name");
-                $scope.addInBasis($scope.groupingInclude);
-                $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude);
+                    //Gets members in the include group
+                    $scope.groupingInclude = _.sortBy(res.include.members, "name");
+                    $scope.addInBasis($scope.groupingInclude);
+                    $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude);
 
-                //Gets members in the exclude group
-                $scope.groupingExclude = _.sortBy(res.exclude.members, "name");
-                $scope.addInBasis($scope.groupingExclude);
-                $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude);
+                    //Gets members in the exclude group
+                    $scope.groupingExclude = _.sortBy(res.exclude.members, "name");
+                    $scope.addInBasis($scope.groupingExclude);
+                    $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude);
 
-                //Gets members in grouping
-                $scope.groupingMembers = _.sortBy(res.composite.members, "name");
-                $scope.addWhereListed($scope.groupingMembers);
-                $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers);
+                    //Gets members in grouping
+                    $scope.groupingMembers = _.sortBy(res.composite.members, "name");
+                    $scope.addWhereListed($scope.groupingMembers);
+                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers);
 
-                //Gets owners of the grouping
-                $scope.groupingOwners = _.sortBy(res.owners.members, "name");
-                $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                    //Gets owners of the grouping
+                    $scope.groupingOwners = _.sortBy(res.owners.members, "name");
+                    $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
-                $scope.allowOptIn = res.optInOn;
-                $scope.allowOptOut = res.optOutOn;
-                $scope.listserv = res.listservOn;
-
+                    $scope.allowOptIn = res.optInOn;
+                    $scope.allowOptOut = res.optOutOn;
+                    $scope.listserv = res.listservOn;
+                }
                 //Stop loading spinner
                 $scope.loading = false;
             }, function (res) {
