@@ -40,7 +40,7 @@
         $scope.allowOptIn = false;
         $scope.allowOptOut = false;
         $scope.listserv = false;
-        $scope.LDAP = false;
+        $scope.ldap = false;
 
         $scope.showGrouping = false;
 
@@ -511,8 +511,8 @@
             }, endpoint);
         };
 
-        $scope.checkLDAP = function () {
-            console.log($scope.LDAP);
+        $scope.checkLdap = function () {
+            console.log($scope.ldap);
         };
 
         /**
