@@ -376,4 +376,33 @@ describe("GeneralController", function () {
 
     });
 
+    describe("showWarningRemovingSelf", function () {
+        describe("removing self from a list", function () {
+            beforeEach(function () {
+                scope.userToRemove = "jdoe";
+            });
+
+            it("should warn the user if removing from the owners list", function () {
+                scope.listName = "owners";
+                expect(scope.showWarningRemovingSelf()).toBe(true);
+            });
+
+            it("should warn the user if removing from the admins list", function () {
+                scope.listName = "admins";
+                expect(scope.showWarningRemovingSelf()).toBe(true);
+            });
+
+            it("should not warn the user if removing from the Include list", function () {
+                scope.listName = "Include";
+                expect(scope.showWarningRemovingSelf()).toBe(false);
+            });
+
+            it("should not warn the user if removing from the Exclude list", function () {
+                scope.listName = "Exclude";
+                expect(scope.showWarningRemovingSelf()).toBe(false);
+            });
+        });
+
+    });
+
 });
