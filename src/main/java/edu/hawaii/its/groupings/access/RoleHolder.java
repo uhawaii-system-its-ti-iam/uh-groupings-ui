@@ -14,7 +14,7 @@ public class RoleHolder {
         authorities.add(new SimpleGrantedAuthority(role.longName()));
     }
 
-    public Set<GrantedAuthority> getAuthorites() {
+    public Set<GrantedAuthority> getAuthorities() {
         return authorities;
     }
 
