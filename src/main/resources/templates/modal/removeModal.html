@@ -2,16 +2,16 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <div class="modal-header"
-     ng-class="{ 'alert alert-danger modal-alert': userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins') }">
+     ng-class="{ 'alert alert-danger modal-alert': showWarningRemovingSelf() }">
     <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelRemoveUser()">
         <span aria-hidden="true">&times;</span>
     </button>
     <h4 class="modal-title" id="modal-title"
-        ng-style="{ 'margin-bottom': userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins') ? '10px' : '0px' }">
+        ng-style="{ 'margin-bottom': showWarningRemovingSelf() ? '10px' : '0px' }">
         Remove User
     </h4>
     <!-- Warning message if users try to delete themselves from the admins or owners list -->
-    <div ng-if="userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins')">
+    <div  ng-if="showWarningRemovingSelf()">
         <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
         <div ng-switch="listName">
             <div ng-switch-when="owners">

@@ -33,6 +33,7 @@ describe("MembershipController", function () {
     });
 
     describe("init", function () {
+
         var mockResponse;
 
         beforeEach(function () {
@@ -108,40 +109,111 @@ describe("MembershipController", function () {
 
     });
 
-    describe("membershipRequired", function () {
-        beforeEach(function () {
-            scope.membershipsList = [
-                {
-                    path: "path:path2:path3:grouping1",
-                    name: "grouping1"
-                },
-                {
-                    path: "path:path2:path4:grouping2",
-                    name: "grouping2"
-                },
-                {
-                    path: "path:path2:path5:grouping3",
-                    name: "grouping3"
-                },
-                {
-                    path: "path:path2:path3:grouping4",
-                    name: "grouping4"
-                }
-            ];
-            scope.itemsPerPage = 2;
-            scope.pagedItemsMemberships = scope.groupToPages(scope.membershipsList);
+    // Set up mock data for optIn, optOut, and membershipRequired
+    beforeEach(function () {
+        scope.itemsPerPage = 2;
 
-            scope.optOutList = [
-                {
-                    path: "path:path2:path3:grouping1",
-                    name: "grouping1"
-                },
-                {
-                    path: "path:path2:path3:grouping4",
-                    name: "grouping4"
-                }
-            ];
+        scope.membershipsList = [
+            {
+                path: "path:path2:path3:grouping1",
+                name: "grouping1"
+            },
+            {
+                path: "path:path2:path4:grouping2",
+                name: "grouping2"
+            },
+            {
+                path: "path:path2:path5:grouping3",
+                name: "grouping3"
+            },
+            {
+                path: "path:path2:path3:grouping4",
+                name: "grouping4"
+            }
+        ];
+        scope.pagedItemsMemberships = scope.groupToPages(scope.membershipsList);
+
+        scope.optInList = [
+            {
+                path: "path1:path4:grouping5",
+                name: "grouping5"
+            }
+        ];
+        scope.pagedItemsOptInList = scope.groupToPages(scope.optInList);
+
+        scope.optOutList = [
+            {
+                path: "path:path2:path3:grouping1",
+                name: "grouping1"
+            },
+            {
+                path: "path:path2:path3:grouping4",
+                name: "grouping4"
+            }
+        ];
+    });
+
+    describe("optOut", function () {
+        var mockResponse;
+
+        beforeEach(function () {
+            mockResponse = [{
+                action: "delete user from path:path2:path3:grouping4:include",
+                resultCode: "SUCCESS"
+            }];
+
+            httpBackend.whenPOST(BASE_URL + "path:path2:path3:grouping4/optOut")
+                .respond(200, mockResponse);
+
+            httpBackend.whenGET(BASE_URL + "groupingAssignment")
+                .respond(200);
         });
+
+        it("should call init() on success", function () {
+            spyOn(scope, "init").and.callThrough();
+
+            // path:path2:path3:grouping4
+            scope.optOut(1, 1);
+            httpBackend.expectPOST(BASE_URL + "path:path2:path3:grouping4/optOut").respond(200, mockResponse);
+            httpBackend.flush();
+
+            expect(scope.init).toHaveBeenCalled();
+            httpBackend.expectGET(BASE_URL + "groupingAssignment").respond(200);
+        });
+
+    });
+
+    describe("optIn", function () {
+        var mockResponse;
+
+        beforeEach(function () {
+            mockResponse = [{
+                action: "add users to path1:path4:grouping5:include",
+                resultCode: "SUCCESS"
+            }];
+
+            httpBackend.whenPOST(BASE_URL + "path1:path4:grouping5/optIn")
+                .respond(200, mockResponse);
+
+            httpBackend.whenGET(BASE_URL + "groupingAssignment")
+                .respond(200);
+        });
+
+        it("should call init() on success", function () {
+            spyOn(scope, "init").and.callThrough();
+
+            // path1:path4:grouping4
+            scope.optIn(0, 0);
+            httpBackend.expectPOST(BASE_URL + "path1:path4:grouping5/optIn").respond(200, mockResponse);
+            httpBackend.flush();
+
+            expect(scope.init).toHaveBeenCalled();
+            httpBackend.expectGET(BASE_URL + "groupingAssignment").respond(200);
+        });
+
+    });
+
+    describe("membershipRequired", function () {
 
         it("should return false for groupings in both membershipsList and optOutList", function () {
             // path:path2:path3:grouping1

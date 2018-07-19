@@ -26,7 +26,7 @@
                         </a>
                     </li>
                     <li role="presentation" data-toggle="tooltip" data-placement="top"
-                        ng-click="change()">
+                        ng-click="displayAdmins()">
                         <a href="#list" data-toggle="tab" role="tab">
                             Manage Admins
                         </a>
@@ -82,8 +82,8 @@
                                                   tabindex="0"
                                                   onmouseover="$(this).tooltip('show')"
                                                   th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
-                                                  ng-click="removeAdmin($index + (currentPageAdmins * itemsPerPage))"
-                                                  ng-keypress="$event.keyCode === 13 ? removeAdmin($index + (currentPageAdmins * itemsPerPage)) : null"
+                                                  ng-click="removeAdmin(currentPageAdmins, $index)"
+                                                  ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null"
                                                   style="margin-right: 10px;"></span>
                                         </td>
                                         <td>{{l.uuid}}</td>
@@ -93,21 +93,21 @@
                                     <tfoot>
                                     <td colspan="6">
                                         <ul class="pagination pull-right">
-                                            <li ng-class="{disabled: (currentPageAdmins) == 0}">
+                                            <li ng-class="{ disabled: disableFirstAndPrev(currentPageAdmins) }">
                                                 <a class="clickable" ng-click="setPage('First','currentPageAdmins','pagedItemsAdmins')">«« First</a>
                                             </li>
-                                            <li ng-class="{disabled: (currentPageAdmins) == 0}">
+                                            <li ng-class="{ disabled: disableFirstAndPrev(currentPageAdmins) }">
                                                 <a class="clickable" ng-click="setPage('Prev','currentPageAdmins','pagedItemsAdmins')">« Prev</a>
                                             </li>
                                             <li ng-repeat="n in pageRange(currentPageAdmins, pagedItemsAdmins.length, gap)"
-                                                ng-class="{active: n == currentPageAdmins}"
+                                                ng-class="{ active: n === currentPageAdmins }"
                                                 ng-click="setPage('Set','currentPageAdmins','pagedItemsAdmins')">
                                                 <a class="clickable" ng-bind="n + 1">1</a>
                                             </li>
-                                            <li ng-class="{disabled: ((currentPageAdmins) == pagedItemsAdmins.length - 1) || pagedItemsAdmins.length == 0 }">
+                                            <li ng-class="{ disabled: disableNextAndLast(pagedItemsAdmins, currentPageAdmins) }">
                                                 <a class="clickable" ng-click="setPage('Next','currentPageAdmins','pagedItemsAdmins')">Next »</a>
                                             </li>
-                                            <li ng-class="{disabled: ((currentPageAdmins) == pagedItemsAdmins.length - 1) || pagedItemsAdmins.length == 0 }">
+                                            <li ng-class="{ disabled: disableNextAndLast(pagedItemsAdmins, currentPageAdmins) }">
                                                 <a class="clickable" ng-click="setPage('Last','currentPageAdmins','pagedItemsAdmins')">Last »»</a>
                                             </li>
                                         </ul>
@@ -142,7 +142,9 @@
                                     <h2 style="margin: inherit; padding-top: .11875em;">Manage Grouping</h2>
                                 </div>
                                 <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="padding: 0;">
-                                    <button ng-click="getData()" class="btn btn-primary xs-left-sm-right">Refresh</button>
+                                    <button ng-click="getGroupingInformation()" class="btn btn-primary xs-left-sm-right">
+                                        Refresh
+                                    </button>
                                 </div>
                             </div>
                         </div>

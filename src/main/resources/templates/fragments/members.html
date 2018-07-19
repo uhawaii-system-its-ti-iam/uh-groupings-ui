@@ -6,7 +6,8 @@
         <!-- Export to CSV button -->
         <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
             <div class="pull-left">
-                <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}" ng-click="export(groupingMembers, selectedGrouping.name, 'members')">
+                <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
+                        ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
                     Export to CSV
                 </button>
             </div>
@@ -59,28 +60,28 @@
                         </i>
                     </div>
                 </td>
-                <td class="text-center" style="width: 3%">{{g.basis}}</td>
+                <td class="text-center" style="width: 3%">{{ g.whereListed }}</td>
             </tr>
             </tbody>
             <tfoot>
             <!-- Pagination control -->
             <td colspan="6">
                 <ul class="pagination pull-right">
-                    <li ng-class="{disabled: (currentPageMembers) == 0}">
+                    <li ng-class=" { disabled: disableFirstAndPrev(currentPageMembers) }">
                         <a class="clickable" ng-click="setPage('First','currentPageMembers','pagedItemsMembers')">«« First</a>
                     </li>
-                    <li ng-class="{disabled: (currentPageMembers) == 0 }">
+                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageMembers) }">
                         <a class="clickable" ng-click="setPage('Prev','currentPageMembers','pagedItemsMembers')">« Prev</a>
                     </li>
                     <li ng-repeat="n in pageRange(currentPageMembers, pagedItemsMembers.length, gap) "
-                        ng-class="{active: n == currentPageMembers}"
+                        ng-class="{ active: n === currentPageMembers }"
                         ng-click="setPage('Set','currentPageMembers','pagedItemsMembers')">
                         <a class="clickable" ng-bind="n + 1"></a>
                     </li>
-                    <li ng-class="{disabled: ((currentPageMembers) == pagedItemsMembers.length - 1) || pagedItemsMembers.length == 0}">
+                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsMembers, currentPageMembers) }">
                         <a class="clickable" ng-click="setPage('Next','currentPageMembers','pagedItemsMembers')">Next »</a>
                     </li>
-                    <li ng-class="{disabled: ((currentPageMembers) == pagedItemsMembers.length - 1) || pagedItemsMembers.length == 0}">
+                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsMembers, currentPageMembers) }">
                         <a class="clickable" ng-click="setPage('Last','currentPageMembers','pagedItemsMembers')">Last »»</a>
                     </li>
                 </ul>

@@ -5,12 +5,7 @@
     <h4 class="modal-title" id="modal-title">Add User</h4>
 </div>
 <div class="modal-body" id="modal-body">
-    <div ng-if="wasSuccessful &amp;&amp; wasRemoved">
-        <p>{{ user }} has been successfully added to the {{ listName }} list and removed from the
-            {{ listName === "Include" ? "Exclude" : "Include" }} list.
-        </p>
-    </div>
-    <div ng-if="wasSuccessful &amp;&amp; !wasRemoved">
+    <div ng-if="wasSuccessful">
         <p>{{ user }} has been successfully added to the {{ listName }} list.</p>
     </div>
     <div ng-if="!wasSuccessful &amp;&amp; user.length > 0">

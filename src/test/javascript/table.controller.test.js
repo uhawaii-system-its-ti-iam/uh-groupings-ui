@@ -94,21 +94,24 @@ describe("TableController", function () {
     describe("filter", function () {
 
         beforeEach(function () {
-            scope.items = [{
-                "$$hashKey": "random",
-                basis: "Include",
-                firstName: "John",
-                lastName: "Doe",
-                username: "jdoe",
-                uuid: "12345678"
-            }, {
-                "$$hashKey": "random",
-                basis: "Exclude",
-                firstName: "Jane",
-                lastName: "Doe",
-                username: "janed",
-                uuid: "23456789"
-            }];
+            scope.items = [
+                {
+                    $$hashKey: "random",
+                    basis: "Include",
+                    firstName: "John",
+                    lastName: "Doe",
+                    username: "jdoe",
+                    uuid: "12345678"
+                },
+                {
+                    $$hashKey: "random",
+                    basis: "Exclude",
+                    firstName: "Jane",
+                    lastName: "Doe",
+                    username: "janed",
+                    uuid: "23456789"
+                }
+            ];
             scope.itemsPerPage = 1;
             scope.pagedItems = scope.groupToPages(scope.items);
             scope.currentPage = 1;
@@ -277,25 +280,32 @@ describe("TableController", function () {
 
     describe("sortBy", function () {
         beforeEach(function () {
-            scope.items = [{
-                name: "a",
-                id: 0
-            }, {
-                name: "b",
-                id: 12
-            }, {
-                name: "c",
-                id: 4
-            }, {
-                name: "d",
-                id: 9
-            }, {
-                name: "e",
-                id: 13
-            }, {
-                name: "f",
-                id: 17
-            }];
+            scope.items = [
+                {
+                    name: "a",
+                    id: 0
+                },
+                {
+                    name: "b",
+                    id: 12
+                },
+                {
+                    name: "c",
+                    id: 4
+                },
+                {
+                    name: "d",
+                    id: 9
+                },
+                {
+                    name: "e",
+                    id: 13
+                },
+                {
+                    name: "f",
+                    id: 17
+                }
+            ];
             scope.itemsPerPage = 2;
             scope.pagedItems = scope.groupToPages(scope.items);
         });
