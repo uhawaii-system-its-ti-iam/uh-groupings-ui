@@ -1,3 +1,6 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
 <div class="modal-header"
      ng-class="{ 'alert alert-danger modal-alert': userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins') }">
     <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelRemoveUser()">
@@ -9,38 +12,27 @@
     </h4>
     <!-- Warning message if users try to delete themselves from the admins or owners list -->
     <div ng-if="userToDelete === currentUser &amp;&amp; (listName === 'owners' || listName === 'admins')">
-        <p>
-            <strong>Warning!</strong>
-            You are attempting to remove yourself from the {{ listName }} list.
-        </p>
+        <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
         <div ng-switch="listName">
             <div ng-switch-when="owners">
-                <p>
-                    If you remove yourself, you will no longer be able to manage this grouping
-                    ({{ selectedGrouping.name }}) from the groupings page.
-                </p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1">
-                    You will be redirected to the home page after you remove yourself.
-                </p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1">
-                    You will be redirected to the list of groupings you own after you remove yourself.
-                </p>
+                <!-- Warning message that tells the user what will happen if they remove themselves -->
+                <p th:utext="#{screen.message.modal.remove.message}">  </p>
+                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1" th:utext="#{screen.message.modal.remove.redirect.home}">  </p>
+                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1" th:utext="#{screen.message.modal.remove.redirect.list}">  </p>
             </div>
+
             <div ng-switch-when="admins">
-                <p>
-                    If you remove yourself, you will no longer have access to the admin page.
-                </p>
-                <p>
-                    You will be redirected to the home page after you remove yourself.
-                </p>
+                <p th:utext="#{screen.message.modal.remove.admin}"></p>
             </div>
         </div>
     </div>
 </div>
 <div class="modal-body" id="modal-body">
-    <p>Are you sure you want to remove {{ userToDelete }} from the {{ listName }} list?</p>
+    <p th:utext="#{screen.message.modal.remove.confirmation}"></p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedRemoveUser()">Yes</button>
     <button class="btn btn-default" ng-click="cancelRemoveUser()" data-dismiss="modal">Cancel</button>
 </div>
+
+</html>
