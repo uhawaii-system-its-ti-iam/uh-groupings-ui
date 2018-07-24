@@ -175,11 +175,6 @@
             <version>4.7.0</version>
         </dependency>
         <dependency>
-            <groupId>org.webjars.bower</groupId>
-            <artifactId>angular-ui-grid</artifactId>
-            <version>4.0.6</version>
-        </dependency>
-        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angular-ui-bootstrap</artifactId>
             <version>2.2.0</version>
