@@ -2,14 +2,15 @@ package edu.hawaii.its.groupings.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import edu.hawaii.its.groupings.type.Feedback;
 
+import edu.hawaii.its.groupings.type.Feedback;
 
 @Service
 public class EmailService {
@@ -34,7 +35,7 @@ public class EmailService {
 
     public void send(Feedback feedback) {
         logger.info("Feedback received in EmailService: " + feedback);
-        if(isEnabled){
+        if (isEnabled) {
             SimpleMailMessage msg = new SimpleMailMessage();
             msg.setTo(to);
             msg.setFrom(from);
@@ -45,7 +46,7 @@ public class EmailService {
             text += "Feedback type: " + feedback.getType() + "\n\n";
             text += "--------------------------" + "\n\n";
             text += "Feedback: " + feedback.getMessage() + "\n\n";
-            if (!feedback.getExceptionMessage().isEmpty()) {
+            if (feedback.getExceptionMessage() != null) {
                 text += "Stack Trace: " + feedback.getExceptionMessage();
             }
             msg.setText(text);
@@ -55,8 +56,15 @@ public class EmailService {
             } catch (MailException ex) {
                 logger.error("Error", ex);
             }
-
         }
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
     }
 
 }
