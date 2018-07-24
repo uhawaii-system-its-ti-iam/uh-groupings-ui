@@ -37,6 +37,7 @@ public class EmailServiceTest {
         feedback.setEmail("jdoe@hawaii.edu");
         feedback.setType("problem");
         feedback.setMessage("Some problem happened.");
+        feedback.setExceptionMessage("");
         return feedback;
     }
 
