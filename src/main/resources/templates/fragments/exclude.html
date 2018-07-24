@@ -96,21 +96,21 @@
                         <a class="clickable" ng-click="setPage('Last','currentPageExclude','pagedItemsExclude')">Last »»</a>
                     </li>
                 </ul>
+                <!-- Input to add a user to the exclude group -->
+                <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group input-inline-pagination">
+                    <form ng-submit="addMember('Exclude')">
+                        <div class="input-group">
+								    <input class="form-control" type="text" placeholder="Enter UH username to exclude"
+								           title="Enter UH username to exclude"
+								           ng-model="userToAdd"/>
+								    <div class="input-group-btn">
+								        <button class="btn btn-primary" type="submit">Add</button>
+								    </div>
+                        </div>
+                    </form>
+                </div>                                
             </td>
             </tfoot>
         </table>
-    </div>
-    <!-- Input to add a user to the exclude group -->
-    <div class="col-lg-4 col-md-6" style="padding: inherit;">
-        <form ng-submit="addMember('Exclude')">
-            <div class="input-group">
-                <input class="form-control" type="text" placeholder="Enter UH username to exclude"
-                       title="Enter UH username to exclude"
-                       ng-model="userToAdd"/>
-                <div class="input-group-btn">
-                    <button class="btn btn-primary" type="submit">Add</button>
-                </div>
-            </div>
-        </form>
     </div>
 </th:block>
