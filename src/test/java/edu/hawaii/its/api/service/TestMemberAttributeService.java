@@ -17,7 +17,10 @@ import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
 
+import java.util.Map;
+
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("integrationTest")
@@ -175,5 +178,33 @@ public class TestMemberAttributeService {
     @Test
     public void getMembershipAttributesTest() {
         //todo
+    }
+
+    @Test
+    public void getUserAttributesTest() {
+
+        // Base test
+        String useruid = username[1];
+        Map<String, String> attributes = memberAttributeService.getUserAttributes(useruid);
+        assertTrue(attributes.get("uid").equals("iamtst02"));
+        assertTrue(attributes.get("cn").equals("tst02name"));
+        assertTrue(attributes.get("sn").equals("tst02name"));
+        assertTrue(attributes.get("givenName").equals("tst02name"));
+        assertTrue(attributes.get("uhuuid").equals("iamtst02"));
+
+        //todo Implement assertThat over assertTrue/assertEquals/etc.
+        //        assertEquals("iamtst02", attributes.get("uhuuid"));
+        //        assertThat(attributes.get("uhuuid"), equalTo("iamtst02"));
+
+        // Test with invalid username
+        attributes = memberAttributeService.getUserAttributes("notarealperson");
+        assertNull(attributes);
+
+        // Test with null field
+        try {
+            attributes = memberAttributeService.getUserAttributes(null);
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
+        }
     }
 }
