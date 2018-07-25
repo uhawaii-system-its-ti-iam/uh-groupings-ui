@@ -473,7 +473,7 @@ td.uh-pre {
         margin-top: 5px;
     }
 
-    .panel > .panel-heading > div.row> div > input {
+    .panel > .panel-heading > div.row > div > input {
         margin-top: 5px;
     }
 }
@@ -531,6 +531,7 @@ td.uh-pre {
     -webkit-border-bottom-left-radius: 0;
     -webkit-border-bottom-right-radius: 0;
 }
+
 @media (max-width: 1200px) {
     .membership-btn-alignment {
         display: none;
