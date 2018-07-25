@@ -472,6 +472,10 @@ td.uh-pre {
         float: left;
         margin-top: 5px;
     }
+
+    .panel > .panel-heading > div.row> div > input {
+        margin-top: 5px;
+    }
 }
 
 .nav.nav-tabs {
