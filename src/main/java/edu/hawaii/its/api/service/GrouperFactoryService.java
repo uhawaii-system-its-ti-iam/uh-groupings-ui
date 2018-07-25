@@ -17,6 +17,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsGetGrouperPrivilegesLit
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetSubjectsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupSaveResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsHasMemberResults;
@@ -132,5 +133,9 @@ public interface GrouperFactoryService {
 
     public WsAttributeAssign[] makeEmptyWsAttributeAssignArray();
 
-    public WsGroupSaveResults addCompositeGroup(String username, String parentGroupPath, String compositeType, String leftGroupPath, String rightGroupPath);
+    public WsGroupSaveResults addCompositeGroup(String username, String parentGroupPath, String compositeType,
+            String leftGroupPath, String rightGroupPath);
+
+    public WsGetSubjectsResults makeWsGetSubjectsResults(WsSubjectLookup lookup);
+
 }

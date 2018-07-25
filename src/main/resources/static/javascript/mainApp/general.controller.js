@@ -589,6 +589,11 @@
             return str;
         };
 
+        /**
+         * Determines whether a warning message should be displayed when removing yourself from a list.
+         * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
+         * returns false
+         */
         $scope.showWarningRemovingSelf = function () {
             return $scope.currentUser === $scope.userToRemove
                 && ($scope.listName === "owners" || $scope.listName === "admins");

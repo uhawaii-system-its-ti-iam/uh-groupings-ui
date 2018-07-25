@@ -38,6 +38,7 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembershipsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetSubjectsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroupSaveResults;
@@ -1142,6 +1143,11 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
     @Override
     public String toString() {
         return "GrouperFactoryServiceImplLocal [SETTINGS=" + SETTINGS + "]";
+    }
+
+    public WsGetSubjectsResults makeWsGetSubjectsResults(WsSubjectLookup lookup) {
+        //todo Not needed for getUserAttributes function, will implement if necessary
+        return null;
     }
 
     @Override public WsGroupSaveResults addCompositeGroup(String username, String parentGroupPath, String compositeType,
