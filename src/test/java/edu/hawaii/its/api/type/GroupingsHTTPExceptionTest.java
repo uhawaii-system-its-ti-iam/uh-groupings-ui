@@ -25,6 +25,7 @@ public class GroupingsHTTPExceptionTest extends RuntimeException {
         assertNull(groupingsHTTPexception.getMessage());
         assertNull(groupingsHTTPexception.getCause());
     }
+
     @Test
     public void testGroupingsHTTPException() {
 
@@ -40,8 +41,11 @@ public class GroupingsHTTPExceptionTest extends RuntimeException {
         groupingsHTTPexception = new GroupingsHTTPException("Error 1", e1);
         assertThat(groupingsHTTPexception.getMessage(), equalTo("Error 1"));
         assertThat(groupingsHTTPexception.getCause(), equalTo(e1));
+        assertThat(groupingsHTTPexception.getStatusCode(), equalTo(0));
 
         groupingsHTTPexception = new GroupingsHTTPException("Error 2");
         assertThat(groupingsHTTPexception.getMessage(), equalTo("Error 2"));
+        assertNull(groupingsHTTPexception.getCause());
+        assertThat(groupingsHTTPexception.getStatusCode(), equalTo(0));
     }
 }

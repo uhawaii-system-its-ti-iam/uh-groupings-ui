@@ -224,6 +224,14 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
+    public void requestCheckModal() throws Exception {
+        mockMvc.perform(get("/modal/checkModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/checkModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
     public void requestApiErrorModal() throws Exception {
         mockMvc.perform(get("/modal/apiError"))
                 .andExpect(status().isOk())
