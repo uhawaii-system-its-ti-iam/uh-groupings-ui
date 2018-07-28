@@ -74,6 +74,9 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     @Value("${groupings.api.listserv}")
     private String LISTSERV;
 
+    @Value("${groupings.api.ldap}")
+    private String LDAP;
+
     @Value("${groupings.api.trio}")
     private String TRIO;
 
@@ -398,6 +401,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     public Grouping setGroupingAttributes(Grouping grouping) {
         logger.info("setGroupingAttributes; grouping: " + grouping + ";");
         boolean listservOn = false;
+        boolean ldapOn = false;
         boolean optInOn = false;
         boolean optOutOn = false;
 
@@ -412,6 +416,8 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
                 String name = defName.getName();
                 if (name.equals(LISTSERV)) {
                     listservOn = true;
+                } else if (name.equals(LDAP)){
+                    ldapOn = true;
                 } else if (name.equals(OPT_IN)) {
                     optInOn = true;
                 } else if (name.equals(OPT_OUT)) {
@@ -421,6 +427,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
         }
 
         grouping.setListservOn(listservOn);
+        grouping.setLdapOn(ldapOn);
         grouping.setOptInOn(optInOn);
         grouping.setOptOutOn(optOutOn);
 
