@@ -89,18 +89,6 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
-    public void requestCampus() throws Exception {
-        mockMvc.perform(get("/campus"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("campus"));
-
-        mockMvc.perform(get("/campuses"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("campus"));
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
     public void memberships() throws Exception {
         mockMvc.perform(get("/memberships"))
                 .andExpect(status().isOk())
