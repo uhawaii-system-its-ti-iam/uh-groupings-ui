@@ -58,23 +58,30 @@
          */
         $scope.addAdmin = function () {
             var adminToAdd = $scope.adminToAdd;
-            var endpoint = BASE_URL + adminToAdd + "/addAdmin";
+            var listName = "admins"; 
 
-            dataProvider.updateData(function (res) {
-                $scope.createAddModal({
-                    user: adminToAdd,
-                    response: res,
-                    listName: "admins"
+            $scope.createConfirmAddModal(adminToAdd, listName);
+            var endpoint = BASE_URL + adminToAdd + "/addAdmin";
+  
+            $scope.confirmAddModalInstance.result.then( 
+                function (){
+                    dataProvider.updateData(function (res) {
+                        $scope.createAddModal({
+                            user: adminToAdd,
+                            response: res,
+                            listName: "admins"
+                        });
+                    $scope.adminToAdd = "";
+                    }, function (res) {
+                        $scope.createAddModal({
+                            user: adminToAdd,
+                            response: res,
+                            listName: "admins"
+                        });
+                    }, endpoint);
                 });
-                $scope.adminToAdd = "";
-            }, function (res) {
-                $scope.createAddModal({
-                    user: adminToAdd,
-                    response: res,
-                    listName: "admins"
-                });
-            }, endpoint);
-        };
+            };
+
 
         /**
          * Removes an admin from the admin list. There must be at least one admin remaining.

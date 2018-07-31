@@ -233,6 +233,25 @@
 
         };
 
+        $scope.createConfirmAddModal = function(userToAdd, listName) {
+            var endpoint = BASE_URL+"members/"+userToAdd;
+            dataProvider.loadData(
+                    function(res) {
+                        $scope.uidToAdd = res.uid;
+                        $scope.uhuuidToAdd = res.uhuuid;
+                        $scope.nameToAdd = res.cn;
+                        $scope.listName = listName;
+                        $scope.confirmAddModalInstance = $uibModal.open({
+                            templateUrl: "modal/confirmAddModal.html",
+                            scope: $scope
+                        });
+                    },
+                    function (res) {
+                        dataProvider.handleException({exceptionMessage: res.exceptionMessage },"feedback/error","feedback");
+                    },
+                    endpoint);
+        };
+
         /**
          * Closes CheckModal and proceeds with the checkModalInstance result.then function
          */
@@ -246,7 +265,20 @@
         $scope.closeCheckModal = function () {
             $scope.checkModalInstance.dismiss();
         };
+        
+        /**
+        * ConfirmAddModal "Yes" button
+        */
+        $scope.proceedConfirmAddUser = function() {
+            $scope.confirmAddModalInstance.close();
+        };
 
+        /**
+        * ConfirmAddModal "Cancel" button
+        */
+        $scope.cancelConfirmAddUser = function() {
+            $scope.confirmAddModalInstance.dismiss();
+        };
         /**
          * Gives a user ownership of a grouping.
          */
