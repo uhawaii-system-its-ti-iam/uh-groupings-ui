@@ -64,12 +64,13 @@
                     </li>
                 </ul>
 					 <!-- Input to add a user to the list of owners -->
-					 <div class="pull-left col-md-3 col-sm-4 col-xs-12 input-group input-inline-pagination">
+					 <div class="pull-left col-lg-4 col-md-5 col-sm-5 col-xs-12 input-group input-inline-pagination">
 						  <form ng-submit="addOwner()">
 								<div class="input-group">
-								    <input class="form-control" type="text" placeholder="Enter UH username for ownership"
+								    <input class="form-control" type="text" placeholder="UH Username"
 								           title="Enter UH username for ownership"
-								           ng-model="ownerToAdd"/>
+								           ng-model="ownerToAdd"
+                                           id="owner-input"/>
 								    <div class="input-group-btn">
 								        <button class="btn btn-primary" type="submit">Add</button>
 								    </div>
