@@ -121,7 +121,7 @@ public class Grouping {
         return listservOn;
     }
 
-    public boolean isLDAPOn(){
+    public boolean isLdapOn(){
         return ldapOn;
     }
 
@@ -154,7 +154,7 @@ public class Grouping {
         return "Grouping [name=" + name
                 + ", path=" + path
                 + ", ListservOn=" + isListservOn()
-                + ", LdapOn=" + isLDAPOn()
+                + ", LdapOn=" + isLdapOn()
                 + ", OptInOn=" + isOptInOn()
                 + ", OptOutOn=" + isOptOutOn()
                 + ", basis=" + basis

@@ -469,6 +469,20 @@ public class TestGroupingsRestController {
 
     @Test
     @WithMockUhUser(username = "iamtst01")
+    public void changeLdapStatusTest() throws Exception {
+        assertTrue(groupAttributeService.hasLdap(GROUPING));
+
+        mapGSR("/api/groupings/" + GROUPING + "/false/setLDAP");
+
+        assertFalse(groupAttributeService.hasLdap(GROUPING));
+
+        mapGSR("/api/groupings/" + GROUPING + "/true/setLDAP");
+
+        assertTrue(groupAttributeService.hasLdap(GROUPING));
+    }
+
+    @Test
+    @WithMockUhUser(username = "iamtst01")
     public void changeOptInTest() throws Exception {
         assertTrue(groupAttributeService.optInPermission(GROUPING));
 

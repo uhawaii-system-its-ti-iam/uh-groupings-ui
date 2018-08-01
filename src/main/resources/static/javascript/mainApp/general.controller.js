@@ -164,8 +164,10 @@
 
             if (_.isUndefined(userToAdd) || userToAdd.length === 0) {
                 $scope.createAddModal({ user: userToAdd });
+            } else if ($scope.existInList(userToAdd, list)) {
+                $scope.createCheckModal(userToAdd, list, false, endpoint);
             } else if ($scope.isInAnotherList(userToAdd, list)) {
-                $scope.createCheckModal(userToAdd, list, endpoint);
+                $scope.createCheckModal(userToAdd, list, true, endpoint);
             } else {
                 $scope.updateAddMember(userToAdd, list, endpoint);
             }
@@ -210,15 +212,26 @@
             return false;
         };
 
+        $scope.existInList = function (user,list) {
+            if (list === "Include") {
+                return _.some($scope.groupingInclude, { username: user });
+            }
+            else if (list === "Exclude") {
+                return _.some($scope.groupingExclude, { username: user });
+            }
+            return false;
+        };
+
         /**
          * Creates a modal that asks whether or not they want to add a person that is already in another list.
          * @param user - Username of the user they are trying to add.
          * @param listName - name of the list they are adding to (either Include or Exclude)
          * @param endpoint - endpoint used to add the user
          */
-        $scope.createCheckModal = function (user, listName, endpoint) {
+        $scope.createCheckModal = function (user, listName, swap, endpoint) {
             $scope.user = user;
             $scope.listName = listName;
+            $scope.swap = swap;
 
             $scope.checkModalInstance = $uibModal.open({
                 templateUrl: "modal/checkModal.html",

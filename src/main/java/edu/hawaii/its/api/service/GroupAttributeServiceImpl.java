@@ -173,7 +173,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
 
     //turn the LDAP for a grouping on or off
     @Override
-    public GroupingsServiceResult changeLDAPStatus(String groupingPath, String ownerUsername, boolean ldapOn) {
+    public GroupingsServiceResult changeLdapStatus(String groupingPath, String ownerUsername, boolean ldapOn) {
         return changeGroupAttributeStatus(groupingPath, ownerUsername, LDAP, ldapOn);
     }
 
@@ -223,7 +223,7 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
 
     //returns true if the grouping has LDAP, false otherwise
     @Override
-    public boolean hadLDAP(String groupingPath) {
+    public boolean hasLdap(String groupingPath) {
         return groupHasAttribute(groupingPath, LDAP);
     }
 

@@ -438,12 +438,12 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{ldapOn}/setLDAP",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupingsServiceResult> setLDAP(Principal principal, @PathVariable String grouping,
+    public ResponseEntity<GroupingsServiceResult> setLdap(Principal principal, @PathVariable String grouping,
                                                           @PathVariable boolean ldapOn) {
         logger.info("Entered REST setLDAP...");
         return ResponseEntity
                 .ok()
-                .body(groupAttributeService.changeLDAPStatus(grouping, principal.getName(), ldapOn));
+                .body(groupAttributeService.changeLdapStatus(grouping, principal.getName(), ldapOn));
     }
 
 

@@ -610,8 +610,8 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         if (grouping.isListservOn()) {
             wsGetAttributeAssignmentsResults = addAssignmentResults(wsGetAttributeAssignmentsResults, LISTSERV);
         }
-        if (grouping.isLDAPOn()) {
-            wsGetAttributeAssignmentsResults = addAssignmentResults(wsGetAttributeAssignmentsResults. LDAP);
+        if (grouping.isLdapOn()) {
+            wsGetAttributeAssignmentsResults = addAssignmentResults(wsGetAttributeAssignmentsResults, LDAP);
         }
         if (grouping.isOptInOn()) {
             wsGetAttributeAssignmentsResults = addAssignmentResults(wsGetAttributeAssignmentsResults, OPT_IN);
@@ -699,7 +699,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
             {
                 grouping.setListservOn(onOrrOff);
 
-            } else if (attributeDefNAmeName.equals(LDAP))
+            } else if (attributeDefNameName.equals(LDAP))
 
             {
                 grouping.setLdapOn(onOrrOff);

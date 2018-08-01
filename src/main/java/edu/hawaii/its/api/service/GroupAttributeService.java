@@ -10,7 +10,7 @@ public interface GroupAttributeService {
 
     public GroupingsServiceResult changeListservStatus(String groupingPath, String ownerUsername, boolean listservOn);
 
-    public GroupingsServiceResult changeLDAPStatus (String groupingPath, String ownerUsername, boolean ldapOn);
+    public GroupingsServiceResult changeLdapStatus (String groupingPath, String ownerUsername, boolean ldapOn);
 
     public List<GroupingsServiceResult> changeOptInStatus(String groupingPath, String ownerUsername, boolean optInOn);
 
@@ -18,7 +18,7 @@ public interface GroupAttributeService {
 
     public boolean hasListserv(String groupingPath);
 
-    public boolean hasLDAP(String groupingPath);
+    public boolean hasLdap(String groupingPath);
 
     public boolean optOutPermission(String groupingPath);
 
