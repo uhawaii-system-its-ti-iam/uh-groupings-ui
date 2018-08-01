@@ -266,4 +266,12 @@ public class HomeControllerTest {
                 .andExpect(view().name("modal/checkModal"));
     }
 
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestConfirmAddModal() throws Exception {
+        mockMvc.perform(get("/modal/confirmAddModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/confirmAddModal"));
+    }
+
 }
