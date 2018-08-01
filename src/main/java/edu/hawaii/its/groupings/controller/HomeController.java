@@ -147,4 +147,9 @@ public class HomeController {
         return "modal/optModal";
     }
 
+    @RequestMapping(value = "/modal/confirmAddModal", method = RequestMethod.GET)
+    public String confirmAddModal(Locale locale, Model model) {
+        return "modal/confirmAddModal";
+    }
+
 }
