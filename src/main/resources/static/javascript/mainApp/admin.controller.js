@@ -62,8 +62,13 @@
 
             $scope.createConfirmAddModal(adminToAdd, listName);
             var endpoint = BASE_URL + adminToAdd + "/addAdmin";
-  
-            $scope.confirmAddModalInstance.result.then( 
+
+           $scope.confirmAddModalInstance = $uibModal.open({
+                templateUrl: "modal/confirmAddModal.html",
+                            scope: $scope
+                });
+
+            $scope.confirmAddModalInstance.result.then(
                 function (){
                     dataProvider.updateData(function (res) {
                         $scope.createAddModal({
@@ -79,7 +84,7 @@
                             listName: "admins"
                         });
                     }, endpoint);
-                });
+                })
             };
 
 

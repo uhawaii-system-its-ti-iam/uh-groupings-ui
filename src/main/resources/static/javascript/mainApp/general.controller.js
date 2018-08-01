@@ -233,6 +233,11 @@
 
         };
 
+        /**
+        *  Creates a modal that asks for confirmation when adding a user.
+        *  @param userToAdd - Username of the person being added
+        *  @param listName, string - name of the list the person is being added to
+        **/
         $scope.createConfirmAddModal = function(userToAdd, listName) {
             var endpoint = BASE_URL+"members/"+userToAdd;
             dataProvider.loadData(
@@ -241,10 +246,6 @@
                         $scope.uhuuidToAdd = res.uhuuid;
                         $scope.nameToAdd = res.cn;
                         $scope.listName = listName;
-                        $scope.confirmAddModalInstance = $uibModal.open({
-                            templateUrl: "modal/confirmAddModal.html",
-                            scope: $scope
-                        });
                     },
                     function (res) {
                         dataProvider.handleException({exceptionMessage: res.exceptionMessage },"feedback/error","feedback");
