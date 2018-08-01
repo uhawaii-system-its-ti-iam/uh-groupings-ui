@@ -1,0 +1,18 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelConfirmAddUser()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="modal-title">Confirm Adding Member</h4>
+</div>
+<div class="modal-body" id="modal-body">
+    <p th:utext="#{screen.message.modal.add.confirmation}"></p>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="proceedConfirmAddUser()">Yes</button>
+    <button class="btn btn-default" ng-click="cancelConfirmAddUser()" data-dismiss="modal">Cancel</button>
+</div>
+</html>

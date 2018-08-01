@@ -81,22 +81,18 @@ public class HomeControllerTest {
     }
 
     @Test
+    @WithMockUhUser
+    public void requestLoginViaUh() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:home"));
+    }
+
+    @Test
     public void requestInfo() throws Exception {
         mockMvc.perform(get("/info"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("info"));
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestCampus() throws Exception {
-        mockMvc.perform(get("/campus"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("campus"));
-
-        mockMvc.perform(get("/campuses"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("campus"));
     }
 
     @Test
@@ -268,6 +264,22 @@ public class HomeControllerTest {
         mockMvc.perform(get("/modal/optModal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("modal/optModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestCheckModal() throws Exception {
+        mockMvc.perform(get("/modal/checkModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/checkModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestConfirmAddModal() throws Exception {
+        mockMvc.perform(get("/modal/confirmAddModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/confirmAddModal"));
     }
 
 }

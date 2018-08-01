@@ -40,12 +40,6 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping(value = {"/campus", "/campuses"})
-    public String campus() {
-        logger.debug("User at campus.");
-        return "campus";
-    }
-
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public String info(Locale locale, Model model) {
         logger.info("User at info.");
@@ -151,6 +145,11 @@ public class HomeController {
     @RequestMapping(value = "/modal/optModal", method = RequestMethod.GET)
     public String optModal(Locale locale, Model model) {
         return "modal/optModal";
+    }
+
+    @RequestMapping(value = "/modal/confirmAddModal", method = RequestMethod.GET)
+    public String confirmAddModal(Locale locale, Model model) {
+        return "modal/confirmAddModal";
     }
 
 }
