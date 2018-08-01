@@ -45,6 +45,8 @@
                     $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList);
 
                     $scope.optOutList = res.groupingsToOptOutOf;
+
+                    refreshTables();
                 }
                 $scope.loading = false;
             }, function (res) {
@@ -124,6 +126,14 @@
             var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
             return !_.some($scope.optOutList, { path: groupingPath });
         };
+
+        /**
+         * Refresh all tables on the page based on their respective filters.
+         */
+        function refreshTables() {
+            $scope.filter($scope.membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', $scope.membersQuery);
+            $scope.filter($scope.optInList, 'pagedItemsOptInList', 'currentPageOptIn', $scope.optInQuery);
+        }
 
     }
 
