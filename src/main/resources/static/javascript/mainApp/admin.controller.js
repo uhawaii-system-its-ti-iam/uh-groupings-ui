@@ -65,8 +65,8 @@
 
            $scope.confirmAddModalInstance = $uibModal.open({
                 templateUrl: "modal/confirmAddModal.html",
-                            scope: $scope
-                });
+                scope: $scope
+            });
 
             $scope.confirmAddModalInstance.result.then(
                 function (){

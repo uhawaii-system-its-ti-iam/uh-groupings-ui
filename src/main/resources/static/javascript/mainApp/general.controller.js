@@ -241,16 +241,16 @@
         $scope.createConfirmAddModal = function(userToAdd, listName) {
             var endpoint = BASE_URL+"members/"+userToAdd;
             dataProvider.loadData(
-                    function(res) {
-                        $scope.uidToAdd = res.uid;
-                        $scope.uhuuidToAdd = res.uhuuid;
-                        $scope.nameToAdd = res.cn;
-                        $scope.listName = listName;
-                    },
-                    function (res) {
-                        dataProvider.handleException({exceptionMessage: res.exceptionMessage },"feedback/error","feedback");
-                    },
-                    endpoint);
+                function(res) {
+                    $scope.uidToAdd = res.uid;
+                    $scope.uhuuidToAdd = res.uhuuid;
+                    $scope.nameToAdd = res.cn;
+                    $scope.listName = listName;
+                },
+                function (res) {
+                    dataProvider.handleException({exceptionMessage: res.exceptionMessage },"feedback/error","feedback");
+                },
+                endpoint);
         };
 
         /**

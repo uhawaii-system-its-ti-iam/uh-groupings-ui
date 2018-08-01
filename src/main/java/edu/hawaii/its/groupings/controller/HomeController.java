@@ -40,7 +40,6 @@ public class HomeController {
         return "home";
     }
 
-
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public String info(Locale locale, Model model) {
         logger.info("User at info.");
