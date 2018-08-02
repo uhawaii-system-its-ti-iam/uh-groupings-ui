@@ -435,12 +435,12 @@ public class GroupingsRestController {
      * @param ldapOn: true if the ldap should be on, false if it should be off
      * @return information about the success of the opertaion
      */
-    @RequestMapping(value = "/{grouping}/{ldapOn}/setLDAP",
+    @RequestMapping(value = "/{grouping}/{ldapOn}/setLdap",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GroupingsServiceResult> setLdap(Principal principal, @PathVariable String grouping,
                                                           @PathVariable boolean ldapOn) {
-        logger.info("Entered REST setLDAP...");
+        logger.info("Entered REST setLdap...");
         return ResponseEntity
                 .ok()
                 .body(groupAttributeService.changeLdapStatus(grouping, principal.getName(), ldapOn));

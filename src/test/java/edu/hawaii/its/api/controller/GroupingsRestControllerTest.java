@@ -489,13 +489,13 @@ public class GroupingsRestControllerTest {
         given(groupAttributeService.changeLdapStatus(grouping, username, false))
                 .willReturn(gsr2);
 
-        mockMvc.perform(post("/api/groupings/grouping/true/setLDAP")
+        mockMvc.perform(post("/api/groupings/grouping/true/setLdap")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("action").value("LDAP has been added to grouping"));
 
-        mockMvc.perform(post("/api/groupings/grouping/false/setLDAP")
+        mockMvc.perform(post("/api/groupings/grouping/false/setLdap")
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))

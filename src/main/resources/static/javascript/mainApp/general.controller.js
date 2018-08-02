@@ -68,6 +68,7 @@
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/grouping";
 
             dataProvider.loadData(function (res) {
+                console.log(res);
                 if (_.isNull(res)) {
                     $scope.createApiErrorModal();
                 } else {
@@ -97,6 +98,7 @@
                     $scope.allowOptIn = res.optInOn;
                     $scope.allowOptOut = res.optOutOn;
                     $scope.listserv = res.listservOn;
+                    $scope.ldap = res.ldapOn;
                 }
                 //Stop loading spinner
                 $scope.loading = false;
@@ -560,8 +562,22 @@
             }, endpoint);
         };
 
-        $scope.checkLdap = function () {
+        $scope.updateLdap = function () {
+            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.ldap + "/setLdap";
             console.log($scope.ldap);
+
+            dataProvider.updateData(function (res) {
+                if (!_.isUndefined(res.statusCode)) {
+                    console.log("Error, Status Code: " + res.statusCode);
+                    $scope.createPreferenceErrorModal();
+                } else if (res.resultCode === "SUCCESS") {
+                    console.log("success");
+                }
+            }, function (res) {
+                console.log("Error, Status Code: " + res.statusCode);
+            },  endpoint);
+
+
         };
 
         /**
