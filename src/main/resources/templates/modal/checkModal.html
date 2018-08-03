@@ -9,11 +9,21 @@
     <h4 class="modal-title" id="modal-title">Warning</h4>
 </div>
 <div class="modal-body" id="modal-body">
-    <div ng-if="listName === 'Include'">
-        <p th:utext="#{screen.message.modal.check.exclude}">They are already in Exclude</p>
+    <div ng-if="swap">
+        <div ng-if="listName === 'Include'">
+            <p th:utext="#{screen.message.modal.check.exclude}">They are already in Exclude</p>
+        </div>
+        <div ng-if="listName === 'Exclude'">
+            <p th:utext="#{screen.message.modal.check.include}">They are already in Include</p>
+        </div>
     </div>
-    <div ng-if="listName === 'Exclude'">
-        <p th:utext="#{screen.message.modal.check.include}">They are already in Include</p>
+    <div ng-if="!swap">
+        <div ng-if="listName === 'Exclude'">
+            <p>They are already in Exclude</p>
+        </div>
+        <div ng-if="listName === 'Include'">
+            <p>They are already in Include</p>
+        </div>
     </div>
 
     <!--<p th:utext="#{screen.message.modal.check.user}">User Name</p>-->
@@ -21,8 +31,14 @@
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="proceedCheckModal()">Yes</button>
-    <button class="btn btn-default" ng-click="closeCheckModal()">Cancel</button>
+    <div ng-if="swap">
+        <button class="btn btn-primary" ng-click="proceedCheckModal()">Yes</button>
+        <button class="btn btn-default" ng-click="closeCheckModal()">Cancel</button>
+    </div>
+    <div ng-if="!swap">
+        <button class="btn btn-default" ng-click="closeCheckModal()">Close</button>
+    </div>
+
 </div>
 
 </html>

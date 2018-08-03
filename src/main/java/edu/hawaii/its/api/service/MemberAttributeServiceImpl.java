@@ -66,6 +66,9 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
     @Value("${groupings.api.listserv}")
     private String LISTSERV;
 
+    @Value("${groupings.api.ldap}")
+    private String LDAP;
+
     @Value("${groupings.api.trio}")
     private String TRIO;
 

@@ -51,10 +51,9 @@
                                 ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\') : null'"></i>
                 </div>
 
-                <!--Hidden until functionality is created.-->
-                <!--<div class="checkbox">
+                <div class="checkbox">
                     <label>
-                        <input type="checkbox" ng-model="LDAP" ng-change="checkLDAP()"/>
+                        <input type="checkbox" ng-model="ldap" ng-change="updateLdap()"/>
                         CAS/LDAP: uhReleasedGroupings
                     </label>
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
@@ -63,7 +62,7 @@
                        th:title="#{screen.message.common.tooltip.preference.ldap}"
                        th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\')',
                                 ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\') : null'"></i>
-                </div>-->
+                </div>
             </div>
         </div>
     </div>

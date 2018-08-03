@@ -112,6 +112,7 @@ public class GroupingsRestControllerTest {
         grouping.setOwners(owners);
 
         grouping.setListservOn(true);
+        grouping.setLdapOn(true);
 
         return grouping;
     }
@@ -473,6 +474,32 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("action").value("listserv has been removed from grouping"));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getSetLdap() throws Exception{
+        final String grouping = "grouping";
+        final String username = "user";
+        GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "LDAP has been added to grouping");
+        GroupingsServiceResult gsr2 = new GroupingsServiceResult("SUCCESS", "LDAP has been removed from grouping");
+
+        given(groupAttributeService.changeLdapStatus(grouping, username, true))
+                .willReturn(gsr);
+        given(groupAttributeService.changeLdapStatus(grouping, username, false))
+                .willReturn(gsr2);
+
+        mockMvc.perform(post("/api/groupings/grouping/true/setLdap")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("action").value("LDAP has been added to grouping"));
+
+        mockMvc.perform(post("/api/groupings/grouping/false/setLdap")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("action").value("LDAP has been removed from grouping"));
     }
 
     @Test

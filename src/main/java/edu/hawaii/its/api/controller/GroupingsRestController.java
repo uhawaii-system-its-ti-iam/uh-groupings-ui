@@ -429,6 +429,25 @@ public class GroupingsRestController {
     }
 
     /**
+     * This allows an owner of a Grouping to change whether or not a Grouping is connected to LDAP.
+     *
+     * @param grouping: the path to the Grouping
+     * @param ldapOn: true if the ldap should be on, false if it should be off
+     * @return information about the success of the opertaion
+     */
+    @RequestMapping(value = "/{grouping}/{ldapOn}/setLdap",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GroupingsServiceResult> setLdap(Principal principal, @PathVariable String grouping,
+                                                          @PathVariable boolean ldapOn) {
+        logger.info("Entered REST setLdap...");
+        return ResponseEntity
+                .ok()
+                .body(groupAttributeService.changeLdapStatus(grouping, principal.getName(), ldapOn));
+    }
+
+
+    /**
      * This allows an owner of a Grouping to change whether or not a Grouping's members can opt in
      *
      * @param grouping: the path to the Grouping
