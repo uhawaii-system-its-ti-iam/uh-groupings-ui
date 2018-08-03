@@ -97,7 +97,6 @@ describe("TableController", function () {
             scope.items = [
                 {
                     $$hashKey: "random",
-                    basis: "Include",
                     firstName: "John",
                     lastName: "Doe",
                     username: "jdoe",
@@ -105,11 +104,24 @@ describe("TableController", function () {
                 },
                 {
                     $$hashKey: "random",
-                    basis: "Exclude",
                     firstName: "Jane",
                     lastName: "Doe",
                     username: "janed",
                     uuid: "23456789"
+                },
+                {
+                    $$hashKey: "something",
+                    firstName: "Dennis",
+                    lastName: "Jefferson",
+                    username: "dj",
+                    uuid: "65478912"
+                },
+                {
+                    $$hashKey: "another",
+                    firstName: "Dave",
+                    lastName: "Williams",
+                    username: "dave",
+                    uuid: "72897556"
                 }
             ];
             scope.itemsPerPage = 1;
@@ -161,6 +173,13 @@ describe("TableController", function () {
 
             expect(scope.pagedItems[0][0]).toEqual(scope.items[0]);
             expect(scope.pagedItems[1][0]).toEqual(scope.items[1]);
+        });
+
+        it("should be equivalent to groupToPages if query is empty", function () {
+            scope.filter(scope.items, "pagedItems", "currentPage", "");
+            var pagedItemsUsingGtp = scope.groupToPages(scope.items)
+
+            expect(scope.pagedItems).toEqual(pagedItemsUsingGtp);
         });
 
     });

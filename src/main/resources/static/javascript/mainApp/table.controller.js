@@ -34,6 +34,7 @@
 
         /**
          * Filters through a list given a user's query.
+         * If query is empty, then this is the same as $scope.pagedListVar = $scope.groupToPages(list)
          * @param {object[]} list - the list to filter
          * @param {string} pagedListVar - the name of the variable containing the paginated list
          * @param {string} pageVar - the name of the variable containing the current page of the list
