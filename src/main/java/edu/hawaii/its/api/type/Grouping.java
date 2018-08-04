@@ -36,6 +36,9 @@ public class Grouping {
     private boolean listservOn = false;
 
     @Column
+    private boolean ldapOn = false;
+
+    @Column
     private boolean optInOn = false;
 
     @Column
@@ -118,8 +121,16 @@ public class Grouping {
         return listservOn;
     }
 
+    public boolean isLdapOn(){
+        return ldapOn;
+    }
+
     public void setListservOn(boolean listservOn) {
         this.listservOn = listservOn;
+    }
+
+    public void setLdapOn(boolean ldapOn) {
+        this.ldapOn = ldapOn;
     }
 
     public boolean isOptInOn() {
@@ -143,6 +154,7 @@ public class Grouping {
         return "Grouping [name=" + name
                 + ", path=" + path
                 + ", ListservOn=" + isListservOn()
+                + ", LdapOn=" + isLdapOn()
                 + ", OptInOn=" + isOptInOn()
                 + ", OptOutOn=" + isOptOutOn()
                 + ", basis=" + basis

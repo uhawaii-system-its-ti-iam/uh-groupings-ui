@@ -17,17 +17,17 @@ public class GroupingsHTTPExceptionTest extends RuntimeException {
         groupingsHTTPexception = new GroupingsHTTPException();
     }
 
-
     @Test
-    public void ConstructionGroupingsHTTPException() {
+    public void GroupingsHTTPExceptionConstructionTest() {
         assertNotNull(groupingsHTTPexception);
-        assertNull(groupingsHTTPexception.getExceptionMessage());
+        assertNull(groupingsHTTPexception.getLocalizedMessage());
         assertNull(groupingsHTTPexception.getMessage());
         assertNull(groupingsHTTPexception.getCause());
+        assertNull(groupingsHTTPexception.getStatusCode());
     }
 
     @Test
-    public void testGroupingsHTTPException() {
+    public void GroupingsHTTPExceptionExpandedTest() {
 
         Exception e = new RuntimeException("Test Case");
 
@@ -41,11 +41,11 @@ public class GroupingsHTTPExceptionTest extends RuntimeException {
         groupingsHTTPexception = new GroupingsHTTPException("Error 1", e1);
         assertThat(groupingsHTTPexception.getMessage(), equalTo("Error 1"));
         assertThat(groupingsHTTPexception.getCause(), equalTo(e1));
-        assertThat(groupingsHTTPexception.getStatusCode(), equalTo(0));
+        assertNull(groupingsHTTPexception.getStatusCode());
 
         groupingsHTTPexception = new GroupingsHTTPException("Error 2");
         assertThat(groupingsHTTPexception.getMessage(), equalTo("Error 2"));
         assertNull(groupingsHTTPexception.getCause());
-        assertThat(groupingsHTTPexception.getStatusCode(), equalTo(0));
+        assertNull(groupingsHTTPexception.getStatusCode());
     }
 }
