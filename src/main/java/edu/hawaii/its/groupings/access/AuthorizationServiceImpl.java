@@ -70,11 +70,13 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         //Determines if user is an owner.
         if (fetchOwner(username)) {
+            logger.info("Added as an owner");//delete
             roleHolder.add(Role.OWNER);
         }
 
         //Determines if a user is an admin.
         if (fetchAdmin(username)) {
+            logger.info("Added as an admin");//delete
             roleHolder.add(Role.ADMIN);
         }
 

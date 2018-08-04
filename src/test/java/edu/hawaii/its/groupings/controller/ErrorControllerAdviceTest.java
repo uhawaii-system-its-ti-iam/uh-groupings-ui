@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
+
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import static org.junit.Assert.assertNotNull;
@@ -22,6 +24,11 @@ import edu.hawaii.its.api.type.GroupingsHTTPException;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+
+import java.security.Principal;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -57,7 +64,111 @@ public class ErrorControllerAdviceTest {
     @Test
     public void IllegalArgumentTest() {
         IllegalArgumentException IAE = new IllegalArgumentException();
-      //  WebRequest req = new WebRequest();
+        WebRequest Req = new WebRequest() {
+            @Override public String getHeader(String s) {
+                return null;
+            }
+
+            @Override public String[] getHeaderValues(String s) {
+                return new String[0];
+            }
+
+            @Override public Iterator<String> getHeaderNames() {
+                return null;
+            }
+
+            @Override public String getParameter(String s) {
+                return null;
+            }
+
+            @Override public String[] getParameterValues(String s) {
+                return new String[0];
+            }
+
+            @Override public Iterator<String> getParameterNames() {
+                return null;
+            }
+
+            @Override public Map<String, String[]> getParameterMap() {
+                return null;
+            }
+
+            @Override public Locale getLocale() {
+                return null;
+            }
+
+            @Override public String getContextPath() {
+                return null;
+            }
+
+            @Override public String getRemoteUser() {
+                return null;
+            }
+
+            @Override public Principal getUserPrincipal() {
+                return null;
+            }
+
+            @Override public boolean isUserInRole(String s) {
+                return false;
+            }
+
+            @Override public boolean isSecure() {
+                return false;
+            }
+
+            @Override public boolean checkNotModified(long l) {
+                return false;
+            }
+
+            @Override public boolean checkNotModified(String s) {
+                return false;
+            }
+
+            @Override public boolean checkNotModified(String s, long l) {
+                return false;
+            }
+
+            @Override public String getDescription(boolean b) {
+                return null;
+            }
+
+            @Override public Object getAttribute(String s, int i) {
+                return null;
+            }
+
+            @Override public void setAttribute(String s, Object o, int i) {
+
+            }
+
+            @Override public void removeAttribute(String s, int i) {
+
+            }
+
+            @Override public String[] getAttributeNames(int i) {
+                return new String[0];
+            }
+
+            @Override public void registerDestructionCallback(String s, Runnable runnable, int i) {
+
+            }
+
+            @Override public Object resolveReference(String s) {
+                return null;
+            }
+
+            @Override public String getSessionId() {
+                return null;
+            }
+
+            @Override public Object getSessionMutex() {
+                return null;
+            }
+        };
+        errorControllerAdvice.handleIllegalArgumentException(IAE,Req);
+        String IAexception = "<404,edu.hawaii.its.api.type.GroupingsHTTPException: "
+                + "Resource not available,{}>";
+        assertThat(errorControllerAdvice.handleIllegalArgumentException(IAE,Req).toString(), equalTo(IAexception));
 
     }
     @Test
@@ -77,14 +188,14 @@ public class ErrorControllerAdviceTest {
                 + "Exception,{}>";
         assertThat(errorControllerAdvice.handleException(E).toString(), equalTo(exception));
     }
- /*   @Test
+    @Test
     public void ExceptionHandleTest() throws GroupingsServiceResultException {
-        GroupingsServiceResultException GSRE = new GroupingServiceResultException();
+        GroupingsServiceResultException GSRE = new GroupingsServiceResultException();
         errorControllerAdvice.handleGroupingsServiceResultException(GSRE);
         String SRE = "<400,edu.hawaii.its.api.type.GroupingsHTTPException: "
                 + "Groupings Service resulted in FAILURE,{}>";
         assertThat(errorControllerAdvice.handleGroupingsServiceResultException(GSRE).toString(), equalTo(SRE));
-    }*/
+    }
     @Test
     public void typeMismatchTest() {
         Exception E1 = new Exception();

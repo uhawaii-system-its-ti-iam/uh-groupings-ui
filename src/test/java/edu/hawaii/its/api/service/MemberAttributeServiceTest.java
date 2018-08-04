@@ -111,7 +111,7 @@ public class MemberAttributeServiceTest {
     @Before
     public void setup() {
 
-        new DatabaseSetup(personRepository, groupRepository, groupingRepository, membershipRepository);
+/*        new DatabaseSetup(personRepository, groupRepository, groupingRepository, membershipRepository);*/
 
         admins.add(ADMIN_PERSON);
         Group adminGroup = new Group(GROUPING_ADMINS, admins);
