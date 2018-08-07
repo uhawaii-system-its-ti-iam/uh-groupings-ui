@@ -34,10 +34,10 @@
                     $scope.createApiErrorModal();
                 } else {
                     $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
-                    $scope.pagedItemsAdmins = $scope.groupToPages($scope.adminsList);
+                    $scope.filter($scope.adminsList, 'pagedItemsAdmins', 'currentPageAdmins', $scope.adminsQuery);
 
                     $scope.groupingsList = _.sortBy(res.allGroupings, "name");
-                    $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+                    $scope.filter($scope.groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', $scope.groupingsQuery)
 
                     $scope.loading = false;
                 }
