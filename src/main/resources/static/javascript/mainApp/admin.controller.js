@@ -48,6 +48,7 @@
 
         $scope.displayAdmins = function () {
             $scope.resetGroupingInformation();
+            $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
             $scope.showGrouping = false;
         };
 
