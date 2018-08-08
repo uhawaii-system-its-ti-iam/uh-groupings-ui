@@ -6,10 +6,11 @@
      * @param $window - the browser window object
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param $controller - service for instantiating controllers
+     * @param $q - service containing promise implementations
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      * @param BASE_URL - the constant base URL for endpoints
      */
-    function GeneralJsController($scope, $window, $uibModal, $controller, dataProvider, BASE_URL) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, $q, dataProvider, BASE_URL) {
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
@@ -295,7 +296,7 @@
          * @returns {Promise<any>} the member's attributes if fulfilled, otherwise nothing if rejected
          */
         $scope.getMemberAttributes = function (member) {
-            return new Promise(function (resolve, reject) {
+            return $q(function (resolve, reject) {
                 var endpoint = BASE_URL + "members/" + member;
                 dataProvider.loadData(function (res) {
                     resolve(res);
