@@ -249,23 +249,60 @@
         };
 
         /**
-         *  Creates a modal that asks for confirmation when adding a user.
-         *  @param userToAdd - Username of the person being added
-         *  @param listName, string - name of the list the person is being added to
-         **/
-        $scope.createConfirmAddModal = function (userToAdd, listName) {
-            var endpoint = BASE_URL + "members/" + userToAdd;
-            dataProvider.loadData(
-                function (res) {
-                    $scope.uidToAdd = res.uid;
-                    $scope.uhuuidToAdd = res.uhuuid;
-                    $scope.nameToAdd = res.cn;
-                    $scope.listName = listName;
-                },
-                function (res) {
-                    dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
-                },
-                endpoint);
+         * Creates a modal that asks for confirmation when adding a user.
+         * @param {object} options - the options object
+         * @param {string} options.userToAdd - the user to add
+         * @param {string} options.listName - name of the list being added to
+         * @param {string} options.endpoint - endpoint to add the user
+         */
+        $scope.createConfirmAddModal = function (options) {
+            var userToAdd = options.userToAdd;
+
+            $scope.getMemberAttributes(userToAdd)
+                .then(function (attributes) {
+                    $scope.uidToAdd = attributes.uid;
+                    $scope.uhuuidToAdd = attributes.uhuuid;
+                    $scope.nameToAdd = attributes.cn;
+
+                    $scope.listName = options.listName;
+
+                    $scope.confirmAddModalInstance = $uibModal.open({
+                        templateUrl: "modal/confirmAddModal.html",
+                        scope: $scope
+                    });
+
+                    $scope.confirmAddModalInstance.result.then(function () {
+                        dataProvider.updateData(function (res) {
+                            $scope.createAddModal({
+                                user: userToAdd,
+                                response: res,
+                                listName: options.listName
+                            });
+                        }, function (res) {
+                            $scope.createAddModal({
+                                user: userToAdd,
+                                response: res,
+                                listName: options.listName
+                            });
+                        }, options.endpoint);
+                    });
+                });
+        };
+
+        /**
+         * Gets the attributes of a member.
+         * @param {string} member - the member's username
+         * @returns {Promise<any>} the member's attributes if fulfilled, otherwise nothing if rejected
+         */
+        $scope.getMemberAttributes = function (member) {
+            return new Promise(function (resolve, reject) {
+                var endpoint = BASE_URL + "members/" + member;
+                dataProvider.loadData(function (res) {
+                    resolve(res);
+                }, function () {
+                    reject();
+                }, endpoint);
+            });
         };
 
         /**
@@ -302,20 +339,11 @@
             var ownerToAdd = $scope.ownerToAdd;
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + ownerToAdd + "/assignOwnership";
 
-            dataProvider.updateData(function (res) {
-                $scope.createAddModal({
-                    user: ownerToAdd,
-                    response: res,
-                    listName: "owners"
-                });
-                $scope.ownerToAdd = "";
-            }, function (res) {
-                $scope.createAddModal({
-                    user: ownerToAdd,
-                    response: res,
-                    listName: "owners"
-                });
-            }, endpoint);
+            $scope.createConfirmAddModal({
+                userToAdd: ownerToAdd,
+                listName: "owners",
+                endpoint: endpoint
+            });
         };
 
         /**

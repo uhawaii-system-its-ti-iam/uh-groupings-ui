@@ -59,35 +59,14 @@
          */
         $scope.addAdmin = function () {
             var adminToAdd = $scope.adminToAdd;
-            var listName = "admins"; 
-
-            $scope.createConfirmAddModal(adminToAdd, listName);
             var endpoint = BASE_URL + adminToAdd + "/addAdmin";
 
-           $scope.confirmAddModalInstance = $uibModal.open({
-                templateUrl: "modal/confirmAddModal.html",
-                scope: $scope
+            $scope.createConfirmAddModal({
+                userToAdd: adminToAdd,
+                listName: "admins",
+                endpoint: endpoint
             });
-
-            $scope.confirmAddModalInstance.result.then(
-                function (){
-                    dataProvider.updateData(function (res) {
-                        $scope.createAddModal({
-                            user: adminToAdd,
-                            response: res,
-                            listName: "admins"
-                        });
-                    $scope.adminToAdd = "";
-                    }, function (res) {
-                        $scope.createAddModal({
-                            user: adminToAdd,
-                            response: res,
-                            listName: "admins"
-                        });
-                    }, endpoint);
-                })
-            };
-
+        };
 
         /**
          * Removes an admin from the admin list. There must be at least one admin remaining.
