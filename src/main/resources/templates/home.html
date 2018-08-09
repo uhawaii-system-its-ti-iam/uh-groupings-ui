@@ -42,7 +42,7 @@
     </div>
 
     <div id="footerBottom">
-        <div class="well well-borderless" sec:authorize="hasAnyRole('ROLE_UH', 'ROLE_ADMIN', 'ROLE_OWNER')">
+        <div class="card bg-light border-light" sec:authorize="hasAnyRole('ROLE_UH', 'ROLE_ADMIN', 'ROLE_OWNER')">
             <div class="row" sec:authorize="isAuthenticated()">
                 <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
                     <p class="h4" style="margin-top: 0;">Administration</p>
