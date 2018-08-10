@@ -1,24 +1,22 @@
 package edu.hawaii.its.groupings.type;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class FeedbackTest {
 
     private Feedback feedback;
 
     @Before
-    public void setUp() { feedback = new Feedback();}
+    public void setUp() {
+        feedback = new Feedback();
+    }
 
     @Test
     public void construction() {
@@ -26,7 +24,7 @@ public class FeedbackTest {
     }
 
     @Test
-    public void setters(){
+    public void setters() {
         assertNotNull(feedback);
         assertNull(feedback.getName());
         assertNull(feedback.getEmail());
@@ -51,7 +49,7 @@ public class FeedbackTest {
     }
 
     @Test
-    public void exceptionConstruction(){
+    public void exceptionConstruction() {
         feedback = new Feedback("Test Exception Stack Trace");
 
         assertNotNull(feedback);
