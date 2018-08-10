@@ -276,21 +276,25 @@
                     $scope.confirmAddModalInstance.result.then(function () {
                         $scope.updateAddMember(userToAdd, options.listName, options.endpoint);
                     });
+                }).catch(function (res) {
+                    if (res.statusCode === 404) {
+                        $scope.createAddModal({ user: userToAdd });
+                    }
                 });
         };
 
         /**
          * Gets the attributes of a member.
          * @param {string} member - the member's username
-         * @returns {Promise<any>} the member's attributes if fulfilled, otherwise nothing if rejected
+         * @returns {Promise<any>} the member's attributes if fulfilled, otherwise the error response if rejected
          */
         $scope.getMemberAttributes = function (member) {
             return $q(function (resolve, reject) {
                 var endpoint = BASE_URL + "members/" + member;
                 dataProvider.loadData(function (res) {
                     resolve(res);
-                }, function () {
-                    reject();
+                }, function (res) {
+                    reject(res);
                 }, endpoint);
             });
         };
