@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import edu.hawaii.its.api.type.Person;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import edu.hawaii.its.api.type.Person;
 import edu.internet2.middleware.grouperClient.api.GcAddMember;
 import edu.internet2.middleware.grouperClient.api.GcAssignAttributes;
 import edu.internet2.middleware.grouperClient.api.GcAssignGrouperPrivilegesLite;
@@ -308,7 +307,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
             List<String> ownerGroupNames) {
 
         List<WsGetAttributeAssignmentsResults> attributeAssignmentsResultList = new ArrayList<>();
-        Iterator iterator = ownerGroupNames.iterator();
+        Iterator<String> iterator = ownerGroupNames.iterator();
 
         for (int i = 0; i < ownerGroupNames.size(); i += ATTRIBUTES_ASSIGN_ID_SIZE) {
             GcGetAttributeAssignments attributeAssignments = new GcGetAttributeAssignments()
@@ -334,7 +333,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
             String attributeDefNameName1,
             List<String> ownerGroupNames) {
         List<WsGetAttributeAssignmentsResults> attributeAssignmentsResultList = new ArrayList<>();
-        Iterator iterator = ownerGroupNames.iterator();
+        Iterator<String> iterator = ownerGroupNames.iterator();
 
         for (int i = 0; i < ownerGroupNames.size(); i += ATTRIBUTES_ASSIGN_ID_SIZE) {
             GcGetAttributeAssignments attributeAssignments = new GcGetAttributeAssignments()
@@ -532,6 +531,7 @@ public class GrouperFactoryServiceImpl implements GrouperFactoryService {
                 .execute();
     }
 
+    @Override
     public WsGetSubjectsResults makeWsGetSubjectsResults(WsSubjectLookup lookup) {
 
         return new GcGetSubjects()

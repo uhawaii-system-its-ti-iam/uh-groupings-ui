@@ -1,21 +1,13 @@
 package edu.hawaii.its.api.service;
 
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import edu.hawaii.its.api.repository.GroupRepository;
-import edu.hawaii.its.api.repository.GroupingRepository;
-import edu.hawaii.its.api.repository.MembershipRepository;
-import edu.hawaii.its.api.repository.PersonRepository;
-import edu.hawaii.its.api.type.Group;
-import edu.hawaii.its.api.type.Person;
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-
-import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,10 +16,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertTrue;
+import edu.hawaii.its.api.repository.GroupRepository;
+import edu.hawaii.its.api.repository.GroupingRepository;
+import edu.hawaii.its.api.repository.MembershipRepository;
+import edu.hawaii.its.api.repository.PersonRepository;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -69,27 +68,7 @@ public class GrouperFactoryServiceTest {
 
     private static final String PATH_ROOT = "path:to:grouping";
 
-    private static final String GROUPING_0_PATH = PATH_ROOT + 0;
-    private static final String GROUPING_1_PATH = PATH_ROOT + 1;
-    private static final String GROUPING_2_PATH = PATH_ROOT + 2;
     private static final String GROUPING_3_PATH = PATH_ROOT + 3;
-    private static final String GROUPING_4_PATH = PATH_ROOT + 4;
-
-    private static final String GROUPING_0_INCLUDE_PATH = GROUPING_0_PATH + ":include";
-    private static final String GROUPING_0_OWNERS_PATH = GROUPING_0_PATH + ":owners";
-
-    private static final String GROUPING_1_INCLUDE_PATH = GROUPING_1_PATH + ":include";
-    private static final String GROUPING_1_EXCLUDE_PATH = GROUPING_1_PATH + ":exclude";
-
-    private static final String GROUPING_2_INCLUDE_PATH = GROUPING_2_PATH + ":include";
-    private static final String GROUPING_2_EXCLUDE_PATH = GROUPING_2_PATH + ":exclude";
-    private static final String GROUPING_2_BASIS_PATH = GROUPING_2_PATH + ":basis";
-    private static final String GROUPING_2_OWNERS_PATH = GROUPING_2_PATH + ":owners";
-
-    private static final String GROUPING_3_INCLUDE_PATH = GROUPING_3_PATH + ":include";
-    private static final String GROUPING_3_EXCLUDE_PATH = GROUPING_3_PATH + ":exclude";
-
-    private static final String GROUPING_4_EXCLUDE_PATH = GROUPING_4_PATH + ":exclude";
 
     private static final String ADMIN_USER = "admin";
     private static final Person ADMIN_PERSON = new Person(ADMIN_USER, ADMIN_USER, ADMIN_USER);
@@ -207,10 +186,7 @@ public class GrouperFactoryServiceTest {
 
         String assignType = "type";
         String assignOperation = OPERATION_ASSIGN_ATTRIBUTE;
-        String removeOperation = OPERATION_REMOVE_ATTRIBUTE;
         String defName = LISTSERV;
-        String defName2 = OPT_IN;
-        String defName3 = OPT_OUT;
         String groupName = GROUPING_3_PATH;
 
         results = gfsl.makeWsAssignAttributesResultsForGroup(lookup, assignType, assignOperation, defName, groupName);

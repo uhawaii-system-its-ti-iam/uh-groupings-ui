@@ -1,8 +1,5 @@
 package edu.hawaii.its.groupings.type;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class Feedback {
 
     private String name;
@@ -10,8 +7,6 @@ public class Feedback {
     private String type;
     private String message;
     private String exceptionMessage;
-
-    private static final Log logger = LogFactory.getLog(Feedback.class);
 
     // Constructor.
     public Feedback() {
@@ -42,7 +37,7 @@ public class Feedback {
         return type;
     }
 
-    public void setType(String type){
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -50,7 +45,7 @@ public class Feedback {
         return message;
     }
 
-    public void setMessage(String message){
+    public void setMessage(String message) {
         this.message = message;
     }
 

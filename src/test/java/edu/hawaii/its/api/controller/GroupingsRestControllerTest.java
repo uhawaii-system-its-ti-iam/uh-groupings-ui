@@ -1,6 +1,5 @@
 package edu.hawaii.its.api.controller;
 
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -20,7 +19,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -478,7 +476,7 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void getSetLdap() throws Exception{
+    public void getSetLdap() throws Exception {
         final String grouping = "grouping";
         final String username = "user";
         GroupingsServiceResult gsr = new GroupingsServiceResult("SUCCESS", "LDAP has been added to grouping");
@@ -632,17 +630,11 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[5].action").value("update last-modified attribute for exclude group"));
     }
 
-
     @Test
     @WithMockUhUser(username = "admin")
     public void adminListsTest() throws Exception {
-
-        String mvcResult = mockMvc.perform(get("/api/groupings/adminLists"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
+        mockMvc.perform(get("/api/groupings/adminLists"))
+                .andExpect(status().isOk());
     }
 
     @Test
