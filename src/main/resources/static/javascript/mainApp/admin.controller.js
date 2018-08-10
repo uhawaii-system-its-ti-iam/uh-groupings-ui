@@ -61,11 +61,15 @@
             var adminToAdd = $scope.adminToAdd;
             var endpoint = BASE_URL + adminToAdd + "/addAdmin";
 
-            $scope.createConfirmAddModal({
-                userToAdd: adminToAdd,
-                listName: "admins",
-                endpoint: endpoint
-            });
+            if (_.isEmpty(adminToAdd)) {
+                $scope.createAddModal({ user: adminToAdd });
+            } else {
+                $scope.createConfirmAddModal({
+                    userToAdd: adminToAdd,
+                    listName: "admins",
+                    endpoint: endpoint
+                });
+            }
         };
 
         /**

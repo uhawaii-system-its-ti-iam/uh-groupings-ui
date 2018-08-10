@@ -165,21 +165,23 @@
             var userToAdd = $scope.userToAdd;
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + userToAdd + "/addMemberTo" + list + "Group";
 
-            if (_.isUndefined(userToAdd) || userToAdd.length === 0) {
+            if (_.isEmpty(userToAdd)) {
                 $scope.createAddModal({ user: userToAdd });
             } else if ($scope.existInList(userToAdd, list)) {
                 $scope.createCheckModal(userToAdd, list, false, endpoint);
             } else if ($scope.isInAnotherList(userToAdd, list)) {
                 $scope.createCheckModal(userToAdd, list, true, endpoint);
             } else {
-                $scope.updateAddMember(userToAdd, list, endpoint);
+                $scope.createConfirmAddModal({
+                    userToAdd: userToAdd,
+                    listName: list,
+                    endpoint: endpoint
+                });
             }
         };
 
         /**
-         * Calls API to add the member to the grouping list
-         * and if they are already in another list, removes them from the other list.
-         *
+         * Initiates the adding of a member to a list.
          * @param userToAdd - user being added
          * @param list - the list the user is being added to
          * @param endpoint - the API call endpoint to add the user
@@ -191,7 +193,6 @@
                     response: res,
                     listName: list
                 });
-                $scope.userToAdd = "";
             }, function (res) {
                 $scope.createAddModal({
                     user: userToAdd,
@@ -273,19 +274,7 @@
                     });
 
                     $scope.confirmAddModalInstance.result.then(function () {
-                        dataProvider.updateData(function (res) {
-                            $scope.createAddModal({
-                                user: userToAdd,
-                                response: res,
-                                listName: options.listName
-                            });
-                        }, function (res) {
-                            $scope.createAddModal({
-                                user: userToAdd,
-                                response: res,
-                                listName: options.listName
-                            });
-                        }, options.endpoint);
+                        $scope.updateAddMember(userToAdd, options.listName, options.endpoint);
                     });
                 });
         };
@@ -340,11 +329,15 @@
             var ownerToAdd = $scope.ownerToAdd;
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + ownerToAdd + "/assignOwnership";
 
-            $scope.createConfirmAddModal({
-                userToAdd: ownerToAdd,
-                listName: "owners",
-                endpoint: endpoint
-            });
+            if (_.isEmpty(ownerToAdd)) {
+                $scope.createAddModal({ user: ownerToAdd });
+            } else {
+                $scope.createConfirmAddModal({
+                    userToAdd: ownerToAdd,
+                    listName: "owners",
+                    endpoint: endpoint
+                });
+            }
         };
 
         /**
