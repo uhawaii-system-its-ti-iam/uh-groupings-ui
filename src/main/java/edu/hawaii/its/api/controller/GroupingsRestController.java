@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -23,8 +22,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.hawaii.its.api.service.GroupAttributeService;
 import edu.hawaii.its.api.service.GroupingAssignmentService;
-import edu.hawaii.its.api.service.GroupingFactoryService;
-import edu.hawaii.its.api.service.HelperService;
 import edu.hawaii.its.api.service.MemberAttributeService;
 import edu.hawaii.its.api.service.MembershipService;
 import edu.hawaii.its.api.type.AdminListsHolder;
@@ -55,12 +52,6 @@ public class GroupingsRestController {
 
     @Autowired
     private GroupingAssignmentService groupingAssignmentService;
-
-    @Autowired
-    private GroupingFactoryService groupingFactoryService;
-
-    @Autowired
-    private HelperService helperService;
 
     @Autowired
     private MemberAttributeService memberAttributeService;
@@ -180,7 +171,7 @@ public class GroupingsRestController {
      * adds a member to the include group of the Grouping who's path is in 'grouping'
      * if that member is in the exclude group, they will be removed from it
      *
-     * @param grouping:  path to the Grouping who's include group the new member will be added to
+     * @param grouping: path to the Grouping who's include group the new member will be added to
      * @param userToAdd: username of the new member to be added to the include group
      * @return information about the success of the operation
      */
@@ -200,7 +191,7 @@ public class GroupingsRestController {
      * adds a member to the exclude group of the Grouping who's path is in 'grouping'
      * if that member is in the include group, they will be removed from it
      *
-     * @param grouping:  path to the Grouping who's exclude group the new member will be added to
+     * @param grouping: path to the Grouping who's exclude group the new member will be added to
      * @param userToAdd: username of the new member to be added to the exclude group
      * @return information about the success of the operation
      */
@@ -255,7 +246,7 @@ public class GroupingsRestController {
     /**
      * deletes a member in the include group of the Grouping who's path is in 'grouping'
      *
-     * @param grouping:     path to the Grouping who's include group contains the member to be deleted
+     * @param grouping: path to the Grouping who's include group contains the member to be deleted
      * @param userToDelete: username of the user to be deleted from the include group
      * @return information about the success of the operation
      */
@@ -275,7 +266,7 @@ public class GroupingsRestController {
     /**
      * deletes a member in the exclude group of the Grouping who's path is in 'grouping'
      *
-     * @param grouping:     path to the Grouping who's exclude group contains the member to be deleted
+     * @param grouping: path to the Grouping who's exclude group contains the member to be deleted
      * @param userToDelete: username of the user to be deleted from the exclude group
      * @return information about the success of the operation
      */
@@ -319,10 +310,10 @@ public class GroupingsRestController {
      * update privilege allows the user to add/delete the members and owners of a Grouping
      * the user should keep the view privilege
      *
-     * @param grouping:      path to the grouping that the owner to be removed will get privileges revoked from
+     * @param grouping: path to the grouping that the owner to be removed will get privileges revoked from
      * @param ownerToRemove: String containing the username of the Person whos owner privileges are to be revoked
      * @return information about the privileges being removed from the owner and the success of these privilege
-     * assignments
+     *         assignments
      */
     @RequestMapping(value = "/{grouping}/{ownerToRemove}/removeOwnership",
             method = RequestMethod.POST,
@@ -340,12 +331,12 @@ public class GroupingsRestController {
      *
      * @param grouping : String containing the path of the Grouping to be searched for
      * @return the Grouping that was searched for
-     * the Grouping will contain information about
-     * members of each Group in the grouping
-     * owners of the Grouping
-     * name of the Grouping
-     * path of the Grouping
-     * whether or not the Grouping has a list serve associated with it
+     *         the Grouping will contain information about
+     *         members of each Group in the grouping
+     *         owners of the Grouping
+     *         name of the Grouping
+     *         path of the Grouping
+     *         whether or not the Grouping has a list serve associated with it
      */
     @RequestMapping(value = "/{grouping}/grouping",
             method = RequestMethod.GET,
@@ -359,10 +350,10 @@ public class GroupingsRestController {
 
     /**
      * @return a MyGrouping Object that contains
-     * Groupings that the user is in
-     * Groupings that the user owns
-     * Groupings that the user can opt into
-     * Groupings that the user can opt out of
+     *         Groupings that the user is in
+     *         Groupings that the user owns
+     *         Groupings that the user can opt into
+     *         Groupings that the user can opt out of
      */
     @RequestMapping(value = "/groupingAssignment",
             method = RequestMethod.GET,
@@ -413,7 +404,7 @@ public class GroupingsRestController {
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserv
      *
-     * @param grouping:   the path to the Grouping
+     * @param grouping: the path to the Grouping
      * @param listservOn: true if the listserv should be on, false if it should be off
      * @return information about the success of the operation
      */
@@ -439,19 +430,18 @@ public class GroupingsRestController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GroupingsServiceResult> setLdap(Principal principal, @PathVariable String grouping,
-                                                          @PathVariable boolean ldapOn) {
+            @PathVariable boolean ldapOn) {
         logger.info("Entered REST setLdap...");
         return ResponseEntity
                 .ok()
                 .body(groupAttributeService.changeLdapStatus(grouping, principal.getName(), ldapOn));
     }
 
-
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping's members can opt in
      *
      * @param grouping: the path to the Grouping
-     * @param optInOn:  true if the members should be able to opt in, false if not
+     * @param optInOn: true if the members should be able to opt in, false if not
      * @return iformation about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{optInOn}/setOptIn",
