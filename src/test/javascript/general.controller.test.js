@@ -234,11 +234,11 @@ describe("GeneralController", function () {
                 scope.userToAdd = "user8";
             });
 
-            it("should call updateAddMember to add the user", function () {
-                spyOn(scope, "updateAddMember").and.callThrough();
+            it("should create a confirmation modal to add the user", function () {
+                spyOn(scope, "createConfirmAddModal").and.callThrough();
                 scope.addMember("Include");
 
-                expect(scope.updateAddMember).toHaveBeenCalled();
+                expect(scope.createConfirmAddModal).toHaveBeenCalled();
             });
 
             it("should not create a modal asking if the user wants to remove 'user8' from a list", function () {
@@ -255,6 +255,32 @@ describe("GeneralController", function () {
             });
 
             it("should create a modal asking if the user wants to remove 'user1' from the Exclude list", function () {
+                spyOn(scope, "createCheckModal").and.callThrough();
+                scope.addMember("Exclude");
+
+                expect(scope.createCheckModal).toHaveBeenCalled();
+            });
+        });
+
+        describe("user tries to add a blank username to a list", function () {
+            beforeEach(function () {
+                scope.userToAdd = "";
+            });
+
+            it("should create a modal saying to enter a username", function () {
+                spyOn(scope, "createAddModal").and.callThrough();
+                scope.addMember("Include");
+
+                expect(scope.createAddModal).toHaveBeenCalled();
+            });
+        });
+
+        describe("user tries to add 'user5', who is currently in the Exclude list, to the Exclude list", function () {
+            beforeEach(function () {
+                scope.userToAdd = "user5";
+            });
+
+            it("should create a modal saying the user already exists in the list", function () {
                 spyOn(scope, "createCheckModal").and.callThrough();
                 scope.addMember("Exclude");
 
@@ -284,6 +310,43 @@ describe("GeneralController", function () {
             });
 
         });
+    });
+
+    describe("existInList", function () {
+        describe("user tries to add 'user5', who is currently in the Exclude list, to the Exclude list", function () {
+            it("should return true since user5 is being added to the same list", function () {
+                expect(scope.existInList("user5", "Exclude")).toBe(true);
+            });
+        });
+
+        describe("user tries to add 'user1', who is currently in the Include list, to the Include list", function () {
+            it("should return true since user1 is being added ot the same list", function () {
+                expect(scope.existInList("user1", "Include")).toBe(true);
+            });
+        });
+
+        describe("user tries to add 'user8', who is not in any list", function () {
+            it("should return false if trying the user tries to add 'user8' to the Include list", function () {
+                expect(scope.existInList("user8", "Include")).toBe(false);
+            });
+
+            it("should return false if trying the user tries to add 'user8' to the Exclude list", function () {
+                expect(scope.existInList("user8", "Exclude")).toBe(false);
+            });
+        });
+
+        describe("user tries to add 'user2', who is currently in the Include list, to the Exclude list", function () {
+            it("should return false since 'user2' is not being added to the same list", function () {
+                expect(scope.existInList("user2", "Exclude")).toBe(false);
+            });
+        });
+
+        describe("user tries to add 'user4', who is currently in the Exclude list, to the Include list", function () {
+            it("should return false since 'user4' is not being added to the same list", function () {
+                expect(scope.existInList("user4", "Include")).toBe(false);
+            });
+        });
+
     });
 
     describe("returnToGroupingsList", function () {
