@@ -442,7 +442,11 @@ describe("GeneralController", function () {
     describe("showWarningRemovingSelf", function () {
         describe("removing self from a list", function () {
             beforeEach(function () {
-                scope.userToRemove = "jdoe";
+                scope.userToRemove = {
+                    username: "jdoe",
+                    name: "John Doe",
+                    uuid: "12345678"
+                };
             });
 
             it("should warn the user if removing from the owners list", function () {

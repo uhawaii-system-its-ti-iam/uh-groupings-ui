@@ -79,8 +79,8 @@
          * account
          */
         $scope.removeAdmin = function (currentPage, index) {
-            var adminToRemove = $scope.pagedItemsAdmins[currentPage][index].username;
-            var endpoint = BASE_URL + adminToRemove + "/deleteAdmin";
+            var adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+            var endpoint = BASE_URL + adminToRemove.username + "/deleteAdmin";
 
             if ($scope.adminsList.length > 1) {
                 $scope.createRemoveModal({
@@ -113,7 +113,7 @@
 
                 dataProvider.updateData(function () {
                     if ($scope.listName === "admins") {
-                        if ($scope.currentUser === $scope.userToRemove) {
+                        if ($scope.currentUser === $scope.userToRemove.username) {
                             $window.location.href = "home";
                         } else {
                             $scope.init();

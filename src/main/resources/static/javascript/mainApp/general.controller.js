@@ -399,11 +399,11 @@
         $scope.removeMember = function (listName, currentPage, index) {
             var userToRemove;
             if (listName === "Include") {
-                userToRemove = $scope.pagedItemsInclude[currentPage][index].username;
+                userToRemove = $scope.pagedItemsInclude[currentPage][index];
             } else if (listName === "Exclude") {
-                userToRemove = $scope.pagedItemsExclude[currentPage][index].username;
+                userToRemove = $scope.pagedItemsExclude[currentPage][index];
             }
-            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + userToRemove + "/deleteMemberFrom" + listName + "Group";
+            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + userToRemove.username + "/deleteMemberFrom" + listName + "Group";
 
             $scope.createRemoveModal({
                 user: userToRemove,
@@ -418,8 +418,8 @@
          * @param {number} index - the index of the owner clicked by the user
          */
         $scope.removeOwner = function (currentPage, index) {
-            var ownerToRemove = $scope.pagedItemsOwners[currentPage][index].username;
-            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + ownerToRemove + "/removeOwnership";
+            var ownerToRemove = $scope.pagedItemsOwners[currentPage][index];
+            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + ownerToRemove.username + "/removeOwnership";
 
             if ($scope.groupingOwners.length > 1) {
                 $scope.createRemoveModal({
@@ -680,7 +680,7 @@
          * returns false
          */
         $scope.showWarningRemovingSelf = function () {
-            return $scope.currentUser === $scope.userToRemove
+            return $scope.currentUser === $scope.userToRemove.username
                 && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 
