@@ -244,10 +244,7 @@
 
             $scope.checkModalInstance.result.then(function () {
                 $scope.updateAddMember(user, listName, endpoint);
-            }).catch(function () {
-                // Do nothing if the user cancels or clicks the backdrop
             });
-
         };
 
         /**
