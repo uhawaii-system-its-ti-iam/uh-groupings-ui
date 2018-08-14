@@ -182,9 +182,9 @@
 
         /**
          * Initiates the adding of a member to a list.
-         * @param userToAdd - user being added
-         * @param list - the list the user is being added to
-         * @param endpoint - the API call endpoint to add the user
+         * @param {string} userToAdd - user being added
+         * @param {string} list - the list the user is being added to
+         * @param {string} endpoint - the API call endpoint to add the user
          */
         $scope.updateAddMember = function (userToAdd, list, endpoint) {
             dataProvider.updateData(function (res) {
@@ -203,8 +203,8 @@
         };
 
         /**
-         * @param user - the user you are checking to see if they are in another list.
-         * @param list - the list the user is currently being added to
+         * @param {string} user - the user you are checking to see if they are in another list.
+         * @param {string} list - the list the user is currently being added to
          * @returns {boolean} - true if the person is already in another list, else false.
          */
         $scope.isInAnotherList = function (user, list) {
@@ -216,6 +216,11 @@
             return false;
         };
 
+        /**
+         * @param {string} user - the user you are checking to see if they are already in the list being added to
+         * @param {string} list - the list the user is currently being added to
+         * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
+         */
         $scope.existInList = function (user, list) {
             if (list === "Include") {
                 return _.some($scope.groupingInclude, { username: user });
@@ -273,7 +278,8 @@
                     $scope.confirmAddModalInstance.result.then(function () {
                         $scope.updateAddMember(userToAdd, options.listName, options.endpoint);
                     });
-                }).catch(function (res) {
+                })
+                .catch(function (res) {
                     if (res.statusCode === 404) {
                         $scope.createAddModal({ user: userToAdd });
                     }
@@ -345,8 +351,8 @@
          * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
          * @param {object} options - the options object
          * @param {string} options.userToAdd - the user being added
-         * @param {string} options.response - the response from adding a member
-         * @param {string} options.listName - the list where the user was being added to
+         * @param {string?} options.response - the response from adding a member
+         * @param {string?} options.listName - the list where the user was being added to
          */
         $scope.createAddModal = function (options) {
             $scope.user = options.user || "";
