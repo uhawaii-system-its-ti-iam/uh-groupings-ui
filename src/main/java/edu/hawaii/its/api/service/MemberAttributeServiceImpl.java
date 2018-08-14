@@ -6,6 +6,7 @@ import edu.hawaii.its.api.repository.PersonRepository;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.Person;
 
+import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
 import edu.internet2.middleware.grouperClient.ws.beans.WsDeleteMemberResults;
@@ -336,17 +337,14 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
 
     // Returns a user's attributes (FirstName, LastName, etc.) based on the username
     // Not testable with Unit test as needs to connect to Grouper database to work, not mock db
-    public Map<String, String> getUserAttributes(String username) {
+    public Map<String, String> getUserAttributes(String username) throws GcWebServiceError {
 
         WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(username);
 
         WsGetSubjectsResults results = grouperFS.makeWsGetSubjectsResults(lookup);
         WsSubject[] subjects = results.getWsSubjects();
 
-        if (subjects[0].getSuccess().equals("F")) {
-            return null;
-        } else {
-
+        try {
             String[] attributeValues = subjects[0].getAttributeValues();
             Map<String, String> mapping = new HashMap<String, String>();
 
@@ -357,6 +355,8 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
 
             return mapping;
 
+        } catch (NullPointerException npe) {
+            throw new GcWebServiceError("Error 404 Not Found");
         }
     }
 

@@ -14,6 +14,8 @@ import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 
+import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
+
 @ControllerAdvice
 public class ErrorControllerAdvice {
 
@@ -26,6 +28,12 @@ public class ErrorControllerAdvice {
 
     @Autowired
     private UserContextService userContextService;
+
+    @ExceptionHandler (GcWebServiceError.class)
+    public ResponseEntity<GroupingsHTTPException>
+    handleGcWebServiceError(GcWebServiceError gce) {
+        return exceptionResponse(gce.getMessage(), gce, 404);
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<GroupingsHTTPException> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
