@@ -117,9 +117,9 @@ td.uh-pre {
 }
 
 .card {
-    padding-right: 2em;
-    padding-left: 2em;
+    padding: 2.5em;
 }
+
 
 .uh-branding-one {
     font-family: cinzel-regular, serif;
@@ -138,14 +138,13 @@ td.uh-pre {
 
 .navbar {
     background-color: white;
+    padding-top: 0;
 }
 
 .navbar-fixed-top .nav {
-    padding-top: 40px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
+    padding: 0px;
     background-color: white;
+    height: 110px;
 }
 
 .navbar-fixed-top .navbar-brand {
@@ -168,7 +167,7 @@ td.uh-pre {
     width: auto;
     padding-top: 10px;
     padding-left: 0;
-    background-color: transparent;
+    background-color: red;
 
     font-family: alegreyasans-regular, opensans-regular, serif;
     font-weight: normal;
@@ -331,7 +330,7 @@ td.uh-pre {
     .navbar-brand.uh-nav-app-name {
         height: 90px;
         width: auto;
-        padding-left: 20px;
+        padding-left: 0;
         padding-top: 51px;
         color: #BD9319;
         background-color: transparent;
@@ -343,6 +342,10 @@ td.uh-pre {
 
     .navbar-brand.uh-nav-app-name:hover {
         color: #B08A17;
+    }
+
+    .navbar-collapse {
+        padding-top: 1em;
     }
 
     .uh-branding-one {
