@@ -120,6 +120,11 @@ td.uh-pre {
     padding: 2.5em;
 }
 
+.card.card-tab-content {
+    padding: 0;
+    border: 0;
+}
+
 
 .uh-branding-one {
     font-family: cinzel-regular, serif;
