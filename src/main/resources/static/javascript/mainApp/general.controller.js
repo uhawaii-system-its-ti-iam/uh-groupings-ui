@@ -69,7 +69,6 @@
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/grouping";
 
             dataProvider.loadData(function (res) {
-                console.log(res);
                 if (_.isNull(res)) {
                     $scope.createApiErrorModal();
                 } else {
