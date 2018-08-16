@@ -21,7 +21,7 @@ public class AdminListsHolderTest {
 
     @Test
     public void nullTest(){
-        assertNotNull(adminListHolder);;
+        assertNotNull(adminListHolder);
         assertThat(adminListHolder.getAllGroupings().toString(), equalTo("[]"));
         assertThat(adminListHolder.getAdminGroup().toString(), equalTo("Group [path=, members=[]]"));
     }

@@ -1,4 +1,3 @@
-/*//package edu.hawaii.its.groupings.access;
 package edu.hawaii.its.serivce;
 
 import org.junit.Before;
@@ -17,6 +16,7 @@ import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.groupings.access.AuthorizationServiceImpl;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResult;
@@ -111,14 +111,15 @@ public class AuthorizationServiceImplTest {
     GroupingAssignmentService groupingAssignmentService;
 
     @Autowired
-*//*    private AuthorizationServiceImpl authorizationserviceimpl;*//*
+    private AuthorizationServiceImpl authorizationserviceimpl;
 
     @Autowired
     public Environment env;
 
     @Before
     public void setup() {
-*//*        new DatabaseSetup(personRepository, groupRepository, groupingRepository, membershipRepository);*//*
+
+/*        new DatabaseSetup(personRepository, groupRepository, groupingRepository, membershipRepository);*/
 
         admins.add(ADMIN_PERSON);
         Group adminGroup = new Group(GROUPING_ADMINS, admins);
@@ -155,4 +156,4 @@ public class AuthorizationServiceImplTest {
     public void fetchTest() {
 
     }
-}*/
+}

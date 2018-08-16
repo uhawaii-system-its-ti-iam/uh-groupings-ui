@@ -214,7 +214,7 @@
             return false;
         };
 
-        $scope.existInList = function (user,list) {
+        $scope.existInList = function (user, list) {
             if (list === "Include") {
                 return _.some($scope.groupingInclude, { username: user });
             }
@@ -249,21 +249,21 @@
         };
 
         /**
-        *  Creates a modal that asks for confirmation when adding a user.
-        *  @param userToAdd - Username of the person being added
-        *  @param listName, string - name of the list the person is being added to
-        **/
-        $scope.createConfirmAddModal = function(userToAdd, listName) {
-            var endpoint = BASE_URL+"members/"+userToAdd;
+         *  Creates a modal that asks for confirmation when adding a user.
+         *  @param userToAdd - Username of the person being added
+         *  @param listName, string - name of the list the person is being added to
+         **/
+        $scope.createConfirmAddModal = function (userToAdd, listName) {
+            var endpoint = BASE_URL + "members/" + userToAdd;
             dataProvider.loadData(
-                function(res) {
+                function (res) {
                     $scope.uidToAdd = res.uid;
                     $scope.uhuuidToAdd = res.uhuuid;
                     $scope.nameToAdd = res.cn;
                     $scope.listName = listName;
                 },
                 function (res) {
-                    dataProvider.handleException({exceptionMessage: res.exceptionMessage },"feedback/error","feedback");
+                    dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
                 },
                 endpoint);
         };
@@ -281,18 +281,18 @@
         $scope.closeCheckModal = function () {
             $scope.checkModalInstance.dismiss();
         };
-        
+
         /**
-        * ConfirmAddModal "Yes" button
-        */
-        $scope.proceedConfirmAddUser = function() {
+         * ConfirmAddModal "Yes" button
+         */
+        $scope.proceedConfirmAddUser = function () {
             $scope.confirmAddModalInstance.close();
         };
 
         /**
-        * ConfirmAddModal "Cancel" button
-        */
-        $scope.cancelConfirmAddUser = function() {
+         * ConfirmAddModal "Cancel" button
+         */
+        $scope.cancelConfirmAddUser = function () {
             $scope.confirmAddModalInstance.dismiss();
         };
         /**
@@ -575,7 +575,7 @@
                 }
             }, function (res) {
                 console.log("Error, Status Code: " + res.statusCode);
-            },  endpoint);
+            }, endpoint);
 
 
         };
@@ -599,6 +599,50 @@
 
         $scope.resetFields = function () {
             $scope.userToAdd = "";
+        };
+
+        /**
+         * Create preference checkbox modal.
+         */
+        $scope.createPreferenceCheckboxModal = function () {
+                $scope.preferenceCheckboxModalInstance = $uibModal.open({
+                    templateUrl: "modal/checkModal.html",
+                    scope: $scope
+                });
+
+        };
+
+        $scope.proceedPreferenceCheckboxModal = function () {
+            $scope.allowOptOut = !$scope.allowOptOut;
+            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
+            dataProvider.updateData(function (res) {
+                if (!_.isUndefined(res.statusCode)) {
+                    console.log("Error, Status Code: " + res.statusCode);
+                    $scope.createPreferenceErrorModal();
+                } else if (_.startsWith(res[0].resultCode), "SUCCESS") {
+                    console.log("success");
+                }
+            }, function (res) {
+                console.log("Error, Status Code: " + res.statusCode);
+            }, endpoint);
+            $scope.preferenceCheckboxModalInstance.close();
+            return true;
+        };
+
+        $scope.closePreferenceCheckboxModal = function () {
+            $scope.preferenceCheckboxModalInstance.dismiss();
+        };
+
+        $scope.confirmPref = function () {
+            if($scope.allowOptOut === true){
+                event.preventDefault();
+                return true;
+            }
+            else{
+                event.preventDefault();
+                return false;
+            }
+/*          return $scope.allowOptout === true ? true : false;*/
         };
 
         /**
