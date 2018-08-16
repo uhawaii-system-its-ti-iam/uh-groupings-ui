@@ -377,6 +377,7 @@
 
             $scope.addModalInstance.result.finally(function () {
                 if ($scope.wasSuccessful) {
+                    clearAddMemberInput(options.listName);
                     $scope.loading = true;
                     if ($scope.listName === "admins") {
                         // Refreshes the groupings list and the admins list
@@ -469,6 +470,7 @@
             resetGroupingMembers();
             resetPillsToAllMembers();
             resetFilterQueries();
+            clearAddMemberInput();
             $scope.columnSort = {};
         };
 
@@ -518,6 +520,29 @@
             $scope.includeQuery = "";
             $scope.membersQuery = "";
             $scope.groupingsQuery = "";
+        }
+
+        /**
+         * Clears the user input for adding a member to a list.
+         * @param {string?} listName - the name of the list the member is being added to
+         */
+        function clearAddMemberInput(listName) {
+            switch (listName) {
+                case "Include":
+                case "Exclude":
+                    $scope.userToAdd = "";
+                    break;
+                case "owners":
+                    $scope.ownerToAdd = "";
+                    break;
+                case "admins":
+                    $scope.adminToAdd = "";
+                    break;
+                default:
+                    $scope.userToAdd = "";
+                    $scope.ownerToAdd = "";
+                    $scope.adminToAdd = "";
+            }
         }
 
         /**
