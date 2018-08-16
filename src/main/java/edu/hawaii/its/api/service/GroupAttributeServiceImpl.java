@@ -1,23 +1,20 @@
 package edu.hawaii.its.api.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignGrouperPrivilegesLiteResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service("groupAttributeService")
 public class GroupAttributeServiceImpl implements GroupAttributeService {
@@ -272,7 +269,8 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         } else {
             gsr = hs.makeGroupingsServiceResult(
                     FAILURE + ", " + ownerUsername + "does not have permission to set " + attributeName
-                            + " because " + ownerUsername + " does not own " + groupPath, action);
+                            + " because " + ownerUsername + " does not own " + groupPath,
+                    action);
         }
 
         return gsr;

@@ -1,8 +1,24 @@
 package edu.hawaii.its.api.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
 import edu.hawaii.its.api.repository.GroupRepository;
 import edu.hawaii.its.api.repository.GroupingRepository;
 import edu.hawaii.its.api.repository.MembershipRepository;
@@ -13,28 +29,11 @@ import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingAssignment;
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResult;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -184,16 +183,7 @@ public class GroupingAssignmentServiceTest {
     }
 
     @Test
-    public void groupingsToOptTest() {
-        GroupingAssignment myGroupings = groupingAssignmentService.getGroupingAssignment(users.get(1).getUsername());
-
-        //todo finish
-
-    }
-
-    @Test
     public void groupingsInTest() {
-
         Iterable<Group> groupsIn = groupRepository.findByMembersUsername(users.get(6).getUsername());
         List<String> groupPaths = new ArrayList<>();
         List<String> supposedGroupings = new ArrayList<>();
@@ -201,6 +191,7 @@ public class GroupingAssignmentServiceTest {
         for (Group group : groupsIn) {
             groupPaths.add(group.getPath());
         }
+
         supposedGroupings
                 .addAll(groupPaths.stream().filter(groupPath -> groupPath.matches("[a-zA-Z0-9:]*grouping[0-9]*"))
                         .collect(Collectors.toList()));
@@ -211,6 +202,7 @@ public class GroupingAssignmentServiceTest {
         for (String path : supposedGroupings) {
             assertTrue(groupingPaths.contains(path));
         }
+
         for (Grouping grouping : groupingsIn) {
             assertTrue(supposedGroupings.contains(grouping.getPath()));
         }
@@ -399,7 +391,6 @@ public class GroupingAssignmentServiceTest {
         subjects[0] = new WsSubject();
         getMembersResults.getResults()[0].setWsSubjects(subjects);
         assertNotNull(groupingAssignmentService.makeGroup(getMembersResults));
-
     }
 
     @Test
@@ -455,4 +446,3 @@ public class GroupingAssignmentServiceTest {
     }
 
 }
-

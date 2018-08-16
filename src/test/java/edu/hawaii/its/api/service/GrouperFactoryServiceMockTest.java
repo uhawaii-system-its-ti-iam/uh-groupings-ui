@@ -1,40 +1,33 @@
 package edu.hawaii.its.api.service;
 
-import org.junit.Before;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import edu.hawaii.its.api.type.Group;
-import edu.hawaii.its.api.type.Person;
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-import edu.hawaii.its.groupings.util.Dates;
-
-import edu.internet2.middleware.grouperClient.ws.beans.*;
-
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.util.Dates;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssign;
+import edu.internet2.middleware.grouperClient.ws.beans.WsAttributeAssignValue;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroupLookup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsStemLookup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 @WebAppConfiguration
 public class GrouperFactoryServiceMockTest {
 
     GrouperFactoryServiceImpl gfs = new GrouperFactoryServiceImpl();
-
-    //todo
-    @Test
-    public void addEmptyGroupTest() {
-    }
 
     @Test
     public void makeWsSubjectLookupTest() {
@@ -63,11 +56,6 @@ public class GrouperFactoryServiceMockTest {
         assertEquals(stemUuid, stemLookup.getUuid());
     }
 
-    //todo
-    @Test
-    public void makeWsStemSaveResultsTest() {
-    }
-
     @Test
     public void makeWsAttributeAssignValueTest() {
         String time = Dates.formatDate(LocalDateTime.now(), "yyyyMMdd'T'HHmm");
@@ -76,129 +64,11 @@ public class GrouperFactoryServiceMockTest {
         assertEquals(time, attributeAssignValue.getValueSystem());
     }
 
-    //todo
-    @Test
-    public void makeWsAddMemberResultsWithLookupTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsAddMemberResultsWithListTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsAddMemberResultsTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsDeleteMemberResultsTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsDeleteMemberResultsTestWithSubjectLookup() {
-    }
-
-    //todo
-    @Test
-    public void makeWsDeleteMemberResultsWithListTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsGetAttributeAssignmentsResultsTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsGetAttributeAssignmentsResultsTrioTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsGetAttributeAssignmentsResultsTrioWithListTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsGetAttributeAssignmentsResultsTrioWithTwoAttributeDefNamesTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsGetAttributeAssignmentsResultsForMembershipTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsGetAttributeAssignmentsResultsForGroupTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsGetAttributeAssignmentsResultsForGroupWithAttributeDefNameTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsHasMemberResultsTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsAssignAttributesReultsTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsAssignAttributesResultsForMembershipTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsAssignAttributesResultsForGroupTest() {
-    }
-
-    //todo
-    @Test
-    public void makeWsAssignAttributesResultsForGroup() {
-    }
-
-    //todo
-    @Test
-    public void makeWsAssignGrouperPrivilegesLiteResult() {
-    }
-
-    //todo
-    @Test
-    public void makeWsGetGrouperPrivilegesLiteResult() {
-    }
-
-    //todo
-    @Test
-    public void makeWsGetMembershipsResults() {
-    }
-
-    //todo
-    @Test
-    public void makeWsGetMembersResults() {
-    }
-
-
-    //todo
-    @Test
-    public void makeWsGetGroupsResults() {
-    }
-
-
     @Test
     public void makeEmptyWsAttributeAssignArrayTest() {
         WsAttributeAssign[] emptyAttributeAssigns = new WsAttributeAssign[0];
         assertTrue(Arrays.equals(emptyAttributeAssigns, gfs.makeEmptyWsAttributeAssignArray()));
     }
-
 
     @Test
     public void toStringTest() {

@@ -4,8 +4,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.*;
-import javax.print.DocFlavor;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Proxy;
 
@@ -13,15 +16,18 @@ import org.hibernate.annotations.Proxy;
 @Proxy(lazy = false)
 public class Person implements Comparable<Person> {
 
-    //todo get these strings to work from a config file, or just wait until we remove the values in a week or two?
     @Transient
     private static String COMPOSITE_NAME = "cn";
+
     @Transient
     private static String FIRST_NAME = "givenName";
+
     @Transient
     private static String LAST_NAME = "sn";
+
     @Transient
     private static String UUID = "uuid";
+
     @Transient
     private static String USERNAME = "uid";
 
@@ -162,7 +168,8 @@ public class Person implements Comparable<Person> {
             return false;
         if (uuid == null) {
             return other.getUuid() == null;
-        } else return uuid.equals(other.getUuid());
+        } else
+            return uuid.equals(other.getUuid());
     }
 
     @Override

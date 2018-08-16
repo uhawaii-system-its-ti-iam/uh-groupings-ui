@@ -1,26 +1,18 @@
 package edu.hawaii.its.api.service;
 
-import edu.hawaii.its.api.type.Group;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
-import edu.hawaii.its.api.type.Person;
-
-import edu.internet2.middleware.grouperClient.ws.StemScope;
-import edu.internet2.middleware.grouperClient.ws.beans.WsFindGroupsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGetGroupsResults;
-import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsStemLookup;
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.internet2.middleware.grouperClient.ws.beans.WsFindGroupsResults;
+import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @Service("groupingFactoryService")
 public class GroupingFactoryServiceImpl implements GroupingFactoryService {
@@ -231,7 +223,7 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
             addGroupingResults.addAll(membershipService.addGroupMembersByUsername(adminUsername,
                     groupPath, entry.getValue()));
 
-            if(groupingPath.equals(groupPath)) {
+            if (groupingPath.equals(groupPath)) {
                 //todo create is-trio attribute
             }
 
@@ -241,10 +233,10 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
         }
 
         WsSubjectLookup lookup = grouperFactoryService.makeWsSubjectLookup(adminUsername);
-        WsStemLookup stemLookup = grouperFactoryService.makeWsStemLookup(STEM);
+        grouperFactoryService.makeWsStemLookup(STEM); // FIXME: Is this needed?
         String basisUid = getGroupId(groupingPath + BASIS);
         String includeUid = getGroupId(groupingPath + INCLUDE);
-        String excludeUid = getGroupId(groupingPath + EXCLUDE);
+        getGroupId(groupingPath + EXCLUDE); // FIXME: Is this needed?
         String basisPlusIncludeUid = getGroupId(groupingPath + BASIS_PLUS_INCLUDE);
 
         //add memberships for BASIS_PLUS_INCLUDE (basis group and include group)
@@ -270,82 +262,17 @@ public class GroupingFactoryServiceImpl implements GroupingFactoryService {
                 ASSIGN_TYPE_GROUP,
                 OPERATION_ASSIGN_ATTRIBUTE,
                 TRIO,
-                groupingPath
-        );
+                groupingPath);
 
         return addGroupingResults;
     }
 
-    @Override public List<GroupingsServiceResult> deleteGrouping(String adminUsername, String groupingPath) {
+    @Override
+    public List<GroupingsServiceResult> deleteGrouping(String adminUsername, String groupingPath) {
+        // Todo implement this once we have the ability to make groupings
+        // we do not want to delete stuff that we can't bring back.
 
-        //Todo implement this once we have the ability to make groupings
-        //we don't want to delete stuff that we can't bring back
-
-        //        List<GroupingsServiceResult> deleteGroupingResults = new ArrayList<>();
-        //        if (isAdmin(username)) {
-        //            deleteGroupingResults.add(assignGroupAttributes(username, PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
-        //            deleteGroupingResults.add(assignGroupAttributes(username, TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
-        //        } else if (isApp(username)) {
-        //            deleteGroupingResults.add(assignGroupAttributes(PURGE_GROUPING, OPERATION_ASSIGN_ATTRIBUTE, groupingPath));
-        //            deleteGroupingResults.add(assignGroupAttributes(TRIO, OPERATION_REMOVE_ATTRIBUTE, groupingPath));
-        //        } else {
-        //            GroupingsServiceResult failureResult = makeGroupingsServiceResult(FAILURE, "delete grouping" + groupingPath);
-        //
-        //            deleteGroupingResults.add(failureResult);
-        //        }
-        //        return deleteGroupingResults;
         throw new UnsupportedOperationException();
-    }
-
-    //set of elements in list0 or list1
-    private List<String> union(List<String> list0, List<String> list1) {
-
-        if (list0 == null) {
-            return list1 != null ? list1 : new ArrayList<>();
-        }
-
-        //remove duplicates
-        Set<String> treeSet = new TreeSet<>(list0);
-        treeSet.addAll(list1);
-
-        return new ArrayList<>(treeSet);
-    }
-
-    //set of elements in list0, but not in list1
-    private List<String> complement(List<String> list0, List<String> list1) {
-        if (list0 == null) {
-            return new ArrayList<>();
-        }
-
-        if (list1 == null) {
-            return list0;
-        }
-
-        list0.removeAll(list1);
-        return list0;
-    }
-
-    //set of elements in both list0 and list1
-    private List<String> intersection(List<String> list0, List<String> list1) {
-        if (list0 == null || list1 == null) {
-            return new ArrayList<>();
-        }
-
-        list0.retainAll(list1);
-        return new ArrayList<>(list0);
-
-    }
-
-    //returns a group of Persons that have usernames from usernames
-    //all other values will be left null
-    private Group makeGroup(String groupPath, List<String> usernames) {
-        List<Person> people = new ArrayList<>();
-
-        for (String username : usernames) {
-            people.add(new Person(null, null, username));
-        }
-
-        return new Group(groupPath, people);
     }
 
     //returns true if there is not a group at groupingPath

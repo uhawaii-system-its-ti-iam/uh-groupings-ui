@@ -1,8 +1,24 @@
 package edu.hawaii.its.api.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
 import edu.hawaii.its.api.repository.GroupRepository;
 import edu.hawaii.its.api.repository.GroupingRepository;
 import edu.hawaii.its.api.repository.MembershipRepository;
@@ -14,24 +30,7 @@ import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.Person;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -152,9 +151,7 @@ public class MembershipServiceTest {
     // Use assert to check if it worked
     @Test
     public void deleteGroupingMemberByUuidTest() {
-        Iterable<Grouping> group = groupingRepository.findAll();
         List<GroupingsServiceResult> listGsr;
-        GroupingsServiceResult gsr;
 
         // Base test
         // Remove person from include and composite
@@ -184,7 +181,7 @@ public class MembershipServiceTest {
                     users.get(6).getUuid());
             assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
         } catch (GroupingsServiceResultException gsre) {
-            gsr = gsre.getGsr();
+            gsre.getGsr();
         }
 
         // Test if user is admin
@@ -195,9 +192,7 @@ public class MembershipServiceTest {
 
     @Test
     public void addGroupingMemberbyUuidTest() {
-        Iterable<Grouping> group = groupingRepository.findAll();
         List<GroupingsServiceResult> listGsr;
-        GroupingsServiceResult gsr;
 
         // Base test
         // Remove person who's not in composite from exclude and return SUCCESS
@@ -220,7 +215,7 @@ public class MembershipServiceTest {
                     users.get(3).getUuid());
             assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
         } catch (GroupingsServiceResultException gsre) {
-            gsr = gsre.getGsr();
+            gsre.getGsr();
         }
 
         // Test if user is admin
@@ -231,9 +226,7 @@ public class MembershipServiceTest {
 
     @Test
     public void addGroupingMemberbyUsernameTest() {
-        Iterable<Grouping> group = groupingRepository.findAll();
         List<GroupingsServiceResult> listGsr;
-        GroupingsServiceResult gsr;
 
         // Base test
         // Remove person who's not in composite from exclude and return SUCCESS
@@ -256,7 +249,7 @@ public class MembershipServiceTest {
                     users.get(3).getUsername());
             assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
         } catch (GroupingsServiceResultException gsre) {
-            gsr = gsre.getGsr();
+            gsre.getGsr();
         }
 
         // Test if user is admin
@@ -267,9 +260,7 @@ public class MembershipServiceTest {
 
     @Test
     public void deleteGroupingMemberbyUsernameTest() {
-        Iterable<Grouping> group = groupingRepository.findAll();
         List<GroupingsServiceResult> listGsr;
-        GroupingsServiceResult gsr;
 
         // Base test
         // Remove person from include and composite
@@ -299,7 +290,7 @@ public class MembershipServiceTest {
                     users.get(6).getUuid());
             assertTrue(listGsr.get(0).getResultCode().startsWith(SUCCESS));
         } catch (GroupingsServiceResultException gsre) {
-            gsr = gsre.getGsr();
+            gsre.getGsr();
         }
 
         // Test if user is admin
@@ -422,31 +413,31 @@ public class MembershipServiceTest {
 
     @Test
     public void removeSelfOptedTest() {
-            Group group = groupRepository.findByPath(GROUPING_4_EXCLUDE_PATH);
+        Group group = groupRepository.findByPath(GROUPING_4_EXCLUDE_PATH);
 
-            GroupingsServiceResult gsr;
+        GroupingsServiceResult gsr;
 
-            try {
-                //member is not in group
-                gsr = membershipService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(5).getUsername());
-            } catch (GroupingsServiceResultException gsre) {
-                gsr = gsre.getGsr();
-            }
-            assertTrue(gsr.getResultCode().startsWith(FAILURE));
-
-            //member is not self-opted
-            gsr = membershipService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(4).getUsername());
-            assertTrue(gsr.getResultCode().startsWith(SUCCESS));
-
-            //make member self-opted
-            Membership membership = membershipRepository.findByPersonAndGroup(users.get(4), group);
-            membership.setSelfOpted(true);
-            membershipRepository.save(membership);
-
-            //member is self-opted
-            gsr = membershipService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(4).getUsername());
-            assertTrue(gsr.getResultCode().startsWith(SUCCESS));
+        try {
+            //member is not in group
+            gsr = membershipService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(5).getUsername());
+        } catch (GroupingsServiceResultException gsre) {
+            gsr = gsre.getGsr();
         }
+        assertTrue(gsr.getResultCode().startsWith(FAILURE));
+
+        //member is not self-opted
+        gsr = membershipService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(4).getUsername());
+        assertTrue(gsr.getResultCode().startsWith(SUCCESS));
+
+        //make member self-opted
+        Membership membership = membershipRepository.findByPersonAndGroup(users.get(4), group);
+        membership.setSelfOpted(true);
+        membershipRepository.save(membership);
+
+        //member is self-opted
+        gsr = membershipService.removeSelfOpted(GROUPING_4_EXCLUDE_PATH, users.get(4).getUsername());
+        assertTrue(gsr.getResultCode().startsWith(SUCCESS));
+    }
 
     @Test
     public void groupOptOutPermissionTest() {

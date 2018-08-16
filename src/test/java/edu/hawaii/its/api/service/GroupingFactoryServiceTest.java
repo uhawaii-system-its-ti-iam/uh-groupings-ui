@@ -1,19 +1,13 @@
 package edu.hawaii.its.api.service;
 
+import static org.junit.Assert.assertNotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import edu.hawaii.its.api.repository.GroupRepository;
-import edu.hawaii.its.api.repository.GroupingRepository;
-import edu.hawaii.its.api.repository.MembershipRepository;
-import edu.hawaii.its.api.repository.PersonRepository;
-import edu.hawaii.its.api.type.Group;
-import edu.hawaii.its.api.type.Person;
-
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-
-import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,10 +16,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
+import edu.hawaii.its.api.repository.GroupRepository;
+import edu.hawaii.its.api.repository.GroupingRepository;
+import edu.hawaii.its.api.repository.MembershipRepository;
+import edu.hawaii.its.api.repository.PersonRepository;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Person;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -111,7 +109,6 @@ public class GroupingFactoryServiceTest {
 
     @Test
     public void construction() {
-        //autowired
         assertNotNull(groupingsService);
     }
 
@@ -119,10 +116,4 @@ public class GroupingFactoryServiceTest {
     public void deleteGroupingTest() {
         groupingsService.deleteGrouping(users.get(0).getUsername(), GROUPING_4_PATH);
     }
-
-    //todo fill this in after changes to addGrouping method
-    @Test
-    public void addGrouping() {
-    }
 }
-
