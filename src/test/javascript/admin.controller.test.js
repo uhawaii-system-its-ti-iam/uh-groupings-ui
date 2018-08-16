@@ -99,7 +99,7 @@ describe("AdminController", function () {
         expect(scope.updateAllowOptOut).toBeDefined();
         expect(scope.updateAllowOptIn).toBeDefined();
         expect(scope.updateListserv).toBeDefined();
-        expect(scope.checkLdap).toBeDefined();
+        expect(scope.updateLdap).toBeDefined();
         expect(scope.createPreferenceErrorModal).toBeDefined();
         expect(scope.closePreferenceError).toBeDefined();
         expect(scope.resetFields).toBeDefined();
@@ -111,5 +111,34 @@ describe("AdminController", function () {
     it("should correctly set the currentUser", function () {
         expect(scope.currentUser).toEqual("jdoe");
     });
+
+    describe("displayAdmins", function () {
+        it("should call resetGroupingInformation", function () {
+            spyOn(scope, "resetGroupingInformation").and.callThrough();
+            scope.displayAdmins();
+
+            expect(scope.resetGroupingInformation).toHaveBeenCalled();
+        });
+
+        it("should repaginate the groupings list table (since the filter is reset)", function () {
+            spyOn(scope, "groupToPages").and.callThrough();
+            scope.displayAdmins();
+
+            expect(scope.groupToPages).toHaveBeenCalledWith(scope.groupingsList);
+        });
+
+        describe("a user is currently looking at a selected grouping", function () {
+            beforeEach(function () {
+                scope.showGrouping = true;
+            });
+
+            it("should no longer show the selected grouping", function () {
+                scope.displayAdmins();
+
+                expect(scope.showGrouping).toBe(false);
+            });
+        });
+    });
+
 
 });

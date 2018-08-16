@@ -74,22 +74,22 @@
                 } else {
                     //Gets members in the basis group
                     $scope.groupingBasis = _.sortBy(res.basis.members, "name");
-                    $scope.pagedItemsBasis = $scope.groupToPages($scope.groupingBasis);
+                    $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
 
                     //Gets members in the include group
                     $scope.groupingInclude = _.sortBy(res.include.members, "name");
                     $scope.addInBasis($scope.groupingInclude);
-                    $scope.pagedItemsInclude = $scope.groupToPages($scope.groupingInclude);
+                    $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
 
                     //Gets members in the exclude group
                     $scope.groupingExclude = _.sortBy(res.exclude.members, "name");
                     $scope.addInBasis($scope.groupingExclude);
-                    $scope.pagedItemsExclude = $scope.groupToPages($scope.groupingExclude);
+                    $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
 
                     //Gets members in grouping
                     $scope.groupingMembers = _.sortBy(res.composite.members, "name");
                     $scope.addWhereListed($scope.groupingMembers);
-                    $scope.pagedItemsMembers = $scope.groupToPages($scope.groupingMembers);
+                    $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
 
                     //Gets owners of the grouping
                     $scope.groupingOwners = _.sortBy(res.owners.members, "name");

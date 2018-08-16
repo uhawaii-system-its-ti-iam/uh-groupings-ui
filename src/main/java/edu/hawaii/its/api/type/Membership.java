@@ -1,8 +1,12 @@
 package edu.hawaii.its.api.type;
 
-import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
-import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class Membership implements Comparable<Membership> {
@@ -28,8 +32,9 @@ public class Membership implements Comparable<Membership> {
     @Column
     private boolean optOutEnabled = false;
 
+    // Constructor.
     public Membership() {
-
+        // Empty.
     }
 
     public Membership(Person person, Group group) {
@@ -92,7 +97,7 @@ public class Membership implements Comparable<Membership> {
 
     @Override
     public int compareTo(Membership membership) {
-        if(membership != null) {
+        if (membership != null) {
             int idComp = membership.getId() != null ? getId().compareTo(membership.getId()) : -1;
             int personComp = membership.getPerson() != null ? getPerson().compareTo(membership.getPerson()) : -1;
             int groupComp = membership.getGroup() != null ? getGroup().compareTo(membership.getGroup()) : -1;

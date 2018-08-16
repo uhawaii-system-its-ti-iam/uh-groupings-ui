@@ -39,10 +39,10 @@
                     $scope.createApiErrorModal();
                 } else {
                     $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
-                    $scope.pagedItemsMemberships = $scope.groupToPages($scope.membershipsList);
+                    $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery);
 
                     $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
-                    $scope.pagedItemsOptInList = $scope.groupToPages($scope.optInList);
+                    $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery);
 
                     $scope.optOutList = res.groupingsToOptOutOf;
                 }

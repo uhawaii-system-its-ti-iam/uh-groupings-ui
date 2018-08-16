@@ -21,7 +21,6 @@ import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.Person;
-
 import edu.internet2.middleware.grouperClient.ws.StemScope;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAddMemberResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsAssignAttributesResults;
@@ -429,6 +428,7 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         return wsDeleteMemberResults;
     }
 
+    @Override
     public WsDeleteMemberResults makeWsDeleteMemberResults(String group, WsSubjectLookup lookup,
             List<String> membersToDelete) {
         WsDeleteMemberResults wsDeleteMemberResults = new WsDeleteMemberResults();
@@ -694,24 +694,13 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         }
 
         if (onOrrOff != null) {
-            if (attributeDefNameName.equals(LISTSERV))
-
-            {
+            if (attributeDefNameName.equals(LISTSERV)) {
                 grouping.setListservOn(onOrrOff);
-
-            } else if (attributeDefNameName.equals(LDAP))
-
-            {
+            } else if (attributeDefNameName.equals(LDAP)) {
                 grouping.setLdapOn(onOrrOff);
-
-            } else if (attributeDefNameName.equals(OPT_IN))
-
-            {
+            } else if (attributeDefNameName.equals(OPT_IN)) {
                 grouping.setOptInOn(onOrrOff);
-
-            } else if (attributeDefNameName.equals(OPT_OUT))
-
-            {
+            } else if (attributeDefNameName.equals(OPT_OUT)) {
                 grouping.setOptOutOn(onOrrOff);
             }
         }
@@ -1158,12 +1147,14 @@ public class GrouperFactoryServiceImplLocal implements GrouperFactoryService {
         return "GrouperFactoryServiceImplLocal [SETTINGS=" + SETTINGS + "]";
     }
 
+    @Override
     public WsGetSubjectsResults makeWsGetSubjectsResults(WsSubjectLookup lookup) {
         //todo Not needed for getUserAttributes function, will implement if necessary
         return null;
     }
 
-    @Override public WsGroupSaveResults addCompositeGroup(String username, String parentGroupPath, String compositeType,
+    @Override
+    public WsGroupSaveResults addCompositeGroup(String username, String parentGroupPath, String compositeType,
             String leftGroupPath, String rightGroupPath) {
         //todo
         return null;

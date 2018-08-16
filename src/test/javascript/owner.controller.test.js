@@ -99,7 +99,7 @@ describe("OwnerController", function () {
         expect(scope.updateAllowOptOut).toBeDefined();
         expect(scope.updateAllowOptIn).toBeDefined();
         expect(scope.updateListserv).toBeDefined();
-        expect(scope.checkLdap).toBeDefined();
+        expect(scope.updateLdap).toBeDefined();
         expect(scope.createPreferenceErrorModal).toBeDefined();
         expect(scope.closePreferenceError).toBeDefined();
         expect(scope.resetFields).toBeDefined();
