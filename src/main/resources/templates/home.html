@@ -42,9 +42,9 @@
         <div th:utext="#{screen.message.home.page.moreInformation}"></div>
     </div>
 
-    <div class="row pl-2 pr-2" id="home-dashboard">
-        <div class="card bg-dashboard border-light" sec:authorize="hasAnyRole('ROLE_UH', 'ROLE_ADMIN', 'ROLE_OWNER')">
-            <div class="card-body pl-0 pr-0">
+    <div class="row" id="home-dashboard">
+        <div class="card bg-dashboard border-light p-0" sec:authorize="hasAnyRole('ROLE_UH', 'ROLE_ADMIN', 'ROLE_OWNER')">
+            <div class="card-body">
                 <div class="row" sec:authorize="isAuthenticated()">
                     <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
                         <p class="h5" style="margin-top: 0;">Administration</p>

@@ -216,6 +216,8 @@ td.uh-pre {
 #home-dashboard {
     margin-top: 2rem;
     margin-bottom: 2rem;
+    padding-left: .75rem;
+    padding-right: .75rem;
 }
 
 #home-dashboard .bg-dashboard {
