@@ -10,55 +10,59 @@
 <div class="container">
     <div class="jumbotron">
         <div class="row">
-            <div class="col-md-2 col-lg-2 hidden-xs hidden-sm" id="iconTop">
-                <!-- <i class="fa fa-users fa-5x" aria-hidden="true" ></i> -->
-                <img class="img-responsive" th:src="@{/images/grouper-users-icon-02.png}"
-                     src="images/grouper-users-icon-02.png" alt="" id="groupings-icon"></img>
+            <div class="col-lg-2 col-md-3 col-sm-4 d-sm-inline-flex d-none justify-content-end align-middle">
+                <img class="img-responsive" id="uh-groupings-icon" th:src="@{/images/grouper-users-icon-02.png}"
+                     src="images/grouper-users-icon-02.png" alt="UH Groupings"/>
             </div>
-            <div class="col-sm-12 col-md-10 col-lg-10">
+            <div class="col-lg-10 col-md-9 col-sm-8">
                 <h1 class="dropshadow">UH Groupings</h1>
-                <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"> </p>
-                <div>
-                    <div sec:authorize="!isAuthenticated()">
-                        <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
-                    </div>
-                    <div sec:authorize="isAuthenticated()">
-                        <form action="/logout" th:action="@{/logout}" method="post">
-                            <button class="btn btn-lg btn-default" type="submit">Logout</button>
-                        </form>
-                    </div>
+                <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"></p>
+            </div>
+        </div>
+        <div class="row ml-auto">
+            <div class="offset-lg-2 offset-md-3 offset-sm-4">
+                <div sec:authorize="!isAuthenticated()">
+                    <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <form action="/logout" th:action="@{/logout}" method="post">
+                        <button class="btn btn-lg btn-light" type="submit">Logout</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row" style="margin-left: inherit; margin-right: inherit">
+    <div class="row pl-4 pr-4">
         <span class="h4">What is a UH Grouping?</span>
-        <div id="descriptionHome">
-            <p th:utext="#{screen.message.home.page.groupingDefinition}">  </p>
-            <p th:utext="#{screen.message.home.page.groupingFeatures}">  </p>
+        <div id="grouping-description">
+            <p th:utext="#{screen.message.home.page.groupingDefinition}"></p>
+            <p th:utext="#{screen.message.home.page.groupingFeatures}"></p>
         </div>
-        <div id="moreInfo" style="margin-top:-16px;" th:utext="#{screen.message.home.page.moreInformation}"> </div>
+        <div th:utext="#{screen.message.home.page.moreInformation}"></div>
     </div>
 
-    <div id="footerBottom">
-        <div class="card bg-light border-light" sec:authorize="hasAnyRole('ROLE_UH', 'ROLE_ADMIN', 'ROLE_OWNER')">
-            <div class="row" sec:authorize="isAuthenticated()">
-                <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
-                    <p class="h4" style="margin-top: 0;">Administration</p>
-                    <p th:utext="#{screen.message.home.page.adminInfo}"> </p>
-                    <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">Admin</a></p>
-                </div>
-                <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
-                    <p class="h4" style="margin-top: 0;">Memberships</p>
-                    <p th:utext="#{screen.message.home.page.membershipInfo}"> </p>
-                    <div class="membership-btn-alignment"><br/></div>
-                    <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">Memberships</a></p>
-                </div>
-                <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
-                    <p class="h4" style="margin-top: 0;">Groupings</p>
-                    <p th:utext="#{screen.message.home.page.mygroupingsInfo}"> </p>
-                    <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">Groupings</a></p>
+    <div class="row pl-2 pr-2" id="home-dashboard">
+        <div class="card bg-dashboard border-light" sec:authorize="hasAnyRole('ROLE_UH', 'ROLE_ADMIN', 'ROLE_OWNER')">
+            <div class="card-body pl-0 pr-0">
+                <div class="row" sec:authorize="isAuthenticated()">
+                    <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <p class="h5" style="margin-top: 0;">Administration</p>
+                        <p th:utext="#{screen.message.home.page.adminInfo}"></p>
+                        <div class="d-xl-none d-lg-inline-block d-none"><br/></div>
+                        <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">Admin</a></p>
+                    </div>
+                    <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
+                        <p class="h5" style="margin-top: 0;">Memberships</p>
+                        <p th:utext="#{screen.message.home.page.membershipInfo}"></p>
+                        <div class="d-md-inline-block d-none"><br/></div>
+                        <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">Memberships</a></p>
+                    </div>
+                    <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
+                        <p class="h5" style="margin-top: 0;">Groupings</p>
+                        <p th:utext="#{screen.message.home.page.mygroupingsInfo}"></p>
+                        <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">Groupings</a></p>
+                    </div>
                 </div>
             </div>
         </div>

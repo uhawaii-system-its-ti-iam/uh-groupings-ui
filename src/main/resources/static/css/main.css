@@ -200,6 +200,22 @@ td.uh-pre {
     color: rgba(0, 0, 0, .7);
 }
 
+#uh-groupings-icon {
+    max-height: 6rem;
+    max-width: 6rem;
+    width: auto;
+    height: auto;
+}
+
+#home-dashboard {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+#home-dashboard .bg-dashboard {
+    background-color: #e9ecef;
+}
+
 .footer {
     position: absolute;
     padding-top: 5px;
@@ -219,21 +235,6 @@ td.uh-pre {
 #all {
     overflow-x: auto;
     overflow-y: auto;
-}
-
-#groupings-icon {
-    max-width: 5.36em;
-    max-height: 5em;
-    height: auto;
-    width: auto;
-    /* padding-top: 0.3em; */
-}
-
-#iconTop {
-    display: flex;
-    margin-top: 20px;
-    justify-content: flex-end;
-    font-size: 20px;
 }
 
 #basisIcon {
@@ -297,9 +298,9 @@ td.uh-pre {
     padding: 10px;
 }
 
-#descriptionHome {
-    padding-top: 0.9em;
-    padding-bottom: 1.2em;
+#grouping-description {
+    padding-top: .5rem;
+    /*padding-bottom: 1.2em;*/
 }
 
 /*.panel{*/
@@ -502,12 +503,6 @@ td.uh-pre {
     -moz-border-radius-bottomright: 0;
     -webkit-border-bottom-left-radius: 0;
     -webkit-border-bottom-right-radius: 0;
-}
-
-@media (max-width: 1200px) {
-    .membership-btn-alignment {
-        display: none;
-    }
 }
 
 /** nav-tabs on the admin page to remove border from small screen widths */
