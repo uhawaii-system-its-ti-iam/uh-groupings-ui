@@ -602,6 +602,73 @@
         };
 
         /**
+         * Create CAS/LDAP confirmation modal.
+         */
+        $scope.createCASLDAPModal = function () {
+            $scope.ldap = !$scope.ldap;
+            $scope.CASLDAPInstance = $uibModal.open({
+                templateUrl: "modal/CASLDAPModal.html",
+                scope: $scope
+            });
+
+            $scope.CASLDAPInstance.result.then(function(){
+                $scope.ldap = !$scope.ldap;
+                $scope.updateLdap();
+            }).catch(function (){
+                //do nothing
+            });
+        };
+
+        /**
+         * Proceeds with the CAS/LDAP confirmation
+         */
+        $scope.proceedCASLDAPModal = function () {
+            $scope.CASLDAPInstance.close();
+        };
+
+        /**
+         * Closes the CAS/LDAP confirmation modal
+         */
+        $scope.closeCASLDAPModal = function () {
+            $scope.CASLDAPInstance.dismiss();
+        };
+
+        /**
+         * Create Email list confirmation modal.
+         */
+        $scope.createEmailListModal = function () {
+            $scope.listserv = !$scope.listserv;
+            $scope.EmailListInstance = $uibModal.open({
+                templateUrl: "modal/EmailListModal.html",
+                scope: $scope
+            });
+
+            $scope.EmailListInstance.result.then(function(){
+                $scope.listserv = !$scope.listserv;
+                $scope.updateListserv();
+            }).catch(function (){
+                //do nothing
+            });
+
+        };
+
+        /**
+         * Proceeds with the change of the Email list
+         */
+        $scope.proceedEmailListModal = function () {
+            $scope.EmailListInstance.close();
+        };
+
+        /**
+         *Closes the Email list confirmation modal
+         */
+        $scope.closeEmailListModal = function () {
+            $scope.EmailListInstance.dismiss();
+        };
+
+
+
+        /**
          * Exports data in a table to a CSV file
          * @param {object[]} table - the table to export
          * @param grouping - grouping name that you are exporting from
