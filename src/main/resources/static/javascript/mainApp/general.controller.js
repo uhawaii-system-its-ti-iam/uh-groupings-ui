@@ -602,48 +602,71 @@
         };
 
         /**
-         * Create preference checkbox modal.
+         * Create CAS/LDAP confirmation modal.
          */
-        $scope.createPreferenceCheckboxModal = function () {
-                $scope.preferenceCheckboxModalInstance = $uibModal.open({
-                    templateUrl: "modal/checkModal.html",
-                    scope: $scope
-                });
+        $scope.createCASLDAPModal = function () {
+            $scope.ldap = !$scope.ldap;
+            $scope.CASLDAPInstance = $uibModal.open({
+                templateUrl: "modal/CASLDAPModal.html",
+                scope: $scope
+            });
+
+            $scope.CASLDAPInstance.result.then(function(){
+                $scope.ldap = !$scope.ldap;
+                $scope.updateLdap();
+            }).catch(function (){
+                //do nothing
+            });
+        };
+
+        /**
+         * Proceeds with the CAS/LDAP confirmation
+         */
+        $scope.proceedCASLDAPModal = function () {
+            $scope.CASLDAPInstance.close();
+        };
+
+        /**
+         * Closes the CAS/LDAP confirmation modal
+         */
+        $scope.closeCASLDAPModal = function () {
+            $scope.CASLDAPInstance.dismiss();
+        };
+
+        /**
+         * Create Email list confirmation modal.
+         */
+        $scope.createEmailListModal = function () {
+            $scope.listserv = !$scope.listserv;
+            $scope.EmailListInstance = $uibModal.open({
+                templateUrl: "modal/EmailListModal.html",
+                scope: $scope
+            });
+
+            $scope.EmailListInstance.result.then(function(){
+                $scope.listserv = !$scope.listserv;
+                $scope.updateListserv();
+            }).catch(function (){
+                //do nothing
+            });
 
         };
 
-        $scope.proceedPreferenceCheckboxModal = function () {
-            $scope.allowOptOut = !$scope.allowOptOut;
-            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
-            dataProvider.updateData(function (res) {
-                if (!_.isUndefined(res.statusCode)) {
-                    console.log("Error, Status Code: " + res.statusCode);
-                    $scope.createPreferenceErrorModal();
-                } else if (_.startsWith(res[0].resultCode), "SUCCESS") {
-                    console.log("success");
-                }
-            }, function (res) {
-                console.log("Error, Status Code: " + res.statusCode);
-            }, endpoint);
-            $scope.preferenceCheckboxModalInstance.close();
-            return true;
+        /**
+         * Proceeds with the change of the Email list
+         */
+        $scope.proceedEmailListModal = function () {
+            $scope.EmailListInstance.close();
         };
 
-        $scope.closePreferenceCheckboxModal = function () {
-            $scope.preferenceCheckboxModalInstance.dismiss();
+        /**
+         *Closes the Email list confirmation modal
+         */
+        $scope.closeEmailListModal = function () {
+            $scope.EmailListInstance.dismiss();
         };
 
-        $scope.confirmPref = function () {
-            if($scope.allowOptOut === true){
-                event.preventDefault();
-                return true;
-            }
-            else{
-                event.preventDefault();
-                return false;
-            }
-/*          return $scope.allowOptout === true ? true : false;*/
-        };
+
 
         /**
          * Exports data in a table to a CSV file

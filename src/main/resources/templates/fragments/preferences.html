@@ -35,11 +35,9 @@
             </div>
             <div>
                 <h4>Sync Destinations</h4>
-                <strong class="bg-danger text-warning col-md-12" th:text="#{screen.message.common.preference.sync.warning}"></strong>
-                <br/>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" ng-model="listserv" ng-change="updateListserv()"
+                        <input type="checkbox" ng-model="listserv" ng-change="createEmailListModal()"
                                ng-init="pref"/>
                         Email list: &lt;{{ selectedGrouping.name }}@lists.hawaii.edu&gt;
                     </label>
@@ -50,10 +48,9 @@
                        th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\')',
                                 ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\') : null'"></i>
                 </div>
-
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" ng-model="ldap" ng-change="updateLdap()"/>
+                        <input type="checkbox" ng-model="ldap" ng-change="createCASLDAPModal()"/>
                         CAS/LDAP: uhReleasedGrouping
                     </label>
                     <i class="fa fa-question-circle clickable" aria-hidden="true"
@@ -62,26 +59,6 @@
                        th:title="#{screen.message.common.tooltip.preference.ldap}"
                        th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\')',
                                 ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\') : null'"></i>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-checked="confirmPref()" ng-click="createPreferenceCheckboxModal()"/>
-                        Testing Checkbox (opt out)
-                    </label>
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       tabindex="0"
-                       th:title="#{screen.message.modal.preferences.confirmation}"></i>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-checked="confirmPref()" ng-click="createPreferenceCheckboxModal()"/>
-                        Testing Checkbox (opt in)
-                    </label>
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       tabindex="0"
-                       th:title="#{screen.message.modal.preferences.confirmation}"></i>
                 </div>
             </div>
         </div>

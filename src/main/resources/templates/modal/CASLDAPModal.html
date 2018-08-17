@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="closeCASLDAPModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="modal-title">Checkbox Confirmation</h4>
+</div>
+<div class="modal-body" id="modal-body">
+    <p th:utext="#{screen.message.modal.ldap.confirmation}"></p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="proceedCASLDAPModal()">Ok</button>
+    <button class="btn btn-default" ng-click="closeCASLDAPModal()" data-dismiss="modal">Cancel</button>
+</div>
+</html>
