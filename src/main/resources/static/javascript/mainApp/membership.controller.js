@@ -21,7 +21,7 @@
         $scope.loading = true;
 
         $scope.gap = 2;
-        $scope.itemsPerPage = 13;
+        $scope.itemsPerPage = 20;
 
         $scope.optOutList = [];
 
