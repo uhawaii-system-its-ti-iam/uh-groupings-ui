@@ -58,7 +58,7 @@
                 $scope.loading = true;
 
                 dataProvider.updateData(function () {
-                    if ($scope.currentUser === $scope.userToRemove && $scope.listName === "owners") {
+                    if ($scope.currentUser === $scope.userToRemove.username && $scope.listName === "owners") {
                         if ($scope.groupingsList.length === 1) {
                             $window.location.href = "home";
                         } else {
