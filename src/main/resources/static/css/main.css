@@ -24,16 +24,16 @@ body {
     background-color: white;
 }
 
+h1 {
+    font-size: 2rem;
+}
+
 h2 {
-    font-size: 25px;
+    font-size: 1.5rem;
 }
 
 h3 {
-    font-size: 20px;
-}
-
-.panel-title {
-    font-size: 25px;
+    font-size: 1.3rem;
 }
 
 .loader {
@@ -48,26 +48,6 @@ h3 {
     top: 50%;
     margin-left: -5.357em;
     margin-top: -5.357em;
-}
-
-::-webkit-input-placeholder {
-    /* Chrome/Opera/Safari */
-    font-weight: bold;
-}
-
-::-moz-placeholder {
-    /* Firefox 19+ */
-    font-weight: bold;
-}
-
-:-ms-input-placeholder {
-    /* IE 10+ */
-    font-weight: bold;
-}
-
-:-moz-placeholder {
-    /* Firefox 18- */
-    font-weight: bold;
 }
 
 #overlay {
@@ -115,16 +95,6 @@ td.uh-pre {
     word-wrap: break-word;
     word-break: break-all;
 }
-
-.card {
-    padding: 2.5em;
-}
-
-.card.card-tab-content {
-    padding: 0;
-    border: 0;
-}
-
 
 .uh-branding-one {
     font-family: cinzel-regular, serif;
@@ -233,12 +203,17 @@ td.uh-pre {
     padding: 0;
 }
 
-.card .card-header {
-    border-bottom: 0;
+.card.card-tab-content, .card.card-tab-content .card-header {
+    border-top-left-radius: 0px;
 }
 
-.card table {
-    border: 0;
+.card.card-with-table {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.card table > thead > tr > th {
+    border-top: none;
 }
 
 .card table > thead > tr > th:first-child, .card table > tbody > tr > td:first-child {
@@ -247,6 +222,10 @@ td.uh-pre {
 
 .card table > thead > tr > th:last-child, .card table > tbody > tr > td:last-child {
     border-right: 0;
+}
+
+.pagination .page-item.disabled {
+    cursor: not-allowed;
 }
 
 .footer {
@@ -339,12 +318,6 @@ td.uh-pre {
 /*.panel{*/
 /*background-color: #f1f1f1f2;*/
 /*}*/
-
-.panel.panel-tab-content {
-    border-radius: 0px 3px 3px 3px;
-    -webkit-border-radius: 0px 3px 3px 3px;
-    -moz-border-radius: 0px 3px 3px 3px;
-}
 
 .panel.panel-tab-content .panel-heading {
     border-top-left-radius: 0px;
@@ -488,13 +461,6 @@ td.uh-pre {
     border-bottom: none;
 }
 
-/*.panel-tab-content .panel-heading {
-    border-radius: 0px 3px 0px 0px;
-    -webkit-border-radius: 0px 3px 0px 0px;
-    -moz-border-radius: 0px 3px 0px 0px;
-    background-color: #07575b;
-}*/
-
 .nav.nav-tabs > li.active > a {
     border-bottom: none;
 }
@@ -538,25 +504,8 @@ td.uh-pre {
     -webkit-border-bottom-right-radius: 0;
 }
 
-/** nav-tabs on the admin page to remove border from small screen widths */
-@media (max-width: 319px) {
-    #admin-tabs > li > a {
-        border-color: transparent;
-    }
-
-    #admin-tabs > li:last-child > a {
-        /** Prevent the last tab from cutting into the panel's border */
-        margin-bottom: 1px;
-    }
-}
-
-/** nav-tabs on the memberships page to remove border from small screen widths */
-@media (max-width: 416px) {
-    #memberships-tabs > li > a {
-        border-color: transparent;
-    }
-
-    #memberships-tabs > li:last-child > a {
-        margin-bottom: 1px;
+@media (max-width: 575.98px) {
+    .nav.nav-tabs.flex-column > .nav-item > .nav-link {
+        border: none;
     }
 }
