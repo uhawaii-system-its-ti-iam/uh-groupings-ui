@@ -152,4 +152,14 @@ public class HomeController {
         return "modal/confirmAddModal";
     }
 
+    @RequestMapping(value = "/modal/EmailListModal", method = RequestMethod.GET)
+    public String EmailListModal(Locale locale, Model model) {
+        return "modal/EmailListModal";
+    }
+
+    @RequestMapping(value = "/modal/CASLDAPModal", method = RequestMethod.GET)
+    public String CASLDAPModal(Locale locale, Model model) {
+        return "modal/CASLDAPModal";
+    }
+
 }

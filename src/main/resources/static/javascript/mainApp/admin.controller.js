@@ -34,10 +34,10 @@
                     $scope.createApiErrorModal();
                 } else {
                     $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
-                    $scope.filter($scope.adminsList, 'pagedItemsAdmins', 'currentPageAdmins', $scope.adminsQuery);
+                    $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery);
 
                     $scope.groupingsList = _.sortBy(res.allGroupings, "name");
-                    $scope.filter($scope.groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', $scope.groupingsQuery)
+                    $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
 
                     $scope.loading = false;
                 }
@@ -59,35 +59,18 @@
          */
         $scope.addAdmin = function () {
             var adminToAdd = $scope.adminToAdd;
-            var listName = "admins"; 
-
-            $scope.createConfirmAddModal(adminToAdd, listName);
             var endpoint = BASE_URL + adminToAdd + "/addAdmin";
 
-           $scope.confirmAddModalInstance = $uibModal.open({
-                templateUrl: "modal/confirmAddModal.html",
-                scope: $scope
-            });
-
-            $scope.confirmAddModalInstance.result.then(
-                function (){
-                    dataProvider.updateData(function (res) {
-                        $scope.createAddModal({
-                            user: adminToAdd,
-                            response: res,
-                            listName: "admins"
-                        });
-                    $scope.adminToAdd = "";
-                    }, function (res) {
-                        $scope.createAddModal({
-                            user: adminToAdd,
-                            response: res,
-                            listName: "admins"
-                        });
-                    }, endpoint);
-                })
-            };
-
+            if (_.isEmpty(adminToAdd)) {
+                $scope.createAddModal({ user: adminToAdd });
+            } else {
+                $scope.createConfirmAddModal({
+                    userToAdd: adminToAdd,
+                    listName: "admins",
+                    endpoint: endpoint
+                });
+            }
+        };
 
         /**
          * Removes an admin from the admin list. There must be at least one admin remaining.
@@ -96,8 +79,8 @@
          * account
          */
         $scope.removeAdmin = function (currentPage, index) {
-            var adminToRemove = $scope.pagedItemsAdmins[currentPage][index].username;
-            var endpoint = BASE_URL + adminToRemove + "/deleteAdmin";
+            var adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+            var endpoint = BASE_URL + adminToRemove.username + "/deleteAdmin";
 
             if ($scope.adminsList.length > 1) {
                 $scope.createRemoveModal({
@@ -130,7 +113,7 @@
 
                 dataProvider.updateData(function () {
                     if ($scope.listName === "admins") {
-                        if ($scope.currentUser === $scope.userToRemove) {
+                        if ($scope.currentUser === $scope.userToRemove.username) {
                             $window.location.href = "home";
                         } else {
                             $scope.init();
