@@ -84,8 +84,8 @@ public class HomeControllerTest {
     @WithMockUhUser
     public void requestLoginViaUh() throws Exception {
         mockMvc.perform(get("/login"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:home"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("home"));
     }
 
     @Test
