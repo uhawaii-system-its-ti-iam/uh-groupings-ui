@@ -73,9 +73,9 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Locale locale, Model model) {
+    public String login() {
         logger.info("User has logged in.");
-        return "redirect:home";
+        return "home";
     }
 
     @PreAuthorize("isAuthenticated()")
