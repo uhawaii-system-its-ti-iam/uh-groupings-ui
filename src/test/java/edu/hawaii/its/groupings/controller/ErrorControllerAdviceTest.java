@@ -25,6 +25,8 @@ import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 
+import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
+
 import java.security.Principal;
 import java.util.Iterator;
 import java.util.Locale;
@@ -52,6 +54,13 @@ public class ErrorControllerAdviceTest {
         assertNotNull(errorControllerAdvice);
     }
 
+   /* @Test void GcWebServiceTest() {
+        GcWebServiceError Gc = new GcWebServiceError();
+        errorControllerAdvice.handleGcWebServiceError(Gc);
+
+        String gce = "error";
+        assertThat(errorControllerAdvice.handleGcWebServiceError(Gc).toString(), equalTo(gce));
+    }*/
     @Test
     public void RuntimeTest() {
         RuntimeException re = new RuntimeException();
