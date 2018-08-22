@@ -224,6 +224,10 @@ td.uh-pre {
     border-right: 0;
 }
 
+table.table-condensed th, table.table-condensed td {
+    padding: 0.4375rem;
+}
+
 .pagination .page-item.disabled {
     cursor: not-allowed;
 }
