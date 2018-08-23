@@ -195,6 +195,10 @@ td.uh-pre {
     background-color: #e9ecef;
 }
 
+.spacer {
+    margin-top: 2.5rem;
+}
+
 .required-asterisk {
     color: red;
 }
@@ -230,6 +234,10 @@ table.table-condensed th, table.table-condensed td {
 
 .pagination .page-item.disabled {
     cursor: not-allowed;
+}
+
+.nav.nav-tabs {
+    border-bottom: none;
 }
 
 .footer {
@@ -459,14 +467,6 @@ table.table-condensed th, table.table-condensed td {
     .panel > .panel-heading > div.row > div > input {
         margin-top: 5px;
     }
-}
-
-.nav.nav-tabs {
-    border-bottom: none;
-}
-
-.nav.nav-tabs > li.active > a {
-    border-bottom: none;
 }
 
 @media (min-width: 768px) {
