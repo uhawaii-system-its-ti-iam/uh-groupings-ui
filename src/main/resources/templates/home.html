@@ -49,13 +49,12 @@
                     <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
                         <p class="h5">Administration</p>
                         <p th:utext="#{screen.message.home.page.adminInfo}"></p>
-                        <div class="d-xl-none d-lg-inline-block d-none"><br/></div>
                         <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">Admin</a></p>
                     </div>
                     <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
                         <p class="h5">Memberships</p>
                         <p th:utext="#{screen.message.home.page.membershipInfo}"></p>
-                        <div class="d-md-inline-block d-none"><br/></div>
+                        <div class="spacer d-xl-block d-lg-none d-md-block d-none"></div>
                         <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">Memberships</a></p>
                     </div>
                     <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
