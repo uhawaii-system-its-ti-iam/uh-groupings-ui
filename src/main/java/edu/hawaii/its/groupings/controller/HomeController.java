@@ -3,24 +3,24 @@ package edu.hawaii.its.groupings.controller;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
-
+import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.groupings.type.Feedback;
-import edu.hawaii.its.groupings.access.UserContextService;
 
 @Controller
 public class HomeController {
@@ -34,7 +34,7 @@ public class HomeController {
     private UserContextService userContextService;
 
     // Mapping to home.
-    @RequestMapping(value = {"/", "/home"}, method = {RequestMethod.GET})
+    @RequestMapping(value = { "/", "/home" }, method = { RequestMethod.GET })
     public String home(Map<String, Object> model, Locale locale) {
         logger.info("User at home. The client locale is " + locale);
         return "home";
@@ -72,10 +72,11 @@ public class HomeController {
         return "groupings";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Locale locale, Model model) {
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/login")
+    public String login() {
         logger.info("User has logged in.");
-        return "redirect:home";
+        return "home";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -107,7 +108,6 @@ public class HomeController {
         redirectAttributes.addFlashAttribute("success", true);
         return "redirect:/feedback";
     }
-
 
     /**
      * Modal Pages
