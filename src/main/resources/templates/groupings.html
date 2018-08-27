@@ -1,4 +1,4 @@
- <!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
@@ -7,68 +7,64 @@
 <nav th:substituteby="menubar :: copy"></nav>
 
 <!--  Content container -->
-<div class="container">
-    <!-- <div ></div> -->
-    <div class='row'>
-        <div class='container-fluid'>
-            <h1 class="text-left">Manage My Groupings</h1>
+<div class="container" ng-controller="OwnerJsController" data-ng-init="init()">
 
-            <p class="text-left" th:utext="#{screen.message.groupings.page.description}"> </p>
+    <h1>Manage My Groupings</h1>
 
-            <div class="groups_belong" ng-controller="OwnerJsController" data-ng-init="init()">
-                <div id="overlay" ng-show="loading">
-                    <div class="loader" ng-show="loading"></div>
-                </div>
-                <div ng-show="!showGrouping">
-                    <div th:replace="fragments/groupings-list :: groupings-list(title='My Groupings', tabContent=false)"></div>
-                </div>
+    <p th:utext="#{screen.message.groupings.page.description}"></p>
 
-                <div ng-show="showGrouping">
-                    <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=false)"></div>
+    <div id="overlay" ng-show="loading">
+        <div class="loader" ng-show="loading"></div>
+    </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="row" style="margin: inherit;">
-                                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 pull-left" style="padding: 0;">
-                                    <h2 style="margin: inherit; padding-top: .11875em;">Manage Grouping</h2>
-                                </div>
-                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="padding: 0;">
-                                    <button ng-click="getGroupingInformation()" class="btn btn-primary xs-left-sm-right">
-                                        Refresh
-                                    </button>
-                                </div>
-                            </div>
+    <div>
+        <div ng-show="!showGrouping">
+            <div th:replace="fragments/groupings-list :: groupings-list(title='My Groupings', tabContent=false)"></div>
+        </div>
+
+        <div ng-show="showGrouping">
+            <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=false)"></div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="row" style="margin: inherit;">
+                        <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 pull-left" style="padding: 0;">
+                            <h2 style="margin: inherit; padding-top: .11875em;">Manage Grouping</h2>
                         </div>
-                        <div class="panel-body" style="min-height: 400px;">
-                            <div class="row" style="margin: inherit;">
-                                <div th:replace="fragments/side-nav :: side-nav"></div>
+                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="padding: 0;">
+                            <button ng-click="getGroupingInformation()" class="btn btn-primary xs-left-sm-right">
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body" style="min-height: 400px;">
+                    <div class="row" style="margin: inherit;">
+                        <div th:replace="fragments/side-nav :: side-nav"></div>
 
-                                <div class="tab-content col-md-11 col-sm-11 col-xs-10" id="pill-content">
-                                    <div id="all" class="tab-pane fade in active">
-                                        <div th:replace="fragments/members :: members"></div>
-                                    </div>
-                                    <div id="basis" class="tab-pane fade">
-                                        <div th:replace="fragments/basis :: basis"></div>
-                                    </div>
-                                    <div id="include" class="tab-pane fade">
-                                        <div th:replace="fragments/include :: include"></div>
-                                    </div>
-                                    <div id="exclude" class="tab-pane fade">
-                                        <div th:replace="fragments/exclude :: exclude"></div>
-                                    </div>
-                                    <div id="owners" class="tab-pane fade">
-                                        <div th:replace="fragments/owners :: owners"></div>
-                                    </div>
-                                    <div id="preferences" class="tab-pane fade">
-                                        <div th:replace="fragments/preferences :: preferences"></div>
-                                    </div>
-                                </div>
+                        <div class="tab-content col-md-11 col-sm-11 col-xs-10" id="pill-content">
+                            <div id="all" class="tab-pane fade in active">
+                                <div th:replace="fragments/members :: members"></div>
+                            </div>
+                            <div id="basis" class="tab-pane fade">
+                                <div th:replace="fragments/basis :: basis"></div>
+                            </div>
+                            <div id="include" class="tab-pane fade">
+                                <div th:replace="fragments/include :: include"></div>
+                            </div>
+                            <div id="exclude" class="tab-pane fade">
+                                <div th:replace="fragments/exclude :: exclude"></div>
+                            </div>
+                            <div id="owners" class="tab-pane fade">
+                                <div th:replace="fragments/owners :: owners"></div>
+                            </div>
+                            <div id="preferences" class="tab-pane fade">
+                                <div th:replace="fragments/preferences :: preferences"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 

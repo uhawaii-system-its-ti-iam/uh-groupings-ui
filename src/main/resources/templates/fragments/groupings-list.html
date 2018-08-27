@@ -1,12 +1,12 @@
 <th:block th:fragment="groupings-list">
-    <div class="panel panel-default"
-         th:classappend="${tabContent ? 'panel-tab-content' : ''}">
-        <div class="panel-heading">
-            <div class="row" style="margin: inherit">
-                <div class="col-md-6 col-sm-7" style="padding: 0px;">
-                    <h2 style="padding: 2.5px 0px; margin: inherit;" th:text="${title}"></h2>
+    <div class="card card-with-table"
+         th:classappend="${tabContent ? 'card-tab-content' : ''}">
+        <div class="card-header">
+            <div class="row m-auto">
+                <div class="col-sm-6 p-0">
+                    <h2 class="card-title mb-1 mt-md-1 mt-0" th:text="${title}"></h2>
                 </div>
-                <div class="col-md-push-3 col-md-3 col-sm-push-1 col-sm-4" style="padding: 0px;">
+                <div class="offset-md-3 col-md-3 col-12 p-0">
                     <input class="form-control" placeholder="Filter Groupings..." type="text"
                            title="Filter Groupings"
                            ng-model="groupingsQuery"
@@ -33,36 +33,37 @@
                     <td class="clickable" tabindex="0" ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                         ng-click="displayGrouping(currentPageGroupings, $index)">
                         {{l.name}}
-                        <span class="pull-right fa fa-pencil-square-o" style="margin-right: 5px;"></span>
+                        <span class="fa fa-pencil-square-o pull-right pt-1"></span>
                     </td>
                     <td>{{l.path}}</td>
                 </tr>
                 </tbody>
-                <tfoot>
-                <!-- Top part of the two parts  -->
-                <td colspan="6">
-                    <ul class="pagination pull-right">
-                        <li ng-class="{ disabled: disableFirstAndPrev(currentPageGroupings) }">
-                            <a class="clickable" ng-click="setPage('First','currentPageGroupings','pagedItemsGroupings')">«« First</a>
-                        </li>
-                        <li ng-class="{ disabled: disableFirstAndPrev(currentPageGroupings) }">
-                            <a class="clickable" ng-click="setPage('Prev','currentPageGroupings','pagedItemsGroupings')">« Prev</a>
-                        </li>
-                        <li ng-repeat="n in pageRange(currentPageGroupings, pagedItemsGroupings.length, gap)"
-                            ng-class="{ active: n === currentPageGroupings }"
-                            ng-click="setPage('Set','currentPageGroupings','pagedItemsGroupings')">
-                            <a class="clickable" ng-bind="n + 1"></a>
-                        </li>
-                        <li ng-class="{ disabled: disableNextAndLast(pagedItemsGroupings, currentPageGroupings) }">
-                            <a class="clickable" ng-click="setPage('Next','currentPageGroupings','pagedItemsGroupings')">Next »</a>
-                        </li>
-                        <li ng-class="{ disabled: disableNextAndLast(pagedItemsGroupings, currentPageGroupings) }">
-                            <a class="clickable" ng-click="setPage('Last','currentPageGroupings','pagedItemsGroupings')">Last »»</a>
-                        </li>
-                    </ul>
-                </td>
-                </tfoot>
             </table>
+            <div class="flex-row pr-sm-3 pr-1">
+                <div class="d-flex justify-content-end">
+                    <nav aria-label="Page Navigation">
+                        <ul class="pagination">
+                            <li class="page-item" ng-class="{ disabled: disableFirstAndPrev(currentPageGroupings) }">
+                                <a class="page-link" ng-click="setPage('First','currentPageGroupings','pagedItemsGroupings')">«« First</a>
+                            </li>
+                            <li class="page-item" ng-class="{ disabled: disableFirstAndPrev(currentPageGroupings) }">
+                                <a class="page-link" ng-click="setPage('Prev','currentPageGroupings','pagedItemsGroupings')">« Prev</a>
+                            </li>
+                            <li class="page-item" ng-repeat="n in pageRange(currentPageGroupings, pagedItemsGroupings.length, gap)"
+                                ng-class="{ active: n === currentPageGroupings }"
+                                ng-click="setPage('Set','currentPageGroupings','pagedItemsGroupings')">
+                                <a class="page-link" ng-bind="n + 1"></a>
+                            </li>
+                            <li class="page-item"  ng-class="{ disabled: disableNextAndLast(pagedItemsGroupings, currentPageGroupings) }">
+                                <a class="page-link" ng-click="setPage('Next','currentPageGroupings','pagedItemsGroupings')">Next »</a>
+                            </li>
+                            <li class="page-item"  ng-class="{ disabled: disableNextAndLast(pagedItemsGroupings, currentPageGroupings) }">
+                                <a class="page-link" ng-click="setPage('Last','currentPageGroupings','pagedItemsGroupings')">Last »»</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
     </div>
 </th:block>
