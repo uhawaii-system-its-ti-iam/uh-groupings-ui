@@ -2,16 +2,16 @@ package edu.hawaii.its.groupings.configuration;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.proxy.ProxyGrantingTicketStorage;
 import org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Saml11TicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAssertionAuthenticationToken;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
@@ -33,11 +33,15 @@ import edu.hawaii.its.groupings.access.UserBuilder;
 import edu.hawaii.its.groupings.access.UserDetailsServiceImpl;
 
 @ComponentScan(basePackages = "edu.hawaii.its")
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final Log logger = LogFactory.getLog(SecurityConfig.class);
+
     @Value("${url.base}")
-    private String urlBase;
+    private String appUrlBase;
+
+    @Value("${app.url.home:/}")
+    private String appUrlHome;
 
     @Value("${cas.login.url}")
     private String casLoginUrl;
@@ -51,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${cas.saml.tolerance}")
     private long casSamlTolerance;
 
-    @Value("${cas.send.renew}")
+    @Value("${cas.send.renew:false}")
     private boolean casSendRenew;
 
     @Autowired
@@ -59,9 +63,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @PostConstruct
     public void init() {
-        Assert.hasLength(urlBase, "property 'urlBase' is required");
+        logger.info("  appUrlHome: " + appUrlHome);
+        logger.info("  appUrlBase: " + appUrlBase);
+        logger.info("  casMainUrl: " + casMainUrl);
+        logger.info(" casLoginUrl: " + casLoginUrl);
+        logger.info("casLogoutUrl: " + casLogoutUrl);
+        logger.info("casSendRenew: " + casSendRenew);
+
+        Assert.hasLength(appUrlHome, "property 'appUrlHome' is required");
+        Assert.hasLength(appUrlBase, "property 'appUrlBase' is required");
         Assert.hasLength(casLoginUrl, "property 'casLoginUrl' is required");
         Assert.hasLength(casLogoutUrl, "property 'casLogoutUrl' is required");
+
+        logger.info("SecurityConfig started. userBuilder: " + userBuilder);
     }
 
     @Bean
@@ -77,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
-        serviceProperties.setService(urlBase + "/login/cas");
+        serviceProperties.setService(appUrlBase + "/login/cas");
         serviceProperties.setSendRenew(casSendRenew);
         serviceProperties.setAuthenticateAllArtifacts(true);
 
@@ -123,13 +137,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         SimpleUrlAuthenticationFailureHandler authenticationFailureHandler =
                 new SimpleUrlAuthenticationFailureHandler();
-        authenticationFailureHandler.setDefaultFailureUrl("/home");
+        authenticationFailureHandler.setDefaultFailureUrl(appUrlHome);
         filter.setAuthenticationFailureHandler(authenticationFailureHandler);
 
         SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler =
                 new SavedRequestAwareAuthenticationSuccessHandler();
         authenticationSuccessHandler.setAlwaysUseDefaultTargetUrl(false);
-        authenticationSuccessHandler.setDefaultTargetUrl("/home");
+        authenticationSuccessHandler.setDefaultTargetUrl(appUrlHome);
         filter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
 
         ServiceAuthenticationDetailsSource authenticationDetailsSource =
@@ -145,7 +159,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilter(casAuthenticationFilter());
         http.exceptionHandling()
                 .authenticationEntryPoint(casProcessingFilterEntryPoint());
         http.authorizeRequests()
@@ -169,12 +182,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/memberships/**").hasRole("UH")
                 .anyRequest().authenticated()
                 .and()
+                .addFilter(casAuthenticationFilter())
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                 .logout()
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl(appUrlHome);
     }
 
     @Override

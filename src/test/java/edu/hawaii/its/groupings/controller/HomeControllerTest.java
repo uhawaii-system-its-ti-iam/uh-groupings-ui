@@ -1,13 +1,13 @@
 package edu.hawaii.its.groupings.controller;
 
-
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.junit.Assert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
@@ -17,6 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import javax.servlet.http.HttpSession;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,16 +30,19 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
-import edu.hawaii.its.groupings.type.Feedback;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-import javax.servlet.http.HttpSession;
+import edu.hawaii.its.groupings.type.Feedback;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class HomeControllerTest {
+
+    @Value("${app.url.home:/}")
+    private String appUrlHome;
 
     @Value("${cas.login.url}")
     private String casLoginUrl;
@@ -86,6 +91,34 @@ public class HomeControllerTest {
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("home"));
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void loginViaAnonymous() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(status().is(302))
+                .andExpect(redirectedUrlPattern(casLoginUrl + "**"));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void loginViaUh() throws Exception {
+        // Logged in already, URL is home page.
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("home"));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void logoutViaUh() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(post("/logout").with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(status().is(302))
+                .andReturn();
+        assertThat(mvcResult.getResponse().getRedirectedUrl(), equalTo(appUrlHome));
     }
 
     @Test
