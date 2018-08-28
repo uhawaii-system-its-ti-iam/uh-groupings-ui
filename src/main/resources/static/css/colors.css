@@ -1,27 +1,26 @@
-h1{
-    color:#BD9319;
+h1 {
+    color: #BD9319;
 }
-h2, h3, h4 {
+
+h2, h3, h4, h5, h6 {
     color: #9B7506;
 }
 
-#uh-nav-name{
-    color:#BD9319;
+#uh-nav-name {
+    color: #BD9319;
 }
 
-.members-tab-title{
+.members-tab-title {
     color: #9B7506;
 }
 
-#defMem{
+#defMem {
     color: #9B7506;
 }
 
-
-#overlay{
+#overlay {
     background: rgba(0, 0, 0, 0.5);
 }
-
 
 a {
     color: #0275d8;
@@ -39,24 +38,26 @@ a:hover {
     color: #777;
 }
 
-.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover{
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
     background-color: #2C658D;
     border-color: #477A9E;
 }
 
 /* navbar color */
-.navbar-default .navbar-nav > li > a{
-  color: #000000;
-}
-.navbar-default .navbar-nav > li > a:hover{
-  color: blue;
-}
-.navbar-default .btn-link{
-  color: #000000;
+.navbar-default .navbar-nav > li > a {
+    color: #000000;
 }
 
-.navbar-default .btn-link:hover{
-  color:blue;
+.navbar-default .navbar-nav > li > a:hover {
+    color: blue;
+}
+
+.navbar-default .btn-link {
+    color: #000000;
+}
+
+.navbar-default .btn-link:hover {
+    color: blue;
 }
 
 .navbar-default .navbar-nav > .open > a,
@@ -69,7 +70,6 @@ a:hover {
 .dropshadow {
     text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
 }
-
 
 .navbar-brand.uh-nav-app-name {
     color: #BD9319;
@@ -100,26 +100,26 @@ a:hover {
     color: #C2C2C2;
 }
 
-.btn-primary{
+.btn-primary {
     background-color: #2C658D;
     border-color: #477A9E;
 }
 
-.card > .table-responsive{
-  background-color: #ffffff;
+.card > .table-responsive {
+    background-color: #ffffff;
 }
 
-#optOutButton{
+#optOutButton {
     background-color: #2C658D;
     border-color: #477A9E;
 }
 
-#side-nav-color{
+#side-nav-color {
     background-color: #2C658D;
     border-color: #477A9E;
 }
 
-.card-default > .card-heading{
+.card-default > .card-heading {
     background-color: #e3e3e3;
     color: #9B7506;
 }
