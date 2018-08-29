@@ -3,10 +3,10 @@
          th:classappend="${tabContent ? 'card-tab-content' : ''}">
         <div class="card-header">
             <div class="row m-auto">
-                <div class="col-sm-6 p-0">
-                    <h2 class="card-title mb-1 mt-md-1 mt-0" th:text="${title}"></h2>
+                <div class="col-lg-9 col-md-8 col-12 p-0">
+                    <h2 class="card-title mt-md-1 mt-0 mb-1" th:text="${title}"></h2>
                 </div>
-                <div class="offset-md-3 col-md-3 col-12 p-0">
+                <div class="col-lg-3 col-md-4 col-12 p-0">
                     <input class="form-control" placeholder="Filter Groupings..." type="text"
                            title="Filter Groupings"
                            ng-model="groupingsQuery"
