@@ -30,19 +30,24 @@
             <tr>
                 <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'name')" class="clickable">
                     Name
-                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'name' || !columnSort.groupingInclude" ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
+                    <i class="fa sort-icon"
+                       ng-show="columnSort.groupingInclude.property === 'name' || !columnSort.groupingInclude"
+                       ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
                 <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'uuid')" class="clickable">
                     UH Number
-                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'uuid'" ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
+                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'uuid'"
+                       ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
                 <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'username')" class="clickable">
                     UH Username
-                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'username'" ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
+                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'username'"
+                       ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
                 <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'inBasis')" class="clickable">
                     In Basis?
-                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'inBasis'" ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
+                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'inBasis'"
+                       ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
             </tr>
             </thead>
@@ -74,45 +79,25 @@
                 <td class="text-center" style="width: 3%">{{i.inBasis}}</td>
             </tr>
             </tbody>
-            <tfoot>
-            <!-- Pagination control -->
-            <td colspan="6">
-                <ul class="pagination pull-right">
-                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageInclude) }">
-                        <a class="clickable" ng-click="setPage('First','currentPageInclude','pagedItemsInclude')">«« First</a>
-                    </li>
-                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageInclude) }">
-                        <a class="clickable" ng-click="setPage('Prev','currentPageInclude','pagedItemsInclude')">« Prev</a>
-                    </li>
-                    <li ng-repeat="n in pageRange(currentPageInclude, pagedItemsInclude.length, gap) "
-                        ng-class="{ active: n === currentPageInclude }"
-                        ng-click="setPage('Set','currentPageInclude','pagedItemsInclude')">
-                        <a class="clickable" ng-bind="n + 1"></a>
-                    </li>
-                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsInclude, currentPageInclude) }">
-                        <a class="clickable" ng-click="setPage('Next','currentPageInclude','pagedItemsInclude')">Next »</a>
-                    </li>
-                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsInclude, currentPageInclude) }">
-                        <a class="clickable" ng-click="setPage('Last','currentPageInclude','pagedItemsInclude')">Last »»</a>
-                    </li>
-                </ul>
-					 <!-- Input to add a user to the include group -->
-					 <div class="pull-left col-lg-4 col-md-5 col-sm-5 col-xs-12 input-group input-inline-pagination">
-						  <form ng-submit="addMember('Include')">
-								<div class="input-group">
-								    <input class="form-control" type="text" placeholder="UH Username"
-								           title="Enter UH username to include"
-								           ng-model="userToAdd"/>
-								    <div class="input-group-btn">
-								        <button class="btn btn-primary" type="submit">Add</button>
-								    </div>
-								</div>
-						  </form>
-					 </div>                
-                
-                
-            </td>
-            </tfoot>
         </table>
+        <div class="flex-row pr-sm-3 pr-1">
+            <div class="pull-left col-lg-4 col-md-5 col-sm-5 m-0 input-group input-inline-pagination">
+                <form ng-submit="addMember('Include')">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="UH Username"
+                               title="Enter UH username to include"
+                               ng-model="userToAdd"/>
+
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="d-flex justify-content-end">
+                <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageInclude'
+                        ,pagedItems = 'pagedItemsInclude')"></div>
+            </div>
+        </div>
     </div>
 </th:block>

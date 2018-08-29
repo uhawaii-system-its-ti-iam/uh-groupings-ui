@@ -503,12 +503,12 @@
             var pills = $("#group-pills")[0].children;
             var pillContents = $("#pill-content")[0].children;
             for (var i = 0; i < pills.length; i++) {
-                if (i === 0 && !$(pills[i]).hasClass("active")) {
-                    $(pills[i]).addClass("active");
-                    $(pillContents[i]).addClass("in active");
+                if (i === 0 && !($(pills[0].children).hasClass("active"))) {
+                    ($(pills[0].children).hasClass("active"));
+                    $(pillContents[i]).addClass("show active");
                 } else if (i !== 0 && $(pills[i]).hasClass("active")) {
-                    $(pills[i]).removeClass("active");
-                    $(pillContents[i]).removeClass("in active");
+                    ($(pills[0].children).removeClass("active"));
+                    $(pillContents[i]).removeClass("show active");
                 }
             }
         }

@@ -8,11 +8,14 @@
             <tr>
                 <th ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'name')" class="clickable">
                     Name
-                    <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners" ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
+                    <i class="fa sort-icon"
+                       ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners"
+                       ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                 </th>
                 <th ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'username')" class="clickable">
                     UH Username
-                    <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'username'" ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
+                    <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'username'"
+                       ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                 </th>
             </tr>
             </thead>
@@ -26,7 +29,7 @@
                           tabindex="0"
                           th:title="#{screen.message.common.tooltip.remove.owner}"
                           ng-keypress="$event.keyCode === 13 ? removeOwner(currentPageOwners, $index) : null"
-                          ng-click="removeOwner(currentPageOwners, $index)" >
+                          ng-click="removeOwner(currentPageOwners, $index)">
                     </span>
                 </td>
                 <td>
@@ -42,44 +45,27 @@
                 </td>
             </tr>
             </tbody>
-            <tfoot>
-            <td colspan="6">
-                <ul class="pagination pull-right">
-                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageOwners) }">
-                        <a class="clickable" ng-click="setPage('First','currentPageOwners','pagedItemsOwners')">«« First</a>
-                    </li>
-                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageOwners) }">
-                        <a class="clickable" ng-click="setPage('Prev','currentPageOwners','pagedItemsOwners')">« Prev</a>
-                    </li>
-                    <li ng-repeat="n in pageRange(currentPageOwners, pagedItemsOwners.length, gap) "
-                        ng-class="{ active: n === currentPageOwners }"
-                        ng-click="setPage('Set','currentPageOwners','pagedItemsOwners')">
-                        <a class="clickable" ng-bind="n + 1"></a>
-                    </li>
-                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsOwners, currentPageOwners) }">
-                        <a class="clickable" ng-click="setPage('Next','currentPageOwners','pagedItemsOwners')">Next »</a>
-                    </li>
-                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsOwners, currentPageOwners) }">
-                        <a class="clickable" ng-click="setPage('Last','currentPageOwners','pagedItemsOwners')">Last »»</a>
-                    </li>
-                </ul>
-					 <!-- Input to add a user to the list of owners -->
-					 <div class="pull-left col-lg-4 col-md-5 col-sm-5 col-xs-12 input-group input-inline-pagination">
-						  <form ng-submit="addOwner()">
-								<div class="input-group">
-								    <input class="form-control" type="text" placeholder="UH Username"
-								           title="Enter UH username for ownership"
-								           ng-model="ownerToAdd"
-                                           id="owner-input"/>
-								    <div class="input-group-btn">
-								        <button class="btn btn-primary" type="submit">Add</button>
-								    </div>
-								</div>
-						  </form>
-					 </div>                
-            </td>
-            </tfoot>
         </table>
+        <div class="flex-row pr-sm-3 pr-1">
+            <div class="pull-left col-lg-4 col-md-5 col-sm-5 m-0 input-group input-inline-pagination">
+                <form ng-submit="addOwner()">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="UH Username"
+                               title="Enter UH username for ownership"
+                               ng-model="ownerToAdd"
+                               id="owner-input"/>
+
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="d-flex justify-content-end">
+                <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageOwners'
+                        ,pagedItems = 'pagedItemsOwners')"></div>
+            </div>
+        </div>
     </div>
 
 </th:block>
