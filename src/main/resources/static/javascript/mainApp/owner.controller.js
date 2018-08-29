@@ -49,8 +49,11 @@
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
+            var windowClass = $scope.showWarningRemovingSelf() ? 'modal-danger' : '';
+
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
+                windowClass: windowClass,
                 scope: $scope
             });
 
