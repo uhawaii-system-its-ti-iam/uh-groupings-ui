@@ -20,17 +20,21 @@
                 <tr>
                     <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'name')" class="clickable">
                         Grouping Name
-                        <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'name' || !columnSort.groupingsList" ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
+                        <i class="fa sort-icon"
+                           ng-show="columnSort.groupingsList.property === 'name' || !columnSort.groupingsList"
+                           ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                     </th>
                     <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')" class="clickable">
                         Grouping Path
-                        <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'" ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
+                        <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
+                           ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                     </th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                    <td class="clickable" tabindex="0" ng-keypress="$event.keyCode === 13 ? showData($index) : null"
+                    <td class="clickable" tabindex="0"
+                        ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                         ng-click="displayGrouping(currentPageGroupings, $index)">
                         {{l.name}}
                         <span class="fa fa-pencil-square-o pull-right pt-1"></span>
@@ -41,27 +45,8 @@
             </table>
             <div class="flex-row pr-sm-3 pr-1">
                 <div class="d-flex justify-content-end">
-                    <nav aria-label="Page Navigation">
-                        <ul class="pagination">
-                            <li class="page-item" ng-class="{ disabled: disableFirstAndPrev(currentPageGroupings) }">
-                                <a class="page-link" ng-click="setPage('First','currentPageGroupings','pagedItemsGroupings')">«« First</a>
-                            </li>
-                            <li class="page-item" ng-class="{ disabled: disableFirstAndPrev(currentPageGroupings) }">
-                                <a class="page-link" ng-click="setPage('Prev','currentPageGroupings','pagedItemsGroupings')">« Prev</a>
-                            </li>
-                            <li class="page-item" ng-repeat="n in pageRange(currentPageGroupings, pagedItemsGroupings.length, gap)"
-                                ng-class="{ active: n === currentPageGroupings }"
-                                ng-click="setPage('Set','currentPageGroupings','pagedItemsGroupings')">
-                                <a class="page-link" ng-bind="n + 1"></a>
-                            </li>
-                            <li class="page-item"  ng-class="{ disabled: disableNextAndLast(pagedItemsGroupings, currentPageGroupings) }">
-                                <a class="page-link" ng-click="setPage('Next','currentPageGroupings','pagedItemsGroupings')">Next »</a>
-                            </li>
-                            <li class="page-item"  ng-class="{ disabled: disableNextAndLast(pagedItemsGroupings, currentPageGroupings) }">
-                                <a class="page-link" ng-click="setPage('Last','currentPageGroupings','pagedItemsGroupings')">Last »»</a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageGroupings'
+                        ,pagedItems = 'pagedItemsGroupings')"></div>
                 </div>
             </div>
         </div>
