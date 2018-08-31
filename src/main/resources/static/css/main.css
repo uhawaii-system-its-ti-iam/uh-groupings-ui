@@ -496,6 +496,21 @@ table.table-condensed th, table.table-condensed td {
     border-top-color: #ffeaece6;
 }
 
+.fade.in {
+    opacity: 1;
+}
+
+.modal.in .modal-dialog {
+    -webkit-transform: translate(0, 0);
+    -o-transform: translate(0, 0);
+    transform: translate(0, 0);
+}
+
+.modal-backdrop.in {
+    filter: alpha(opacity=50);
+    opacity: .5;
+}
+
 @media (max-width: 575.98px) {
     .nav.nav-tabs.flex-column > .nav-item > .nav-link {
         border: none;
