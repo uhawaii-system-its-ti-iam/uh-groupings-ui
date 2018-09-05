@@ -23,7 +23,7 @@
             <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
                 <td tabindex="0">
                     {{owner.name}}
-                    <span class="fa fa-trash-o pull-right clickable"
+                    <span class="fa fa-trash-o pull-right clickable pt-1"
                           data-toggle="tooltip" data-placement="top"
                           onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
                           tabindex="0"
@@ -47,7 +47,7 @@
             </tbody>
         </table>
         <div class="flex-row pr-sm-3 pr-1">
-            <div class="pull-left col-lg-4 col-md-5 col-sm-5 m-0 input-group input-inline-pagination">
+            <div class="float-left col-lg-4 col-md-5 col-sm-5 m-0 input-group">
                 <form ng-submit="addOwner()">
                     <div class="input-group">
                         <input class="form-control" type="text" placeholder="UH Username"
@@ -55,7 +55,7 @@
                                ng-model="ownerToAdd"
                                id="owner-input"/>
 
-                        <div class="input-group-btn">
+                        <div class="input-group-append">
                             <button class="btn btn-primary" type="submit">Add</button>
                         </div>
                     </div>

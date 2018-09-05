@@ -516,3 +516,31 @@ table.table-condensed th, table.table-condensed td {
         border: none;
     }
 }
+
+#group-pills > .nav-item {
+    width: 2.75rem;
+    height: 2.75rem;
+}
+
+#group-pills > .nav-item > .nav-link {
+    padding-left: .75rem;
+}
+
+.manage-grouping-body {
+    min-height: 25rem;
+}
+
+.selected-grouping-card {
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+.selected-grouping-card > .card-header {
+    border-left: 1px solid rgba(0,0,0,.125);
+    border-right: 1px solid rgba(0,0,0,.125);
+}
+
+.selected-grouping-card table > tbody > tr:first-child > th, .selected-grouping-card table > tbody > tr:first-child > td{
+    border-top: 0;
+}

@@ -118,8 +118,3 @@ a:hover {
     background-color: #2C658D;
     border-color: #477A9E;
 }
-
-.card-default > .card-heading {
-    background-color: #e3e3e3;
-    color: #9B7506;
-}

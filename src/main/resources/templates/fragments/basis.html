@@ -3,24 +3,22 @@
         <h3 class="members-tab-title">Basis</h3>
     </div>
     <div class="row member-row-title">
-        <div class="row member-row-title">
-            <!-- Export to CSV button -->
-            <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
-                <div class="pull-left">
-                    <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
-                            ng-click="exportGroupToCsv(groupingBasis, selectedGrouping.name, 'basis')">
-                        Export to CSV
-                    </button>
-                </div>
+        <!-- Export to CSV button -->
+        <div class="col-md-6 col-sm-6 col-12 p-0">
+            <div class="float-left">
+                <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
+                        ng-click="exportGroupToCsv(groupingBasis, selectedGrouping.name, 'basis')">
+                    Export to CSV
+                </button>
             </div>
-            <!-- Filter bar -->
-            <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
-                <div class="xs-left-sm-right">
-                    <input class="form-control" placeholder="Filter Members..." type="text"
-                           title="Filter Members"
-                           ng-model="basisQuery"
-                           ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery)"/>
-                </div>
+        </div>
+        <!-- Filter bar -->
+        <div class="col-md-6 col-sm-6 col-12 p-0">
+            <div class="float-sm-right float-left">
+                <input class="form-control" placeholder="Filter Members..." type="text"
+                       title="Filter Members"
+                       ng-model="basisQuery"
+                       ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery)"/>
             </div>
         </div>
     </div>
