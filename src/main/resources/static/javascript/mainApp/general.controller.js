@@ -74,25 +74,30 @@
                 } else {
                     //Gets members in the basis group
                     $scope.groupingBasis = _.sortBy(res.basis.members, "name");
+                    _.remove($scope.groupingBasis, hasBlankUsername);
                     $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
 
                     //Gets members in the include group
                     $scope.groupingInclude = _.sortBy(res.include.members, "name");
+                    _.remove($scope.groupingInclude, hasBlankUsername);
                     $scope.addInBasis($scope.groupingInclude);
                     $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
 
                     //Gets members in the exclude group
                     $scope.groupingExclude = _.sortBy(res.exclude.members, "name");
+                    _.remove($scope.groupingExclude, hasBlankUsername);
                     $scope.addInBasis($scope.groupingExclude);
                     $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
 
                     //Gets members in grouping
                     $scope.groupingMembers = _.sortBy(res.composite.members, "name");
+                    _.remove($scope.groupingMembers, hasBlankUsername);
                     $scope.addWhereListed($scope.groupingMembers);
                     $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
 
                     //Gets owners of the grouping
                     $scope.groupingOwners = _.sortBy(res.owners.members, "name");
+                    _.remove($scope.groupingOwners, hasBlankUsername);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
                     $scope.allowOptIn = res.optInOn;
@@ -106,6 +111,14 @@
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             }, endpoint);
         };
+
+        /**
+         * @param {object} member - the member to check
+         * @returns {boolean} true if the member has a blank username, otherwise returns false
+         */
+        function hasBlankUsername(member) {
+            return member.username === '';
+        }
 
         /**
          * Creates a modal for errors in loading data from the API.
