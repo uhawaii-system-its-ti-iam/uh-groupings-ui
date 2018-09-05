@@ -73,31 +73,26 @@
                     $scope.createApiErrorModal();
                 } else {
                     //Gets members in the basis group
-                    $scope.groupingBasis = _.sortBy(res.basis.members, "name");
-                    _.remove($scope.groupingBasis, hasBlankUsername);
+                    $scope.groupingBasis = setGroupMembers(res.basis.members);
                     $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
 
                     //Gets members in the include group
-                    $scope.groupingInclude = _.sortBy(res.include.members, "name");
-                    _.remove($scope.groupingInclude, hasBlankUsername);
+                    $scope.groupingInclude = setGroupMembers(res.include.members);
                     $scope.addInBasis($scope.groupingInclude);
                     $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
 
                     //Gets members in the exclude group
-                    $scope.groupingExclude = _.sortBy(res.exclude.members, "name");
-                    _.remove($scope.groupingExclude, hasBlankUsername);
+                    $scope.groupingExclude = setGroupMembers(res.exclude.members);
                     $scope.addInBasis($scope.groupingExclude);
                     $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
 
                     //Gets members in grouping
-                    $scope.groupingMembers = _.sortBy(res.composite.members, "name");
-                    _.remove($scope.groupingMembers, hasBlankUsername);
+                    $scope.groupingMembers = setGroupMembers(res.composite.members);
                     $scope.addWhereListed($scope.groupingMembers);
                     $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
 
                     //Gets owners of the grouping
-                    $scope.groupingOwners = _.sortBy(res.owners.members, "name");
-                    _.remove($scope.groupingOwners, hasBlankUsername);
+                    $scope.groupingOwners = setGroupMembers(res.owners.members);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
                     $scope.allowOptIn = res.optInOn;
@@ -113,11 +108,14 @@
         };
 
         /**
-         * @param {object} member - the member to check
-         * @returns {boolean} true if the member has a blank username, otherwise returns false
+         * @param {object[]} members - the members of the group
+         * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
          */
-        function hasBlankUsername(member) {
-            return member.username === '';
+        function setGroupMembers(members) {
+            _.remove(members, function (member) {
+                return _.isEmpty(member.username);
+            });
+            return _.sortBy(members, "name");
         }
 
         /**
