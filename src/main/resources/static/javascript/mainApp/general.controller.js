@@ -773,12 +773,8 @@
                 var line = "";
                 line += table[i].lastName + ",";
                 line += table[i].firstName + ",";
-                if (_.isEmpty(table[i].username)) {
-                    line += ",,";
-                } else {
-                    line += table[i].username + ",";
-                    line += table[i].username + "@hawaii.edu,";
-                }
+                line += table[i].username + ",";
+                line += table[i].username + "@hawaii.edu,";
                 str += line + "\r\n";
             }
             return str;
