@@ -2,6 +2,7 @@ package edu.hawaii.its.api.service;
 
 import java.util.*;
 
+import org.springframework.stereotype.Service;
 import org.springframework.test.context.ActiveProfiles;
 
 import edu.hawaii.its.api.repository.GroupRepository;
@@ -13,6 +14,9 @@ import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.Membership;
 import edu.hawaii.its.api.type.Person;
 
+import javax.annotation.PostConstruct;
+
+@Service
 @ActiveProfiles("localTest")
 class DatabaseSetup {
 
@@ -39,7 +43,6 @@ class DatabaseSetup {
 
         fillDatabase();
     }
-
     private void fillDatabase() {
         fillPersonRepository();
         fillGroupRepository();

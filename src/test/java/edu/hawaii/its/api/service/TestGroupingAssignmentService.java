@@ -79,6 +79,9 @@ public class TestGroupingAssignmentService {
     @Value("${groupings.api.test.usernames}")
     private String[] username;
 
+    @Value("${groupings.api.grouping_admins}")
+
+    private String GROUPING_ADMINS;
     @Autowired
     GroupAttributeService groupAttributeService;
 
@@ -133,6 +136,12 @@ public class TestGroupingAssignmentService {
         assertEquals(info.getAdminGroup().getUsernames().size(), 0);
         assertEquals(info.getAdminGroup().getNames().size(), 0);
         assertEquals(info.getAdminGroup().getUuids().size(), 0);
+
+        //try with admin
+        AdminListsHolder infoAdmin = groupingAssignmentService.adminLists(GROUPING_ADMINS);
+        assertNotNull(infoAdmin);
+
+
 
     }
 

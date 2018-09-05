@@ -69,7 +69,7 @@ public class MembershipServiceTest {
     private static final String GROUPING_2_PATH = PATH_ROOT + 2;
     private static final String GROUPING_3_PATH = PATH_ROOT + 3;
     private static final String GROUPING_4_PATH = PATH_ROOT + 4;
-
+//same lines?
     private static final String GROUPING_1_INCLUDE_PATH = GROUPING_1_PATH + INCLUDE;
     private static final String GROUPING_1_EXCLUDE_PATH = GROUPING_1_PATH + EXCLUDE;
 
