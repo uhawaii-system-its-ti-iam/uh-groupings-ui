@@ -503,12 +503,14 @@
             var pills = $("#group-pills")[0].children;
             var pillContents = $("#pill-content")[0].children;
             for (var i = 0; i < pills.length; i++) {
-                if (i === 0 && !($(pills[0].children).hasClass("active"))) {
-                    ($(pills[0].children).hasClass("active"));
-                    $(pillContents[i]).addClass("show active");
-                } else if (i !== 0 && $(pills[i]).hasClass("active")) {
-                    ($(pills[0].children).removeClass("active"));
-                    $(pillContents[i]).removeClass("show active");
+                var anchorTag = $(pills[i].children[0]);
+                var pillContent = $(pillContents[i]);
+                if (i === 0 && !anchorTag.hasClass("active")) {
+                    anchorTag.addClass("active");
+                    pillContent.addClass("show active");
+                } else if (i !== 0 && anchorTag.hasClass("active")) {
+                    anchorTag.removeClass("active");
+                    pillContent.removeClass("show active");
                 }
             }
         }
