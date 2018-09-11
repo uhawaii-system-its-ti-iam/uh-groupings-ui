@@ -64,11 +64,9 @@
             </tbody>
         </table>
     </div>
-    <div class="pr-sm-3 pr-1">
+    <div class="pl-0 pr-0">
         <div class="d-flex justify-content-lg-end justify-content-start">
-            <div class="pl-3">
-                <div th:replace="fragments/pagination :: pagination(currentPage='currentPageBasis', pagedItems='pagedItemsBasis')"></div>
-            </div>
+            <div th:replace="fragments/pagination :: pagination(currentPage='currentPageBasis', pagedItems='pagedItemsBasis')"></div>
         </div>
     </div>
 </th:block>
