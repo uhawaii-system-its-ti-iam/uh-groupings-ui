@@ -16,7 +16,7 @@
         <div class="loader" ng-show="loading"></div>
     </div>
 
-    <ul class="nav nav-tabs flex-column flex-sm-row" role="tablist">
+    <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist">
         <li class="nav-item" role="presentation">
             <a href="#groupings" class="nav-link active" data-toggle="tab" role="tab">
                 Manage Groupings
@@ -91,9 +91,9 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class="flex-row pr-sm-3 pr-1">
-                            <div class="d-md-inline-flex d-block">
-                                <div class="d-flex justify-content-md-start justify-content-center">
+                        <div class="pl-sm-3 pr-sm-3 pl-1 pr-1">
+                            <div class="d-lg-flex d-block justify-content-between justify-content-start">
+                                <div>
                                     <form ng-submit="addAdmin()">
                                         <div class="input-group">
                                             <input name="Add Admin" class="form-control" type="text"
@@ -105,45 +105,8 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="d-flex float-md-right justify-content-center">
-                                    <nav aria-label="Admins List Navigation">
-                                        <ul class="pagination">
-                                            <li class="page-item"
-                                                ng-class="{ disabled: disableFirstAndPrev(currentPageAdmins) }">
-                                                <a class="page-link"
-                                                   ng-click="setPage('First','currentPageAdmins','pagedItemsAdmins')">
-                                                    «« First
-                                                </a>
-                                            </li>
-                                            <li class="page-item"
-                                                ng-class="{ disabled: disableFirstAndPrev(currentPageAdmins) }">
-                                                <a class="page-link"
-                                                   ng-click="setPage('Prev','currentPageAdmins','pagedItemsAdmins')">
-                                                    « Prev
-                                                </a>
-                                            </li>
-                                            <li class="page-item"
-                                                ng-repeat="n in pageRange(currentPageAdmins, pagedItemsAdmins.length, gap)"
-                                                ng-class="{ active: n === currentPageAdmins }"
-                                                ng-click="setPage('Set','currentPageAdmins','pagedItemsAdmins')">
-                                                <a class="page-link" ng-bind="n + 1">1</a>
-                                            </li>
-                                            <li class="page-item"
-                                                ng-class="{ disabled: disableNextAndLast(pagedItemsAdmins, currentPageAdmins) }">
-                                                <a class="page-link"
-                                                   ng-click="setPage('Next','currentPageAdmins','pagedItemsAdmins')">
-                                                    Next »
-                                                </a>
-                                            </li>
-                                            <li class="page-item"
-                                                ng-class="{ disabled: disableNextAndLast(pagedItemsAdmins, currentPageAdmins) }">
-                                                <a class="page-link"
-                                                   ng-click="setPage('Last','currentPageAdmins','pagedItemsAdmins')">
-                                                    Last »»
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </nav>
+                                <div class="mt-lg-0 mt-2">
+                                    <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
                                 </div>
                             </div>
                         </div>

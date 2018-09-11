@@ -4,7 +4,7 @@
     </div>
     <div class="row member-row-title">
         <!-- Export to CSV button -->
-        <div class="col-md-6 col-sm-6 col-12 p-0">
+        <div class="col-sm-6 col-12 p-0 mb-sm-0 mb-2">
             <div class="pull-left">
                 <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
                         ng-click="exportGroupToCsv(groupingExclude, selectedGrouping.name, 'exclude')">
@@ -13,7 +13,7 @@
             </div>
         </div>
         <!-- Filter bar -->
-        <div class="col-md-6 col-sm-6 col-12 p-0">
+        <div class="col-sm-6 col-12 p-0">
             <div class="float-sm-right float-left">
                 <input class="form-control" placeholder="Filter Members..." type="text"
                        title="Filter Members"
@@ -78,8 +78,10 @@
             </tr>
             </tbody>
         </table>
-        <div class="flex-row pr-sm-3 pr-1">
-            <div class="float-left col-lg-4 col-md-5 col-sm-5 m-0 input-group">
+    </div>
+    <div class="pr-sm-3 pr-1">
+        <div class="d-lg-flex d-block justify-content-between justify-content-start">
+            <div class="col-lg-4 mt-lg-0 mt-2">
                 <form ng-submit="addMember('Exclude')">
                     <div class="input-group">
                         <input class="form-control" type="text" placeholder="UH Username"
@@ -92,9 +94,8 @@
                     </div>
                 </form>
             </div>
-            <div class="d-flex justify-content-end">
-                <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageExclude'
-                        ,pagedItems = 'pagedItemsExclude')"></div>
+            <div class="mt-lg-0 mt-2 pr-0 pl-3 pl-lg-0">
+                <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude')"></div>
             </div>
         </div>
     </div>

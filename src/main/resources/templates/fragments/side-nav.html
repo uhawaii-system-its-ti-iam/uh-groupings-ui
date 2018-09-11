@@ -1,6 +1,7 @@
 <th:block th:fragment="side-nav">
-    <div class="col-md-1 col-2">
-        <ul class="nav nav-pills flex-column mt-2" id="group-pills">
+    <div class="col-md-1 col-12" id="pills-column">
+        <ul class="nav nav-pills flex-md-column flex-row justify-content-md-start justify-content-center"
+            id="group-pills">
             <li class="nav-item" data-toggle="tooltip" data-placement="right"
                 th:title="#{screen.message.common.tooltip.nav.members}">
                 <a data-toggle="tab" href="#all" class="nav-link active"

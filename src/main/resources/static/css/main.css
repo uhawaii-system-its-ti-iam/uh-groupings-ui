@@ -517,6 +517,10 @@ table.table-condensed th, table.table-condensed td {
     }
 }
 
+#group-pills {
+    margin-top: .5rem;
+}
+
 #group-pills > .nav-item {
     width: 2.75rem;
     height: 2.75rem;
@@ -537,10 +541,23 @@ table.table-condensed th, table.table-condensed td {
 }
 
 .selected-grouping-card > .card-header {
-    border-left: 1px solid rgba(0,0,0,.125);
-    border-right: 1px solid rgba(0,0,0,.125);
+    border-left: 1px solid rgba(0, 0, 0, .125);
+    border-right: 1px solid rgba(0, 0, 0, .125);
 }
 
-.selected-grouping-card table > tbody > tr:first-child > th, .selected-grouping-card table > tbody > tr:first-child > td{
+.selected-grouping-card table > tbody > tr:first-child > th, .selected-grouping-card table > tbody > tr:first-child > td {
     border-top: 0;
+}
+
+@media (max-width: 575.98px) {
+    .manage-grouping-body.card-body {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .tooltip {
+        display: none;
+    }
 }
