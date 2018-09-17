@@ -91,23 +91,23 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class="pl-sm-3 pr-sm-3 pl-1 pr-1">
-                            <div class="d-lg-flex d-block justify-content-between justify-content-start">
-                                <div>
-                                    <form ng-submit="addAdmin()">
-                                        <div class="input-group">
-                                            <input name="Add Admin" class="form-control" type="text"
-                                                   title="Enter UH Username"
-                                                   placeholder="UH Username" ng-model="adminToAdd"/>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="submit">Add</button>
-                                            </div>
+                    </div>
+                    <div class="pl-sm-3 pr-sm-3 pl-1 pr-1">
+                        <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
+                            <div>
+                                <form ng-submit="addAdmin()">
+                                    <div class="input-group">
+                                        <input name="Add Admin" class="form-control" type="text"
+                                               title="Enter UH Username"
+                                               placeholder="UH Username" ng-model="adminToAdd"/>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="submit">Add</button>
                                         </div>
-                                    </form>
-                                </div>
-                                <div class="mt-lg-0 mt-2">
-                                    <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
-                                </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-lg-0 mt-2">
+                                <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
                             </div>
                         </div>
                     </div>

@@ -4,13 +4,13 @@
             <li class="page-item" th:attr="ng-class='{ disabled: disableFirstAndPrev(' + ${currentPage} + ') }'">
                 <a class="page-link"
                    th:attr="ng-click='setPage(\'First\', \'' + ${currentPage} + '\', \'' + ${pagedItems} + '\')'">
-                    «« First
+                    « First
                 </a>
             </li>
             <li class="page-item" th:attr="ng-class='{ disabled: disableFirstAndPrev(' + ${currentPage} + ') }'">
                 <a class="page-link"
                    th:attr="ng-click='setPage(\'Prev\', \'' + ${currentPage} + '\', \'' + ${pagedItems} + '\')'">
-                    « Prev
+                    ‹ Prev
                 </a>
             </li>
             <li class="page-item"
@@ -25,14 +25,14 @@
                 th:attr="ng-class='{ disabled: disableNextAndLast(' + ${pagedItems} + ', ' + ${currentPage} + ') }'">
                 <a class="page-link"
                    th:attr="ng-click='setPage(\'Next\', \'' + ${currentPage} + '\', \'' + ${pagedItems} + '\')'">
-                    Next »
+                    Next ›
                 </a>
             </li>
             <li class="page-item"
                 th:attr="ng-class='{ disabled: disableNextAndLast(' + ${pagedItems} + ', ' + ${currentPage} + ') }'">
                 <a class="page-link"
                    th:attr="ng-click='setPage(\'Last\', \'' + ${currentPage} + '\', \'' + ${pagedItems} + '\')'">
-                    Last »»
+                    Last »
                 </a>
             </li>
         </ul>
