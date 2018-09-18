@@ -427,12 +427,7 @@ table.table-condensed th, table.table-condensed td {
 
 }
 
-.members-tab-title {
-    margin: inherit;
-    padding-top: 5px;
-}
-
-.row.member-row-title {
+.row.group-header {
     margin-top: inherit;
     margin-right: inherit;
     margin-bottom: 5px;
