@@ -2,14 +2,13 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="closeCASLDAPModal()">
+    <h5 class="modal-title" id="modal-title">CAS/LDAP Confirmation</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="closeCASLDAPModal()">
         <span aria-hidden="true">&times;</span>
     </button>
-    <h4 class="modal-title" id="modal-title">CAS/LDAP Confirmation</h4>
 </div>
 <div class="modal-body" id="modal-body">
-    <strong class="bg-danger text-warning col-md-12" th:text="#{screen.message.modal.preferences.warning}"></strong>
-    <br style="line-height:6;"/>
+    <div class="alert alert-warning" role="alert" th:text="#{screen.message.modal.preferences.warning}"></div>
     <p th:utext="#{screen.message.modal.ldap.confirmation}"></p>
 </div>
 <div class="modal-footer">
