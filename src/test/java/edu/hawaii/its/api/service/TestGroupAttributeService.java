@@ -1,5 +1,6 @@
 package edu.hawaii.its.api.service;
 
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +19,9 @@ import org.springframework.util.Assert;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
@@ -46,6 +47,12 @@ public class TestGroupAttributeService {
 
     @Value("${groupings.api.failure}")
     private String FAILURE;
+
+    @Value("${groupings.api.assign_type_group}")
+    private String ASSIGN_TYPE_GROUP;
+
+    @Value("${groupings.api.yyyymmddThhmm}")
+    private String YYYYMMDDTHHMM;
 
     @Autowired
     private GroupAttributeService groupAttributeService;
@@ -109,12 +116,49 @@ public class TestGroupAttributeService {
 
         assertTrue(memberAttributeService.isOwner(GROUPING, username[0]));
         assertTrue(groupAttributeService.hasListserv(GROUPING));
+
+        //get last modified time
+        WsGetAttributeAssignmentsResults attributes = groupAttributeService.attributeAssignmentsResults(ASSIGN_TYPE_GROUP, GROUPING, YYYYMMDDTHHMM);
+        String lastModTime = attributes.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
+
         groupAttributeService.changeListservStatus(GROUPING, username[0], true);
         assertTrue(groupAttributeService.hasListserv(GROUPING));
+
+        //get last modified time and make sure that it hasn't changed
+        try {
+            TimeUnit.MINUTES.sleep(1);
+        } catch (InterruptedException e){
+            fail();
+        }
+        attributes = groupAttributeService.attributeAssignmentsResults(ASSIGN_TYPE_GROUP, GROUPING, YYYYMMDDTHHMM);
+        String lastModTime2 = attributes.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
+        assertEquals(lastModTime, lastModTime2);
+
         groupAttributeService.changeListservStatus(GROUPING, username[0], false);
         assertFalse(groupAttributeService.hasListserv(GROUPING));
+
+        //todo get last modified time and make sure that it has changed
+        try {
+            TimeUnit.MINUTES.sleep(1);
+        } catch (InterruptedException e){
+            fail();
+        }
+        attributes = groupAttributeService.attributeAssignmentsResults(ASSIGN_TYPE_GROUP, GROUPING, YYYYMMDDTHHMM);
+        String lastModTime3 = attributes.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
+        assertNotEquals(lastModTime2, lastModTime3);
+
         groupAttributeService.changeListservStatus(GROUPING, username[0], false);
         assertFalse(groupAttributeService.hasListserv(GROUPING));
+
+        //todo get last modified time and make sure that it hasn't changed
+        try {
+            TimeUnit.MINUTES.sleep(1);
+        } catch (InterruptedException e){
+            fail();
+        }
+        attributes = groupAttributeService.attributeAssignmentsResults(ASSIGN_TYPE_GROUP, GROUPING, YYYYMMDDTHHMM);
+        String lastModTime4 = attributes.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
+        assertEquals(lastModTime3, lastModTime4);
 
         assertFalse(memberAttributeService.isOwner(GROUPING, username[1]));
         try {
