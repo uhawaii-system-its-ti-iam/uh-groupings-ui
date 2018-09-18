@@ -89,6 +89,9 @@ public class TestGroupingAssignmentService {
     private MembershipService membershipService;
 
     @Autowired
+    private MemberAttributeService memberAttributeService;
+
+    @Autowired
     private HelperService helperService;
 
     @Autowired
@@ -121,6 +124,9 @@ public class TestGroupingAssignmentService {
 
         //add to exclude
         membershipService.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
+
+        //remove from owners
+        memberAttributeService.removeOwnership(GROUPING, username[0], username[1]);
     }
 
     @Test
