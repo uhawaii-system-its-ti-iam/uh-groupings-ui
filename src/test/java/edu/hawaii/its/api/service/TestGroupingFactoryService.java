@@ -1,8 +1,10 @@
 package edu.hawaii.its.api.service;
 
 import javax.annotation.PostConstruct;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +53,7 @@ public class TestGroupingFactoryService {
     GroupingAssignmentService groupingAssignmentService;
 
     @Autowired
-    private MembershipService membershipService;
+    private GroupingFactoryService groupingFactoryService;
 
     @Autowired
     public Environment env; // Just for the settings check.
@@ -68,21 +70,10 @@ public class TestGroupingFactoryService {
 
     @Before
     public void setUp() {
-        groupAttributeService.changeListservStatus(GROUPING, username[0], true);
-        groupAttributeService.changeOptInStatus(GROUPING, username[0], true);
-        groupAttributeService.changeOptOutStatus(GROUPING, username[0], true);
-
-        //put in include
-        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[0]);
-        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[1]);
-        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[2]);
-
-        //remove from exclude
-        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[4]);
-        membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[5]);
-
-        //add to exclude
-        membershipService.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
     }
 
+    @Test
+    public void testConstruction() {
+        assertNotNull(groupingFactoryService);
+    }
 }

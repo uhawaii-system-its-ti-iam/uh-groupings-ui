@@ -169,6 +169,9 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private MembershipService membershipService;
+
     public static final Log logger = LogFactory.getLog(MemberAttributeServiceImpl.class);
 
     //return true if the membership between the group and user has the self-opted attribute, false otherwise
@@ -212,6 +215,10 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
         if (isOwner(groupingPath, ownerUsername) || isAdmin(ownerUsername)) {
             WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
             WsAddMemberResults amr = grouperFS.makeWsAddMemberResults(groupingPath + OWNERS, user, newOwnerUsername);
+
+            //todo should we add this to the results?
+            membershipService.updateLastModified(groupingPath);
+
             ownershipResult = hs.makeGroupingsServiceResult(amr, action);
 
             return ownershipResult;
@@ -244,6 +251,10 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
                     lookup,
                     ownerToRemove);
             ownershipResults = hs.makeGroupingsServiceResult(memberResults, action);
+
+            //todo should we add this to the results?
+            membershipService.updateLastModified(groupingPath);
+
             return ownershipResults;
         }
 
