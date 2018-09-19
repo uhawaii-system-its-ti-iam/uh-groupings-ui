@@ -216,10 +216,10 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
             WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
             WsAddMemberResults amr = grouperFS.makeWsAddMemberResults(groupingPath + OWNERS, user, newOwnerUsername);
 
+            ownershipResult = hs.makeGroupingsServiceResult(amr, action);
+
             //todo should we add this to the results?
             membershipService.updateLastModified(groupingPath);
-
-            ownershipResult = hs.makeGroupingsServiceResult(amr, action);
 
             return ownershipResult;
         }
