@@ -6,115 +6,57 @@ h2, h3, h4, h5, h6 {
     color: #9B7506;
 }
 
-#uh-nav-name {
+.navbar-brand.uh-nav-app-name {
     color: #BD9319;
 }
 
-.members-tab-title {
-    color: #9B7506;
-}
-
-#defMem {
-    color: #9B7506;
+.navbar-brand.uh-nav-app-name:hover {
+    color: #B08A17;
 }
 
 #overlay {
     background: rgba(0, 0, 0, 0.5);
 }
 
-a {
-    color: #0275d8;
-}
-
-a:hover {
-    color: #0275d8;
-}
-
 .uh-branding-one {
     color: #777;
 }
 
 .uh-branding-two {
     color: #777;
-}
-
-.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
-    background-color: #2C658D;
-    border-color: #477A9E;
-}
-
-/* navbar color */
-.navbar-default .navbar-nav > li > a {
-    color: #000000;
-}
-
-.navbar-default .navbar-nav > li > a:hover {
-    color: blue;
-}
-
-.navbar-default .btn-link {
-    color: #000000;
-}
-
-.navbar-default .btn-link:hover {
-    color: blue;
-}
-
-.navbar-default .navbar-nav > .open > a,
-.navbar-default .navbar-nav > .open > a:focus,
-.navbar-default .navbar-nav > .open > a:hover {
-    color: #555;
-    background-color: white;
 }
 
 .dropshadow {
     text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
 }
 
-.navbar-brand.uh-nav-app-name {
-    color: #BD9319;
-    background-color: transparent;
-}
-
-.navbar-brand.uh-nav-app-name:hover {
-    color: #B08A17;
-}
-
-.uh-branding-one {
-    color: #777;
-}
-
-.uh-branding-two {
-    color: #777;
-}
-
-.navbar-brand.uh-nav-app-name {
-    color: #BD9319;
-}
-
-.navbar-brand.uh-nav-app-name:hover {
-    color: #B08A17;
-}
-
-.opt-button[disabled], .opt-button:disabled, .opt-button[disabled]:active, .opt-button:disabled:active {
-    color: #C2C2C2;
-}
-
-.btn-primary {
+.btn.btn-primary {
     background-color: #2C658D;
     border-color: #477A9E;
 }
 
-.card > .table-responsive {
-    background-color: #ffffff;
+.btn.btn-primary:hover {
+    /*background-color:*/
+    /*border-color:*/
 }
 
-#optOutButton {
-    background-color: #2C658D;
-    border-color: #477A9E;
+.jumbotron {
+    /*background-color:*/
 }
 
-#side-nav-color {
-    background-color: #2C658D;
-    border-color: #477A9E;
+.bg-dashboard {
+    /*background-color:*/
+}
+
+.card-header {
+    /*background-color:*/
+}
+
+.page-item.active > .page-link {
+    /*background-color:*/
+    /*border-color:*/
+}
+
+#group-pills > .nav-item > .nav-link.active {
+    /*background-color:*/
 }
