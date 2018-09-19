@@ -33,7 +33,11 @@ h2 {
 }
 
 h3 {
-    font-size: 1.3rem;
+    font-size: 1.17rem;
+}
+
+h4 {
+    font-size: 1rem;
 }
 
 .loader {
@@ -67,20 +71,6 @@ h3 {
     100% {
         transform: rotate(360deg);
     }
-}
-
-label {
-    color: black;
-}
-
-a {
-    /*color: #0275d8;*/
-    /* text-decoration:underline; */
-}
-
-a:hover {
-    /*color: #0275d8;*/
-    text-decoration: underline;
 }
 
 td.uh-pre {
@@ -251,88 +241,8 @@ table.table-condensed th, table.table-condensed td {
     text-align: center;
 }
 
-#wellHolder {
-    /*padding: 10px;*/
-    margin-top: 1em;
-}
-
-#all {
-    overflow-x: auto;
-    overflow-y: auto;
-}
-
-#basisIcon {
-    font-size: 1.3em;
-    padding: .7em .7em;
-}
-
-#logInButton {
-    display: relative;
-    margin-left: 3em;
-    padding: 10px;
-
-}
-
-#footerBottom {
-    margin-top: 25px;
-    display: relative;
-    padding: 0px 15px;
-
-}
-
-#groupHeader {
-    height: 55px;
-}
-
-#headingOptIn {
-    position: relative;
-    /*vertical-align: 50%;*/
-    white-space: nowrap;
-    margin-top: 5px;
-    /*height:  15px;*/
-
-}
-
-#groupingOptInPath {
-    text-overflow: ellipsis;
-}
-
-#optOut th a {
-    padding-left: 0px;
-    text-align: left;
-    width: 100%;
-    border: none;
-}
-
-#goupingInitList th a {
-    padding-left: 0px;
-    text-align: left;
-    width: 100%;
-    border: none;
-}
-
-#belong th a {
-    padding-left: 0px;
-    text-align: left;
-    width: 100%;
-    border: none;
-}
-
-#filters {
-    padding: 10px;
-}
-
 #grouping-description {
     padding-top: .5rem;
-    /*padding-bottom: 1.2em;*/
-}
-
-/*.panel{*/
-/*background-color: #f1f1f1f2;*/
-/*}*/
-
-.panel.panel-tab-content .panel-heading {
-    border-top-left-radius: 0px;
 }
 
 @media (min-width: 992px) {
@@ -393,31 +303,6 @@ table.table-condensed th, table.table-condensed td {
         color: #777;
     }
 
-    #topRow {
-        text-align: left;
-    }
-
-    #tops {
-        text-align: center;
-    }
-
-    #uh-login fieldset {
-        border: 1px solid #4cae4c;
-        text-align: left;
-        width: 25%;
-        height: 16em;
-        padding-left: 1.3em;
-        padding-right: 1.3em;
-    }
-
-    fieldset legend {
-        font-size: 1em;
-        width: auto;
-        padding: 0.3em 0.5em 0 1.5em;
-        margin-bottom: 0;
-        background-color: white;
-    }
-
 }
 
 @media (max-width: 991px) {
@@ -428,38 +313,11 @@ table.table-condensed th, table.table-condensed td {
 }
 
 .row.group-header {
+    margin: inherit;
     margin-top: inherit;
     margin-right: inherit;
     margin-bottom: 5px;
     margin-left: inherit;
-}
-
-@media (max-width: 767px) {
-    .xs-left-sm-right {
-        float: left;
-        margin-top: 5px;
-    }
-
-    .panel > .panel-heading > div.row > div > input {
-        margin-top: 5px;
-    }
-}
-
-@media (min-width: 768px) {
-    .xs-left-sm-right {
-        float: right;
-    }
-
-    .input-inline-pagination {
-        margin-top: 1.40625em;
-    }
-}
-
-.well-borderless {
-    border: none;
-    box-shadow: none;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
 }
 
 .clickable {
