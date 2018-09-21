@@ -202,7 +202,7 @@ public class MemberAttributeServiceTest {
         //try to remove ownership from user that is not an owner
         GroupingsServiceResult ownerRemovesNonOwner = memberAttributeService
                 .removeOwnership(GROUPING_0_PATH, users.get(0).getUsername(), users.get(1).getUsername());
-        assertEquals(SUCCESS, ownerRemovesNonOwner.getResultCode());
+        assertTrue(ownerRemovesNonOwner.getResultCode().startsWith(SUCCESS));
 
         //add owner for admin to remove
         membershipService.addGroupMemberByUsername(users.get(0).getUsername(), GROUPING_0_OWNERS_PATH,
