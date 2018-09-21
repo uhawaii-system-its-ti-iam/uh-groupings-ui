@@ -750,11 +750,12 @@ public class MembershipServiceImpl implements MembershipService {
                 updateLastModified(include);
                 updateComposite = true;
             }
-            if (updateComposite) {
-                updateLastModified(composite);
-            }
             if (updateOwners) {
                 updateLastModified(owners);
+                updateComposite = true;
+            }
+            if (updateComposite) {
+                updateLastModified(composite);
             }
         } else {
             gsrList.add(hs.makeGroupingsServiceResult(
