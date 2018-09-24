@@ -108,10 +108,7 @@ td.uh-pre {
 }
 
 .fixed-top .navbar-nav {
-    padding-top: 2.5rem;
-    padding-bottom: 0;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 2.5rem 0 0 0;
     font-size: .9375rem;
 }
 
@@ -154,10 +151,7 @@ td.uh-pre {
 }
 
 .fixed-top .navbar-logout {
-    padding-top: .5rem;
-    padding-bottom: .5rem;
-    padding-left: .5625rem;
-    padding-right: .5625rem;
+    padding: .5rem .5625rem;
     font-size: .9375rem;
     color: #212529;
     border: 0;
@@ -256,10 +250,7 @@ table.table-condensed th, table.table-condensed td {
     }
 
     .fixed-top .nav {
-        padding-top: 2.5rem;
-        padding-bottom: 0;
-        padding-left: 0;
-        padding-right: 1.25rem;
+        padding: 2.5rem 1.25rem 0 0;
         background-color: white;
     }
 
@@ -313,11 +304,7 @@ table.table-condensed th, table.table-condensed td {
 }
 
 .row.group-header {
-    margin: inherit;
-    margin-top: inherit;
-    margin-right: inherit;
-    margin-bottom: 5px;
-    margin-left: inherit;
+    margin: 0 auto .5rem;
 }
 
 .clickable {
