@@ -216,6 +216,14 @@ table.table-condensed th, table.table-condensed td {
     padding: 0.4375rem;
 }
 
+table .w-20 {
+    width: 20%;
+}
+
+table .w-30 {
+    width: 30%;
+}
+
 .pagination .page-item.disabled {
     cursor: not-allowed;
 }

@@ -54,26 +54,26 @@
                             <thead>
                             <tr>
                                 <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'name')"
-                                    class="col-3 clickable">
+                                    class="w-30 clickable">
                                     Grouping Name
                                     <i class="fa sort-icon"
                                        ng-show="columnSort.membershipsList.property === 'name' || !columnSort.membershipsList"
                                        ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
                                 </th>
                                 <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'path')"
-                                    class="col-7 clickable">
+                                    class="w-50 clickable">
                                     Grouping Path
                                     <i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'path'"
                                        ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
                                 </th>
-                                <th class="text-center col-2">Opt Out?</th>
+                                <th class="w-20 text-center">Opt Out?</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships] ">
-                                <td>{{ l.name }}</td>
-                                <td>{{ l.path }}</td>
-                                <td class="text-center">
+                                <td class="w-30">{{ l.name }}</td>
+                                <td class="w-50">{{ l.path }}</td>
+                                <td class="w-20 text-center">
                                 <span ng-if="membershipRequired(currentPageMemberships, $index)">
                                     Membership Required
                                 </span>
@@ -132,26 +132,26 @@
                             <thead>
                             <tr>
                                 <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'name')"
-                                    class="col-3 clickable">
+                                    class="w-30 clickable">
                                     Grouping Name
                                     <i class="fa sort-icon"
                                        ng-show="columnSort.optInList.property === 'name' || !columnSort.optInList"
                                        ng-class="{ reverse: columnSort.optInList.reverse }"></i>
                                 </th>
                                 <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'path')"
-                                    class="col-7 clickable">
+                                    class="w-50 clickable">
                                     Grouping Path
                                     <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'path'"
                                        ng-class="{ reverse: columnSort.optInList.reverse }"></i>
                                 </th>
-                                <th class="col-2 text-center">Opt In?</th>
+                                <th class="w-20 text-center">Opt In?</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn] ">
-                                <td>{{ o.name }}</td>
-                                <td id="groupingOptInPath">{{ o.path }}</td>
-                                <td>
+                                <td class="w-30">{{ o.name }}</td>
+                                <td class="w-50" id="groupingOptInPath">{{ o.path }}</td>
+                                <td class="w-20">
                                     <button class="btn btn-primary btn-block opt-button"
                                             tabindex="0"
                                             ng-click="optIn(currentPageOptIn, $index)">Opt In
