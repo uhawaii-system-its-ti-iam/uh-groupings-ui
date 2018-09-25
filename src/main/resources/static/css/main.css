@@ -349,14 +349,36 @@ table .w-30 {
 }
 
 .modal.in .modal-dialog {
-    -webkit-transform: translate(0, 0);
-    -o-transform: translate(0, 0);
-    transform: translate(0, 0);
+    -webkit-transform: none;
+    transform: none;
 }
 
 .modal-backdrop.in {
     filter: alpha(opacity=50);
     opacity: .5;
+}
+
+.modal-dialog {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: calc(100% - (0.5rem * 2));
+}
+
+.modal-dialog::before {
+    display: block;
+    height: calc(100vh - (0.5rem * 2));
+    content: "";
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        min-height: calc(100% - (1.75rem * 2));
+    }
+    .modal-dialog::before {
+        height: calc(100vh - (1.75rem * 2));
+    }
 }
 
 @media (max-width: 575.98px) {
