@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service("memberAttributeService")
@@ -213,13 +214,14 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
         GroupingsServiceResult ownershipResult;
 
         if (isOwner(groupingPath, ownerUsername) || isAdmin(ownerUsername)) {
-            WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
-            WsAddMemberResults amr = grouperFS.makeWsAddMemberResults(groupingPath + OWNERS, user, newOwnerUsername);
 
-            //todo should we add this to the results?
-            membershipService.updateLastModified(groupingPath);
+            // todo return this list rather than a single GSR
+            List<GroupingsServiceResult> groupingsServiceResults = membershipService.addGroupMemberByUsername(
+                    ownerUsername,
+                    groupingPath + OWNERS,
+                    newOwnerUsername);
 
-            ownershipResult = hs.makeGroupingsServiceResult(amr, action);
+            ownershipResult = hs.makeGroupingsServiceResult(SUCCESS, action);
 
             return ownershipResult;
         }
@@ -246,16 +248,13 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
 
         if (isOwner(groupingPath, ownerUsername) || isAdmin(ownerUsername)) {
             WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(ownerUsername);
-            WsDeleteMemberResults memberResults = grouperFS.makeWsDeleteMemberResults(
+
+            GroupingsServiceResult groupingsServiceResult = membershipService.deleteGroupMemberByUsername(
+                    ownerUsername,
                     groupingPath + OWNERS,
-                    lookup,
                     ownerToRemove);
-            ownershipResults = hs.makeGroupingsServiceResult(memberResults, action);
 
-            //todo should we add this to the results?
-            membershipService.updateLastModified(groupingPath);
-
-            return ownershipResults;
+            return groupingsServiceResult;
         }
 
         ownershipResults = hs.makeGroupingsServiceResult(

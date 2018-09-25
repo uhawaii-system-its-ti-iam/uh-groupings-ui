@@ -159,6 +159,9 @@ public class TestGroupingsRestController {
         membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[4]);
         membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[5]);
 
+        //remove from owners
+        memberAttributeService.removeOwnership(GROUPING, tst[0], tst[1]);
+
         groupAttributeService.changeOptOutStatus(GROUPING, tst[0], true);
         groupAttributeService.changeOptInStatus(GROUPING, tst[0], true);
         groupAttributeService.changeLdapStatus(GROUPING, tst[0], true);
