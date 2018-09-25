@@ -431,3 +431,7 @@ table .w-30 {
         display: none;
     }
 }
+
+.remove-icon {
+    color: #d21515;
+}
