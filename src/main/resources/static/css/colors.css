@@ -30,6 +30,10 @@ h2, h3, h4, h5, h6 {
     text-shadow: 1px 1px 3px rgba(150, 150, 150, 1);
 }
 
+.fa.fa-trash-o {
+    color: #d21515;
+}
+
 .btn.btn-primary {
     background-color: #2C658D;
     border-color: #477A9E;
