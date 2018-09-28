@@ -159,8 +159,12 @@ public class TestGroupingsRestController {
         membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[4]);
         membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[5]);
 
+        //remove from owners
+        memberAttributeService.removeOwnership(GROUPING, tst[0], tst[1]);
+
         groupAttributeService.changeOptOutStatus(GROUPING, tst[0], true);
         groupAttributeService.changeOptInStatus(GROUPING, tst[0], true);
+        groupAttributeService.changeLdapStatus(GROUPING, tst[0], true);
     }
 
     @Test
@@ -472,11 +476,11 @@ public class TestGroupingsRestController {
     public void changeLdapStatusTest() throws Exception {
         assertTrue(groupAttributeService.hasLdap(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/false/setLDAP");
+        mapGSR("/api/groupings/" + GROUPING + "/false/setLdap");
 
         assertFalse(groupAttributeService.hasLdap(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/true/setLDAP");
+        mapGSR("/api/groupings/" + GROUPING + "/true/setLdap");
 
         assertTrue(groupAttributeService.hasLdap(GROUPING));
     }
@@ -532,7 +536,9 @@ public class TestGroupingsRestController {
         Grouping storeEmpty = mapGrouping(GROUPING_STORE_EMPTY);
         Grouping trueEmpty = mapGrouping(GROUPING_TRUE_EMPTY);
 
-        assertTrue(storeEmpty.getBasis().getMembers().size() == 1);
+        //todo should this value be 0 or 1?
+        assertTrue(storeEmpty.getBasis().getMembers().size() == 0);
+
         assertTrue(storeEmpty.getComposite().getMembers().size() == 0);
         assertTrue(storeEmpty.getExclude().getMembers().size() == 0);
         assertTrue(storeEmpty.getInclude().getMembers().size() == 0);
