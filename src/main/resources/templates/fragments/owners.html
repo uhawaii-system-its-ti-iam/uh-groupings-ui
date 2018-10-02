@@ -4,13 +4,15 @@
         <table class="table table-bordered table-sm table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'name')" class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'name')">
                     Name
                     <i class="fa sort-icon"
                        ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners"
                        ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'username')" class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'username')">
                     UH Username
                     <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'username'"
                        ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
@@ -23,7 +25,7 @@
                     {{owner.name}}
                     <span class="fa fa-trash-o pull-right clickable pt-1"
                           data-toggle="tooltip" data-placement="top"
-                          onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
+                          onmouseover="$(this).tooltip('show')"
                           tabindex="0"
                           th:title="#{screen.message.common.tooltip.remove.owner}"
                           ng-keypress="$event.keyCode === 13 ? removeOwner(currentPageOwners, $index) : null"

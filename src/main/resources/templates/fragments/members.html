@@ -36,7 +36,7 @@
                     <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'"
                        ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
-                <th style="vertical-align: middle;" class="clickable"
+                <th class="basis-column clickable"
                     ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')">
                     Where Listed?
                     <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
@@ -59,7 +59,7 @@
                         </i>
                     </div>
                 </td>
-                <td class="text-center" style="width: 3%">{{ g.whereListed }}</td>
+                <td class="basis-column text-center">{{ g.whereListed }}</td>
             </tr>
             </tbody>
         </table>

@@ -20,23 +20,27 @@
         <table class="table table-bordered table-sm table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'name')" class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'name')">
                     Name
                     <i class="fa sort-icon"
                        ng-show="columnSort.groupingExclude.property === 'name' || !columnSort.groupingExclude"
                        ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'uuid')" class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'uuid')">
                     UH Number
                     <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'uuid'"
                        ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'username')" class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'username')">
                     UH Username
                     <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'username'"
                        ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'inBasis')" class="clickable">
+                <th class="basis-column clickable"
+                    ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'inBasis')">
                     In Basis?
                     <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'inBasis'"
                        ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
@@ -49,7 +53,7 @@
                     {{e.name}}
                     <span class="fa fa-trash-o pull-right clickable pt-1"
                           data-toggle="tooltip" data-placement="top"
-                          onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
+                          onmouseover="$(this).tooltip('show')"
                           tabindex="0"
                           th:title="#{screen.message.common.tooltip.remove.exclude}"
                           ng-keypress="$event.keyCode === 13 ? removeMember('Exclude', currentPageExclude, $index) : null"
@@ -68,7 +72,7 @@
                         </i>
                     </div>
                 </td>
-                <td class="text-center" style="width: 3%">{{e.inBasis}}</td>
+                <td class="basis-column text-center">{{e.inBasis}}</td>
             </tr>
             </tbody>
         </table>

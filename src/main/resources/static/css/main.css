@@ -155,6 +155,7 @@ td.uh-pre {
     font-size: .9375rem;
     color: #212529;
     border: 0;
+    text-decoration: none;
 }
 
 .fixed-top .navbar-logout:hover {
@@ -426,4 +427,12 @@ table .w-30 {
     .tooltip {
         display: none;
     }
+}
+
+.fa.fa-trash-o {
+    margin-right: .75rem;
+}
+
+.basis-column {
+    width: 3%;
 }

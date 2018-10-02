@@ -20,21 +20,21 @@
         <table class="table table-bordered table-sm table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'name')"
-                    class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'name')">
                     Name
                     <i class="fa sort-icon"
                        ng-show="columnSort.groupingBasis.property === 'name' || !columnSort.groupingBasis"
                        ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'uuid')"
-                    class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'uuid')">
                     UH Number
                     <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'uuid'"
                        ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'username')"
-                    class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'username')">
                     UH Username
                     <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'username'"
                        ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>

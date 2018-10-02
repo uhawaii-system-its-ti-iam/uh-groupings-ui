@@ -83,8 +83,8 @@
                                           onmouseover="$(this).tooltip('show')"
                                           th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
                                           ng-click="removeAdmin(currentPageAdmins, $index)"
-                                          ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null"
-                                          style="margin-right: 10px;"></span>
+                                          ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">
+                                    </span>
                                 </td>
                                 <td>{{l.uuid}}</td>
                                 <td>{{l.username}}</td>

@@ -20,23 +20,27 @@
         <table class="table table-bordered table-sm table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'name')" class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'name')" >
                     Name
                     <i class="fa sort-icon"
                        ng-show="columnSort.groupingInclude.property === 'name' || !columnSort.groupingInclude"
                        ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'uuid')" class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'uuid')" >
                     UH Number
                     <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'uuid'"
                        ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'username')" class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'username')" >
                     UH Username
                     <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'username'"
                        ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'inBasis')" class="clickable">
+                <th class="basis-column clickable"
+                    ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'inBasis')" >
                     In Basis?
                     <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'inBasis'"
                        ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
@@ -49,7 +53,7 @@
                     {{i.name}}
                     <span class="fa fa-trash-o pull-right clickable pt-1"
                           data-toggle="tooltip" data-placement="top"
-                          onmouseover="$(this).tooltip('show')" style="margin-right: 10px;"
+                          onmouseover="$(this).tooltip('show')"
                           tabindex="0"
                           th:title="#{screen.message.common.tooltip.remove.include}"
                           ng-keypress="$event.keyCode === 13 ? removeMember('Include', currentPageInclude, $index) : null"
@@ -68,7 +72,7 @@
                         </i>
                     </div>
                 </td>
-                <td class="text-center" style="width: 3%">{{i.inBasis}}</td>
+                <td class="basis-column text-center">{{i.inBasis}}</td>
             </tr>
             </tbody>
         </table>
