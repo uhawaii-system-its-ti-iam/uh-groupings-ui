@@ -2,22 +2,18 @@
     <h3>Exclude</h3>
     <div class="row group-header">
         <!-- Export to CSV button -->
-        <div class="col-sm-6 col-12 p-0 mb-sm-0 mb-2">
-            <div class="pull-left">
-                <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
-                        ng-click="exportGroupToCsv(groupingExclude, selectedGrouping.name, 'exclude')">
-                    Export to CSV
-                </button>
-            </div>
+        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
+            <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
+                    ng-click="exportGroupToCsv(groupingExclude, selectedGrouping.name, 'exclude')">
+                Export to CSV
+            </button>
         </div>
         <!-- Filter bar -->
-        <div class="col-sm-6 col-12 p-0">
-            <div class="float-sm-right float-left">
-                <input class="form-control" placeholder="Filter Members..." type="text"
-                       title="Filter Members"
-                       ng-model="excludeQuery"
-                       ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', excludeQuery)"/>
-            </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 p-0">
+            <input class="form-control" placeholder="Filter Members..." type="text"
+                   title="Filter Members"
+                   ng-model="excludeQuery"
+                   ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', excludeQuery)"/>
         </div>
     </div>
     <div class="table-responsive">
