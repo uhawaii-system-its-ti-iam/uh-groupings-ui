@@ -100,10 +100,22 @@ body{
     font-size: 18px;
     line-height: 1.3333333;
     border-radius: 6px;
+    background: #6fa9be;
+    border-color: #5a9cb4;
+    color: white;
+
 
 }
 
 .btn-default {
 
     background: #6fa9be;
+}
+
+.btn-default {
+
+    background: #6fa9be;
+    border-color: #5a9cb4;
+    color: white;
+
 }
