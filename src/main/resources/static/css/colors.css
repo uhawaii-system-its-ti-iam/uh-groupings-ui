@@ -77,3 +77,33 @@ body{
     background: #f5f5f5;
     border-color: #b5bcc7;
 }
+
+.jumbotron .h1, .jumbotron h1 {
+
+    font-size: 63px;
+
+}
+
+.jumbotron .h1, .jumbotron h1 {
+
+    color: inherit;
+
+}
+
+.btn{
+    border: 1px solid transparent;
+}
+
+.btn-group-lg > .btn, .btn-lg {
+
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.3333333;
+    border-radius: 6px;
+
+}
+
+.btn-default {
+
+    background: #6fa9be;
+}
