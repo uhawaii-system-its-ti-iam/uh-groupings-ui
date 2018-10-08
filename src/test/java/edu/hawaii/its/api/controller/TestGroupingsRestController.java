@@ -614,7 +614,7 @@ public class TestGroupingsRestController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(post(uri)
-                .with(csrf()))
+                )
                 .andReturn();
 
         if (result.getResponse().getStatus() == 200) {
@@ -628,7 +628,7 @@ public class TestGroupingsRestController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(post(uri)
-                .with(csrf()))
+                )
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -639,7 +639,7 @@ public class TestGroupingsRestController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(get("/api/groupings/groupingAssignment")
-                .with(csrf()))
+                )
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -650,7 +650,7 @@ public class TestGroupingsRestController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(get("/api/groupings/adminLists")
-                .with(csrf()))
+                )
                 .andExpect(status().isOk())
                 .andReturn();
 
