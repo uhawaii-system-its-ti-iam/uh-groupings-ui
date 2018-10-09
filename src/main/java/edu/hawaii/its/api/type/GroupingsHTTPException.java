@@ -8,7 +8,7 @@ public class GroupingsHTTPException extends RuntimeException {
     private String exceptionMessage;
 
     public GroupingsHTTPException() {
-        //empty
+        // Empty constructor.
     }
 
     public GroupingsHTTPException(String message) {
@@ -17,7 +17,6 @@ public class GroupingsHTTPException extends RuntimeException {
 
     public GroupingsHTTPException(String message, Throwable cause) {
         super(message, cause);
-        this.setStackTrace(cause.getStackTrace());
         this.exceptionMessage = ExceptionUtils.getStackTrace(cause);
     }
 
@@ -26,7 +25,7 @@ public class GroupingsHTTPException extends RuntimeException {
         this.statusCode = statusCode;
     }
 
-    public Integer getStatusCode() {
+    public int getStatusCode() {
         return statusCode;
     }
 
