@@ -165,6 +165,7 @@ public class TestGroupingsRestController {
         groupAttributeService.changeOptOutStatus(GROUPING, tst[0], true);
         groupAttributeService.changeOptInStatus(GROUPING, tst[0], true);
         groupAttributeService.changeLdapStatus(GROUPING, tst[0], true);
+        groupAttributeService.changeListservStatus(GROUPING, tst[0], true);
     }
 
     @Test
@@ -463,11 +464,11 @@ public class TestGroupingsRestController {
     public void changeListservStatusTest() throws Exception {
         assertTrue(groupAttributeService.hasListserv(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/false/setListserv");
+        mapGSRs("/api/groupings/" + GROUPING + "/false/setListserv");
 
         assertFalse(groupAttributeService.hasListserv(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/true/setListserv");
+        mapGSRs("/api/groupings/" + GROUPING + "/true/setListserv");
         assertTrue(groupAttributeService.hasListserv(GROUPING));
     }
 
@@ -614,7 +615,7 @@ public class TestGroupingsRestController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(post(uri)
-                )
+                .with(csrf()))
                 .andReturn();
 
         if (result.getResponse().getStatus() == 200) {
@@ -628,7 +629,7 @@ public class TestGroupingsRestController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(post(uri)
-                )
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
 
