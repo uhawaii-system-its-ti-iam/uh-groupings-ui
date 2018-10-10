@@ -477,11 +477,11 @@ public class TestGroupingsRestController {
     public void changeLdapStatusTest() throws Exception {
         assertTrue(groupAttributeService.hasLdap(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/false/setLdap");
+        mapGSRs("/api/groupings/" + GROUPING + "/false/setLdap");
 
         assertFalse(groupAttributeService.hasLdap(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/true/setLdap");
+        mapGSRs("/api/groupings/" + GROUPING + "/true/setLdap");
 
         assertTrue(groupAttributeService.hasLdap(GROUPING));
     }
