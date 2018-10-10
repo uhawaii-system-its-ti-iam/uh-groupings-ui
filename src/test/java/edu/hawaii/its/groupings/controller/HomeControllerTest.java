@@ -1,10 +1,10 @@
 package edu.hawaii.its.groupings.controller;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -216,7 +216,7 @@ public class HomeControllerTest {
                 .andReturn()
                 .getRequest()
                 .getSession();
-        assertNull(session.getAttribute("feedback"));
+        assertThat(session.getAttribute("feedback"), notNullValue());
     }
 
     @Test

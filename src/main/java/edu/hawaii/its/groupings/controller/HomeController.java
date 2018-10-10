@@ -88,7 +88,6 @@ public class HomeController {
             sessionFeedback.setType("problem");
             sessionFeedback.setEmail(userContextService.getCurrentUsername() + "@hawaii.edu");
             model.addAttribute("feedback", sessionFeedback);
-            session.removeAttribute("feedback");
         } else {
             Feedback feedback = new Feedback();
             feedback.setType("general");
