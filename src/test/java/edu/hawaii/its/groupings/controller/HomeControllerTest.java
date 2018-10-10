@@ -307,4 +307,20 @@ public class HomeControllerTest {
                 .andExpect(view().name("modal/confirmAddModal"));
     }
 
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestEmailListModal() throws Exception {
+        mockMvc.perform(get("/modal/EmailListModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/EmailListModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestLdapModal() throws Exception {
+        mockMvc.perform(get("/modal/CASLDAPModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/CASLDAPModal"));
+    }
+
 }
