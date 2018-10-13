@@ -35,8 +35,11 @@ h2, h3, h4, h5, h6 {
 }
 
 .btn.btn-primary {
-    background-color: #2C658D;
-    border-color: #477A9E;
+/*    background-color: #2C658D;
+    border-color: #477A9E;*/
+    color: #fff;
+    background-color: #286090;
+    border-color: #204d74;
 }
 
 .btn.btn-primary:hover {
@@ -55,8 +58,8 @@ h2, h3, h4, h5, h6 {
     /*background-color:*/
 }
 
-.card-header {
-    /*background-color:*/
+/*.card.page-header */.card-header {
+    background-color: #e5eef1;
 }
 
 .page-item.active > .page-link {
@@ -117,5 +120,22 @@ body{
     background: #6fa9be;
     border-color: #5a9cb4;
     color: white;
+
+}
+
+#name{
+    color: #5a9cb4;
+}
+
+h1, h2, .text-left, span {
+
+    color: #1c6070;
+
+}
+
+.btn-light:hover {
+    color: #212529;
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
 
 }

@@ -8,11 +8,15 @@
 
 <!--  Content container -->
 <div class="container" ng-controller="MembershipJsController" data-ng-init="init()">
-    <h1 class="text-left">Manage My Memberships</h1>
+    <!--<h1 class="text-left">Manage My Memberships</h1>
 
-    <!-- <p th:text="#{screen.message.home.test('{{currentUsername}}')}">Hi my name is aaron</p> -->
+    &lt;!&ndash; <p th:text="#{screen.message.home.test('{{currentUsername}}')}">Hi my name is aaron</p> &ndash;&gt;
 
-    <p class="text-left" th:utext="#{screen.message.memberships.page.description}"></p>
+    <p class="text-left" th:utext="#{screen.message.memberships.page.description}"></p>-->
+
+    <div th:replace="fragments/page-header :: page-header(title='Manage My Memberships', description=#{screen.message.memberships.page.description})">
+    </div>
+
 
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
