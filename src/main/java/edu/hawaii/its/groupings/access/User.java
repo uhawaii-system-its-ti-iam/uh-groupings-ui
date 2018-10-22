@@ -8,31 +8,27 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 public class User extends org.springframework.security.core.userdetails.User {
 
     public static final long serialVersionUID = 2L;
-    private Long uhuuid;
+    private String uhuuid;
     private UhAttributes attributes;
 
-    // Constructor.
-    public User(String username, Long uhuuid, Collection<GrantedAuthority> authorities) {
+    public User(String username, String uhuuid, Collection<GrantedAuthority> authorities) {
         super(username, "", authorities);
         setUhuuid(uhuuid);
     }
 
-    // Constructor.
     public User(String username, Collection<GrantedAuthority> authorities) {
-        this(username, null, authorities);
+        super(username, "", authorities);
     }
 
     public String getUid() {
         return getUsername();
     }
 
-    public Long getUhuuid() {
+    public String getUhuuid() {
         return uhuuid;
     }
 
-    public void setUhuuid(Long uhuuid) {
-        this.uhuuid = uhuuid;
-    }
+    public void setUhuuid(String uhuuid) { this.uhuuid = uhuuid; }
 
     public String getAttribute(String name) {
         return attributes.getValue(name);
