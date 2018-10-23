@@ -165,6 +165,7 @@ public class TestGroupingsRestController {
         groupAttributeService.changeOptOutStatus(GROUPING, tst[0], true);
         groupAttributeService.changeOptInStatus(GROUPING, tst[0], true);
         groupAttributeService.changeLdapStatus(GROUPING, tst[0], true);
+        groupAttributeService.changeListservStatus(GROUPING, tst[0], true);
     }
 
     @Test
@@ -463,11 +464,11 @@ public class TestGroupingsRestController {
     public void changeListservStatusTest() throws Exception {
         assertTrue(groupAttributeService.hasListserv(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/false/setListserv");
+        mapGSRs("/api/groupings/" + GROUPING + "/false/setListserv");
 
         assertFalse(groupAttributeService.hasListserv(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/true/setListserv");
+        mapGSRs("/api/groupings/" + GROUPING + "/true/setListserv");
         assertTrue(groupAttributeService.hasListserv(GROUPING));
     }
 
@@ -476,11 +477,11 @@ public class TestGroupingsRestController {
     public void changeLdapStatusTest() throws Exception {
         assertTrue(groupAttributeService.hasLdap(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/false/setLdap");
+        mapGSRs("/api/groupings/" + GROUPING + "/false/setLdap");
 
         assertFalse(groupAttributeService.hasLdap(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/true/setLdap");
+        mapGSRs("/api/groupings/" + GROUPING + "/true/setLdap");
 
         assertTrue(groupAttributeService.hasLdap(GROUPING));
     }
@@ -639,7 +640,7 @@ public class TestGroupingsRestController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(get("/api/groupings/groupingAssignment")
-                .with(csrf()))
+                )
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -650,7 +651,7 @@ public class TestGroupingsRestController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MvcResult result = mockMvc.perform(get("/api/groupings/adminLists")
-                .with(csrf()))
+                )
                 .andExpect(status().isOk())
                 .andReturn();
 
