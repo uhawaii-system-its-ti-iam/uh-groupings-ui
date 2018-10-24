@@ -11,10 +11,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.jasig.cas.client.authentication.SimplePrincipal;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,12 +33,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.hawaii.its.api.service.GroupAttributeService;
-import edu.hawaii.its.api.service.GroupingAssignmentService;
-import edu.hawaii.its.api.service.GroupingFactoryService;
-import edu.hawaii.its.api.service.HelperService;
-import edu.hawaii.its.api.service.MemberAttributeService;
-import edu.hawaii.its.api.service.MembershipService;
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
@@ -103,25 +99,7 @@ public class TestGroupingsRestController {
     private String API_ACCOUNT;
 
     @Autowired
-    private GroupAttributeService groupAttributeService;
-
-    @Autowired
-    private GroupingAssignmentService groupingAssignmentService;
-
-    @Autowired
-    private GroupingFactoryService groupingFactoryService;
-
-    @Autowired
-    private HelperService helperService;
-
-    @Autowired
-    private MemberAttributeService memberAttributeService;
-
-    @Autowired
-    private MembershipService membershipService;
-
-    @Autowired
-    private GroupingsRestController gc;
+    private GroupingsRestController groupingsRestController;
 
     @Autowired
     public Environment env; // Just for the settings check.
@@ -130,6 +108,8 @@ public class TestGroupingsRestController {
     private WebApplicationContext webApplicationContext;
 
     private MockMvc mockMvc;
+
+    private static final String API_BASE = "/api/groupings/";
 
     @PostConstruct
     public void init() {
@@ -147,36 +127,33 @@ public class TestGroupingsRestController {
                 .apply(springSecurity())
                 .build();
 
+        Principal tst0Principal = new SimplePrincipal(tst[0]);
+
         //put in include
-        membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[0]);
-        membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[1]);
-        membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[2]);
+        groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[0]);
+        groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[1]);
+        groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[2]);
 
         //add to exclude
-        membershipService.addGroupMemberByUsername(tst[0], GROUPING_EXCLUDE, tst[3]);
+        groupingsRestController.addMemberToExcludeGroup(tst0Principal, GROUPING, tst[3]);
 
         //remove from exclude
-        membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[4]);
-        membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[5]);
+        groupingsRestController.deleteMemberFromExcludeGroup(tst0Principal, GROUPING, tst[4]);
+        groupingsRestController.deleteMemberFromExcludeGroup(tst0Principal, GROUPING, tst[5]);
 
         //remove from owners
-        memberAttributeService.removeOwnership(GROUPING, tst[0], tst[1]);
+        groupingsRestController.removeOwnership(tst0Principal, GROUPING, tst[1]);
 
-        groupAttributeService.changeOptOutStatus(GROUPING, tst[0], true);
-        groupAttributeService.changeOptInStatus(GROUPING, tst[0], true);
-        groupAttributeService.changeLdapStatus(GROUPING, tst[0], true);
-        groupAttributeService.changeListservStatus(GROUPING, tst[0], true);
+        //set statuses
+        groupingsRestController.setOptOut(tst0Principal, GROUPING, true);
+        groupingsRestController.setOptIn(tst0Principal, GROUPING, true);
+        groupingsRestController.setLdap(tst0Principal, GROUPING, true);
+        groupingsRestController.setListserv(tst0Principal, GROUPING, true);
     }
 
     @Test
     public void testConstruction() {
-        assertNotNull(groupAttributeService);
-        assertNotNull(groupingAssignmentService);
-        assertNotNull(groupingFactoryService);
-        assertNotNull(helperService);
-        assertNotNull(memberAttributeService);
-        assertNotNull(membershipService);
-        assertNotNull(gc);
+        assertNotNull(groupingsRestController);
     }
 
     @Test
@@ -187,13 +164,13 @@ public class TestGroupingsRestController {
 
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
 
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/assignOwnership");
+        mapGSR(API_BASE + GROUPING + "/" + tst[1] + "/assignOwnership");
 
         g = mapGrouping(GROUPING);
 
         assertTrue(g.getOwners().getUsernames().contains(tst[1]));
 
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/removeOwnership");
+        mapGSR(API_BASE + GROUPING + "/" + tst[1] + "/removeOwnership");
 
         g = mapGrouping(GROUPING);
 
@@ -206,18 +183,19 @@ public class TestGroupingsRestController {
 
         assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
 
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToIncludeGroup");
+        mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addMemberToIncludeGroup");
 
+        assertFalse(groupingsRestController.g);
         assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
         //tst[3] is in basis and will go into include
         assertTrue(memberAttributeService.isMember(GROUPING_INCLUDE, tst[3]));
 
         //add tst[3] back to exclude
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
+        mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
         assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
 
         //add tst[3] to Grouping
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[3] + "/addGroupingMemberByUsername");
+        mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addGroupingMemberByUsername");
         assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
         //tst[3] is in basis, so will not go into include
         assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, tst[3]));
@@ -230,13 +208,13 @@ public class TestGroupingsRestController {
     public void deleteMemberTest() throws Exception {
 
         assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[3] + "/deleteMemberFromExcludeGroup");
+        mapGSR(API_BASE + GROUPING + "/" + tst[3] + "/deleteMemberFromExcludeGroup");
 
         assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
         assertTrue(memberAttributeService.isMember(GROUPING, tst[3]));
 
         assertTrue(memberAttributeService.isMember(GROUPING_INCLUDE, tst[1]));
-        mapGSR("/api/groupings/" + GROUPING + "/" + tst[1] + "/deleteMemberFromIncludeGroup");
+        mapGSR(API_BASE + GROUPING + "/" + tst[1] + "/deleteMemberFromIncludeGroup");
 
         assertFalse(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[1]));
         assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, tst[1]));
@@ -245,8 +223,8 @@ public class TestGroupingsRestController {
         assertTrue(memberAttributeService.isMember(GROUPING, tst[5]));
         assertTrue(memberAttributeService.isMember(GROUPING_BASIS, tst[5]));
         assertTrue(memberAttributeService.isMember(GROUPING_INCLUDE, tst[2]));
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[2] + "/deleteGroupingMemberByUsername");
-        mapGSRs("/api/groupings/" + GROUPING + "/" + tst[5] + "/deleteGroupingMemberByUsername");
+        mapGSRs(API_BASE + GROUPING + "/" + tst[2] + "/deleteGroupingMemberByUsername");
+        mapGSRs(API_BASE + GROUPING + "/" + tst[5] + "/deleteGroupingMemberByUsername");
 
         assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[5]));
         assertFalse(memberAttributeService.isMember(GROUPING_INCLUDE, tst[2]));
@@ -294,11 +272,11 @@ public class TestGroupingsRestController {
         assertTrue(include.getNames().contains(tstName[2]));
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
-        mapGSR("/api/groupings/" + grouping.getPath() + "/" + tst[5] + "/assignOwnership");
+        mapGSR(API_BASE + grouping.getPath() + "/" + tst[5] + "/assignOwnership");
         grouping = mapGrouping(GROUPING);
 
         assertTrue(grouping.getOwners().getNames().contains(tstName[5]));
-        mapGSR("/api/groupings/" + grouping.getPath() + "/" + tst[5] + "/removeOwnership");
+        mapGSR(API_BASE + grouping.getPath() + "/" + tst[5] + "/removeOwnership");
         grouping = mapGrouping(GROUPING);
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
@@ -312,7 +290,7 @@ public class TestGroupingsRestController {
         assertEquals(groupings.getGroupingsIn().size(), groupings.getGroupingsToOptOutOf().size());
 
         for(Grouping grouping : groupings.getGroupingsIn()) {
-            mapGSRs("/api/groupings/" + grouping.getPath() + "/optOut");
+            mapGSRs(API_BASE + grouping.getPath() + "/optOut");
         }
 
         groupings = mapGroupingAssignment();
@@ -395,7 +373,7 @@ public class TestGroupingsRestController {
 
         GroupingAssignment tst4Groupings = mapGroupingAssignment();
         assertEquals(tst4Groupings.getGroupingsOptedInTo().size(), 0);
-        mapGSRs("/api/groupings/" + GROUPING + "/optIn");
+        mapGSRs(API_BASE + GROUPING + "/optIn");
         tst4Groupings = mapGroupingAssignment();
         for (Grouping grouping : tst4Groupings.getGroupingsOptedInTo()) {
             if (grouping.getPath().contains(GROUPING)) {
@@ -413,7 +391,7 @@ public class TestGroupingsRestController {
 
         GroupingAssignment tst5Groupings = mapGroupingAssignment();
         assertEquals(tst5Groupings.getGroupingsOptedOutOf().size(), 0);
-        mapGSRs("/api/groupings/" + GROUPING + "/optOut");
+        mapGSRs(API_BASE + GROUPING + "/optOut");
         tst5Groupings = mapGroupingAssignment();
 
         for (Grouping grouping : tst5Groupings.getGroupingsOptedOutOf()) {
@@ -435,7 +413,7 @@ public class TestGroupingsRestController {
         assertTrue(memberAttributeService.isMember(GROUPING_EXCLUDE, tst[3]));
 
         //tst[3] opts into Grouping
-        mapGSRs("/api/groupings/" + GROUPING + "/optIn");
+        mapGSRs(API_BASE + GROUPING + "/optIn");
 
         //tst[3] is now in composite, still in basis and not in exclude
         assertTrue(memberAttributeService.isMember(GROUPING, tst[3]));
@@ -451,7 +429,7 @@ public class TestGroupingsRestController {
         assertTrue(memberAttributeService.isMember(GROUPING_BASIS, tst[5]));
 
         //tst[5] opts out of Grouping
-        mapGSRs("/api/groupings/" + GROUPING + "/optOut");
+        mapGSRs(API_BASE + GROUPING + "/optOut");
 
         //tst[5] is now in exclude, not in include or Grouping
         assertTrue(memberAttributeService.isSelfOpted(GROUPING_EXCLUDE, tst[5]));
@@ -464,11 +442,11 @@ public class TestGroupingsRestController {
     public void changeListservStatusTest() throws Exception {
         assertTrue(groupAttributeService.hasListserv(GROUPING));
 
-        mapGSRs("/api/groupings/" + GROUPING + "/false/setListserv");
+        mapGSRs(API_BASE + GROUPING + "/false/setListserv");
 
         assertFalse(groupAttributeService.hasListserv(GROUPING));
 
-        mapGSRs("/api/groupings/" + GROUPING + "/true/setListserv");
+        mapGSRs(API_BASE + GROUPING + "/true/setListserv");
         assertTrue(groupAttributeService.hasListserv(GROUPING));
     }
 
@@ -477,11 +455,11 @@ public class TestGroupingsRestController {
     public void changeLdapStatusTest() throws Exception {
         assertTrue(groupAttributeService.hasLdap(GROUPING));
 
-        mapGSRs("/api/groupings/" + GROUPING + "/false/setLdap");
+        mapGSRs(API_BASE + GROUPING + "/false/setLdap");
 
         assertFalse(groupAttributeService.hasLdap(GROUPING));
 
-        mapGSRs("/api/groupings/" + GROUPING + "/true/setLdap");
+        mapGSRs(API_BASE + GROUPING + "/true/setLdap");
 
         assertTrue(groupAttributeService.hasLdap(GROUPING));
     }
@@ -491,10 +469,10 @@ public class TestGroupingsRestController {
     public void changeOptInTest() throws Exception {
         assertTrue(groupAttributeService.optInPermission(GROUPING));
 
-        mapGSRs("/api/groupings/" + GROUPING + "/false/setOptIn");
+        mapGSRs(API_BASE + GROUPING + "/false/setOptIn");
         assertFalse(groupAttributeService.optInPermission(GROUPING));
 
-        mapGSRs("/api/groupings/" + GROUPING + "/true/setOptIn");
+        mapGSRs(API_BASE + GROUPING + "/true/setOptIn");
         assertTrue(groupAttributeService.optInPermission(GROUPING));
     }
 
@@ -503,10 +481,10 @@ public class TestGroupingsRestController {
     public void changeOptOutTest() throws Exception {
         assertTrue(groupAttributeService.optOutPermission(GROUPING));
 
-        mapGSRs("/api/groupings/" + GROUPING + "/false/setOptOut");
+        mapGSRs(API_BASE + GROUPING + "/false/setOptOut");
         assertFalse(groupAttributeService.optOutPermission(GROUPING));
 
-        mapGSRs("/api/groupings/" + GROUPING + "/true/setOptOut");
+        mapGSRs(API_BASE + GROUPING + "/true/setOptOut");
         assertTrue(groupAttributeService.optOutPermission(GROUPING));
     }
 
@@ -578,16 +556,16 @@ public class TestGroupingsRestController {
         GroupingsServiceResult deleteAdminResults;
 
         try {
-            //            addAdminResults = gc.addAdmin(tst[0], tst[0]).getBody();
-            addAdminResults = mapGSR("/api/groupings/" + tst[0] + "/addAdmin");
+            //            addAdminResults = groupingsRestController.addAdmin(tst[0], tst[0]).getBody();
+            addAdminResults = mapGSR(API_BASE + tst[0] + "/addAdmin");
         } catch (GroupingsHTTPException ghe) {
             addAdminResults = new GroupingsServiceResult();
             addAdminResults.setResultCode(FAILURE);
         }
 
         try {
-            //            deleteAdminResults = gc.deleteAdmin(tst[0], tst[0]).getBody();
-            deleteAdminResults = mapGSR("/api/groupings/" + tst[0] + "/deleteAdmin");
+            //            deleteAdminResults = groupingsRestController.deleteAdmin(tst[0], tst[0]).getBody();
+            deleteAdminResults = mapGSR(API_BASE + tst[0] + "/deleteAdmin");
         } catch (GroupingsHTTPException ghe) {
             deleteAdminResults = new GroupingsServiceResult();
             deleteAdminResults.setResultCode(FAILURE);
@@ -604,7 +582,7 @@ public class TestGroupingsRestController {
     private Grouping mapGrouping(String groupingPath) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        MvcResult result = mockMvc.perform(get("/api/groupings/" + groupingPath + "/grouping"))
+        MvcResult result = mockMvc.perform(get(API_BASE + groupingPath + "/grouping"))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -639,7 +617,7 @@ public class TestGroupingsRestController {
     private GroupingAssignment mapGroupingAssignment() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        MvcResult result = mockMvc.perform(get("/api/groupings/groupingAssignment")
+        MvcResult result = mockMvc.perform(get(API_BASE + "groupingAssignment")
                 )
                 .andExpect(status().isOk())
                 .andReturn();
@@ -650,7 +628,7 @@ public class TestGroupingsRestController {
     private AdminListsHolder mapAdminListsHolder() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        MvcResult result = mockMvc.perform(get("/api/groupings/adminLists")
+        MvcResult result = mockMvc.perform(get(API_BASE + "adminLists")
                 )
                 .andExpect(status().isOk())
                 .andReturn();

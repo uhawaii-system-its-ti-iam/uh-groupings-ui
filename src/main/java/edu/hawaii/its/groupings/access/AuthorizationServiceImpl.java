@@ -1,16 +1,19 @@
 package edu.hawaii.its.groupings.access;
 
+import edu.hawaii.its.api.controller.GroupingsRestController;
+import edu.hawaii.its.api.type.AdminListsHolder;
+import edu.hawaii.its.api.type.GroupingAssignment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import edu.hawaii.its.api.service.GroupingAssignmentService;
-import edu.hawaii.its.api.service.MemberAttributeService;
 
+import org.jasig.cas.client.authentication.SimplePrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +32,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private Map<String, List<Role>> userMap = new HashMap<>();
 
     @Autowired
-    private MemberAttributeService memberAttributeService;
-
-    @Autowired
-    private GroupingAssignmentService groupingAssignmentService;
+    GroupingsRestController groupingsRestController;
 
     private static final Log logger = LogFactory.getLog(AuthorizationServiceImpl.class);
 
@@ -96,7 +96,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public boolean fetchOwner(String username) {
         try {
             logger.info("//////////////////////////////");
-            if (!groupingAssignmentService.getGroupingAssignment(username).getGroupingsOwned().isEmpty()) {
+            Principal principal = new SimplePrincipal(username);
+            // todo this should be changed to the new isOwner endpoint after it is available
+            GroupingAssignment groupingAssignment = (GroupingAssignment)groupingsRestController.groupingAssignment(principal).getBody();
+            if (!(groupingAssignment.getGroupingsOwned().size() == 0)) {
                 logger.info("This person is an owner");
                 return true;
             } else {
@@ -117,7 +120,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public boolean fetchAdmin(String username) {
         logger.info("//////////////////////////////");
         try {
-            if (memberAttributeService.isAdmin(username)) {
+
+            Principal principal = new SimplePrincipal(username);
+            AdminListsHolder adminListsHolder = (AdminListsHolder)groupingsRestController.adminLists(principal).getBody();
+            // todo this should be changed to the new isAdmin endpoint after it is available
+            if (! (adminListsHolder.getAdminGroup().getMembers().size() == 0)) {
                 logger.info("this person is an admin");
                 return true;
             } else {
