@@ -15,7 +15,14 @@
 
     </div>
 -->
-    <div class="container">
+
+     <div class = "alert alert-success" role="alert" th:if="${success}">
+     <p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>
+</div>
+
+ <div th:replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.description})"></div>
+
+    <!--<div class="container">
     <div th:if="${success}" replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.alertSuccess})">
     </div>
     </div>
@@ -23,7 +30,7 @@
 
 
     <p th:utext="#{screen.message.feedback.page.description}"></p>
-
+-->
     <div class="border p-4">
         <form th:action="@{/feedback}" th:object="${feedback}" method="post">
             <div class="form-group row" id="typeError">
