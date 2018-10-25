@@ -161,4 +161,9 @@ public class HomeController {
         return "modal/CASLDAPModal";
     }
 
+    @RequestMapping(value = "/modal/removeErrorModal", method = RequestMethod.GET)
+    public String removeErrorModal(Locale locale, Model model) {
+        return "modal/removeErrorModal";
+    }
+
 }

@@ -444,6 +444,10 @@
                     endpoint: endpoint,
                     listName: "owners"
                 });
+            } else {
+                $scope.createRemoveErrorModal({
+                    userType: "owner"
+                });
             }
         };
 
@@ -459,6 +463,27 @@
          */
         $scope.cancelRemoveUser = function () {
             $scope.removeModalInstance.dismiss();
+        };
+
+        /**
+         * Creates a modal stating there was an error removing the user from a group.
+         * @param {object} options - the options object
+         * @param {string} options.userType - the type of user being removed (either admin or owner)
+         */
+        $scope.createRemoveErrorModal = function (options) {
+            $scope.userType = options.userType;
+
+            $scope.removeErrorModalInstance = $uibModal.open({
+                templateUrl: "modal/removeErrorModal.html",
+                scope: $scope
+            });
+        };
+
+        /**
+         * Closes the remove error modal.
+         */
+        $scope.closeRemoveErrorModal = function () {
+            $scope.removeErrorModalInstance.close();
         };
 
         /**
@@ -675,10 +700,10 @@
                 scope: $scope
             });
 
-            $scope.CASLDAPInstance.result.then(function(){
+            $scope.CASLDAPInstance.result.then(function () {
                 $scope.ldap = !$scope.ldap;
                 $scope.updateLdap();
-            }).catch(function (){
+            }).catch(function () {
                 //do nothing
             });
         };
@@ -707,10 +732,10 @@
                 scope: $scope
             });
 
-            $scope.EmailListInstance.result.then(function(){
+            $scope.EmailListInstance.result.then(function () {
                 $scope.listserv = !$scope.listserv;
                 $scope.updateListserv();
-            }).catch(function (){
+            }).catch(function () {
                 //do nothing
             });
 
@@ -729,7 +754,6 @@
         $scope.closeEmailListModal = function () {
             $scope.EmailListInstance.dismiss();
         };
-
 
 
         /**

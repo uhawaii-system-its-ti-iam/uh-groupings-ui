@@ -323,4 +323,12 @@ public class HomeControllerTest {
                 .andExpect(view().name("modal/CASLDAPModal"));
     }
 
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestRemoveErrorModal() throws Exception {
+        mockMvc.perform(get("/modal/removeErrorModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/removeErrorModal"));
+    }
+
 }
