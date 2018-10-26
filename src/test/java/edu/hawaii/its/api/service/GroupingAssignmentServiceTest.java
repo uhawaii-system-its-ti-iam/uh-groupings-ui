@@ -1,5 +1,8 @@
 package edu.hawaii.its.api.service;
 
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -14,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.access.method.P;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -34,6 +38,8 @@ import edu.internet2.middleware.grouperClient.ws.beans.WsGetMembersResults;
 import edu.internet2.middleware.grouperClient.ws.beans.WsGroup;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubject;
 import edu.internet2.middleware.grouperClient.ws.beans.WsSubjectLookup;
+
+import javax.validation.constraints.Null;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -87,6 +93,7 @@ public class GroupingAssignmentServiceTest {
 
     private List<Person> users = new ArrayList<>();
     private List<WsSubjectLookup> lookups = new ArrayList<>();
+    private Person person;
 
     @Autowired
     private GroupingRepository groupingRepository;
@@ -410,9 +417,8 @@ public class GroupingAssignmentServiceTest {
         getMembersResult1.setWsSubjects(list);
         getMembersResult[0] = getMembersResult1;
         getMembersResults.setResults(getMembersResult);
-
+        //Dead code below
         Group group = groupingAssignmentService.makeGroup(getMembersResults);
-
         for (int i = 0; i < group.getMembers().size(); i++) {
             assertTrue(group.getMembers().get(i).getName().equals("testSubject_" + i));
             assertTrue(group.getNames().contains("testSubject_" + i));
@@ -445,4 +451,36 @@ public class GroupingAssignmentServiceTest {
         assertNotNull(groupingAssignmentService.makePerson(new WsSubject(), new String[] {}));
     }
 
+    @Test
+    public void makeBasisGroupTest() {
+        WsGetMembersResult getMembersResult = new WsGetMembersResult();
+        WsGetMembersResult[] getMembersResults = new WsGetMembersResult[1];
+        WsGetMembersResults getMembersResult1 = new WsGetMembersResults();
+
+        WsSubject[] list = new WsSubject[5];
+        for (int i = 0; i < 5; i++) {
+            list[i] = new WsSubject();
+            list[i].setName("testSubject" + i);
+            list[i].setId("testSubject_uuid" + i);
+            list[i].setAttributeValues(new String[] { "testSubject_username" + i });
+            list[i].setSourceId("g:gsa");
+        }
+
+
+        getMembersResult.setWsSubjects(list);
+        getMembersResults[0] = getMembersResult;
+        getMembersResult1.setResults(getMembersResults);
+        groupingAssignmentService.makeBasisGroup(getMembersResult1);
+        System.out.println(groupingAssignmentService.makeBasisGroup(getMembersResult1));
+        Group group = groupingAssignmentService.makeBasisGroup(getMembersResult1);
+        for (int i = 0; i < 5; i++) {
+            person = new Person();
+            person.setUsername("name" + i);
+            person.setName("uName" + i);
+            person.setUuid("uuid" + i);
+            person.setAttribute("key", "value" + i);
+            group.addMember(person);
+        }
+    }
 }
+

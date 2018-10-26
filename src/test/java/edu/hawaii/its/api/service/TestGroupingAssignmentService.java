@@ -80,8 +80,11 @@ public class TestGroupingAssignmentService {
     private String[] username;
 
     @Value("${groupings.api.grouping_admins}")
-
     private String GROUPING_ADMINS;
+
+    @Value("${groupings.api.test.student_test_username}")
+    private String AARON;
+
     @Autowired
     GroupAttributeService groupAttributeService;
 
@@ -113,15 +116,13 @@ public class TestGroupingAssignmentService {
         groupAttributeService.changeOptInStatus(GROUPING, username[0], true);
         groupAttributeService.changeOptOutStatus(GROUPING, username[0], true);
 
-        //put in include
+
         membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[0]);
         membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[1]);
         membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[2]);
-
         //remove from exclude
         membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[4]);
         membershipService.addGroupingMemberByUsername(username[0], GROUPING, username[5]);
-
         //add to exclude
         membershipService.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
     }
@@ -138,10 +139,14 @@ public class TestGroupingAssignmentService {
         assertEquals(info.getAdminGroup().getUuids().size(), 0);
 
         //try with admin
-        AdminListsHolder infoAdmin = groupingAssignmentService.adminLists(GROUPING_ADMINS);
+        membershipService.addAdmin(AARON, username[0]);
+        AdminListsHolder infoAdmin = groupingAssignmentService.adminLists(username[0]);
         assertNotNull(infoAdmin);
-
-
+        assertEquals(infoAdmin.getAllGroupings().size(), 129);
+        assertEquals(infoAdmin.getAdminGroup().getMembers().size(), 10);
+        assertEquals(infoAdmin.getAdminGroup().getUsernames().size(), 10);
+        assertEquals(infoAdmin.getAdminGroup().getNames().size(), 10);
+        assertEquals(infoAdmin.getAdminGroup().getUuids().size(), 10);
 
     }
 
@@ -167,9 +172,9 @@ public class TestGroupingAssignmentService {
     @Test
     public void getGroupingTest() {
         Grouping grouping = groupingAssignmentService.getGrouping(GROUPING, username[4]);
-        assertEquals(grouping.getPath(), "");
-        assertEquals(grouping.getName(), "");
-        assertEquals(grouping.getOwners().getMembers().size(), 0);
+        assertEquals(grouping.getPath(), "tmp:zknoebel-test:zac-many");
+        assertEquals(grouping.getName(), "zac-many");
+        assertEquals(grouping.getOwners().getMembers().size(), 2);
         assertEquals(grouping.getInclude().getMembers().size(), 0);
         assertEquals(grouping.getExclude().getMembers().size(), 0);
         assertEquals(grouping.getBasis().getMembers().size(), 0);
@@ -182,13 +187,11 @@ public class TestGroupingAssignmentService {
         assertTrue(grouping.getBasis().getUsernames().contains(username[3]));
         assertTrue(grouping.getBasis().getUsernames().contains(username[4]));
         assertTrue(grouping.getBasis().getUsernames().contains(username[5]));
-
         assertTrue(grouping.getComposite().getUsernames().contains(username[0]));
         assertTrue(grouping.getComposite().getUsernames().contains(username[1]));
         assertTrue(grouping.getComposite().getUsernames().contains(username[2]));
         assertTrue(grouping.getComposite().getUsernames().contains(username[4]));
         assertTrue(grouping.getComposite().getUsernames().contains(username[5]));
-
         assertTrue(grouping.getExclude().getUsernames().contains(username[3]));
 
         assertTrue(grouping.getInclude().getUsernames().contains(username[0]));

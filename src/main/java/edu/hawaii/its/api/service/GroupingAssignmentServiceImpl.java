@@ -366,7 +366,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
                     if (subject != null) {
                         if (subject.getSourceId() == null) {
                             group.addMember(makePerson(subject, attributeNames));
-                        } else if (!subject.getSourceId().equals("g:gsa")) {
+                        } else if(!subject.getSourceId().equals("g:gsa")) {
                             group.addMember(makePerson(subject, attributeNames));
                         }
                     }
