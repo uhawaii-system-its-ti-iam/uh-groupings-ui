@@ -33,16 +33,16 @@ public class Grouping {
     private Group owners;
 
     @Column
-    private boolean listservOn = false;
+    private boolean isListservOn = false;
 
     @Column
-    private boolean ldapOn = false;
+    private boolean isReleasedGroupingOn = false;
 
     @Column
-    private boolean optInOn = false;
+    private boolean isOptInOn = false;
 
     @Column
-    private boolean optOutOn = false;
+    private boolean isOptOutOn = false;
 
     // Constructor.
     public Grouping() {
@@ -118,35 +118,35 @@ public class Grouping {
     }
 
     public boolean isListservOn() {
-        return listservOn;
+        return isListservOn;
     }
 
-    public boolean isLdapOn(){
-        return ldapOn;
+    public boolean isReleasedGroupingOn(){
+        return isReleasedGroupingOn;
     }
 
     public void setListservOn(boolean listservOn) {
-        this.listservOn = listservOn;
+        this.isListservOn = listservOn;
     }
 
-    public void setLdapOn(boolean ldapOn) {
-        this.ldapOn = ldapOn;
+    public void setReleasedGroupingOn(boolean releasedGroupingOn) {
+        this.isReleasedGroupingOn = releasedGroupingOn;
     }
 
     public boolean isOptInOn() {
-        return optInOn;
+        return isOptInOn;
     }
 
     public void setOptInOn(boolean optInOn) {
-        this.optInOn = optInOn;
+        this.isOptInOn = optInOn;
     }
 
     public boolean isOptOutOn() {
-        return optOutOn;
+        return isOptOutOn;
     }
 
     public void setOptOutOn(boolean optOutOn) {
-        this.optOutOn = optOutOn;
+        this.isOptOutOn = optOutOn;
     }
 
     @Override
@@ -154,7 +154,7 @@ public class Grouping {
         return "Grouping [name=" + name
                 + ", path=" + path
                 + ", ListservOn=" + isListservOn()
-                + ", LdapOn=" + isLdapOn()
+                + ", ReleasedGroupingOn=" + isReleasedGroupingOn()
                 + ", OptInOn=" + isOptInOn()
                 + ", OptOutOn=" + isOptOutOn()
                 + ", basis=" + basis
