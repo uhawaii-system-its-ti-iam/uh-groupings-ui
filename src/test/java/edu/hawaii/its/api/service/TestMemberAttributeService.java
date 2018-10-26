@@ -1,5 +1,6 @@
 package edu.hawaii.its.api.service;
 
+import edu.internet2.middleware.grouperClient.ws.beans.WsGetAttributeAssignmentsResults;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +21,9 @@ import org.springframework.util.Assert;
 import javax.annotation.PostConstruct;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
@@ -50,6 +50,11 @@ public class TestMemberAttributeService {
     @Value("${groupings.api.failure}")
     private String FAILURE;
 
+    @Value("${groupings.api.assign_type_group}")
+    private String ASSIGN_TYPE_GROUP;
+
+    @Value("${groupings.api.yyyymmddThhmm}")
+    private String YYYYMMDDTHHMM;
     @Autowired
     GroupAttributeService groupAttributeService;
 
@@ -92,6 +97,9 @@ public class TestMemberAttributeService {
 
         //add to exclude
         membershipService.deleteGroupingMemberByUsername(username[0], GROUPING, username[3]);
+
+        //remove from owners
+        memberAttributeService.removeOwnership(GROUPING, username[0], username[1]);
     }
 
     @Test
@@ -117,10 +125,25 @@ public class TestMemberAttributeService {
         assertFalse(memberAttributeService.isOwner(GROUPING, username[1]));
         assertTrue(assignOwnershipFail.getResultCode().startsWith(FAILURE));
 
+        // get last modified time
+        WsGetAttributeAssignmentsResults attributes = groupAttributeService.attributeAssignmentsResults(ASSIGN_TYPE_GROUP, GROUPING, YYYYMMDDTHHMM);
+        String lastModTime1 = attributes.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
+
+        // get last modified time and make sure that it has changed
+        try {
+            TimeUnit.MINUTES.sleep(1);
+        } catch (InterruptedException e){
+            fail();
+        }
+        
         GroupingsServiceResult assignOwnershipSuccess =
                 memberAttributeService.assignOwnership(GROUPING, username[0], username[1]);
         assertTrue(memberAttributeService.isOwner(GROUPING, username[1]));
         assertTrue(assignOwnershipSuccess.getResultCode().startsWith(SUCCESS));
+
+        attributes = groupAttributeService.attributeAssignmentsResults(ASSIGN_TYPE_GROUP, GROUPING, YYYYMMDDTHHMM);
+        String lastModTime2 = attributes.getWsAttributeAssigns()[0].getWsAttributeAssignValues()[0].getValueSystem();
+        assertNotEquals(lastModTime1, lastModTime2);
 
         try {
             removeOwnershipFail = memberAttributeService.removeOwnership(GROUPING, username[2], username[1]);

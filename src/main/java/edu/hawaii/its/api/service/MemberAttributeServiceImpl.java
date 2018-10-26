@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service("memberAttributeService")
@@ -169,6 +170,9 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private MembershipService membershipService;
+
     public static final Log logger = LogFactory.getLog(MemberAttributeServiceImpl.class);
 
     //return true if the membership between the group and user has the self-opted attribute, false otherwise
@@ -210,9 +214,14 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
         GroupingsServiceResult ownershipResult;
 
         if (isOwner(groupingPath, ownerUsername) || isAdmin(ownerUsername)) {
-            WsSubjectLookup user = grouperFS.makeWsSubjectLookup(ownerUsername);
-            WsAddMemberResults amr = grouperFS.makeWsAddMemberResults(groupingPath + OWNERS, user, newOwnerUsername);
-            ownershipResult = hs.makeGroupingsServiceResult(amr, action);
+
+            // todo return this list rather than a single GSR
+            List<GroupingsServiceResult> groupingsServiceResults = membershipService.addGroupMemberByUsername(
+                    ownerUsername,
+                    groupingPath + OWNERS,
+                    newOwnerUsername);
+
+            ownershipResult = hs.makeGroupingsServiceResult(SUCCESS, action);
 
             return ownershipResult;
         }
@@ -239,12 +248,13 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
 
         if (isOwner(groupingPath, ownerUsername) || isAdmin(ownerUsername)) {
             WsSubjectLookup lookup = grouperFS.makeWsSubjectLookup(ownerUsername);
-            WsDeleteMemberResults memberResults = grouperFS.makeWsDeleteMemberResults(
+
+            GroupingsServiceResult groupingsServiceResult = membershipService.deleteGroupMemberByUsername(
+                    ownerUsername,
                     groupingPath + OWNERS,
-                    lookup,
                     ownerToRemove);
-            ownershipResults = hs.makeGroupingsServiceResult(memberResults, action);
-            return ownershipResults;
+
+            return groupingsServiceResult;
         }
 
         ownershipResults = hs.makeGroupingsServiceResult(

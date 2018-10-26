@@ -73,26 +73,26 @@
                     $scope.createApiErrorModal();
                 } else {
                     //Gets members in the basis group
-                    $scope.groupingBasis = _.sortBy(res.basis.members, "name");
+                    $scope.groupingBasis = setGroupMembers(res.basis.members);
                     $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
 
                     //Gets members in the include group
-                    $scope.groupingInclude = _.sortBy(res.include.members, "name");
+                    $scope.groupingInclude = setGroupMembers(res.include.members);
                     $scope.addInBasis($scope.groupingInclude);
                     $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
 
                     //Gets members in the exclude group
-                    $scope.groupingExclude = _.sortBy(res.exclude.members, "name");
+                    $scope.groupingExclude = setGroupMembers(res.exclude.members);
                     $scope.addInBasis($scope.groupingExclude);
                     $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
 
                     //Gets members in grouping
-                    $scope.groupingMembers = _.sortBy(res.composite.members, "name");
+                    $scope.groupingMembers = setGroupMembers(res.composite.members);
                     $scope.addWhereListed($scope.groupingMembers);
                     $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
 
                     //Gets owners of the grouping
-                    $scope.groupingOwners = _.sortBy(res.owners.members, "name");
+                    $scope.groupingOwners = setGroupMembers(res.owners.members);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
                     $scope.allowOptIn = res.optInOn;
@@ -106,6 +106,17 @@
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             }, endpoint);
         };
+
+        /**
+         * @param {object[]} members - the members of the group
+         * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
+         */
+        function setGroupMembers(members) {
+            _.remove(members, function (member) {
+                return _.isEmpty(member.username);
+            });
+            return _.sortBy(members, "name");
+        }
 
         /**
          * Creates a modal for errors in loading data from the API.
@@ -760,12 +771,8 @@
                 var line = "";
                 line += table[i].lastName + ",";
                 line += table[i].firstName + ",";
-                if (_.isEmpty(table[i].username)) {
-                    line += ",,";
-                } else {
-                    line += table[i].username + ",";
-                    line += table[i].username + "@hawaii.edu,";
-                }
+                line += table[i].username + ",";
+                line += table[i].username + "@hawaii.edu,";
                 str += line + "\r\n";
             }
             return str;
