@@ -1,9 +1,6 @@
 package edu.hawaii.its.api.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -195,8 +192,13 @@ public class TestGroupingsRestController {
         membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[4]);
         membershipService.addGroupMemberByUsername(tst[0], GROUPING_INCLUDE, tst[5]);
 
+        //remove from owners
+        memberAttributeService.removeOwnership(GROUPING, tst[0], tst[1]);
+
         groupAttributeService.changeOptOutStatus(GROUPING, tst[0], true);
         groupAttributeService.changeOptInStatus(GROUPING, tst[0], true);
+        groupAttributeService.changeLdapStatus(GROUPING, tst[0], true);
+        groupAttributeService.changeListservStatus(GROUPING, tst[0], true);
     }
 
     @Test
@@ -493,11 +495,11 @@ public class TestGroupingsRestController {
     public void changeListservStatusTest() throws Exception {
         assertTrue(groupAttributeService.hasListserv(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/false/setListserv");
+        mapGSRs("/api/groupings/" + GROUPING + "/false/setListserv");
 
         assertFalse(groupAttributeService.hasListserv(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/true/setListserv");
+        mapGSRs("/api/groupings/" + GROUPING + "/true/setListserv");
         assertTrue(groupAttributeService.hasListserv(GROUPING));
     }
 
@@ -506,11 +508,11 @@ public class TestGroupingsRestController {
     public void changeLdapStatusTest() throws Exception {
         assertTrue(groupAttributeService.hasLdap(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/false/setLdap");
+        mapGSRs("/api/groupings/" + GROUPING + "/false/setLdap");
 
         assertFalse(groupAttributeService.hasLdap(GROUPING));
 
-        mapGSR("/api/groupings/" + GROUPING + "/true/setLdap");
+        mapGSRs("/api/groupings/" + GROUPING + "/true/setLdap");
 
         assertTrue(groupAttributeService.hasLdap(GROUPING));
     }
@@ -565,7 +567,9 @@ public class TestGroupingsRestController {
         Grouping storeEmpty = mapGrouping(GROUPING_STORE_EMPTY);
         Grouping trueEmpty = mapGrouping(GROUPING_TRUE_EMPTY);
 
+        //todo should this value be 0 or 1?
         assertTrue(storeEmpty.getBasis().getMembers().size() == 0);
+
         assertTrue(storeEmpty.getComposite().getMembers().size() == 0);
         assertTrue(storeEmpty.getExclude().getMembers().size() == 0);
         assertTrue(storeEmpty.getInclude().getMembers().size() == 0);
@@ -690,6 +694,7 @@ public class TestGroupingsRestController {
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
+
 
         return objectMapper.readValue(result.getResponse().getContentAsByteArray(), AdminListsHolder.class);
     }

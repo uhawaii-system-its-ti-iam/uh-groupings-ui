@@ -6,10 +6,11 @@
      * @param $window - the browser window object
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param $controller - service for instantiating controllers
+     * @param $q - service containing promise implementations
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      * @param BASE_URL - the constant base URL for endpoints
      */
-    function GeneralJsController($scope, $window, $uibModal, $controller, dataProvider, BASE_URL) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, $q, dataProvider, BASE_URL) {
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
@@ -68,31 +69,30 @@
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/grouping";
 
             dataProvider.loadData(function (res) {
-                console.log(res);
                 if (_.isNull(res)) {
                     $scope.createApiErrorModal();
                 } else {
                     //Gets members in the basis group
-                    $scope.groupingBasis = _.sortBy(res.basis.members, "name");
+                    $scope.groupingBasis = setGroupMembers(res.basis.members);
                     $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
 
                     //Gets members in the include group
-                    $scope.groupingInclude = _.sortBy(res.include.members, "name");
+                    $scope.groupingInclude = setGroupMembers(res.include.members);
                     $scope.addInBasis($scope.groupingInclude);
                     $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
 
                     //Gets members in the exclude group
-                    $scope.groupingExclude = _.sortBy(res.exclude.members, "name");
+                    $scope.groupingExclude = setGroupMembers(res.exclude.members);
                     $scope.addInBasis($scope.groupingExclude);
                     $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
 
                     //Gets members in grouping
-                    $scope.groupingMembers = _.sortBy(res.composite.members, "name");
+                    $scope.groupingMembers = setGroupMembers(res.composite.members);
                     $scope.addWhereListed($scope.groupingMembers);
                     $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
 
                     //Gets owners of the grouping
-                    $scope.groupingOwners = _.sortBy(res.owners.members, "name");
+                    $scope.groupingOwners = setGroupMembers(res.owners.members);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
                     $scope.allowOptIn = res.optInOn;
@@ -106,6 +106,17 @@
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             }, endpoint);
         };
+
+        /**
+         * @param {object[]} members - the members of the group
+         * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
+         */
+        function setGroupMembers(members) {
+            _.remove(members, function (member) {
+                return _.isEmpty(member.username);
+            });
+            return _.sortBy(members, "name");
+        }
 
         /**
          * Creates a modal for errors in loading data from the API.
@@ -164,24 +175,26 @@
             var userToAdd = $scope.userToAdd;
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + userToAdd + "/addMemberTo" + list + "Group";
 
-            if (_.isUndefined(userToAdd) || userToAdd.length === 0) {
+            if (_.isEmpty(userToAdd)) {
                 $scope.createAddModal({ user: userToAdd });
             } else if ($scope.existInList(userToAdd, list)) {
                 $scope.createCheckModal(userToAdd, list, false, endpoint);
             } else if ($scope.isInAnotherList(userToAdd, list)) {
                 $scope.createCheckModal(userToAdd, list, true, endpoint);
             } else {
-                $scope.updateAddMember(userToAdd, list, endpoint);
+                $scope.createConfirmAddModal({
+                    userToAdd: userToAdd,
+                    listName: list,
+                    endpoint: endpoint
+                });
             }
         };
 
         /**
-         * Calls API to add the member to the grouping list
-         * and if they are already in another list, removes them from the other list.
-         *
-         * @param userToAdd - user being added
-         * @param list - the list the user is being added to
-         * @param endpoint - the API call endpoint to add the user
+         * Initiates the adding of a member to a list.
+         * @param {string} userToAdd - user being added
+         * @param {string} list - the list the user is being added to
+         * @param {string} endpoint - the API call endpoint to add the user
          */
         $scope.updateAddMember = function (userToAdd, list, endpoint) {
             dataProvider.updateData(function (res) {
@@ -190,7 +203,6 @@
                     response: res,
                     listName: list
                 });
-                $scope.userToAdd = "";
             }, function (res) {
                 $scope.createAddModal({
                     user: userToAdd,
@@ -201,8 +213,8 @@
         };
 
         /**
-         * @param user - the user you are checking to see if they are in another list.
-         * @param list - the list the user is currently being added to
+         * @param {string} user - the user you are checking to see if they are in another list.
+         * @param {string} list - the list the user is currently being added to
          * @returns {boolean} - true if the person is already in another list, else false.
          */
         $scope.isInAnotherList = function (user, list) {
@@ -214,6 +226,11 @@
             return false;
         };
 
+        /**
+         * @param {string} user - the user you are checking to see if they are already in the list being added to
+         * @param {string} list - the list the user is currently being added to
+         * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
+         */
         $scope.existInList = function (user, list) {
             if (list === "Include") {
                 return _.some($scope.groupingInclude, { username: user });
@@ -242,30 +259,57 @@
 
             $scope.checkModalInstance.result.then(function () {
                 $scope.updateAddMember(user, listName, endpoint);
-            }).catch(function () {
-                // Do nothing if the user cancels or clicks the backdrop
             });
-
         };
 
         /**
-         *  Creates a modal that asks for confirmation when adding a user.
-         *  @param userToAdd - Username of the person being added
-         *  @param listName, string - name of the list the person is being added to
-         **/
-        $scope.createConfirmAddModal = function (userToAdd, listName) {
-            var endpoint = BASE_URL + "members/" + userToAdd;
-            dataProvider.loadData(
-                function (res) {
-                    $scope.uidToAdd = res.uid;
-                    $scope.uhuuidToAdd = res.uhuuid;
-                    $scope.nameToAdd = res.cn;
-                    $scope.listName = listName;
-                },
-                function (res) {
-                    dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
-                },
-                endpoint);
+         * Creates a modal that asks for confirmation when adding a user.
+         * @param {object} options - the options object
+         * @param {string} options.userToAdd - the user to add
+         * @param {string} options.listName - name of the list being added to
+         * @param {string} options.endpoint - endpoint to add the user
+         */
+        $scope.createConfirmAddModal = function (options) {
+            var userToAdd = options.userToAdd;
+
+            $scope.getMemberAttributes(userToAdd)
+                .then(function (attributes) {
+                    $scope.uidToAdd = attributes.uid;
+                    $scope.uhuuidToAdd = attributes.uhuuid;
+                    $scope.nameToAdd = attributes.cn;
+
+                    $scope.listName = options.listName;
+
+                    $scope.confirmAddModalInstance = $uibModal.open({
+                        templateUrl: "modal/confirmAddModal.html",
+                        scope: $scope
+                    });
+
+                    $scope.confirmAddModalInstance.result.then(function () {
+                        $scope.updateAddMember(userToAdd, options.listName, options.endpoint);
+                    });
+                })
+                .catch(function (res) {
+                    if (res.statusCode === 404) {
+                        $scope.createAddModal({ user: userToAdd });
+                    }
+                });
+        };
+
+        /**
+         * Gets the attributes of a member.
+         * @param {string} member - the member's username
+         * @returns {Promise<any>} the member's attributes if fulfilled, otherwise the error response if rejected
+         */
+        $scope.getMemberAttributes = function (member) {
+            return $q(function (resolve, reject) {
+                var endpoint = BASE_URL + "members/" + member;
+                dataProvider.loadData(function (res) {
+                    resolve(res);
+                }, function (res) {
+                    reject(res);
+                }, endpoint);
+            });
         };
 
         /**
@@ -302,28 +346,23 @@
             var ownerToAdd = $scope.ownerToAdd;
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + ownerToAdd + "/assignOwnership";
 
-            dataProvider.updateData(function (res) {
-                $scope.createAddModal({
-                    user: ownerToAdd,
-                    response: res,
-                    listName: "owners"
+            if (_.isEmpty(ownerToAdd)) {
+                $scope.createAddModal({ user: ownerToAdd });
+            } else {
+                $scope.createConfirmAddModal({
+                    userToAdd: ownerToAdd,
+                    listName: "owners",
+                    endpoint: endpoint
                 });
-                $scope.ownerToAdd = "";
-            }, function (res) {
-                $scope.createAddModal({
-                    user: ownerToAdd,
-                    response: res,
-                    listName: "owners"
-                });
-            }, endpoint);
+            }
         };
 
         /**
          * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
          * @param {object} options - the options object
          * @param {string} options.userToAdd - the user being added
-         * @param {string} options.response - the response from adding a member
-         * @param {string} options.listName - the list where the user was being added to
+         * @param {string?} options.response - the response from adding a member
+         * @param {string?} options.listName - the list where the user was being added to
          */
         $scope.createAddModal = function (options) {
             $scope.user = options.user || "";
@@ -348,6 +387,7 @@
 
             $scope.addModalInstance.result.finally(function () {
                 if ($scope.wasSuccessful) {
+                    clearAddMemberInput(options.listName);
                     $scope.loading = true;
                     if ($scope.listName === "admins") {
                         // Refreshes the groupings list and the admins list
@@ -376,11 +416,11 @@
         $scope.removeMember = function (listName, currentPage, index) {
             var userToRemove;
             if (listName === "Include") {
-                userToRemove = $scope.pagedItemsInclude[currentPage][index].username;
+                userToRemove = $scope.pagedItemsInclude[currentPage][index];
             } else if (listName === "Exclude") {
-                userToRemove = $scope.pagedItemsExclude[currentPage][index].username;
+                userToRemove = $scope.pagedItemsExclude[currentPage][index];
             }
-            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + userToRemove + "/deleteMemberFrom" + listName + "Group";
+            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + userToRemove.username + "/deleteMemberFrom" + listName + "Group";
 
             $scope.createRemoveModal({
                 user: userToRemove,
@@ -395,8 +435,8 @@
          * @param {number} index - the index of the owner clicked by the user
          */
         $scope.removeOwner = function (currentPage, index) {
-            var ownerToRemove = $scope.pagedItemsOwners[currentPage][index].username;
-            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + ownerToRemove + "/removeOwnership";
+            var ownerToRemove = $scope.pagedItemsOwners[currentPage][index];
+            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + ownerToRemove.username + "/removeOwnership";
 
             if ($scope.groupingOwners.length > 1) {
                 $scope.createRemoveModal({
@@ -440,6 +480,7 @@
             resetGroupingMembers();
             resetPillsToAllMembers();
             resetFilterQueries();
+            clearAddMemberInput();
             $scope.columnSort = {};
         };
 
@@ -489,6 +530,29 @@
             $scope.includeQuery = "";
             $scope.membersQuery = "";
             $scope.groupingsQuery = "";
+        }
+
+        /**
+         * Clears the user input for adding a member to a list.
+         * @param {string?} listName - the name of the list the member is being added to
+         */
+        function clearAddMemberInput(listName) {
+            switch (listName) {
+                case "Include":
+                case "Exclude":
+                    $scope.userToAdd = "";
+                    break;
+                case "owners":
+                    $scope.ownerToAdd = "";
+                    break;
+                case "admins":
+                    $scope.adminToAdd = "";
+                    break;
+                default:
+                    $scope.userToAdd = "";
+                    $scope.ownerToAdd = "";
+                    $scope.adminToAdd = "";
+            }
         }
 
         /**
@@ -602,6 +666,73 @@
         };
 
         /**
+         * Create CAS/LDAP confirmation modal.
+         */
+        $scope.createCASLDAPModal = function () {
+            $scope.ldap = !$scope.ldap;
+            $scope.CASLDAPInstance = $uibModal.open({
+                templateUrl: "modal/CASLDAPModal.html",
+                scope: $scope
+            });
+
+            $scope.CASLDAPInstance.result.then(function(){
+                $scope.ldap = !$scope.ldap;
+                $scope.updateLdap();
+            }).catch(function (){
+                //do nothing
+            });
+        };
+
+        /**
+         * Proceeds with the CAS/LDAP confirmation
+         */
+        $scope.proceedCASLDAPModal = function () {
+            $scope.CASLDAPInstance.close();
+        };
+
+        /**
+         * Closes the CAS/LDAP confirmation modal
+         */
+        $scope.closeCASLDAPModal = function () {
+            $scope.CASLDAPInstance.dismiss();
+        };
+
+        /**
+         * Create Email list confirmation modal.
+         */
+        $scope.createEmailListModal = function () {
+            $scope.listserv = !$scope.listserv;
+            $scope.EmailListInstance = $uibModal.open({
+                templateUrl: "modal/EmailListModal.html",
+                scope: $scope
+            });
+
+            $scope.EmailListInstance.result.then(function(){
+                $scope.listserv = !$scope.listserv;
+                $scope.updateListserv();
+            }).catch(function (){
+                //do nothing
+            });
+
+        };
+
+        /**
+         * Proceeds with the change of the Email list
+         */
+        $scope.proceedEmailListModal = function () {
+            $scope.EmailListInstance.close();
+        };
+
+        /**
+         *Closes the Email list confirmation modal
+         */
+        $scope.closeEmailListModal = function () {
+            $scope.EmailListInstance.dismiss();
+        };
+
+
+
+        /**
          * Exports data in a table to a CSV file
          * @param {object[]} table - the table to export
          * @param grouping - grouping name that you are exporting from
@@ -640,12 +771,8 @@
                 var line = "";
                 line += table[i].lastName + ",";
                 line += table[i].firstName + ",";
-                if (_.isEmpty(table[i].username)) {
-                    line += ",,";
-                } else {
-                    line += table[i].username + ",";
-                    line += table[i].username + "@hawaii.edu,";
-                }
+                line += table[i].username + ",";
+                line += table[i].username + "@hawaii.edu,";
                 str += line + "\r\n";
             }
             return str;
@@ -657,7 +784,7 @@
          * returns false
          */
         $scope.showWarningRemovingSelf = function () {
-            return $scope.currentUser === $scope.userToRemove
+            return $scope.currentUser === $scope.userToRemove.username
                 && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 
