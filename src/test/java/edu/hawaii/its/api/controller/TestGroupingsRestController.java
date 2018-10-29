@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -183,24 +182,24 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst01")
     public void addMemberTest() throws Exception {
 
-        assertTrue(isInExcludeGroup(GROUPING, tst[3]));
+        assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
         mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addMemberToIncludeGroup");
-        assertFalse(isInExcludeGroup(GROUPING, tst[3]));
+        assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
         //tst[3] is in basis and will go into include
-        assertTrue(isInIncludeGroup(GROUPING, tst[3]));
+        assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[3]));
 
         //add tst[3] back to exclude
         mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
-        assertTrue(isInExcludeGroup(GROUPING, tst[3]));
+        assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
         //add tst[3] to Grouping
         mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addGroupingMemberByUsername");
-        assertFalse(isInExcludeGroup(GROUPING, tst[3]));
+        assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
         //tst[3] is in basis, so will not go into include
-        assertFalse(isInIncludeGroup(GROUPING, tst[3]));
+        assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[3]));
 
         //todo add other test cases
     }
@@ -209,29 +208,29 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst01")
     public void deleteMemberTest() throws Exception {
 
-        assertTrue(isInExcludeGroup(GROUPING, tst[3]));
+        assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
         mapGSR(API_BASE + GROUPING + "/" + tst[3] + "/deleteMemberFromExcludeGroup");
 
-        assertFalse(isInExcludeGroup(GROUPING, tst[3]));
-        assertTrue(isInGrouping(GROUPING, tst[3]));
+        assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[3]));
+        assertTrue(isInGrouping(GROUPING, tst[0], tst[3]));
 
-        assertTrue(isInIncludeGroup(GROUPING, tst[1]));
+        assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[1]));
         mapGSR(API_BASE + GROUPING + "/" + tst[1] + "/deleteMemberFromIncludeGroup");
 
-        assertFalse(isInExcludeGroup(GROUPING, tst[1]));
-        assertFalse(isInIncludeGroup(GROUPING, tst[1]));
+        assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[1]));
+        assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[1]));
 
 
-        assertTrue(isInGrouping(GROUPING, tst[2]));
-        assertTrue(isInGrouping(GROUPING, tst[5]));
-        assertTrue(isInBasisGroup(GROUPING, tst[5]));
-        assertTrue(isInIncludeGroup(GROUPING, tst[2]));
+        assertTrue(isInGrouping(GROUPING, tst[0], tst[2]));
+        assertTrue(isInGrouping(GROUPING, tst[0], tst[5]));
+        assertTrue(isInBasisGroup(GROUPING, tst[0], tst[5]));
+        assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[2]));
         mapGSRs(API_BASE + GROUPING + "/" + tst[2] + "/deleteGroupingMemberByUsername");
         mapGSRs(API_BASE + GROUPING + "/" + tst[5] + "/deleteGroupingMemberByUsername");
 
-        assertTrue(isInExcludeGroup(GROUPING, tst[5]));
-        assertFalse(isInIncludeGroup(GROUPING, tst[2]));
+        assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[5]));
+        assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[2]));
     }
 
     @Test
@@ -411,33 +410,33 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst04")
     public void optInTest() throws Exception {
         //tst[3] is not in Grouping, but is in basis and exclude
-        assertFalse(isInGrouping(GROUPING, tst[3]));
-        assertTrue(isInBasisGroup(GROUPING, tst[3]));
-        assertTrue(isInExcludeGroup(GROUPING, tst[3]));
+        assertFalse(isInGrouping(GROUPING, tst[0], tst[3]));
+        assertTrue(isInBasisGroup(GROUPING, tst[0], tst[3]));
+        assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
         //tst[3] opts into Grouping
         mapGSRs(API_BASE + GROUPING + "/optIn");
 
         //tst[3] is now in composite, still in basis and not in exclude
         assertFalse(isOptedOutOfGrouping(GROUPING, tst[3]));
-        assertTrue(isInGrouping(GROUPING, tst[3]));
-        assertTrue(isInBasisGroup(GROUPING, tst[3]));
+        assertTrue(isInGrouping(GROUPING, tst[0], tst[3]));
+        assertTrue(isInBasisGroup(GROUPING, tst[0], tst[3]));
     }
 
     @Test
     @WithMockUhUser(username = "iamtst06")
     public void optOutTest() throws Exception {
         //tst[5] is in the Grouping and in the basis
-        assertTrue(isInGrouping(GROUPING, tst[5]));
-        assertTrue(isInBasisGroup(GROUPING, tst[5]));
+        assertTrue(isInGrouping(GROUPING, tst[0], tst[5]));
+        assertTrue(isInBasisGroup(GROUPING, tst[0], tst[5]));
 
         //tst[5] opts out of Grouping
         mapGSRs(API_BASE + GROUPING + "/optOut");
 
         //tst[5] is now in exclude, not in include or Grouping
         assertTrue(isOptedOutOfGrouping(GROUPING, tst[5]));
-        assertFalse(isInIncludeGroup(GROUPING, tst[5]));
-        assertFalse(isInGrouping(GROUPING, tst[5]));
+        assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[5]));
+        assertFalse(isInGrouping(GROUPING, tst[0], tst[5]));
     }
 
     @Test
@@ -635,49 +634,49 @@ public class TestGroupingsRestController {
         return objectMapper.readValue(result.getResponse().getContentAsByteArray(), AdminListsHolder.class);
     }
 
-    private boolean isInIncludeGroup(String grouping, String username) {
-        Principal principal = new SimplePrincipal(username);
+    private boolean isInIncludeGroup(String grouping, String ownerUsername, String username) {
+        Principal principal = new SimplePrincipal(ownerUsername);
         return ((Grouping) groupingsRestController.grouping(principal, grouping)
                 .getBody())
                 .getInclude()
                 .getUsernames()
-                .contains(tst[3]);
+                .contains(username);
     }
 
-    private boolean isInExcludeGroup(String grouping, String username) {
-        Principal principal = new SimplePrincipal(username);
+    private boolean isInExcludeGroup(String grouping, String ownerUsername, String username) {
+        Principal principal = new SimplePrincipal(ownerUsername);
         return ((Grouping) groupingsRestController.grouping(principal, grouping)
                 .getBody())
                 .getExclude()
                 .getUsernames()
-                .contains(tst[3]);
+                .contains(username);
     }
 
-    private boolean isInBasisGroup(String grouping, String username) {
-        Principal principal = new SimplePrincipal(username);
+    private boolean isInBasisGroup(String grouping, String ownerUsername, String username) {
+        Principal principal = new SimplePrincipal(ownerUsername);
         return ((Grouping) groupingsRestController.grouping(principal, grouping)
                 .getBody())
                 .getBasis()
                 .getUsernames()
-                .contains(tst[3]);
+                .contains(username);
     }
 
-    private boolean isInGrouping(String grouping, String username) {
-        Principal principal = new SimplePrincipal(username);
+    private boolean isInGrouping(String grouping, String ownerUsername, String username) {
+        Principal principal = new SimplePrincipal(ownerUsername);
         return ((Grouping) groupingsRestController.grouping(principal, grouping)
                 .getBody())
                 .getComposite()
                 .getUsernames()
-                .contains(tst[3]);
+                .contains(username);
     }
 
-    private boolean isGroupingOwner(String grouping, String username) {
-        Principal principal = new SimplePrincipal(username);
+    private boolean isGroupingOwner(String grouping, String ownerUsername, String username) {
+        Principal principal = new SimplePrincipal(ownerUsername);
         return ((Grouping) groupingsRestController.grouping(principal, grouping)
                 .getBody())
                 .getOwners()
                 .getUsernames()
-                .contains(tst[3]);
+                .contains(username);
     }
 
     private boolean isListservOn(String grouping, String username) {
