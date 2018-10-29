@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service("httpRequestService")
-public class HttpRequestServiceImpl implements HttpRequestService{
+public class HttpRequestServiceImpl implements HttpRequestService {
 
     @Value("${groupings.api.current_user}")
     private String CURRENT_USER;
@@ -25,8 +25,7 @@ public class HttpRequestServiceImpl implements HttpRequestService{
 
         try {
             return restTemplate.exchange(uri, method, httpEntity, responseClass);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
             return ResponseEntity
                     .badRequest()
