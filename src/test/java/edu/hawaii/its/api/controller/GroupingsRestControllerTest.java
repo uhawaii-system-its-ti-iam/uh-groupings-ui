@@ -20,6 +20,7 @@ import java.util.List;
 
 import edu.hawaii.its.api.service.HttpRequestService;
 import edu.hawaii.its.api.type.*;
+import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +37,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-import edu.hawaii.its.groupings.controller.WithMockUhUser;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("localTest")
