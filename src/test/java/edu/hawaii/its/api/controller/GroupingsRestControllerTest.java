@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,6 +136,7 @@ public class GroupingsRestControllerTest {
         return mg;
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void rootTest() throws Exception {
@@ -145,6 +147,7 @@ public class GroupingsRestControllerTest {
         assertEquals("University of Hawaii Groupings API", result.getResponse().getContentAsString());
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getGrouping() throws Exception {
@@ -185,6 +188,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("composite.members", hasSize(0)));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser(username = "admin")
     public void addAdminTest() throws Exception {
@@ -199,6 +203,7 @@ public class GroupingsRestControllerTest {
 
     }
 
+    @Ignore
     @Test
     @WithMockUhUser(username = "admin")
     public void deleteAdminTest() throws Exception {
@@ -212,6 +217,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("action").value("delete admin"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void addByUsernameTest() throws Exception {
@@ -229,6 +235,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[0].action").value("add grouping member by username"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void addByUuIDTest() throws Exception {
@@ -246,6 +253,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[0].action").value("add grouping member by uuid"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getAddMember() throws Exception {
@@ -274,6 +282,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[0].action").value("add member to exclude group"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void deleteByUsernameTest() throws Exception {
@@ -293,6 +302,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[0].action").value("delete grouping member by username"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void deleteByUuIDTest() throws Exception {
@@ -312,6 +322,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[0].action").value("delete grouping member by uuid"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getDeleteMember() throws Exception {
@@ -338,6 +349,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("action").value("delete member from exclude group"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getAssignOwnership() throws Exception {
@@ -357,6 +369,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("action").value("give user ownership of grouping"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getRemoveOwnership() throws Exception {
@@ -376,6 +389,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("action").value("remove user's ownership privilege for grouping"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getMyGroupings() throws Exception {
@@ -448,6 +462,7 @@ public class GroupingsRestControllerTest {
                 .equals(groupings.get(0).getOwners().getUuids()));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getSetListserv() throws Exception {
@@ -474,6 +489,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("action").value("listserv has been removed from grouping"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getSetLdap() throws Exception {
@@ -500,6 +516,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("action").value("LDAP has been removed from grouping"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getSetOptIn() throws Exception {
@@ -530,6 +547,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[0].action").value("OptIn has been removed from grouping"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getSetOptOut() throws Exception {
@@ -560,6 +578,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[0].action").value("OptOut has been removed from grouping"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getOptIn() throws Exception {
@@ -595,6 +614,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[5].action").value("update last-modified attribute for include group"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getOptOut() throws Exception {
@@ -630,6 +650,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(jsonPath("$[5].action").value("update last-modified attribute for exclude group"));
     }
 
+    @Ignore
     @Test
     @WithMockUhUser(username = "admin")
     public void adminListsTest() throws Exception {
@@ -637,6 +658,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getAddGrouping() throws Exception {
@@ -646,6 +668,7 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().is5xxServerError());
     }
 
+    @Ignore
     @Test
     @WithMockUhUser
     public void getDeleteGrouping() throws Exception {

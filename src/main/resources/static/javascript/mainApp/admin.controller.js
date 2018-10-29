@@ -88,6 +88,10 @@
                     endpoint: endpoint,
                     listName: "admins"
                 });
+            } else {
+                $scope.createRemoveErrorModal({
+                    userType: "admin"
+                });
             }
         };
 

@@ -3,6 +3,11 @@ package edu.hawaii.its.api.type;
 import java.util.List;
 
 public class GroupingAssignment {
+
+    public GroupingAssignment(){
+
+    }
+
     List<Grouping> groupingsIn;
     List<Grouping> groupingsOwned;
     List<Grouping> groupingsOptedOutOf;
