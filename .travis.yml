@@ -1,7 +1,7 @@
 language: java
 install: true
-  jdk:
-    - oraclejdk8
+jdk:
+  - oraclejdk8
 
 branches:
   only:
@@ -19,4 +19,3 @@ notifications:
       - its-iam-web-app-dev-help-l@lists.hawaii.edu
     on_success: change
     on_failure: always
-
