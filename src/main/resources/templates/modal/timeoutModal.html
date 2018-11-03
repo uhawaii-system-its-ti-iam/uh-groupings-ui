@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="closeTimeoutModal()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="modal-title">Preference Information</h4>
+</div>
+<div class="modal-body" id="modal-body">
+    <p>Warning! There are <span id="countdown" class="timer"></span> min left until session logs out.</p>
+    <p ng-bind="timeleft"> left <span id="countdown" class="timer"></span></p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="closeTimeoutModal()">OK</button>
+</div>
