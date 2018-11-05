@@ -166,4 +166,9 @@ public class HomeController {
         return "modal/removeErrorModal";
     }
 
+    @RequestMapping(value = "/modal/timeoutModal", method = RequestMethod.GET)
+    public String TimeoutModal(Locale locale, Model model) {
+        return "modal/timeoutModal";
+    }
+
 }
