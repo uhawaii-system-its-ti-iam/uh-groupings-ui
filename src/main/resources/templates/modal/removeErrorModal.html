@@ -8,7 +8,7 @@
     <h4 class="modal-title" id="modal-title">Error Removing User</h4>
 </div>
 <div class="modal-body" id="modal-body">
-    <p>You are unable to remove this user. There must be at least one {{ userType }} remaining.</p>
+    <p th:text="#{screen.message.modal.remove.error}"></p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="closeRemoveErrorModal()">Close</button>
