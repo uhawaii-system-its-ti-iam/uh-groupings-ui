@@ -12,7 +12,8 @@
         <p th:utext="#{screen.message.modal.add.success}"> Success </p>
     </div>
     <div ng-if="!wasSuccessful &amp;&amp; user.length > 0">
-        <p th:utext="#{screen.message.modal.add.fail}">Error</p>
+        <p th:text="#{screen.message.modal.add.fail}"></p>
+        <p th:text="#{screen.message.modal.add.ensureValid}"></p>
     </div>
     <div ng-if="!wasSuccessful &amp;&amp; user.length === 0">
         <p th:utext="#{screen.message.modal.add.empty}">Empty</p>
