@@ -1,5 +1,6 @@
 package edu.hawaii.its.groupings.access;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.GroupingAssignment;
@@ -28,6 +29,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Value("#{'${app.user.roles}'.split(',')}")
     private List<String> users;
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private Map<String, List<Role>> userMap = new HashMap<>();
 
@@ -98,7 +101,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             logger.info("//////////////////////////////");
             Principal principal = new SimplePrincipal(username);
             // todo this should be changed to the new isOwner endpoint after it is available
-            GroupingAssignment groupingAssignment = (GroupingAssignment)groupingsRestController.groupingAssignment(principal).getBody();
+            String groupingAssignmentJson = (String) groupingsRestController.groupingAssignment(principal).getBody();
+            GroupingAssignment groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, GroupingAssignment.class);
+
             if (!(groupingAssignment.getGroupingsOwned().size() == 0)) {
                 logger.info("This person is an owner");
                 return true;
@@ -122,9 +127,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         try {
 
             Principal principal = new SimplePrincipal(username);
-            AdminListsHolder adminListsHolder = (AdminListsHolder)groupingsRestController.adminLists(principal).getBody();
+            String adminListHolderJson = (String) groupingsRestController.adminLists(principal).getBody();
+            AdminListsHolder adminListsHolder = OBJECT_MAPPER.readValue(adminListHolderJson, AdminListsHolder.class);
+
             // todo this should be changed to the new isAdmin endpoint after it is available
-            if (! (adminListsHolder.getAdminGroup().getMembers().size() == 0)) {
+            if (!(adminListsHolder.getAdminGroup().getMembers().size() == 0)) {
                 logger.info("this person is an admin");
                 return true;
             } else {
