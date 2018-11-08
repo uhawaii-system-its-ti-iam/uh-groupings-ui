@@ -45,7 +45,7 @@ public class UserDetailsServiceTest {
         // Basics.
         assertEquals("duckart", user.getUsername());
         assertEquals("duckart", user.getUid());
-        assertEquals(Long.valueOf(89999999), user.getUhuuid());
+        assertEquals("89999999", user.getUhuuid());
 
         // Granted Authorities.
         assertTrue(user.getAuthorities().size() > 0);
@@ -65,7 +65,7 @@ public class UserDetailsServiceTest {
 
         assertEquals("someuser", user.getUsername());
         assertEquals("someuser", user.getUid());
-        assertEquals(Long.valueOf(10000001), user.getUhuuid());
+        assertEquals("10000001", user.getUhuuid());
 
         assertTrue(user.getAuthorities().size() > 0);
         assertTrue(user.hasRole(Role.ANONYMOUS));
@@ -88,7 +88,7 @@ public class UserDetailsServiceTest {
         // Basics.
         assertEquals("jjcale", user.getUsername());
         assertEquals("jjcale", user.getUid());
-        assertEquals(Long.valueOf(10000004), user.getUhuuid());
+        assertEquals("10000004", user.getUhuuid());
 
         // Granted Authorities.
         assertTrue(user.getAuthorities().size() == 3);

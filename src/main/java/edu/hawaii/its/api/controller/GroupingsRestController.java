@@ -1,24 +1,25 @@
 package edu.hawaii.its.api.controller;
 
+import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.api.type.AdminListsHolder;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.annotation.PostConstruct;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
-import edu.hawaii.its.api.type.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -44,14 +45,14 @@ public class GroupingsRestController {
     @Value("${url.api.2.1.base}")
     private String API_2_1_BASE;
 
-    @Value("${groupings.api.current_user}")
-    private String CURRENT_USER;
-
     @Value("${groupings.api.listserv}")
     private String LISTSERV;
 
     @Value("${groupings.api.ldap}")
     private String UH_RELEASED_GROUPING;
+
+    @Autowired
+    HttpRequestService httpRequestService;
 
     @PostConstruct
     public void init() {
@@ -80,18 +81,8 @@ public class GroupingsRestController {
     @ResponseBody
     public ResponseEntity memberAttributes(Principal principal, @PathVariable String uid) {
         logger.info("Entered REST memberAttributes...");
-//        return ResponseEntity
-//                .ok()
-//                .body(memberAttributeService.getUserAttributes(uid));
         String uri = String.format(API_2_1_BASE + "/members/%s", uid);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.GET, Map.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET, Map.class);
     }
 
     /**
@@ -105,18 +96,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addAdmin(Principal principal, @PathVariable String adminToAdd) {
         logger.info("Entered REST addAdmin...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService.addAdmin(principal.getName(), adminToAdd));
         String uri = String.format(API_2_0_BASE + "/admins/%s", adminToAdd);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
     }
 
     /**
@@ -130,18 +111,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteAdmin(Principal principal, @PathVariable String adminToDelete) {
         logger.info("Entered REST deleteAdmin...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService.deleteAdmin(principal.getName(), adminToDelete));
         String uri = String.format(API_2_0_BASE + "/%s/deleteAdmin", adminToDelete);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
     }
 
     /**
@@ -161,18 +132,8 @@ public class GroupingsRestController {
                                                       @PathVariable String grouping,
                                                       @PathVariable String userToAdd) {
         logger.info("Entered REST addGroupingMemberByUsername...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService.addGroupingMemberByUsername(principal.getName(), grouping, userToAdd));
         String uri = String.format(API_2_0_BASE + "/%s/%s/addGroupingMemberByUsername", grouping, userToAdd);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
     }
 
     /**
@@ -192,18 +153,8 @@ public class GroupingsRestController {
                                                   @PathVariable String grouping,
                                                   @PathVariable String userToAdd) {
         logger.info("Entered REST addGroupingMemberByUuid...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService.addGroupingMemberByUuid(principal.getName(), grouping, userToAdd));
         String uri = String.format(API_2_0_BASE + "/%s/%s/addGroupingMemberByUuid", grouping, userToAdd);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
     }
 
     /**
@@ -221,18 +172,8 @@ public class GroupingsRestController {
                                                   @PathVariable String grouping,
                                                   @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToIncludeGroup...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService.addGroupMemberByUsername(principal.getName(), grouping + INCLUDE, userToAdd));
         String uri = String.format(API_2_0_BASE + "/%s/%s/addMemberToIncludeGroup", grouping, userToAdd);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
     }
 
     /**
@@ -250,18 +191,8 @@ public class GroupingsRestController {
                                                   @PathVariable String grouping,
                                                   @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToExcludeGroup...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService.addGroupMemberByUsername(principal.getName(), grouping + EXCLUDE, userToAdd));
         String uri = String.format(API_2_0_BASE + "/%s/%s/addMemberToExcludeGroup", grouping, userToAdd);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
     }
 
     /**
@@ -277,18 +208,8 @@ public class GroupingsRestController {
                                                          @PathVariable String grouping,
                                                          @PathVariable String userToDelete) {
         logger.info("Entered REST deleteGroupingMemberByUsername...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService.deleteGroupingMemberByUsername(principal.getName(), grouping, userToDelete));
         String uri = String.format(API_2_0_BASE + "/%s/%s/deleteGroupingMemberByUsername", grouping, userToDelete);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
     }
 
     /**
@@ -304,18 +225,8 @@ public class GroupingsRestController {
                                                      @PathVariable String grouping,
                                                      @PathVariable String userToDelete) {
         logger.info("Entered REST deleteGroupingMemberByUsername...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService.deleteGroupingMemberByUuid(principal.getName(), grouping, userToDelete));
         String uri = String.format(API_2_0_BASE + "/%s/%s/deleteGroupingMemberByUuid", grouping, userToDelete);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
     }
 
     /**
@@ -332,19 +243,8 @@ public class GroupingsRestController {
                                                        @PathVariable String grouping,
                                                        @PathVariable String userToDelete) {
         logger.info("Entered REST deleteMemberFromIncludeGroup...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService
-//                        .deleteGroupMemberByUsername(principal.getName(), grouping + INCLUDE, userToDelete));
         String uri = String.format(API_2_0_BASE + "/%s/%s/deleteMemberFromIncludeGroup", grouping, userToDelete);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
     }
 
     /**
@@ -361,19 +261,8 @@ public class GroupingsRestController {
                                                        @PathVariable String grouping,
                                                        @PathVariable String userToDelete) {
         logger.info("Entered REST deleteMemberFromExcludeGroup...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService
-//                        .deleteGroupMemberByUsername(principal.getName(), grouping + EXCLUDE, userToDelete));
         String uri = String.format(API_2_0_BASE + "/%s/%s/deleteMemberFromExcludeGroup", grouping, userToDelete);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
     }
 
     /**
@@ -392,18 +281,8 @@ public class GroupingsRestController {
     public ResponseEntity assignOwnership(Principal principal, @PathVariable String grouping,
                                           @PathVariable String newOwner) {
         logger.info("Entered REST assignOwnership...");
-//        return ResponseEntity
-//                .ok()
-//                .body(memberAttributeService.assignOwnership(grouping, principal.getName(), newOwner));
         String uri = String.format(API_2_0_BASE + "/%s/%s/assignOwnership", grouping, newOwner);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
     }
 
     /**
@@ -423,18 +302,8 @@ public class GroupingsRestController {
     public ResponseEntity removeOwnership(Principal principal, @PathVariable String grouping,
                                           @PathVariable String ownerToRemove) {
         logger.info("Entered REST removeOwnership...");
-//        return ResponseEntity
-//                .ok()
-//                .body(memberAttributeService.removeOwnership(grouping, principal.getName(), ownerToRemove));
         String uri = String.format(API_2_0_BASE + "/%s/%s/removeOwnership", grouping, ownerToRemove);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, GroupingsServiceResult.class);
     }
 
     /**
@@ -454,18 +323,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity grouping(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST grouping...");
-//        return ResponseEntity
-//                .ok()
-//                .body(groupingAssignmentService.getGrouping(grouping, principal.getName()));
         String uri = String.format(API_2_0_BASE + "/%s/grouping", grouping);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.GET, Grouping.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET, Grouping.class);
     }
 
     /**
@@ -480,18 +339,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity groupingAssignment(Principal principal) {
         logger.info("Entered REST GroupingAssignment...");
-//        return ResponseEntity
-//                .ok()
-//                .body(groupingAssignmentService.getGroupingAssignment(principal.getName()));
         String uri = API_2_0_BASE + "/groupingAssignment";
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.GET, GroupingAssignment.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET, GroupingAssignment.class);
     }
 
     /**
@@ -507,18 +356,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity optIn(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optIn...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService.optIn(principal.getName(), grouping));
         String uri = String.format(API_2_0_BASE + "/%s/optIn", grouping);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
     }
 
     /**
@@ -534,18 +373,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity optOut(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optOut...");
-//        return ResponseEntity
-//                .ok()
-//                .body(membershipService.optOut(principal.getName(), grouping));
         String uri = String.format(API_2_0_BASE + "/%s/optOut", grouping);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
     }
 
     /**
@@ -562,22 +391,12 @@ public class GroupingsRestController {
                                       @PathVariable String grouping,
                                       @PathVariable boolean listservOn) {
         logger.info("Entered REST setListserv...");
-//        return ResponseEntity
-//                .ok()
-//                .body(groupAttributeService.changeListservStatus(grouping, principal.getName(), listservOn));
         String ending = "disable";
         if (listservOn) {
             ending = "enable";
         }
         String uri = String.format(API_2_0_BASE + "/groupings/%s/preferences/%s/%s", grouping, LISTSERV, ending);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.PUT, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT, List.class);
     }
 
     /**
@@ -594,22 +413,12 @@ public class GroupingsRestController {
                                   @PathVariable String grouping,
                                   @PathVariable boolean ldapOn) {
         logger.info("Entered REST setLdap...");
-//        return ResponseEntity
-//                .ok()
-//                .body(groupAttributeService.changeLdapStatus(grouping, principal.getName(), ldapOn));
         String ending = "disable";
         if (ldapOn) {
             ending = "enable";
         }
         String uri = String.format(API_2_1_BASE + "/groupings/%s/preferences/%s/%s", grouping, UH_RELEASED_GROUPING, ending);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.PUT, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT, List.class);
     }
 
     /**
@@ -626,18 +435,8 @@ public class GroupingsRestController {
                                    @PathVariable String grouping,
                                    @PathVariable boolean optInOn) {
         logger.info("Entered REST setOptIn...");
-//        return ResponseEntity
-//                .ok()
-//                .body(groupAttributeService.changeOptInStatus(grouping, principal.getName(), optInOn));
         String uri = String.format(API_2_0_BASE + "/%s/%s/setOptIn", grouping, optInOn);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
     }
 
     /**
@@ -653,18 +452,8 @@ public class GroupingsRestController {
     public ResponseEntity setOptOut(Principal principal, @PathVariable String grouping,
                                     @PathVariable boolean optOutOn) {
         logger.info("Entered REST setOptOut...");
-//        return ResponseEntity
-//                .ok()
-//                .body(groupAttributeService.changeOptOutStatus(grouping, principal.getName(), optOutOn));
         String uri = String.format(API_2_0_BASE + "/%s/%s/setOptOut", grouping, optOutOn);
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST, List.class);
     }
 
     @RequestMapping(value = "/adminLists",
@@ -672,18 +461,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity adminLists(Principal principal) {
         logger.info("Entered REST adminListHolder...");
-//        return ResponseEntity
-//                .ok()
-//                .body(groupingAssignmentService.adminLists(principal.getName()));
         String uri = API_2_0_BASE + "/adminLists";
-        try {
-            return makeApiRequest(principal.getName(), uri, HttpMethod.GET, AdminListsHolder.class);
-        } catch (Exception e) {
-            GroupingsHTTPException ge = new GroupingsHTTPException("API Error", e);
-            return ResponseEntity
-                    .badRequest()
-                    .body(ge);
-        }
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET, AdminListsHolder.class);
     }
 
     /**
@@ -732,13 +511,4 @@ public class GroupingsRestController {
         //                .body(groupingFactoryService.deleteGrouping(username, grouping));
     }
 
-    private ResponseEntity makeApiRequest(String currentUser, String uri, HttpMethod method, Class responseClass) {
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(CURRENT_USER, currentUser);
-        HttpEntity httpEntity = new HttpEntity(httpHeaders);
-
-        return restTemplate.exchange(uri, method, httpEntity, responseClass);
-    }
 }
