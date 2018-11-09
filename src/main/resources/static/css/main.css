@@ -130,7 +130,7 @@ td.uh-pre {
 }
 
 .navbar-brand .uh-nav-app-name {
-    color: #BD9319;
+    color: inherit;
     height: 3.125rem;
     width: auto;
     padding-top: 0;

@@ -8,9 +8,12 @@
 <!--  Content container -->
 <div class="container" ng-controller="AdminJsController" data-ng-init="init()">
 
-    <h1 class="text-left">UH Groupings Administration</h1>
+   <!-- <h1 class="text-left">UH Groupings Administration</h1>
 
-    <p class="text-left" th:text="#{screen.message.admin.page.description}">Page Description </p>
+    <p class="text-left" th:text="#{screen.message.admin.page.description}">Page Description </p>-->
+
+    <div th:replace="fragments/page-header :: page-header(title='UH Groupings Administration', description=#{screen.message.admin.page.description})">
+    </div>
 
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>

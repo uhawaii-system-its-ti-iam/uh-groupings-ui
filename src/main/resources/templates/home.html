@@ -22,7 +22,7 @@
         <div class="row ml-auto">
             <div class="offset-lg-2 offset-md-3 offset-sm-4">
                 <div sec:authorize="!isAuthenticated()">
-                    <a class="btn btn-lg btn-success" th:href="@{/login}" role="button">Login Here</a>
+                    <a class="btn btn-lg btn-light" th:href="@{/login}" role="button">Login Here</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
                     <form action="/logout" th:action="@{/logout}" method="post">
