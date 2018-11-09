@@ -139,3 +139,16 @@ h1, h2, .text-left, span {
     border-color: #dae0e5;
 
 }
+
+.border{
+    background: white;
+}
+
+.table{
+    background: white;
+}
+
+.card-header{
+    border: 1px solid #dee2e6;
+    background: #e5eef1;
+}
