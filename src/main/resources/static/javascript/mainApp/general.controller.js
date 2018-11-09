@@ -446,6 +446,10 @@
                     endpoint: endpoint,
                     listName: "owners"
                 });
+            } else {
+                $scope.createRemoveErrorModal({
+                    userType: "owner"
+                });
             }
         };
 
@@ -461,6 +465,27 @@
          */
         $scope.cancelRemoveUser = function () {
             $scope.removeModalInstance.dismiss();
+        };
+
+        /**
+         * Creates a modal stating there was an error removing the user from a group.
+         * @param {object} options - the options object
+         * @param {string} options.userType - the type of user being removed (either admin or owner)
+         */
+        $scope.createRemoveErrorModal = function (options) {
+            $scope.userType = options.userType;
+
+            $scope.removeErrorModalInstance = $uibModal.open({
+                templateUrl: "modal/removeErrorModal.html",
+                scope: $scope
+            });
+        };
+
+        /**
+         * Closes the remove error modal.
+         */
+        $scope.closeRemoveErrorModal = function () {
+            $scope.removeErrorModalInstance.close();
         };
 
         /**
@@ -516,12 +541,14 @@
             var pills = $("#group-pills")[0].children;
             var pillContents = $("#pill-content")[0].children;
             for (var i = 0; i < pills.length; i++) {
-                if (i === 0 && !$(pills[i]).hasClass("active")) {
-                    $(pills[i]).addClass("active");
-                    $(pillContents[i]).addClass("in active");
-                } else if (i !== 0 && $(pills[i]).hasClass("active")) {
-                    $(pills[i]).removeClass("active");
-                    $(pillContents[i]).removeClass("in active");
+                var anchorTag = $(pills[i].children[0]);
+                var pillContent = $(pillContents[i]);
+                if (i === 0 && !anchorTag.hasClass("active")) {
+                    anchorTag.addClass("active");
+                    pillContent.addClass("show active");
+                } else if (i !== 0 && anchorTag.hasClass("active")) {
+                    anchorTag.removeClass("active");
+                    pillContent.removeClass("show active");
                 }
             }
         }

@@ -1,20 +1,22 @@
 <th:block th:fragment="selected-grouping">
-    <div class="panel panel-default"
-         th:classappend="${tabContent ? 'panel-tab-content' : ''}">
-        <div class="panel-heading">
-            <div class="row" style="margin: inherit;">
-                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 pull-left" style="padding: 0;">
-                    <h2 style="margin: inherit; padding-top: .11875em;">Selected Grouping</h2>
-                </div>
-                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" style="padding: 0;">
-                    <button ng-click="returnToGroupingsList()" class="btn btn-primary xs-left-sm-right">
-                        Return to Groupings
-                    </button>
+    <div class="card selected-grouping-card"
+         th:classappend="${tabContent ? 'card-tab-content' : ''}">
+        <div class="card-header">
+            <div class="flex-row m-auto">
+                <div class="d-sm-flex d-block justify-content-between">
+                    <div>
+                        <h2 class="card-title mt-sm-1 mt-0 mb-1">Selected Grouping</h2>
+                    </div>
+                    <div class="p-0">
+                        <button ng-click="returnToGroupingsList()" class="btn btn-primary">
+                            Return to Groupings
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table table-bordered">
+        <div class="table-responsive-sm">
+            <table class="table table-bordered table-sm">
                 <tbody>
                 <tr>
                     <th>Name</th>

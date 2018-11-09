@@ -88,7 +88,6 @@ public class HomeController {
             sessionFeedback.setType("problem");
             sessionFeedback.setEmail(userContextService.getCurrentUsername() + "@hawaii.edu");
             model.addAttribute("feedback", sessionFeedback);
-            session.removeAttribute("feedback");
         } else {
             Feedback feedback = new Feedback();
             feedback.setType("general");
@@ -160,6 +159,16 @@ public class HomeController {
     @RequestMapping(value = "/modal/CASLDAPModal", method = RequestMethod.GET)
     public String CASLDAPModal(Locale locale, Model model) {
         return "modal/CASLDAPModal";
+    }
+
+    @RequestMapping(value = "/modal/removeErrorModal", method = RequestMethod.GET)
+    public String removeErrorModal(Locale locale, Model model) {
+        return "modal/removeErrorModal";
+    }
+
+    @RequestMapping(value = "/modal/timeoutModal", method = RequestMethod.GET)
+    public String TimeoutModal(Locale locale, Model model) {
+        return "modal/timeoutModal";
     }
 
 }

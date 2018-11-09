@@ -1,38 +1,39 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
-<div class="modal-header"
-     ng-class="{ 'alert alert-danger modal-alert': showWarningRemovingSelf() }">
-    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="cancelRemoveUser()">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">
+        Remove User
+    </h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="cancelRemoveUser()">
         <span aria-hidden="true">&times;</span>
     </button>
-    <h4 class="modal-title" id="modal-title"
-        ng-style="{ 'margin-bottom': showWarningRemovingSelf() ? '10px' : '0px' }">
-        Remove User
-    </h4>
-    <!-- Warning message if users try to delete themselves from the admins or owners list -->
-    <div  ng-if="showWarningRemovingSelf()">
+</div>
+<div class="modal-body" id="modal-body">
+    <!--Warning message if users try to delete themselves from the admins or owners list -->
+    <div class="modal-danger-message" ng-if="showWarningRemovingSelf()">
         <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
         <div ng-switch="listName">
             <div ng-switch-when="owners">
                 <!-- Warning message that tells the user what will happen if they remove themselves -->
-                <p th:utext="#{screen.message.modal.remove.message}">  </p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1" th:utext="#{screen.message.modal.remove.redirect.home}">  </p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1" th:utext="#{screen.message.modal.remove.redirect.list}">  </p>
+                <p th:text="#{screen.message.modal.remove.message}"></p>
+                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1" th:text="#{screen.message.modal.remove.redirect.home}"></p>
+                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1" th:text="#{screen.message.modal.remove.redirect.groupings}"></p>
             </div>
-
             <div ng-switch-when="admins">
-                <p th:utext="#{screen.message.modal.remove.admin}"></p>
+                <p th:text="#{screen.message.modal.remove.admin}"></p>
+                <p th:text="#{screen.message.modal.remove.redirect.home}"></p>
             </div>
         </div>
     </div>
-</div>
-<div class="modal-body" id="modal-body">
+
     <p th:utext="#{screen.message.modal.remove.confirmation}"></p>
+    <p th:utext="#{screen.message.modal.remove.memberInfo}"></p>
+    <p th:text="#{screen.message.modal.remove.finalConfirm}"></p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedRemoveUser()">Yes</button>
-    <button class="btn btn-default" ng-click="cancelRemoveUser()" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-light" ng-click="cancelRemoveUser()" data-dismiss="modal">Cancel</button>
 </div>
 
 </html>

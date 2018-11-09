@@ -16,6 +16,7 @@
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
+        angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
 
         /**
          * Initialize function that retrieves the groupings you own.
@@ -49,8 +50,11 @@
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
+            var windowClass = $scope.showWarningRemovingSelf() ? 'modal-danger' : '';
+
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
+                windowClass: windowClass,
                 scope: $scope
             });
 

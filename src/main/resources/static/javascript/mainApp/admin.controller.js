@@ -20,6 +20,7 @@
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
+        angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
 
         /**
          * Initializes the page, displaying the list of groupings to administer and the list of admins to manage.
@@ -88,6 +89,10 @@
                     endpoint: endpoint,
                     listName: "admins"
                 });
+            } else {
+                $scope.createRemoveErrorModal({
+                    userType: "admin"
+                });
             }
         };
 
@@ -103,8 +108,11 @@
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
+            var windowClass = $scope.showWarningRemovingSelf() ? 'modal-danger' : '';
+
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
+                windowClass: windowClass,
                 scope: $scope
             });
 

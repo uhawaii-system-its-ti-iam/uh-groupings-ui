@@ -1,47 +1,48 @@
 <th:block th:fragment="side-nav">
-    <div class="col-md-1 col-sm-1 col-xs-2">
-        <ul class="nav nav-pills nav-stacked" style="width: 3.125em; margin-top: 2.5em;" id="group-pills">
-            <li class="active" data-toggle="tooltip" data-placement="right"
+    <div class="col-md-1 col-12" id="pills-column">
+        <ul class="nav nav-pills flex-md-column flex-row justify-content-md-start justify-content-center"
+            id="group-pills">
+            <li class="nav-item" data-toggle="tooltip" data-placement="right"
                 th:title="#{screen.message.common.tooltip.nav.members}">
-                <a data-toggle="tab" href="#all" class="text-center"
+                <a data-toggle="tab" href="#all" class="nav-link active"
                    aria-label="All Members" ng-click="resetFields()">
-                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <i class="fa fa-user fa-fw" aria-hidden="true"></i>
                 </a>
             </li>
-            <li data-toggle="tooltip" data-placement="right"
+            <li class="nav-item" data-toggle="tooltip" data-placement="right"
                 th:title="#{screen.message.common.tooltip.nav.basis}">
-                <a data-toggle="tab" href="#basis" class="text-center"
+                <a data-toggle="tab" href="#basis" class="nav-link"
                    aria-label="Basis Members" ng-click="resetFields()">
-                    <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                    <i class="fa fa-id-card-o fa-fw" aria-hidden="true"></i>
 
                 </a>
             </li>
-            <li data-toggle="tooltip" data-placement="right"
+            <li class="nav-item" data-toggle="tooltip" data-placement="right"
                 th:title="#{screen.message.common.tooltip.nav.include}">
-                <a data-toggle="tab" href="#include" class="text-center"
+                <a data-toggle="tab" href="#include" class="nav-link"
                    aria-label="Include Members" ng-click="resetFields()">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
                 </a>
             </li>
-            <li data-toggle="tooltip" data-placement="right"
+            <li class="nav-item" data-toggle="tooltip" data-placement="right"
                 th:title="#{screen.message.common.tooltip.nav.exclude}">
-                <a data-toggle="tab" href="#exclude" class="text-center"
+                <a data-toggle="tab" href="#exclude" class="nav-link"
                    aria-label="Exclude Members" ng-click="resetFields()">
-                    <i class="fa fa-minus" aria-hidden="true"></i>
+                    <i class="fa fa-minus fa-fw" aria-hidden="true"></i>
                 </a>
             </li>
-            <li data-toggle="tooltip" data-placement="right"
+            <li class="nav-item" data-toggle="tooltip" data-placement="right"
                 th:title="#{screen.message.common.tooltip.nav.owners}">
-                <a data-toggle="tab" href="#owners" class="text-center"
+                <a data-toggle="tab" href="#owners" class="nav-link"
                    aria-label="Grouping Owners" ng-click="resetFields()">
-                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <i class="fa fa-star fa-fw" aria-hidden="true"></i>
                 </a>
             </li>
-            <li data-toggle="tooltip" data-placement="right"
+            <li class="nav-item" data-toggle="tooltip" data-placement="right"
                 th:title="#{screen.message.common.tooltip.nav.preferences}">
-                <a data-toggle="tab" href="#preferences" class="text-center"
+                <a data-toggle="tab" href="#preferences" class="nav-link"
                    aria-label="Preferences" ng-click="resetFields()">
-                    <i class="fa fa-cog" aria-hidden="true"></i>
+                    <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
                 </a>
             </li>
         </ul>

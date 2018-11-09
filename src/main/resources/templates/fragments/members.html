@@ -1,47 +1,46 @@
 <th:block th:fragment="members">
-    <div class="row member-row-title">
-        <h3 class="members-tab-title">All Members</h3>
-    </div>
-    <div class="row member-row-title">
+    <h3>All Members</h3>
+    <div class="row group-header">
         <!-- Export to CSV button -->
-        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
-            <div class="pull-left">
-                <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
-                        ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
-                    Export to CSV
-                </button>
-            </div>
+        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
+            <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
+                    ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
+                Export to CSV
+            </button>
         </div>
         <!-- Filter bar -->
-        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
-            <div class="xs-left-sm-right">
-                <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="membersQuery" class="form-control"
-                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery)"/>
-            </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 p-0">
+            <input placeholder="Filter Members..." type="text" title="Filter Members"
+                   ng-model="membersQuery" class="form-control"
+                   ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery)"/>
         </div>
     </div>
-    <div class="table-responsive">
-        <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
+    <div class="table-responsive-sm">
+        <table class="table table-bordered table-sm table-hover" aria-live="assertive">
             <thead>
             <tr>
                 <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" class="clickable">
                     Name
-                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                    <i class="fa sort-icon"
+                       ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
+                       ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
                 <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uuid')" class="clickable">
                     UH Number
-                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uuid'" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uuid'"
+                       ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
                 <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'username')"
                     class="clickable">
                     UH Username
-                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'"
+                       ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
-                <th style="vertical-align: middle;" class="clickable"
+                <th class="basis-column clickable"
                     ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')">
                     Where Listed?
-                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'" ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
+                       ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
             </tr>
             </thead>
@@ -60,33 +59,12 @@
                         </i>
                     </div>
                 </td>
-                <td class="text-center" style="width: 3%">{{ g.whereListed }}</td>
+                <td class="basis-column text-center">{{ g.whereListed }}</td>
             </tr>
             </tbody>
-            <tfoot>
-            <!-- Pagination control -->
-            <td colspan="6">
-                <ul class="pagination pull-right">
-                    <li ng-class=" { disabled: disableFirstAndPrev(currentPageMembers) }">
-                        <a class="clickable" ng-click="setPage('First','currentPageMembers','pagedItemsMembers')">«« First</a>
-                    </li>
-                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageMembers) }">
-                        <a class="clickable" ng-click="setPage('Prev','currentPageMembers','pagedItemsMembers')">« Prev</a>
-                    </li>
-                    <li ng-repeat="n in pageRange(currentPageMembers, pagedItemsMembers.length, gap) "
-                        ng-class="{ active: n === currentPageMembers }"
-                        ng-click="setPage('Set','currentPageMembers','pagedItemsMembers')">
-                        <a class="clickable" ng-bind="n + 1"></a>
-                    </li>
-                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsMembers, currentPageMembers) }">
-                        <a class="clickable" ng-click="setPage('Next','currentPageMembers','pagedItemsMembers')">Next »</a>
-                    </li>
-                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsMembers, currentPageMembers) }">
-                        <a class="clickable" ng-click="setPage('Last','currentPageMembers','pagedItemsMembers')">Last »»</a>
-                    </li>
-                </ul>
-            </td>
-            </tfoot>
         </table>
+    </div>
+    <div class="d-flex justify-content-lg-end justify-content-start">
+        <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMembers', pagedItems='pagedItemsMembers')"></div>
     </div>
 </th:block>

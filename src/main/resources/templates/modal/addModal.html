@@ -2,17 +2,18 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="dialog" style="float: right;" ng-click="closeAddModal()">
+    <h5 class="modal-title" id="modal-title">Add User</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="closeAddModal()">
         <span aria-hidden="true">&times;</span>
     </button>
-    <h4 class="modal-title" id="modal-title">Add User</h4>
 </div>
 <div class="modal-body" id="modal-body">
     <div ng-if="wasSuccessful">
         <p th:utext="#{screen.message.modal.add.success}"> Success </p>
     </div>
     <div ng-if="!wasSuccessful &amp;&amp; user.length > 0">
-        <p th:utext="#{screen.message.modal.add.fail}">Error</p>
+        <p th:text="#{screen.message.modal.add.fail}"></p>
+        <p th:text="#{screen.message.modal.add.ensureValid}"></p>
     </div>
     <div ng-if="!wasSuccessful &amp;&amp; user.length === 0">
         <p th:utext="#{screen.message.modal.add.empty}">Empty</p>

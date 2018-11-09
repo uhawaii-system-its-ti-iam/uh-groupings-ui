@@ -1,0 +1,44 @@
+<th:block th:fragment="manage-grouping">
+    <div class="card">
+        <div class="card-header">
+            <div class="flex-row m-auto">
+                <div class="d-sm-flex d-block justify-content-between">
+                    <div>
+                        <h2 class="card-title mt-sm-1 mt-0 mb-1">Manage Grouping</h2>
+                    </div>
+                    <div class="p-0">
+                        <button ng-click="getGroupingInformation()" class="btn btn-primary">
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body manage-grouping-body">
+            <div class="row m-auto">
+                <div th:replace="fragments/side-nav :: side-nav"></div>
+
+                <div class="tab-content col-md-11 col-12" id="pill-content">
+                    <div id="all" class="tab-pane fade show active">
+                        <div th:replace="fragments/members :: members"></div>
+                    </div>
+                    <div id="basis" class="tab-pane fade">
+                        <div th:replace="fragments/basis :: basis"></div>
+                    </div>
+                    <div id="include" class="tab-pane fade">
+                        <div th:replace="fragments/include :: include"></div>
+                    </div>
+                    <div id="exclude" class="tab-pane fade">
+                        <div th:replace="fragments/exclude :: exclude"></div>
+                    </div>
+                    <div id="owners" class="tab-pane fade">
+                        <div th:replace="fragments/owners :: owners"></div>
+                    </div>
+                    <div id="preferences" class="tab-pane fade">
+                        <div th:replace="fragments/preferences :: preferences"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

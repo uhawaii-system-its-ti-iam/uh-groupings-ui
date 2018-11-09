@@ -1,64 +1,69 @@
 <th:block th:fragment="preferences">
-    <div class="row member-row-title">
-        <h3 class="members-tab-title">Preferences</h3>
-    </div>
-    <div class="well">
-        <div class="row" style="margin: inherit;">
-            <div>
-                <h4 style="margin-top: 0;">User Options</h4>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="allowOptIn" ng-change="updateAllowOptIn()"/>
-                        Allow people to add
-                        themselves to this group
-                    </label>
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       tabindex="0"
-                       th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
-                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\')',
-                                ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\') : null'"></i>
+    <h3>Preferences</h3>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <h4>User Options</h4>
+                    <div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" ng-model="allowOptIn" id="allowOptIn"
+                                   ng-change="updateAllowOptIn()"/>
+                            <label class="form-check-label" for="allowOptIn">
+                                Allow people to add themselves to this group
+                            </label>
+                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="right"
+                                  tabindex="0"
+                                  th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
+                                  th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\')',
+                                  ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\') : null'"></span>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="allowOptOut" ng-model="allowOptOut"
+                                   ng-change="updateAllowOptOut()"/>
+                            <label class="form-check-label" for="allowOptOut">
+                                Allow people to remove themselves from this group
+                            </label>
+                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="right"
+                                  tabindex="0"
+                                  th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
+                                  th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
+                                  ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'"></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="allowOptOut" ng-change="updateAllowOptOut()"/>
-                        Allow people to remove
-                        themselves from this group
-                    </label>
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       tabindex="0"
-                       th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
-                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
-                                 ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'"></i>
-                </div>
-            </div>
-            <div>
-                <h4>Sync Destinations</h4>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="listserv" ng-change="createEmailListModal()"
-                               ng-init="pref"/>
-                        Email list: &lt;{{ selectedGrouping.name }}@lists.hawaii.edu&gt;
-                    </label>
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       tabindex="0"
-                       th:title="#{screen.message.common.tooltip.preference.listserv}"
-                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\')',
-                                ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\') : null'"></i>
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="ldap" ng-change="createCASLDAPModal()"/>
-                        CAS/LDAP: uhReleasedGrouping
-                    </label>
-                    <i class="fa fa-question-circle clickable" aria-hidden="true"
-                       data-toggle="tooltip" data-placement="right"
-                       tabindex="0"
-                       th:title="#{screen.message.common.tooltip.preference.ldap}"
-                       th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\')',
-                                ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\') : null'"></i>
+                <div class="col-md-6 col-12">
+                    <h4>Sync Destinations</h4>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="listserv" ng-model="listserv"
+                                   ng-change="createEmailListModal()"/>
+                            <label class="form-check-label" for="listserv">
+                                Email list: &lt;{{ selectedGrouping.name }}@lists.hawaii.edu&gt;
+                            </label>
+                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="right"
+                                  tabindex="0"
+                                  th:title="#{screen.message.common.tooltip.preference.listserv}"
+                                  th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\')',
+                                  ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.listserv} + '\') : null'"></span>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="ldap" ng-model="ldap"
+                                   ng-change="createCASLDAPModal()"/>
+                            <label class="form-check-label" for="ldap">
+                                CAS/LDAP: uhReleasedGrouping
+                            </label>
+                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="right"
+                                  tabindex="0"
+                                  th:title="#{screen.message.common.tooltip.preference.ldap}"
+                                  th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\')',
+                                  ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.ldap} + '\') : null'"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

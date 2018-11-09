@@ -1,47 +1,43 @@
 <th:block th:fragment="basis">
-    <div class="row member-row-title">
-        <h3 class="members-tab-title">Basis</h3>
-    </div>
-    <div class="row member-row-title">
-        <div class="row member-row-title">
-            <!-- Export to CSV button -->
-            <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
-                <div class="pull-left">
-                    <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
-                            ng-click="exportGroupToCsv(groupingBasis, selectedGrouping.name, 'basis')">
-                        Export to CSV
-                    </button>
-                </div>
-            </div>
-            <!-- Filter bar -->
-            <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
-                <div class="xs-left-sm-right">
-                    <input class="form-control" placeholder="Filter Members..." type="text"
-                           title="Filter Members"
-                           ng-model="basisQuery"
-                           ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery)"/>
-                </div>
-            </div>
+    <h3>Basis</h3>
+    <div class="row group-header">
+        <!-- Export to CSV button -->
+        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
+            <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
+                    ng-click="exportGroupToCsv(groupingBasis, selectedGrouping.name, 'basis')">
+                Export to CSV
+            </button>
+        </div>
+        <!-- Filter bar -->
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 p-0">
+            <input class="form-control" placeholder="Filter Members..." type="text"
+                   title="Filter Members"
+                   ng-model="basisQuery"
+                   ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery)"/>
         </div>
     </div>
-    <div class="table-responsive">
-        <table class="table table-bordered table-condensed table-hover" aria-live="assertive">
+    <div class="table-responsive-sm">
+        <table class="table table-bordered table-sm table-hover" aria-live="assertive">
             <thead>
             <tr>
-                <th ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'name')"
-                    class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'name')">
                     Name
-                    <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'name' || !columnSort.groupingBasis" ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
+                    <i class="fa sort-icon"
+                       ng-show="columnSort.groupingBasis.property === 'name' || !columnSort.groupingBasis"
+                       ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'uuid')"
-                    class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'uuid')">
                     UH Number
-                    <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'uuid'" ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
+                    <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'uuid'"
+                       ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                 </th>
-                <th ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'username')"
-                    class="clickable">
+                <th class="clickable"
+                    ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'username')">
                     UH Username
-                    <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'username'" ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
+                    <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'username'"
+                       ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
                 </th>
             </tr>
             </thead>
@@ -62,30 +58,11 @@
                 </td>
             </tr>
             </tbody>
-            <tfoot>
-            <!-- Pagination control -->
-            <td colspan="6">
-                <ul class="pagination pull-right">
-                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageBasis) }">
-                        <a class="clickable" ng-click="setPage('First','currentPageBasis','pagedItemsBasis')">«« First</a>
-                    </li>
-                    <li ng-class="{ disabled: disableFirstAndPrev(currentPageBasis) }">
-                        <a class="clickable" ng-click="setPage('Prev','currentPageBasis','pagedItemsBasis')">« Prev</a>
-                    </li>
-                    <li ng-repeat="n in pageRange(currentPageBasis, pagedItemsBasis.length, gap) "
-                        ng-class="{ active: n === currentPageBasis }"
-                        ng-click="setPage('Set','currentPageBasis','pagedItemsBasis')">
-                        <a class="clickable" ng-bind="n + 1"></a>
-                    </li>
-                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsBasis, currentPageBasis) }">
-                        <a class="clickable" ng-click="setPage('Next','currentPageBasis','pagedItemsBasis')">Next »</a>
-                    </li>
-                    <li ng-class="{ disabled: disableNextAndLast(pagedItemsBasis, currentPageBasis) }">
-                        <a class="clickable" ng-click="setPage('Last','currentPageBasis','pagedItemsBasis')">Last »»</a>
-                    </li>
-                </ul>
-            </td>
-            </tfoot>
         </table>
+    </div>
+    <div class="pl-0 pr-0">
+        <div class="d-flex justify-content-lg-end justify-content-start">
+            <div th:replace="fragments/pagination :: pagination(currentPage='currentPageBasis', pagedItems='pagedItemsBasis')"></div>
+        </div>
     </div>
 </th:block>
