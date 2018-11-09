@@ -5,7 +5,7 @@ public interface UserContextService {
 
     public abstract String getCurrentUsername();
 
-    public abstract Long getCurrentUhuuid();
+    public abstract String getCurrentUhuuid();
 
-    public void setCurrentUhuuid(Long uhuuid);
+    public void setCurrentUhuuid(String uhuuid);
 }

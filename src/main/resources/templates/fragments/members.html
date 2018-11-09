@@ -2,24 +2,20 @@
     <h3>All Members</h3>
     <div class="row group-header">
         <!-- Export to CSV button -->
-        <div class="col-sm-6 col-12 p-0 mb-sm-0 mb-2">
-            <div class="float-left">
-                <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
-                        ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
-                    Export to CSV
-                </button>
-            </div>
+        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
+            <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
+                    ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
+                Export to CSV
+            </button>
         </div>
         <!-- Filter bar -->
-        <div class="col-sm-6 col-12 p-0">
-            <div class="float-sm-right float-left">
-                <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="membersQuery" class="form-control"
-                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery)"/>
-            </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 p-0">
+            <input placeholder="Filter Members..." type="text" title="Filter Members"
+                   ng-model="membersQuery" class="form-control"
+                   ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery)"/>
         </div>
     </div>
-    <div class="table-responsive">
+    <div class="table-responsive-sm">
         <table class="table table-bordered table-sm table-hover" aria-live="assertive">
             <thead>
             <tr>
@@ -40,7 +36,7 @@
                     <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'"
                        ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                 </th>
-                <th style="vertical-align: middle;" class="clickable"
+                <th class="basis-column clickable"
                     ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')">
                     Where Listed?
                     <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
@@ -63,7 +59,7 @@
                         </i>
                     </div>
                 </td>
-                <td class="text-center" style="width: 3%">{{ g.whereListed }}</td>
+                <td class="basis-column text-center">{{ g.whereListed }}</td>
             </tr>
             </tbody>
         </table>

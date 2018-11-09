@@ -1,10 +1,10 @@
 package edu.hawaii.its.groupings.controller;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -216,7 +216,7 @@ public class HomeControllerTest {
                 .andReturn()
                 .getRequest()
                 .getSession();
-        assertNull(session.getAttribute("feedback"));
+        assertThat(session.getAttribute("feedback"), notNullValue());
     }
 
     @Test
@@ -305,6 +305,30 @@ public class HomeControllerTest {
         mockMvc.perform(get("/modal/confirmAddModal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("modal/confirmAddModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestEmailListModal() throws Exception {
+        mockMvc.perform(get("/modal/EmailListModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/EmailListModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestLdapModal() throws Exception {
+        mockMvc.perform(get("/modal/CASLDAPModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/CASLDAPModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestRemoveErrorModal() throws Exception {
+        mockMvc.perform(get("/modal/removeErrorModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/removeErrorModal"));
     }
 
 }

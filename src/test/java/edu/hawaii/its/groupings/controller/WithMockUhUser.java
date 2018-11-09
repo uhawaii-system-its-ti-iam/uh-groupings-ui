@@ -12,7 +12,7 @@ public @interface WithMockUhUser {
 
     String[] roles() default {"ROLE_UH"};
 
-    long uhuuid() default 12345678L;
+    String uhuuid() default "12345678";
 
     String name() default "User";
 }

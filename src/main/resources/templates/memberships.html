@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <div ng-if="membershipsList.length !== 0">
-                    <div class="table-responsive">
+                    <div class="table-responsive-sm">
                         <table class="table table-bordered table-sm table-hover" aria-live="assertive">
                             <thead>
                             <tr>
@@ -103,11 +103,9 @@
                     </div>
                 </div>
                 <div ng-if="membershipsList.length === 0" align="center">
-                    <h3 style="color: black">
-                        <b ng-hide="loading" th:text="#{screen.message.membership.empty.membershipsList}">
-                            No Groupings Available
-                        </b>
-                    </h3>
+                    <p class="font-weight-bold" ng-hide="loading" th:text="#{screen.message.membership.empty.membershipsList}">
+                        No Groupings Available
+                    </p>
                 </div>
             </div>
         </div>
@@ -131,7 +129,7 @@
                     </div>
                 </div>
                 <div ng-if="optInList.length !== 0">
-                    <div class="table-responsive">
+                    <div class="table-responsive-sm">
                         <table class="table table-bordered table-sm table-hover" aria-live="assertive">
                             <thead>
                             <tr>
@@ -174,11 +172,9 @@
                     </div>
                 </div>
                 <div ng-if="optInList.length === 0" align="center">
-                    <h3 style="color: black">
-                        <b ng-hide="loading" th:text="#{screen.message.membership.empty.optIn}">
-                            No Groupings Available
-                        </b>
-                    </h3>
+                    <p class="font-weight-bold" ng-hide="loading" th:text="#{screen.message.membership.empty.optIn}">
+                        No Groupings Available
+                    </p>
                 </div>
             </div>
         </div>

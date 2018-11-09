@@ -40,7 +40,7 @@ public class EmailService {
             msg.setTo(to);
             msg.setFrom(from);
             String text = "";
-            String header = "UHGroupings service feedback [" + feedback.getType() + "]";
+            String header = "UH Groupings service feedback [" + feedback.getType() + "]";
             text += "Submitted name: " + feedback.getName() + "\n\n";
             text += "Submitted email: <" + feedback.getEmail() + ">\n\n";
             text += "Feedback type: " + feedback.getType() + "\n\n";

@@ -20,6 +20,7 @@
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
+        angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
 
         /**
          * Initializes the page, displaying the list of groupings to administer and the list of admins to manage.
@@ -87,6 +88,10 @@
                     user: adminToRemove,
                     endpoint: endpoint,
                     listName: "admins"
+                });
+            } else {
+                $scope.createRemoveErrorModal({
+                    userType: "admin"
                 });
             }
         };
