@@ -35,8 +35,8 @@ h2, h3, h4, h5, h6 {
 }
 
 .btn.btn-primary {
-/*    background-color: #2C658D;
-    border-color: #477A9E;*/
+    /*    background-color: #2C658D;
+        border-color: #477A9E;*/
     color: #fff;
     background-color: #286090;
     border-color: #204d74;
@@ -58,7 +58,8 @@ h2, h3, h4, h5, h6 {
     /*background-color:*/
 }
 
-/*.card.page-header */.card-header {
+/*.card.page-header */
+.card-header {
     background-color: #e5eef1;
 }
 
@@ -71,34 +72,28 @@ h2, h3, h4, h5, h6 {
     /*background-color:*/
 }
 
-body{
+body {
     background: url("../images/background.png") repeat 0px 0px #f0f0f0;
 }
 
-.card-body{
-
+.card-body {
     background: #f5f5f5;
     border-color: #b5bcc7;
 }
 
 .jumbotron .h1, .jumbotron h1 {
-
     font-size: 63px;
-
 }
 
 .jumbotron .h1, .jumbotron h1 {
-
     color: inherit;
-
 }
 
-.btn{
+.btn {
     border: 1px solid transparent;
 }
 
 .btn-group-lg > .btn, .btn-lg {
-
     padding: 10px 16px;
     font-size: 18px;
     line-height: 1.3333333;
@@ -106,49 +101,41 @@ body{
     background: #6fa9be;
     border-color: #5a9cb4;
     color: white;
-
-
 }
 
 .btn-default {
-
     background: #6fa9be;
 }
 
 .btn-default {
-
     background: #6fa9be;
     border-color: #5a9cb4;
     color: white;
-
 }
 
-#name{
+#name {
     color: #5a9cb4;
 }
 
 h1, h2, .text-left, span {
-
     color: #1c6070;
-
 }
 
 .btn-light:hover {
     color: #212529;
     background-color: #e2e6ea;
     border-color: #dae0e5;
-
 }
 
-.border{
+.border {
     background: white;
 }
 
-.table{
+.table {
     background: white;
 }
 
-.card-header{
+.card-header {
     border: 1px solid #dee2e6;
     background: #e5eef1;
 }
