@@ -23,8 +23,6 @@
         $scope.gap = 2;
         $scope.itemsPerPage = 20;
 
-        $scope.optOutList = [];
-
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
         angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
 
@@ -44,8 +42,6 @@
 
                     $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
                     $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery);
-
-                    $scope.optOutList = res.groupingsToOptOutOf;
                 }
                 $scope.loading = false;
             }, function (res) {
@@ -114,16 +110,6 @@
             }, function (res) {
                 console.log("Error, Status Code: " + res.statusCode);
             }, endpoint);
-        };
-
-        /**
-         * Checks if membership is required in the grouping.
-         * @param index - the index of the grouping in the table
-         * @returns {boolean} true if membership is required, otherwise returns false
-         */
-        $scope.membershipRequired = function (currentPage, indexClicked) {
-            var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
-            return !_.some($scope.optOutList, { path: groupingPath });
         };
 
     }
