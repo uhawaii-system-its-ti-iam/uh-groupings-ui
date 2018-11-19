@@ -20,7 +20,7 @@ You'll need a Java JDK to build and run the project (version 1.8).
 The files for the project are kept in a code repository,
 available from here:
 
-https://github.com/uhawaii-system-its-ti-iam/uhgroupings
+https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui
 
 ##### Building
 Install the necessary project dependencies:
