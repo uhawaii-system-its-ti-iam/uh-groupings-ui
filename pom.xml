@@ -245,6 +245,7 @@
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/owner.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/table.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/timeout.controller.js</source>
                     </preloadSources>
                     <specIncludes>
                         <include>**/**.test.js</include>
