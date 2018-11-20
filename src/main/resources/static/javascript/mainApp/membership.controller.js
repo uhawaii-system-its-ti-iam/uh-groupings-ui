@@ -34,36 +34,16 @@
             var endpoint = BASE_URL + "groupingAssignment";
 
             dataProvider.loadData(function (res) {
-                if (_.isNull(res)) {
-                    $scope.createApiErrorModal();
-                } else {
-                    $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
-                    $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery);
+                $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
+                $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery);
 
-                    $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
-                    $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery);
-                }
+                $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
+                $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery);
+
                 $scope.loading = false;
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             }, endpoint);
-        };
-
-        /**
-         * Creates a modal for errors in loading data from the API.
-         */
-        $scope.createApiErrorModal = function () {
-            $scope.apiErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/apiError.html",
-                scope: $scope
-            });
-        };
-
-        /**
-         * Closes the API error modal.
-         */
-        $scope.closeApiError = function () {
-            $scope.apiErrorModalInstance.close();
         };
 
         /**

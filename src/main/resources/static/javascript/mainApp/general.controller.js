@@ -61,6 +61,17 @@
         };
 
         /**
+         * @param {object[]} members - the members of the group
+         * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
+         */
+        function setGroupMembers(members) {
+            _.remove(members, function (member) {
+                return _.isEmpty(member.username);
+            });
+            return _.sortBy(members, "name");
+        }
+
+        /**
          * Gets information about the grouping, such as its members and the preferences set.
          * @param {string} path - the path of the grouping to retrieve information
          */
@@ -106,17 +117,6 @@
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             }, endpoint);
         };
-
-        /**
-         * @param {object[]} members - the members of the group
-         * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
-         */
-        function setGroupMembers(members) {
-            _.remove(members, function (member) {
-                return _.isEmpty(member.username);
-            });
-            return _.sortBy(members, "name");
-        }
 
         /**
          * Creates a modal for errors in loading data from the API.
@@ -487,29 +487,6 @@
         };
 
         /**
-         * Returns to the list of groupings available for management/administration.
-         */
-        $scope.returnToGroupingsList = function () {
-            $scope.resetGroupingInformation();
-
-            // Ensure the groupings list is reset with the now-blank filter
-            $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
-
-            $scope.showGrouping = false;
-        };
-
-        /**
-         * Resets the grouping members, page numbers, filters, and columns to sort by.
-         */
-        $scope.resetGroupingInformation = function () {
-            resetGroupingMembers();
-            resetPillsToAllMembers();
-            resetFilterQueries();
-            clearAddMemberInput();
-            $scope.columnSort = {};
-        };
-
-        /**
          * Resets the grouping members and page numbers.
          */
         function resetGroupingMembers() {
@@ -581,6 +558,29 @@
                     $scope.adminToAdd = "";
             }
         }
+
+        /**
+         * Returns to the list of groupings available for management/administration.
+         */
+        $scope.returnToGroupingsList = function () {
+            $scope.resetGroupingInformation();
+
+            // Ensure the groupings list is reset with the now-blank filter
+            $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
+
+            $scope.showGrouping = false;
+        };
+
+        /**
+         * Resets the grouping members, page numbers, filters, and columns to sort by.
+         */
+        $scope.resetGroupingInformation = function () {
+            resetGroupingMembers();
+            resetPillsToAllMembers();
+            resetFilterQueries();
+            clearAddMemberInput();
+            $scope.columnSort = {};
+        };
 
         /**
          * Creates a modal with a description of the preference selected.
