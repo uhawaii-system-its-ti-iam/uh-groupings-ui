@@ -602,6 +602,10 @@
             $scope.infoModalInstance.close();
         };
 
+        /**
+         * Toggles a grouping preference option.
+         * @param {string} endpoint - the API endpoint to toggle the preference
+         */
         function togglePreference(endpoint) {
             dataProvider.updateData(function (res) {
                 if (!_.isUndefined(res.statusCode)) {

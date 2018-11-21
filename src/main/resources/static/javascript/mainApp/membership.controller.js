@@ -44,16 +44,11 @@
         };
 
         /**
-         * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
-         * @param {number} currentPage - the current page within the table
-         * @param {number} indexClicked - the index of the grouping clicked by the user
+         * Handles requests for opting in to or out of a grouping.
+         * @param {string} endpoint - the API endpoint to opt in/out of a grouping
          */
-        $scope.optOut = function (currentPage, indexClicked) {
-            var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
-            var endpoint = BASE_URL + groupingPath + "/optOut";
-
+        function handleOptRequest(endpoint) {
             $scope.loading = true;
-
             dataProvider.updateData(function (res) {
                 if (_.startsWith(res[0].resultCode, "FAILURE")) {
                     alert("Failed to opt out");
@@ -64,6 +59,17 @@
             }, function (res) {
                 console.log("Error, Status Code: " + res.statusCode);
             }, endpoint);
+        }
+
+        /**
+         * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
+         * @param {number} currentPage - the current page within the table
+         * @param {number} indexClicked - the index of the grouping clicked by the user
+         */
+        $scope.optOut = function (currentPage, indexClicked) {
+            var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
+            var endpoint = BASE_URL + groupingPath + "/optOut";
+            handleOptRequest(endpoint);
         };
 
         /**
@@ -74,19 +80,7 @@
         $scope.optIn = function (currentPage, indexClicked) {
             var groupingPath = $scope.pagedItemsOptInList[currentPage][indexClicked].path;
             var endpoint = BASE_URL + groupingPath + "/optIn";
-
-            $scope.loading = true;
-
-            dataProvider.updateData(function (res) {
-                if (_.startsWith(res[0].resultCode, "FAILURE")) {
-                    alert("Failed to opt in");
-                    $scope.loading = false;
-                } else {
-                    $scope.init();
-                }
-            }, function (res) {
-                console.log("Error, Status Code: " + res.statusCode);
-            }, endpoint);
+            handleOptRequest(endpoint);
         };
 
     }
