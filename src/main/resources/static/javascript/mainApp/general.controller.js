@@ -602,11 +602,7 @@
             $scope.infoModalInstance.close();
         };
 
-        /**
-         * Toggles the grouping preference which allows users to opt out of a grouping.
-         */
-        $scope.updateAllowOptOut = function () {
-            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
+        function togglePreference(endpoint) {
             dataProvider.updateData(function (res) {
                 if (!_.isUndefined(res.statusCode)) {
                     console.log("Error, Status Code: " + res.statusCode);
@@ -617,6 +613,14 @@
             }, function (res) {
                 console.log("Error, Status Code: " + res.statusCode);
             }, endpoint);
+        }
+
+        /**
+         * Toggles the grouping preference which allows users to opt out of a grouping.
+         */
+        $scope.updateAllowOptOut = function () {
+            var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.allowOptOut + "/setOptOut";
+            togglePreference(endpoint);
         };
 
         /**
@@ -624,16 +628,7 @@
          */
         $scope.updateAllowOptIn = function () {
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.allowOptIn + "/setOptIn";
-            dataProvider.updateData(function (res) {
-                if (!_.isUndefined(res.statusCode)) {
-                    console.log("Error, Status Code: " + res.statusCode);
-                    $scope.createPreferenceErrorModal();
-                } else if (_.startsWith(res[0].resultCode), "SUCCESS") {
-                    console.log("success");
-                }
-            }, function (res) {
-                console.log("Error, Status Code: " + res.statusCode);
-            }, endpoint);
+            togglePreference(endpoint);
         };
 
         /**
@@ -641,34 +636,15 @@
          */
         $scope.updateListserv = function () {
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.listserv + "/setListserv";
-            dataProvider.updateData(function (res) {
-                if (!_.isUndefined(res.statusCode)) {
-                    console.log("Error, Status Code: " + res.statusCode);
-                    $scope.createPreferenceErrorModal();
-                } else if (res.resultCode === "SUCCESS") {
-                    console.log("success");
-                }
-            }, function (res) {
-                console.log("Error, Status Code: " + res.statusCode);
-            }, endpoint);
+            togglePreference(endpoint);
         };
 
+        /**
+         * Toggles the grouping preference to synchronize memberships with the uhReleasedGroupings attribute.
+         */
         $scope.updateLdap = function () {
             var endpoint = BASE_URL + $scope.selectedGrouping.path + "/" + $scope.ldap + "/setLdap";
-            console.log($scope.ldap);
-
-            dataProvider.updateData(function (res) {
-                if (!_.isUndefined(res.statusCode)) {
-                    console.log("Error, Status Code: " + res.statusCode);
-                    $scope.createPreferenceErrorModal();
-                } else if (res.resultCode === "SUCCESS") {
-                    console.log("success");
-                }
-            }, function (res) {
-                console.log("Error, Status Code: " + res.statusCode);
-            }, endpoint);
-
-
+            togglePreference(endpoint);
         };
 
         /**
