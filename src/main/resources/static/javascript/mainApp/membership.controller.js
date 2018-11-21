@@ -20,9 +20,6 @@
 
         $scope.loading = true;
 
-        $scope.gap = 2;
-        $scope.itemsPerPage = 20;
-
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
         angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
 

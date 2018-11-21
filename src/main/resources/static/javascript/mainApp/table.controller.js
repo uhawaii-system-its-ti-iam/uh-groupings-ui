@@ -9,6 +9,9 @@
 
         $scope.columnSort = {};
 
+        $scope.itemsPerPage = 20;
+        $scope.gap = 2;
+
         var FILTER_COLUMNS_TO_IGNORE = ["basis", "$$hashKey"];
         var DEFAULT_COLUMN_NAME = "name";
 
