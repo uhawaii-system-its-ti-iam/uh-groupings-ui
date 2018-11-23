@@ -150,6 +150,10 @@ td.uh-pre {
     color: #212529;
 }
 
+.fixed-top .navbar-nav .nav-link:hover {
+    color: #0056b3;
+}
+
 .fixed-top .navbar-logout {
     padding: .5rem .5625rem;
     font-size: .9375rem;
@@ -379,6 +383,7 @@ table .w-30 {
     .modal-dialog {
         min-height: calc(100% - (1.75rem * 2));
     }
+
     .modal-dialog::before {
         height: calc(100vh - (1.75rem * 2));
     }

@@ -78,10 +78,10 @@
                                 <td class="w-30">{{ l.name }}</td>
                                 <td class="w-50">{{ l.path }}</td>
                                 <td class="w-20 text-center">
-                                <span ng-if="membershipRequired(currentPageMemberships, $index)">
+                                <span ng-if="!l.optOutOn">
                                     Membership Required
                                 </span>
-                                    <div ng-if="!membershipRequired(currentPageMemberships, $index)">
+                                    <div ng-if="l.optOutOn">
                                         <button id="optOutButton"
                                                 class="btn btn-primary btn-block opt-button text-center"
                                                 tabindex="0"

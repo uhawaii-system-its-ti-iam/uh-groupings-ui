@@ -9,6 +9,9 @@
 
         $scope.columnSort = {};
 
+        $scope.itemsPerPage = 20;
+        $scope.gap = 2;
+
         var FILTER_COLUMNS_TO_IGNORE = ["basis", "$$hashKey"];
         var DEFAULT_COLUMN_NAME = "name";
 
@@ -33,31 +36,10 @@
         };
 
         /**
-         * Filters through a list given a user's query.
-         * If query is empty, then this is the same as $scope.pagedListVar = $scope.groupToPages(list)
-         * @param {object[]} list - the list to filter
-         * @param {string} pagedListVar - the name of the variable containing the paginated list
-         * @param {string} pageVar - the name of the variable containing the current page of the list
-         * @param {string} query - the user's search query
+         * @param {string} key - the key/column name to check
+         * @returns {boolean} false if values in this key/column should be ignored when filtering for members/groupings,
+         * otherwise returns true.
          */
-        $scope.filter = function (list, pagedListVar, pageVar, query) {
-            // Filters for items that match the user's query
-            var filteredItems = $filter("filter")(list, function (item) {
-                for (var key in item) {
-                    if (_.has(item, key)
-                            && isFilterableColumn(key)
-                            && _.isString(item[key])
-                            && containsSubstring(item[key], query)) {
-                        return true;
-                    }
-                }
-            });
-            // Resets the page number
-            $scope[pageVar] = 0;
-            // Paginates the filtered items
-            $scope[pagedListVar] = $scope.groupToPages(filteredItems);
-        };
-
         function isFilterableColumn(key) {
             return !_.includes(FILTER_COLUMNS_TO_IGNORE, key);
         }
@@ -72,6 +54,32 @@
             if (!substr) return true;
             return str.toLowerCase().indexOf(substr.toLowerCase()) !== -1;
         }
+
+        /**
+         * Filters through a list given a user's query.
+         * If query is empty, then this is the same as $scope.pagedListVar = $scope.groupToPages(list)
+         * @param {object[]} list - the list to filter
+         * @param {string} pagedListVar - the name of the variable containing the paginated list
+         * @param {string} pageVar - the name of the variable containing the current page of the list
+         * @param {string} query - the user's search query
+         */
+        $scope.filter = function (list, pagedListVar, pageVar, query) {
+            // Filters for items that match the user's query
+            var filteredItems = $filter("filter")(list, function (item) {
+                for (var key in item) {
+                    if (_.has(item, key)
+                        && isFilterableColumn(key)
+                        && _.isString(item[key])
+                        && containsSubstring(item[key], query)) {
+                        return true;
+                    }
+                }
+            });
+            // Resets the page number
+            $scope[pageVar] = 0;
+            // Paginates the filtered items
+            $scope[pagedListVar] = $scope.groupToPages(filteredItems);
+        };
 
         /**
          * @param {number} currentPage - the current page in the table

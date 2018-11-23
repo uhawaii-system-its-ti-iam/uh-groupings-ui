@@ -15,9 +15,6 @@
         $scope.pagedItemsAdmins = [];
         $scope.currentPageAdmins = 0;
 
-        $scope.gap = 2;
-        $scope.itemsPerPage = 20;
-
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
         angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
@@ -108,7 +105,7 @@
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
-            var windowClass = $scope.showWarningRemovingSelf() ? 'modal-danger' : '';
+            var windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",

@@ -57,12 +57,6 @@ describe("MembershipController", function () {
                         path: "path1:path4:grouping4",
                         name: "grouping4"
                     }
-                ],
-                groupingsToOptOutOf: [
-                    {
-                        path: "path1:path3:grouping2",
-                        name: "grouping2"
-                    }
                 ]
             };
 
@@ -97,14 +91,6 @@ describe("MembershipController", function () {
             expect(scope.optInList.length).toEqual(1);
             expect(scope.pagedItemsOptInList.length).toEqual(1);
             expect(scope.optInList).toContain(mockResponse.groupingsToOptInTo[0]);
-        });
-
-        it("should initialize optOutList", function () {
-            httpBackend.expectGET(BASE_URL + "groupingAssignment").respond(200, mockResponse);
-            httpBackend.flush();
-
-            expect(scope.optOutList.length).toEqual(1);
-            expect(scope.optOutList).toContain(mockResponse.groupingsToOptOutOf[0]);
         });
 
     });
@@ -211,23 +197,6 @@ describe("MembershipController", function () {
             httpBackend.expectGET(BASE_URL + "groupingAssignment").respond(200);
         });
 
-    });
-
-    describe("membershipRequired", function () {
-
-        it("should return false for groupings in both membershipsList and optOutList", function () {
-            // path:path2:path3:grouping1
-            expect(scope.membershipRequired(0, 0)).toBe(false);
-            // path:path2:path3:grouping4
-            expect(scope.membershipRequired(1, 1)).toBe(false);
-        });
-
-        it("should return true for groupings in membershipsList, but not in optOutList", function () {
-            // path:path2:path4:grouping2
-            expect(scope.membershipRequired(0, 1)).toBe(true);
-            // path:path2:path5:grouping3
-            expect(scope.membershipRequired(1, 0)).toBe(true);
-        });
     });
 
 });
