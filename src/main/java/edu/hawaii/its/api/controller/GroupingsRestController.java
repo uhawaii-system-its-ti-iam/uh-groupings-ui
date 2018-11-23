@@ -344,6 +344,18 @@ public class GroupingsRestController {
     }
 
     /**
+     * @return a list of groupings that a user owns
+     */
+    @RequestMapping(value = "/groupingsOwned",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity groupingsOwned(Principal principal) {
+        logger.info("Entered REST GroupingAssignment...");
+        String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
      * if the user is allowed to opt into the grouping
      * this will add them to the include group of that grouping
      * if the user is in the exclude group, they will be removed from it
