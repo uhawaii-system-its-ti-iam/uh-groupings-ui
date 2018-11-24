@@ -346,12 +346,24 @@ public class GroupingsRestController {
     /**
      * @return a list of groupings that a user owns
      */
-    @RequestMapping(value = "/groupingsOwned",
+    @RequestMapping(value = "/owners/groupings",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity groupingsOwned(Principal principal) {
         logger.info("Entered REST GroupingAssignment...");
         String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * @return a list of groupings that a user owns
+     */
+    @RequestMapping(value = "/owners/{uid}/groupings",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity groupingsOwnedUid(Principal principal, @PathVariable String uid) {
+        logger.info("Entered REST GroupingAssignment...");
+        String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", uid);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
