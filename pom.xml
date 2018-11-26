@@ -24,7 +24,7 @@
         <hibernate-jpa.version>1.0.0.Final</hibernate-jpa.version>
         <hibernate.version>5.2.3.Final</hibernate.version>
         <h2.version>1.4.192</h2.version>
-        <org.jasig.cas.client-version>3.4.1</org.jasig.cas.client-version>
+        <org.jasig.cas.client-version>3.5.0</org.jasig.cas.client-version>
 
         <jquery-version>3.2.0</jquery-version>
         <angular-mocks-version>1.5.8</angular-mocks-version>
@@ -277,10 +277,10 @@
                                 <echo>$ mvn -Dmaven.test.skip=true clean package</echo>
                                 <echo>$ mvn jasmine:test</echo>
                                 <echo>$ mvn clean test jacoco:report</echo>
-                                <echo></echo>
+                                <echo/>
                                 <echo>To run the integrations tests with your Grouper server:</echo>
                                 <echo>$ mvn -Dtest=TestGroupAttributeService,TestGroupingAssignmentService,TestGroupingFactoryService,TestHelperService,TestMemberAttributeService,TestMembershipService,TestGroupingsRestController test</echo>
-                                <echo></echo>
+                                <echo/>
                                 <echo>To run UH Groupings locally:</echo>
                                 <echo>$ mvn clean spring-boot:run</echo>
                             </target>
