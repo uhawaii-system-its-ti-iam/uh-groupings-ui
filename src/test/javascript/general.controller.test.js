@@ -114,36 +114,14 @@ describe("GeneralController", function () {
         ];
         scope.pagedItemsExclude = scope.groupToPages(scope.groupingExclude);
 
-        scope.groupingMembers = [
-            {
-                name: "User One",
-                username: "user1",
-                uuid: "00000001",
-                firstName: "User",
-                lastName: "One"
-            },
-            {
-                name: "User Two",
-                username: "user2",
-                uuid: "00000002",
-                firstName: "User",
-                lastName: "Two"
-            },
-            {
-                name: "User Three",
-                username: "user3",
-                uuid: "00000003",
-                firstName: "User",
-                lastName: "Three"
-            },
-            {
-                name: "User Seven",
-                username: "user7",
-                uuid: "00000007",
-                firstName: "User",
-                lastName: "Seven"
-            }
-        ];
+        scope.groupingMembers = _.cloneDeep(scope.groupingInclude);
+        scope.groupingMembers.push({
+            name: "User Seven",
+            username: "user7",
+            uuid: "00000007",
+            firstName: "User",
+            lastName: "Seven"
+        });
         scope.pagedItemsMembers = scope.groupToPages(scope.groupingMembers);
 
         scope.groupingOwners = [
