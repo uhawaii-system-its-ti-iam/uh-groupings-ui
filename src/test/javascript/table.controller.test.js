@@ -365,24 +365,13 @@ describe("TableController", function () {
                 scope.sortBy("items", "pagedItems", "name");
             });
 
-            it("should sort items back in ascending order by nameif the name clicked is clicked", function () {
+            it("should sort items back in ascending order by name if the name clicked is clicked", function () {
                 scope.sortBy("items", "pagedItems", "name");
 
                 expect(scope.items[0]).toEqual({ name: "a", id: 0 });
                 expect(scope.items[1]).toEqual({ name: "b", id: 12 });
                 expect(scope.items[2]).toEqual({ name: "c", id: 4 });
                 expect(scope.items[3]).toEqual({ name: "d", id: 9 });
-                expect(scope.items[4]).toEqual({ name: "e", id: 13 });
-                expect(scope.items[5]).toEqual({ name: "f", id: 17 });
-            });
-
-            it("should sort items in ascending order by id if the id column is clicked", function () {
-                scope.sortBy("items", "pagedItems", "id");
-
-                expect(scope.items[0]).toEqual({ name: "a", id: 0 });
-                expect(scope.items[1]).toEqual({ name: "c", id: 4 });
-                expect(scope.items[2]).toEqual({ name: "d", id: 9 });
-                expect(scope.items[3]).toEqual({ name: "b", id: 12 });
                 expect(scope.items[4]).toEqual({ name: "e", id: 13 });
                 expect(scope.items[5]).toEqual({ name: "f", id: 17 });
             });
