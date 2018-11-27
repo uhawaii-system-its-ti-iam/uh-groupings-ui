@@ -2,13 +2,6 @@ package edu.hawaii.its.groupings.type;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "message")
 public class Message implements Serializable {
 
     public static final long serialVersionUID = 2L;
@@ -20,8 +13,6 @@ public class Message implements Serializable {
     private String text;
     private String enabled;
 
-    @Id
-    @Column(name = "MSG_ID")
     public Integer getId() {
         return id;
     }
@@ -30,7 +21,6 @@ public class Message implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "MSG_TEXT")
     public String getText() {
         return text;
     }
@@ -39,7 +29,6 @@ public class Message implements Serializable {
         this.text = text;
     }
 
-    @Column(name = "MSG_ENABLED", columnDefinition = "char")
     public String getEnabled() {
         return enabled;
     }
@@ -48,7 +37,6 @@ public class Message implements Serializable {
         this.enabled = enabled;
     }
 
-    @Column(name = "MSG_TYPE_ID")
     public Integer getTypeId() {
         return typeId;
     }

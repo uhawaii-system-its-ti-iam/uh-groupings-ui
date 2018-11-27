@@ -3,16 +3,6 @@ package edu.hawaii.its.api.type;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-@Entity
-@Table(name = "groups")
 public class Group implements Comparable<Group> {
     private List<Person> members = new ArrayList<>();
     private String path = "";
@@ -42,13 +32,10 @@ public class Group implements Comparable<Group> {
         this.path = path != null ? path : "";
     }
 
-    @Id
-    @Column(name = "path")
     public String getPath() {
         return path;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
     public List<Person> getMembers() {
         return members;
     }
@@ -61,12 +48,10 @@ public class Group implements Comparable<Group> {
         members.add(person);
     }
 
-    @Transient
     public boolean isMember(Person person) {
         return members.contains(person);
     }
 
-    @Transient
     public List<String> getNames() {
         List<String> names = new ArrayList<>();
         for (Person person : members) {
@@ -75,7 +60,6 @@ public class Group implements Comparable<Group> {
         return names;
     }
 
-    @Transient
     public List<String> getUuids() {
         List<String> uuids = new ArrayList<>();
         for (Person person : members) {
@@ -84,7 +68,6 @@ public class Group implements Comparable<Group> {
         return uuids;
     }
 
-    @Transient
     public List<String> getUsernames() {
         List<String> usernames = new ArrayList<>();
         for (Person person : members) {

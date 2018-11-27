@@ -4,31 +4,16 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Transient;
-
-import org.hibernate.annotations.Proxy;
-
-@Entity
-@Proxy(lazy = false)
 public class Person implements Comparable<Person> {
 
-    @Transient
     private static String COMPOSITE_NAME = "cn";
 
-    @Transient
     private static String FIRST_NAME = "givenName";
 
-    @Transient
     private static String LAST_NAME = "sn";
 
-    @Transient
     private static String UUID = "uuid";
 
-    @Transient
     private static String USERNAME = "uid";
 
     private Map<String, String> attributes = new HashMap<>();
@@ -65,8 +50,6 @@ public class Person implements Comparable<Person> {
         this.attributes = attributes;
     }
 
-    @Id
-    @Column
     public String getUsername() {
         return attributes.get(USERNAME);
     }
@@ -75,7 +58,6 @@ public class Person implements Comparable<Person> {
         attributes.put(USERNAME, username);
     }
 
-    @Column(name = "FullName")
     public String getName() {
         return attributes.get(COMPOSITE_NAME);
     }
@@ -84,7 +66,6 @@ public class Person implements Comparable<Person> {
         attributes.put(COMPOSITE_NAME, name);
     }
 
-    @Column
     public String getUuid() {
         return attributes.get(UUID);
     }
@@ -93,7 +74,6 @@ public class Person implements Comparable<Person> {
         attributes.put(UUID, uuid);
     }
 
-    @Column(name = "FirstName")
     public String getFirstName() {
         return attributes.get(FIRST_NAME);
     }
@@ -102,7 +82,6 @@ public class Person implements Comparable<Person> {
         attributes.put(FIRST_NAME, firstName);
     }
 
-    @Column(name = "LastName")
     public String getLastName() {
         return attributes.get(LAST_NAME);
     }
@@ -111,7 +90,6 @@ public class Person implements Comparable<Person> {
         attributes.put(LAST_NAME, lastName);
     }
 
-    @ElementCollection
     public Map<String, String> getAttributes() {
         return attributes;
     }
@@ -120,7 +98,6 @@ public class Person implements Comparable<Person> {
         this.attributes = attributes;
     }
 
-    @Transient
     public String getAttribute(String key) {
         return attributes.get(key);
     }

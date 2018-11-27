@@ -2,13 +2,6 @@ package edu.hawaii.its.groupings.type;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "unique_uh_number_v")
 public class Employee implements Serializable {
 
     public static final long serialVersionUID = 2L;
@@ -22,8 +15,6 @@ public class Employee implements Serializable {
         this.uhNumber = uhNumber;
     }
 
-    @Id
-    @Column(name = "UH_NUMBER")
     public Long getUhNumber() {
         return uhNumber;
     }
