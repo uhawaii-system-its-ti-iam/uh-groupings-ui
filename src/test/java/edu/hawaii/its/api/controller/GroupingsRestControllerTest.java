@@ -105,6 +105,18 @@ public class GroupingsRestControllerTest {
     }
 
     @Test
+    @WithMockUhUser
+    public void getMembershipAssignmentTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "members/groupings";
+
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(uri))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     @WithMockUhUser(username = "admin")
     public void addAdminTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "newAdmin/addAdmin";
