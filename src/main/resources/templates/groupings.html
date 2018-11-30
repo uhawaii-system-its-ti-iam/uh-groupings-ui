@@ -9,15 +9,18 @@
 <!--  Content container -->
 <div class="container" ng-controller="OwnerJsController" data-ng-init="init()">
 
-    <h1>Manage My Groupings</h1>
+<!--    <h1>Manage My Groupings</h1>
 
-    <p th:utext="#{screen.message.groupings.page.description}"></p>
+    <p th:utext="#{screen.message.groupings.page.description}"></p>-->
+
+    <div th:replace="fragments/page-header :: page-header(title='Manage My Groupings', description=#{screen.message.groupings.page.description})">
+    </div>
 
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
 
-    <div>
+    <div class="nav-tabs nav-item">
         <div ng-show="!showGrouping">
             <div th:replace="fragments/groupings-list :: groupings-list(title='My Groupings', tabContent=false)"></div>
         </div>

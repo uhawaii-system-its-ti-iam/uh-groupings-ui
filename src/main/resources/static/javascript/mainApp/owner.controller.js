@@ -11,9 +11,6 @@
      */
     function OwnerJsController($scope, $controller, $window, $uibModal, dataProvider, BASE_URL) {
 
-        $scope.gap = 2;
-        $scope.itemsPerPage = 20;
-
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
         angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
@@ -36,45 +33,6 @@
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             }, endpoint);
-        };
-
-        /**
-         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
-         * a request is made to delete the user.
-         * @param {object} options - the options object
-         * @param {string} options.user - the user being removed
-         * @param {string} options.endpoint - the endpoint used to make the request
-         * @param {string} options.listName - where the user is being removed from
-         */
-        $scope.createRemoveModal = function (options) {
-            $scope.userToRemove = options.user;
-            $scope.listName = options.listName;
-
-            var windowClass = $scope.showWarningRemovingSelf() ? 'modal-danger' : '';
-
-            $scope.removeModalInstance = $uibModal.open({
-                templateUrl: "modal/removeModal.html",
-                windowClass: windowClass,
-                scope: $scope
-            });
-
-            $scope.removeModalInstance.result.then(function () {
-                $scope.loading = true;
-
-                dataProvider.updateData(function () {
-                    if ($scope.currentUser === $scope.userToRemove.username && $scope.listName === "owners") {
-                        if ($scope.groupingsList.length === 1) {
-                            $window.location.href = "home";
-                        } else {
-                            $window.location.href = "groupings";
-                        }
-                    } else {
-                        $scope.getGroupingInformation();
-                    }
-                }, function (res) {
-                    console.log("Error, Status Code: " + res.statusCode);
-                }, options.endpoint);
-            });
         };
 
     }

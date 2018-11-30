@@ -20,11 +20,6 @@
 
         $scope.loading = true;
 
-        $scope.gap = 2;
-        $scope.itemsPerPage = 20;
-
-        $scope.optOutList = [];
-
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
         angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
 
@@ -36,17 +31,12 @@
             var endpoint = BASE_URL + "groupingAssignment";
 
             dataProvider.loadData(function (res) {
-                if (_.isNull(res)) {
-                    $scope.createApiErrorModal();
-                } else {
-                    $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
-                    $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery);
+                $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
+                $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery);
 
-                    $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
-                    $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery);
+                $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
+                $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery);
 
-                    $scope.optOutList = res.groupingsToOptOutOf;
-                }
                 $scope.loading = false;
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
@@ -54,33 +44,11 @@
         };
 
         /**
-         * Creates a modal for errors in loading data from the API.
+         * Handles requests for opting in to or out of a grouping.
+         * @param {string} endpoint - the API endpoint to opt in/out of a grouping
          */
-        $scope.createApiErrorModal = function () {
-            $scope.apiErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/apiError.html",
-                scope: $scope
-            });
-        };
-
-        /**
-         * Closes the API error modal.
-         */
-        $scope.closeApiError = function () {
-            $scope.apiErrorModalInstance.close();
-        };
-
-        /**
-         * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
-         * @param {number} currentPage - the current page within the table
-         * @param {number} indexClicked - the index of the grouping clicked by the user
-         */
-        $scope.optOut = function (currentPage, indexClicked) {
-            var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
-            var endpoint = BASE_URL + groupingPath + "/optOut";
-
+        function handleOptRequest(endpoint) {
             $scope.loading = true;
-
             dataProvider.updateData(function (res) {
                 if (_.startsWith(res[0].resultCode, "FAILURE")) {
                     alert("Failed to opt out");
@@ -91,6 +59,17 @@
             }, function (res) {
                 console.log("Error, Status Code: " + res.statusCode);
             }, endpoint);
+        }
+
+        /**
+         * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
+         * @param {number} currentPage - the current page within the table
+         * @param {number} indexClicked - the index of the grouping clicked by the user
+         */
+        $scope.optOut = function (currentPage, indexClicked) {
+            var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
+            var endpoint = BASE_URL + groupingPath + "/optOut";
+            handleOptRequest(endpoint);
         };
 
         /**
@@ -101,29 +80,7 @@
         $scope.optIn = function (currentPage, indexClicked) {
             var groupingPath = $scope.pagedItemsOptInList[currentPage][indexClicked].path;
             var endpoint = BASE_URL + groupingPath + "/optIn";
-
-            $scope.loading = true;
-
-            dataProvider.updateData(function (res) {
-                if (_.startsWith(res[0].resultCode, "FAILURE")) {
-                    alert("Failed to opt in");
-                    $scope.loading = false;
-                } else {
-                    $scope.init();
-                }
-            }, function (res) {
-                console.log("Error, Status Code: " + res.statusCode);
-            }, endpoint);
-        };
-
-        /**
-         * Checks if membership is required in the grouping.
-         * @param index - the index of the grouping in the table
-         * @returns {boolean} true if membership is required, otherwise returns false
-         */
-        $scope.membershipRequired = function (currentPage, indexClicked) {
-            var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
-            return !_.some($scope.optOutList, { path: groupingPath });
+            handleOptRequest(endpoint);
         };
 
     }

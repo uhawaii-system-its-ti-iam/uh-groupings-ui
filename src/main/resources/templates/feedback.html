@@ -8,14 +8,29 @@
 
 <!--  Content container -->
 <div class="container">
-    <h1>Feedback</h1>
+ <!--   &lt;!&ndash;<h1>Feedback</h1>&ndash;&gt;
 
     <div class="alert alert-success" role="alert" th:if="${success}">
-        <p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>
+        &lt;!&ndash;<p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>&ndash;&gt;
+
+    </div>
+-->
+
+     <div class = "alert alert-success" role="alert" th:if="${success}">
+     <p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>
+</div>
+
+ <div th:replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.description})"></div>
+
+    <!--<div class="container">
+    <div th:if="${success}" replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.alertSuccess})">
+    </div>
     </div>
 
-    <p th:utext="#{screen.message.feedback.page.description}"></p>
 
+
+    <p th:utext="#{screen.message.feedback.page.description}"></p>
+-->
     <div class="border p-4">
         <form th:action="@{/feedback}" th:object="${feedback}" method="post">
             <div class="form-group row" id="typeError">

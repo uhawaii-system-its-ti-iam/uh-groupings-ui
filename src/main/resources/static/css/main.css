@@ -130,7 +130,7 @@ td.uh-pre {
 }
 
 .navbar-brand .uh-nav-app-name {
-    color: #BD9319;
+    color: inherit;
     height: 3.125rem;
     width: auto;
     padding-top: 0;
@@ -148,6 +148,10 @@ td.uh-pre {
 
 .fixed-top .navbar-nav .nav-link {
     color: #212529;
+}
+
+.fixed-top .navbar-nav .nav-link:hover {
+    color: #0056b3;
 }
 
 .fixed-top .navbar-logout {
@@ -190,10 +194,16 @@ td.uh-pre {
 
 .card.card-with-table {
     padding: 0;
+    margin-top: 1rem;
+}
+
+.card.card-with-table.card-tab-content {
+    margin-top:0rem;
 }
 
 .card.card-tab-content, .card.card-tab-content .card-header {
     border-top-left-radius: 0px;
+    margin-top: 0rem;
 }
 
 .card-with-table {
@@ -373,6 +383,7 @@ table .w-30 {
     .modal-dialog {
         min-height: calc(100% - (1.75rem * 2));
     }
+
     .modal-dialog::before {
         height: calc(100vh - (1.75rem * 2));
     }
@@ -436,3 +447,16 @@ table .w-30 {
 .basis-column {
     width: 3%;
 }
+
+/*.card.page-header {
+    margin-bottom: 1rem;
+}*/
+
+.nav-tabs .nav-item{
+    margin-top: 1rem;
+}
+
+.card{
+    margin-top: 1rem;
+}
+

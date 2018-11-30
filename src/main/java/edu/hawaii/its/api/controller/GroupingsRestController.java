@@ -1,9 +1,6 @@
 package edu.hawaii.its.api.controller;
 
 import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingAssignment;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,13 +10,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -359,6 +359,44 @@ public class GroupingsRestController {
     public ResponseEntity groupingAssignment(Principal principal) {
         logger.info("Entered REST GroupingAssignment...");
         String uri = API_2_0_BASE + "/groupingAssignment";
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * @return a MembershipAssignment Object that contains
+     * Groupings that the user is in
+     * Groupings that the user can opt into
+     */
+    @RequestMapping(value = "/members/groupings",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity membershipAssignment(Principal principal) {
+        logger.info("Entered REST MembershipAssignment...");
+        String uri = API_2_1_BASE + "/members/groupings";
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * @return a list of groupings that a user owns
+     */
+    @RequestMapping(value = "/owners/groupings",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity groupingsOwned(Principal principal) {
+        logger.info("Entered REST GroupingAssignment...");
+        String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * @return a list of groupings that a user owns
+     */
+    @RequestMapping(value = "/owners/{uid}/groupings",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity groupingsOwnedUid(Principal principal, @PathVariable String uid) {
+        logger.info("Entered REST GroupingAssignment...");
+        String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", uid);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 

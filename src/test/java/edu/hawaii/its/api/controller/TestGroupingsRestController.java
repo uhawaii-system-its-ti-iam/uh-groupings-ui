@@ -1,5 +1,6 @@
 package edu.hawaii.its.api.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hawaii.its.api.type.*;
 import edu.hawaii.its.groupings.access.Role;
@@ -369,6 +370,14 @@ public class TestGroupingsRestController {
     }
 
     @Test
+    public void ownedGroupingsTest() throws Exception {
+
+        List<Grouping> groupings = mapOwnedGroupings(uhUser01);
+
+
+    }
+
+    @Test
     public void myGroupingsTest2() throws Exception {
         GroupingAssignment groupings = mapGroupingAssignment(uhUser04);
 
@@ -606,6 +615,17 @@ public class TestGroupingsRestController {
         return objectMapper.readValue(result.getResponse().getContentAsByteArray(), Grouping.class);
     }
 
+    private List<Grouping> mapOwnedGroupings(User currentUser) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        MvcResult result = mockMvc.perform(get(API_BASE + "/owners/groupings")
+                .with(user(currentUser)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<Grouping>>(){});
+    }
+
     private GroupingsServiceResult mapGSR(String uri) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -628,7 +648,7 @@ public class TestGroupingsRestController {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<GroupingsServiceResult>>(){});
     }
 
     private GroupingAssignment mapGroupingAssignment(User currentUser) throws Exception {

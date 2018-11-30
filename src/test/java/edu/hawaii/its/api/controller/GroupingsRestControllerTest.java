@@ -1,10 +1,6 @@
 package edu.hawaii.its.api.controller;
 
 import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingAssignment;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import org.junit.Before;
@@ -22,14 +18,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -81,6 +79,35 @@ public class GroupingsRestControllerTest {
     @WithMockUhUser
     public void getGrouping() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/grouping";
+
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(uri))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getOwnedGroupingsTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "owners/groupings";
+
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(uri))
+                .andExpect(status().isOk());
+
+        uri = REST_CONTROLLER_BASE + "owners/" + USERNAME + "/groupings";
+
+        mockMvc.perform(get(uri))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getMembershipAssignmentTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "members/groupings";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
