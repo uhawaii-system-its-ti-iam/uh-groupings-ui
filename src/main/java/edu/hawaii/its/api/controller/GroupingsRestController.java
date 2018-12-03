@@ -96,7 +96,7 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addAdmin(Principal principal, @PathVariable String adminToAdd) {
         logger.info("Entered REST addAdmin...");
-        String uri = String.format(API_2_0_BASE + "/admins/%s", adminToAdd);
+        String uri = String.format(API_2_1_BASE + "/admins/%s", adminToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
     }
 
@@ -111,8 +111,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteAdmin(Principal principal, @PathVariable String adminToDelete) {
         logger.info("Entered REST deleteAdmin...");
-        String uri = String.format(API_2_0_BASE + "/%s/deleteAdmin", adminToDelete);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
+        String uri = String.format(API_2_1_BASE + "/admins/%s", adminToDelete);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
     /**
@@ -172,8 +172,8 @@ public class GroupingsRestController {
                                                   @PathVariable String grouping,
                                                   @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToIncludeGroup...");
-        String uri = String.format(API_2_0_BASE + "/%s/%s/addMemberToIncludeGroup", grouping, userToAdd);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", grouping, userToAdd);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
     /**
@@ -191,8 +191,8 @@ public class GroupingsRestController {
                                                   @PathVariable String grouping,
                                                   @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToExcludeGroup...");
-        String uri = String.format(API_2_0_BASE + "/%s/%s/addMemberToExcludeGroup", grouping, userToAdd);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", grouping, userToAdd);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
     /**
@@ -243,8 +243,8 @@ public class GroupingsRestController {
                                                        @PathVariable String grouping,
                                                        @PathVariable String userToDelete) {
         logger.info("Entered REST deleteMemberFromIncludeGroup...");
-        String uri = String.format(API_2_0_BASE + "/%s/%s/deleteMemberFromIncludeGroup", grouping, userToDelete);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", grouping, userToDelete);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
     /**
@@ -261,8 +261,8 @@ public class GroupingsRestController {
                                                        @PathVariable String grouping,
                                                        @PathVariable String userToDelete) {
         logger.info("Entered REST deleteMemberFromExcludeGroup...");
-        String uri = String.format(API_2_0_BASE + "/%s/%s/deleteMemberFromExcludeGroup", grouping, userToDelete);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", grouping, userToDelete);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
     /**
