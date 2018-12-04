@@ -162,7 +162,7 @@
             /**
              * Toggles the publication destination for listserv.
              * @param {string} path - the path of the grouping to update
-             * @param {boolean} listservOn - true if the listserv should be enabled, otherwise false
+             * @param {boolean} listservOn - true if the listserv destination should be enabled, otherwise false
              */
             setListserv: function (path, listservOn, onSuccess, onError) {
                 var endpoint = BASE_URL + path + "/" + listservOn + "/setListserv";
@@ -172,11 +172,11 @@
             /**
              * Toggles the publication destination for uhReleasedGroupings.
              * @param {string} path - the path of the grouping to update
-             * @param {boolean} listservOn - true if the uhReleasedGroupings destination should be enabled, otherwise
+             * @param {boolean} ldapOn - true if the uhReleasedGroupings destination should be enabled, otherwise
              * false
              */
-            setLdap: function (path, listservOn, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + listservOn + "/setLdap";
+            setLdap: function (path, ldapOn, onSuccess, onError) {
+                var endpoint = BASE_URL + path + "/" + ldapOn + "/setLdap";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
