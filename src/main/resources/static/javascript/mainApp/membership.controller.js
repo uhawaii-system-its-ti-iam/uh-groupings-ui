@@ -5,10 +5,10 @@
      * @param $scope - binding between controller and HTML page
      * @param $window - the browser window object
      * @param $controller - the service for instantiating controllers
-     * @param dataProvider - the service that provides GET and POST requests for getting or updating data
-     * @param BASE_URL - the constant base URL for endpoints
+     * @param dataProvider - service that handles redirection to the feedback page upon error
+     * @param groupingsService - service for creating requests to the groupings API
      */
-    function MembershipJsController($scope, $window, $controller, dataProvider, BASE_URL) {
+    function MembershipJsController($scope, $window, $controller, groupingsService, dataProvider) {
 
         $scope.membershipsList = [];
         $scope.pagedItemsMemberships = [];
@@ -18,7 +18,7 @@
         $scope.pagedItemsOptInList = [];
         $scope.currentPageOptIn = 0;
 
-        $scope.loading = true;
+        $scope.loading = false;
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
         angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
@@ -28,9 +28,9 @@
          * is able to opt out of.
          */
         $scope.init = function () {
-            var endpoint = BASE_URL + "groupingAssignment";
+            $scope.loading = true;
 
-            dataProvider.loadData(function (res) {
+            groupingsService.getMembershipAssignment(function (res) {
                 $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
                 $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery);
 
@@ -39,26 +39,21 @@
 
                 $scope.loading = false;
             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
-            }, endpoint);
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback")
+            });
         };
 
         /**
-         * Handles requests for opting in to or out of a grouping.
-         * @param {string} endpoint - the API endpoint to opt in/out of a grouping
+         * Handles responses for opting into or out of a grouping.
+         * @param {object} res - the response from opting into/out of a grouping
          */
-        function handleOptRequest(endpoint) {
-            $scope.loading = true;
-            dataProvider.updateData(function (res) {
-                if (_.startsWith(res[0].resultCode, "FAILURE")) {
-                    alert("Failed to opt out");
-                    $scope.loading = false;
-                } else {
-                    $scope.init();
-                }
-            }, function (res) {
-                console.log("Error, Status Code: " + res.statusCode);
-            }, endpoint);
+        function handleSuccessfulOpt(res) {
+            if (_.startsWith(res[0].resultCode, "FAILURE")) {
+                alert("Failed to opt out");
+                $scope.loading = false;
+            } else {
+                $scope.init();
+            }
         }
 
         /**
@@ -68,8 +63,8 @@
          */
         $scope.optOut = function (currentPage, indexClicked) {
             var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
-            var endpoint = BASE_URL + groupingPath + "/optOut";
-            handleOptRequest(endpoint);
+            $scope.loading = true;
+            groupingsService.optOut(groupingPath, handleSuccessfulOpt);
         };
 
         /**
@@ -79,8 +74,8 @@
          */
         $scope.optIn = function (currentPage, indexClicked) {
             var groupingPath = $scope.pagedItemsOptInList[currentPage][indexClicked].path;
-            var endpoint = BASE_URL + groupingPath + "/optIn";
-            handleOptRequest(endpoint);
+            $scope.loading = true;
+            groupingsService.optIn(groupingPath, handleSuccessfulOpt);
         };
 
     }

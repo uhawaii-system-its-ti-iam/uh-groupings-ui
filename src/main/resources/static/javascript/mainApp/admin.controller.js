@@ -7,9 +7,8 @@
      * @param $controller - service for instantiating controllers
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
-     * @param BASE_URL - the constant base URL for endpoints
      */
-    function AdminJsController($scope, $window, $controller, $uibModal, dataProvider, BASE_URL) {
+    function AdminJsController($scope, $window, $controller, dataProvider, groupingsService) {
 
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
@@ -25,23 +24,18 @@
         $scope.init = function () {
             // Adds the loading spinner.
             $scope.loading = true;
-            var endpoint = BASE_URL + "adminLists";
 
-            dataProvider.loadData(function (res) {
-                if (_.isNull(res)) {
-                    $scope.createApiErrorModal();
-                } else {
-                    $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
-                    $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery);
+            groupingsService.getAdminLists(function (res) {
+                $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
+                $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery);
 
-                    $scope.groupingsList = _.sortBy(res.allGroupings, "name");
-                    $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
+                $scope.groupingsList = _.sortBy(res.allGroupings, "name");
+                $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
 
-                    $scope.loading = false;
-                }
+                $scope.loading = false;
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
-            }, endpoint);
+            });
         };
 
         $scope.displayAdmins = function () {
@@ -50,22 +44,18 @@
             $scope.showGrouping = false;
         };
 
-        // TODO: Find a way to make the 3 adds into a more singular function.
-
         /**
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
             var adminToAdd = $scope.adminToAdd;
-            var endpoint = BASE_URL + adminToAdd + "/addAdmin";
 
             if (_.isEmpty(adminToAdd)) {
-                $scope.createAddModal({ user: adminToAdd });
+                $scope.createAddErrorModal(adminToAdd);
             } else {
                 $scope.createConfirmAddModal({
                     userToAdd: adminToAdd,
-                    listName: "admins",
-                    endpoint: endpoint
+                    listName: "admins"
                 });
             }
         };
@@ -78,18 +68,15 @@
          */
         $scope.removeAdmin = function (currentPage, index) {
             var adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
-            var endpoint = BASE_URL + adminToRemove.username + "/deleteAdmin";
 
             if ($scope.adminsList.length > 1) {
                 $scope.createRemoveModal({
                     user: adminToRemove,
-                    endpoint: endpoint,
                     listName: "admins"
                 });
             } else {
-                $scope.createRemoveErrorModal({
-                    userType: "admin"
-                });
+                var userType = "admin";
+                $scope.createRemoveErrorModal(userType);
             }
         };
 
