@@ -146,7 +146,7 @@
              */
             setOptIn: function (path, optInOn, onSuccess, onError) {
                 var endpoint = BASE_URL + path + "/" + optInOn + "/setOptIn";
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
             /**
@@ -156,7 +156,7 @@
              */
             setOptOut: function (path, optOutOn, onSuccess, onError) {
                 var endpoint = BASE_URL + path + "/" + optOutOn + "/setOptOut";
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
             /**
@@ -164,9 +164,9 @@
              * @param {string} path - the path of the grouping to update
              * @param {boolean} listservOn - true if the listserv should be enabled, otherwise false
              */
-            setListserv: function(path, listservOn, onSuccess, onError) {
+            setListserv: function (path, listservOn, onSuccess, onError) {
                 var endpoint = BASE_URL + path + "/" + listservOn + "/setListserv";
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
             /**
@@ -175,9 +175,9 @@
              * @param {boolean} listservOn - true if the uhReleasedGroupings destination should be enabled, otherwise
              * false
              */
-            setLdap: function(path, listservOn, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + listservOn + "/setListserv";
-                dataProvider.loadData(onSuccess, onError, endpoint);
+            setLdap: function (path, listservOn, onSuccess, onError) {
+                var endpoint = BASE_URL + path + "/" + listservOn + "/setLdap";
+                dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
             /**
@@ -186,7 +186,7 @@
             getGroupingsOwned: function (onSuccess, onError) {
                 var endpoint = BASE_URL + "groupingAssignment";
                 dataProvider.loadData(onSuccess, onError, endpoint);
-            },
+            }
 
         };
     });
