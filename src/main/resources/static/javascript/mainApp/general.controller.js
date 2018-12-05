@@ -60,6 +60,13 @@
         };
 
         /**
+         * Generic handler for unsuccessful requests to the API.
+         */
+        function handleUnsuccessfulRequest(res) {
+            console.log("Error: Status Code " + res.statusCode);
+        }
+
+        /**
          * @param {object[]} members - the members of the group
          * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
          */
@@ -203,13 +210,13 @@
             };
 
             if (list === "Include") {
-                groupingsService.addMemberToInclude(groupingPath, userToAdd, handleSuccessfulAdd);
+                groupingsService.addMemberToInclude(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "Exclude") {
-                groupingsService.addMemberToExclude(groupingPath, userToAdd, handleSuccessfulAdd);
+                groupingsService.addMemberToExclude(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "owners") {
-                groupingsService.assignOwnership(groupingPath, userToAdd, handleSuccessfulAdd);
+                groupingsService.assignOwnership(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "admins") {
-                groupingsService.addAdmin(userToAdd, handleSuccessfulAdd);
+                groupingsService.addAdmin(userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
         };
 
@@ -485,13 +492,13 @@
                 var groupingPath = $scope.selectedGrouping.path;
 
                 if ($scope.listName === "Include") {
-                    groupingsService.removeMemberFromInclude(groupingPath, userToRemove, handleMemberRemove);
+                    groupingsService.removeMemberFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "Exclude") {
-                    groupingsService.removeMemberFromExclude(groupingPath, userToRemove, handleMemberRemove);
+                    groupingsService.removeMemberFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "owners") {
-                    groupingsService.removeOwner(groupingPath, userToRemove, handleOwnerRemove);
+                    groupingsService.removeOwner(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
-                    groupingsService.removeAdmin(userToRemove, handleAdminRemove);
+                    groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
                 }
             });
         };
@@ -666,7 +673,7 @@
             var groupingPath = $scope.selectedGrouping.path;
             var allowOptOut = $scope.allowOptOut;
 
-            groupingsService.setOptOut(groupingPath, allowOptOut, handleSuccessfulPreferenceToggle);
+            groupingsService.setOptOut(groupingPath, allowOptOut, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
         /**
@@ -676,7 +683,7 @@
             var groupingPath = $scope.selectedGrouping.path;
             var allowOptIn = $scope.allowOptIn;
 
-            groupingsService.setOptIn(groupingPath, allowOptIn, handleSuccessfulPreferenceToggle);
+            groupingsService.setOptIn(groupingPath, allowOptIn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
         /**
@@ -686,7 +693,7 @@
             var groupingPath = $scope.selectedGrouping.path;
             var listservOn = $scope.listserv;
 
-            groupingsService.setListserv(groupingPath, listservOn, handleSuccessfulPreferenceToggle);
+            groupingsService.setListserv(groupingPath, listservOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
         /**
@@ -696,7 +703,7 @@
             var groupingPath = $scope.selectedGrouping.path;
             var ldapOn = $scope.ldap;
 
-            groupingsService.setLdap(groupingPath, ldapOn, handleSuccessfulPreferenceToggle);
+            groupingsService.setLdap(groupingPath, ldapOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
         /**

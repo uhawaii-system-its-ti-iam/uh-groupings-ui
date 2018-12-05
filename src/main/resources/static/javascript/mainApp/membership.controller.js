@@ -39,7 +39,7 @@
 
                 $scope.loading = false;
             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback")
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             });
         };
 
@@ -48,12 +48,17 @@
          * @param {object} res - the response from opting into/out of a grouping
          */
         function handleSuccessfulOpt(res) {
-            if (_.startsWith(res[0].resultCode, "FAILURE")) {
-                alert("Failed to opt out");
-                $scope.loading = false;
-            } else {
+            if (_.startsWith(res[0].resultCode, "SUCCESS")) {
                 $scope.init();
             }
+        }
+
+        /**
+         * Generic handler for an unsuccessful opt into/out of a grouping.
+         * @param {object} res - the response from the request
+         */
+        function handleUnsuccessfulOpt(res) {
+            console.log("Error opting into grouping: " + res.statusCode);
         }
 
         /**
@@ -64,7 +69,7 @@
         $scope.optOut = function (currentPage, indexClicked) {
             var groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
             $scope.loading = true;
-            groupingsService.optOut(groupingPath, handleSuccessfulOpt);
+            groupingsService.optOut(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
         };
 
         /**
@@ -75,7 +80,7 @@
         $scope.optIn = function (currentPage, indexClicked) {
             var groupingPath = $scope.pagedItemsOptInList[currentPage][indexClicked].path;
             $scope.loading = true;
-            groupingsService.optIn(groupingPath, handleSuccessfulOpt);
+            groupingsService.optIn(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
         };
 
     }
