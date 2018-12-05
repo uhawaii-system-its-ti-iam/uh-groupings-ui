@@ -200,6 +200,7 @@
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/admin.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.service.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/groupings.service.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.constants.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/general.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.controller.js</source>
