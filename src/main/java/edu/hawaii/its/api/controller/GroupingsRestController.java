@@ -1,9 +1,10 @@
 package edu.hawaii.its.api.controller;
 
-import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -359,7 +360,7 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity membershipAssignment(Principal principal) {
         logger.info("Entered REST MembershipAssignment...");
-        String uri = API_2_1_BASE + "/members/groupings";
+        String uri = String.format(API_2_1_BASE + "/members/%s/groupings", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
