@@ -25,7 +25,7 @@
                     {{owner.name}}
                     <span class="fa fa-trash-o pull-right clickable pt-1"
                           data-toggle="tooltip" data-placement="top"
-                          onmouseover="$(this).tooltip('show')"
+                          onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                           tabindex="0"
                           th:title="#{screen.message.common.tooltip.remove.owner}"
                           ng-keypress="$event.keyCode === 13 ? removeOwner(currentPageOwners, $index) : null"
@@ -38,7 +38,7 @@
                         <span>N/A</span>
                         <i class="fa fa-question-circle clickable" aria-hidden="true"
                            data-toggle="tooltip" data-placement="right"
-                           onmouseover="$(this).tooltip('show')"
+                           onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                            th:title="#{screen.message.common.tooltip.username.notApplicable}">
                         </i>
                     </div>
