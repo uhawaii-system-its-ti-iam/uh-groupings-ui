@@ -135,7 +135,7 @@
              * Gets the groupings a user is a part of, the groupings they can opt in to, and the groupings they own.
              */
             getMembershipAssignment: function (onSuccess, onError) {
-                var endpoint = BASE_URL + "groupingAssignment";
+                var endpoint = BASE_URL + "members/groupings";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
@@ -184,7 +184,7 @@
              * Gets the groupings a member owns.
              */
             getGroupingsOwned: function (onSuccess, onError) {
-                var endpoint = BASE_URL + "groupingAssignment";
+                var endpoint = BASE_URL + "owners/groupings"
                 dataProvider.loadData(onSuccess, onError, endpoint);
             }
 
