@@ -40,9 +40,6 @@ public class GroupingsRestController {
     @Value("${groupings.api.include}")
     private String INCLUDE;
 
-    @Value("${url.api.2.0.base}")
-    private String API_2_0_BASE;
-
     @Value("${url.api.2.1.base}")
     private String API_2_1_BASE;
 
@@ -255,22 +252,6 @@ public class GroupingsRestController {
     public ResponseEntity grouping(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST grouping...");
         String uri = String.format(API_2_1_BASE + "/groupings/%s", grouping);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
-    }
-
-    /**
-     * @return a MyGrouping Object that contains
-     * Groupings that the user is in
-     * Groupings that the user owns
-     * Groupings that the user can opt into
-     * Groupings that the user can opt out of
-     */
-    @RequestMapping(value = "/groupingAssignment",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity groupingAssignment(Principal principal) {
-        logger.info("Entered REST GroupingAssignment...");
-        String uri = API_2_0_BASE + "/groupingAssignment";
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 

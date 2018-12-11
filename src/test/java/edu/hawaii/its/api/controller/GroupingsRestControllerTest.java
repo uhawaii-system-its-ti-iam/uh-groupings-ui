@@ -207,19 +207,6 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void getMyGroupings() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "groupingAssignment";
-
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        mockMvc.perform(get(REST_CONTROLLER_BASE + "groupingAssignment"))
-                .andExpect(status().isOk());
-
-    }
-
-    @Test
-    @WithMockUhUser
     public void getSetListserv() throws Exception {
         String uri_true = REST_CONTROLLER_BASE + GROUPING + "/true/setListserv";
         String uri_false = REST_CONTROLLER_BASE + GROUPING + "/false/setListserv";

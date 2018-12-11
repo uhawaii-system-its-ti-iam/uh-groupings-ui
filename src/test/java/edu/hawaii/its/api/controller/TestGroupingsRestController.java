@@ -34,7 +34,6 @@ import java.security.Principal;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -301,130 +300,13 @@ public class TestGroupingsRestController {
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
     }
 
-    @Test
-    @WithMockUhUser(username = "iamtst05")
-    public void groupingsAssignmentEmptyTest() throws Exception {
-        GroupingAssignment groupings = mapGroupingAssignment(uhUser05);
 
-        assertEquals(groupings.getGroupingsIn().size(), groupings.getGroupingsToOptOutOf().size());
-
-        for (Grouping grouping : groupings.getGroupingsIn()) {
-            mapGSRs(API_BASE + grouping.getPath() + "/optOut");
-        }
-
-        groupings = mapGroupingAssignment(uhUser05);
-
-        assertEquals(0, groupings.getGroupingsIn().size());
-        assertEquals(0, groupings.getGroupingsToOptOutOf().size());
-    }
-
-    @Test
-    public void groupingAssignmentTest() throws Exception {
-        GroupingAssignment groupings = mapGroupingAssignment(uhUser01);
-
-        boolean inGrouping = false;
-        for (Grouping grouping : groupings.getGroupingsIn()) {
-            if (grouping.getPath().contains(this.GROUPING)) {
-                inGrouping = true;
-                break;
-            }
-        }
-        assertTrue(inGrouping);
-
-        boolean canOptin = false;
-        for (Grouping grouping : groupings.getGroupingsToOptInTo()) {
-            if (grouping.getPath().contains(this.GROUPING)) {
-                canOptin = true;
-                break;
-            }
-        }
-        assertFalse(canOptin);
-
-        boolean canOptOut = false;
-        for (Grouping grouping : groupings.getGroupingsToOptOutOf()) {
-            if (grouping.getPath().contains(this.GROUPING)) {
-                canOptOut = true;
-                break;
-            }
-        }
-        assertTrue(canOptOut);
-
-        boolean ownsGrouping = false;
-        for (Grouping grouping : groupings.getGroupingsOwned()) {
-            if (grouping.getPath().contains(this.GROUPING)) {
-                ownsGrouping = true;
-                break;
-            }
-        }
-        assertTrue(ownsGrouping);
-
-    }
 
     @Test
     public void ownedGroupingsTest() throws Exception {
 
         List<Grouping> groupings = mapOwnedGroupings(uhUser01);
 
-
-    }
-
-    @Test
-    public void myGroupingsTest2() throws Exception {
-        GroupingAssignment groupings = mapGroupingAssignment(uhUser04);
-
-        boolean inGrouping = false;
-        for (Grouping grouping : groupings.getGroupingsIn()) {
-            if (grouping.getPath().contains(this.GROUPING)) {
-                inGrouping = true;
-                break;
-            }
-        }
-        assertFalse(inGrouping);
-
-        boolean ownsGrouping = false;
-        for (Grouping grouping : groupings.getGroupingsOwned()) {
-            if (grouping.getPath().contains(this.GROUPING)) {
-                ownsGrouping = true;
-                break;
-            }
-        }
-        assertFalse(ownsGrouping);
-    }
-
-    @Test
-    @WithMockUhUser(username = "iamtst04")
-    public void myGroupingsTest3() throws Exception {
-        boolean optedIn = false;
-
-        GroupingAssignment tst4Groupings = mapGroupingAssignment(uhUser04);
-        assertEquals(tst4Groupings.getGroupingsOptedInTo().size(), 0);
-        mapGSRs(API_BASE + GROUPING + "/optIn");
-        tst4Groupings = mapGroupingAssignment(uhUser04);
-        for (Grouping grouping : tst4Groupings.getGroupingsOptedInTo()) {
-            if (grouping.getPath().contains(GROUPING)) {
-                optedIn = true;
-            }
-        }
-        //in basis
-        assertFalse(optedIn);
-    }
-
-    @Test
-    @WithMockUhUser(username = "iamtst06")
-    public void myGroupingsTest4() throws Exception {
-        boolean optedOut = false;
-
-        GroupingAssignment tst5Groupings = mapGroupingAssignment(uhUser06);
-        assertEquals(tst5Groupings.getGroupingsOptedOutOf().size(), 0);
-        mapGSRs(API_BASE + GROUPING + "/optOut");
-        tst5Groupings = mapGroupingAssignment(uhUser06);
-
-        for (Grouping grouping : tst5Groupings.getGroupingsOptedOutOf()) {
-            if (grouping.getPath().contains(GROUPING)) {
-                optedOut = true;
-            }
-        }
-        assertTrue(optedOut);
 
     }
 
@@ -438,11 +320,6 @@ public class TestGroupingsRestController {
 
         //tst[3] opts into Grouping
         mapGSRs(API_BASE + GROUPING + "/optIn");
-
-        //tst[3] is now in composite, still in basis and not in exclude
-        assertFalse(isOptedOutOfGrouping(GROUPING, tst[3]));
-        assertTrue(isInGrouping(GROUPING, tst[0], tst[3]));
-        assertTrue(isInBasisGroup(GROUPING, tst[0], tst[3]));
     }
 
     @Test
@@ -454,11 +331,6 @@ public class TestGroupingsRestController {
 
         //tst[5] opts out of Grouping
         mapGSRs(API_BASE + GROUPING + "/optOut");
-
-        //tst[5] is now in exclude, not in include or Grouping
-        assertTrue(isOptedOutOfGrouping(GROUPING, tst[5]));
-        assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[5]));
-        assertFalse(isInGrouping(GROUPING, tst[0], tst[5]));
     }
 
     @Test
@@ -507,25 +379,6 @@ public class TestGroupingsRestController {
 
         mapGSRs(API_BASE + GROUPING + "/true/setOptOut");
         assertTrue(isOptOutOn(GROUPING, tst[0]));
-    }
-
-    @Test
-    public void aaronTest() throws Exception {
-        //This test often fails because the test server is very slow.
-        //Because the server caches some results and gets quicker the more times
-        //it is run, we let it run a few times if it starts failing
-
-        int i = 0;
-        while (i < 5) {
-            try {
-                GroupingAssignment aaronsGroupings = mapGroupingAssignment(adminUser);
-                assertNotNull(aaronsGroupings);
-                break;
-            } catch (AssertionError ae) {
-                i++;
-            }
-        }
-        assertTrue(i < 5);
     }
 
     @Test
@@ -642,27 +495,6 @@ public class TestGroupingsRestController {
         });
     }
 
-    private GroupingAssignment mapGroupingAssignment(User currentUser) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        MvcResult result;
-
-        if (currentUser != null) {
-            result = mockMvc.perform(get(API_BASE + "groupingAssignment")
-                    .with(user(currentUser))
-                    .with(csrf()))
-                    .andExpect(status().isOk())
-                    .andReturn();
-        } else {
-            result = mockMvc.perform(get("/api/groupings/groupingAssignment")
-                    .with(csrf()))
-                    .andExpect(status().isOk())
-                    .andReturn();
-        }
-
-        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), GroupingAssignment.class);
-    }
-
     private AdminListsHolder mapAdminListsHolder(User currentUser) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -758,41 +590,6 @@ public class TestGroupingsRestController {
                 .getBody();
         return mapGroupingJson(groupingString)
                 .isReleasedGroupingOn();
-    }
-
-    private boolean isOptedIntoGrouping(String grouping, String username) {
-        Principal principal = new SimplePrincipal(username);
-        String groupingAssignmentString =
-                (String) groupingsRestController.groupingAssignment(principal)
-                        .getBody();
-
-        GroupingAssignment groupingAssignment = mapGroupingAssignmentJson(groupingAssignmentString);
-        List<String> optedIntoList = groupingAssignment
-                .getGroupingsOptedInTo()
-                .stream()
-                .map(Grouping::getPath)
-                .collect(Collectors.toList());
-
-        return optedIntoList.contains(grouping);
-
-    }
-
-    private boolean isOptedOutOfGrouping(String grouping, String username) {
-        Principal principal = new SimplePrincipal(username);
-        String groupingAssignmentString =
-                (String) groupingsRestController.groupingAssignment(principal)
-                        .getBody();
-
-        GroupingAssignment groupingAssignment = mapGroupingAssignmentJson(groupingAssignmentString);
-
-        List<String> optedOutOfList = groupingAssignment
-                .getGroupingsOptedOutOf()
-                .stream()
-                .map(Grouping::getPath)
-                .collect(Collectors.toList());
-
-        return optedOutOfList.contains(grouping);
-
     }
 
     private Grouping mapGroupingJson(String json) {
