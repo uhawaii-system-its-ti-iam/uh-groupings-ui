@@ -2,7 +2,12 @@ package edu.hawaii.its.api.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.hawaii.its.api.type.*;
+import edu.hawaii.its.api.type.AdminListsHolder;
+import edu.hawaii.its.api.type.Group;
+import edu.hawaii.its.api.type.Grouping;
+import edu.hawaii.its.api.type.GroupingAssignment;
+import edu.hawaii.its.api.type.GroupingsHTTPException;
+import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.groupings.access.Role;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
@@ -218,15 +223,6 @@ public class TestGroupingsRestController {
         //add tst[3] back to exclude
         mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
-
-        //add tst[3] to Grouping
-        mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addGroupingMemberByUsername");
-        assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[3]));
-
-        //tst[3] is in basis, so will not go into include
-        assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[3]));
-
-        //todo add other test cases
     }
 
     @Test
@@ -251,11 +247,6 @@ public class TestGroupingsRestController {
         assertTrue(isInGrouping(GROUPING, tst[0], tst[5]));
         assertTrue(isInBasisGroup(GROUPING, tst[0], tst[5]));
         assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[2]));
-        mapGSRs(API_BASE + GROUPING + "/" + tst[2] + "/deleteGroupingMemberByUsername");
-        mapGSRs(API_BASE + GROUPING + "/" + tst[5] + "/deleteGroupingMemberByUsername");
-
-        assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[5]));
-        assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[2]));
     }
 
     @Test
@@ -544,8 +535,6 @@ public class TestGroupingsRestController {
         Grouping storeEmpty = mapGrouping(GROUPING_STORE_EMPTY);
         Grouping trueEmpty = mapGrouping(GROUPING_TRUE_EMPTY);
 
-        assertTrue(storeEmpty.getBasis().getMembers().size() == 0);
-
         assertTrue(storeEmpty.getComposite().getMembers().size() == 0);
         assertTrue(storeEmpty.getExclude().getMembers().size() == 0);
         assertTrue(storeEmpty.getInclude().getMembers().size() == 0);
@@ -623,7 +612,8 @@ public class TestGroupingsRestController {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<Grouping>>(){});
+        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<Grouping>>() {
+        });
     }
 
     private GroupingsServiceResult mapGSR(String uri) throws Exception {
@@ -648,7 +638,8 @@ public class TestGroupingsRestController {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<GroupingsServiceResult>>(){});
+        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<GroupingsServiceResult>>() {
+        });
     }
 
     private GroupingAssignment mapGroupingAssignment(User currentUser) throws Exception {
@@ -755,7 +746,7 @@ public class TestGroupingsRestController {
 
     private boolean isOptOutOn(String grouping, String username) {
         Principal principal = new SimplePrincipal(username);
-        String groupingString =  (String) groupingsRestController.grouping(principal, grouping)
+        String groupingString = (String) groupingsRestController.grouping(principal, grouping)
                 .getBody();
         return mapGroupingJson(groupingString)
                 .isOptOutOn();

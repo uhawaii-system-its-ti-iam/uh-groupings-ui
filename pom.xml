@@ -233,7 +233,7 @@
                                 <echo>$ mvn clean test jacoco:report</echo>
                                 <echo></echo>
                                 <echo>To run the integrations tests with your Grouper server:</echo>
-                                <echo>$ mvn -Dtest=TestGroupAttributeService,TestGroupingAssignmentService,TestGroupingFactoryService,TestHelperService,TestMemberAttributeService,TestMembershipService,TestGroupingsRestController test</echo>
+                                <echo>$ mvn -Dtest=TestGroupingsRestController test</echo>
                                 <echo></echo>
                                 <echo>To run UH Groupings locally:</echo>
                                 <echo>$ mvn clean spring-boot:run</echo>
