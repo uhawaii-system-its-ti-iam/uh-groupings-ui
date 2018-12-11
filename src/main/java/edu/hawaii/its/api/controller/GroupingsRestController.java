@@ -283,7 +283,7 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity membershipAssignment(Principal principal) {
         logger.info("Entered REST MembershipAssignment...");
-        String uri = API_2_1_BASE + "/members/groupings";
+        String uri = String.format(API_2_1_BASE + "/members/%s/groupings", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
