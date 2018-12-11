@@ -9,7 +9,7 @@
      * @param dataProvider - service that handles redirection to the feedback page upon error
      * @param groupingsService - service for creating requests to the groupings API
      */
-    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider) {
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
