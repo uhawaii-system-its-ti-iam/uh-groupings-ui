@@ -472,7 +472,7 @@
          * @param {object} options - the options object
          * @param {object} options.user - the user being removed
          * @param {string} options.listName - where the user is being removed from
-         */git 
+         */
         $scope.createRemoveModal = function (options) {
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
