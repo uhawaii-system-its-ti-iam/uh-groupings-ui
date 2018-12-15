@@ -46,6 +46,13 @@
 
         $scope.loading = false;
 
+        // CLINT STUFF:
+        $scope.description = "test description; CHANGE ME!!!!";
+        $scope.tempDescription;
+        $scope.descriptionForm = false;      // used with ng-view on selected-grouping.html to toggle description editing.
+        $scope.maxDescriptionLength = 38;
+        // CLINT STUFF
+
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
         /**
@@ -58,6 +65,70 @@
             $scope.getGroupingInformation();
             $scope.showGrouping = true;
         };
+
+        // CLINT STUFF FUNCTIONS START:
+
+        // used to check the length of the text string entered in the description form box, for error handling of max length
+        $scope.descriptionLengthWarning = function() {
+            // if ($scope.description.length > 39)
+            // {
+            //     return true;
+            // }
+            // return false;
+
+            return ($scope.description.length >= $scope.maxDescriptionLength);
+        }
+
+        /**
+         * Enable or disable editing of a Grouping's description, from selected-grouping.html.
+         */
+        $scope.editDescription = function() {
+            //$scope.descriptionForm = ($scope.descriptionForm) ? false : true;
+
+            // the next line saves the "last saved description" into a variable, to be referenced when user cancels description edit.
+            $scope.tempDescription = angular.element(document.getElementById('descriptionString')).scope().description;
+            $scope.descriptionForm = !($scope.descriptionForm);
+        }
+
+        /**
+         * Cancel the editing of a description, and revert back to base selected-grouping page.
+         */
+        $scope.cancelDescriptionEdit = function() {
+            // refer to last saved description when user cancels the edit:
+            $scope.description = $scope.tempDescription;
+
+            $scope.descriptionForm = !($scope.descriptionForm);
+        }
+
+        /**
+         * Used for placeholder text for a grouping's description in the form box.
+         * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
+         */
+        $scope.descriptionDisplay = function() {
+            return ($scope.description.length > 0)
+                ? $scope.description
+                : "";       // causes the description edit box to display the placeholder text.
+        }
+
+        /**
+         * Used for placeholder text for a grouping's description if the description is saved as an empty string.
+         * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
+         */
+        $scope.descriptionDisplay = function() {
+            return ($scope.description.length > 0)
+                ? $scope.description
+                : "No description given for this Grouping.";
+        }
+
+        /**
+         * Sets a new description for a Grouping.
+         * TODOS:   --> make this function call RestController to change the description in Grouper.
+         *          --> error checking?
+         */
+        $scope.setDescription = function() {
+            // $scope.description = $scope.descriptionText;
+        }
+        // CLINT STUFF FUNCTIONS END//
 
         /**
          * @param {object[]} members - the members of the group
@@ -107,6 +178,10 @@
                 $scope.allowOptOut = res.optOutOn;
                 $scope.listserv = res.listservOn;
                 $scope.ldap = res.ldapOn;
+
+                // CLINT STUFF:
+                // $scope.hithere = res.description;
+                // CLINT STUFF
 
                 //Stop loading spinner
                 $scope.loading = false;
