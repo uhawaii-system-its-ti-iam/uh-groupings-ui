@@ -12,11 +12,21 @@
              * @param {function} callback - the function to perform on a successful request (200)
              */
             loadData: function (callback, callError, url) {
-                $http.get(encodeURI(url))
-                    .success(callback)
-                    .error(callError, function (data, status) {
-                        console.log("Error in dataProvider; status: ", status);
-                    });
+                $http.get(encodeURI(url)).then(successCallback(response));//, errorCallback(error));
+                
+                function successCallback(response){
+                    callback(response.data)
+                }
+
+                // function errorCallback(error) {
+                //     callError, function (errordata, status) {
+                //         console.log("Error in dataProvider; status: ", status);
+                //     }
+                // }
+                    // .success(callback)
+                    // .error(callError, function (data, status) {
+                    //     console.log("Error in dataProvider; status: ", status);
+                    // });
             },
 
             /**
