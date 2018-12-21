@@ -10,7 +10,6 @@
      */
     function AdminJsController($scope, $window, $controller, dataProvider, groupingsService) {
 
-        console.log("start of admin");
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
         $scope.currentPageAdmins = 0;
@@ -24,25 +23,18 @@
          */
         $scope.init = function () {
             // Adds the loading spinner.
-            console.log("spinner gets called");
             $scope.loading = true;
-            console.log("spinner loading");
             groupingsService.getAdminLists(function (res) {
-                console.log("inside function");
-                $scope.adminsList = _.sortBy(res.data.adminGroup.members, "name");
+                $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
                 $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery);
 
-                $scope.groupingsList = _.sortBy(res.data.allGroupings, "name");
+                $scope.groupingsList = _.sortBy(res.allGroupings, "name");
                 $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
 
                 $scope.loading = false;
-            // }, function (res) {
-                console.log("on error begin");
-
-                dataProvider.handleException({ exceptionMessage: res.data.exceptionMessage }, "feedback/error", "feedback");
-                console.log("on error end");
+             }, function (res) {
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             });
-            console.log("end of function");
         };
 
         $scope.displayAdmins = function () {
