@@ -246,10 +246,10 @@ describe("GeneralController", function () {
             });
 
             it("should create a modal saying to enter a username", function () {
-                spyOn(scope, "createAddModal").and.callThrough();
+                spyOn(scope, "createAddErrorModal").and.callThrough();
                 scope.addMember("Include");
 
-                expect(scope.createAddModal).toHaveBeenCalled();
+                expect(scope.createAddErrorModal).toHaveBeenCalled();
             });
         });
 

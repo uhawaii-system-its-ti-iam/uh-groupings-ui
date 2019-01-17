@@ -83,7 +83,7 @@
                                     <span class="fa fa-trash-o pull-right clickable pt-1"
                                           data-toggle="tooltip" data-placement="top"
                                           tabindex="0"
-                                          onmouseover="$(this).tooltip('show')"
+                                          onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                                           th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
                                           ng-click="removeAdmin(currentPageAdmins, $index)"
                                           ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">

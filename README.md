@@ -6,7 +6,7 @@ Groupings can be synchronized with one or more of the following: email LISTSERV 
 
 UH Groupings utilizes the Internet2 Grouper project.  Grouper is an enterprise access management system designed for the highly distributed management environment and heterogeneous information technology environment common to universities.
 
-[![Build Status](https://travis-ci.org/uhawaii-system-its-ti-iam/uhgroupings.png?branch=master)](https://travis-ci.org/uhawaii-system-its-ti-iam/uhgroupings)
+[![Build Status](https://travis-ci.org/uhawaii-system-its-ti-iam/uh-groupings-ui.png?branch=master)](https://travis-ci.org/uhawaii-system-its-ti-iam/uh-groupings-ui)
 [![Coverage Status](https://coveralls.io/repos/github/uhawaii-system-its-ti-iam/uhgroupings/badge.svg?branch=master)](https://coveralls.io/github/uhawaii-system-its-ti-iam/uhgroupings?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/69274196397f4587b88b0ecce5856d0a)](https://www.codacy.com/app/mhodgesatuh/uhgroupings?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=uhawaii-system-its-ti-iam/uhgroupings&amp;utm_campaign=Badge_Grade)
 ##### Build Tool

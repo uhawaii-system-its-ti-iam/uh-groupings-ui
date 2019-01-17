@@ -1,5 +1,23 @@
 package edu.hawaii.its.groupings.controller;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.type.Feedback;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.context.WebApplicationContext;
+
+import javax.servlet.http.HttpSession;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasProperty;
@@ -17,24 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-
-import javax.servlet.http.HttpSession;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.context.WebApplicationContext;
-
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-import edu.hawaii.its.groupings.type.Feedback;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -329,6 +329,14 @@ public class HomeControllerTest {
         mockMvc.perform(get("/modal/removeErrorModal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("modal/removeErrorModal"));
+    }
+
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestAddErrorModal() throws Exception {
+        mockMvc.perform(get("/modal/addErrorModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/addErrorModal"));
     }
 
 }

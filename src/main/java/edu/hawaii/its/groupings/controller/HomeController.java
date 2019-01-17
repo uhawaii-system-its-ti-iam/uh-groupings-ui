@@ -1,12 +1,11 @@
 package edu.hawaii.its.groupings.controller;
 
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import edu.hawaii.its.groupings.access.UserContextService;
+import edu.hawaii.its.groupings.service.EmailService;
+import edu.hawaii.its.groupings.type.Feedback;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.hawaii.its.groupings.access.UserContextService;
-import edu.hawaii.its.groupings.service.EmailService;
-import edu.hawaii.its.groupings.type.Feedback;
+import javax.servlet.http.HttpSession;
+import java.util.Locale;
+import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -169,6 +168,11 @@ public class HomeController {
     @RequestMapping(value = "/modal/timeoutModal", method = RequestMethod.GET)
     public String TimeoutModal(Locale locale, Model model) {
         return "modal/timeoutModal";
+    }
+
+    @RequestMapping(value = "/modal/addErrorModal", method = RequestMethod.GET)
+    public String addErrorModal(Locale locale, Model model) {
+        return "modal/addErrorModal";
     }
 
 }

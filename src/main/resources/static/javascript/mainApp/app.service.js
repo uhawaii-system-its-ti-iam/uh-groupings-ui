@@ -13,9 +13,11 @@
              */
             loadData: function (callback, callError, url) {
                 $http.get(encodeURI(url))
-                    .success(callback)
-                    .error(callError, function (data, status) {
-                        console.log("Error in dataProvider; status: ", status);
+                    .then(function(response){
+                       callback(response.data);
+                    }, function (response) {
+                        callError(response.data);
+                        console.log("Error in dataProvider; status: ", response.status);
                     });
             },
 
@@ -26,9 +28,11 @@
              */
             updateData: function (callback, callError, url) {
                 $http.post(encodeURI(url))
-                    .success(callback)
-                    .error(callError, function (data, status) {
-                        console.log("Error in dataProvider; status: ", status);
+                    .then(function(response){
+                        callback(response.data);
+                    }, function (response) {
+                        callError(response);
+                        console.log("Error in dataProvider; status: ", response.status);
                     });
             },
 
@@ -44,7 +48,7 @@
                         "Content-Type": "application/json"
                     }
                 })
-                    .success(function () {
+                    .then(function () {
                         $window.location.href = redirectUrl;
                     });
             }
