@@ -46,7 +46,7 @@
 
         $scope.loading = false;
 
-        angular.extend(this, $controller("TableJsController", { $scope: $scope }));
+        angular.extend(this, $controller("TableJsController", {$scope: $scope}));
 
         /**
          * Initiates the retrieval of information about the grouping clicked by the user.
@@ -56,6 +56,10 @@
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
             $scope.getGroupingInformation();
+            // console.log("calling grouping: currentPage" + currentPage, + "index" + index);
+
+            // $scope.getAsynchronousGroupingInformation(currentPage, index);
+
             $scope.showGrouping = true;
         };
 
@@ -86,8 +90,9 @@
 
             var groupingPath = $scope.selectedGrouping.path;
 
-            groupingsService.getGrouping(groupingPath, function (res) {
-                //Gets members in the basis group
+            groupingsService.getPaginatedGrouping(groupingPath, 1, 20, function (res) {
+
+                // Gets members in the basis group
                 $scope.groupingBasis = setGroupMembers(res.basis.members);
                 $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
 
@@ -118,9 +123,10 @@
                 //Stop loading spinner
                 $scope.loading = false;
             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+                dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
             });
 
+            // //Testing for another page
         };
 
         /**
@@ -147,7 +153,7 @@
         $scope.addInBasis = function (group) {
             _.forEach(group, function (member) {
                 var memberUuid = member.uuid;
-                member.inBasis = _.some($scope.groupingBasis, { uuid: memberUuid })
+                member.inBasis = _.some($scope.groupingBasis, {uuid: memberUuid})
                     ? "Yes"
                     : "No";
             });
@@ -160,11 +166,11 @@
         $scope.addWhereListed = function (compositeGroup) {
             _.forEach(compositeGroup, function (member) {
                 var memberUuid = member.uuid;
-                if (_.some($scope.groupingBasis, { uuid: memberUuid })) {
+                if (_.some($scope.groupingBasis, {uuid: memberUuid})) {
                     member.whereListed = "Basis";
                 }
 
-                if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
+                if (_.some($scope.groupingInclude, {uuid: memberUuid})) {
                     member.whereListed = _.isUndefined(member.whereListed)
                         ? "Include"
                         : "Basis / Include";
@@ -227,9 +233,9 @@
          */
         $scope.isInAnotherList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingExclude, { username: user });
+                return _.some($scope.groupingExclude, {username: user});
             } else if (list === "Exclude") {
-                return _.some($scope.groupingInclude, { username: user });
+                return _.some($scope.groupingInclude, {username: user});
             }
             return false;
         };
@@ -241,9 +247,9 @@
          */
         $scope.existInList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingInclude, { username: user });
+                return _.some($scope.groupingInclude, {username: user});
             } else if (list === "Exclude") {
-                return _.some($scope.groupingExclude, { username: user });
+                return _.some($scope.groupingExclude, {username: user});
             }
             return false;
         };

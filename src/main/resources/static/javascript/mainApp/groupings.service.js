@@ -8,6 +8,18 @@
      */
     UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL) {
         return {
+
+            /**
+             * Get page of a grouping
+             * @param {String} path - the path to the grouping
+             * @param {String} page - the page to retrieve
+             * @param {String} size - the size of each page
+             */
+            getPaginatedGrouping: function (path, page, size, onSuccess, onError) {
+                var endpoint = BASE_URL + "groupings/" + path + "?page=" + page + "&size=" + size;
+                dataProvider.loadData(onSuccess, onError, endpoint);
+            },
+
             /**
              * Gets information about a grouping.
              * @param {string} path - the path to the grouping

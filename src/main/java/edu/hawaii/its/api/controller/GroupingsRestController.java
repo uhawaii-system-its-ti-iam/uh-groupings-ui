@@ -14,6 +14,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
@@ -252,6 +253,21 @@ public class GroupingsRestController {
     public ResponseEntity grouping(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST grouping...");
         String uri = String.format(API_2_1_BASE + "/groupings/%s", grouping);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    //todo This is a test mapping
+    /**
+     * Some comments for later (this is getPaginatedGrouping)
+     */
+    @RequestMapping(value = "/groupings/{path}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity paginatedGrouping(Principal principal, @PathVariable String path,
+            @RequestParam(value = "page") Integer page,
+            @RequestParam(value = "size") Integer size) {
+        logger.info("Entered REST paginatedGrouping...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s?page=%d&size=%d", path, page, size);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
