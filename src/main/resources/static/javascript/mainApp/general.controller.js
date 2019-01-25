@@ -66,6 +66,71 @@
             $scope.showGrouping = true;
         };
 
+        /**
+         * @param {object[]} members - the members of the group
+         * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
+         */
+        function setGroupMembers(members) {
+            _.remove(members, function (member) {
+                return _.isEmpty(member.username);
+            });
+            return _.sortBy(members, "name");
+        }
+
+        /**
+         * Gets information about the grouping, such as its members and the preferences set.
+         * @param {string} path - the path of the grouping to retrieve information
+         */
+
+
+        $scope.getGroupingInformation = function () {
+            $scope.loading = true;
+
+            var groupingPath = $scope.selectedGrouping.path;
+            console.log($scope.selectedGrouping);
+
+            groupingsService.getGrouping(groupingPath, function (res) {
+                //Gets members in the basis group
+                $scope.groupingBasis = setGroupMembers(res.basis.members);
+                $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
+
+                //Gets members in the include group
+                $scope.groupingInclude = setGroupMembers(res.include.members);
+                $scope.addInBasis($scope.groupingInclude);
+                $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
+
+                //Gets members in the exclude group
+                $scope.groupingExclude = setGroupMembers(res.exclude.members);
+                $scope.addInBasis($scope.groupingExclude);
+                $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
+
+                //Gets members in grouping
+                $scope.groupingMembers = setGroupMembers(res.composite.members);
+                $scope.addWhereListed($scope.groupingMembers);
+                $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
+
+                //Gets owners of the grouping
+                $scope.groupingOwners = setGroupMembers(res.owners.members);
+                $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+
+                $scope.allowOptIn = res.optInOn;
+                $scope.allowOptOut = res.optOutOn;
+                $scope.listserv = res.listservOn;
+                $scope.ldap = res.ldapOn;
+
+                // CLINT STUFF:
+                // $scope.hithere = res.description;
+                // CLINT STUFF
+
+                //Stop loading spinner
+                $scope.loading = false;
+            }, function (res) {
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+            });
+
+        };
+
+
         // CLINT STUFF FUNCTIONS START:
 
         // used to check the length of the text string entered in the description form box, for error handling of max length
@@ -129,67 +194,6 @@
             // $scope.description = $scope.descriptionText;
         }
         // CLINT STUFF FUNCTIONS END//
-
-        /**
-         * @param {object[]} members - the members of the group
-         * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
-         */
-        function setGroupMembers(members) {
-            _.remove(members, function (member) {
-                return _.isEmpty(member.username);
-            });
-            return _.sortBy(members, "name");
-        }
-
-        /**
-         * Gets information about the grouping, such as its members and the preferences set.
-         * @param {string} path - the path of the grouping to retrieve information
-         */
-        $scope.getGroupingInformation = function () {
-            $scope.loading = true;
-
-            var groupingPath = $scope.selectedGrouping.path;
-
-            groupingsService.getGrouping(groupingPath, function (res) {
-                //Gets members in the basis group
-                $scope.groupingBasis = setGroupMembers(res.basis.members);
-                $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
-
-                //Gets members in the include group
-                $scope.groupingInclude = setGroupMembers(res.include.members);
-                $scope.addInBasis($scope.groupingInclude);
-                $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
-
-                //Gets members in the exclude group
-                $scope.groupingExclude = setGroupMembers(res.exclude.members);
-                $scope.addInBasis($scope.groupingExclude);
-                $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
-
-                //Gets members in grouping
-                $scope.groupingMembers = setGroupMembers(res.composite.members);
-                $scope.addWhereListed($scope.groupingMembers);
-                $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
-
-                //Gets owners of the grouping
-                $scope.groupingOwners = setGroupMembers(res.owners.members);
-                $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-
-                $scope.allowOptIn = res.optInOn;
-                $scope.allowOptOut = res.optOutOn;
-                $scope.listserv = res.listservOn;
-                $scope.ldap = res.ldapOn;
-
-                // CLINT STUFF:
-                // $scope.hithere = res.description;
-                // CLINT STUFF
-
-                //Stop loading spinner
-                $scope.loading = false;
-            }, function (res) {
-                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
-            });
-
-        };
 
         /**
          * Creates a modal for errors in loading data from the API.
