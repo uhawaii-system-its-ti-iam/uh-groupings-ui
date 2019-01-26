@@ -50,7 +50,7 @@
         $scope.description = " ";
         $scope.tempDescription;
         $scope.descriptionForm = false;      // used with ng-view on selected-grouping.html to toggle description editing.
-        $scope.maxDescriptionLength = 38;
+        $scope.maxDescriptionLength = 40;
         // CLINT STUFF
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));

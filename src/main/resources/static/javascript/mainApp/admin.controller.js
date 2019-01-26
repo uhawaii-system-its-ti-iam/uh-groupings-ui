@@ -26,6 +26,7 @@
             $scope.loading = true;
 
             groupingsService.getAdminLists(function (res) {
+                console.log("Displaying groups");
                 $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
                 $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery);
 
