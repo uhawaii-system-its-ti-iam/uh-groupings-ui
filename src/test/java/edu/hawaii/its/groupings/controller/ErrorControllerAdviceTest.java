@@ -2,13 +2,10 @@ package edu.hawaii.its.groupings.controller;
 
 import org.junit.Before;
 import org.junit.Test;
-
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
-
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -20,12 +17,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.request.WebRequest;
 
-import edu.hawaii.its.api.type.GroupingsHTTPException;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-
-import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 
 import java.security.Principal;
 import java.util.Iterator;
@@ -54,18 +47,21 @@ public class ErrorControllerAdviceTest {
         assertNotNull(errorControllerAdvice);
     }
 
-   /* @Test void GcWebServiceTest() {
+    /*
+    @Test
+    public void GcWebServiceTest() {
         GcWebServiceError Gc = new GcWebServiceError();
         errorControllerAdvice.handleGcWebServiceError(Gc);
+           String gce = "error";
+        assertThat(errorControllerAdvice.handleGcWebServiceError(Gc).toString(),equalTo(gce));
+    }
+    */
 
-        String gce = "error";
-        assertThat(errorControllerAdvice.handleGcWebServiceError(Gc).toString(), equalTo(gce));
-    }*/
     @Test
     public void RuntimeTest() {
         RuntimeException re = new RuntimeException();
         errorControllerAdvice.handleRuntimeException(re);
-
+        System.out.println(errorControllerAdvice.handleRuntimeException(re).toString());
         String runtime = "<500,edu.hawaii.its.api.type.GroupingsHTTPException:"
                 + " runtime exception,{}>";
         assertThat(errorControllerAdvice.handleRuntimeException(re).toString(), equalTo(runtime));

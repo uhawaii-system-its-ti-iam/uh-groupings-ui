@@ -83,12 +83,6 @@
          */
         $scope.getGroupingInformation = function () {
             $scope.loading = true;
-<<<<<<< HEAD
-           // var endpoint = BASE_URL + $scope.selectedGrouping.path + "/grouping";
-          var endpoint = BASE_URL + $scope.selectedGrouping.path + "/?path="  + $scope.currentPageBasis  + "&size=20";
-
-=======
->>>>>>> master
 
             var groupingPath = $scope.selectedGrouping.path;
 
@@ -853,48 +847,9 @@
             return $scope.currentUser === $scope.userToRemove.username
                 && ($scope.listName === "owners" || $scope.listName === "admins");
         };
-        ///v2.1/groupings	/{path}
-        ///{groupingPath} /grouping
-        // $scope.getGroupingOnepage = function (){
-        //     $scope.loading =  true;
-        //     var end point = BASE_URL + $scope.selectedGrouping.path + "/?path=" + $scope.currentPage + "&size=20";
-        //     dataProvider.loadData(function (res){
-        //         if (_.isNull(res)) {
-        //             $scope.createApiErrorModal();
-        //         } else{
-        //             //Gets members in the basis group
-        //             $scope.groupingBasis = setGroupMembers(res.basis.members);
-        //             $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
-        //
-        //             //Gets members in the include group
-        //             $scope.groupingInclude = setGroupMembers(res.include.members);
-        //             $scope.addInBasis($scope.groupingInclude);
-        //             $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
-        //
-        //             //Gets members in the exclude group
-        //             $scope.groupingExclude = setGroupMembers(res.exclude.members);
-        //             $scope.addInBasis($scope.groupingExclude);
-        //             $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
-        //
-        //             //Gets members in grouping
-        //             $scope.groupingMembers = setGroupMembers(res.composite.members);
-        //             $scope.addWhereListed($scope.groupingMembers);
-        //             $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
-        //
-        //             //Gets owners of the grouping
-        //             $scope.groupingOwners = setGroupMembers(res.owners.members);
-        //             $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-        //
-        //             $scope.allowOptIn = res.optInOn;
-        //             $scope.allowOptOut = res.optOutOn;
-        //             $scope.listserv = res.listservOn;
-        //             $scope.ldap = res.ldapOn;
-        //         }
-        //         $scope.loading = false;
-        //     } function(res)
-        //     )
-        // }
+
     }
+
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
 
 })();

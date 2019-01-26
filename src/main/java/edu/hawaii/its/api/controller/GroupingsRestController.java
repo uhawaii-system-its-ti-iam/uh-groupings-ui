@@ -251,46 +251,7 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity grouping(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST grouping...");
-<<<<<<< HEAD
-        String uri = String.format(API_2_0_BASE + "/%s/grouping", grouping);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
-    }
-
-    /**
-     *  finds and returns the specified paginated grouping
-     *
-     * @param paginated grouping :
-     * @param grouping
-     * @return The Grouping that was searched for
-     */
-    @RequestMapping(value = "/grouping/{path}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity paginatedGrouping(Principal principal, @PathVariable String path,
-                @RequestParam(value = "page") Integer page,
-                @RequestParam(value = "size") Integer size) {
-        logger.info("Entered REST paginatedgrouping...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/?page=%d&size=%d", path, page, size);
-        return makeApiRequest(principal.getName(), uri, HttpMethod.GET, Grouping.class);
-
-    }
-
-    /**
-     * @return a MyGrouping Object that contains
-     * Groupings that the user is in
-     * Groupings that the user owns
-     * Groupings that the user can opt into
-     * Groupings that the user can opt out of
-     */
-    @RequestMapping(value = "/groupingAssignment",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity groupingAssignment(Principal principal) {
-        logger.info("Entered REST GroupingAssignment...");
-        String uri = API_2_0_BASE + "/groupingAssignment";
-=======
         String uri = String.format(API_2_1_BASE + "/groupings/%s", grouping);
->>>>>>> master
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
