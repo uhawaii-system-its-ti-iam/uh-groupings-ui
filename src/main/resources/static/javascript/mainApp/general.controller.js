@@ -82,6 +82,21 @@
         }
 
         /**
+         * @param {object[]} initialMembers - initial members in group
+         * @param {object[]} membersToAdd - members to add to group
+         * @returns {object[]} the members of both groups in one array, sorted by name with blank usernames filtered out
+         */
+        function combineGroupMembers(initialMembers, membersToAdd) {
+
+            _.remove(membersToAdd, function (member) {
+                return _.isEmpty(member.username);
+            });
+
+            var newMembers = _.concat(initialMembers, membersToAdd);
+            return _.sortBy(newMembers, "name");
+        }
+
+        /**
          * Gets information about the grouping, such as its members and the preferences set.
          * @param {string} path - the path of the grouping to retrieve information
          */
@@ -92,9 +107,13 @@
 
             groupingsService.getPaginatedGrouping(groupingPath, 1, 20, function (res) {
 
+                console.log($scope.groupingBasis);
+                console.log(res.basis.members);
                 // Gets members in the basis group
                 $scope.groupingBasis = setGroupMembers(res.basis.members);
                 $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
+
+                console.log($scope.groupingBasis);
 
                 //Gets members in the include group
                 $scope.groupingInclude = setGroupMembers(res.include.members);
@@ -127,6 +146,46 @@
             });
 
             // //Testing for another page
+            //todo Not sure if working, probably not (check content of group in console)
+            groupingsService.getPaginatedGrouping(groupingPath, 2, 20, function (res) {
+
+                console.log($scope.groupingBasis);
+                console.log(res.basis.members);
+
+                // Gets members in the basis group
+                $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
+                $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
+
+                console.log($scope.groupingBasis);
+
+
+                //Gets members in the include group
+                $scope.groupingInclude = setGroupMembers(res.include.members);
+                $scope.addInBasis($scope.groupingInclude);
+                $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
+
+                //Gets members in the exclude group
+                $scope.groupingExclude = setGroupMembers(res.exclude.members);
+                $scope.addInBasis($scope.groupingExclude);
+                $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
+
+                //Gets members in grouping
+                $scope.groupingMembers = setGroupMembers(res.composite.members);
+                $scope.addWhereListed($scope.groupingMembers);
+                $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
+
+                //Gets owners of the grouping
+                $scope.groupingOwners = setGroupMembers(res.owners.members);
+                $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+
+                $scope.allowOptIn = res.optInOn;
+                $scope.allowOptOut = res.optOutOn;
+                $scope.listserv = res.listservOn;
+                $scope.ldap = res.ldapOn;
+
+            }, function (res) {
+                dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+            });
         };
 
         /**
