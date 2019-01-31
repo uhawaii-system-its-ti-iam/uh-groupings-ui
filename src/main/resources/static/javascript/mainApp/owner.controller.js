@@ -6,7 +6,7 @@
      * @param $controller - service for instantiating controllers
      * @param groupingsService - service for creating requests to the groupings API
      */
-    function OwnerJsController($scope, $controller, groupingsService) {
+    function OwnerJsController($scope, $controller, groupingsService, dataProvider) {
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));

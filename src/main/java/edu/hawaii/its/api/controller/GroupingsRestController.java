@@ -40,9 +40,6 @@ public class GroupingsRestController {
     @Value("${groupings.api.include}")
     private String INCLUDE;
 
-    @Value("${url.api.2.0.base}")
-    private String API_2_0_BASE;
-
     @Value("${url.api.2.1.base}")
     private String API_2_1_BASE;
 
@@ -123,48 +120,6 @@ public class GroupingsRestController {
     }
 
     /**
-     * adds a member to a Grouping
-     * <p>
-     * a member will not be in a Grouping for one of two reasons
-     * - The member is not in the basis or include group
-     * - The member is in the basis group, but also in the exclude group
-     * <p>
-     * for the first case, the member will be added to the include group
-     * for the second case, the member will be removed from the exclude group
-     */
-    @RequestMapping(value = "/{grouping}/{userToAdd}/addGroupingMemberByUsername",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addGroupingMemberByUsername(Principal principal,
-                                                      @PathVariable String grouping,
-                                                      @PathVariable String userToAdd) {
-        logger.info("Entered REST addGroupingMemberByUsername...");
-        String uri = String.format(API_2_0_BASE + "/%s/%s/addGroupingMemberByUsername", grouping, userToAdd);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
-    }
-
-    /**
-     * adds a member to a Grouping
-     * <p>
-     * a member will not be in a Grouping for one of two reasons
-     * - The member is not in the basis or include group
-     * - The member is in the basis group, but also in the exclude group
-     * <p>
-     * for the first case, the member will be added to the include group
-     * for the second case, the member will be removed from the exclude group
-     */
-    @RequestMapping(value = "/{grouping}/{userToAdd}/addGroupingMemberByUuid",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addGroupingMemberByUuid(Principal principal,
-                                                  @PathVariable String grouping,
-                                                  @PathVariable String userToAdd) {
-        logger.info("Entered REST addGroupingMemberByUuid...");
-        String uri = String.format(API_2_0_BASE + "/%s/%s/addGroupingMemberByUuid", grouping, userToAdd);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
-    }
-
-    /**
      * adds a member to the include group of the Grouping who's path is in 'grouping'
      * if that member is in the exclude group, they will be removed from it
      *
@@ -200,40 +155,6 @@ public class GroupingsRestController {
         logger.info("Entered REST addMemberToExcludeGroup...");
         String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", grouping, userToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
-    }
-
-    /**
-     * Deletes a member from a Grouping
-     * <p>
-     * if the user is in the basis, then it will add them to the exclude
-     * if a user is in the include instead of the basis, then it will remove them from the include
-     */
-    @RequestMapping(value = "/{grouping}/{userToDelete}/deleteGroupingMemberByUsername",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteGroupingMemberByUsername(Principal principal,
-                                                         @PathVariable String grouping,
-                                                         @PathVariable String userToDelete) {
-        logger.info("Entered REST deleteGroupingMemberByUsername...");
-        String uri = String.format(API_2_0_BASE + "/%s/%s/deleteGroupingMemberByUsername", grouping, userToDelete);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
-    }
-
-    /**
-     * Deletes a member from a Grouping
-     * <p>
-     * if the user is in the basis, then it will add them to the exclude
-     * if a user is in the include instead of the basis, then it will remove them from the include
-     */
-    @RequestMapping(value = "/{grouping}/{userToDelete}/deleteGroupingMemberByUuid",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteGroupingMemberByUuid(Principal principal,
-                                                     @PathVariable String grouping,
-                                                     @PathVariable String userToDelete) {
-        logger.info("Entered REST deleteGroupingMemberByUsername...");
-        String uri = String.format(API_2_0_BASE + "/%s/%s/deleteGroupingMemberByUuid", grouping, userToDelete);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
     }
 
     /**
@@ -335,22 +256,6 @@ public class GroupingsRestController {
     }
 
     /**
-     * @return a MyGrouping Object that contains
-     * Groupings that the user is in
-     * Groupings that the user owns
-     * Groupings that the user can opt into
-     * Groupings that the user can opt out of
-     */
-    @RequestMapping(value = "/groupingAssignment",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity groupingAssignment(Principal principal) {
-        logger.info("Entered REST GroupingAssignment...");
-        String uri = API_2_0_BASE + "/groupingAssignment";
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
-    }
-
-    /**
      * @return a MembershipAssignment Object that contains
      * Groupings that the user is in
      * Groupings that the user can opt into
@@ -401,8 +306,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity optIn(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optIn...");
-        String uri = String.format(API_2_0_BASE + "/%s/optIn", grouping);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", grouping, principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
     /**
@@ -418,8 +323,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity optOut(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optOut...");
-        String uri = String.format(API_2_0_BASE + "/%s/optOut", grouping);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s/self", grouping, principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
     /**

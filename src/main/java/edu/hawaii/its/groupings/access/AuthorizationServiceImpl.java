@@ -101,10 +101,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             logger.info("//////////////////////////////");
             Principal principal = new SimplePrincipal(username);
             // todo this should be changed to the new isOwner endpoint after it is available
-            String groupingAssignmentJson = (String) groupingsRestController.groupingAssignment(principal).getBody();
-            GroupingAssignment groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, GroupingAssignment.class);
+            String groupingAssignmentJson = (String) groupingsRestController.groupingsOwned(principal).getBody();
+            List groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, List.class);
 
-            if (!(groupingAssignment.getGroupingsOwned().size() == 0)) {
+            if (!(groupingAssignment.size() == 0)) {
                 logger.info("This person is an owner");
                 return true;
             } else {
@@ -119,7 +119,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     /**
      * Determines if a user is an admin in grouping admin.
      *
-     * @param username - self-explanitory
+     * @param username - self-explanatory
      * @return true if the person gets pass the grouping admins check by checking if they can get all the groupings.
      */
     public boolean fetchAdmin(String username) {

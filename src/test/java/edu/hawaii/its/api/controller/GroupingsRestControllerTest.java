@@ -144,32 +144,6 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void addByUsernameTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/user/addGroupingMemberByUsername";
-
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.POST)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        mockMvc.perform(post(uri)
-                .with(csrf()))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUhUser
-    public void addByUuIDTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/user/addGroupingMemberByUuid";
-
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.POST)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        mockMvc.perform(post(uri)
-                .with(csrf()))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUhUser
     public void postAddMember() throws Exception {
         String uri_include = REST_CONTROLLER_BASE + GROUPING + "/user/addMemberToIncludeGroup";
         String uri_exclude = REST_CONTROLLER_BASE + GROUPING + "/user/addMemberToExcludeGroup";
@@ -186,31 +160,6 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @WithMockUhUser
-    public void deleteByUsernameTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/user/deleteGroupingMemberByUsername";
-
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.POST)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        mockMvc.perform(post(uri)
-                .with(csrf()))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUhUser
-    public void deleteByUuIDTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/user/deleteGroupingMemberByUuid";
-
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.POST)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        mockMvc.perform(post(uri)
-                .with(csrf()))
-                .andExpect(status().isOk());
-    }
 
     @Test
     @WithMockUhUser
@@ -254,19 +203,6 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(post(uri)
                 .with(csrf()))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUhUser
-    public void getMyGroupings() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "groupingAssignment";
-
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        mockMvc.perform(get(REST_CONTROLLER_BASE + "groupingAssignment"))
-                .andExpect(status().isOk());
-
     }
 
     @Test
@@ -346,7 +282,7 @@ public class GroupingsRestControllerTest {
     public void getOptIn() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/optIn";
 
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.POST)))
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(REST_CONTROLLER_BASE + GROUPING + "/optIn")
@@ -359,7 +295,7 @@ public class GroupingsRestControllerTest {
     public void getOptOut() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/optOut";
 
-        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.POST)))
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri)

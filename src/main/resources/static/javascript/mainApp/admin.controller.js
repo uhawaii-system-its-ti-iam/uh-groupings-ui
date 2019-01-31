@@ -24,7 +24,6 @@
         $scope.init = function () {
             // Adds the loading spinner.
             $scope.loading = true;
-
             groupingsService.getAdminLists(function (res) {
                 console.log("Displaying groups");
                 $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
@@ -34,7 +33,7 @@
                 $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
 
                 $scope.loading = false;
-            }, function (res) {
+             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             });
         };

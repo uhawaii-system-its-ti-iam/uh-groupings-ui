@@ -21,17 +21,6 @@ describe("MembershipController", function () {
         expect(controller).toBeDefined();
     });
 
-    it("should define the variables and methods in the table controller", function () {
-        expect(scope.columnSort).toBeDefined();
-        expect(scope.groupToPages).toBeDefined();
-        expect(scope.filter).toBeDefined();
-        expect(scope.pageRange).toBeDefined();
-        expect(scope.setPage).toBeDefined();
-        expect(scope.disableFirstAndPrev).toBeDefined();
-        expect(scope.disableNextAndLast).toBeDefined();
-        expect(scope.sortBy).toBeDefined();
-    });
-
     describe("init", function () {
 
         var mockResponse;
@@ -62,19 +51,19 @@ describe("MembershipController", function () {
 
             scope.itemsPerPage = 2;
 
-            httpBackend.whenGET(BASE_URL + "groupingAssignment")
+            httpBackend.whenGET(BASE_URL + "members/groupings")
                 .respond(200, mockResponse);
 
             scope.init();
         });
 
         it("should make an API call to groupingAssignment", function () {
-            httpBackend.expectGET(BASE_URL + "groupingAssignment").respond(200, mockResponse);
+            httpBackend.expectGET(BASE_URL + "members/groupings").respond(200, mockResponse);
             expect(httpBackend.flush).not.toThrow();
         });
 
         it("should initialize membershipsList", function () {
-            httpBackend.expectGET(BASE_URL + "groupingAssignment").respond(200, mockResponse);
+            httpBackend.expectGET(BASE_URL + "members/groupings").respond(200, mockResponse);
             httpBackend.flush();
 
             expect(scope.membershipsList.length).toEqual(3);
@@ -85,7 +74,7 @@ describe("MembershipController", function () {
         });
 
         it("should initialize optInList", function () {
-            httpBackend.expectGET(BASE_URL + "groupingAssignment").respond(200, mockResponse);
+            httpBackend.expectGET(BASE_URL + "members/groupings").respond(200, mockResponse);
             httpBackend.flush();
 
             expect(scope.optInList.length).toEqual(1);
@@ -151,7 +140,7 @@ describe("MembershipController", function () {
             httpBackend.whenPOST(BASE_URL + "path:path2:path3:grouping4/optOut")
                 .respond(200, mockResponse);
 
-            httpBackend.whenGET(BASE_URL + "groupingAssignment")
+            httpBackend.whenGET(BASE_URL + "members/groupings")
                 .respond(200);
         });
 
@@ -164,7 +153,7 @@ describe("MembershipController", function () {
             httpBackend.flush();
 
             expect(scope.init).toHaveBeenCalled();
-            httpBackend.expectGET(BASE_URL + "groupingAssignment").respond(200);
+            httpBackend.expectGET(BASE_URL + "members/groupings").respond(200);
         });
 
     });
@@ -181,7 +170,7 @@ describe("MembershipController", function () {
             httpBackend.whenPOST(BASE_URL + "path1:path4:grouping5/optIn")
                 .respond(200, mockResponse);
 
-            httpBackend.whenGET(BASE_URL + "groupingAssignment")
+            httpBackend.whenGET(BASE_URL + "members/groupings")
                 .respond(200);
         });
 
@@ -194,7 +183,7 @@ describe("MembershipController", function () {
             httpBackend.flush();
 
             expect(scope.init).toHaveBeenCalled();
-            httpBackend.expectGET(BASE_URL + "groupingAssignment").respond(200);
+            httpBackend.expectGET(BASE_URL + "members/groupings").respond(200);
         });
 
     });
