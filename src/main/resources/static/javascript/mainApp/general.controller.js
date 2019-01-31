@@ -47,7 +47,7 @@
         $scope.loading = false;
 
         // CLINT STUFF:
-        $scope.description = " ";
+        $scope.description = "";
         $scope.tempDescription;
         $scope.descriptionForm = false;      // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.maxDescriptionLength = 40;
@@ -119,7 +119,7 @@
                 $scope.groupingOwners = setGroupMembers(res.owners.members);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
-                $scope.description = res.description;
+                //$scope.description = res.description;
 
                 $scope.allowOptIn = res.optInOn;
                 $scope.allowOptOut = res.optOutOn;
