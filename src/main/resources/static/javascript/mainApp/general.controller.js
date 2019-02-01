@@ -157,10 +157,13 @@
          */
         $scope.editDescription = function() {
             //$scope.descriptionForm = ($scope.descriptionForm) ? false : true;
+            console.log("Entering function");
 
             // the next line saves the "last saved description" into a variable, to be referenced when user cancels description edit.
+
             $scope.tempDescription = angular.element(document.getElementById('descriptionString')).scope().description;
             $scope.descriptionForm = !($scope.descriptionForm);
+            //console.log($scope.tempDescription);
         }
 
         /**
