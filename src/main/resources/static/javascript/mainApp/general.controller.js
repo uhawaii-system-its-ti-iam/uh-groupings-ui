@@ -48,9 +48,11 @@
 
         // CLINT STUFF:
         $scope.description = "";
+        $scope.someString;
         $scope.tempDescription;
         $scope.descriptionForm = false;      // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.maxDescriptionLength = 40;
+        $scope.descript;
         // CLINT STUFF
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
@@ -160,10 +162,12 @@
             console.log("Entering function");
 
             // the next line saves the "last saved description" into a variable, to be referenced when user cancels description edit.
-
-            $scope.tempDescription = angular.element(document.getElementById('descriptionString')).scope().description;
+            console.log("Before the assignment statement" + $scope.tempDescription);
+            // $scope.tempDescription = angular.element(document.getElementById('descriptionString')).scope().description;
+            $scope.tempDescription = $scope.descript;
             $scope.descriptionForm = !($scope.descriptionForm);
-            //console.log($scope.tempDescription);
+            console.log("After the assignment statement" + $scope.tempDescription);
+
         }
 
         /**
