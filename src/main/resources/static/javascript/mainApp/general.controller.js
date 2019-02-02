@@ -105,7 +105,7 @@
 
             var groupingPath = $scope.selectedGrouping.path;
 
-            groupingsService.getPaginatedGrouping(groupingPath, 1, 20, function (res) {
+            groupingsService.getGrouping(groupingPath, 1, 20, "name", true, function (res) {
 
                 console.log($scope.groupingBasis);
                 console.log(res.basis.members);
@@ -142,26 +142,26 @@
                 //Stop loading spinner
                 $scope.loading = false;
             }, function (res) {
-                dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+                // dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
             });
 
-            int page = 2;
-            while (true) {
-
-                groupingsService.getPaginatedGrouping(groupingPath, page, 20, function (res) {
-
-                    if(res.basis.members.isEmpty && res.include.members.isEmpty && res.exclude.members.isEmpty && res.composite.members.isEmpty && res.owners.members.isEmpty ) {
-                        break;
-                    }
-
-
-
-
-                }, function (res) {
-                    dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
-                    });
-
-            }
+            // int page = 2;
+            // while (true) {
+            //
+            //     groupingsService.getPaginatedGrouping(groupingPath, page, 20, function (res) {
+            //
+            //         if(res.basis.members.isEmpty && res.include.members.isEmpty && res.exclude.members.isEmpty && res.composite.members.isEmpty && res.owners.members.isEmpty ) {
+            //             break;
+            //         }
+            //
+            //
+            //
+            //
+            //     }, function (res) {
+            //         dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+            //         });
+            //
+            // }
 
             // //Testing for another page
             //todo Not sure if working, probably not (check content of group in console)

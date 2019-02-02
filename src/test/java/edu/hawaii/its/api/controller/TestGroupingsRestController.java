@@ -510,7 +510,7 @@ public class TestGroupingsRestController {
 
     private boolean isInIncludeGroup(String grouping, String ownerUsername, String username) {
         Principal principal = new SimplePrincipal(ownerUsername);
-        String groupingString = (String) groupingsRestController.grouping(principal, grouping)
+        String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
 
         return mapGroupingJson(groupingString)
@@ -521,7 +521,7 @@ public class TestGroupingsRestController {
 
     private boolean isInExcludeGroup(String grouping, String ownerUsername, String username) {
         Principal principal = new SimplePrincipal(ownerUsername);
-        String groupingString = (String) groupingsRestController.grouping(principal, grouping)
+        String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
 
         return mapGroupingJson(groupingString)
@@ -532,7 +532,7 @@ public class TestGroupingsRestController {
 
     private boolean isInBasisGroup(String grouping, String ownerUsername, String username) {
         Principal principal = new SimplePrincipal(ownerUsername);
-        String groupingString = (String) groupingsRestController.grouping(principal, grouping)
+        String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
         return mapGroupingJson(groupingString)
                 .getBasis()
@@ -542,7 +542,7 @@ public class TestGroupingsRestController {
 
     private boolean isInGrouping(String grouping, String ownerUsername, String username) {
         Principal principal = new SimplePrincipal(ownerUsername);
-        String groupingString = (String) groupingsRestController.grouping(principal, grouping)
+        String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
         return mapGroupingJson(groupingString)
                 .getComposite()
@@ -552,7 +552,7 @@ public class TestGroupingsRestController {
 
     private boolean isGroupingOwner(String grouping, String ownerUsername, String username) {
         Principal principal = new SimplePrincipal(ownerUsername);
-        String groupingString = (String) groupingsRestController.grouping(principal, grouping)
+        String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
         return mapGroupingJson(groupingString)
                 .getOwners()
@@ -562,7 +562,7 @@ public class TestGroupingsRestController {
 
     private boolean isListservOn(String grouping, String username) {
         Principal principal = new SimplePrincipal(username);
-        String groupingString = (String) groupingsRestController.grouping(principal, grouping)
+        String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
         return mapGroupingJson(groupingString)
                 .isListservOn();
@@ -570,7 +570,7 @@ public class TestGroupingsRestController {
 
     private boolean isOptInOn(String grouping, String username) {
         Principal principal = new SimplePrincipal(username);
-        String groupingString = (String) groupingsRestController.grouping(principal, grouping)
+        String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
         return mapGroupingJson(groupingString)
                 .isOptInOn();
@@ -578,7 +578,7 @@ public class TestGroupingsRestController {
 
     private boolean isOptOutOn(String grouping, String username) {
         Principal principal = new SimplePrincipal(username);
-        String groupingString = (String) groupingsRestController.grouping(principal, grouping)
+        String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
         return mapGroupingJson(groupingString)
                 .isOptOutOn();
@@ -586,7 +586,7 @@ public class TestGroupingsRestController {
 
     private boolean isReleasedGrouping(String grouping, String username) {
         Principal principal = new SimplePrincipal(username);
-        String groupingString = (String) groupingsRestController.grouping(principal, grouping)
+        String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
         return mapGroupingJson(groupingString)
                 .isReleasedGroupingOn();
