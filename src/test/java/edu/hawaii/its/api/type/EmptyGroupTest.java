@@ -13,12 +13,12 @@ public class EmptyGroupTest extends Group{
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
-    public void setup(){
+    public void setUp(){
         emptygroup = new EmptyGroup();
     }
 
     @Test
-    public void test() {
+    public void emptyGroupTest() {
         thrown.expect(UnsupportedOperationException.class);
         emptygroup.addMember(new Person());
 

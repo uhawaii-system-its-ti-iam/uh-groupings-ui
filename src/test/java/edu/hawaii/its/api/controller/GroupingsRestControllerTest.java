@@ -280,8 +280,6 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getOptIn() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/optIn";
-
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 

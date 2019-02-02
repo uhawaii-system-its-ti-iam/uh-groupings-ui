@@ -15,7 +15,7 @@ public class AdminListsHolderTest {
     private AdminListsHolder adminListHolder;
 
     @Before
-    public void setup(){
+    public void setUp(){
         adminListHolder = new AdminListsHolder();
     }
 
@@ -26,7 +26,7 @@ public class AdminListsHolderTest {
         assertThat(adminListHolder.getAdminGroup().toString(), equalTo("Group [path=, members=[]]"));
     }
     @Test
-    public void AdminListsHoldertest(){
+    public void adminlistsholderTest(){
         List<Grouping> newList = new ArrayList<Grouping>();
         adminListHolder.setAllGroupings(newList);
         assertThat(adminListHolder.getAllGroupings(), equalTo(newList));

@@ -57,8 +57,7 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(GroupingsServiceResultException.class)
     public ResponseEntity<GroupingsHTTPException> handleGroupingsServiceResultException(GroupingsServiceResultException gsre) {
-        ResponseEntity<GroupingsHTTPException> re = exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
-        return re;
+        return exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
     }
 
     //todo this is for the HolidayRestControllerTest test (should we really have this behavior?)

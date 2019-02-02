@@ -662,7 +662,7 @@
                 console.log("Error, Status Code: " + res.statusCode);
                 $scope.createPreferenceErrorModal();
             } else if (_.startsWith(res[0].resultCode, "SUCCESS")) {
-                console.log("success");
+                console.log("Success");
             }
         }
 

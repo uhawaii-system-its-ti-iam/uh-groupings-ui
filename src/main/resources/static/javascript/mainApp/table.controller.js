@@ -51,7 +51,9 @@
          * @returns {boolean} true if the string contains the substring. Otherwise returns false.
          */
         function containsSubstring(str, substr) {
-            if (!substr) return true;
+            if (!substr) {
+                return true;
+            }
             return str.toLowerCase().indexOf(substr.toLowerCase()) !== -1;
         }
 

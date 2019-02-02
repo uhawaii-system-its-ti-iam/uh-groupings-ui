@@ -184,7 +184,7 @@
              * Gets the groupings a member owns.
              */
             getGroupingsOwned: function (onSuccess, onError) {
-                var endpoint = BASE_URL + "owners/groupings"
+                var endpoint = BASE_URL + "owners/groupings";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             }
 

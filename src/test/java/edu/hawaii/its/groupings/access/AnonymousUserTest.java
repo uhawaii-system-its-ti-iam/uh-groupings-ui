@@ -2,6 +2,7 @@ package edu.hawaii.its.groupings.access;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -21,7 +22,7 @@ public class AnonymousUserTest {
         assertNotNull(user);
         assertEquals("anonymous", user.getUsername());
         assertEquals("anonymous", user.getUid());
-        assertEquals(null, user.getUhuuid());
+        assertNull(user.getUhuuid());
         assertEquals("", user.getPassword());
         assertEquals(1, user.getAuthorities().size());
         assertTrue(user.hasRole(Role.ANONYMOUS));

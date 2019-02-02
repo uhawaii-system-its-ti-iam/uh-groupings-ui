@@ -1,11 +1,7 @@
 package edu.hawaii.its.groupings.controller;
 
-import org.junit.Before;
 import org.junit.Test;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -33,32 +29,21 @@ public class ErrorControllerAdviceTest {
     @Autowired
     private ErrorControllerAdvice errorControllerAdvice;
 
-    @Autowired
-    private WebApplicationContext context;
-
-    private MockMvc mockMvc;
-
-    @Before
-    public void setUp() {
-        mockMvc = webAppContextSetup(context).build();
-    }
     @Test
     public void nullTest(){
         assertNotNull(errorControllerAdvice);
     }
 
-    /*
-    @Test
-    public void GcWebServiceTest() {
-        GcWebServiceError Gc = new GcWebServiceError();
-        errorControllerAdvice.handleGcWebServiceError(Gc);
-           String gce = "error";
-        assertThat(errorControllerAdvice.handleGcWebServiceError(Gc).toString(),equalTo(gce));
-    }
-    */
+//    @Test
+//    public void GcWebServiceTest() {
+//        GcWebServiceError Gc = new GcWebServiceError();
+//        errorControllerAdvice.handleGcWebServiceError(Gc);
+//           String gce = "error";
+//        assertThat(errorControllerAdvice.handleGcWebServiceError(Gc).toString(),equalTo(gce));
+//    }
 
     @Test
-    public void RuntimeTest() {
+    public void runtimeTest() {
         RuntimeException re = new RuntimeException();
         errorControllerAdvice.handleRuntimeException(re);
         System.out.println(errorControllerAdvice.handleRuntimeException(re).toString());
@@ -67,7 +52,7 @@ public class ErrorControllerAdviceTest {
         assertThat(errorControllerAdvice.handleRuntimeException(re).toString(), equalTo(runtime));
     }
     @Test
-    public void IllegalArgumentTest() {
+    public void illegalArgumentTest() {
         IllegalArgumentException IAE = new IllegalArgumentException();
         WebRequest Req = new WebRequest() {
             @Override public String getHeader(String s) {
@@ -143,11 +128,11 @@ public class ErrorControllerAdviceTest {
             }
 
             @Override public void setAttribute(String s, Object o, int i) {
-
+            //intentionally empty
             }
 
             @Override public void removeAttribute(String s, int i) {
-
+            //intentionally empty
             }
 
             @Override public String[] getAttributeNames(int i) {
@@ -155,7 +140,7 @@ public class ErrorControllerAdviceTest {
             }
 
             @Override public void registerDestructionCallback(String s, Runnable runnable, int i) {
-
+            //intentionally empty
             }
 
             @Override public Object resolveReference(String s) {
@@ -171,13 +156,13 @@ public class ErrorControllerAdviceTest {
             }
         };
         errorControllerAdvice.handleIllegalArgumentException(IAE,Req);
-        String IAexception = "<404,edu.hawaii.its.api.type.GroupingsHTTPException: "
+        String IAException = "<404,edu.hawaii.its.api.type.GroupingsHTTPException: "
                 + "Resource not available,{}>";
-        assertThat(errorControllerAdvice.handleIllegalArgumentException(IAE,Req).toString(), equalTo(IAexception));
+        assertThat(errorControllerAdvice.handleIllegalArgumentException(IAE,Req).toString(), equalTo(IAException));
 
     }
     @Test
-    public void UnsupportedOpTest() {
+    public void unsupportedOpTest() {
         UnsupportedOperationException UOE = new UnsupportedOperationException();
         errorControllerAdvice.handleUnsupportedOperationException(UOE);
         String UnOpE = "<501,edu.hawaii.its.api.type.GroupingsHTTPException: "
@@ -186,7 +171,7 @@ public class ErrorControllerAdviceTest {
 
     }
     @Test
-    public void ExceptionTest() {
+    public void exceptionTest() {
         Exception E = new Exception();
         errorControllerAdvice.handleException(E);
         String exception = "<500,edu.hawaii.its.api.type.GroupingsHTTPException: "
@@ -194,7 +179,7 @@ public class ErrorControllerAdviceTest {
         assertThat(errorControllerAdvice.handleException(E).toString(), equalTo(exception));
     }
     @Test
-    public void ExceptionHandleTest() throws GroupingsServiceResultException {
+    public void exceptionHandleTest() throws GroupingsServiceResultException {
         GroupingsServiceResultException GSRE = new GroupingsServiceResultException();
         errorControllerAdvice.handleGroupingsServiceResultException(GSRE);
         String SRE = "<400,edu.hawaii.its.api.type.GroupingsHTTPException: "
