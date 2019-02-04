@@ -2,6 +2,7 @@ package edu.hawaii.its.api.type;
 
 import java.util.List;
 
+
 public class GroupingAssignment {
 
     public GroupingAssignment(){
