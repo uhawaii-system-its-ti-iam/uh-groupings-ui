@@ -46,8 +46,6 @@
 
         $scope.loading = false;
 
-        $scope.endPagination = false;
-
         angular.extend(this, $controller("TableJsController", {$scope: $scope}));
 
         /**
@@ -97,7 +95,7 @@
 
         /**
          * Gets information about the grouping, such as its members and the preferences set.
-         * @param {string} path - the path of the grouping to retrieve information
+         * Retrieves information asynchronously page by page
          */
         $scope.getGroupingInformation = function () {
             $scope.loading = true;
@@ -140,10 +138,12 @@
                 dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
             });
 
+            // Recursive function to retrieve the rest of the pages
             $scope.getPages(groupingPath, 2, 20, "name", true);
 
             //todo Need to fix so can terminate
             //todo Is the only solution recursive????
+            //todo Keeping code in case, will probably delete
             // var page = 2;
             // // for (var i = 0; i < 20; i++) {
             // while ($scope.endPagination === false && page < 50) {
@@ -189,7 +189,15 @@
             // }
         };
 
-        // Recursive function to get pages of a grouping asynchronously
+        //todo Is this airtight? Is it possible to force stack overflow?
+        /**
+         * Recursive function to get pages of a grouping asynchronously
+         * @param {String} groupingPath - Path to the grouping to retrieve data from
+         * @param {Integer} page - Page of grouping to retrieve (Paging starts from 1)
+         * @param {Integer} size - Size of page to retrieve
+         * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
+         * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending (Z-A)
+         */
         $scope.getPages = function (groupingPath, page, size, sortString, isAscending) {
 
             groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
