@@ -202,9 +202,8 @@
 
             groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
 
-                if (res.basis.members.length === 0 && res.include.members.length === 0 &&
-                    res.exclude.members.length === 0 && res.composite.members.length === 0 && res.owners.members.length === 0) {
-                } else {
+                if (res.basis.members.length !== 0 || res.include.members.length !== 0 ||
+                    res.exclude.members.length !== 0 || res.composite.members.length !== 0 || res.owners.members.length !== 0) {
 
                     $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
                     $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);

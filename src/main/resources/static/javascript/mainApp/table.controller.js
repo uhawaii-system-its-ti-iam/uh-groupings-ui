@@ -76,7 +76,8 @@
                 }
             });
             // Resets the page number
-            $scope[pageVar] = 0;
+            // Commenting this out for better behavior
+            // $scope[pageVar] = 0;
             // Paginates the filtered items
             $scope[pagedListVar] = $scope.groupToPages(filteredItems);
         };
