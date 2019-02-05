@@ -147,12 +147,62 @@
                 dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
             });
 
-            //todo Need to fix so can terminate
-            var page = 2;
-            // for (var i = 0; i < 20; i++) {
-            while ($scope.endPagination === false) {
+            $scope.getPages(groupingPath, 2, 20, "name", true);
 
-                groupingsService.getGrouping(groupingPath, page, 20, "name", true, function (res) {
+            //todo Need to fix so can terminate
+            //todo Is the only solution recursive????
+            // var page = 2;
+            // // for (var i = 0; i < 20; i++) {
+            // while ($scope.endPagination === false && page < 50) {
+            //
+            //     console.log("Page: " + page);
+            //
+            //     // On success function doesn't execute until loop finishes...
+            //     groupingsService.getGrouping(groupingPath, page, 20, "name", true, function (res) {
+            //
+            //         $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
+            //         $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
+            //
+            //         //Gets members in the include group
+            //         $scope.groupingInclude = combineGroupMembers($scope.groupingInclude, res.include.members);
+            //         $scope.addInBasis($scope.groupingInclude);
+            //         $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
+            //
+            //         //Gets members in the exclude group
+            //         $scope.groupingExclude = combineGroupMembers($scope.groupingExclude, res.exclude.members);
+            //         $scope.addInBasis($scope.groupingExclude);
+            //         $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
+            //
+            //         //Gets members in grouping
+            //         $scope.groupingMembers = combineGroupMembers($scope.groupingMembers, res.composite.members);
+            //         $scope.addWhereListed($scope.groupingMembers);
+            //         $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
+            //
+            //         //Gets owners of the grouping
+            //         $scope.groupingOwners = combineGroupMembers($scope.groupingOwners, res.owners.members);
+            //         $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+            //
+            //         if (res.basis.members.length === 0 && res.include.members.length === 0 &&
+            //             res.exclude.members.length === 0 && res.composite.members.length === 0 && res.owners.members.length === 0) {
+            //             $scope.endPagination = true;
+            //         }
+            //
+            //
+            //     }, function (res) {
+            //         $scope.endPagination = true;
+            //         dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+            //     });
+            //     page++;
+            // }
+        };
+
+        $scope.getPages = function (groupingPath, page, size, sortString, isAscending) {
+
+            groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
+
+                if (res.basis.members.length === 0 && res.include.members.length === 0 &&
+                    res.exclude.members.length === 0 && res.composite.members.length === 0 && res.owners.members.length === 0) {
+                } else {
 
                     $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
                     $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
@@ -176,19 +226,12 @@
                     $scope.groupingOwners = combineGroupMembers($scope.groupingOwners, res.owners.members);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
-                    if (res.basis.members.length === 0 && res.include.members.length === 0 &&
-                        res.exclude.members.length === 0 && res.composite.members.length === 0 && res.owners.members.length === 0) {
-                        console.log("STOP!!!");
-                        $scope.endPagination = true;
-                    }
-
-                }, function (res) {
-                    $scope.endPagination = true;
-                    dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
-                });
-                page++;
-            }
-        };
+                    $scope.getPages(groupingPath, page + 1, size, "name", true);
+                }
+            }, function (res) {
+                dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+            });
+        }
 
         /**
          * Creates a modal for errors in loading data from the API.
