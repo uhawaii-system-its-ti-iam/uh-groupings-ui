@@ -58,9 +58,6 @@
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
             $scope.getGroupingInformation();
-            // console.log("calling grouping: currentPage" + currentPage, + "index" + index);
-
-            // $scope.getAsynchronousGroupingInformation(currentPage, index);
 
             $scope.showGrouping = true;
         };
@@ -109,13 +106,9 @@
 
             groupingsService.getGrouping(groupingPath, 1, 20, "name", true, function (res) {
 
-                console.log($scope.groupingBasis);
-                console.log(res.basis.members);
                 // Gets members in the basis group
                 $scope.groupingBasis = setGroupMembers(res.basis.members);
                 $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
-
-                console.log($scope.groupingBasis);
 
                 //Gets members in the include group
                 $scope.groupingInclude = setGroupMembers(res.include.members);
@@ -196,6 +189,7 @@
             // }
         };
 
+        // Recursive function to get pages of a grouping asynchronously
         $scope.getPages = function (groupingPath, page, size, sortString, isAscending) {
 
             groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
