@@ -166,7 +166,6 @@
              * ~Kahlin
              */
             // $scope.tempDescription = angular.element(document.getElementById('descriptionString')).scope().description;
-            $scope.tempDescription = $scope.descript;
             $scope.descriptionForm = !($scope.descriptionForm);
 
         }
@@ -176,7 +175,7 @@
          */
         $scope.cancelDescriptionEdit = function() {
             // refer to last saved description when user cancels the edit:
-            $scope.description = $scope.tempDescription;
+           // $scope.description = $scope.tempDescription;
 
             $scope.descriptionForm = !($scope.descriptionForm);
         }
@@ -206,8 +205,11 @@
          * TODOS:   --> make this function call RestController to change the description in Grouper.
          *          --> error checking?
          */
-        $scope.setDescription = function() {
-            // $scope.description = $scope.descriptionText;
+        $scope.saveDescription = function() {
+            $scope.description = $scope.descript;
+            groupingsService.updateDescription($scope.description, );
+            $scope.descriptionForm = !($scope.descriptionForm);
+
         }
         // CLINT STUFF FUNCTIONS END//
 
