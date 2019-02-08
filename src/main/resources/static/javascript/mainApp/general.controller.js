@@ -47,12 +47,12 @@
         $scope.loading = false;
 
         // CLINT STUFF:
-        $scope.description = "";
+
         $scope.someString;
         $scope.tempDescription;
         $scope.descriptionForm = false;      // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.maxDescriptionLength = 40;
-        $scope.descript = "";
+        $scope.modalDescription;
         // CLINT STUFF
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
@@ -64,6 +64,7 @@
          */
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
+            $scope.description = $scope.selectedGrouping.description;
             $scope.getGroupingInformation();
             $scope.showGrouping = true;
         };
@@ -151,7 +152,8 @@
             // }
             // return false;
 
-            return ($scope.description.length >= $scope.maxDescriptionLength);
+            //return ($scope.description.length >= $scope.maxDescriptionLength);
+            return false;
         }
 
         /**
@@ -174,9 +176,9 @@
          * Cancel the editing of a description, and revert back to base selected-grouping page.
          */
         $scope.cancelDescriptionEdit = function() {
-            // refer to last saved description when user cancels the edit:
-           // $scope.description = $scope.tempDescription;
-
+            // refer to last saved description when user cancels the edit
+            //
+            $scope.modalDescription = $scope.description;
             $scope.descriptionForm = !($scope.descriptionForm);
         }
 
@@ -185,20 +187,18 @@
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function() {
-            return ($scope.description.length > 0)
-                ? $scope.description
-                : "";       // causes the description edit box to display the placeholder text.
+            return $scope.description;       // causes the description edit box to display the placeholder text.
         }
 
         /**
          * Used for placeholder text for a grouping's description if the description is saved as an empty string.
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
-        $scope.descriptionDisplay = function() {
-            return ($scope.description.length > 0)
-                ? $scope.description
-                : "No description given for this Grouping.";
-        }
+        // $scope.descriptionDisplay = function() {
+        //     return ($scope.description.length > 0)
+        //         ? $scope.description
+        //         : "No description given for this Grouping.";
+        // }
 
         /**
          * Sets a new description for a Grouping.
@@ -207,7 +207,6 @@
          */
         $scope.saveDescription = function() {
             $scope.description = $scope.descript;
-            groupingsService.updateDescription($scope.description, );
             $scope.descriptionForm = !($scope.descriptionForm);
 
         }

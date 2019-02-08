@@ -242,7 +242,7 @@ public class GroupingsRestController {
                                           @RequestBody String description) {
         logger.info("Entered REST removeOwnership...");
         String uri = String.format(API_2_1_BASE + "/groupings/%s/description", path);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, description, HttpMethod.PUT);
     }
 
 
