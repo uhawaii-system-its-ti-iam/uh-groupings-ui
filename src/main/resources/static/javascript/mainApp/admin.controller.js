@@ -26,10 +26,10 @@
             $scope.loading = true;
             groupingsService.getAdminLists(function (res) {
                 $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
-                $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery);
+                $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
 
                 $scope.groupingsList = _.sortBy(res.allGroupings, "name");
-                $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
+                $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
 
                 $scope.loading = false;
              }, function (res) {

@@ -111,22 +111,22 @@
 
                 // Gets members in the basis group
                 $scope.groupingBasis = setGroupMembers(res.basis.members);
-                $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
+                $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
 
                 //Gets members in the include group
                 $scope.groupingInclude = setGroupMembers(res.include.members);
                 $scope.addInBasis($scope.groupingInclude);
-                $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
+                $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
 
                 //Gets members in the exclude group
                 $scope.groupingExclude = setGroupMembers(res.exclude.members);
                 $scope.addInBasis($scope.groupingExclude);
-                $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
+                $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
 
                 //Gets members in grouping
                 $scope.groupingMembers = setGroupMembers(res.composite.members);
                 $scope.addWhereListed($scope.groupingMembers);
-                $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
+                $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
 
                 //Gets owners of the grouping
                 $scope.groupingOwners = setGroupMembers(res.owners.members);
@@ -137,18 +137,15 @@
                 $scope.listserv = res.listservOn;
                 $scope.ldap = res.ldapOn;
 
-                //Stop loading spinner
+                //Stop loading spinner and turn on loading text
                 $scope.loading = false;
+                $scope.paginating = true;
+
+                // Recursive function to retrieve the rest of the pages
+                $scope.getPages(groupingPath, 2, 20, "name", true);
             }, function (res) {
                 dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
             });
-
-            $scope.paginating = true;
-
-            // Recursive function to retrieve the rest of the pages
-            $scope.getPages(groupingPath, 2, 20, "name", true);
-
-            //todo Unshow loading spinner/text/whatever it ends up being
 
             //todo Need to fix so can terminate
             //todo Is the only solution recursive????
@@ -216,22 +213,22 @@
                     res.exclude.members.length !== 0 || res.composite.members.length !== 0 || res.owners.members.length !== 0) {
 
                     $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
-                    $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
+                    $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
 
                     //Gets members in the include group
                     $scope.groupingInclude = combineGroupMembers($scope.groupingInclude, res.include.members);
                     $scope.addInBasis($scope.groupingInclude);
-                    $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
+                    $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
 
                     //Gets members in the exclude group
                     $scope.groupingExclude = combineGroupMembers($scope.groupingExclude, res.exclude.members);
                     $scope.addInBasis($scope.groupingExclude);
-                    $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
+                    $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
 
                     //Gets members in grouping
                     $scope.groupingMembers = combineGroupMembers($scope.groupingMembers, res.composite.members);
                     $scope.addWhereListed($scope.groupingMembers);
-                    $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
+                    $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
 
                     //Gets owners of the grouping
                     $scope.groupingOwners = combineGroupMembers($scope.groupingOwners, res.owners.members);
@@ -740,7 +737,7 @@
             $scope.resetGroupingInformation();
 
             // Ensure the groupings list is reset with the now-blank filter
-            $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
+            $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
 
             $scope.showGrouping = false;
         };

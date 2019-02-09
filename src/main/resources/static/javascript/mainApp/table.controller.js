@@ -63,7 +63,7 @@
          * @param {string} pageVar - the name of the variable containing the current page of the list
          * @param {string} query - the user's search query
          */
-        $scope.filter = function (list, pagedListVar, pageVar, query) {
+        $scope.filter = function (list, pagedListVar, pageVar, query, resetPage) {
             // Filters for items that match the user's query
             var filteredItems = $filter("filter")(list, function (item) {
                 for (var key in item) {
@@ -78,6 +78,7 @@
             // Resets the page number
             // Commenting this out for better behavior
             // $scope[pageVar] = 0;
+            if(resetPage) $scope[pageVar] = 0;
             // Paginates the filtered items
             $scope[pagedListVar] = $scope.groupToPages(filteredItems);
         };
