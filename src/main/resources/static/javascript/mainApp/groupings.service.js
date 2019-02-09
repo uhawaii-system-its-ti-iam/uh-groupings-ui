@@ -19,9 +19,9 @@
 
             //Possible description restcontroller call
 
-            updateDescription: function(path, onSuccess, onError) {
+            updateDescription: function(path, onSuccess, onError, data) {
                 var endpoint = BASE_URL + "groupings/" + path + "/description";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateDataWithBody(onSuccess, onError, endpoint, data);
             },
 
             //End description restcontroller call temp

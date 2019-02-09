@@ -206,7 +206,11 @@
          *          --> error checking?
          */
         $scope.saveDescription = function() {
-            $scope.description = $scope.descript;
+            $scope.description = $scope.modalDescription;
+            groupingsService.updateDescription($scope.selectedGrouping.path, console.log("Worked"), function (res) {
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+            }, $scope.description);
+
             $scope.descriptionForm = !($scope.descriptionForm);
 
         }
