@@ -230,10 +230,13 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
-    // Description Code Here
-
-
-
+    /**
+     * Updates the description of a grouping to the new one
+     *
+     * @param path:      path to the grouping that the description will be updated
+     * @param description: String containing the description of the group to be updated
+     * @return information about the descripiton and group being updated
+     */
 
     @RequestMapping(value = "/groupings/{path}/description",
             method = RequestMethod.PUT,
@@ -244,10 +247,6 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/groupings/%s/description", path);
         return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, description, HttpMethod.PUT);
     }
-
-
-
-    //Description Code End
 
 
 
