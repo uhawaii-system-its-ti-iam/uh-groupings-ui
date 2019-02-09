@@ -143,3 +143,14 @@ h1, h2, .text-left, span {
 h3{
     color: #1c6070;
 }
+
+.loading-text{
+    margin-left: 4.357em;
+    color: #296191;
+    float: left;
+}
+
+.done-text{
+    color: #296191;
+    text-align: right;
+}

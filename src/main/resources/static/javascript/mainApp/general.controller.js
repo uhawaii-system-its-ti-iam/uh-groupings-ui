@@ -45,6 +45,7 @@
         $scope.showGrouping = false;
 
         $scope.loading = false;
+        $scope.paginating = false;
 
         angular.extend(this, $controller("TableJsController", {$scope: $scope}));
 
@@ -93,6 +94,10 @@
             return _.sortBy(newMembers, "name");
         }
 
+        //todo Make loading spinner/text/whatever
+        //todo Can't use bar because I don't know how long it'll take
+        //todo Show on by default
+        //todo Show variable in Angular maybe?
         /**
          * Gets information about the grouping, such as its members and the preferences set.
          * Retrieves information asynchronously page by page
@@ -138,8 +143,12 @@
                 dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
             });
 
+            $scope.paginating = true;
+
             // Recursive function to retrieve the rest of the pages
             $scope.getPages(groupingPath, 2, 20, "name", true);
+
+            //todo Unshow loading spinner/text/whatever it ends up being
 
             //todo Need to fix so can terminate
             //todo Is the only solution recursive????
@@ -190,6 +199,7 @@
         };
 
         //todo Is this airtight? Is it possible to force stack overflow?
+        //todo Can consider adding a hard cap to the number of iterations, though it doesn't seem necessary
         /**
          * Recursive function to get pages of a grouping asynchronously
          * @param {String} groupingPath - Path to the grouping to retrieve data from
@@ -228,6 +238,8 @@
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
                     $scope.getPages(groupingPath, page + 1, size, "name", true);
+                } else {
+                    $scope.paginating = false;
                 }
             }, function (res) {
                 dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
