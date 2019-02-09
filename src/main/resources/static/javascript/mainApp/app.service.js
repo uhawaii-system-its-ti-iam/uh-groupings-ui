@@ -36,9 +36,7 @@
                     });
             },
 
-
-            //Description possible service call
-
+            // Might have to clean this code up? Not complete sure yet.
             /**
              * Performs a POST request to the specified URL.
              * @param {string} url - the URL to perform the request on
@@ -47,14 +45,12 @@
             updateDataWithBody: function (callback, callError, url, data) {
                 $http.put(encodeURI(url), data)
                     .then(function(response){
-                        callback();
+                        callback(response);
                     }, function (response) {
                         callError(response);
                         console.log("Error in dataProvider; status: ", response.status);
                     });
             },
-
-            //Description stuff end
 
             /**
              * Handles Java exceptions by performing a POST request.

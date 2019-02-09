@@ -160,16 +160,7 @@
          * Enable or disable editing of a Grouping's description, from selected-grouping.html.
          */
         $scope.editDescription = function() {
-            //$scope.descriptionForm = ($scope.descriptionForm) ? false : true;
-
-            // the next line saves the "last saved description" into a variable, to be referenced when user cancels description edit.
-            /**
-             * Not sure what the next line is for, but I will leave it for now since its left over from clint
-             * ~Kahlin
-             */
-            // $scope.tempDescription = angular.element(document.getElementById('descriptionString')).scope().description;
             $scope.descriptionForm = !($scope.descriptionForm);
-
         }
 
         /**
@@ -177,7 +168,6 @@
          */
         $scope.cancelDescriptionEdit = function() {
             // refer to last saved description when user cancels the edit
-            //
             $scope.modalDescription = $scope.description;
             $scope.descriptionForm = !($scope.descriptionForm);
         }
@@ -187,18 +177,11 @@
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function() {
-            return $scope.description;       // causes the description edit box to display the placeholder text.
+            var descriptionLength = $scope.description;
+            return (descriptionLength.length > 0)
+                ? $scope.description
+                : "No description given for this Grouping.";
         }
-
-        /**
-         * Used for placeholder text for a grouping's description if the description is saved as an empty string.
-         * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
-         */
-        // $scope.descriptionDisplay = function() {
-        //     return ($scope.description.length > 0)
-        //         ? $scope.description
-        //         : "No description given for this Grouping.";
-        // }
 
         /**
          * Sets a new description for a Grouping.
@@ -207,10 +190,12 @@
          */
         $scope.saveDescription = function() {
             $scope.description = $scope.modalDescription;
-            groupingsService.updateDescription($scope.selectedGrouping.path, console.log("Worked"), function (res) {
-                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
-            }, $scope.description);
+            groupingsService.updateDescription($scope.selectedGrouping.path, function () {
 
+            }, function (res) {
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+
+            }, $scope.description);
             $scope.descriptionForm = !($scope.descriptionForm);
 
         }
