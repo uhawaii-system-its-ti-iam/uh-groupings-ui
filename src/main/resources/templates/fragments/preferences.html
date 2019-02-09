@@ -1,6 +1,16 @@
 <th:block th:fragment="preferences">
-    <h3>Preferences</h3>
-    <div class="card">
+    <div class="row group-header">
+        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
+            <h3>Preferences</h3>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginating">
+            <h4 class="loading-text">Now Loading...</h4>
+            <div class="small-loader"></div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-hide="paginating">
+            <h4 class="done-text">Grouping Loaded! ✓</h4>
+        </div>
+    </div>    <div class="card">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6 col-12">
