@@ -45,7 +45,7 @@
         $scope.showGrouping = false;
 
         $scope.loading = false;
-        $scope.paginating = false;
+        $scope.paginating = true;
 
         angular.extend(this, $controller("TableJsController", {$scope: $scope}));
 
@@ -209,6 +209,7 @@
 
             groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
 
+                // Add members to grouping if the page we got wasn't completely empty of members
                 if (res.basis.members.length !== 0 || res.include.members.length !== 0 ||
                     res.exclude.members.length !== 0 || res.composite.members.length !== 0 || res.owners.members.length !== 0) {
 
@@ -234,8 +235,11 @@
                     $scope.groupingOwners = combineGroupMembers($scope.groupingOwners, res.owners.members);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
+                    // Retrieve the next page
                     $scope.getPages(groupingPath, page + 1, size, "name", true);
+
                 } else {
+                    // Stop loading text
                     $scope.paginating = false;
                 }
             }, function (res) {
