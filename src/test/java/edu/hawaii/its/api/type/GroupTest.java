@@ -27,7 +27,6 @@ public class GroupTest {
     @Test
     public void construction() {
         assertNotNull(group);
-        assertThat(group, not(equalTo(null)));
         assertThat(group.getMembers(), not(equalTo(null)));
         assertThat(group.getNames(), not(equalTo(null)));
         assertThat(group.getPath(), equalTo(""));
@@ -37,13 +36,10 @@ public class GroupTest {
     @Test
     public void accessors() {
         assertThat(group.getPath(), equalTo(""));
-
         group.setPath(null);
         assertThat(group.getPath(), equalTo(""));
-
         group.setPath("path");
         assertThat(group.getPath(), equalTo("path"));
-
         assertThat(group.getMembers().size(), equalTo(0));
         group.addMember(new Person("a"));
         assertThat(group.getMembers().size(), equalTo(1));
@@ -51,7 +47,6 @@ public class GroupTest {
         assertThat(group.getMembers().size(), equalTo(2));
         group.addMember(new Person("c"));
         assertThat(group.getMembers().size(), equalTo(3));
-
         group.setMembers(null);
         assertThat(group.getMembers().size(), equalTo(0));
     }

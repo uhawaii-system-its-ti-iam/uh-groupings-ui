@@ -10,12 +10,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SpringBootWebApplication.class })
+@SpringBootTest(classes = {SpringBootWebApplication.class})
 public class GrouperPropertyConfigurerTest {
 
     @Autowired
@@ -33,17 +35,17 @@ public class GrouperPropertyConfigurerTest {
     public void testing() {
         GrouperClientConfig config = GrouperClientConfig.retrieveConfig();
         String key = "grouperClient.webService.url";
+        String testUrl = "test-url-b";
 
         String value = config.propertiesOverrideMap().get(key);
-        assertThat(value, equalTo(null));
+        assertNotEquals(value, testUrl);
 
         // Will cause an override of value.
-        env.getSystemProperties().put(key, "test-url-b");
+        env.getSystemProperties().put(key, testUrl);
 
         grouperPropertyConfigurer.init();
 
         value = config.propertiesOverrideMap().get(key);
-        assertThat(value, equalTo("test-url-b"));
+        assertThat(value, equalTo(testUrl));
     }
-
 }

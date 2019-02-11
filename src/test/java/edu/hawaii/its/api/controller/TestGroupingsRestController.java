@@ -52,9 +52,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class TestGroupingsRestController {
 
-    @Value("${groupings.api.test.student_test_username}")
-    private String STUDENT_TEST_USERNAME;
-
     @Value("${groupings.api.test.grouping_many}")
     private String GROUPING;
 
@@ -417,7 +414,7 @@ public class TestGroupingsRestController {
         AdminListsHolder infoSuccess = mapAdminListsHolder(adminUser);
 
         //STUDENT_TEST_USERNAME can be replaced with any account that has admin access
-        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(STUDENT_TEST_USERNAME));
+        assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(ADMIN));
     }
 
     @Test

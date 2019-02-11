@@ -28,10 +28,10 @@ public class ErrorControllerAdvice {
     private UserContextService userContextService;
 
     @ExceptionHandler (GcWebServiceError.class)
-    public ResponseEntity<GroupingsHTTPException>
-    handleGcWebServiceError(GcWebServiceError gce) {
+    public ResponseEntity<GroupingsHTTPException> handleGcWebServiceError(GcWebServiceError gce) {
         return exceptionResponse(gce.getMessage(), gce, 404);
     }
+
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<GroupingsHTTPException> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
