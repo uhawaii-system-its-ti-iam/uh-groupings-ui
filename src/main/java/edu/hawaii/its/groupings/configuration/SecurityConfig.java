@@ -1,7 +1,7 @@
 package edu.hawaii.its.groupings.configuration;
 
-import javax.annotation.PostConstruct;
-
+import edu.hawaii.its.groupings.access.UserBuilder;
+import edu.hawaii.its.groupings.access.UserDetailsServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.proxy.ProxyGrantingTicketStorage;
@@ -29,8 +29,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.util.Assert;
 
-import edu.hawaii.its.groupings.access.UserBuilder;
-import edu.hawaii.its.groupings.access.UserDetailsServiceImpl;
+import javax.annotation.PostConstruct;
 
 @ComponentScan(basePackages = "edu.hawaii.its")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
