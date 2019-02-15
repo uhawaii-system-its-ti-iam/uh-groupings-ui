@@ -17,6 +17,15 @@
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
+            //Possible description restcontroller call
+
+            updateDescription: function(path, onSuccess, onError) {
+                var endpoint = BASE_URL + "groupings/" + path + "/description";
+                dataProvider.updateData(onSuccess, onError, endpoint);
+            },
+
+            //End description restcontroller call temp
+
             /**
              * Gets the list of admins and groupings.
              */

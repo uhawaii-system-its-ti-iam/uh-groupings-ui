@@ -1,4 +1,4 @@
-<th:block th:fragment="selected-grouping">
+<th:block th:fragment="selected-grouping" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="card selected-grouping-card"
          th:classappend="${tabContent ? 'card-tab-content' : ''}">
         <div class="card-header">
@@ -25,6 +25,46 @@
                 <tr>
                     <th>Path</th>
                     <td>{{ selectedGrouping.path }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td style="table-layout: fixed; width: 80%">
+                        <div ng-show="!descriptionForm">
+                            {{ descriptionDisplay() }}
+                            <span ng-click="editDescription()" class="fa fa-pencil-square-o p-1 pull-right clickable"
+                                  th:title="#{screen.message.description.edit}"
+                                  style="margin-right: 16px; margin-top: 2px"></span>
+                        </div>
+
+                        <div ng-show="descriptionForm" style="margin: 5px">
+                            <form>
+                                <div ng-show="descriptionLengthWarning()" class="alert alert-warning">
+                                    <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"> </p>
+                                </div>
+
+                                <input class="form-control"
+                                       style="margin: 5px 5px 10px 5px; float: left;
+                                           width: -webkit-calc(100% - 80px);
+                                           width:    -moz-calc(100% - 80px);
+                                           width:         calc(100% - 80px)"
+                                       th:title="#{screen.message.admin.selectedGrouping.descriptionFormTitle}"
+                                       th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
+                                       ng-value="descriptionDisplay()"
+                                       ng-model="modalDescription"
+                                       maxlength="{{ maxDescriptionLength }}"
+                                       id="descriptionForm" />
+                                <span ng-click="saveDescription()"
+                                      th:title="#{screen.message.description.save}"
+                                      class="fa fa-save pull-right pt-1 clickable"
+                                      style="margin-left: 14px; margin-top: 12px; margin-right: 10px; float: left"></span>
+                                <span ng-click="cancelDescriptionEdit()"
+                                      th:title="#{screen.message.description.cancel}"
+                                      class="fa fa-times-circle pull-right pt-1 clickable" id="descriptionString"
+                                      style="margin-top: 12px; float: left"></span>
+                            </form>
+                        </div>
+
+                    </td>
                 </tr>
                 </tbody>
             </table>

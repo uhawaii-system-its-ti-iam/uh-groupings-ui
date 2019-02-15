@@ -11,11 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.PostConstruct;
@@ -233,6 +229,27 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", grouping, ownerToRemove);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
+
+    // Description Code Here
+
+
+
+
+    @RequestMapping(value = "/groupings/{path}/description",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateDescription(Principal principal, @PathVariable String path,
+                                          @RequestBody String description) {
+        logger.info("Entered REST removeOwnership...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/description", path);
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, description, HttpMethod.PUT);
+    }
+
+
+
+    //Description Code End
+
+
 
     /**
      * finds and returns the specified Grouping
