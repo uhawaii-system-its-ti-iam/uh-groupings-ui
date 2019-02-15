@@ -76,6 +76,10 @@
             _.remove(members, function (member) {
                 return _.isEmpty(member.username);
             });
+
+            // Unique members only by UUID (assume no two users should have the same uuid)
+            members = _.uniqBy(members, "uuid");
+
             return _.sortBy(members, "name");
         }
 
@@ -91,6 +95,10 @@
             });
 
             var newMembers = _.concat(initialMembers, membersToAdd);
+
+            // Unique members only by UUID (assume no two users should have the same uuid)
+            newMembers = _.uniqBy(newMembers, "uuid");
+
             return _.sortBy(newMembers, "name");
         }
 
