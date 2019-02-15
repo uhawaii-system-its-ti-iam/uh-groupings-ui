@@ -48,11 +48,11 @@
 
         // CLINT STUFF:
 
-        $scope.someString;
-        $scope.tempDescription;
         $scope.descriptionForm = false;      // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.maxDescriptionLength = 40;
         $scope.modalDescription;
+
+        var noDescriptionMessage = "No description given for this Grouping.";
         // CLINT STUFF
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
@@ -122,16 +122,18 @@
                 $scope.groupingOwners = setGroupMembers(res.owners.members);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
-                $scope.description = res.description;
+                //Gets the description go the group
+                if(res.description == null) {
+                    $scope.description = "";
+                } else {
+                    $scope.description = res.description;
+                }
+
 
                 $scope.allowOptIn = res.optInOn;
                 $scope.allowOptOut = res.optOutOn;
                 $scope.listserv = res.listservOn;
                 $scope.ldap = res.ldapOn;
-
-                // CLINT STUFF:
-                // $scope.hithere = res.description;
-                // CLINT STUFF
 
                 //Stop loading spinner
                 $scope.loading = false;
@@ -146,14 +148,8 @@
 
         // used to check the length of the text string entered in the description form box, for error handling of max length
         $scope.descriptionLengthWarning = function() {
-            // if ($scope.description.length > 39)
-            // {
-            //     return true;
-            // }
-            // return false;
 
-            //return ($scope.description.length >= $scope.maxDescriptionLength);
-            return false;
+            return (String($scope.modalDescription).length >= 40);
         }
 
         /**
@@ -177,10 +173,16 @@
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function() {
-            var descriptionLength = $scope.description;
+            var descriptionLength;
+
+            ($scope.description == null)
+                ? (descriptionLength = "")
+                : descriptionLength= String($scope.description);
+
+
             return (descriptionLength.length > 0)
                 ? $scope.description
-                : "No description given for this Grouping.";
+                : noDescriptionMessage;
         }
 
         /**
@@ -190,6 +192,9 @@
          */
         $scope.saveDescription = function() {
             $scope.description = $scope.modalDescription;
+            if(String($scope.description).length === 0) {
+                $scope.description = "";
+            }
             groupingsService.updateDescription($scope.selectedGrouping.path, function () {
 
             }, function (res) {

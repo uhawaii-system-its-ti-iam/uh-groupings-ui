@@ -109,7 +109,7 @@ public class TestGroupingsRestController {
     @Value("${groupings.api.test.admin_user}")
     private String ADMIN;
 
-    @Value("${groupings.api.test.specific_user")
+    @Value("${groupings.api.test.specific_user}")
     private String SPECIFIC_USER;
 
     private MockMvc mockMvc;

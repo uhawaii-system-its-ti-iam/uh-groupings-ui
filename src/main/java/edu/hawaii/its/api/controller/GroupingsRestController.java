@@ -242,8 +242,8 @@ public class GroupingsRestController {
             method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateDescription(Principal principal, @PathVariable String path,
-                                          @RequestBody String description) {
-        logger.info("Entered REST removeOwnership...");
+                                          @RequestBody(required = false) String description) {
+        logger.info("Entered REST updateDescription...");
         String uri = String.format(API_2_1_BASE + "/groupings/%s/description", path);
         return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, description, HttpMethod.PUT);
     }
@@ -253,7 +253,7 @@ public class GroupingsRestController {
     /**
      * finds and returns the specified Grouping
      *
-     * @param grouping : String containing the path of the Grouping to be searched for
+     * @param path : String containing the path of the Grouping to be searched for
      * @return the Grouping that was searched for
      * the Grouping will contain information about
      * members of each Group in the grouping
@@ -262,12 +262,12 @@ public class GroupingsRestController {
      * path of the Grouping
      * whether or not the Grouping has a list serve associated with it
      */
-    @RequestMapping(value = "/{grouping}/grouping",
+    @RequestMapping(value = "/groupings/{path}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity grouping(Principal principal, @PathVariable String grouping) {
+    public ResponseEntity grouping(Principal principal, @PathVariable String path) {
         logger.info("Entered REST grouping...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s", grouping);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s", path);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
