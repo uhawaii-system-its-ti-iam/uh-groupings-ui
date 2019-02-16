@@ -45,7 +45,9 @@
         $scope.showGrouping = false;
 
         $scope.loading = false;
-        $scope.paginating = true;
+        $scope.paginatingProgress = true;
+        $scope.paginatingComplete = false;
+        $scope.largeGrouping = false;
 
         angular.extend(this, $controller("TableJsController", {$scope: $scope}));
 
@@ -102,10 +104,6 @@
             return _.sortBy(newMembers, "name");
         }
 
-        //todo Make loading spinner/text/whatever
-        //todo Can't use bar because I don't know how long it'll take
-        //todo Show on by default
-        //todo Show variable in Angular maybe?
         /**
          * Gets information about the grouping, such as its members and the preferences set.
          * Retrieves information asynchronously page by page
@@ -113,9 +111,12 @@
         $scope.getGroupingInformation = function () {
             $scope.loading = true;
 
+            // console.log($scope.paginatingProgress);
+            // console.log($scope.paginatingComplete);
+
             var groupingPath = $scope.selectedGrouping.path;
 
-            groupingsService.getGrouping(groupingPath, 1, 20, "name", true, function (res) {
+            groupingsService.getGrouping(groupingPath, 1, 700, "name", true, function (res) {
 
                 // Gets members in the basis group
                 $scope.groupingBasis = setGroupMembers(res.basis.members);
@@ -147,17 +148,15 @@
 
                 //Stop loading spinner and turn on loading text
                 $scope.loading = false;
-                $scope.paginating = true;
+                $scope.paginatingProgress = true;
 
                 // Recursive function to retrieve the rest of the pages
-                $scope.getPages(groupingPath, 2, 20, "name", true);
+                $scope.getPages(groupingPath, 2, 700, "name", true);
             }, function (res) {
                 dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
             });
 
-            //todo Need to fix so can terminate
-            //todo Is the only solution recursive????
-            //todo Keeping code in case, will probably delete
+            //todo Keeping code in case
             // var page = 2;
             // // for (var i = 0; i < 20; i++) {
             // while ($scope.endPagination === false && page < 50) {
@@ -203,8 +202,8 @@
             // }
         };
 
-        //todo Is this airtight? Is it possible to force stack overflow?
-        //todo Can consider adding a hard cap to the number of iterations, though it doesn't seem necessary
+        //todo This breaks after 100~ pages (returns Connection: Close in headers and net::ERR_INCOMPLETE_CHUNKED_ENCODING 200
+        //todo Possibly switch to an iterative approach in the future
         /**
          * Recursive function to get pages of a grouping asynchronously
          * @param {String} groupingPath - Path to the grouping to retrieve data from
@@ -213,6 +212,7 @@
          * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
          * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending (Z-A)
          */
+
         $scope.getPages = function (groupingPath, page, size, sortString, isAscending) {
 
             groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
@@ -248,10 +248,21 @@
 
                 } else {
                     // Stop loading text
-                    $scope.paginating = false;
+                    $scope.paginatingProgress = false;
+                    $scope.paginatingComplete = true;
                 }
             }, function (res) {
-                dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+                if(res === null) {
+                    $scope.largeGrouping = true;
+                    $scope.paginatingComplete = false;
+                    $scope.paginatingProgress = false;
+
+                    // console.log("Progress", $scope.paginatingProgress);
+                    // console.log("Complete", $scope.paginatingComplete);
+                    // console.log("Large", $scope.largeGrouping);
+                } else {
+                    dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+                }
             });
         }
 

@@ -16,6 +16,8 @@
                     .then(function(response){
                        callback(response.data);
                     }, function (response) {
+                        // console.log("Error A", response);
+                        // if(response.data == null) return false;
                         callError(response.data);
                         console.log("Error in dataProvider; status: ", response.status);
                     });
