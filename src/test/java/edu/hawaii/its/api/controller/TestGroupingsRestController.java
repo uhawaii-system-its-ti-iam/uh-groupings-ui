@@ -109,9 +109,6 @@ public class TestGroupingsRestController {
     @Value("${groupings.api.test.admin_user}")
     private String ADMIN;
 
-    @Value("${groupings.api.test.specific_user")
-    private String SPECIFIC_USER;
-
     private MockMvc mockMvc;
 
     private static final String API_BASE = "/api/groupings/";
@@ -120,7 +117,6 @@ public class TestGroupingsRestController {
     private User uhUser05;
     private User uhUser04;
     private User uhUser06;
-    private User specific_user;
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -154,7 +150,6 @@ public class TestGroupingsRestController {
         uhUser04 = new User(tst[3], tst[3], uhAuthorities);
         uhUser05 = new User(tst[4], tst[4], uhAuthorities);
         uhUser06 = new User(tst[5], tst[5], uhAuthorities);
-        specific_user = new User(SPECIFIC_USER, SPECIFIC_USER, uhAuthorities);
 
         //put in include
         groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[0]);
