@@ -83,7 +83,6 @@
          */
         $scope.getGroupingInformation = function () {
             $scope.loading = true;
-
             var groupingPath = $scope.selectedGrouping.path;
 
             groupingsService.getGrouping(groupingPath, function (res) {
@@ -476,7 +475,6 @@
         $scope.createRemoveModal = function (options) {
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
-
             var windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
             $scope.removeModalInstance = $uibModal.open({
@@ -487,9 +485,13 @@
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
-
                 var userToRemove = options.user.username;
-                var groupingPath = $scope.selectedGrouping.path;
+
+                var groupingPath = undefined;
+                // if not admin type remove
+                if ($scope.listName != "admins") {
+                    groupingPath = $scope.selectedGrouping.path;
+                }
 
                 if ($scope.listName === "Include") {
                     groupingsService.removeMemberFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
