@@ -115,7 +115,7 @@
 
             var groupingPath = $scope.selectedGrouping.path;
 
-            groupingsService.getGrouping(groupingPath, 1, 400, "name", true, function (res) {
+            groupingsService.getGrouping(groupingPath, 1, 20, "name", true, function (res) {
 
                 // Gets members in the basis group
                 $scope.groupingBasis = setGroupMembers(res.basis.members);
@@ -150,7 +150,7 @@
                 $scope.paginating = true;
 
                 // Recursive function to retrieve the rest of the pages
-                $scope.getPages(groupingPath, 2, 400, "name", true);
+                $scope.getPages(groupingPath, 2, 20, "name", true);
             }, function (res) {
                 dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
             });
