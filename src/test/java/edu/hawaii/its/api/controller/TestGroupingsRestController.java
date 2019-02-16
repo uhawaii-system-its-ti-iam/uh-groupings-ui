@@ -442,7 +442,7 @@ public class TestGroupingsRestController {
     private Grouping mapGrouping(String groupingPath) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        MvcResult result = mockMvc.perform(get(API_BASE + groupingPath + "/grouping"))
+        MvcResult result = mockMvc.perform(get(API_BASE + "groupings/" + groupingPath))
                 .andExpect(status().isOk())
                 .andReturn();
 
