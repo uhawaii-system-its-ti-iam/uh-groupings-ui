@@ -13,7 +13,7 @@
              * @param {string} path - the path to the grouping
              */
             getGrouping: function (path, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/grouping";
+                var endpoint = BASE_URL + path + "/grouping" /* "grouping/"+path*/;
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
