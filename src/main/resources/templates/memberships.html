@@ -48,7 +48,7 @@
                             <input placeholder="Filter Groupings..." type="text"
                                    title="Filter Groupings"
                                    ng-model="membersQuery" class="form-control"
-                                   ng-change="filter(membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', membersQuery)"/>
+                                   ng-change="filter(membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', membersQuery, true)"/>
                         </div>
                     </div>
                 </div>
@@ -123,7 +123,7 @@
                             <input placeholder="Filter Groupings..." type="text"
                                    title="Filter Groupings"
                                    ng-model="optInQuery" class="form-control"
-                                   ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', optInQuery)"
+                                   ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', optInQuery, true)"
                                    id="optIn"/>
                         </div>
                     </div>

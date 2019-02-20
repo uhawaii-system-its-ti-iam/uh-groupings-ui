@@ -32,10 +32,10 @@
 
             groupingsService.getMembershipAssignment(function (res) {
                 $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
-                $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery);
+                $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, true);
 
                 $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
-                $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery);
+                $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
 
                 $scope.loading = false;
             }, function (res) {
