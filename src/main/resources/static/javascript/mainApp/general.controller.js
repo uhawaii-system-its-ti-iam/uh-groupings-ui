@@ -199,11 +199,12 @@
          */
         $scope.updateAddMember = function (userToAdd, list) {
 
-            var groupingPath = undefined;
+            // only initialize groupingPath is listNmae is not "admins"
 
             if ($scope.listName != "admins") {
                 groupingPath = $scope.selectedGrouping.path;
             }
+
             var handleSuccessfulAdd = function (res) {
                 $scope.createSuccessfulAddModal({
                     user: userToAdd,
@@ -491,8 +492,7 @@
                 $scope.loading = true;
                 var userToRemove = options.user.username;
 
-                var groupingPath = undefined;
-                // if not admin type then remove
+                // groupingPath should only be defined if listName is not "admins"
                 if ($scope.listName != "admins") {
                     groupingPath = $scope.selectedGrouping.path;
                 }
