@@ -488,7 +488,7 @@
                 var userToRemove = options.user.username;
 
                 var groupingPath = undefined;
-                // if not admin type remove
+                // if not admin type then remove
                 if ($scope.listName != "admins") {
                     groupingPath = $scope.selectedGrouping.path;
                 }
