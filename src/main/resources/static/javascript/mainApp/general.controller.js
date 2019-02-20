@@ -198,8 +198,12 @@
          * @param {string} list - the list the user is being added to
          */
         $scope.updateAddMember = function (userToAdd, list) {
-            var groupingPath = $scope.selectedGrouping.path;
 
+            var groupingPath = undefined;
+
+            if ($scope.listName != "admins") {
+                groupingPath = $scope.selectedGrouping.path;
+            }
             var handleSuccessfulAdd = function (res) {
                 $scope.createSuccessfulAddModal({
                     user: userToAdd,
