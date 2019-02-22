@@ -262,12 +262,12 @@ public class GroupingsRestController {
      * path of the Grouping
      * whether or not the Grouping has a list serve associated with it
      */
-    @RequestMapping(value = "/groupings/{path}",
+    @RequestMapping(value = "/grouping/{grouping}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity grouping(Principal principal, @PathVariable String path) {
+    public ResponseEntity grouping(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST grouping...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s", path);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s", grouping);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
