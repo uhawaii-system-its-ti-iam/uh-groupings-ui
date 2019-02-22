@@ -156,7 +156,7 @@ public class TestGroupingsRestController {
         //add to owners
         groupingsRestController.assignOwnership(adminPrincipal, GROUPING, tst[0]);
         groupingsRestController.assignOwnership(adminPrincipal, GROUPING_STORE_EMPTY, tst[0]);
-
+        groupingsRestController.assignOwnership(adminPrincipal, GROUPING_TRUE_EMPTY, tst[0]);
 
         //put in include
         groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[0]);
