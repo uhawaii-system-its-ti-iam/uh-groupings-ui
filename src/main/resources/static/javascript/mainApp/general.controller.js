@@ -111,9 +111,6 @@
         $scope.getGroupingInformation = function () {
             $scope.loading = true;
 
-            // console.log($scope.paginatingProgress);
-            // console.log($scope.paginatingComplete);
-
             var groupingPath = $scope.selectedGrouping.path;
 
             groupingsService.getGrouping(groupingPath, 1, 700, "name", true, function (res) {
@@ -342,7 +339,12 @@
          * @param {string} list - the list the user is being added to
          */
         $scope.updateAddMember = function (userToAdd, list) {
-            var groupingPath = $scope.selectedGrouping.path;
+
+            // only initialize groupingPath is listNmae is not "admins"
+
+            if ($scope.listName != "admins") {
+                groupingPath = $scope.selectedGrouping.path;
+            }
 
             var handleSuccessfulAdd = function (res) {
                 $scope.createSuccessfulAddModal({
@@ -620,7 +622,6 @@
         $scope.createRemoveModal = function (options) {
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
-
             var windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
             $scope.removeModalInstance = $uibModal.open({
@@ -631,9 +632,12 @@
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
-
                 var userToRemove = options.user.username;
-                var groupingPath = $scope.selectedGrouping.path;
+
+                // groupingPath should only be defined if listName is not "admins"
+                if ($scope.listName != "admins") {
+                    groupingPath = $scope.selectedGrouping.path;
+                }
 
                 if ($scope.listName === "Include") {
                     groupingsService.removeMemberFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);

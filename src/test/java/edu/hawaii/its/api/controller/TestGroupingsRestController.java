@@ -16,6 +16,7 @@ import org.jasig.cas.client.authentication.SimplePrincipal;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,7 +47,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 public class TestGroupingsRestController {
 
     @Value("${groupings.api.test.grouping_many}")
@@ -137,6 +138,7 @@ public class TestGroupingsRestController {
                 .build();
 
         Principal tst0Principal = new SimplePrincipal(tst[0]);
+        Principal adminPrincipal = new SimplePrincipal(ADMIN);
         // Creates admin user for testing
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
         authorities.add(new SimpleGrantedAuthority(Role.ADMIN.longName()));
@@ -150,6 +152,11 @@ public class TestGroupingsRestController {
         uhUser04 = new User(tst[3], tst[3], uhAuthorities);
         uhUser05 = new User(tst[4], tst[4], uhAuthorities);
         uhUser06 = new User(tst[5], tst[5], uhAuthorities);
+
+        //add to owners
+        groupingsRestController.assignOwnership(adminPrincipal, GROUPING, tst[0]);
+        groupingsRestController.assignOwnership(adminPrincipal, GROUPING_STORE_EMPTY, tst[0]);
+        groupingsRestController.assignOwnership(adminPrincipal, GROUPING_TRUE_EMPTY, tst[0]);
 
         //put in include
         groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[0]);
@@ -233,7 +240,6 @@ public class TestGroupingsRestController {
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[1]));
         assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[1]));
 
-
         assertTrue(isInGrouping(GROUPING, tst[0], tst[2]));
         assertTrue(isInGrouping(GROUPING, tst[0], tst[5]));
         assertTrue(isInBasisGroup(GROUPING, tst[0], tst[5]));
@@ -292,13 +298,10 @@ public class TestGroupingsRestController {
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
     }
 
-
-
     @Test
     public void ownedGroupingsTest() throws Exception {
 
         List<Grouping> groupings = mapOwnedGroupings(uhUser01);
-
 
     }
 
@@ -457,8 +460,9 @@ public class TestGroupingsRestController {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<Grouping>>() {
-        });
+        return objectMapper
+                .readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<Grouping>>() {
+                });
     }
 
     private GroupingsServiceResult mapGSR(String uri) throws Exception {
@@ -483,8 +487,9 @@ public class TestGroupingsRestController {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<GroupingsServiceResult>>() {
-        });
+        return objectMapper.readValue(result.getResponse().getContentAsByteArray(),
+                new TypeReference<List<GroupingsServiceResult>>() {
+                });
     }
 
     private AdminListsHolder mapAdminListsHolder(User currentUser) throws Exception {
@@ -495,7 +500,6 @@ public class TestGroupingsRestController {
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
-
 
         return objectMapper.readValue(result.getResponse().getContentAsByteArray(), AdminListsHolder.class);
     }
