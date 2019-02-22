@@ -246,7 +246,7 @@ public class GroupingsRestController {
      * path of the Grouping
      * whether or not the Grouping has a list serve associated with it
      */
-    @RequestMapping(value = "/{grouping}/grouping" /*"/groupings/{grouping}"*/,
+    @RequestMapping(value = "/groupings/{grouping:.+}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity grouping(Principal principal, @PathVariable String grouping) {
