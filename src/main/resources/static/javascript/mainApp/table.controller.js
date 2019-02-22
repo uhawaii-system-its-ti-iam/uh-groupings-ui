@@ -12,8 +12,8 @@
         $scope.itemsPerPage = 20;
         $scope.gap = 2;
 
-        var FILTER_COLUMNS_TO_IGNORE = ["basis", "$$hashKey"];
-        var DEFAULT_COLUMN_NAME = "name";
+        const FILTER_COLUMNS_TO_IGNORE = ["basis", "$$hashKey"];
+        const DEFAULT_COLUMN_NAME = "name";
 
         /**
          * Paginates a list of items.
@@ -24,8 +24,8 @@
             if (!_.isArray(list) || $scope.itemsPerPage < 1) {
                 return [];
             }
-            var pagedList = [];
-            for (var i = 0; i < list.length; i++) {
+            const pagedList = [];
+            for (let i = 0; i < list.length; i++) {
                 if (i % $scope.itemsPerPage === 0) {
                     pagedList[Math.floor(i / $scope.itemsPerPage)] = [list[i]];
                 } else {
@@ -67,8 +67,8 @@
          */
         $scope.filter = function (list, pagedListVar, pageVar, query) {
             // Filters for items that match the user's query
-            var filteredItems = $filter("filter")(list, function (item) {
-                for (var key in item) {
+            const filteredItems = $filter("filter")(list, function (item) {
+                for (let key in item) {
                     if (_.has(item, key)
                         && isFilterableColumn(key)
                         && _.isString(item[key])
@@ -91,8 +91,8 @@
          */
         $scope.pageRange = function (currentPage, totalPages, gap) {
             // Prevent pagination from starting and ending at nonexistent pages
-            var start = (currentPage - gap < 0) ? 0 : currentPage - gap;
-            var end = (currentPage + gap + 1 > totalPages) ? totalPages : currentPage + gap + 1;
+            const start = (currentPage - gap < 0) ? 0 : currentPage - gap;
+            const end = (currentPage + gap + 1 > totalPages) ? totalPages : currentPage + gap + 1;
             return _.range(start, end);
         };
 
@@ -172,7 +172,7 @@
                     $scope.columnSort[tableName].reverse = false;
                 }
             }
-            var reverse = $scope.columnSort[tableName].reverse;
+            const reverse = $scope.columnSort[tableName].reverse;
             $scope[tableName] = $filter("orderBy")($scope[tableName], propertyName, reverse);
             // Paginate the table again
             $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);

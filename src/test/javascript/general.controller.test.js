@@ -1,17 +1,17 @@
 describe("GeneralController", function () {
 
     // Set up mock element for setting the current user
-    var mockElement = document.createElement("div");
+    const mockElement = document.createElement("div");
     mockElement.innerHTML = "jdoe";
     document.getElementById = jasmine.createSpy("name").and.returnValue(mockElement);
 
     beforeEach(module("UHGroupingsApp"));
     beforeEach(module("ngMockE2E"));
 
-    var scope;
-    var controller;
-    var httpBackend;
-    var BASE_URL;
+    let scope;
+    let controller;
+    let httpBackend;
+    let BASE_URL;
 
     beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_) {
         scope = $rootScope.$new();
@@ -402,13 +402,13 @@ describe("GeneralController", function () {
     describe("convertListToCsv", function () {
         describe("user exports a list with members", function () {
             it("should start with the correct column headers", function () {
-                var csv = scope.convertListToCsv(scope.groupingExclude);
+                const csv = scope.convertListToCsv(scope.groupingExclude);
 
                 expect(csv.indexOf("Last,First,Username,Email\r\n")).toEqual(0);
             });
 
             it("should contain the information of every member in the list", function () {
-                var csv = scope.convertListToCsv(scope.groupingExclude);
+                const csv = scope.convertListToCsv(scope.groupingExclude);
 
                 expect(csv).toContain("Four,User,user4,user4@hawaii.edu,\r\n");
                 expect(csv).toContain("Five,User,user5,user5@hawaii.edu,\r\n");
