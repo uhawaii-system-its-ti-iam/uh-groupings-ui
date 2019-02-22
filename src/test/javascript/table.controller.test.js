@@ -130,7 +130,7 @@ describe("TableController", function () {
         });
 
         it("should return entries where any property value matches the query", function () {
-            scope.filter(scope.items, "pagedItems", "currentPage", "janed");
+            scope.filter(scope.items, "pagedItems", "currentPage", "janed", true);
 
             expect(scope.pagedItems.length).toEqual(1);
 
@@ -139,35 +139,35 @@ describe("TableController", function () {
         });
 
         it("should ignore the $$hashKey column", function () {
-            scope.filter(scope.items, "pagedItems", "currentPage", "random");
+            scope.filter(scope.items, "pagedItems", "currentPage", "random", true);
 
             expect(scope.pagedItems.length).toEqual(0);
         });
 
         it("should ignore the basis column", function () {
-            scope.filter(scope.items, "pagedItems", "currentPage", "Exclude");
+            scope.filter(scope.items, "pagedItems", "currentPage", "Exclude", true);
             expect(scope.pagedItems.length).toEqual(0);
 
-            scope.filter(scope.items, "pagedItems", "currentPage", "Include");
+            scope.filter(scope.items, "pagedItems", "currentPage", "Include", true);
             expect(scope.pagedItems.length).toEqual(0);
         });
 
         it("should call groupToPages so the table is repaginated", function () {
             spyOn(scope, "groupToPages").and.callThrough();
 
-            scope.filter(scope.items, "pagedItems", "currentPage", "janed");
+            scope.filter(scope.items, "pagedItems", "currentPage", "janed", true);
 
             expect(scope.groupToPages).toHaveBeenCalled();
         });
 
         it("should reset the page number to 0", function () {
-            scope.filter(scope.items, "pagedItems", "currentPage", "janed");
+            scope.filter(scope.items, "pagedItems", "currentPage", "janed", true);
 
             expect(scope.currentPage).toEqual(0);
         });
 
         it("should allow matching to be case insensitive", function () {
-            scope.filter(scope.items, "pagedItems", "currentPage", "DOE");
+            scope.filter(scope.items, "pagedItems", "currentPage", "DOE", true);
 
             expect(scope.pagedItems.length).toEqual(2);
 
@@ -178,6 +178,7 @@ describe("TableController", function () {
         it("should be equivalent to groupToPages if query is empty", function () {
             scope.filter(scope.items, "pagedItems", "currentPage", "");
             const pagedItemsUsingGtp = scope.groupToPages(scope.items);
+
 
             expect(scope.pagedItems).toEqual(pagedItemsUsingGtp);
         });

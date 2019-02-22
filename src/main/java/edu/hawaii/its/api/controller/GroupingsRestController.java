@@ -14,6 +14,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
@@ -246,13 +247,61 @@ public class GroupingsRestController {
      * path of the Grouping
      * whether or not the Grouping has a list serve associated with it
      */
-    @RequestMapping(value = "/{grouping}/grouping",
+//    @RequestMapping(value = "/{grouping}/grouping",
+//            method = RequestMethod.GET,
+//            produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity grouping(Principal principal, @PathVariable String grouping) {
+//        logger.info("Entered REST grouping...");
+//        String uri = String.format(API_2_1_BASE + "/groupings/%s", grouping);
+//        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+//    }
+//
+//    //todo This is a test mapping
+//    /**
+//     * Some comments for later (this is getPaginatedGrouping)
+//     */
+//    @RequestMapping(value = "/groupings/{path}",
+//        method = RequestMethod.GET,
+//        produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity paginatedGrouping(Principal principal, @PathVariable String path,
+//            @RequestParam(value = "page") Integer page,
+//            @RequestParam(value = "size") Integer size) {
+//        logger.info("Entered REST paginatedGrouping...");
+//        String uri = String.format(API_2_1_BASE + "/groupings/%s?page=%d&size=%d", path, page, size);
+//        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+//    }
+
+    //todo Consolidate getGrouping and getPaginatedGrouping into one call
+    @RequestMapping(value = "/groupings/{path}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity grouping(Principal principal, @PathVariable String grouping) {
-        logger.info("Entered REST grouping...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s", grouping);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    public ResponseEntity grouping(Principal principal, @PathVariable String path,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) String sortString,
+            @RequestParam(required = false) Boolean isAscending) {
+        logger.info("Entered REST getGrouping...");
+        String baseUri = String.format(API_2_1_BASE + "/groupings/%s?", path);
+
+        // todo There might be a better way to do this, this approach is kinda gross
+        String params = "";
+        if(page != null) params = params + "page=" + page;
+        if(size != null) {
+            if(!params.equals("")) params = params + "&";
+            params = params + "size=" + size;
+        }
+        if(sortString != null) {
+            if(!params.equals("")) params = params + "&";
+            params = params + "sortString=" + sortString;
+        }
+        if(isAscending != null) {
+            if(!params.equals("")) params = params + "&";
+            params = params + "isAscending=" + isAscending;
+        }
+
+        logger.info(baseUri + params);
+
+        return httpRequestService.makeApiRequest(principal.getName(), baseUri + params, HttpMethod.GET);
     }
 
     /**
