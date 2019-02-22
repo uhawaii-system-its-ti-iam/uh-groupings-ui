@@ -624,12 +624,9 @@
         $scope.createRemoveModal = function (options) {
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
-<<<<<<< HEAD
 
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
-=======
-            var windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
->>>>>>> master
+
 
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal.html",
@@ -639,18 +636,13 @@
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
-<<<<<<< HEAD
 
-                const userToRemove = options.user.username;
-                const groupingPath = $scope.selectedGrouping.path;
-=======
                 var userToRemove = options.user.username;
 
                 // groupingPath should only be defined if listName is not "admins"
                 if ($scope.listName != "admins") {
                     groupingPath = $scope.selectedGrouping.path;
                 }
->>>>>>> master
 
                 if ($scope.listName === "Include") {
                     groupingsService.removeMemberFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
