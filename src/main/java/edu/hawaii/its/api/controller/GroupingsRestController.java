@@ -272,7 +272,7 @@ public class GroupingsRestController {
 //    }
 
     //todo Consolidate getGrouping and getPaginatedGrouping into one call
-    @RequestMapping(value = "/groupings/{path}",
+    @RequestMapping(value = "/groupings/{path:.+}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity grouping(Principal principal, @PathVariable String path,
