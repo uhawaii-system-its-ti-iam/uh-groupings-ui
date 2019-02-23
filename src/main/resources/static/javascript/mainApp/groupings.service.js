@@ -15,17 +15,17 @@
                 var endpoint = BASE_URL + "groupings/" + path + "?";
 
                 var params = "";
-                if(page != null) params = params + "page=" + page;
+                if(page != null) {params = params + "page=" + page;}
                 if(size != null) {
-                    if(params !== "") params = params + "&";
+                    if(params !== "") {params = params + "&";}
                     params = params + "size=" + size;
                 }
                 if(sortString != null) {
-                    if(params !== "") params = params + "&";
+                    if(params !== "") {params = params + "&";}
                     params = params + "sortString=" + sortString;
                 }
                 if(isAscending != null) {
-                    if(params !== "") params = params + "&";
+                    if(params !== "") {params = params + "&";}
                     params = params + "isAscending=" + isAscending;
                 }
 

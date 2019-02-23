@@ -1,6 +1,7 @@
 package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.controller.RestTemplateResponseErrorHandler;
+import edu.hawaii.its.api.type.GroupingsHTTPException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;

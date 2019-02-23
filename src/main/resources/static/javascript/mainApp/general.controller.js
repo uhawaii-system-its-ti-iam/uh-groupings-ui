@@ -57,7 +57,8 @@
          * @param {number} index - the index of the grouping clicked by the user
          */
         $scope.displayGrouping = function (currentPage, index) {
-            $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
+            var  x = currentPage.valueOf();
+            $scope.selectedGrouping = $scope.pagedItemsGroupings[x][index.valueOf()];
             $scope.getGroupingInformation();
 
             $scope.showGrouping = true;

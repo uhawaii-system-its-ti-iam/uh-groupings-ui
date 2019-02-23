@@ -27,7 +27,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
@@ -44,6 +43,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.springframework.util.Assert.hasLength;
 
 @ActiveProfiles("integrationTest")
 @RunWith(SpringRunner.class)
@@ -53,38 +53,14 @@ public class TestGroupingsRestController {
     @Value("${groupings.api.test.grouping_many}")
     private String GROUPING;
 
-    @Value("${groupings.api.test.grouping_many_include}")
-    private String GROUPING_INCLUDE;
-
-    @Value("${groupings.api.test.grouping_many_exclude}")
-    private String GROUPING_EXCLUDE;
-
-    @Value("${groupings.api.test.grouping_many_indirect_basis}")
-    private String GROUPING_BASIS;
-
     @Value("${groupings.api.test.grouping_store_empty}")
     private String GROUPING_STORE_EMPTY;
-
-    @Value("${groupings.api.test.grouping_store_empty_include}")
-    private String GROUPING_STORE_EMPTY_INCLUDE;
 
     @Value("${groupings.api.test.grouping_store_empty_exclude}")
     private String GROUPING_STORE_EMPTY_EXCLUDE;
 
     @Value("${groupings.api.test.grouping_true_empty}")
     private String GROUPING_TRUE_EMPTY;
-
-    @Value("${groupings.api.test.grouping_true_empty_include}")
-    private String GROUPING_TRUE_EMPTY_INCLUDE;
-
-    @Value("${groupings.api.test.grouping_true_empty_exclude}")
-    private String GROUPING_TRUE_EMPTY_EXCLUDE;
-
-    @Value("${groupings.api.basis}")
-    private String BASIS;
-
-    @Value("${groupings.api.basis_plus_include}")
-    private String BASIS_PLUS_INCLUDE;
 
     @Value("${groupings.api.test.usernames}")
     private String[] tst;
@@ -94,9 +70,6 @@ public class TestGroupingsRestController {
 
     @Value("${groupings.api.failure}")
     private String FAILURE;
-
-    @Value("${grouperClient.webService.login}")
-    private String API_ACCOUNT;
 
     @Autowired
     private GroupingsRestController groupingsRestController;
@@ -123,11 +96,11 @@ public class TestGroupingsRestController {
 
     @PostConstruct
     public void init() {
-        Assert.hasLength(env.getProperty("grouperClient.webService.url"),
+        hasLength(env.getProperty("grouperClient.webService.url"),
                 "property 'grouperClient.webService.url' is required");
-        Assert.hasLength(env.getProperty("grouperClient.webService.login"),
+        hasLength(env.getProperty("grouperClient.webService.login"),
                 "property 'grouperClient.webService.login' is required");
-        Assert.hasLength(env.getProperty("grouperClient.webService.password"),
+        hasLength(env.getProperty("grouperClient.webService.password"),
                 "property 'grouperClient.webService.password' is required");
     }
 
@@ -297,7 +270,7 @@ public class TestGroupingsRestController {
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
     }
-
+//Test not used
     @Test
     public void ownedGroupingsTest() throws Exception {
 
@@ -383,15 +356,15 @@ public class TestGroupingsRestController {
         Grouping storeEmpty = mapGrouping(GROUPING_STORE_EMPTY);
         Grouping trueEmpty = mapGrouping(GROUPING_TRUE_EMPTY);
 
-        assertTrue(storeEmpty.getComposite().getMembers().size() == 0);
-        assertTrue(storeEmpty.getExclude().getMembers().size() == 0);
+        assertEquals(0, storeEmpty.getComposite().getMembers().size());
+        assertEquals(0, storeEmpty.getExclude().getMembers().size());
         assertTrue(storeEmpty.getInclude().getMembers().size() == 0);
         assertTrue(storeEmpty.getOwners().getUsernames().contains(tst[0]));
 
-        assertTrue(trueEmpty.getBasis().getMembers().size() == 0);
-        assertTrue(trueEmpty.getComposite().getMembers().size() == 0);
-        assertTrue(trueEmpty.getExclude().getMembers().size() == 0);
-        assertTrue(trueEmpty.getInclude().getMembers().size() == 0);
+        assertEquals(0, trueEmpty.getBasis().getMembers().size());
+        assertEquals(0, trueEmpty.getComposite().getMembers().size());
+        assertEquals(0, trueEmpty.getExclude().getMembers().size());
+        assertEquals(0, trueEmpty.getInclude().getMembers().size());
         assertTrue(trueEmpty.getOwners().getUsernames().contains(tst[0]));
 
     }

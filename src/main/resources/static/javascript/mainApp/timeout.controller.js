@@ -18,21 +18,6 @@
 
         $scope.seconds = 300;
         $scope.idleTime = 0;
-        /**
-         * Every minute, checks whether or not user has clicked or pressed button
-         */
-        $(document).ready(function () {
-            //Increment the idle time counter every minute.
-            const idleInterval = setInterval(timerIncrement, 60000); // 1 minute
-            //Zero the idle timer on mouse movement.
-            $(this).click(function (e) {
-                $scope.idleTime = 0;
-            });
-
-            $(this).keypress(function (e) {
-                $scope.idleTime = 0;
-            });
-        });
 
         /**
          * Gets cookie information
@@ -45,11 +30,11 @@
             const ca = decodedCookie.split(";");
             for(let i = 0; i <ca.length; i++) {
                 let c = ca[i];
-                while (c.charAt(0) === ' ') {
+                while (c.charAt(0) === " ") {
                     c = c.substring(1);
                 }
-                if (c.indexOf(name) === 0)
-                    return c.substring(name.length, c.length);
+                if (c.indexOf(name) === 0){
+                    return c.substring(name.length, c.length);}
             }
             return "";
         }
@@ -126,9 +111,25 @@
             $scope.seconds = 300;
             dataProvider.loadData(function (res) {
                 console.log("Success in pinging tomcat");
-            },function (res){console.log("Error in pinging tomcat")
+            },function (res){console.log("Error in pinging tomcat");
             }, endpoint);
         }
+
+        /**
+         * Every minute, checks whether or not user has clicked or pressed button
+         */
+        $(document).ready(function () {
+            //Increment the idle time counter every minute.
+            const idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+            //Zero the idle timer on mouse movement.
+            $(this).click(function (e) {
+                $scope.idleTime = 0;
+            });
+
+            $(this).keypress(function (e) {
+                $scope.idleTime = 0;
+            });
+        });
 
     }
     UHGroupingsApp.controller("TimeoutJsController", TimeoutJsController);
