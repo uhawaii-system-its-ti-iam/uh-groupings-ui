@@ -49,14 +49,15 @@
         $scope.paginatingComplete = false;
         $scope.largeGrouping = false;
 
-        // CLINT STUFF:
-
-        $scope.descriptionForm = false;      // used with ng-view on selected-grouping.html to toggle description editing.
+        // used with ng-view on selected-grouping.html to toggle description editing.
+        $scope.descriptionForm = false;
+        //The max length usable when getting input
         $scope.maxDescriptionLength = 40;
-        $scope.modalDescription;
+        //The user input
+        $scope.modelDescription;
 
+        var maxLength = 40;
         var noDescriptionMessage = "No description given for this Grouping.";
-        // CLINT STUFF
 
         angular.extend(this, $controller("TableJsController", {$scope: $scope}));
 
@@ -150,7 +151,7 @@
                 $scope.groupingOwners = setGroupMembers(res.owners.members);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
 
-                //Gets the description go the group
+                // Gets the description go the group
                 if(res.description == null) {
                     $scope.description = "";
                 } else {
@@ -283,13 +284,10 @@
             });
         }
 
-
-        // CLINT STUFF FUNCTIONS START:
-
         // used to check the length of the text string entered in the description form box, for error handling of max length
         $scope.descriptionLengthWarning = function() {
 
-            return (String($scope.modalDescription).length >= 40);
+            return (String($scope.modelDescription).length >= maxLength);
         }
 
         /**
@@ -304,7 +302,7 @@
          */
         $scope.cancelDescriptionEdit = function() {
             // refer to last saved description when user cancels the edit
-            $scope.modalDescription = $scope.description;
+            $scope.modelDescription = $scope.description;
             $scope.descriptionForm = !($scope.descriptionForm);
         }
 
@@ -315,10 +313,11 @@
         $scope.descriptionDisplay = function() {
             var descriptionLength;
 
-            ($scope.description == null)
-                ? (descriptionLength = "")
-                : descriptionLength= String($scope.description);
-
+            if ($scope.description === "") {
+                (descriptionLength = "")
+            } else {
+                descriptionLength = String($scope.description);
+            }
 
             return (descriptionLength.length > 0)
                 ? $scope.description
@@ -331,7 +330,7 @@
          *          --> error checking?
          */
         $scope.saveDescription = function() {
-            $scope.description = $scope.modalDescription;
+            $scope.description = $scope.modelDescription;
             if(String($scope.description).length === 0) {
                 $scope.description = "";
             }
@@ -344,7 +343,7 @@
             $scope.descriptionForm = !($scope.descriptionForm);
 
         }
-        // CLINT STUFF FUNCTIONS END//
+
 
         /**
          * Creates a modal for errors in loading data from the API.

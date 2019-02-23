@@ -41,7 +41,7 @@
                                 <div ng-show="descriptionLengthWarning()" class="alert alert-warning">
                                     <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"> </p>
                                 </div>
-
+                                <!--Use an ng form instead-->
                                 <input class="form-control"
                                        style="margin: 5px 5px 10px 5px; float: left;
                                            width: -webkit-calc(100% - 80px);
@@ -50,7 +50,7 @@
                                        th:title="#{screen.message.admin.selectedGrouping.descriptionFormTitle}"
                                        th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
                                        ng-value="descriptionDisplay()"
-                                       ng-model="modalDescription"
+                                       ng-model="modelDescription"
                                        maxlength="{{ maxDescriptionLength }}"
                                        id="descriptionForm" />
                                 <span ng-click="saveDescription()"
