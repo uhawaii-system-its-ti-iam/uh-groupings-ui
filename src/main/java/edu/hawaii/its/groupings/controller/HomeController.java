@@ -63,7 +63,7 @@ public class HomeController {
         return "memberships";
     }
 
-    @PreAuthorize("hasRole('ADMIN') || hasRole('OWNER')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('OWNER')")
     @RequestMapping(value = "/groupings", method = RequestMethod.GET)
     public String groupings(Locale locale, Model model) {
         logger.info("User at groupings.");

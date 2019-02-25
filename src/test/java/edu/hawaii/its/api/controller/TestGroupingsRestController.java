@@ -112,7 +112,7 @@ public class TestGroupingsRestController {
     @Value("${groupings.api.test.admin_user}")
     private String ADMIN;
 
-    @Value("${groupings.api.test.specific_user")
+    @Value("${groupings.api.test.specific_user}")
     private String SPECIFIC_USER;
 
     private MockMvc mockMvc;
@@ -144,11 +144,13 @@ public class TestGroupingsRestController {
                 .build();
 
         Principal tst0Principal = new SimplePrincipal(tst[0]);
+        Principal adminPrincipal = new SimplePrincipal(ADMIN);
         // Creates admin user for testing
         Set<GrantedAuthority> authorities = new LinkedHashSet<>();
         authorities.add(new SimpleGrantedAuthority(Role.ADMIN.longName()));
         authorities.add(new SimpleGrantedAuthority(Role.UH.longName()));
         adminUser = new User(ADMIN, ADMIN, authorities);
+
 
         // Creates normal users for testing
         Set<GrantedAuthority> uhAuthorities = new LinkedHashSet<>();
@@ -158,6 +160,9 @@ public class TestGroupingsRestController {
         uhUser05 = new User(tst[4], tst[4], uhAuthorities);
         uhUser06 = new User(tst[5], tst[5], uhAuthorities);
         specific_user = new User(SPECIFIC_USER, SPECIFIC_USER, uhAuthorities);
+
+        // add to owners
+        groupingsRestController.assignOwnership(adminPrincipal, GROUPING, tst[0]);
 
         //put in include
         groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[0]);

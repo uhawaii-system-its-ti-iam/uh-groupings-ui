@@ -14,6 +14,7 @@
              */
             getGrouping: function (path, onSuccess, onError) {
                 var endpoint = BASE_URL + path + "/grouping";
+                console.log("Endpoint: " + endpoint);
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
