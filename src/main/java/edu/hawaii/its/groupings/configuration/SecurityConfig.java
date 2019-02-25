@@ -180,7 +180,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/404").permitAll()
                 .antMatchers("/login").hasRole("UH")
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/groupings/**").permitAll()
+                .antMatchers("/groupings/**").hasAnyRole("ADMIN", "OWNER")
                 .antMatchers("/memberships/**").hasRole("UH")
                 .anyRequest().authenticated()
                 .and()
