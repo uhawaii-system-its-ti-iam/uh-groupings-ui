@@ -156,7 +156,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator</artifactId>
-            <version>0.34</version>
+            <version>0.35</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -246,10 +246,10 @@
                                 <echo>$ mvn -Dmaven.test.skip=true clean package</echo>
                                 <echo>$ mvn jasmine:test</echo>
                                 <echo>$ mvn clean test jacoco:report</echo>
-                                <echo></echo>
+                                <echo/>
                                 <echo>To run the integrations tests with your Grouper server:</echo>
                                 <echo>$ mvn -Dtest=TestGroupingsRestController test</echo>
-                                <echo></echo>
+                                <echo/>
                                 <echo>To run UH Groupings locally:</echo>
                                 <echo>$ mvn clean spring-boot:run</echo>
                             </target>
