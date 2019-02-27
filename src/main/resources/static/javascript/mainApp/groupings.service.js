@@ -8,7 +8,6 @@
      */
     UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL) {
         return {
-
             getGrouping: function (path, page, size, sortString, isAscending, onSuccess, onError) {
 
                 var endpoint = BASE_URL + "groupings/" + path + "?";
