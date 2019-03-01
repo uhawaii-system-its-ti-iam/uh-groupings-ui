@@ -11,7 +11,8 @@
      */
 
     //Possible switch to $log
-    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
+
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
@@ -128,7 +129,7 @@
 
             var groupingPath = $scope.selectedGrouping.path;
 
-            groupingsService.getGrouping(groupingPath, 1, 700, "name", true, function (res) {
+            groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function (res) {
 
                 // Gets members in the basis group
                 $scope.groupingBasis = setGroupMembers(res.basis.members);
@@ -171,7 +172,7 @@
                 $scope.paginatingProgress = true;
 
                 // Recursive function to retrieve the rest of the pages
-                $scope.getPages(groupingPath, 2, 700, "name", true);
+                $scope.getPages(groupingPath, 2, PAGE_SIZE, "name", true);
             }, function (res) {
                 dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
             });
