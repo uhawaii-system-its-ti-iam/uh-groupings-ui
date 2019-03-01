@@ -8,14 +8,52 @@
      */
     UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL) {
         return {
-            /**
-             * Gets information about a grouping.
-             * @param {string} path - the path to the grouping
-             */
-            getGrouping: function (path, onSuccess, onError) {
-                var endpoint = BASE_URL + /*path + "/grouping"*/  "groupings/"+path;
+
+            getGrouping: function (path, page, size, sortString, isAscending, onSuccess, onError) {
+
+                var endpoint = BASE_URL + "groupings/" + path + "?";
+
+                var params = "";
+                if(page != null) params = params + "page=" + page;
+                if(size != null) {
+                    if(params !== "") params = params + "&";
+                    params = params + "size=" + size;
+                }
+                if(sortString != null) {
+                    if(params !== "") params = params + "&";
+                    params = params + "sortString=" + sortString;
+                }
+                if(isAscending != null) {
+                    if(params !== "") params = params + "&";
+                    params = params + "isAscending=" + isAscending;
+                }
+
+                endpoint = endpoint + params;
+                // console.log(endpoint);
+
+
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
+
+            /**
+             * Get page of a grouping
+             * @param {String} path - the path to the grouping
+             * @param {String} page - the page to retrieve
+             * @param {String} size - the size of each page
+             */
+            // getPaginatedGrouping: function (path, page, size, onSuccess, onError) {
+            //     var endpoint = BASE_URL + "groupings/" + path + "?page=" + page + "&size=" + size;
+            //     dataProvider.loadData(onSuccess, onError, endpoint);
+            // },
+            //
+            // /**
+            //  * Gets information about a grouping.
+            //  * @param {string} path - the path to the grouping
+            //  */
+            // getGrouping: function (path, onSuccess, onError) {
+            //     var endpoint = BASE_URL + path + "/grouping";
+            //     dataProvider.loadData(onSuccess, onError, endpoint);
+            // },
 
             /**
              * Gets the list of admins and groupings.

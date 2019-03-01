@@ -1,5 +1,10 @@
 package edu.hawaii.its.groupings.controller;
 
+import edu.hawaii.its.api.type.GroupingsHTTPException;
+import edu.hawaii.its.api.type.GroupingsServiceResultException;
+import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.access.UserContextService;
+import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -8,13 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-
-import edu.hawaii.its.api.type.GroupingsHTTPException;
-import edu.hawaii.its.api.type.GroupingsServiceResultException;
-import edu.hawaii.its.groupings.access.User;
-import edu.hawaii.its.groupings.access.UserContextService;
-
-import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 
 @ControllerAdvice
 public class ErrorControllerAdvice {
