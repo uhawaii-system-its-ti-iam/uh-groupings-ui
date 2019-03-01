@@ -9,6 +9,8 @@
      * @param dataProvider - service that handles redirection to the feedback page upon error
      * @param groupingsService - service for creating requests to the groupings API
      */
+
+    //Possible switch to $log
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider) {
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
@@ -331,11 +333,12 @@
          */
         $scope.saveDescription = function() {
             $scope.description = $scope.modelDescription;
+            console.log("Description value: ", $scope.description);
             if(String($scope.description).length === 0) {
                 $scope.description = "";
             }
             groupingsService.updateDescription($scope.selectedGrouping.path, function () {
-
+                // Explain why this empty todo
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
 

@@ -38,4 +38,13 @@ public class UserContextServiceTest {
         userContextService.setCurrentUhuuid("87654321");
         assertThat(userContextService.getCurrentUhuuid(), equalTo("87654321"));
     }
+    @Test
+    @WithMockUhUser(username = "Owner", roles = { "ROLE_OWNER"})
+    public void testOwner(){
+        User user = userContextService.getCurrentUser();
+        assertThat(user.hasRole(Role.ADMIN), equalTo(false));
+        assertThat(user.hasRole(Role.OWNER), equalTo(true));
+    }
 }
+
+
