@@ -182,8 +182,8 @@ public class HomeControllerTest {
     public void groupingsViaUH() throws Exception {
         // Not high enough role for access
 
-        ResultActions result = mockMvc.perform(get("/groupings"));
-//                .andExpect(status().is4xxClientError());
+        ResultActions result = mockMvc.perform(get("/groupings"))
+                .andExpect(status().is4xxClientError());
         System.out.print("jfaj");
     }
 
@@ -191,9 +191,9 @@ public class HomeControllerTest {
     @WithAnonymousUser
     public void groupingsViaAnonymous() throws Exception {
         // Anonymous users not allowed into admin area.
-        ResultActions result = mockMvc.perform(get("/groupings"));
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrlPattern(casLoginUrl + "**"));
+        ResultActions result = mockMvc.perform(get("/groupings"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern(casLoginUrl + "**"));
         System.out.print("jfaj");
     }
 
