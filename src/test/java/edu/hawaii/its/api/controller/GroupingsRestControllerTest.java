@@ -323,12 +323,4 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().is5xxServerError());
     }
 
-    @Test
-    @WithMockUhUser
-    public void getDeleteGrouping() throws Exception {
-        mockMvc.perform(delete(REST_CONTROLLER_BASE + "fakeGroup/deleteGrouping")
-                .with(csrf()))
-                .andExpect(status().is5xxServerError());
-    }
-
 }
