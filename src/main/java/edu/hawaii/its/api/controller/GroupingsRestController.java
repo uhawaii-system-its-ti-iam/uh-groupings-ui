@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
@@ -481,24 +480,6 @@ public class GroupingsRestController {
         //                .body(groupingFactoryService.addGrouping(username, grouping, basis, include, exclude, owners));
     }
 
-    /**
-     * removes a Grouping
-     *
-     * @return information about the deleted Grouping and its success
-     */
-    @RequestMapping(value = "/{grouping}/deleteGrouping",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public RedirectView deleteGrouping(Principal principal, @PathVariable String grouping) {
-        logger.info("Entered REST deleteGrouping...");
-
-        throw new UnsupportedOperationException();
-
-        //todo implement method
-        //        return ResponseEntity
-        //                .ok()
-        //                .body(groupingFactoryService.deleteGrouping(username, grouping));
-    }
 
     private ResponseEntity changePreference(String grouping, String username, String preference, Boolean isOn){
 
