@@ -11,9 +11,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
@@ -230,25 +234,6 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", grouping, ownerToRemove);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
-
-    // Description Code Here
-
-
-
-
-    @RequestMapping(value = "/groupings/{path}/description",
-            method = RequestMethod.PUT,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateDescription(Principal principal, @PathVariable String path,
-                                          @RequestBody String description) {
-        logger.info("Entered REST removeOwnership...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/description", path);
-        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, description, HttpMethod.PUT);
-    }
-
-
-
-    //Description Code End
 
 
 
@@ -498,24 +483,6 @@ public class GroupingsRestController {
         //                .body(groupingFactoryService.addGrouping(username, grouping, basis, include, exclude, owners));
     }
 
-    /**
-     * removes a Grouping
-     *
-     * @return information about the deleted Grouping and its success
-     */
-    @RequestMapping(value = "/{grouping}/deleteGrouping",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public RedirectView deleteGrouping(Principal principal, @PathVariable String grouping) {
-        logger.info("Entered REST deleteGrouping...");
-
-        throw new UnsupportedOperationException();
-
-        //todo implement method
-        //        return ResponseEntity
-        //                .ok()
-        //                .body(groupingFactoryService.deleteGrouping(username, grouping));
-    }
 
     private ResponseEntity changePreference(String grouping, String username, String preference, Boolean isOn){
 
