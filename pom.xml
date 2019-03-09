@@ -269,6 +269,7 @@
                 <configuration>
                     <excludes>
                         <exclude>edu/hawaii/its/groupings/configuration/SpringBootWebApplication.class</exclude>
+                        <exclude>edu/hawaii/its/groupings/access/AuthorizationServiceImpl.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>

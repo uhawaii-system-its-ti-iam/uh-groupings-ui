@@ -8,8 +8,8 @@
         return {
             /**
              * Performs a GET request to the specified URL.
-             * @param {string} url - the URL to perform the request on
              * @param {function} callback - the function to perform on a successful request (200)
+             * @param {string} url - the URL to perform the request on
              */
             loadData: function (callback, callError, url) {
                 $http.get(encodeURI(url))
@@ -20,13 +20,14 @@
                         // if(response.data == null) return false;
                         callError(response.data);
                         console.log("Error in dataProvider; status: ", response.status);
+
                     });
             },
 
             /**
              * Performs a POST request to the specified URL.
-             * @param {string} url - the URL to perform the request on
              * @param {function} callback - the function to perform on a successful request (200)
+             * @param {string} url - the URL to perform the request on
              */
             updateData: function (callback, callError, url) {
                 $http.post(encodeURI(url))

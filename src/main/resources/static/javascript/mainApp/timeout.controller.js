@@ -51,7 +51,7 @@
             }
             if ($scope.idleTime === 30) { // Logout user after 30 min has passed
                 const r = new XMLHttpRequest();
-                r.open('POST', '/uhgroupings/logout', true);
+                r.open('POST', "/uhgroupings/logout", true);
                 r.setRequestHeader("X-XSRF-TOKEN", getCookie("XSRF-TOKEN"));
                 r.send();
                 $window.location.href = "/uhgroupings/";
@@ -84,20 +84,20 @@
                 templateUrl: "modal/timeoutModal.html",
                 scope: $scope
             });
--
-            $scope.timeoutModalInstance.result.then(function(){
-                //Filler in order to catch off click dismiss
-            }, function(){
-                $scope.idleTime = 0;
-                $scope.pingServer()
-            });
+            -
+                $scope.timeoutModalInstance.result.then(function(){
+                    //Filler in order to catch off click dismiss
+                }, function(){
+                    $scope.idleTime = 0;
+                    $scope.pingServer();
+                });
         };
 
         /**
          * Closes modal and restarts timer effect.
          */
         $scope.closeTimeoutModal = function () {
-          $scope.timeoutModalInstance.close();
+            $scope.timeoutModalInstance.close();
             $scope.idleTime = 0;
             $scope.pingServer();
         };
@@ -111,9 +111,10 @@
             $scope.seconds = 300;
             dataProvider.loadData(function (res) {
                 console.log("Success in pinging tomcat");
-            },function (res){console.log("Error in pinging tomcat");
+            }, function (res) {
+                console.log("Error in pinging tomcat");
             }, endpoint);
-        }
+        };
 
         /**
          * Every minute, checks whether or not user has clicked or pressed button

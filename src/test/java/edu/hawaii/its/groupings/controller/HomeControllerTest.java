@@ -22,6 +22,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -337,7 +338,7 @@ public class HomeControllerTest {
         mockMvc.perform(get("/modal/addErrorModal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("modal/addErrorModal"));
-    }
+        }
     @Test
     @WithMockUhUser(username = "uh")
     public void requestTimeoutModal() throws Exception {

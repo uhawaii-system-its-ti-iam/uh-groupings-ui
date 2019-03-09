@@ -12,9 +12,9 @@
 
             getGrouping: function (path, page, size, sortString, isAscending, onSuccess, onError) {
 
-                var endpoint = BASE_URL + "groupings/" + path + "?";
+                let endpoint = BASE_URL + "groupings/" + path + "?";
 
-                var params = "";
+                let params = "";
                 if(page != null) {params = params + "page=" + page;}
                 if(size != null) {
                     if(params !== "") {params = params + "&";}

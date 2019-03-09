@@ -57,8 +57,7 @@
          * @param {number} index - the index of the grouping clicked by the user
          */
         $scope.displayGrouping = function (currentPage, index) {
-            var  x = currentPage.valueOf();
-            $scope.selectedGrouping = $scope.pagedItemsGroupings[x][index.valueOf()];
+            $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
             $scope.getGroupingInformation();
 
             $scope.showGrouping = true;
@@ -68,7 +67,7 @@
          * Generic handler for unsuccessful requests to the API.
          */
         function handleUnsuccessfulRequest(res) {
-            console.log("Error: Status Code " + res.statusCode);
+            return `Error: Status Code${res.statusCode}`;
         }
 
         /**
@@ -262,7 +261,7 @@
                     dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
                 }
             });
-        }
+        };
 
         /**
          * Creates a modal for errors in loading data from the API.
@@ -343,7 +342,7 @@
          */
         $scope.updateAddMember = function (userToAdd, list) {
 
-            // only initialize groupingPath is listNmae is not "admins"
+            // only initialize groupingPath is listName is not "admins"
 
             if ($scope.listName !== "admins") {
                 groupingPath = $scope.selectedGrouping.path;
@@ -916,14 +915,14 @@
         /**
          * Create Email list confirmation modal.
          */
-        $scope.createEmailListModal = function () {
+        $scope.createemailListModal = function () {
             $scope.listserv = !$scope.listserv;
-            $scope.EmailListInstance = $uibModal.open({
-                templateUrl: "modal/EmailListModal.html",
+            $scope.emailListInstance = $uibModal.open({
+                templateUrl: "modal/emailListModal.html",
                 scope: $scope
             });
 
-            $scope.EmailListInstance.result.then(function () {
+            $scope.emailListInstance.result.then(function () {
                 $scope.listserv = !$scope.listserv;
                 $scope.updateListserv();
             }).catch(function () {
@@ -935,15 +934,15 @@
         /**
          * Proceeds with the change of the Email list
          */
-        $scope.proceedEmailListModal = function () {
-            $scope.EmailListInstance.close();
+        $scope.proceedemailListModal = function () {
+            $scope.emailListInstance.close();
         };
 
         /**
          *Closes the Email list confirmation modal
          */
-        $scope.closeEmailListModal = function () {
-            $scope.EmailListInstance.dismiss();
+        $scope.closeemailListModal = function () {
+            $scope.emailListInstance.dismiss();
         };
 
         /**

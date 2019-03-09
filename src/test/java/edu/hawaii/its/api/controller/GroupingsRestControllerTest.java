@@ -78,7 +78,7 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getGrouping() throws Exception {
-//        String uri = REST_CONTROLLER_BASE + GROUPING + "/grouping";
+        //        String uri = REST_CONTROLLER_BASE + GROUPING + "/grouping";
         String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING;
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
@@ -204,6 +204,7 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(post(uri)
                 .with(csrf()))
                 .andExpect(status().isOk());
+
     }
 
     @Test
