@@ -5,7 +5,6 @@ import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.api.type.AdminListsHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.jasig.cas.client.authentication.SimplePrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

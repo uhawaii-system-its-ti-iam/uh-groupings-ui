@@ -9,7 +9,7 @@
      * @param dataProvider - service that handles redirection to the feedback page upon error
      * @param groupingsService - service for creating requests to the groupings API
      */
-    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
@@ -113,7 +113,7 @@
 
             const groupingPath = $scope.selectedGrouping.path;
 
-            groupingsService.getGrouping(groupingPath, 1, 700, "name", true, function (res) {
+            groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function (res) {
 
                 // Gets members in the basis group
                 $scope.groupingBasis = setGroupMembers(res.basis.members);
@@ -148,7 +148,7 @@
                 $scope.paginatingProgress = true;
 
                 // Recursive function to retrieve the rest of the pages
-                $scope.getPages(groupingPath, 2, 700, "name", true);
+                $scope.getPages(groupingPath, 2, PAGE_SIZE, "name", true);
             }, function (res) {
                 dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
             });
@@ -268,7 +268,7 @@
          */
         $scope.createApiErrorModal = function () {
             $scope.apiErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/apiError.html",
+                templateUrl: "modal/apiError",
                 scope: $scope
             });
         };
@@ -407,7 +407,7 @@
             $scope.swap = swap;
 
             $scope.checkModalInstance = $uibModal.open({
-                templateUrl: "modal/checkModal.html",
+                templateUrl: "modal/checkModal",
                 scope: $scope
             });
 
@@ -434,7 +434,7 @@
 
                 // Ask for confirmation from the user to add the member
                 $scope.confirmAddModalInstance = $uibModal.open({
-                    templateUrl: "modal/confirmAddModal.html",
+                    templateUrl: "modal/confirmAddModal",
                     scope: $scope
                 });
 
@@ -503,7 +503,7 @@
             $scope.listName = options.listName;
 
             $scope.addModalInstance = $uibModal.open({
-                templateUrl: "modal/addModal.html",
+                templateUrl: "modal/addModal",
                 scope: $scope
             });
 
@@ -530,7 +530,7 @@
             $scope.user = userAdded;
 
             $scope.addErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/addErrorModal.html",
+                templateUrl: "modal/addErrorModal",
                 scope: $scope
             });
         };
@@ -629,7 +629,7 @@
 
 
             $scope.removeModalInstance = $uibModal.open({
-                templateUrl: "modal/removeModal.html",
+                templateUrl: "modal/removeModal",
                 windowClass: windowClass,
                 scope: $scope
             });
@@ -678,7 +678,7 @@
             $scope.userType = userType;
 
             $scope.removeErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/removeErrorModal.html",
+                templateUrl: "modal/removeErrorModal",
                 scope: $scope
             });
         };
@@ -794,7 +794,7 @@
             $scope.preferenceInfo = desc;
 
             $scope.infoModalInstance = $uibModal.open({
-                templateUrl: "modal/infoModal.html",
+                templateUrl: "modal/infoModal",
                 scope: $scope
             });
         };
@@ -864,7 +864,7 @@
          */
         $scope.createPreferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/preferenceErrorModal.html",
+                templateUrl: "modal/preferenceErrorModal",
                 scope: $scope
             });
         };
@@ -886,7 +886,7 @@
         $scope.createCASLDAPModal = function () {
             $scope.ldap = !$scope.ldap;
             $scope.CASLDAPInstance = $uibModal.open({
-                templateUrl: "modal/CASLDAPModal.html",
+                templateUrl: "modal/CASLDAPModal",
                 scope: $scope
             });
 
@@ -919,6 +919,7 @@
             $scope.listserv = !$scope.listserv;
             $scope.emailListInstance = $uibModal.open({
                 templateUrl: "modal/emailListModal.html",
+
                 scope: $scope
             });
 

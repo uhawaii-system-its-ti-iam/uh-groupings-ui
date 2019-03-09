@@ -129,7 +129,7 @@ public class TestGroupingsRestController {
         //add to owners
         groupingsRestController.assignOwnership(adminPrincipal, GROUPING, tst[0]);
         groupingsRestController.assignOwnership(adminPrincipal, GROUPING_STORE_EMPTY, tst[0]);
-
+        groupingsRestController.assignOwnership(adminPrincipal, GROUPING_TRUE_EMPTY, tst[0]);
 
         //put in include
         groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[0]);
@@ -367,14 +367,6 @@ public class TestGroupingsRestController {
         assertEquals(0, trueEmpty.getInclude().getMembers().size());
         assertTrue(trueEmpty.getOwners().getUsernames().contains(tst[0]));
 
-    }
-
-    @Test
-    public void adminListsFailTest() throws Exception {
-        AdminListsHolder infoFail = mapAdminListsHolder(uhUser01);
-
-        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
-        assertEquals(infoFail.getAllGroupings().size(), 0);
     }
 
     @Test
