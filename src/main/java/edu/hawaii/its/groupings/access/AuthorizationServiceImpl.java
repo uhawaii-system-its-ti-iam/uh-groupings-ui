@@ -3,10 +3,8 @@ package edu.hawaii.its.groupings.access;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.api.type.AdminListsHolder;
-import edu.hawaii.its.api.type.GroupingAssignment;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.jasig.cas.client.authentication.SimplePrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

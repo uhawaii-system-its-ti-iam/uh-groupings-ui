@@ -397,14 +397,6 @@ public class TestGroupingsRestController {
     }
 
     @Test
-    public void adminListsFailTest() throws Exception {
-        AdminListsHolder infoFail = mapAdminListsHolder(uhUser01);
-
-        assertEquals(infoFail.getAdminGroup().getMembers().size(), 0);
-        assertEquals(infoFail.getAllGroupings().size(), 0);
-    }
-
-    @Test
     public void adminListsPassTest() throws Exception {
         AdminListsHolder infoSuccess = mapAdminListsHolder(adminUser);
 

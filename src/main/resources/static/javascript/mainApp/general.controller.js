@@ -354,7 +354,7 @@
          */
         $scope.createApiErrorModal = function () {
             $scope.apiErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/apiError.html",
+                templateUrl: "modal/apiError",
                 scope: $scope
             });
         };
@@ -491,7 +491,7 @@
             $scope.swap = swap;
 
             $scope.checkModalInstance = $uibModal.open({
-                templateUrl: "modal/checkModal.html",
+                templateUrl: "modal/checkModal",
                 scope: $scope
             });
 
@@ -518,7 +518,7 @@
 
                 // Ask for confirmation from the user to add the member
                 $scope.confirmAddModalInstance = $uibModal.open({
-                    templateUrl: "modal/confirmAddModal.html",
+                    templateUrl: "modal/confirmAddModal",
                     scope: $scope
                 });
 
@@ -587,7 +587,7 @@
             $scope.listName = options.listName;
 
             $scope.addModalInstance = $uibModal.open({
-                templateUrl: "modal/addModal.html",
+                templateUrl: "modal/addModal",
                 scope: $scope
             });
 
@@ -614,7 +614,7 @@
             $scope.user = userAdded;
 
             $scope.addErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/addErrorModal.html",
+                templateUrl: "modal/addErrorModal",
                 scope: $scope
             });
         };
@@ -711,7 +711,7 @@
             var windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
             $scope.removeModalInstance = $uibModal.open({
-                templateUrl: "modal/removeModal.html",
+                templateUrl: "modal/removeModal",
                 windowClass: windowClass,
                 scope: $scope
             });
@@ -759,7 +759,7 @@
             $scope.userType = userType;
 
             $scope.removeErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/removeErrorModal.html",
+                templateUrl: "modal/removeErrorModal",
                 scope: $scope
             });
         };
@@ -875,7 +875,7 @@
             $scope.preferenceInfo = desc;
 
             $scope.infoModalInstance = $uibModal.open({
-                templateUrl: "modal/infoModal.html",
+                templateUrl: "modal/infoModal",
                 scope: $scope
             });
         };
@@ -945,7 +945,7 @@
          */
         $scope.createPreferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/preferenceErrorModal.html",
+                templateUrl: "modal/preferenceErrorModal",
                 scope: $scope
             });
         };
@@ -967,7 +967,7 @@
         $scope.createCASLDAPModal = function () {
             $scope.ldap = !$scope.ldap;
             $scope.CASLDAPInstance = $uibModal.open({
-                templateUrl: "modal/CASLDAPModal.html",
+                templateUrl: "modal/CASLDAPModal",
                 scope: $scope
             });
 
@@ -999,7 +999,7 @@
         $scope.createEmailListModal = function () {
             $scope.listserv = !$scope.listserv;
             $scope.EmailListInstance = $uibModal.open({
-                templateUrl: "modal/EmailListModal.html",
+                templateUrl: "modal/EmailListModal",
                 scope: $scope
             });
 

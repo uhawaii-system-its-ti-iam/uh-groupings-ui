@@ -96,7 +96,7 @@
          */
         $scope.createTimeoutModal = function () {
             $scope.timeoutModalInstance = $uibModal.open({
-                templateUrl: "modal/timeoutModal.html",
+                templateUrl: "modal/timeoutModal",
                 scope: $scope
             });
 -
