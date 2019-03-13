@@ -6,6 +6,8 @@ public class Grouping {
 
     private String name;
 
+    private String description;
+
     private Group basis;
 
     private Group exclude;
@@ -54,6 +56,14 @@ public class Grouping {
         if (index != -1) {
             this.name = this.name.substring(index + 1);
         }
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Group getBasis() {
