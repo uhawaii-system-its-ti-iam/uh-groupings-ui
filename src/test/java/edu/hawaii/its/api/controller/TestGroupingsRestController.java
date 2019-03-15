@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -113,6 +114,7 @@ public class TestGroupingsRestController {
     private MockMvc mockMvc;
 
     private static final String API_BASE = "/api/groupings/";
+    private org.owasp.html.PolicyFactory policy;
     private User adminUser;
     private User uhUser01;
     private User uhUser05;
@@ -136,6 +138,8 @@ public class TestGroupingsRestController {
         mockMvc = webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
+
+        policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
         Principal tst0Principal = new SimplePrincipal(tst[0]);
         Principal adminPrincipal = new SimplePrincipal(ADMIN);
@@ -219,7 +223,7 @@ public class TestGroupingsRestController {
         assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[3]));
 
         //add tst[3] back to exclude
-        mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
+        mapGSRs(API_BASE + GROUPING + "/<h1>" + tst[3] + "</h1>/addMemberToExcludeGroup");
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
     }
 
@@ -404,6 +408,7 @@ public class TestGroupingsRestController {
         assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(ADMIN));
     }
 
+    //todo FINISH THIS
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void addDeleteAdminTest() throws Exception {
@@ -411,16 +416,15 @@ public class TestGroupingsRestController {
         GroupingsServiceResult deleteAdminResults;
 
         try {
-            //            addAdminResults = groupingsRestController.addAdmin(tst[0], tst[0]).getBody();
-            addAdminResults = mapGSR(API_BASE + tst[0] + "/addAdmin");
+             addAdminResults = mapGSR(API_BASE + "<h1>" + tst[0] + "</h1>/addAdmin");
+
         } catch (GroupingsHTTPException ghe) {
             addAdminResults = new GroupingsServiceResult();
             addAdminResults.setResultCode(FAILURE);
         }
 
         try {
-            //            deleteAdminResults = groupingsRestController.deleteAdmin(tst[0], tst[0]).getBody();
-            deleteAdminResults = mapGSR(API_BASE + tst[0] + "/deleteAdmin");
+            deleteAdminResults = mapGSR(API_BASE + "<div>" +tst[0] + "</div>/deleteAdmin");
         } catch (GroupingsHTTPException ghe) {
             deleteAdminResults = new GroupingsServiceResult();
             deleteAdminResults.setResultCode(FAILURE);
@@ -428,6 +432,16 @@ public class TestGroupingsRestController {
 
         assertTrue(addAdminResults.getResultCode().startsWith(FAILURE));
         assertTrue(deleteAdminResults.getResultCode().startsWith(FAILURE));
+    }
+
+    @Test
+    @WithMockUhUser(username = "iamtst01")
+    public void sanitationTest() {
+        String unsafeHTML = "<h1>Hello</h1>";
+
+        String safeInput = policy.sanitize(unsafeHTML);
+        assertFalse(safeInput.equals(unsafeHTML));
+
     }
 
     ///////////////////////////////////////////////////////////////////////

@@ -5,6 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import edu.hawaii.its.api.service.HttpRequestService;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -27,6 +29,8 @@ import java.util.List;
 public class GroupingsRestController {
 
     private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
+
+    private org.owasp.html.PolicyFactory policy;
 
     @Value("${app.groupings.controller.uuid}")
     private String uuid;
@@ -62,6 +66,9 @@ public class GroupingsRestController {
     public void init() {
         Assert.hasLength(uuid, "Property 'app.groupings.controller.uuid' is required.");
         logger.info("GroupingsRestController started.");
+
+        // For sanitation
+        policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
     }
 
     @RequestMapping(value = "/",
@@ -73,6 +80,8 @@ public class GroupingsRestController {
                 .body("University of Hawaii Groupings API");
     }
 
+
+//todo TEST THAT THIS WORKS
     /**
      * Get a member's attributes based off username
      *
@@ -85,7 +94,8 @@ public class GroupingsRestController {
     @ResponseBody
     public ResponseEntity memberAttributes(Principal principal, @PathVariable String uid) {
         logger.info("Entered REST memberAttributes...");
-        String uri = String.format(API_2_1_BASE + "/members/%s", uid);
+        String safeInput = policy.sanitize(uid);
+        String uri = String.format(API_2_1_BASE + "/members/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -100,7 +110,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addAdmin(Principal principal, @PathVariable String adminToAdd) {
         logger.info("Entered REST addAdmin...");
-        String uri = String.format(API_2_1_BASE + "/admins/%s", adminToAdd);
+        String safeInput = policy.sanitize(adminToAdd);
+        String uri = String.format(API_2_1_BASE + "/admins/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
     }
 
@@ -115,7 +126,16 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteAdmin(Principal principal, @PathVariable String adminToDelete) {
         logger.info("Entered REST deleteAdmin...");
-        String uri = String.format(API_2_1_BASE + "/admins/%s", adminToDelete);
+        String safeInput = policy.sanitize(adminToDelete);
+
+
+
+        System.out.println("ABCDEFG: " + safeInput);
+
+
+
+
+        String uri = String.format(API_2_1_BASE + "/admins/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
@@ -133,8 +153,12 @@ public class GroupingsRestController {
     public ResponseEntity addMemberToIncludeGroup(Principal principal,
             @PathVariable String grouping,
             @PathVariable String userToAdd) {
+
+        String safeGrouping = policy.sanitize(grouping);
+        String safeUserToAdd = policy.sanitize(userToAdd);
+
         logger.info("Entered REST addMemberToIncludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", grouping, userToAdd);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", safeGrouping, safeUserToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
