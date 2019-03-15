@@ -39,6 +39,22 @@
                     });
             },
 
+            // Might have to clean this code up? Not complete sure yet.
+            /**
+             * Performs a POST request to the specified URL.
+             * @param {string} url - the URL to perform the request on
+             * @param {function} callback - the function to perform on a successful request (200)
+             */
+            updateDataWithBody: function (callback, callError, url, data) {
+                $http.put(encodeURI(url), data)
+                    .then(function(response){
+                        callback(response);
+                    }, function (response) {
+                        callError(response);
+                        console.log("Error in dataProvider; status: ", response.status);
+                    });
+            },
+
             /**
              * Handles Java exceptions by performing a POST request.
              * @param {object} exceptionData - an object containing the exception (stored as a string)

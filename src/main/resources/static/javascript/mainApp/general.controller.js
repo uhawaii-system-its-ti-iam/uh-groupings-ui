@@ -9,7 +9,10 @@
      * @param dataProvider - service that handles redirection to the feedback page upon error
      * @param groupingsService - service for creating requests to the groupings API
      */
+
+    //Possible switch to $log
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
+
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
@@ -49,6 +52,16 @@
         $scope.paginatingComplete = false;
         $scope.largeGrouping = false;
 
+        // used with ng-view on selected-grouping.html to toggle description editing.
+        $scope.descriptionForm = false;
+        //The max length usable when getting input
+        $scope.maxDescriptionLength = 40;
+        //The user input
+        $scope.modelDescription;
+
+        var maxLength = 40;
+        var noDescriptionMessage = "No description given for this Grouping.";
+
         angular.extend(this, $controller("TableJsController", {$scope: $scope}));
 
         /**
@@ -58,6 +71,7 @@
          */
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
+            $scope.description = $scope.selectedGrouping.description;
             $scope.getGroupingInformation();
 
             $scope.showGrouping = true;
@@ -108,6 +122,8 @@
          * Gets information about the grouping, such as its members and the preferences set.
          * Retrieves information asynchronously page by page
          */
+
+
         $scope.getGroupingInformation = function () {
             $scope.loading = true;
 
@@ -137,6 +153,14 @@
                 //Gets owners of the grouping
                 $scope.groupingOwners = setGroupMembers(res.owners.members);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+
+                // Gets the description go the group
+                if(res.description == null) {
+                    $scope.description = "";
+                } else {
+                    $scope.description = res.description;
+                }
+
 
                 $scope.allowOptIn = res.optInOn;
                 $scope.allowOptOut = res.optOutOn;
@@ -262,6 +286,68 @@
                 }
             });
         }
+
+        // used to check the length of the text string entered in the description form box, for error handling of max length
+        $scope.descriptionLengthWarning = function() {
+
+            return (String($scope.modelDescription).length >= maxLength);
+        }
+
+        /**
+         * Enable or disable editing of a Grouping's description, from selected-grouping.html.
+         */
+        $scope.editDescription = function() {
+            $scope.descriptionForm = !($scope.descriptionForm);
+        }
+
+        /**
+         * Cancel the editing of a description, and revert back to base selected-grouping page.
+         */
+        $scope.cancelDescriptionEdit = function() {
+            // refer to last saved description when user cancels the edit
+            $scope.modelDescription = $scope.description;
+            $scope.descriptionForm = !($scope.descriptionForm);
+        }
+
+        /**
+         * Used for placeholder text for a grouping's description in the form box.
+         * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
+         */
+        $scope.descriptionDisplay = function() {
+            var descriptionLength;
+
+            if ($scope.description === "") {
+                (descriptionLength = "")
+            } else {
+                descriptionLength = String($scope.description);
+            }
+
+            return (descriptionLength.length > 0)
+                ? $scope.description
+                : noDescriptionMessage;
+        }
+
+        /**
+         * Sets a new description for a Grouping.
+         * TODOS:   --> make this function call RestController to change the description in Grouper.
+         *          --> error checking?
+         */
+        $scope.saveDescription = function() {
+            $scope.description = $scope.modelDescription;
+            console.log("Description value: ", $scope.description);
+            if(String($scope.description).length === 0) {
+                $scope.description = "";
+            }
+            groupingsService.updateDescription($scope.selectedGrouping.path, function () {
+                // Explain why this empty todo
+            }, function (res) {
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+
+            }, $scope.description);
+            $scope.descriptionForm = !($scope.descriptionForm);
+
+        }
+
 
         /**
          * Creates a modal for errors in loading data from the API.

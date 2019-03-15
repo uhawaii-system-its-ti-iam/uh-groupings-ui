@@ -13,12 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
@@ -259,9 +254,29 @@ public class GroupingsRestController {
     }
 
     /**
+     * Updates the description of a grouping to the new one
+     *
+     * @param path:      path to the grouping that the description will be updated
+     * @param description: String containing the description of the group to be updated
+     * @return information about the descripiton and group being updated
+     */
+
+    @RequestMapping(value = "/groupings/{path}/description",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateDescription(Principal principal, @PathVariable String path,
+                                          @RequestBody(required = false) String description) {
+        logger.info("Entered REST updateDescription...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/description", path);
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, description, HttpMethod.PUT);
+    }
+
+
+
+    /**
      * finds and returns the specified Grouping
      *
-     * @param grouping : String containing the path of the Grouping to be searched for
+     * @param path : String containing the path of the Grouping to be searched for
      * @return the Grouping that was searched for
      * the Grouping will contain information about
      * members of each Group in the grouping
