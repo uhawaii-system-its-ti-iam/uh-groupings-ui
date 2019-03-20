@@ -1,9 +1,7 @@
 package edu.hawaii.its.api.type;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ public class GroupingAssignmentTest {
     private GroupingAssignment groupingAssignment;
 
     @Before
-    public void setup() {
+    public void setUp() {
         groupingAssignment = new GroupingAssignment();
     }
 
@@ -32,7 +30,7 @@ public class GroupingAssignmentTest {
     }
 
     @Test
-    public void GroupingAssignmenttest() {
+    public void groupingAssignmentTest() {
         List<Grouping> newList = new ArrayList<Grouping>();
         groupingAssignment.setGroupingsIn(newList);
         assertThat(groupingAssignment.getGroupingsIn().toString(),equalTo("[]"));

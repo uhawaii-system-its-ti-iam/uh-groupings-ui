@@ -15,7 +15,7 @@ public class AdminListsHolderTest {
     private AdminListsHolder adminListHolder;
 
     @Before
-    public void setup(){
+    public void setUp(){
         adminListHolder = new AdminListsHolder();
     }
 

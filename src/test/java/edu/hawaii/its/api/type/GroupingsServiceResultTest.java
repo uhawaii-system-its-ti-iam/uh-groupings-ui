@@ -12,12 +12,12 @@ public class GroupingsServiceResultTest {
     private GroupingsServiceResult groupingsServiceResult;
 
     @Before
-    public void setup() {
+    public void setUp() {
         groupingsServiceResult = new GroupingsServiceResult();
     }
 
     @Test
-    public void GroupingsServiceResultTest(){
+    public void groupingsServiceResultTest(){
         assertNotNull(groupingsServiceResult);
         groupingsServiceResult.setResultCode("resultCode");
         groupingsServiceResult.setAction("Action");

@@ -4,6 +4,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.rules.ExpectedException;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class EmptyGroupTest extends Group{
 
@@ -13,14 +15,16 @@ public class EmptyGroupTest extends Group{
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
-    public void setup(){
+    public void setUp(){
         emptygroup = new EmptyGroup();
     }
 
     @Test
     public void test() {
-        thrown.expect(UnsupportedOperationException.class);
-        emptygroup.addMember(new Person());
+       assertThat(emptygroup.getPath().toString(),equalTo(""));
+       assertThat(emptygroup.getMembers().toString(),equalTo("[]"));
+       thrown.expect(UnsupportedOperationException.class);
+       emptygroup.addMember(new Person());
 
     }
 }
