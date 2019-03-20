@@ -49,7 +49,7 @@
         $scope.paginatingComplete = false;
         $scope.largeGrouping = false;
 
-        angular.extend(this, $controller("TableJsController", {$scope: $scope}));
+        angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
         /**
          * Initiates the retrieval of information about the grouping clicked by the user.
@@ -150,7 +150,7 @@
                 // Recursive function to retrieve the rest of the pages
                 $scope.getPages(groupingPath, 2, PAGE_SIZE, "name", true);
             }, function (res) {
-                dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
             });
 
             //todo Keeping code in case
@@ -249,7 +249,7 @@
                     $scope.paginatingComplete = true;
                 }
             }, function (res) {
-                if(res === null) {
+                if (res === null) {
                     $scope.largeGrouping = true;
                     $scope.paginatingComplete = false;
                     $scope.paginatingProgress = false;
@@ -258,10 +258,10 @@
                     // console.log("Complete", $scope.paginatingComplete);
                     // console.log("Large", $scope.largeGrouping);
                 } else {
-                    dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+                    dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
                 }
             });
-        }
+        };
 
         /**
          * Creates a modal for errors in loading data from the API.
@@ -287,7 +287,7 @@
         $scope.addInBasis = function (group) {
             _.forEach(group, function (member) {
                 var memberUuid = member.uuid;
-                member.inBasis = _.some($scope.groupingBasis, {uuid: memberUuid})
+                member.inBasis = _.some($scope.groupingBasis, { uuid: memberUuid })
                     ? "Yes"
                     : "No";
             });
@@ -300,11 +300,11 @@
         $scope.addWhereListed = function (compositeGroup) {
             _.forEach(compositeGroup, function (member) {
                 var memberUuid = member.uuid;
-                if (_.some($scope.groupingBasis, {uuid: memberUuid})) {
+                if (_.some($scope.groupingBasis, { uuid: memberUuid })) {
                     member.whereListed = "Basis";
                 }
 
-                if (_.some($scope.groupingInclude, {uuid: memberUuid})) {
+                if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
                     member.whereListed = _.isUndefined(member.whereListed)
                         ? "Include"
                         : "Basis / Include";
@@ -333,6 +333,10 @@
             }
         };
 
+        $scope.addMembers = function(list) {
+            var usersToAdd = $scope.usersToAdd;
+            console.log(usersToAdd);
+        }
         /**
          * Initiates the adding of a member to a list.
          * @param {string} userToAdd - user being added
@@ -340,7 +344,7 @@
          */
         $scope.updateAddMember = function (userToAdd, list) {
 
-            // only initialize groupingPath is listNmae is not "admins"
+            // only initialize groupingPath is listName is not "admins"
 
             if ($scope.listName != "admins") {
                 groupingPath = $scope.selectedGrouping.path;
@@ -373,9 +377,9 @@
          */
         $scope.isInAnotherList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingExclude, {username: user});
+                return _.some($scope.groupingExclude, { username: user });
             } else if (list === "Exclude") {
-                return _.some($scope.groupingInclude, {username: user});
+                return _.some($scope.groupingInclude, { username: user });
             }
             return false;
         };
@@ -387,9 +391,9 @@
          */
         $scope.existInList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingInclude, {username: user});
+                return _.some($scope.groupingInclude, { username: user });
             } else if (list === "Exclude") {
-                return _.some($scope.groupingExclude, {username: user});
+                return _.some($scope.groupingExclude, { username: user });
             }
             return false;
         };
@@ -413,7 +417,28 @@
                 $scope.updateAddMember(user, listName);
             });
         };
+        $scope.createConfirmAddMembersModal = function (members) {
+            _.forEach(members, function (member) {
+                var memberToAdd = member.userToAdd;
+                groupingsService.getMemberAttributes(memberToAdd, function (attributes) {
+                    $scope.namesToAdd = $scope.namesToAdd.concat(attributes.cn);
+                    console.log($scope.namesToAdd);
+                    $scope.uhuuidsToAdd = $scope.uhuuidsToAdd.concat(attributes.uhuuid);
+                    $scope.uidsToAdd = $scope.uidsToAdd.concat(attributes.uid);
+                    $scope.listName = member.listName;
+                });
+            });
+            $scope.confirmAddModalInstance = $uibModal.open({
+                templateUrl: "modal/confirmAddModal",
+                scope: $scope
+            });
+            _.forEach($scope.namesToAdd, function (member) {
+                $scope.confirmAddModalInstance.result.then(function () {
+                    $scope.updateAddMember(member, member.listName);
+                });
 
+            });
+        };
         /**
          * Creates a modal that asks for confirmation when adding a user.
          * @param {object} options - the options object
@@ -424,9 +449,9 @@
             var userToAdd = options.userToAdd;
 
             groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                $scope.uidToAdd = attributes.uid;
-                $scope.uhuuidToAdd = attributes.uhuuid;
                 $scope.nameToAdd = attributes.cn;
+                $scope.uhuuidToAdd = attributes.uhuuid;
+                $scope.uidToAdd = attributes.uid;
 
                 $scope.listName = options.listName;
 
