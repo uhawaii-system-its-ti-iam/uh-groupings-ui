@@ -9,15 +9,15 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <div class="modal-header">
-  <h5 class="modal-title" id="modal-title" th:text="#{screen.message.modal.add.title}"></h5>
+  <h5 class="modal-title" id="modal-title">Confirm Adding New Member</h5>
   <button type="button" class="close" data-dismiss="dialog" ng-click="cancelConfirmAddUser()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body" id="modal-body">
   <p>
-    <span class="textblack" th:text="#{screen.message.modal.add.confirmation}"></span>
-    <span class="textblack">{{listName}} list.</span>
+    <span style="color: black" th:text="#{screen.message.modal.add.confirmation}"></span>
+    <span style="color: black" >{{listName}} list.</span>
   </p>
   <table style = "width: 80%;margin-bottom: 30px;">
     <tr>
