@@ -176,9 +176,8 @@ describe("TableController", function () {
         });
 
         it("should be equivalent to groupToPages if query is empty", function () {
-            scope.filter(scope.items, "pagedItems", "currentPage", "");
-            const pagedItemsUsingGtp = scope.groupToPages(scope.items);
-
+            scope.filter(scope.items, "pagedItems", "currentPage", "", true);
+            var pagedItemsUsingGtp = scope.groupToPages(scope.items);
 
             expect(scope.pagedItems).toEqual(pagedItemsUsingGtp);
         });

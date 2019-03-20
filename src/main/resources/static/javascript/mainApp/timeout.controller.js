@@ -18,6 +18,21 @@
 
         $scope.seconds = 300;
         $scope.idleTime = 0;
+            /**
+             * Every minute, checks whether or not user has clicked or pressed button
+             */
+            $(document).ready(function () {
+                //Increment the idle time counter every minute.
+                let idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+                //Zero the idle timer on mouse movement.
+                $(this).click(function (e) {
+                    $scope.idleTime = 0;
+                });
+
+                $(this).keypress(function (e) {
+                    $scope.idleTime = 0;
+                });
+            });
 
         /**
          * Gets cookie information
@@ -25,16 +40,17 @@
          * @returns {*}
          */
         function getCookie(cname) {
-            const name = cname + "=";
-            const decodedCookie = decodeURIComponent(document.cookie);
-            const ca = decodedCookie.split(";");
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(";");
             for(let i = 0; i <ca.length; i++) {
                 let c = ca[i];
                 while (c.charAt(0) === " ") {
                     c = c.substring(1);
                 }
-                if (c.indexOf(name) === 0){
-                    return c.substring(name.length, c.length);}
+                if (c.indexOf(name) === 0) {
+                    return c.substring(name.length, c.length);
+                }
             }
             return "";
         }
@@ -50,8 +66,8 @@
                 $scope.createTimeoutModal();
             }
             if ($scope.idleTime === 30) { // Logout user after 30 min has passed
-                const r = new XMLHttpRequest();
-                r.open('POST', "/uhgroupings/logout", true);
+                let r = new XMLHttpRequest();
+                r.open("POST", "/uhgroupings/logout", true);
                 r.setRequestHeader("X-XSRF-TOKEN", getCookie("XSRF-TOKEN"));
                 r.send();
                 $window.location.href = "/uhgroupings/";
@@ -63,7 +79,7 @@
          * Creates a countdown timer.
          */
         function timer() {
-            const minutes = Math.round(($scope.seconds - 30) / 60);
+            let minutes = Math.round(($scope.seconds - 30)/60);
             let remainingSeconds = $scope.seconds % 60;
             if (remainingSeconds < 10) {
                 remainingSeconds = "0" + remainingSeconds;
@@ -84,13 +100,12 @@
                 templateUrl: "modal/timeoutModal",
                 scope: $scope
             });
-            -
-                $scope.timeoutModalInstance.result.then(function(){
-                    //Filler in order to catch off click dismiss
-                }, function(){
-                    $scope.idleTime = 0;
-                    $scope.pingServer();
-                });
+            $scope.timeoutModalInstance.result.then(function(){
+                //Filler in order to catch off click dismiss
+            }, function(){
+                $scope.idleTime = 0;
+                $scope.pingServer();
+            });
         };
 
         /**
@@ -115,22 +130,6 @@
                 console.log("Error in pinging tomcat");
             }, endpoint);
         };
-
-        /**
-         * Every minute, checks whether or not user has clicked or pressed button
-         */
-        $(document).ready(function () {
-            //Increment the idle time counter every minute.
-            const idleInterval = setInterval(timerIncrement, 60000); // 1 minute
-            //Zero the idle timer on mouse movement.
-            $(this).click(function (e) {
-                $scope.idleTime = 0;
-            });
-
-            $(this).keypress(function (e) {
-                $scope.idleTime = 0;
-            });
-        });
 
     }
     UHGroupingsApp.controller("TimeoutJsController", TimeoutJsController);

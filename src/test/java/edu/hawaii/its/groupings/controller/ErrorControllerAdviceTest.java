@@ -1,25 +1,27 @@
 package edu.hawaii.its.groupings.controller;
 
+import org.junit.runner.RunWith;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
-import org.junit.runner.RunWith;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 
 import java.security.Principal;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -34,19 +36,19 @@ public class ErrorControllerAdviceTest {
         assertNotNull(errorControllerAdvice);
     }
 
-//    @Test
-//    public void GcWebServiceTest() {
-//        GcWebServiceError Gc = new GcWebServiceError();
-//        errorControllerAdvice.handleGcWebServiceError(Gc);
-//           String gce = "error";
-//        assertThat(errorControllerAdvice.handleGcWebServiceError(Gc).toString(),equalTo(gce));
-//    }
+    @Test
+    public void gcWebServiceTest()throws Exception {
+        Object Ro = new Object();
+        GcWebServiceError Gc = new GcWebServiceError(Ro);
+        errorControllerAdvice.handleGcWebServiceError(Gc);
+           String gce = "<404,edu.hawaii.its.api.type.GroupingsHTTPException,{}>";
+        assertThat(errorControllerAdvice.handleGcWebServiceError(Gc).toString(),equalTo(gce));
+    }
 
     @Test
     public void runtimeTest() {
         RuntimeException re = new RuntimeException();
         errorControllerAdvice.handleRuntimeException(re);
-        System.out.println(errorControllerAdvice.handleRuntimeException(re).toString());
         String runtime = "<500,edu.hawaii.its.api.type.GroupingsHTTPException:"
                 + " runtime exception,{}>";
         assertThat(errorControllerAdvice.handleRuntimeException(re).toString(), equalTo(runtime));
@@ -140,7 +142,7 @@ public class ErrorControllerAdviceTest {
             }
 
             @Override public void registerDestructionCallback(String s, Runnable runnable, int i) {
-            //intentionally empty
+                //intentionally empty
             }
 
             @Override public Object resolveReference(String s) {
