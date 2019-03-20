@@ -17,16 +17,16 @@
 <div class="modal-body" id="modal-body">
   <p>
     <span style="color: black" th:text="#{screen.message.modal.add.confirmation}"></span>
-    <span style="color: black" >{{listName}} list.</span>
+    <span style="color: black">{{listName}} list.</span>
   </p>
-  <table style = "width: 80%;margin-bottom: 30px;">
+  <table style="width: 80%;margin-bottom: 30px;">
     <tr>
       <th th:utext="#{screen.message.modal.add.name}"></th>
-      <th style="font-weight: normal"> {{nameToAdd}} </th>
+      <th style="font-weight: normal"> {{nameToAdd}}</th>
     </tr>
     <tr>
       <th th:utext="#{screen.message.modal.add.uhUserName}"></th>
-      <th class="font-weight-normal"> {{uhuuidToAdd}} </th>
+      <th class="font-weight-normal"> {{uhuuidToAdd}}</th>
     </tr>
     <tr>
       <th th:utext="#{screen.message.modal.add.uhUserId}"></th>
@@ -34,8 +34,12 @@
     </tr>
   </table>
 
-    <p> Are you sure you want to add <span style="font-weight: bold" th:utext="#{screen.message.modal.add.finalConfirm}"></span><span class="textblack"> to the </span><span class="textblack" th:utext="#{screen.message.modal.add.listName}"></span><span class="textblack"> list?</span>
-    </p>
+  <p> Are you sure you want to add
+    <span style="font-weight: bold">{{ uidToAdd}}</span>
+    <span style="color: black"> to the </span>
+    <span style="color: black">{{listName}}</span>
+    <span style="color: black"> list?</span>
+  </p>
 </div>
 
 <div class="modal-footer">
