@@ -34,25 +34,6 @@
             });
         });
 
-        /**
-         * Gets cookie information
-         * @param cname = name of cookie you want to look for.
-         * @returns {*}
-         */
-        function getCookie(cname) {
-            var name = cname + "=";
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for(var i = 0; i <ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0)
-                    return c.substring(name.length, c.length);
-            }
-            return "";
-        }
 
         /**
          *  Checks on time of inactivity, if time is meet, log out user.
@@ -67,7 +48,7 @@
             if ($scope.idleTime == 30) { // Logout user after 30 min has passed
                 var r = new XMLHttpRequest();
                 r.open('POST', '/uhgroupings/logout', true);
-                r.setRequestHeader("X-XSRF-TOKEN", getCookie("XSRF-TOKEN"));
+                r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
                 r.send();
                 $window.location.href = "/uhgroupings/";
 

@@ -68,11 +68,17 @@
          * @param {number} index - the index of the grouping clicked by the user
          */
         $scope.displayGrouping = function (currentPage, index) {
-            $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
-            $scope.description = $scope.selectedGrouping.description;
-            $scope.getGroupingInformation();
+            groupingsService.getAdminLists(function () {
+                $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
+                $scope.description = $scope.selectedGrouping.description;
+                $scope.getGroupingInformation();
 
-            $scope.showGrouping = true;
+                $scope.showGrouping = true;
+            }, function (res) {
+                if (res.statusCode === 403) {
+                    $scope.createRoleErrorModal();
+                }
+            });
         };
 
         /**
@@ -81,6 +87,7 @@
         function handleUnsuccessfulRequest(res) {
             console.log("Error: Status Code " + res.statusCode);
         }
+
 
         /**
          * @param {object[]} members - the members of the group
@@ -1089,7 +1096,28 @@
                 && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 
+        /**
+         * Gets cookie information
+         * @param cname = name of cookie you want to look for.
+         * @returns {*}
+         */
+        $scope.getCookie = function(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for(var i = 0; i <ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0)
+                    return c.substring(name.length, c.length);
+            }
+            return "";
+        }
     }
+
+
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
 

@@ -8,7 +8,7 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function AdminJsController($scope, $window, $controller, dataProvider, groupingsService) {
+    function AdminJsController($scope, $window, $uibModal, $controller, dataProvider, groupingsService) {
 
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
@@ -17,6 +17,25 @@
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
         angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
+
+
+        $scope.createRoleErrorModal = function () {
+            $scope.loading = false;
+            $scope.RoleErrorModalInstance = $uibModal.open({
+                templateUrl: "modal/roleErrorModal",
+                scope: $scope
+            });
+        };
+
+        $scope.proceedLogoutUser = function () {
+            $scope.RoleErrorModalInstance.close();
+            var r = new XMLHttpRequest();
+            r.open('POST', '/uhgroupings/logout', true);
+            r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
+            r.send();
+            $window.location.href = "/uhgroupings/";
+        };
+
 
         /**
          * Initializes the page, displaying the list of groupings to administer and the list of admins to manage.
@@ -33,7 +52,9 @@
 
                 $scope.loading = false;
              }, function (res) {
-                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+                if (res.statusCode === 403) {
+                         $scope.createRoleErrorModal();
+                     }
             });
         };
 
@@ -47,16 +68,21 @@
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            var adminToAdd = $scope.adminToAdd;
-
-            if (_.isEmpty(adminToAdd)) {
-                $scope.createAddErrorModal(adminToAdd);
-            } else {
-                $scope.createConfirmAddModal({
-                    userToAdd: adminToAdd,
-                    listName: "admins"
-                });
-            }
+            groupingsService.getAdminLists(function () {
+                var adminToAdd = $scope.adminToAdd;
+                if (_.isEmpty(adminToAdd)) {
+                    $scope.createAddErrorModal(adminToAdd);
+                } else {
+                    $scope.createConfirmAddModal({
+                        userToAdd: adminToAdd,
+                        listName: "admins"
+                    });
+                }
+            }, function (res) {
+                if (res.statusCode === 403) {
+                    $scope.createRoleErrorModal();
+                }
+            });
         };
 
         /**
@@ -66,17 +92,23 @@
          * account
          */
         $scope.removeAdmin = function (currentPage, index) {
-            var adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+            groupingsService.getAdminLists(function () {
+                var adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
 
-            if ($scope.adminsList.length > 1) {
-                $scope.createRemoveModal({
-                    user: adminToRemove,
-                    listName: "admins"
-                });
-            } else {
-                var userType = "admin";
-                $scope.createRemoveErrorModal(userType);
-            }
+                if ($scope.adminsList.length > 1) {
+                    $scope.createRemoveModal({
+                        user: adminToRemove,
+                        listName: "admins"
+                    });
+                } else {
+                    var userType = "admin";
+                    $scope.createRemoveErrorModal(userType);
+                }
+            },function (res){
+                if (res.statusCode === 403) {
+                    $scope.createRoleErrorModal();
+                }
+            });
         };
 
     }
