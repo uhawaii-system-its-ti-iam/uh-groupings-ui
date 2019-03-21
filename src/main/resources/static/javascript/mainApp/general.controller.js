@@ -340,7 +340,6 @@
             _.forEach(usersToAdd, function (user) {
                 usersToAdd = usersToAdd.filter(user => _.isEmpty(user) === false);
                 usersToAdd = usersToAdd.filter(user => $scope.existInList(user, list) === false);
-                usersToAdd = usersToAdd.filter(user => $scope.isInAnotherList(user, list) === true)
             });
 
             console.log(usersToAdd);
