@@ -102,7 +102,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             String groupingAssignmentJson = (String) groupingsRestController.groupingsOwned(principal).getBody();
             List groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, List.class);
 
-            if (!(groupingAssignment.size() == 0)) {
+            if (groupingAssignment.size() != 0) {
                 logger.info("This person is an owner");
                 return true;
             } else {

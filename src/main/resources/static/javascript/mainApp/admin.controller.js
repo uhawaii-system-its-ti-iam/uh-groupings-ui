@@ -29,7 +29,7 @@
 
         $scope.proceedLogoutUser = function () {
             $scope.RoleErrorModalInstance.close();
-            var r = new XMLHttpRequest();
+            let r = new XMLHttpRequest();
             r.open('POST', '/uhgroupings/logout', true);
             r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
             r.send();
@@ -69,7 +69,8 @@
          */
         $scope.addAdmin = function () {
             groupingsService.getAdminLists(function () {
-                var adminToAdd = $scope.adminToAdd;
+                const adminToAdd = $scope.adminToAdd;
+
                 if (_.isEmpty(adminToAdd)) {
                     $scope.createAddErrorModal(adminToAdd);
                 } else {
@@ -93,7 +94,7 @@
          */
         $scope.removeAdmin = function (currentPage, index) {
             groupingsService.getAdminLists(function () {
-                var adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+                const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
 
                 if ($scope.adminsList.length > 1) {
                     $scope.createRemoveModal({
@@ -101,7 +102,7 @@
                         listName: "admins"
                     });
                 } else {
-                    var userType = "admin";
+                    const userType = "admin";
                     $scope.createRemoveErrorModal(userType);
                 }
             },function (res){

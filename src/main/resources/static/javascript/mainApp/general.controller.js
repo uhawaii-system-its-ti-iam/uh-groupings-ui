@@ -85,7 +85,7 @@
          * Generic handler for unsuccessful requests to the API.
          */
         function handleUnsuccessfulRequest(res) {
-            console.log("Error: Status Code " + res.statusCode);
+            return `Error: Status Code${res.statusCode}`;
         }
 
 
@@ -132,7 +132,7 @@
         $scope.getGroupingInformation = function () {
             $scope.loading = true;
 
-            var groupingPath = $scope.selectedGrouping.path;
+            const groupingPath = $scope.selectedGrouping.path;
 
             groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function (res) {
 
@@ -290,7 +290,7 @@
                     dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
                 }
             });
-        }
+        };
 
 
         // CLINT STUFF FUNCTIONS START:
@@ -386,8 +386,9 @@
          */
         $scope.addInBasis = function (group) {
             _.forEach(group, function (member) {
-                var memberUuid = member.uuid;
-                member.inBasis = _.some($scope.groupingBasis, {uuid: memberUuid})
+                const memberUuid = member.uuid;
+                member.inBasis = _.some($scope.groupingBasis, { uuid: memberUuid })
+
                     ? "Yes"
                     : "No";
             });
@@ -399,8 +400,9 @@
          */
         $scope.addWhereListed = function (compositeGroup) {
             _.forEach(compositeGroup, function (member) {
-                var memberUuid = member.uuid;
-                if (_.some($scope.groupingBasis, {uuid: memberUuid})) {
+                const memberUuid = member.uuid;
+                if (_.some($scope.groupingBasis, { uuid: memberUuid })) {
+
                     member.whereListed = "Basis";
                 }
 
@@ -417,7 +419,7 @@
          * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
-            var userToAdd = $scope.userToAdd;
+            const userToAdd = $scope.userToAdd;
 
             if (_.isEmpty(userToAdd)) {
                 $scope.createAddErrorModal(userToAdd);
@@ -440,13 +442,13 @@
          */
         $scope.updateAddMember = function (userToAdd, list) {
 
-            // only initialize groupingPath is listNmae is not "admins"
+            // only initialize groupingPath is listName is not "admins"
 
-            if ($scope.listName != "admins") {
+            if ($scope.listName !== "admins") {
                 groupingPath = $scope.selectedGrouping.path;
             }
 
-            var handleSuccessfulAdd = function (res) {
+            const handleSuccessfulAdd = function (res) {
                 $scope.createSuccessfulAddModal({
                     user: userToAdd,
                     listName: list,
@@ -521,7 +523,7 @@
          * @param {string} options.listName - name of the list being added to
          */
         $scope.createConfirmAddModal = function (options) {
-            var userToAdd = options.userToAdd;
+            const userToAdd = options.userToAdd;
 
             groupingsService.getMemberAttributes(userToAdd, function (attributes) {
                 $scope.uidToAdd = attributes.uid;
@@ -577,7 +579,7 @@
          * Gives a user ownership of a grouping.
          */
         $scope.addOwner = function () {
-            var ownerToAdd = $scope.ownerToAdd;
+            const ownerToAdd = $scope.ownerToAdd;
 
             if (_.isEmpty(ownerToAdd)) {
                 $scope.createAddErrorModal(ownerToAdd);
@@ -645,7 +647,7 @@
          * account
          */
         $scope.removeMember = function (listName, currentPage, index) {
-            var userToRemove;
+            let userToRemove;
             if (listName === "Include") {
                 userToRemove = $scope.pagedItemsInclude[currentPage][index];
             } else if (listName === "Exclude") {
@@ -664,7 +666,7 @@
          * @param {number} index - the index of the owner clicked by the user
          */
         $scope.removeOwner = function (currentPage, index) {
-            var ownerToRemove = $scope.pagedItemsOwners[currentPage][index];
+            const ownerToRemove = $scope.pagedItemsOwners[currentPage][index];
 
             if ($scope.groupingOwners.length > 1) {
                 $scope.createRemoveModal({
@@ -672,7 +674,7 @@
                     listName: "owners"
                 });
             } else {
-                var userType = "owner";
+                const userType = "owner";
                 $scope.createRemoveErrorModal(userType);
             }
         };
@@ -722,7 +724,9 @@
         $scope.createRemoveModal = function (options) {
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
-            var windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+
+            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+
 
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal",
@@ -732,6 +736,7 @@
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
+
                 var userToRemove = options.user.username;
 
                 // groupingPath should only be defined if listName is not "admins"
@@ -812,11 +817,11 @@
          * Resets the selected group in the side navbar to the list of all members.
          */
         function resetPillsToAllMembers() {
-            var pills = $("#group-pills")[0].children;
-            var pillContents = $("#pill-content")[0].children;
-            for (var i = 0; i < pills.length; i++) {
-                var anchorTag = $(pills[i].children[0]);
-                var pillContent = $(pillContents[i]);
+            const pills = $("#group-pills")[0].children;
+            const pillContents = $("#pill-content")[0].children;
+            for (let i = 0; i < pills.length; i++) {
+                const anchorTag = $(pills[i].children[0]);
+                const pillContent = $(pillContents[i]);
                 if (i === 0 && !anchorTag.hasClass("active")) {
                     anchorTag.addClass("active");
                     pillContent.addClass("show active");
@@ -910,7 +915,7 @@
                 console.log("Error, Status Code: " + res.statusCode);
                 $scope.createPreferenceErrorModal();
             } else if (_.startsWith(res[0].resultCode, "SUCCESS")) {
-                console.log("success");
+                console.log("Success");
             }
         }
 
@@ -918,8 +923,8 @@
          * Toggles the grouping preference which allows users to opt out of a grouping.
          */
         $scope.updateAllowOptOut = function () {
-            var groupingPath = $scope.selectedGrouping.path;
-            var allowOptOut = $scope.allowOptOut;
+            const groupingPath = $scope.selectedGrouping.path;
+            const allowOptOut = $scope.allowOptOut;
 
             groupingsService.setOptOut(groupingPath, allowOptOut, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
@@ -928,8 +933,8 @@
          * Toggles the grouping preference which allows users to discover the grouping and opt into it.
          */
         $scope.updateAllowOptIn = function () {
-            var groupingPath = $scope.selectedGrouping.path;
-            var allowOptIn = $scope.allowOptIn;
+            const groupingPath = $scope.selectedGrouping.path;
+            const allowOptIn = $scope.allowOptIn;
 
             groupingsService.setOptIn(groupingPath, allowOptIn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
@@ -938,8 +943,8 @@
          * Toggles the grouping preference which creates a LISTSERV email list based off the grouping.
          */
         $scope.updateListserv = function () {
-            var groupingPath = $scope.selectedGrouping.path;
-            var listservOn = $scope.listserv;
+            const groupingPath = $scope.selectedGrouping.path;
+            const listservOn = $scope.listserv;
 
             groupingsService.setListserv(groupingPath, listservOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
@@ -948,8 +953,8 @@
          * Toggles the grouping preference to synchronize memberships with the uhReleasedGroupings attribute.
          */
         $scope.updateLdap = function () {
-            var groupingPath = $scope.selectedGrouping.path;
-            var ldapOn = $scope.ldap;
+            const groupingPath = $scope.selectedGrouping.path;
+            const ldapOn = $scope.ldap;
 
             groupingsService.setLdap(groupingPath, ldapOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
@@ -1010,14 +1015,15 @@
         /**
          * Create Email list confirmation modal.
          */
-        $scope.createEmailListModal = function () {
+        $scope.createemailListModal = function () {
             $scope.listserv = !$scope.listserv;
-            $scope.EmailListInstance = $uibModal.open({
-                templateUrl: "modal/EmailListModal",
+            $scope.emailListInstance = $uibModal.open({
+                templateUrl: "modal/emailListModal.html",
+
                 scope: $scope
             });
 
-            $scope.EmailListInstance.result.then(function () {
+            $scope.emailListInstance.result.then(function () {
                 $scope.listserv = !$scope.listserv;
                 $scope.updateListserv();
             }).catch(function () {
@@ -1029,15 +1035,15 @@
         /**
          * Proceeds with the change of the Email list
          */
-        $scope.proceedEmailListModal = function () {
-            $scope.EmailListInstance.close();
+        $scope.proceedemailListModal = function () {
+            $scope.emailListInstance.close();
         };
 
         /**
          *Closes the Email list confirmation modal
          */
-        $scope.closeEmailListModal = function () {
-            $scope.EmailListInstance.dismiss();
+        $scope.closeemailListModal = function () {
+            $scope.emailListInstance.dismiss();
         };
 
         /**
@@ -1047,9 +1053,9 @@
          * @param list - grouping list (i.e. include or exclude)
          */
         $scope.exportGroupToCsv = function (table, grouping, list) {
-            var data, filename, link;
+            let data, filename, link;
 
-            var csv = $scope.convertListToCsv(table);
+            let csv = $scope.convertListToCsv(table);
             if (csv == null) {
                 $scope.createApiErrorModal();
                 return;
@@ -1074,9 +1080,9 @@
          * @returns the table in CSV format
          */
         $scope.convertListToCsv = function (table) {
-            var str = "Last,First,Username,Email\r\n";
-            for (var i = 0; i < table.length; i++) {
-                var line = "";
+            let str = "Last,First,Username,Email\r\n";
+            for (let i = 0; i < table.length; i++) {
+                let line = "";
                 line += table[i].lastName + ",";
                 line += table[i].firstName + ",";
                 line += table[i].username + ",";
@@ -1102,11 +1108,11 @@
          * @returns {*}
          */
         $scope.getCookie = function(cname) {
-            var name = cname + "=";
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for(var i = 0; i <ca.length; i++) {
-                var c = ca[i];
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
                 while (c.charAt(0) == ' ') {
                     c = c.substring(1);
                 }

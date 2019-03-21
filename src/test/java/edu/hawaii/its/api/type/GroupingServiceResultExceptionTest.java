@@ -14,7 +14,7 @@ public class GroupingServiceResultExceptionTest extends GroupingsServiceResult {
     private GroupingsServiceResultException groupingsServiceResultException;
 
     @Before
-    public void setup(){
+    public void setUp(){
         groupingsServiceResultException = new GroupingsServiceResultException();
     }
 
