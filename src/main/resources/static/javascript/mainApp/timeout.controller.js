@@ -60,7 +60,7 @@
         function timerIncrement() {
             $scope.idleTime++;
             //console.log($scope.idleTime);
-            if ($scope.idleTime == 25) {// Create warning modal when 5 min left
+            if ($scope.idleTime === 25) {// Create warning modal when 5 min left
                 $scope.countdownTimer = setInterval(timer, 1000);
                 $scope.createTimeoutModal();
             }
