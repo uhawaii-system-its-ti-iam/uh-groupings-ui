@@ -74,6 +74,16 @@
             },
 
             /**
+             * Adds a members to the include group of a grouping.
+             * @param {string} path - the path to the grouping
+             * @param {string} userToAdd - the usernames of the members to add
+             */
+            addMembersToInclude: function (path, usersToAdd) {
+                var endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
+                dataProvider.updateData( endpoint);
+            },
+
+            /**
              * Adds a member to the exclude group of a grouping.
              * @param {string} path - the path to the grouping
              * @param {string} userToAdd - the username of the member to add

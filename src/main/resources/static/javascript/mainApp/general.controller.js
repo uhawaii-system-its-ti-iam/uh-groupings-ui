@@ -336,15 +336,10 @@
         $scope.addMembers = function (list) {
             var str = $scope.usersToAdd;
             var usersToAdd = str.split(/\r?\n/);
-
-            _.forEach(usersToAdd, function (user) {
-                usersToAdd = usersToAdd.filter(user => _.isEmpty(user) === false);
-                usersToAdd = usersToAdd.filter(user => $scope.existInList(user, list) === false);
-            });
-
-            console.log(usersToAdd);
-
-
+            _.forEach(usersToAdd, user => $scope.createConfirmAddModal({
+                userToAdd: user,
+                listName: list
+            }));
         };
         /**
          * Initiates the adding of a member to a list.
