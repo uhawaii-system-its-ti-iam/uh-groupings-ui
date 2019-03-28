@@ -142,7 +142,7 @@ public class GroupingsRestController {
      * adds a members to the include group of the Grouping who's path is in 'grouping'
      * if the members are in the exclude group, they will be removed from it
      *
-     * @param grouping:  path to the Grouping who's include group the new member will be added to
+     * @param grouping:   path to the Grouping who's include group the new member will be added to
      * @param usersToAdd: usernames of the new members to be added to the include group
      * @return information about the success of the operation
      */
@@ -153,10 +153,11 @@ public class GroupingsRestController {
             @PathVariable String grouping,
             @PathVariable List<String> usersToAdd) {
         logger.info("Entered REST addMembersToIncludeGroup...");
-        for(String userToAdd: usersToAdd){
+        for (String userToAdd : usersToAdd) {
             addMemberToIncludeGroup(principal, grouping, userToAdd);
         }
     }
+
     /**
      * adds a member to the exclude group of the Grouping who's path is in 'grouping'
      * if that member is in the include group, they will be removed from it
@@ -305,17 +306,21 @@ public class GroupingsRestController {
 
         // todo There might be a better way to do this, this approach is kinda gross
         String params = "";
-        if(page != null) params = params + "page=" + page;
-        if(size != null) {
-            if(!params.equals("")) params = params + "&";
+        if (page != null)
+            params = params + "page=" + page;
+        if (size != null) {
+            if (!params.equals(""))
+                params = params + "&";
             params = params + "size=" + size;
         }
-        if(sortString != null) {
-            if(!params.equals("")) params = params + "&";
+        if (sortString != null) {
+            if (!params.equals(""))
+                params = params + "&";
             params = params + "sortString=" + sortString;
         }
-        if(isAscending != null) {
-            if(!params.equals("")) params = params + "&";
+        if (isAscending != null) {
+            if (!params.equals(""))
+                params = params + "&";
             params = params + "isAscending=" + isAscending;
         }
 
@@ -375,7 +380,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity optIn(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optIn...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", grouping, principal.getName());
+        String uri =
+                String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", grouping, principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -392,7 +398,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity optOut(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optOut...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s/self", grouping, principal.getName());
+        String uri =
+                String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s/self", grouping, principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -499,8 +506,7 @@ public class GroupingsRestController {
         //                .body(groupingFactoryService.addGrouping(username, grouping, basis, include, exclude, owners));
     }
 
-
-    private ResponseEntity changePreference(String grouping, String username, String preference, Boolean isOn){
+    private ResponseEntity changePreference(String grouping, String username, String preference, Boolean isOn) {
 
         String ending = "disable";
         if (isOn) {
