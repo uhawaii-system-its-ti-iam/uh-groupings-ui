@@ -5,9 +5,12 @@
     </button>
 </div>
 <div class="modal-body" id="modal-body">
-    <p>Warning! There are <span id="countdown" class="timer"></span> min left until session logs out.</p>
+    <p>Warning! There are <span id="countdown" class="timer"></span> test min left until session logs out.</p>
     <p ng-bind="timeleft"> left <span id="countdown" class="timer"></span></p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="closeTimeoutModal()">Stay logged in.</button>
+    <button class="btn btn-primary" ng-click="closeTimeoutModal()">Stay logged in</button>
+//  form action="/uhgroupings/logout" method="post">
+    <button class="btn btn-secondary" type="submit">Log off now</button>
+//    input type="hidden" name="_csrf" value="90fae406-623a-4685-9695-1bf70ee3064e">/form>
 </div>

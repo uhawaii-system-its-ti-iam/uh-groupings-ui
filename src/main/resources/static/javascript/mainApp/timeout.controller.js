@@ -25,6 +25,8 @@
             //Increment the idle time counter every minute.
             var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
             //Zero the idle timer on mouse movement.
+          console.log(idleInterval);
+
             $(this).click(function (e) {
                 $scope.idleTime = 0;
             });
@@ -60,7 +62,7 @@
         function timerIncrement() {
             $scope.idleTime++;
             //console.log($scope.idleTime);
-            if ($scope.idleTime === 25) {// Create warning modal when 5 min left
+            if ($scope.idleTime == 25) {// Create warning modal when 5 min left
                 $scope.countdownTimer = setInterval(timer, 1000);
                 $scope.createTimeoutModal();
             }
@@ -121,7 +123,7 @@
          * Pings tomcat server with a GET request to retrieve uses info.
          */
         $scope.pingServer = function() {
-            var endpoint = BASE_URL +"members/aaronvil";
+            var endpoint = BASE_URL +"members/ariding";
             clearInterval($scope.countdownTimer);
             $scope.seconds = 300;
             dataProvider.loadData(function (res) {
