@@ -14,17 +14,17 @@
                 var endpoint = BASE_URL + "groupings/" + path + "?";
 
                 var params = "";
-                if(page != null) params = params + "page=" + page;
-                if(size != null) {
-                    if(params !== "") params = params + "&";
+                if (page != null) params = params + "page=" + page;
+                if (size != null) {
+                    if (params !== "") params = params + "&";
                     params = params + "size=" + size;
                 }
-                if(sortString != null) {
-                    if(params !== "") params = params + "&";
+                if (sortString != null) {
+                    if (params !== "") params = params + "&";
                     params = params + "sortString=" + sortString;
                 }
-                if(isAscending != null) {
-                    if(params !== "") params = params + "&";
+                if (isAscending != null) {
+                    if (params !== "") params = params + "&";
                     params = params + "isAscending=" + isAscending;
                 }
 
@@ -79,8 +79,8 @@
              * @param {string} userToAdd - the usernames of the members to add
              */
             addMembersToInclude: function (path, usersToAdd) {
-                var endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
-                dataProvider.updateData( endpoint);
+                    var endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
+                    dataProvider.importData(endpoint);
             },
 
             /**
@@ -232,7 +232,7 @@
              * Gets the groupings a member owns.
              */
             getGroupingsOwned: function (onSuccess, onError) {
-                var endpoint = BASE_URL + "owners/groupings"
+                var endpoint = BASE_URL + "owners/groupings";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             }
 

@@ -336,10 +336,23 @@
         $scope.addMembers = function (list) {
             var str = $scope.usersToAdd;
             var usersToAdd = str.split(/\r?\n/);
-            _.forEach(usersToAdd, user => $scope.createConfirmAddModal({
-                userToAdd: user,
+            $scope.createConfirmAddMembersModal({
+                usersToAdd: usersToAdd,
                 listName: list
-            }));
+            });
+            /*    _.forEach(usersToAdd, user => $scope.createConfirmAddModal({
+                    userToAdd: user,
+                    listName: list
+                })); */
+
+        };
+        $scope.updateAddMembers = function (usersToAdd, list) {
+
+            groupingPath = $scope.selectedGrouping.path;
+
+
+            groupingsService.addMembersToInclude(
+                groupingPath, usersToAdd);
         };
         /**
          * Initiates the adding of a member to a list.
@@ -421,28 +434,40 @@
                 $scope.updateAddMember(user, listName);
             });
         };
-        $scope.createConfirmAddMembersModal = function (members) {
-            _.forEach(members, function (member) {
-                var memberToAdd = member.userToAdd;
-                groupingsService.getMemberAttributes(memberToAdd, function (attributes) {
-                    $scope.namesToAdd = $scope.namesToAdd.concat(attributes.cn);
-                    console.log($scope.namesToAdd);
-                    $scope.uhuuidsToAdd = $scope.uhuuidsToAdd.concat(attributes.uhuuid);
-                    $scope.uidsToAdd = $scope.uidsToAdd.concat(attributes.uid);
-                    $scope.listName = member.listName;
-                });
-            });
+        /*----------------------------------------------------*/
+        $scope.createConfirmAddMembersModal = function (options) {
+
             $scope.confirmAddModalInstance = $uibModal.open({
                 templateUrl: "modal/confirmAddModal",
                 scope: $scope
             });
-            _.forEach($scope.namesToAdd, function (member) {
-                $scope.confirmAddModalInstance.result.then(function () {
-                    $scope.updateAddMember(member, member.listName);
-                });
 
+            $scope.confirmAddModalInstance.result.then(function () {
+                $scope.updateAddMembers(options.usersToAdd, options.listName);
             });
         };
+        /* $scope.createConfirmAddMembersModal = function (members) {
+             _.forEach(members, function (member) {
+                 var memberToAdd = member.userToAdd;
+                 groupingsService.getMemberAttributes(memberToAdd, function (attributes) {
+                     $scope.namesToAdd = $scope.namesToAdd.concat(attributes.cn);
+                     console.log($scope.namesToAdd);
+                     $scope.uhuuidsToAdd = $scope.uhuuidsToAdd.concat(attributes.uhuuid);
+                     $scope.uidsToAdd = $scope.uidsToAdd.concat(attributes.uid);
+                     $scope.listName = member.listName;
+                 });
+             });
+             $scope.confirmAddModalInstance = $uibModal.open({
+                 templateUrl: "modal/confirmAddModal",
+                 scope: $scope
+             });
+             _.forEach($scope.namesToAdd, function (member) {
+                 $scope.confirmAddModalInstance.result.then(function () {
+                     $scope.updateAddMember(member, member.listName);
+                 });
+
+             });
+         }; */
         /**
          * Creates a modal that asks for confirmation when adding a user.
          * @param {object} options - the options object

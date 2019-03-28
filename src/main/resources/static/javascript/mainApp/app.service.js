@@ -39,6 +39,10 @@
                     });
             },
 
+            importData: function(url) {
+                $http.post(encodeURI(url));
+            },
+
             /**
              * Handles Java exceptions by performing a POST request.
              * @param {object} exceptionData - an object containing the exception (stored as a string)

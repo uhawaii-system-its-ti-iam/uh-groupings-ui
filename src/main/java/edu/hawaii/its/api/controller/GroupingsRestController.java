@@ -149,12 +149,13 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{usersToAdd}/addMembersToIncludeGroup",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addMembersToIncludeGroup(Principal principal,
+    public void addMembersToIncludeGroup(Principal principal,
             @PathVariable String grouping,
             @PathVariable List<String> usersToAdd) {
         logger.info("Entered REST addMembersToIncludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMultipleMembers/%s", grouping);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
+        for(String userToAdd: usersToAdd){
+            addMemberToIncludeGroup(principal, grouping, userToAdd);
+        }
     }
     /**
      * adds a member to the exclude group of the Grouping who's path is in 'grouping'
