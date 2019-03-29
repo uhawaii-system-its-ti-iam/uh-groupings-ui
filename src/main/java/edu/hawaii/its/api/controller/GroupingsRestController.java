@@ -149,13 +149,14 @@ public class GroupingsRestController {
     @RequestMapping(value = "/{grouping}/{usersToAdd}/addMembersToIncludeGroup",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public void addMembersToIncludeGroup(Principal principal,
+    public int addMembersToIncludeGroup(Principal principal,
             @PathVariable String grouping,
             @PathVariable List<String> usersToAdd) {
         logger.info("Entered REST addMembersToIncludeGroup...");
         for (String userToAdd : usersToAdd) {
             addMemberToIncludeGroup(principal, grouping, userToAdd);
         }
+        return 0;
     }
 
     /**

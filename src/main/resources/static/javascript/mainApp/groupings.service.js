@@ -78,9 +78,9 @@
              * @param {string} path - the path to the grouping
              * @param {string} userToAdd - the usernames of the members to add
              */
-            addMembersToInclude: function (path, usersToAdd) {
-                    var endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
-                    dataProvider.importData(endpoint);
+            addMembersToInclude: function (path, usersToAdd, onSuccess, onError) {
+                var endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
+                dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
             /**

@@ -351,8 +351,16 @@
             groupingPath = $scope.selectedGrouping.path;
 
 
+            var handleSuccessfulAdd = function (res) {
+                $scope.createSuccessfulAddModal({
+                    user: usersToAdd,
+                    listName: list,
+                    response: res
+                });
+            };
+
             groupingsService.addMembersToInclude(
-                groupingPath, usersToAdd);
+                groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
         };
         /**
          * Initiates the adding of a member to a list.
