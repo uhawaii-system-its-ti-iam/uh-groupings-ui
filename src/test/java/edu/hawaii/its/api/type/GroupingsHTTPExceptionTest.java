@@ -20,7 +20,7 @@ public class GroupingsHTTPExceptionTest extends RuntimeException {
     }
 
     @Test
-    public void GroupingsHTTPExceptionConstructionTest() {
+    public void groupingsHTTPExceptionConstructionTest() {
         assertNotNull(groupingsHTTPexception);
         assertNull(groupingsHTTPexception.getLocalizedMessage());
         assertNull(groupingsHTTPexception.getMessage());
@@ -30,7 +30,7 @@ public class GroupingsHTTPExceptionTest extends RuntimeException {
     }
 
     @Test
-    public void GroupingsHTTPExceptionExpandedTest() {
+    public void groupingsHTTPExceptionExpandedTest() {
 
         Exception e = new RuntimeException("Test Case");
 

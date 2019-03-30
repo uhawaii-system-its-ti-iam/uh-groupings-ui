@@ -47,7 +47,7 @@
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            var adminToAdd = $scope.adminToAdd;
+            const adminToAdd = $scope.adminToAdd;
 
             if (_.isEmpty(adminToAdd)) {
                 $scope.createAddErrorModal(adminToAdd);
@@ -66,7 +66,7 @@
          * account
          */
         $scope.removeAdmin = function (currentPage, index) {
-            var adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+            const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
 
             if ($scope.adminsList.length > 1) {
                 $scope.createRemoveModal({
@@ -74,7 +74,7 @@
                     listName: "admins"
                 });
             } else {
-                var userType = "admin";
+                const userType = "admin";
                 $scope.createRemoveErrorModal(userType);
             }
         };

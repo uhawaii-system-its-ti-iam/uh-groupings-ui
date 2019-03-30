@@ -303,15 +303,15 @@ public class GroupingsRestController {
         String params = "";
         if(page != null) params = params + "page=" + page;
         if(size != null) {
-            if(!params.equals("")) params = params + "&";
+            if(!"".equals(params)) {params = params + "&";}
             params = params + "size=" + size;
         }
         if(sortString != null) {
-            if(!params.equals("")) params = params + "&";
+            if(!"".equals(params)) {params = params + "&";}
             params = params + "sortString=" + sortString;
         }
         if(isAscending != null) {
-            if(!params.equals("")) params = params + "&";
+            if(!"".equals(params)) {params = params + "&";}
             params = params + "isAscending=" + isAscending;
         }
 

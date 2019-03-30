@@ -3,10 +3,10 @@ describe("MembershipController", function () {
     beforeEach(module("UHGroupingsApp"));
     beforeEach(module("ngMockE2E"));
 
-    var scope;
-    var controller;
-    var httpBackend;
-    var BASE_URL;
+    let scope;
+    let controller;
+    let httpBackend;
+    let BASE_URL;
 
     beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_) {
         scope = $rootScope.$new();
@@ -23,7 +23,7 @@ describe("MembershipController", function () {
 
     describe("init", function () {
 
-        var mockResponse;
+        let mockResponse;
 
         beforeEach(function () {
             mockResponse = {
@@ -129,7 +129,7 @@ describe("MembershipController", function () {
     });
 
     describe("optOut", function () {
-        var mockResponse;
+        let mockResponse;
 
         beforeEach(function () {
             mockResponse = [{
@@ -159,7 +159,7 @@ describe("MembershipController", function () {
     });
 
     describe("optIn", function () {
-        var mockResponse;
+        let mockResponse;
 
         beforeEach(function () {
             mockResponse = [{

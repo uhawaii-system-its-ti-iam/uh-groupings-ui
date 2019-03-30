@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.ActiveProfiles;
+
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -312,10 +313,10 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
-    public void requestEmailListModal() throws Exception {
-        mockMvc.perform(get("/modal/EmailListModal"))
+    public void requestemailListModal() throws Exception {
+        mockMvc.perform(get("/modal/emailListModal"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("modal/EmailListModal"));
+                .andExpect(view().name("modal/emailListModal"));
     }
 
     @Test
@@ -340,7 +341,7 @@ public class HomeControllerTest {
         mockMvc.perform(get("/modal/addErrorModal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("modal/addErrorModal"));
-    }
+        }
     @Test
     @WithMockUhUser(username = "uh")
     public void requestTimeoutModal() throws Exception {

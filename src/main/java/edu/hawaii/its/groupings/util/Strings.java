@@ -25,9 +25,10 @@ public class Strings {
     }
 
     public static String truncate(String value, int length) {
-        if (value != null && value.length() > length) {
-            value = value.substring(0, length);
+        String s = value;
+        if (s != null && s.length() > length) {
+            s = s.substring(0, length);
         }
-        return value;
+        return s;
     }
 }

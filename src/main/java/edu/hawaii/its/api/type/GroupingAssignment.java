@@ -5,16 +5,17 @@ import java.util.List;
 
 public class GroupingAssignment {
 
+   private List<Grouping> groupingsIn;
+   private List<Grouping> groupingsOwned;
+   private List<Grouping> groupingsOptedOutOf;
+   private List<Grouping> groupingsOptedInTo;
+   private List<Grouping> groupingsToOptOutOf;
+   private List<Grouping> groupingsToOptInTo;
+
     public GroupingAssignment(){
 
     }
 
-    List<Grouping> groupingsIn;
-    List<Grouping> groupingsOwned;
-    List<Grouping> groupingsOptedOutOf;
-    List<Grouping> groupingsOptedInTo;
-    List<Grouping> groupingsToOptOutOf;
-    List<Grouping> groupingsToOptInTo;
 
     public List<Grouping> getGroupingsIn() {
         return groupingsIn;

@@ -12,8 +12,8 @@
         $scope.itemsPerPage = 20;
         $scope.gap = 2;
 
-        var FILTER_COLUMNS_TO_IGNORE = ["basis", "$$hashKey"];
-        var DEFAULT_COLUMN_NAME = "name";
+        const FILTER_COLUMNS_TO_IGNORE = ["basis", "$$hashKey"];
+        const DEFAULT_COLUMN_NAME = "name";
 
         /**
          * Paginates a list of items.
@@ -25,7 +25,7 @@
                 return [];
             }
             var pagedList = [];
-            for (var i = 0; i < list.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 if (i % $scope.itemsPerPage === 0) {
                     pagedList[Math.floor(i / $scope.itemsPerPage)] = [list[i]];
                 } else {
@@ -51,7 +51,9 @@
          * @returns {boolean} true if the string contains the substring. Otherwise returns false.
          */
         function containsSubstring(str, substr) {
-            if (!substr) return true;
+            if (!substr) {
+                return true;
+            }
             return str.toLowerCase().indexOf(substr.toLowerCase()) !== -1;
         }
 
@@ -65,8 +67,9 @@
          */
         $scope.filter = function (list, pagedListVar, pageVar, query, resetPage) {
             // Filters for items that match the user's query
-            var filteredItems = $filter("filter")(list, function (item) {
-                for (var key in item) {
+
+            let filteredItems = $filter("filter")(list, function (item) {
+                for (let key in item) {
                     if (_.has(item, key)
                         && isFilterableColumn(key)
                         && _.isString(item[key])
@@ -77,7 +80,7 @@
             });
 
             // Resets the page number
-            if(resetPage) $scope[pageVar] = 0;
+            if(resetPage) {$scope[pageVar] = 0;}
             // Paginates the filtered items
             $scope[pagedListVar] = $scope.groupToPages(filteredItems);
         };
@@ -90,8 +93,8 @@
          */
         $scope.pageRange = function (currentPage, totalPages, gap) {
             // Prevent pagination from starting and ending at nonexistent pages
-            var start = (currentPage - gap < 0) ? 0 : currentPage - gap;
-            var end = (currentPage + gap + 1 > totalPages) ? totalPages : currentPage + gap + 1;
+            let start = (currentPage - gap < 0) ? 0 : currentPage - gap;
+            let end = (currentPage + gap + 1 > totalPages) ? totalPages : currentPage + gap + 1;
             return _.range(start, end);
         };
 
@@ -171,7 +174,7 @@
                     $scope.columnSort[tableName].reverse = false;
                 }
             }
-            var reverse = $scope.columnSort[tableName].reverse;
+            let reverse = $scope.columnSort[tableName].reverse;
             $scope[tableName] = $filter("orderBy")($scope[tableName], propertyName, reverse);
             // Paginate the table again
             $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
