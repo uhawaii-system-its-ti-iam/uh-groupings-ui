@@ -314,7 +314,7 @@
 
         /**
          * Adds a user to a group.
-         * @param {string} list - the list the user is being added to (either Include or Exclude)
+         * @param {string} list - the list the user is being added to (either Include or Exclude jsdlkfjaslfsdalsdfks)
          */
         $scope.addMember = function (list) {
             var userToAdd = $scope.userToAdd;
