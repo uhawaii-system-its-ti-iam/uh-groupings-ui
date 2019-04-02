@@ -23,7 +23,7 @@
          */
         $(document).ready(function () {
             //Increment the idle time counter every minute.
-            var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+            var idleInterval = setInterval(timerIncrement, 30000); // 1 minute
             //Zero the idle timer on mouse movement.
           console.log(idleInterval);
 
@@ -62,7 +62,7 @@
         function timerIncrement() {
             $scope.idleTime++;
             //console.log($scope.idleTime);
-            if ($scope.idleTime == 25) {// Create warning modal when 5 min left
+            if ($scope.idleTime == 1) {// Create warning modal when 5 min left
                 $scope.countdownTimer = setInterval(timer, 1000);
                 $scope.createTimeoutModal();
             }
