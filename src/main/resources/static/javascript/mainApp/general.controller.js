@@ -462,7 +462,7 @@
 
             }, function (res) {
                 if (res.statusCode === 404) {
-                    $scope.createAddErrorModal(usersToAdd);
+                    $scope.createAddErrorModal(options.usersToAdd);
                 }
             });
         };
