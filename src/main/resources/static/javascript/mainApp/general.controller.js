@@ -445,26 +445,14 @@
          * @param {string} options.listName - name of the list being added to
          */
         $scope.createConfirmAddMembersModal = function (options) {
-            groupingsService.getMemberAttributes(options.usersToAdd, function (attributes) {
-                $scope.namesToAdd = attributes.cn;
-                $scope.uhuuidsToAdd = attributes.uhuuid;
-                $scope.uidsToAdd = attributes.uid;
-
-                $scope.listName = options.listName;
-
-                $scope.confirmAddModalInstance = $uibModal.open({
-                    templateUrl: "modal/confirmAddModal",
-                    scope: $scope
-                });
-                $scope.confirmAddModalInstance.result.then(function () {
-                    $scope.updateAddMembers(options.usersToAdd, options.listName);
-                });
-
-            }, function (res) {
-                if (res.statusCode === 404) {
-                    $scope.createAddErrorModal(options.usersToAdd);
-                }
+            $scope.confirmAddModalInstance = $uibModal.open({
+                templateUrl: "modal/confirmAddModal",
+                scope: $scope
             });
+            $scope.confirmAddModalInstance.result.then(function () {
+                $scope.updateAddMembers(options.usersToAdd, options.listName);
+            });
+
         };
         /**
          * Creates a modal that asks for confirmation when adding a user.
