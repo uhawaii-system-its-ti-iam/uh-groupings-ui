@@ -68,24 +68,22 @@
          * @param {number} index - the index of the grouping clicked by the user
          */
         $scope.displayGrouping = function (currentPage, index) {
-            groupingsService.getAdminLists(function () {
                 $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
                 $scope.description = $scope.selectedGrouping.description;
                 $scope.getGroupingInformation();
 
                 $scope.showGrouping = true;
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createRoleErrorModal();
-                }
-            });
         };
 
         /**
          * Generic handler for unsuccessful requests to the API.
          */
         function handleUnsuccessfulRequest(res) {
-            return `Error: Status Code${res.statusCode}`;
+            if (res.status === 403) {
+                $scope.createOwnerErrorModal();
+            } else {
+                return `Error: Status Code${res.statusCode}`;
+            }
         }
 
 
@@ -179,7 +177,9 @@
                 // Recursive function to retrieve the rest of the pages
                 $scope.getPages(groupingPath, 2, PAGE_SIZE, "name", true);
             }, function (res) {
-                dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+                if (res.statusCode === 403) {
+                    $scope.createOwnerErrorModal();
+                }
             });
 
             //todo Keeping code in case
@@ -286,6 +286,9 @@
                     // console.log("Progress", $scope.paginatingProgress);
                     // console.log("Complete", $scope.paginatingComplete);
                     // console.log("Large", $scope.largeGrouping);
+
+                } else if (res.statusCode === 403) {
+                    $scope.createOwnerErrorModal();
                 } else {
                     dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
                 }
@@ -419,8 +422,9 @@
          * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
+            const groupingPath = $scope.selectedGrouping.path;
+            groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function () {
             const userToAdd = $scope.userToAdd;
-
             if (_.isEmpty(userToAdd)) {
                 $scope.createAddErrorModal(userToAdd);
             } else if ($scope.existInList(userToAdd, list)) {
@@ -433,6 +437,12 @@
                     listName: list
                 });
             }
+            }, function (res) {
+                if (res.statusCode === 403) {
+                    $scope.createOwnerErrorModal();
+                }
+            });
+
         };
 
         /**
@@ -579,6 +589,7 @@
          * Gives a user ownership of a grouping.
          */
         $scope.addOwner = function () {
+
             const ownerToAdd = $scope.ownerToAdd;
 
             if (_.isEmpty(ownerToAdd)) {
@@ -589,7 +600,12 @@
                     listName: "owners"
                 });
             }
-        };
+            }, function (res) {
+                if (res.statusCode === 403) {
+                    $scope.createOwnerErrorModal();
+                }
+            };
+
 
         /**
          * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
@@ -640,6 +656,17 @@
         };
 
         /**
+         * Creates a modal telling the user that they do not have access to perform this action and that they
+         * will be logged out and redirected to the homepage.
+         */
+        $scope.createRoleErrorModal = function () {
+            $scope.loading = false;
+            $scope.RoleErrorModalInstance = $uibModal.open({
+                templateUrl: "modal/roleErrorModal",
+                scope: $scope
+            });
+        };
+        /**
          * Removes a user from the include or exclude group.
          * @param {string} listName - the list to remove the user from (either Include or Exclude)
          * @param {number} currentPage - the current page in the table
@@ -647,6 +674,7 @@
          * account
          */
         $scope.removeMember = function (listName, currentPage, index) {
+
             let userToRemove;
             if (listName === "Include") {
                 userToRemove = $scope.pagedItemsInclude[currentPage][index];
@@ -658,7 +686,12 @@
                 user: userToRemove,
                 listName: listName
             });
-        };
+            }, function (res) {
+                if (res.statusCode === 403) {
+                    $scope.createOwnerErrorModal();
+                }
+            };
+
 
         /**
          * Removes a grouping owner. There must be at least one grouping owner remaining.
@@ -677,6 +710,12 @@
                 const userType = "owner";
                 $scope.createRemoveErrorModal(userType);
             }
+
+            } , function (res) {
+            if (res.statusCode === 403) {
+                $scope.createOwnerErrorModal();
+            };
+
         };
 
         /**
@@ -1046,6 +1085,15 @@
             $scope.emailListInstance.dismiss();
         };
 
+
+        $scope.createOwnerErrorModal = function () {
+            $scope.loading = false;
+            $scope.OwnerErrorModalInstance = $uibModal.open({
+                templateUrl: "modal/ownerErrorModal",
+                scope: $scope
+            });
+        };
+
         /**
          * Exports data in a table to a CSV file
          * @param {object[]} table - the table to export
@@ -1121,6 +1169,22 @@
             }
             return "";
         }
+
+        $scope.proceedLogoutUser = function () {
+            $scope.RoleErrorModalInstance.close();
+            let r = new XMLHttpRequest();
+            r.open('POST', '/uhgroupings/logout', true);
+            r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
+            r.send();
+            $window.location.href = "/uhgroupings/";
+        };
+
+        $scope.proceedRedirect = function () {
+            $scope.OwnerErrorModalInstance.close();
+            $window.location.href = "/uhgroupings/groupings";
+        };
+
+
     }
 
 

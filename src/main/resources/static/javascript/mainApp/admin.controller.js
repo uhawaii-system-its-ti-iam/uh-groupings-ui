@@ -27,14 +27,6 @@
             });
         };
 
-        $scope.proceedLogoutUser = function () {
-            $scope.RoleErrorModalInstance.close();
-            let r = new XMLHttpRequest();
-            r.open('POST', '/uhgroupings/logout', true);
-            r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
-            r.send();
-            $window.location.href = "/uhgroupings/";
-        };
 
 
         /**

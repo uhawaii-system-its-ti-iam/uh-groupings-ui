@@ -177,5 +177,8 @@ public class HomeController {
     @RequestMapping(value = "/modal/roleErrorModal", method = RequestMethod.GET)
     public String roleErrorModal(Locale locale, Model model) {return "modal/roleErrorModal";}
 
+    @RequestMapping(value = "/modal/ownerErrorModal", method = RequestMethod.GET)
+    public String ownerErrorModal(Locale locale, Model model) {return "modal/ownerErrorModal";}
+
 
 }
