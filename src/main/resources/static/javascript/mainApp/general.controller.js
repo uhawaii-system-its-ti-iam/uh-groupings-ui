@@ -1085,7 +1085,11 @@
             $scope.emailListInstance.dismiss();
         };
 
-
+        /**
+         * Create owner error modal when a grouping owner
+         * is removed while still trying to access grouping
+         * owner actions.
+         */
         $scope.createOwnerErrorModal = function () {
             $scope.loading = false;
             $scope.OwnerErrorModalInstance = $uibModal.open({
@@ -1170,6 +1174,9 @@
             return "";
         }
 
+        /**
+         * Logs out a user and redirects them to the homepage.
+         */
         $scope.proceedLogoutUser = function () {
             $scope.RoleErrorModalInstance.close();
             let r = new XMLHttpRequest();
@@ -1179,6 +1186,9 @@
             $window.location.href = "/uhgroupings/";
         };
 
+        /**
+         * redirects the user to the groupings page.
+         */
         $scope.proceedRedirect = function () {
             $scope.OwnerErrorModalInstance.close();
             $window.location.href = "/uhgroupings/groupings";
