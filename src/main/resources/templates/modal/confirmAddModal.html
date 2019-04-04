@@ -1,20 +1,49 @@
+<!--
+   -  confirmAddModal.html
+        -  Contains the add conformation modal
+        -  See Modal Add section in messages.properties
+        -  See createConfirmAddModal general.controller.js
+-->
+
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">Confirm Adding Member</h5>
-    <button type="button" class="close" data-dismiss="dialog" ng-click="cancelConfirmAddUser()">
-        <span aria-hidden="true">&times;</span>
-    </button>
+  <h5 class="modal-title" id="modal-title">Confirm Adding New Member</h5>
+  <button type="button" class="close" data-dismiss="dialog" ng-click="cancelConfirmAddUser()">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body" id="modal-body">
-    <p th:text="#{screen.message.modal.add.confirmation}"></p>
-    <p th:utext="#{screen.message.modal.add.memberInfo}"></p>
-    <p th:text="#{screen.message.modal.add.finalConfirm}"></p>
+  <p>
+    <span style="color: black" th:text="#{screen.message.modal.add.confirmation}"></span>
+    <span style="color: black">{{listName}} list.</span>
+  </p>
+  <table style="width: 80%;margin-bottom: 30px;">
+    <tr>
+      <th th:utext="#{screen.message.modal.add.name}"></th>
+      <th style="font-weight: normal"> {{nameToAdd}}</th>
+    </tr>
+    <tr>
+      <th th:utext="#{screen.message.modal.add.uhUserName}"></th>
+      <th class="font-weight-normal"> {{uhuuidToAdd}}</th>
+    </tr>
+    <tr>
+      <th th:utext="#{screen.message.modal.add.uhUserId}"></th>
+      <th class="font-weight-normal">{{uidToAdd}}</th>
+    </tr>
+  </table>
+
+  <p> Are you sure you want to add
+    <span style="font-weight: bold">{{ uidToAdd}}</span>
+    <span style="color: black"> to the </span>
+    <span style="color: black">{{listName}}</span>
+    <span style="color: black"> list?</span>
+  </p>
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="proceedConfirmAddUser()">Yes</button>
-    <button class="btn btn-default" ng-click="cancelConfirmAddUser()" data-dismiss="modal">Cancel</button>
+  <button class="btn btn-primary" ng-click="proceedConfirmAddUser()">Yes</button>
+  <button class="btn btn-default" ng-click="cancelConfirmAddUser()" data-dismiss="modal">Cancel</button>
 </div>
 </html>

@@ -1,5 +1,21 @@
 <th:block th:fragment="members">
-    <h3>All Members</h3>
+
+    <div class="row group-header">
+        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
+            <h3>All Members<span> ({{groupingMembers.length}})</span></h3>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingProgress">
+            <h4 class="loading-text">Now Loading...</h4>
+            <div class="small-loader"></div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingComplete">
+            <h4 class="done-text">Grouping Loaded! ✓</h4>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="largeGrouping">
+            <h4 class="done-text">Grouping Too Large. Loading stopped.</h4>
+        </div>
+    </div>
+
     <div class="row group-header">
         <!-- Export to CSV button -->
         <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
@@ -12,7 +28,7 @@
         <div class="col-lg-3 col-md-4 col-sm-6 col-12 p-0">
             <input placeholder="Filter Members..." type="text" title="Filter Members"
                    ng-model="membersQuery" class="form-control"
-                   ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery)"/>
+                   ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
         </div>
     </div>
     <div class="table-responsive-sm">

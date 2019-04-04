@@ -8,20 +8,60 @@
      */
     UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL) {
         return {
-            /**
-             * Gets information about a grouping.
-             * @param {string} path - the path to the grouping
-             */
-            getGrouping: function (path, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/grouping";
+
+
+            getGrouping: function (path, page, size, sortString, isAscending, onSuccess, onError) {
+
+                let endpoint = BASE_URL + "groupings/" + path + "?";
+
+                let params = "";
+
+                if(page != null) { params = params + "page=" + page; }
+                if(size != null) {
+                    if(params !== "") { params = params + "&"; }
+                    params = params + "size=" + size;
+                }
+                if(sortString != null) {
+                    if(params !== "") { params = params + "&"; }
+                    params = params + "sortString=" + sortString;
+                }
+                if(isAscending != null) {
+                    if(params !== "") { params = params + "&"; }
+                    params = params + "isAscending=" + isAscending;
+                }
+
+                endpoint = endpoint + params;
+                // console.log(endpoint);
+
+
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
+
+            /**
+             * Get page of a grouping
+             * @param {String} path - the path to the grouping
+             * @param {String} page - the page to retrieve
+             * @param {String} size - the size of each page
+             */
+            // getPaginatedGrouping: function (path, page, size, onSuccess, onError) {
+            //     var endpoint = BASE_URL + "groupings/" + path + "?page=" + page + "&size=" + size;
+            //     dataProvider.loadData(onSuccess, onError, endpoint);
+            // },
+            //
+            // /**
+            //  * Gets information about a grouping.
+            //  * @param {string} path - the path to the grouping
+            //  */
+            // getGrouping: function (path, onSuccess, onError) {
+            //     var endpoint = BASE_URL + path + "/grouping";
+            //     dataProvider.loadData(onSuccess, onError, endpoint);
+            // },
 
             /**
              * Gets the list of admins and groupings.
              */
             getAdminLists: function (onSuccess, onError) {
-                var endpoint = BASE_URL + "adminLists";
+                let endpoint = BASE_URL + "adminLists";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
@@ -31,7 +71,7 @@
              * @param {string} userToAdd - the username of the member to add
              */
             addMemberToInclude: function (path, userToAdd, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToIncludeGroup";
+                let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -41,7 +81,7 @@
              * @param {string} userToAdd - the username of the member to add
              */
             addMemberToExclude: function (path, userToAdd, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToExcludeGroup";
+                let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToExcludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -51,7 +91,7 @@
              * @param {string} newOwner - the new owner to add to the grouping
              */
             assignOwnership: function (path, newOwner, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + newOwner + "/assignOwnership";
+                let endpoint = BASE_URL + path + "/" + newOwner + "/assignOwnership";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -60,7 +100,7 @@
              * @param {string} adminToAdd - the username of the admin to add
              */
             addAdmin: function (adminToAdd, onSuccess, onError) {
-                var endpoint = BASE_URL + adminToAdd + "/addAdmin";
+                let endpoint = BASE_URL + adminToAdd + "/addAdmin";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -70,7 +110,7 @@
              * @param {string} member - the member to remove
              */
             removeMemberFromInclude: function (path, member, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromIncludeGroup";
+                let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -80,7 +120,7 @@
              * @param {string} member - the member to remove
              */
             removeMemberFromExclude: function (path, member, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromExcludeGroup";
+                let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromExcludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -90,7 +130,7 @@
              * @param {string} member - the member to remove
              */
             removeOwner: function (path, ownerToRemove, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + ownerToRemove + "/removeOwnership";
+                let endpoint = BASE_URL + path + "/" + ownerToRemove + "/removeOwnership";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -100,7 +140,7 @@
              * @param {string} member - the member to remove
              */
             removeAdmin: function (adminToRemove, onSuccess, onError) {
-                var endpoint = BASE_URL + adminToRemove + "/deleteAdmin";
+                let endpoint = BASE_URL + adminToRemove + "/deleteAdmin";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -109,7 +149,7 @@
              * @param {string} member - the UH username of the member
              */
             getMemberAttributes: function (member, onSuccess, onError) {
-                var endpoint = BASE_URL + "members/" + member;
+                let endpoint = BASE_URL + "members/" + member;
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
@@ -118,7 +158,7 @@
              * @param {string} path - the path of the grouping to opt out of
              */
             optOut: function (path, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/optOut";
+                let endpoint = BASE_URL + path + "/optOut";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -127,7 +167,7 @@
              * @param {string} path - the path of the grouping to opt in to
              */
             optIn: function (path, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/optIn";
+                let endpoint = BASE_URL + path + "/optIn";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -135,7 +175,7 @@
              * Gets the groupings a user is a part of, the groupings they can opt in to, and the groupings they own.
              */
             getMembershipAssignment: function (onSuccess, onError) {
-                var endpoint = BASE_URL + "members/groupings";
+                let endpoint = BASE_URL + "members/groupings";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
@@ -145,7 +185,7 @@
              * @param {boolean} optInOn - true if users should be allowed to opt into the grouping, otherwise false
              */
             setOptIn: function (path, optInOn, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + optInOn + "/setOptIn";
+                let endpoint = BASE_URL + path + "/" + optInOn + "/setOptIn";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -155,7 +195,7 @@
              * @param {boolean} optInOn - true if users should be allowed to opt out of the grouping, otherwise false
              */
             setOptOut: function (path, optOutOn, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + optOutOn + "/setOptOut";
+                let endpoint = BASE_URL + path + "/" + optOutOn + "/setOptOut";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -165,10 +205,14 @@
              * @param {boolean} listservOn - true if the listserv destination should be enabled, otherwise false
              */
             setListserv: function (path, listservOn, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + listservOn + "/setListserv";
+                let endpoint = BASE_URL + path + "/" + listservOn + "/setListserv";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
+            // setListserv(path, listservOn, onSuccess, onError){
+            //     let endpoint = BASE_URL + path + "/" + listservOn + "/setListserv";
+            //     dataProvider.updateData(onSuccess, onError, endpoint);
+            // }
             /**
              * Toggles the publication destination for uhReleasedGroupings.
              * @param {string} path - the path of the grouping to update
@@ -176,7 +220,7 @@
              * false
              */
             setLdap: function (path, ldapOn, onSuccess, onError) {
-                var endpoint = BASE_URL + path + "/" + ldapOn + "/setLdap";
+                let endpoint = BASE_URL + path + "/" + ldapOn + "/setLdap";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -184,10 +228,9 @@
              * Gets the groupings a member owns.
              */
             getGroupingsOwned: function (onSuccess, onError) {
-                var endpoint = BASE_URL + "owners/groupings"
+                let endpoint = BASE_URL + "owners/groupings";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             }
-
         };
     });
 

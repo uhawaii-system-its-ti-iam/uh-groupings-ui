@@ -1,15 +1,6 @@
 package edu.hawaii.its.groupings.access;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.authentication.AttributePrincipalImpl;
 import org.jasig.cas.client.validation.Assertion;
@@ -22,7 +13,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -91,7 +90,7 @@ public class UserDetailsServiceTest {
         assertEquals("10000004", user.getUhuuid());
 
         // Granted Authorities.
-        assertTrue(user.getAuthorities().size() == 3);
+        assertEquals(3, user.getAuthorities().size());
         assertTrue(user.hasRole(Role.ANONYMOUS));
         assertTrue(user.hasRole(Role.UH));
         assertTrue(user.hasRole(Role.EMPLOYEE));

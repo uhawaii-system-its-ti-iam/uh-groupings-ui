@@ -1,5 +1,10 @@
 package edu.hawaii.its.groupings.controller;
 
+import edu.hawaii.its.api.type.GroupingsHTTPException;
+import edu.hawaii.its.api.type.GroupingsServiceResultException;
+import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.access.UserContextService;
+import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -8,13 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-
-import edu.hawaii.its.api.type.GroupingsHTTPException;
-import edu.hawaii.its.api.type.GroupingsServiceResultException;
-import edu.hawaii.its.groupings.access.User;
-import edu.hawaii.its.groupings.access.UserContextService;
-
-import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 
 @ControllerAdvice
 public class ErrorControllerAdvice {
@@ -57,8 +55,7 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(GroupingsServiceResultException.class)
     public ResponseEntity<GroupingsHTTPException> handleGroupingsServiceResultException(GroupingsServiceResultException gsre) {
-        ResponseEntity<GroupingsHTTPException> re = exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
-        return re;
+        return exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
     }
 
     //todo this is for the HolidayRestControllerTest test (should we really have this behavior?)

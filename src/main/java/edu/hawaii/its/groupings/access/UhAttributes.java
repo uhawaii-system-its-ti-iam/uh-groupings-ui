@@ -7,21 +7,21 @@ public interface UhAttributes {
 
     // Methods specific to UH results.
 
-    public String getUid();
+    String getUid();
 
-    public String getUhUuid();
+    String getUhUuid();
 
-    public String getName();
+    String getName();
 
-    public List<String> getMail();
+    List<String> getMail();
 
-    public List<String> getAffiliation();
+    List<String> getAffiliation();
 
     // Generic methods.
 
-    public String getValue(String name);
+    String getValue(String name);
 
-    public List<String> getValues(String name);
+    List<String> getValues(String name);
 
-    public Map<?, ?> getMap();
+    Map<?, ?> getMap();
 }

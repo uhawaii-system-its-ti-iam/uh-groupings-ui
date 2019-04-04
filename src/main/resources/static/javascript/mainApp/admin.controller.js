@@ -26,10 +26,10 @@
             $scope.loading = true;
             groupingsService.getAdminLists(function (res) {
                 $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
-                $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery);
+                $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
 
                 $scope.groupingsList = _.sortBy(res.allGroupings, "name");
-                $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery);
+                $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
 
                 $scope.loading = false;
              }, function (res) {
@@ -47,7 +47,7 @@
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            var adminToAdd = $scope.adminToAdd;
+            const adminToAdd = $scope.adminToAdd;
 
             if (_.isEmpty(adminToAdd)) {
                 $scope.createAddErrorModal(adminToAdd);
@@ -66,7 +66,7 @@
          * account
          */
         $scope.removeAdmin = function (currentPage, index) {
-            var adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+            const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
 
             if ($scope.adminsList.length > 1) {
                 $scope.createRemoveModal({
@@ -74,7 +74,7 @@
                     listName: "admins"
                 });
             } else {
-                var userType = "admin";
+                const userType = "admin";
                 $scope.createRemoveErrorModal(userType);
             }
         };

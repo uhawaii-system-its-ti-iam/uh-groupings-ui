@@ -1,23 +1,25 @@
 package edu.hawaii.its.api.type;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.test.util.ReflectionTestUtils;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class GroupTest {
 
     private Group group;
+    private Person person;
 
     @Before
     public void setUp() {
@@ -49,15 +51,16 @@ public class GroupTest {
         assertThat(group.getMembers().size(), equalTo(3));
         group.setMembers(null);
         assertThat(group.getMembers().size(), equalTo(0));
+        assertFalse(group.isMember(person));
     }
 
     @Test
     public void equals() {
         Group g0 = new Group();
         assertThat(g0, equalTo(g0));
-        assertTrue(g0.equals(g0));
+        assertEquals(g0, g0);
         assertFalse(g0.equals(null));
-        assertFalse(g0.equals(new String()));
+        assertNotEquals(g0, new String());
 
         Group g1 = new Group();
         assertThat(g0, equalTo(g1));
@@ -121,24 +124,24 @@ public class GroupTest {
 
         g0 = new Group();
         assertFalse(g0.equals(null));
-        assertFalse(g0.equals(new String()));
-        assertTrue(g0.equals(g0));
+        assertNotEquals(g0, new String());
+        assertEquals(g0, g0);
 
         g1 = new Group();
-        assertTrue(g0.equals(g1));
-        assertTrue(g1.equals(g0));
+        assertEquals(g0, g1);
+        assertEquals(g1, g0);
         ReflectionTestUtils.setField(g0, "members", null);
-        assertFalse(g0.equals(g1));
-        assertFalse(g1.equals(g0));
+        assertNotEquals(g0, g1);
+        assertNotEquals(g1, g0);
         ReflectionTestUtils.setField(g1, "members", null);
-        assertTrue(g0.equals(g1));
-        assertTrue(g1.equals(g0));
+        assertEquals(g0, g1);
+        assertEquals(g1, g0);
         ReflectionTestUtils.setField(g0, "path", null);
-        assertFalse(g0.equals(g1));
-        assertFalse(g1.equals(g0));
+        assertNotEquals(g0, g1);
+        assertNotEquals(g1, g0);
         ReflectionTestUtils.setField(g1, "path", null);
-        assertTrue(g0.equals(g1));
-        assertTrue(g1.equals(g0));
+        assertEquals(g0, g1);
+        assertEquals(g1, g0);
     }
 
     @Test
@@ -243,8 +246,8 @@ public class GroupTest {
         g0 = new Group("a", list0);
         g1 = new Group("a", list1);
         assertThat(g0.compareTo(g1), equalTo(0));
-        assertTrue(g0.equals(g1));
-        assertTrue(g1.equals(g0));
+        assertEquals(g0, g1);
+        assertEquals(g1, g0);
 
         g1.getMembers().get(3).setName("e");
         assertThat(g0.compareTo(g1), equalTo(-1));

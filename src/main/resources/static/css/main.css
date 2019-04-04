@@ -54,6 +54,16 @@ h4 {
     margin-top: -5.357em;
 }
 
+.small-loader {
+    float: right;
+    border: 2px solid white; /* Black */
+    border-top: 2px solid black; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
 #overlay {
     position: fixed;
     top: 0;

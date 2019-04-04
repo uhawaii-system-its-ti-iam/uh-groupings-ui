@@ -78,7 +78,8 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getGrouping() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/grouping";
+        //        String uri = REST_CONTROLLER_BASE + GROUPING + "/grouping";
+        String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING;
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -203,6 +204,7 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(post(uri)
                 .with(csrf()))
                 .andExpect(status().isOk());
+
     }
 
     @Test
@@ -280,8 +282,6 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getOptIn() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/optIn";
-
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
@@ -318,14 +318,6 @@ public class GroupingsRestControllerTest {
     public void getAddGrouping() throws Exception {
 
         mockMvc.perform(post(REST_CONTROLLER_BASE + "fakeGroup/fakeBasis/fakeInclude/fakeExclude/fakeOwners/addGrouping")
-                .with(csrf()))
-                .andExpect(status().is5xxServerError());
-    }
-
-    @Test
-    @WithMockUhUser
-    public void getDeleteGrouping() throws Exception {
-        mockMvc.perform(delete(REST_CONTROLLER_BASE + "fakeGroup/deleteGrouping")
                 .with(csrf()))
                 .andExpect(status().is5xxServerError());
     }

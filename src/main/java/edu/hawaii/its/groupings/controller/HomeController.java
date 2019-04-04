@@ -1,11 +1,10 @@
 package edu.hawaii.its.groupings.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.groupings.type.Feedback;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -64,7 +63,7 @@ public class HomeController {
         return "memberships";
     }
 
-    @PreAuthorize("hasRole('ADMIN') || hasRole('OWNER')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('OWNER')")
     @RequestMapping(value = "/groupings", method = RequestMethod.GET)
     public String groupings(Locale locale, Model model) {
         logger.info("User at groupings.");
@@ -150,9 +149,9 @@ public class HomeController {
         return "modal/confirmAddModal";
     }
 
-    @RequestMapping(value = "/modal/EmailListModal", method = RequestMethod.GET)
-    public String EmailListModal(Locale locale, Model model) {
-        return "modal/EmailListModal";
+    @RequestMapping(value = "/modal/emailListModal", method = RequestMethod.GET)
+    public String emailListModal(Locale locale, Model model) {
+        return "modal/emailListModal";
     }
 
     @RequestMapping(value = "/modal/CASLDAPModal", method = RequestMethod.GET)
@@ -166,7 +165,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/modal/timeoutModal", method = RequestMethod.GET)
-    public String TimeoutModal(Locale locale, Model model) {
+    public String timeoutModal(Locale locale, Model model) {
         return "modal/timeoutModal";
     }
 
