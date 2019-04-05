@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+=======
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+>>>>>>> dev-kahlin
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
@@ -235,12 +240,37 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Updates the description of a grouping to the new one
+     *
+     * @param path:      path to the grouping that the description will be updated
+     * @param description: String containing the description of the group to be updated
+     * @return information about the descripiton and group being updated
+     */
+
+    @RequestMapping(value = "/groupings/{path}/description",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateDescription(Principal principal, @PathVariable String path,
+                                          @RequestBody(required = false) String description) {
+        logger.info("Entered REST updateDescription...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/description", path);
+        return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, description, HttpMethod.PUT);
+    }
+
+>>>>>>> dev-kahlin
 
 
     /**
      * finds and returns the specified Grouping
      *
+<<<<<<< HEAD
      * @param  : String containing the path of the Grouping to be searched for
+=======
+     * @param path : String containing the path of the Grouping to be searched for
+>>>>>>> dev-kahlin
      * @return the Grouping that was searched for
      * the Grouping will contain information about
      * members of each Group in the grouping

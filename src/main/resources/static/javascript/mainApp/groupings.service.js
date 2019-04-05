@@ -8,8 +8,12 @@
      */
     UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL) {
         return {
-
-
+            /**
+            * Get page of a grouping
+            * @param {String} path - the path to the grouping
+            * @param {String} page - the page to retrieve
+            * @param {String} size - the size of each page
+            */
             getGrouping: function (path, page, size, sortString, isAscending, onSuccess, onError) {
 
                 let endpoint = BASE_URL + "groupings/" + path + "?";
@@ -37,34 +41,17 @@
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
-            //Possible description restcontroller call
-
-            updateDescription: function(path, onSuccess, onError) {
-                var endpoint = BASE_URL + "groupings/" + path + "/description";
-                dataProvider.updateData(onSuccess, onError, endpoint);
-            },
-
-            //End description restcontroller call temp
-
             /**
-             * Get page of a grouping
-             * @param {String} path - the path to the grouping
-             * @param {String} page - the page to retrieve
-             * @param {String} size - the size of each page
+
+             * Gets information about a grouping.
+             * @param {string} path - the path to the grouping
+             * @param {string} data - description to be updated
              */
-            // getPaginatedGrouping: function (path, page, size, onSuccess, onError) {
-            //     var endpoint = BASE_URL + "groupings/" + path + "?page=" + page + "&size=" + size;
-            //     dataProvider.loadData(onSuccess, onError, endpoint);
-            // },
-            //
-            // /**
-            //  * Gets information about a grouping.
-            //  * @param {string} path - the path to the grouping
-            //  */
-            // getGrouping: function (path, onSuccess, onError) {
-            //     var endpoint = BASE_URL + path + "/grouping";
-            //     dataProvider.loadData(onSuccess, onError, endpoint);
-            // },
+
+            updateDescription: function(path, onSuccess, onError, data) {
+                var endpoint = BASE_URL + "groupings/" + path + "/description";
+                dataProvider.updateDataWithBody(onSuccess, onError, endpoint, data);
+            },
 
             /**
              * Gets the list of admins and groupings.
