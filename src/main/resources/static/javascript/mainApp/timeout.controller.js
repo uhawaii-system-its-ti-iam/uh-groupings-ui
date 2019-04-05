@@ -100,7 +100,9 @@
          * Pings tomcat server with a GET request to retrieve uses info.
          */
         $scope.pingServer = function () {
+
             const endpoint = BASE_URL + "members/aaronvil";
+
             clearInterval($scope.countdownTimer);
             $scope.seconds = 300;
             dataProvider.loadData(function (res) {
