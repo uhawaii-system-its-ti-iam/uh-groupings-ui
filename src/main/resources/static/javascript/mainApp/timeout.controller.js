@@ -18,47 +18,47 @@
 
         $scope.seconds = 300;
         $scope.idleTime = 0;
-            /**
-             * Every minute, checks whether or not user has clicked or pressed button
-             */
-            $(document).ready(function () {
-                //Increment the idle time counter every minute.
-                let idleInterval = setInterval($scope.timerIncrement, 60000); // 1 minute
-                //Zero the idle timer on mouse movement.
-                $(this).click(function (e) {
-                    $scope.idleTime = 0;
-                });
-
-                $(this).keypress(function (e) {
-                    $scope.idleTime = 0;
-                });
+        /**
+         * Every minute, checks whether or not user has clicked or pressed button
+         */
+        $(document).ready(function () {
+            //Increment the idle time counter every minute.
+            let idleInterval = setInterval($scope.timerIncrement, 60000); // 1 minute
+            //Zero the idle timer on mouse movement.
+            $(this).click(function (e) {
+                $scope.idleTime = 0;
             });
+
+            $(this).keypress(function (e) {
+                $scope.idleTime = 0;
+            });
+        });
 
         /**
          *  Checks on time of inactivity, if time is meet, log out user.
          */
         $scope.timerIncrement = function () {
-                $scope.idleTime++;
-                //console.log($scope.idleTime);
-                if ($scope.idleTime === 25) {// Create warning modal when 5 min left
-                    $scope.countdownTimer = setInterval(timer, 1000);
-                    $scope.createTimeoutModal();
-                }
-                if ($scope.idleTime == 30) { // Logout user after 30 min has passed
-                    let r = new XMLHttpRequest();
-                    r.open('POST', '/uhgroupings/logout', true);
-                    r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
-                    r.send();
-                    $window.location.href = "/uhgroupings/";
+            $scope.idleTime++;
+            //console.log($scope.idleTime);
+            if ($scope.idleTime === 25) {// Create warning modal when 5 min left
+                $scope.countdownTimer = setInterval(timer, 1000);
+                $scope.createTimeoutModal();
+            }
+            if ($scope.idleTime == 30) { // Logout user after 30 min has passed
+                let r = new XMLHttpRequest();
+                r.open('POST', '/uhgroupings/logout', true);
+                r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
+                r.send();
+                $window.location.href = "/uhgroupings/";
 
-                }
+            }
         };
 
         /**
          * Creates a countdown timer.
          */
         function timer() {
-            let minutes = Math.round(($scope.seconds - 30)/60);
+            let minutes = Math.round(($scope.seconds - 30) / 60);
             let remainingSeconds = $scope.seconds % 60;
             if (remainingSeconds < 10) {
                 remainingSeconds = "0" + remainingSeconds;
@@ -79,9 +79,9 @@
                 templateUrl: "modal/timeoutModal",
                 scope: $scope
             });
-            $scope.timeoutModalInstance.result.then(function(){
+            $scope.timeoutModalInstance.result.then(function () {
                 //Filler in order to catch off click dismiss
-            }, function(){
+            }, function () {
                 $scope.idleTime = 0;
                 $scope.pingServer();
             });
@@ -99,7 +99,7 @@
         /**
          * Pings tomcat server with a GET request to retrieve uses info.
          */
-        $scope.pingServer = function() {
+        $scope.pingServer = function () {
             const endpoint = BASE_URL + "members/aaronvil";
             clearInterval($scope.countdownTimer);
             $scope.seconds = 300;
@@ -111,5 +111,6 @@
         };
 
     }
+
     UHGroupingsApp.controller("TimeoutJsController", TimeoutJsController);
 })();

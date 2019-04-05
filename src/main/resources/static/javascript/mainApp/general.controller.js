@@ -68,11 +68,11 @@
          * @param {number} index - the index of the grouping clicked by the user
          */
         $scope.displayGrouping = function (currentPage, index) {
-                $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
-                $scope.description = $scope.selectedGrouping.description;
-                $scope.getGroupingInformation();
+            $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
+            $scope.description = $scope.selectedGrouping.description;
+            $scope.getGroupingInformation();
 
-                $scope.showGrouping = true;
+            $scope.showGrouping = true;
         };
 
         /**
@@ -278,7 +278,7 @@
                     $scope.paginatingComplete = true;
                 }
             }, function (res) {
-                if(res === null) {
+                if (res === null) {
                     $scope.largeGrouping = true;
                     $scope.paginatingComplete = false;
                     $scope.paginatingProgress = false;
@@ -290,7 +290,7 @@
                 } else if (res.statusCode === 403) {
                     $scope.createOwnerErrorModal();
                 } else {
-                    dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+                    dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
                 }
             });
         };
@@ -299,7 +299,7 @@
         // CLINT STUFF FUNCTIONS START:
 
         // used to check the length of the text string entered in the description form box, for error handling of max length
-        $scope.descriptionLengthWarning = function() {
+        $scope.descriptionLengthWarning = function () {
             // if ($scope.description.length > 39)
             // {
             //     return true;
@@ -313,7 +313,7 @@
         /**
          * Enable or disable editing of a Grouping's description, from selected-grouping.html.
          */
-        $scope.editDescription = function() {
+        $scope.editDescription = function () {
             //$scope.descriptionForm = ($scope.descriptionForm) ? false : true;
 
             // the next line saves the "last saved description" into a variable, to be referenced when user cancels description edit.
@@ -321,7 +321,7 @@
              * Not sure what the next line is for, but I will leave it for now since its left over from clint
              * ~Kahlin
              */
-            // $scope.tempDescription = angular.element(document.getElementById('descriptionString')).scope().description;
+                // $scope.tempDescription = angular.element(document.getElementById('descriptionString')).scope().description;
             $scope.descriptionForm = !($scope.descriptionForm);
 
         }
@@ -329,7 +329,7 @@
         /**
          * Cancel the editing of a description, and revert back to base selected-grouping page.
          */
-        $scope.cancelDescriptionEdit = function() {
+        $scope.cancelDescriptionEdit = function () {
             // refer to last saved description when user cancels the edit
             //
             $scope.modalDescription = $scope.description;
@@ -340,7 +340,7 @@
          * Used for placeholder text for a grouping's description in the form box.
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
-        $scope.descriptionDisplay = function() {
+        $scope.descriptionDisplay = function () {
             return $scope.description;       // causes the description edit box to display the placeholder text.
         }
 
@@ -359,7 +359,7 @@
          * TODOS:   --> make this function call RestController to change the description in Grouper.
          *          --> error checking?
          */
-        $scope.saveDescription = function() {
+        $scope.saveDescription = function () {
             $scope.description = $scope.descript;
             $scope.descriptionForm = !($scope.descriptionForm);
 
@@ -409,7 +409,7 @@
                     member.whereListed = "Basis";
                 }
 
-                if (_.some($scope.groupingInclude, {uuid: memberUuid})) {
+                if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
                     member.whereListed = _.isUndefined(member.whereListed)
                         ? "Include"
                         : "Basis / Include";
@@ -424,19 +424,19 @@
         $scope.addMember = function (list) {
             const groupingPath = $scope.selectedGrouping.path;
             groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function () {
-            const userToAdd = $scope.userToAdd;
-            if (_.isEmpty(userToAdd)) {
-                $scope.createAddErrorModal(userToAdd);
-            } else if ($scope.existInList(userToAdd, list)) {
-                $scope.createCheckModal(userToAdd, list, false);
-            } else if ($scope.isInAnotherList(userToAdd, list)) {
-                $scope.createCheckModal(userToAdd, list, true);
-            } else {
-                $scope.createConfirmAddModal({
-                    userToAdd: userToAdd,
-                    listName: list
-                });
-            }
+                const userToAdd = $scope.userToAdd;
+                if (_.isEmpty(userToAdd)) {
+                    $scope.createAddErrorModal(userToAdd);
+                } else if ($scope.existInList(userToAdd, list)) {
+                    $scope.createCheckModal(userToAdd, list, false);
+                } else if ($scope.isInAnotherList(userToAdd, list)) {
+                    $scope.createCheckModal(userToAdd, list, true);
+                } else {
+                    $scope.createConfirmAddModal({
+                        userToAdd: userToAdd,
+                        listName: list
+                    });
+                }
             }, function (res) {
                 if (res.statusCode === 403) {
                     $scope.createOwnerErrorModal();
@@ -485,9 +485,9 @@
          */
         $scope.isInAnotherList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingExclude, {username: user});
+                return _.some($scope.groupingExclude, { username: user });
             } else if (list === "Exclude") {
-                return _.some($scope.groupingInclude, {username: user});
+                return _.some($scope.groupingInclude, { username: user });
             }
             return false;
         };
@@ -499,9 +499,9 @@
          */
         $scope.existInList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingInclude, {username: user});
+                return _.some($scope.groupingInclude, { username: user });
             } else if (list === "Exclude") {
-                return _.some($scope.groupingExclude, {username: user});
+                return _.some($scope.groupingExclude, { username: user });
             }
             return false;
         };
@@ -600,11 +600,11 @@
                     listName: "owners"
                 });
             }
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            };
+        }, function (res) {
+            if (res.statusCode === 403) {
+                $scope.createOwnerErrorModal();
+            }
+        };
 
 
         /**
@@ -686,11 +686,11 @@
                 user: userToRemove,
                 listName: listName
             });
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            };
+        }, function (res) {
+            if (res.statusCode === 403) {
+                $scope.createOwnerErrorModal();
+            }
+        };
 
 
         /**
@@ -711,10 +711,11 @@
                 $scope.createRemoveErrorModal(userType);
             }
 
-            } , function (res) {
+        } , function (res) {
             if (res.statusCode === 403) {
                 $scope.createOwnerErrorModal();
-            };
+            }
+            ;
 
         };
 
@@ -1159,11 +1160,11 @@
          * @param cname = name of cookie you want to look for.
          * @returns {*}
          */
-        $scope.getCookie = function(cname) {
+        $scope.getCookie = function (cname) {
             let name = cname + "=";
             let decodedCookie = decodeURIComponent(document.cookie);
             let ca = decodedCookie.split(';');
-            for(let i = 0; i <ca.length; i++) {
+            for (let i = 0; i < ca.length; i++) {
                 let c = ca[i];
                 while (c.charAt(0) == ' ') {
                     c = c.substring(1);
@@ -1196,7 +1197,6 @@
 
 
     }
-
 
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);

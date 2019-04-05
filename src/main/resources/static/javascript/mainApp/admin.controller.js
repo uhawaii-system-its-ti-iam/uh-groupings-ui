@@ -28,7 +28,6 @@
         };
 
 
-
         /**
          * Initializes the page, displaying the list of groupings to administer and the list of admins to manage.
          */
@@ -43,10 +42,10 @@
                 $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
 
                 $scope.loading = false;
-             }, function (res) {
+            }, function (res) {
                 if (res.statusCode === 403) {
-                         $scope.createRoleErrorModal();
-                     }
+                    $scope.createRoleErrorModal();
+                }
             });
         };
 
@@ -97,7 +96,7 @@
                     const userType = "admin";
                     $scope.createRemoveErrorModal(userType);
                 }
-            },function (res){
+            }, function (res) {
                 if (res.statusCode === 403) {
                     $scope.createRoleErrorModal();
                 }
