@@ -18,6 +18,7 @@
 
         $scope.seconds = 300;
         $scope.idleTime = 0;
+
             /**
              * Every minute, checks whether or not user has clicked or pressed button
              */
@@ -28,7 +29,7 @@
                 $(this).click(function (e) {
                     $scope.idleTime = 0;
                 });
-
+              
                 $(this).keypress(function (e) {
                     $scope.idleTime = 0;
                 });
@@ -121,7 +122,9 @@
          * Pings tomcat server with a GET request to retrieve uses info.
          */
         $scope.pingServer = function() {
+
             const endpoint = BASE_URL + "members/aaronvil";
+          
             clearInterval($scope.countdownTimer);
             $scope.seconds = 300;
             dataProvider.loadData(function (res) {
