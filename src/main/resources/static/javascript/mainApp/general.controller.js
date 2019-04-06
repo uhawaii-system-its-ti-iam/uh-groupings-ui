@@ -513,6 +513,7 @@
                 if ($scope.listName === "admins") {
                     // Refreshes the groupings list and the admins list
                     $scope.init();
+                    $scope.paginatingComplete = false;
                 } else {
                     $scope.getGroupingInformation();
                 }
