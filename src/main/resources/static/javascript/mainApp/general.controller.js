@@ -354,7 +354,7 @@
                 // Explain why this empty todo
             }, function (res) {
                 if (res.status === 403) {
-                        $scope.createOwnerErrorModal();
+                    $scope.createOwnerErrorModal();
                 }
             }, $scope.description);
             $scope.descriptionForm = !($scope.descriptionForm);

@@ -14,8 +14,8 @@
              */
             loadData: function (callback, callError, url) {
                 $http.get(encodeURI(url))
-                    .then(function(response){
-                       callback(response.data);
+                    .then(function (response) {
+                        callback(response.data);
                     }, function (response) {
                         // console.log("Error A", response);
                         // if(response.data == null) return false;
@@ -32,7 +32,7 @@
              */
             updateData: function (callback, callError, url) {
                 $http.post(encodeURI(url))
-                    .then(function(response){
+                    .then(function (response) {
                         callback(response.data);
                     }, function (response) {
                         callError(response);
@@ -48,7 +48,7 @@
              */
             updateDataWithBody: function (callback, callError, url, data) {
                 $http.put(encodeURI(url), data)
-                    .then(function(response){
+                    .then(function (response) {
                         callback(response);
                     }, function (response) {
                         callError(response);
