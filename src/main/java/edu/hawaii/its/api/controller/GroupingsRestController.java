@@ -11,18 +11,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-<<<<<<< HEAD
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-=======
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
->>>>>>> dev-kahlin
+
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
@@ -240,8 +230,6 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
-<<<<<<< HEAD
-=======
     /**
      * Updates the description of a grouping to the new one
      *
@@ -260,17 +248,12 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, description, HttpMethod.PUT);
     }
 
->>>>>>> dev-kahlin
 
 
     /**
      * finds and returns the specified Grouping
      *
-<<<<<<< HEAD
-     * @param  : String containing the path of the Grouping to be searched for
-=======
      * @param path : String containing the path of the Grouping to be searched for
->>>>>>> dev-kahlin
      * @return the Grouping that was searched for
      * the Grouping will contain information about
      * members of each Group in the grouping

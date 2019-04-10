@@ -353,8 +353,9 @@
             groupingsService.updateDescription($scope.selectedGrouping.path, function () {
                 // Explain why this empty todo
             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
-
+                if (res.status === 403) {
+                        $scope.createOwnerErrorModal();
+                }
             }, $scope.description);
             $scope.descriptionForm = !($scope.descriptionForm);
 
@@ -1187,7 +1188,7 @@
          */
         $scope.proceedRedirect = function () {
             $scope.OwnerErrorModalInstance.close();
-            $window.location.href = "/uhgroupings/groupings";
+            $window.location.href = "/uhgroupings/";
         };
 
 
