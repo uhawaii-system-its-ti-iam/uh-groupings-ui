@@ -8,7 +8,7 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function AdminJsController($scope, $window, $controller, dataProvider, groupingsService) {
+    function AdminJsController($scope, $window, $uibModal, $controller, dataProvider, groupingsService) {
 
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
@@ -17,6 +17,16 @@
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
         angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
+
+
+        $scope.createRoleErrorModal = function () {
+            $scope.loading = false;
+            $scope.RoleErrorModalInstance = $uibModal.open({
+                templateUrl: "modal/roleErrorModal",
+                scope: $scope
+            });
+        };
+
 
         /**
          * Initializes the page, displaying the list of groupings to administer and the list of admins to manage.
@@ -32,8 +42,10 @@
                 $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
 
                 $scope.loading = false;
-             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+            }, function (res) {
+                if (res.statusCode === 403) {
+                    $scope.createRoleErrorModal();
+                }
             });
         };
 
@@ -47,16 +59,22 @@
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
-            const adminToAdd = $scope.adminToAdd;
+            groupingsService.getAdminLists(function () {
+                const adminToAdd = $scope.adminToAdd;
 
-            if (_.isEmpty(adminToAdd)) {
-                $scope.createAddErrorModal(adminToAdd);
-            } else {
-                $scope.createConfirmAddModal({
-                    userToAdd: adminToAdd,
-                    listName: "admins"
-                });
-            }
+                if (_.isEmpty(adminToAdd)) {
+                    $scope.createAddErrorModal(adminToAdd);
+                } else {
+                    $scope.createConfirmAddModal({
+                        userToAdd: adminToAdd,
+                        listName: "admins"
+                    });
+                }
+            }, function (res) {
+                if (res.statusCode === 403) {
+                    $scope.createRoleErrorModal();
+                }
+            });
         };
 
         /**
@@ -66,17 +84,23 @@
          * account
          */
         $scope.removeAdmin = function (currentPage, index) {
-            const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+            groupingsService.getAdminLists(function () {
+                const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
 
-            if ($scope.adminsList.length > 1) {
-                $scope.createRemoveModal({
-                    user: adminToRemove,
-                    listName: "admins"
-                });
-            } else {
-                const userType = "admin";
-                $scope.createRemoveErrorModal(userType);
-            }
+                if ($scope.adminsList.length > 1) {
+                    $scope.createRemoveModal({
+                        user: adminToRemove,
+                        listName: "admins"
+                    });
+                } else {
+                    const userType = "admin";
+                    $scope.createRemoveErrorModal(userType);
+                }
+            }, function (res) {
+                if (res.statusCode === 403) {
+                    $scope.createRoleErrorModal();
+                }
+            });
         };
 
     }

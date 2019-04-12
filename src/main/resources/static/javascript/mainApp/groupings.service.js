@@ -8,25 +8,37 @@
      */
     UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL) {
         return {
-
-
+            /**
+             * Get page of a grouping
+             * @param {String} path - the path to the grouping
+             * @param {String} page - the page to retrieve
+             * @param {String} size - the size of each page
+             */
             getGrouping: function (path, page, size, sortString, isAscending, onSuccess, onError) {
 
                 let endpoint = BASE_URL + "groupings/" + path + "?";
 
                 let params = "";
 
-                if(page != null) { params = params + "page=" + page; }
-                if(size != null) {
-                    if(params !== "") { params = params + "&"; }
+                if (page != null) {
+                    params = params + "page=" + page;
+                }
+                if (size != null) {
+                    if (params !== "") {
+                        params = params + "&";
+                    }
                     params = params + "size=" + size;
                 }
-                if(sortString != null) {
-                    if(params !== "") { params = params + "&"; }
+                if (sortString != null) {
+                    if (params !== "") {
+                        params = params + "&";
+                    }
                     params = params + "sortString=" + sortString;
                 }
-                if(isAscending != null) {
-                    if(params !== "") { params = params + "&"; }
+                if (isAscending != null) {
+                    if (params !== "") {
+                        params = params + "&";
+                    }
                     params = params + "isAscending=" + isAscending;
                 }
 
@@ -38,24 +50,16 @@
             },
 
             /**
-             * Get page of a grouping
-             * @param {String} path - the path to the grouping
-             * @param {String} page - the page to retrieve
-             * @param {String} size - the size of each page
+
+             * Gets information about a grouping.
+             * @param {string} path - the path to the grouping
+             * @param {string} data - description to be updated
              */
-            // getPaginatedGrouping: function (path, page, size, onSuccess, onError) {
-            //     var endpoint = BASE_URL + "groupings/" + path + "?page=" + page + "&size=" + size;
-            //     dataProvider.loadData(onSuccess, onError, endpoint);
-            // },
-            //
-            // /**
-            //  * Gets information about a grouping.
-            //  * @param {string} path - the path to the grouping
-            //  */
-            // getGrouping: function (path, onSuccess, onError) {
-            //     var endpoint = BASE_URL + path + "/grouping";
-            //     dataProvider.loadData(onSuccess, onError, endpoint);
-            // },
+
+            updateDescription: function (path, onSuccess, onError, data) {
+                var endpoint = BASE_URL + "groupings/" + path + "/description";
+                dataProvider.updateDataWithBody(onSuccess, onError, endpoint, data);
+            },
 
             /**
              * Gets the list of admins and groupings.
