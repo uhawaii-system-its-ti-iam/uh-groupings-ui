@@ -132,6 +132,7 @@
 
         $scope.getGroupingInformation = function () {
             $scope.loading = true;
+            $scope.paginatingComplete = false;
 
             const groupingPath = $scope.selectedGrouping.path;
 
@@ -625,7 +626,6 @@
                 if ($scope.listName === "admins") {
                     // Refreshes the groupings list and the admins list
                     $scope.init();
-                    $scope.paginatingComplete = false;
                 } else {
                     $scope.getGroupingInformation();
                 }
