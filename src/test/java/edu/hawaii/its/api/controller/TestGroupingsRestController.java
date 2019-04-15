@@ -209,23 +209,24 @@ public class TestGroupingsRestController {
 
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
     }
-
+//todo touched
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void addMemberTest() throws Exception {
 
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
-        mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addMemberToIncludeGroup");
+        mapGSRs(API_BASE + GROUPING + "/<h1>" + tst[3] + "<h1>/addMemberToIncludeGroup");
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
         //tst[3] is in basis and will go into include
         assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[3]));
 
         //add tst[3] back to exclude
-        mapGSRs(API_BASE + GROUPING + "/<h1>" + tst[3] + "</h1>/addMemberToExcludeGroup");
+        mapGSRs(API_BASE + GROUPING + "/<div class='container'>" + tst[3] + "<div>/addMemberToExcludeGroup");
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
     }
+    //todo touched
 
     @Test
     @WithMockUhUser(username = "iamtst01")
@@ -233,13 +234,14 @@ public class TestGroupingsRestController {
 
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
-        mapGSR(API_BASE + GROUPING + "/" + tst[3] + "/deleteMemberFromExcludeGroup");
+        mapGSR(API_BASE + GROUPING + "/<h1>" + tst[3] + "<h1>/deleteMemberFromExcludeGroup");
 
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[3]));
         assertTrue(isInGrouping(GROUPING, tst[0], tst[3]));
 
         assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[1]));
-        mapGSR(API_BASE + GROUPING + "/" + tst[1] + "/deleteMemberFromIncludeGroup");
+//        mapGSR(API_BASE + GROUPING + "/<a href='google.com'>" + tst[1] + "<a>/deleteMemberFromIncludeGroup"); // Erroring out
+        mapGSR(API_BASE + GROUPING + "/<span>" + tst[1] + "<span>/deleteMemberFromIncludeGroup");
 
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[1]));
         assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[1]));
@@ -437,11 +439,19 @@ public class TestGroupingsRestController {
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void sanitationTest() {
+        String regularInput = "Hello";
+        String regularInputPost = policy.sanitize(regularInput);
+        assertTrue(regularInput.equals(regularInputPost));
+
         String unsafeHTML = "<h1>Hello</h1>";
 
         String safeInput = policy.sanitize(unsafeHTML);
         assertFalse(safeInput.equals(unsafeHTML));
 
+        String unsafeLink = "<a href='google.com'>Hello</a>";
+        safeInput = policy.sanitize(unsafeLink);
+        System.out.println("SANITIZE RESULTS: " + safeInput);
+        assertNotEquals(safeInput, "<a href='google.com'>Hello</a>");
     }
 
     ///////////////////////////////////////////////////////////////////////
