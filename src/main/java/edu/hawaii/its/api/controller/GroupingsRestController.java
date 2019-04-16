@@ -153,7 +153,7 @@ public class GroupingsRestController {
             @PathVariable String grouping,
             @PathVariable String usersToAdd) {
         logger.info("Entered REST addMembersToIncludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", grouping, usersToAdd);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMultipleMembers/%s", grouping, usersToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
