@@ -139,8 +139,11 @@ public class GroupingsRestController {
     }
 
     /**
-     * adds a members to the include group of the Grouping who's path is in 'grouping'
+     * Uses  the apis includeMultipleMembers utility.
+     * adds multiple members to the include group of the Grouping who's path is in 'grouping'
      * if the members are in the exclude group, they will be removed from it
+     * SEE:   addMembers():        general.controller.js
+     *        updateAddMembers():  general.controller.js
      *
      * @param grouping:   path to the Grouping who's include group the new member will be added to
      * @param usersToAdd: usernames of the new members to be added to the include group
