@@ -28,18 +28,18 @@
                 </tr>
                 <tr>
                     <th>Description</th>
-                    <td style="table-layout: fixed; width: 80%">
+                    <td class="grouping-card-description">
                         <div ng-show="!descriptionForm">
                             {{ descriptionDisplay() }}
-                            <span ng-click="editDescription()" class="fa fa-pencil-square-o p-1 pull-right clickable"
-                                  th:title="#{screen.message.description.edit}"
-                                  style="margin-right: 16px; margin-top: 2px"></span>
+                            <span ng-click="editDescription()" class="fa fa-pencil-square-o p-1 pull-right clickable
+                            grouping-edit-description"
+                                  th:title="#{screen.message.description.edit}">
+                            </span>
                         </div>
-
-                        <div ng-show="descriptionForm" style="margin: 5px">
+                        <div ng-show="descriptionForm" class="grouping-description-form">
                             <form>
                                 <div ng-show="descriptionLengthWarning()" class="alert alert-warning">
-                                    <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"> </p>
+                                    <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"></p>
                                 </div>
                                 <input class="form-control"
                                        style="margin: 5px 5px 10px 5px; float: left;
@@ -51,15 +51,16 @@
                                        ng-value="descriptionDisplay()"
                                        ng-model="modelDescription"
                                        maxlength="{{ maxDescriptionLength }}"
-                                       id="descriptionForm" />
+                                       id="descriptionForm"/>
                                 <span ng-click="saveDescription()"
                                       th:title="#{screen.message.description.save}"
-                                      class="fa fa-save pull-right pt-1 clickable"
-                                      style="margin-left: 14px; margin-top: 12px; margin-right: 10px; float: left"></span>
+                                      class="fa fa-save pull-right pt-1 clickable grouping-description-save-icon">
+                                </span>
                                 <span ng-click="cancelDescriptionEdit()"
                                       th:title="#{screen.message.description.cancel}"
-                                      class="fa fa-times-circle pull-right pt-1 clickable" id="descriptionString"
-                                      style="margin-top: 12px; float: left"></span>
+                                      class="fa fa-times-circle pull-right pt-1 clickable
+                                      grouping-description-cancel-icon" id="descriptionString">
+                                </span>
                             </form>
                         </div>
 
