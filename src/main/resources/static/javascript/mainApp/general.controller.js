@@ -985,7 +985,7 @@
          */
         $scope.showWarningRemovingSelf = function () {
             return $scope.currentUser === $scope.userToRemove.username
-                && ($scope.listName === "owners" || $scope.listName === "admins");
+                && ($scope.listName === "owners" || $scope.listName === "admins")
         };
 
     }
