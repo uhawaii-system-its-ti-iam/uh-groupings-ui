@@ -151,7 +151,7 @@
                 $scope.getPages(groupingPath, 2, PAGE_SIZE, "name", true);
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
-            });
+            });};
 
         /**
          * Recursive function to get pages of a grouping asynchronously
