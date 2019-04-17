@@ -98,11 +98,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         try {
             logger.info("//////////////////////////////");
             Principal principal = new SimplePrincipal(username);
-            // todo this should be changed to the new isOwner endpoint after it is available
+
+            // todo eliminate this entire public function and replace with the isOwner api call
             String groupingAssignmentJson = (String) groupingsRestController.groupingsOwned(principal).getBody();
             List groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, List.class);
 
-            if (!(groupingAssignment.size() == 0)) {
+            if (groupingAssignment.size() != 0) {
                 logger.info("This person is an owner");
                 return true;
             } else {
@@ -128,7 +129,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             String adminListHolderJson = (String) groupingsRestController.adminLists(principal).getBody();
             AdminListsHolder adminListsHolder = OBJECT_MAPPER.readValue(adminListHolderJson, AdminListsHolder.class);
 
-            // todo this should be changed to the new isAdmin endpoint after it is available
+            // todo eliminate this entire public function and replace with the isAdmin api call
             if (!(adminListsHolder.getAdminGroup().getMembers().size() == 0)) {
                 logger.info("this person is an admin");
                 return true;

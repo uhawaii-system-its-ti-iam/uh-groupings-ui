@@ -24,7 +24,6 @@ public class AuthorizationServiceTest {
 
     @Test
     public void basics() {
-        assertTrue(true);
         assertNotNull(authorizationService);
     }
 

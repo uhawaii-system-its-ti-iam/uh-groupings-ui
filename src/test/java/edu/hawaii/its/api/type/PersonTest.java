@@ -5,10 +5,13 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -24,16 +27,18 @@ public class PersonTest {
     }
 
     @Test
-    public void constuction() {
+    public void construction() {
         assertNotNull(person);
         assertNull(person.getName());
         assertNull(person.getUuid());
         assertNull(person.getUsername());
 
-        person = new Person("a", "b", "c");
+        person = new Person("a","b","c","d","e");
         assertThat(person.getName(), equalTo("a"));
         assertThat(person.getUuid(), equalTo("b"));
         assertThat(person.getUsername(), equalTo("c"));
+        assertThat(person.getFirstName(),equalTo("d"));
+        assertThat(person.getLastName(),equalTo("e"));
     }
 
     @Test
@@ -56,39 +61,57 @@ public class PersonTest {
         assertThat(person.getName(), equalTo("name"));
         assertThat(person.getUuid(), equalTo("uuid"));
         assertThat(person.getUsername(), equalTo("username"));
+
+
+        person.setLastName("last");
+        person.setFirstName("first");
+        assertThat(person.getFirstName(),equalTo("first"));
+        assertThat(person.getLastName(),equalTo("last"));
+
+        Map<String,String> attributes = new HashMap<>();
+        attributes.put("name","user");
+        person = new Person(attributes);
+        assertThat(person.getAttributes().toString(),equalTo("{name=user}"));
+        assertThat(person.getAttribute("name"),equalTo("user"));
+        person.setAttribute("name","user");
+        assertThat(person.getAttribute("name"),equalTo("user"));
+        person.setAttributes(attributes);
+        assertThat(person.getAttributes().toString(),equalTo("{name=user}"));
+
+
     }
 
     @Test
     public void equals() {
         Person p0 = new Person();
-        assertFalse(p0.equals(null));
-        assertFalse(p0.equals(new String()));
-        assertTrue(p0.equals(p0));
+        assertNotEquals(p0, null);
+        assertNotEquals(p0, new String());
+        assertEquals(p0, p0);
 
         Person p1 = new Person();
-        assertTrue(p0.equals(p1));
-        assertTrue(p1.equals(p0));
+        assertEquals(p0, p1);
+        assertEquals(p1, p0);
 
         p0.setName("name");
-        assertFalse(p0.equals(p1));
-        assertFalse(p1.equals(p0));
+        assertNotEquals(p0, p1);
+        assertNotEquals(p1, p0);
         p1.setName("name");
-        assertTrue(p0.equals(p1));
-        assertTrue(p1.equals(p0));
+        assertEquals(p0, p1);
+        assertEquals(p1, p0);
 
         p0.setUuid("uuid");
-        assertFalse(p0.equals(p1));
-        assertFalse(p1.equals(p0));
+        assertNotEquals(p0, p1);
+        assertNotEquals(p1, p0);
         p1.setUuid("uuid");
-        assertTrue(p0.equals(p1));
-        assertTrue(p1.equals(p0));
+        assertEquals(p0, p1);
+        assertEquals(p1, p0);
 
         p0.setUsername("username");
-        assertFalse(p0.equals(p1));
-        assertFalse(p1.equals(p0));
+        assertNotEquals(p0, p1);
+        assertNotEquals(p1, p0);
         p1.setUsername("username");
-        assertTrue(p0.equals(p1));
-        assertTrue(p1.equals(p0));
+        assertEquals(p0, p1);
+        assertEquals(p1, p0);
     }
 
     @Test

@@ -58,12 +58,12 @@ public class Grouping {
         }
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDescription(){
+        return this.description;
     }
 
     public Group getBasis() {

@@ -90,7 +90,7 @@ public class UserDetailsServiceTest {
         assertEquals("10000004", user.getUhuuid());
 
         // Granted Authorities.
-        assertTrue(user.getAuthorities().size() == 3);
+        assertEquals(3, user.getAuthorities().size());
         assertTrue(user.hasRole(Role.ANONYMOUS));
         assertTrue(user.hasRole(Role.UH));
         assertTrue(user.hasRole(Role.EMPLOYEE));

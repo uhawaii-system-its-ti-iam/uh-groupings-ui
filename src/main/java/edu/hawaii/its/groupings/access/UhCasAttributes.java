@@ -29,7 +29,7 @@ public class UhCasAttributes implements UhAttributes {
         this.map = map;
         if (map != null) {
             for (Object key : map.keySet()) {
-                if (key != null && key instanceof String) {
+                if (key instanceof String) {
                     String k = ((String) key).toLowerCase();
                     Object v = map.get(key);
                     if (v != null) {

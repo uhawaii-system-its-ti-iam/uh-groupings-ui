@@ -149,9 +149,9 @@ public class HomeController {
         return "modal/confirmAddModal";
     }
 
-    @RequestMapping(value = "/modal/EmailListModal", method = RequestMethod.GET)
-    public String EmailListModal(Locale locale, Model model) {
-        return "modal/EmailListModal";
+    @RequestMapping(value = "/modal/emailListModal", method = RequestMethod.GET)
+    public String emailListModal(Locale locale, Model model) {
+        return "modal/emailListModal";
     }
 
     @RequestMapping(value = "/modal/CASLDAPModal", method = RequestMethod.GET)
@@ -165,7 +165,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/modal/timeoutModal", method = RequestMethod.GET)
-    public String TimeoutModal(Locale locale, Model model) {
+    public String timeoutModal(Locale locale, Model model) {
         return "modal/timeoutModal";
     }
 
@@ -173,5 +173,12 @@ public class HomeController {
     public String addErrorModal(Locale locale, Model model) {
         return "modal/addErrorModal";
     }
+
+    @RequestMapping(value = "/modal/roleErrorModal", method = RequestMethod.GET)
+    public String roleErrorModal(Locale locale, Model model) {return "modal/roleErrorModal";}
+
+    @RequestMapping(value = "/modal/ownerErrorModal", method = RequestMethod.GET)
+    public String ownerErrorModal(Locale locale, Model model) {return "modal/ownerErrorModal";}
+
 
 }

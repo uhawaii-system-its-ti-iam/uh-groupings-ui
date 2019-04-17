@@ -413,7 +413,7 @@ public class DatesTest {
     }
 
     @Test
-    public void firstDateOfYear_Two() {
+    public void firstDateOfYearTwo() {
         for (int year = 2000; year < 2025; year++) {
             LocalDate date = Dates.newLocalDate(year, Month.JANUARY, 1);
             assertEquals(date, Dates.firstDateOfYear(year));
@@ -441,7 +441,7 @@ public class DatesTest {
     }
 
     @Test
-    public void lastDateOfYear_Two() {
+    public void lastDateOfYearTwo() {
         LocalDate date = Dates.newLocalDate(2000, Month.JANUARY, 1);
         assertEquals(Dates.newLocalDate(2000, Month.DECEMBER, 31), Dates.lastDateOfYear(date));
         date = Dates.newLocalDate(2009, Month.JANUARY, 1);

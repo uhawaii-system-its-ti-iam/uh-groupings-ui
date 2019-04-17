@@ -1,17 +1,17 @@
 describe("AdminController", function () {
 
     // Set up mock element for setting the current user
-    var mockElement = document.createElement("div");
+    const mockElement = document.createElement("div");
     mockElement.innerHTML = "jdoe";
     document.getElementById = jasmine.createSpy("name").and.returnValue(mockElement);
 
     beforeEach(module("UHGroupingsApp"));
     beforeEach(module("ngMockE2E"));
 
-    var scope;
-    var controller;
-    var httpBackend;
-    var BASE_URL;
+    let scope;
+    let controller;
+    let httpBackend;
+    let BASE_URL;
 
     beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_) {
         scope = $rootScope.$new();

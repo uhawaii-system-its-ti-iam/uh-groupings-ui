@@ -1,6 +1,17 @@
 <th:block th:fragment="owners">
 
-    <h3>Owners<span> ({{groupingOwners.length}})</span></h3>
+    <div class="row group-header">
+        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
+            <h3>Owners<span> ({{groupingOwners.length}})</span></h3>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingProgress">
+            <h4 class="loading-text">Now Loading...</h4>
+            <div class="small-loader"></div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="largeGrouping">
+            <h4 class="done-text">Grouping Too Large. Loading stopped.</h4>
+        </div>
+    </div>
 
     <div class="table-responsive-sm">
         <table class="table table-bordered table-sm table-hover" aria-live="assertive">

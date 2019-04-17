@@ -9,29 +9,30 @@
             //todo It might be possible to use async/await function to change the promise behavior to better accomodate async getGrouping
             /**
              * Performs a GET request to the specified URL.
-             * @param {string} url - the URL to perform the request on
              * @param {function} callback - the function to perform on a successful request (200)
+             * @param {string} url - the URL to perform the request on
              */
             loadData: function (callback, callError, url) {
                 $http.get(encodeURI(url))
-                    .then(function(response){
-                       callback(response.data);
+                    .then(function (response) {
+                        callback(response.data);
                     }, function (response) {
                         // console.log("Error A", response);
                         // if(response.data == null) return false;
                         callError(response.data);
                         console.log("Error in dataProvider; status: ", response.status);
+
                     });
             },
 
             /**
              * Performs a POST request to the specified URL.
-             * @param {string} url - the URL to perform the request on
              * @param {function} callback - the function to perform on a successful request (200)
+             * @param {string} url - the URL to perform the request on
              */
             updateData: function (callback, callError, url) {
                 $http.post(encodeURI(url))
-                    .then(function(response){
+                    .then(function (response) {
                         callback(response.data);
                     }, function (response) {
                         callError(response);
@@ -39,8 +40,21 @@
                     });
             },
 
-            importData: function(url) {
-                $http.post(encodeURI(url));
+
+            // Might have to clean this code up? Not complete sure yet.
+            /**
+             * Performs a POST request to the specified URL.
+             * @param {string} url - the URL to perform the request on
+             * @param {function} callback - the function to perform on a successful request (200)
+             */
+            updateDataWithBody: function (callback, callError, url, data) {
+                $http.put(encodeURI(url), data)
+                    .then(function (response) {
+                        callback(response);
+                    }, function (response) {
+                        callError(response);
+                        console.log("Error in dataProvider; status: ", response.status);
+                    });
             },
 
             /**
