@@ -259,7 +259,6 @@ public class GroupingsRestController {
     /**
      * finds and returns the specified Grouping
      *
-     * @param grouping : String containing the path of the Grouping to be searched for
      * @return the Grouping that was searched for
      * the Grouping will contain information about
      * members of each Group in the grouping

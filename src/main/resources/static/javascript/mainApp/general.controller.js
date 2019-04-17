@@ -151,7 +151,8 @@
                 $scope.getPages(groupingPath, 2, PAGE_SIZE, "name", true);
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
-            });};
+            });
+        };
 
         /**
          * Recursive function to get pages of a grouping asynchronously
@@ -284,10 +285,14 @@
                 });
             }
         };
-
+        /**
+         * Lets a user import multiple members to a grouping, in the long run this method triggers the
+         * api method includeMultipleMembers.
+         * @param list
+         */
         $scope.addMembers = function (list) {
-            var str = $scope.usersToAdd;
-            var usersToAdd = str.replace(/\n/g, ", ");
+            let str = $scope.usersToAdd;
+            let usersToAdd = str.replace(/\n/g, ", ");
             $scope.createConfirmAddMembersModal({
                 usersToAdd: usersToAdd,
                 listName: list
@@ -295,11 +300,17 @@
             console.log(usersToAdd);
 
         };
+
+        /**
+         * Creates a modal display for members added, and calls addMembersToInclude service.
+         * @param usersToAdd
+         * @param list
+         */
         $scope.updateAddMembers = function (usersToAdd, list) {
 
-            groupingPath = $scope.selectedGrouping.path;
+            let groupingPath = $scope.selectedGrouping.path;
 
-            var handleSuccessfulAdd = function (res) {
+            let handleSuccessfulAdd = function (res, list, usersToAdd) {
                 $scope.createSuccessfulAddModal({
                     user: usersToAdd,
                     listName: list,
@@ -318,12 +329,12 @@
         $scope.updateAddMember = function (userToAdd, list) {
 
             // only initialize groupingPath is listName is not "admins"
-
-            if ($scope.listName != "admins") {
+            let groupingPath;
+            if ($scope.listName !== "admins") {
                 groupingPath = $scope.selectedGrouping.path;
             }
 
-            var handleSuccessfulAdd = function (res) {
+            let handleSuccessfulAdd = function (res) {
                 $scope.createSuccessfulAddModal({
                     user: userToAdd,
                     listName: list,
@@ -413,7 +424,7 @@
          * @param {string} options.listName - name of the list being added to
          */
         $scope.createConfirmAddModal = function (options) {
-            var userToAdd = options.userToAdd;
+            let userToAdd = options.userToAdd;
 
             groupingsService.getMemberAttributes(userToAdd, function (attributes) {
                 $scope.nameToAdd = attributes.cn;
@@ -985,7 +996,7 @@
          */
         $scope.showWarningRemovingSelf = function () {
             return $scope.currentUser === $scope.userToRemove.username
-                && ($scope.listName === "owners" || $scope.listName === "admins")
+                && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 
     }
