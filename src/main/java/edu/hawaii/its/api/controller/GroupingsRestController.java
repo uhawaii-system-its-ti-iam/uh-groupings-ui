@@ -158,6 +158,28 @@ public class GroupingsRestController {
     }
 
     /**
+     * Uses  the apis includeMultipleMembers utility.
+     * adds multiple members to the include group of the Grouping who's path is in 'grouping'
+     * if the members are in the exclude group, they will be removed from it
+     * SEE:   addMembers():        general.controller.js
+     *        updateAddMembers():  general.controller.js
+     *
+     * @param grouping:   path to the Grouping who's include group the new member will be added to
+     * @param usersToAdd: usernames of the new members to be added to the include group
+     * @return information about the success of the operation
+     */
+    @RequestMapping(value = "/{grouping}/{usersToAdd}/addMembersToIncludeGroup",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity addMembersToIncludeGroup(Principal principal,
+            @PathVariable String grouping,
+            @PathVariable String usersToAdd) {
+        logger.info("Entered REST addMembersToIncludeGroup...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMultipleMembers/%s", grouping, usersToAdd);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
+    }
+
+    /**
      * adds a member to the exclude group of the Grouping who's path is in 'grouping'
      * if that member is in the include group, they will be removed from it
      *
@@ -298,7 +320,6 @@ public class GroupingsRestController {
 
     /**
      * finds and returns the specified Grouping
-     *
      * @param path : String containing the path of the Grouping to be searched for
      * @return the Grouping that was searched for
      * the Grouping will contain information about
@@ -348,17 +369,22 @@ public class GroupingsRestController {
 
         // todo There might be a better way to do this, this approach is kinda gross
         String params = "";
-        if(page != null) params = params + "page=" + page;
-        if(size != null) {
-            if(!"".equals(params)) {params = params + "&";}
+        if (page != null)
+            params = params + "page=" + page;
+        if (size != null) {
+            if (!params.equals(""))
+                params = params + "&";
             params = params + "size=" + size;
         }
-        if(sortString != null) {
-            if(!"".equals(params)) {params = params + "&";}
+        if (sortString != null) {
+            if (!params.equals(""))
+                params = params + "&";
             params = params + "sortString=" + sortString;
         }
-        if(isAscending != null) {
-            if(!"".equals(params)) {params = params + "&";}
+        if (isAscending != null) {
+            if (!params.equals(""))
+                params = params + "&";
+
             params = params + "isAscending=" + isAscending;
         }
 
@@ -422,9 +448,11 @@ public class GroupingsRestController {
     public ResponseEntity optIn(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optIn...");
 
+
         String safeGrouping= policy.sanitize(grouping);
 
         String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", safeGrouping, principal.getName());
+
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -563,8 +591,7 @@ public class GroupingsRestController {
         //                .body(groupingFactoryService.addGrouping(username, grouping, basis, include, exclude, owners));
     }
 
-
-    private ResponseEntity changePreference(String grouping, String username, String preference, Boolean isOn){
+    private ResponseEntity changePreference(String grouping, String username, String preference, Boolean isOn) {
 
         String ending = "disable";
         if (isOn) {

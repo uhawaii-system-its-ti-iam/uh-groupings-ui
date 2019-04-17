@@ -185,55 +185,8 @@
                     $scope.createOwnerErrorModal();
                 }
             });
-
-            //todo Keeping code in case
-            // var page = 2;
-            // // for (var i = 0; i < 20; i++) {
-            // while ($scope.endPagination === false && page < 50) {
-            //
-            //     console.log("Page: " + page);
-            //
-            //     // On success function doesn't execute until loop finishes...
-            //     groupingsService.getGrouping(groupingPath, page, 20, "name", true, function (res) {
-            //
-            //         $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
-            //         $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery);
-            //
-            //         //Gets members in the include group
-            //         $scope.groupingInclude = combineGroupMembers($scope.groupingInclude, res.include.members);
-            //         $scope.addInBasis($scope.groupingInclude);
-            //         $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery);
-            //
-            //         //Gets members in the exclude group
-            //         $scope.groupingExclude = combineGroupMembers($scope.groupingExclude, res.exclude.members);
-            //         $scope.addInBasis($scope.groupingExclude);
-            //         $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery);
-            //
-            //         //Gets members in grouping
-            //         $scope.groupingMembers = combineGroupMembers($scope.groupingMembers, res.composite.members);
-            //         $scope.addWhereListed($scope.groupingMembers);
-            //         $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery);
-            //
-            //         //Gets owners of the grouping
-            //         $scope.groupingOwners = combineGroupMembers($scope.groupingOwners, res.owners.members);
-            //         $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-            //
-            //         if (res.basis.members.length === 0 && res.include.members.length === 0 &&
-            //             res.exclude.members.length === 0 && res.composite.members.length === 0 && res.owners.members.length === 0) {
-            //             $scope.endPagination = true;
-            //         }
-            //
-            //
-            //     }, function (res) {
-            //         $scope.endPagination = true;
-            //         dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
-            //     });
-            //     page++;
-            // }
         };
 
-        //todo This breaks after 100~ pages (returns Connection: Close in headers and net::ERR_INCOMPLETE_CHUNKED_ENCODING 200
-        //todo Possibly switch to an iterative approach in the future
         /**
          * Recursive function to get pages of a grouping asynchronously
          * @param {String} groupingPath - Path to the grouping to retrieve data from
@@ -385,7 +338,7 @@
          * @param {object[]} group - the group to check
          */
         $scope.addInBasis = function (group) {
-            _.forEach(group, function (member) {
+            _.forEach(group, function (member) 
                 const memberUuid = member.uuid;
                 member.inBasis = _.some($scope.groupingBasis, { uuid: memberUuid })
 
@@ -400,6 +353,7 @@
          */
         $scope.addWhereListed = function (compositeGroup) {
             _.forEach(compositeGroup, function (member) {
+
                 const memberUuid = member.uuid;
                 if (_.some($scope.groupingBasis, { uuid: memberUuid })) {
 
@@ -416,7 +370,7 @@
 
         /**
          * Adds a user to a group.
-         * @param {string} list - the list the user is being added to (either Include or Exclude)
+         * @param {string} list - the list the user is being added to (either Include or Exclude jsdlkfjaslfsdalsdfks)
          */
         $scope.addMember = function (list) {
             const groupingPath = $scope.selectedGrouping.path;
@@ -441,7 +395,42 @@
             });
 
         };
+        /**
+         * Lets a user import multiple members to a grouping, in the long run this method triggers the
+         * api method includeMultipleMembers.
+         * @param list
+         */
+        $scope.addMembers = function (list) {
+            let str = $scope.usersToAdd;
+            let usersToAdd = str.replace(/\n/g, ", ");
+            $scope.createConfirmAddMembersModal({
+                usersToAdd: usersToAdd,
+                listName: list
+            });
+            console.log(usersToAdd);
 
+        };
+
+        /**
+         * Creates a modal display for members added, and calls addMembersToInclude service.
+         * @param usersToAdd
+         * @param list
+         */
+        $scope.updateAddMembers = function (usersToAdd, list) {
+
+            let groupingPath = $scope.selectedGrouping.path;
+
+            let handleSuccessfulAdd = function (res, list, usersToAdd) {
+                $scope.createSuccessfulAddModal({
+                    user: usersToAdd,
+                    listName: list,
+                    response: res
+                });
+            };
+            if (list === "Include") {
+                groupingsService.addMembersToInclude(groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+            }
+        };
         /**
          * Initiates the adding of a member to a list.
          * @param {string} userToAdd - user being added
@@ -450,10 +439,12 @@
         $scope.updateAddMember = function (userToAdd, list) {
 
             // only initialize groupingPath is listName is not "admins"
+            let groupingPath;
 
             if ($scope.listName !== "admins") {
                 groupingPath = $scope.selectedGrouping.path;
             }
+
 
             const handleSuccessfulAdd = function (res) {
                 $scope.createSuccessfulAddModal({
@@ -522,7 +513,22 @@
                 $scope.updateAddMember(user, listName);
             });
         };
+        /**
+         * Creates a modal that asks for confirmation when importing multiple users.
+         * @param {object} options - the options object
+         * @param {string} options.usersToAdd - the users to import
+         * @param {string} options.listName - name of the list being added to
+         */
+        $scope.createConfirmAddMembersModal = function (options) {
+            $scope.confirmAddModalInstance = $uibModal.open({
+                templateUrl: "modal/confirmAddModal",
+                scope: $scope
+            });
+            $scope.confirmAddModalInstance.result.then(function () {
+                $scope.updateAddMembers(options.usersToAdd, options.listName);
+            });
 
+        };
         /**
          * Creates a modal that asks for confirmation when adding a user.
          * @param {object} options - the options object
@@ -533,9 +539,9 @@
             const userToAdd = options.userToAdd;
 
             groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                $scope.uidToAdd = attributes.uid;
-                $scope.uhuuidToAdd = attributes.uhuuid;
                 $scope.nameToAdd = attributes.cn;
+                $scope.uhuuidToAdd = attributes.uhuuid;
+                $scope.uidToAdd = attributes.uid;
 
                 $scope.listName = options.listName;
 
