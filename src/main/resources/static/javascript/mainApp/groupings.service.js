@@ -19,6 +19,7 @@
 
                 let endpoint = BASE_URL + "groupings/" + path + "?";
 
+
                 let params = "";
 
                 if (page != null) {
@@ -77,6 +78,16 @@
              */
             addMemberToInclude: function (path, userToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToIncludeGroup";
+                dataProvider.updateData(onSuccess, onError, endpoint);
+            },
+
+            /**
+             * Adds a members to the include group of a grouping.
+             * @param {string} path - the path to the grouping
+             * @param {string} userToAdd - the usernames of the members to add
+             */
+            addMembersToInclude: function (path, usersToAdd, onSuccess, onError) {
+                var endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
