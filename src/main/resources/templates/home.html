@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Home')"></head>
-<body>
+<body ng-app="UHGroupingsApp">
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
@@ -25,9 +25,11 @@
                     <a class="btn btn-lg btn-light" th:href="@{/login}" role="button">Login Here</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
-                    <form action="/logout" th:action="@{/logout}" method="post">
-                        <button class="btn btn-lg btn-light" type="submit">Logout</button>
-                    </form>
+                    <div ng-controller="TimeoutJsController">
+                        <form action="/logout" th:action="@{/logout}" method="post">
+                            <button class="btn btn-lg btn-light" type="submit">Logout</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,7 +45,8 @@
     </div>
 
     <div class="row" id="home-dashboard">
-        <div class="card bg-dashboard border-light p-0" sec:authorize="hasAnyRole('ROLE_UH', 'ROLE_ADMIN', 'ROLE_OWNER')">
+        <div class="card bg-dashboard border-light p-0"
+             sec:authorize="hasAnyRole('ROLE_UH', 'ROLE_ADMIN', 'ROLE_OWNER')">
             <div class="card-body">
                 <div class="row" sec:authorize="isAuthenticated()">
                     <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">

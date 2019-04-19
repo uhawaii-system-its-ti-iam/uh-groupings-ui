@@ -46,11 +46,9 @@
             }
             if ($scope.idleTime == 30) { // Logout user after 30 min has passed
                 let r = new XMLHttpRequest();
-                r.open('POST', '/uhgroupings/logout', true);
+                r.open("POST", "/uhgroupings/logout", true);
                 r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
                 r.send();
-                $window.location.href = "/uhgroupings/";
-
             }
         };
 
@@ -63,7 +61,7 @@
             if (remainingSeconds < 10) {
                 remainingSeconds = "0" + remainingSeconds;
             }
-            document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
+            document.getElementById("countdown").innerHTML = minutes + ":" + remainingSeconds;
             if ($scope.seconds === 0) {
                 clearInterval($scope.countdownTimer);
             } else {
