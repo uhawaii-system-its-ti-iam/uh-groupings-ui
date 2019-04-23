@@ -13,8 +13,9 @@
      * @param BASE_URL - base url for api calls
      * @constructor
      */
-    function TimeoutJsController($scope, $window, $uibModal, dataProvider, BASE_URL) {
+    function TimeoutJsController($scope, $window, $uibModal, $controller, dataProvider, BASE_URL) {
 
+        angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
         $scope.seconds = 300;
         $scope.idleTime = 0;
@@ -49,6 +50,7 @@
                 r.open("POST", "/uhgroupings/logout", true);
                 r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
                 r.send();
+                $window.location.href = "/uhgroupings/";
             }
         };
 
