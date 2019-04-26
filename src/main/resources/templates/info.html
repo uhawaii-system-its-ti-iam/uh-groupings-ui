@@ -3,127 +3,142 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Info')"></head>
-<body>
-    <nav th:substituteby="menubar :: copy"></nav>
+<nav th:substituteby="menubar :: copy"></nav>
+<!--  Content container -->
+<div class='container'>
+    <div class='row'>
+        <div>
+            <!-- <div class="table-header"><h2>General Information</h2></div>-->
 
-    <!--  Content container -->
-    <div class='container'>
-        <div class='row'>
-            <div>
-               <!-- <div class="table-header"><h2>General Information</h2></div>-->
+            <table class='table table-bordered' role="presentation">
+                <div class="card-header">
+                    <h2>General Information</h2>
+                </div>
+                <tbody>
+                <tr>
+                    <td align="left" valign="top" width="450em">How do I request a new grouping?</td>
+                    <td align="left" valign="top">A request form is available <a
+                            href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form">here</a>.
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top">Exactly what is a grouping?</td>
+                    <td align="left" valign="top">General information about groupings can be found <a
+                            href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">here</a>. A grouping's
+                        components include the Basis, Include, and Exclude lists.
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top">What is the Basis?</td>
+                    <td align="left" valign="top">A grouping's Basis is the portion of the grouping membership that is
+                        automatically updated. It may be empty.
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top">What is the Include members list?</td>
+                    <td align="left" valign="top">A grouping's Include is the portion of the grouping membership that is
+                        manually updated. It may be empty.
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top">What is the Exclude members list?</td>
+                    <td align="left" valign="top">A grouping's Exclude overrides automatic and manual membership by
+                        explicitly not including anyone listed here. It may be empty.
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top">For general help/how-to questions:</td>
+                    <td align="left" valign="top">Send email: &lt;<a href="mailto:its-iam-help@lists.hawaii.edu">its-iam-help@lists.hawaii.edu</a>&gt;
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-                <table class='table table-bordered' role = "presentation">
-                        <div class="card-header">
-                            <h2>General Information</h2>
-                        </div>
-                    <tbody>
-                    <tr>
-                        <td align="left" valign="top" width="450em">How do I request a new grouping?</td>
-                        <td align="left" valign="top">A request form is available <a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form">here</a>.</td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top">Exactly what is a grouping?</td>
-                        <td align="left" valign="top">General information about groupings can be found <a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">here</a>.  A grouping's components include the Basis, Include, and Exclude lists.</td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top">What is the Basis?</td>
-                        <td align="left" valign="top">A grouping's Basis is the portion of the grouping membership that is automatically updated.  It may be empty.</td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top">What is the Include members list?</td>
-                        <td align="left" valign="top">A grouping's Include is the portion of the grouping membership that is manually updated.  It may be empty.</td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top">What is the Exclude members list?</td>
-                        <td align="left" valign="top">A grouping's Exclude overrides automatic and manual membership by explicitly not including anyone listed here.  It may be empty.</td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top">For general help/how-to questions:</td>
-                        <td align="left" valign="top">Send email: &lt;<a href="mailto:its-iam-help@lists.hawaii.edu">its-iam-help@lists.hawaii.edu</a>&gt;</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <table class='table table-bordered'>
-                    <div class="card-header">
-                        <h2>Technical Information</h2>
-                    </div>
-                    <tbody>
-                    <tr>
-                        <td colspan="2" align="left" valign="top"><b>Resources</b></td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top">Source code</td>
-                        <td align="left" valign="top">It is available at this <a href="https://github.com/uhawaii-system-its-ti-iam/uhgroupings" target="_git_repo">GitHub repository</a>.</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="left" valign="top"><b>Technologies</b></td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top">Technologies used to create this application:</td>
-                        <td align="left" valign="top">
-                            <ul  class="list-unstyled">
-                                <li>
-                                    Apache Maven
-                                    <a href="https://maven.apache.org/what-is-maven.html">(Introduction)</a>
-                                </li>
-                                <li>
-                                    Apache Tomcat
-                                    <a href="https://wiki.apache.org/tomcat/FrontPage">(Welcome)</a>
-                                </li>
-                                <li>Java</li>
-                                <li>
-                                    Spring Framework
-                                    <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/spring-framework-reference/htmlsingle/" target="_sprgu">(Guide)</a>
-                                    <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/javadoc-api/" target="_sprapi">(API)</a>
-                                </li>
-                                <li>
-                                    Spring Boot
-                                    <a href="https://docs.spring.io/spring-boot/docs/1.5.12.RELEASE/reference/htmlsingle/">(Guide)</a>
-                                </li>
-                                <li>
-                                    Spring Security
-                                    <a href="https://projects.spring.io/spring-security/">(Quickstart)</a>
-                                </li>
-                                <li>
-                                    Thymeleaf
-                                    <a href="http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#introducing-thymeleaf" target="_thylgu">(Guide)</a>
-                                </li>
-                                <li>
-                                    Bootstrap
-                                    <a href="http://getbootstrap.com/" target="_boogu">(Guide)</a>
-                                </li>
-                                <li>
-                                    AngularJS
-                                    <a href="https://code.angularjs.org/1.5.8/docs/guide" target="_anggu">(Guide)</a>
-                                    <a href="https://code.angularjs.org/1.5.8/docs/api" target="_angapi">(API)</a>
-                                </li>
-                                <li>
-                                    JQuery
-                                    <a href="http://api.jquery.com/" target="_jquapi">(API)</a>
-                                </li>
-                                <li>
-                                    Jasmine
-                                    <a href="https://jasmine.github.io/" target="_jasmine">(Guide)</a>
-                                </li>
-                                <li>
-                                    Jenkins
-                                    <a href="https://jenkins.io/doc/">(Documentation)</a>
-                                </li>
-                                <li>
-                                    Underscore.js
-                                    <a href="https://underscorejs.org/">(Documentation)</a>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table class='table table-bordered'>
+                <div class="card-header">
+                    <h2>Technical Information</h2>
+                </div>
+                <tbody>
+                <tr>
+                    <td colspan="2" align="left" valign="top"><b>Resources</b></td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top">Source code</td>
+                    <td align="left" valign="top">It is available at this <a
+                            href="https://github.com/uhawaii-system-its-ti-iam/uhgroupings" target="_git_repo">GitHub
+                        repository</a>.
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="left" valign="top"><b>Technologies</b></td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top">Technologies used to create this application:</td>
+                    <td align="left" valign="top">
+                        <ul class="list-unstyled">
+                            <li>
+                                Apache Maven
+                                <a href="https://maven.apache.org/what-is-maven.html">(Introduction)</a>
+                            </li>
+                            <li>
+                                Apache Tomcat
+                                <a href="https://wiki.apache.org/tomcat/FrontPage">(Welcome)</a>
+                            </li>
+                            <li>Java</li>
+                            <li>
+                                Spring Framework
+                                <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/spring-framework-reference/htmlsingle/"
+                                   target="_sprgu">(Guide)</a>
+                                <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/javadoc-api/" target="_sprapi">(API)</a>
+                            </li>
+                            <li>
+                                Spring Boot
+                                <a href="https://docs.spring.io/spring-boot/docs/1.5.12.RELEASE/reference/htmlsingle/">(Guide)</a>
+                            </li>
+                            <li>
+                                Spring Security
+                                <a href="https://projects.spring.io/spring-security/">(Quickstart)</a>
+                            </li>
+                            <li>
+                                Thymeleaf
+                                <a href="http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#introducing-thymeleaf"
+                                   target="_thylgu">(Guide)</a>
+                            </li>
+                            <li>
+                                Bootstrap
+                                <a href="http://getbootstrap.com/" target="_boogu">(Guide)</a>
+                            </li>
+                            <li>
+                                AngularJS
+                                <a href="https://code.angularjs.org/1.5.8/docs/guide" target="_anggu">(Guide)</a>
+                                <a href="https://code.angularjs.org/1.5.8/docs/api" target="_angapi">(API)</a>
+                            </li>
+                            <li>
+                                JQuery
+                                <a href="http://api.jquery.com/" target="_jquapi">(API)</a>
+                            </li>
+                            <li>
+                                Jasmine
+                                <a href="https://jasmine.github.io/" target="_jasmine">(Guide)</a>
+                            </li>
+                            <li>
+                                Jenkins
+                                <a href="https://jenkins.io/doc/">(Documentation)</a>
+                            </li>
+                            <li>
+                                Underscore.js
+                                <a href="https://underscorejs.org/">(Documentation)</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-    <!-- / Content container. -->
+</div>
+<!-- / Content container. -->
 
-    <div th:substituteby="footer :: copy"></div>
+<div th:substituteby="footer :: copy"></div>
 </body>
 </html>
