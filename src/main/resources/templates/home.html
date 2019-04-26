@@ -2,10 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
-<head th:replace="header :: copy(headingTitle='UH Groupings Home')">
-
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i,700,700i,900,900i" rel="stylesheet">
-
+<head th:replace="header(headingTitle='UH Groupings Home')">
 
 
 </head>
@@ -13,72 +10,97 @@
 <nav th:replace="menubar"></nav>
 
 <!--  Content container -->
-<div class="container">
-    <div class="jumbotron">
-        <div class="row">
-            <div class="col-lg-2 col-md-3 col-sm-4 d-sm-inline-flex d-none justify-content-end align-middle">
-                <img class="img-fluid" id="uh-groupings-icon" th:src="@{/images/grouper-users-icon-02.png}"
-                     src="images/grouper-users-icon-02.png" alt="UH Groupings"/>
-            </div>
-            <div class="col-lg-10 col-md-9 col-sm-8">
-                <h1 class="dropshadow">UH Groupings</h1>
+
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-sm-7 d-inline-flex align-items-center">
+            <div>
+                <h1 class="sr-only">UH Groupings</h1>
+                <img class="img-fluid align-self-center" src="" th:src="@{/images/uh-groupings-text.png}" th:srcset="@{/images/uh-groupings-text.png 1x, /images/uh-groupings-text-2x.png 2x}" alt="UH Groupings logotype">
                 <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"></p>
-            </div>
-        </div>
-        <div class="row ml-auto">
-            <div class="offset-lg-2 offset-md-3 offset-sm-4">
                 <div sec:authorize="!isAuthenticated()">
-                    <a class="btn btn-lg btn-light" th:href="@{/login}" role="button">Login Here</a>
+                    <a class="btn btn-lg dark-teal-bg" th:href="@{/login}" role="button">Login Here</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
                     <form action="/logout" th:action="@{/logout}" method="post">
-                        <button class="btn btn-lg btn-light" type="submit">Logout</button>
+                        <button class="btn btn-lg dark-teal-bg" type="submit">Logout</button>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row pl-4 pr-4">
-        <span class="h5">What is a UH Grouping?</span>
-        <div id="grouping-description">
-            <p th:utext="#{screen.message.home.page.groupingDefinition}"></p>
-            <p th:utext="#{screen.message.home.page.groupingFeatures}"></p>
+        <div class="col-sm-5 align-middle d-none d-sm-block">
+            <img class="img-fluid" th:src="@{/images/uh-groupings-logo-large.png}" th:srcset="@{/images/uh-groupings-logo-large.png 1x, /images/uh-groupings-logo-large-2x.png 2x}"  alt="UH Groupings">
         </div>
-        <div th:utext="#{screen.message.home.page.moreInformation}"></div>
     </div>
+</div>
 
-    <div class="row" id="home-dashboard">
-        <div class="card bg-dashboard border-light p-0" sec:authorize="hasAnyRole('ROLE_UH', 'ROLE_ADMIN', 'ROLE_OWNER')">
-            <div class="card-body">
-                <div class="row" sec:authorize="isAuthenticated()">
-                    <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <p class="h5">Administration</p>
-                        <p th:utext="#{screen.message.home.page.adminInfo}"></p>
-                        <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">Admin</a></p>
-                    </div>
-                    <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
-                        <p class="h5">Memberships</p>
-                        <p th:utext="#{screen.message.home.page.membershipInfo}"></p>
-                        <div class="spacer d-xl-block d-lg-none d-md-block d-none"></div>
-                        <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">Memberships</a></p>
-                    </div>
-                    <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
-                        <p class="h5">Groupings</p>
-                        <p th:utext="#{screen.message.home.page.mygroupingsInfo}"></p>
-                        <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">Groupings</a></p>
-                    </div>
+
+<div class="seafoam-bg pt-5 pb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="h1 text-center d-block">What is a UH Grouping?</h2>
+            </div>
+            <div class="col-md-12">
+                <p class="lead text-center d-block" th:utext="#{screen.message.home.page.groupingDefinition}"></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <img th:src="@{/images/cogs.png}" th:srcset="@{/images/cogs.png 1x, /images/cogs-2x.png 2x}"  alt="cogs">
+                </div>
+                <p class="text-center" th:utext="#{screen.message.home.page.groupingControls}"></p>
+            </div>
+
+            <div class="col-md-4">
+                <div class="text-center">
+                    <img th:src="@{/images/id-email.png}" th:srcset="@{/images/id-email.png 1x, /images/id-email-2x.png 2x}"  alt="cogs">
+                </div>
+                <p class="text-center" th:utext="#{screen.message.home.page.groupingEmail}"></p>
+            </div>
+
+            <div class="col-md-4">
+                <div class="text-center">
+                    <img th:src="@{/images/watch.png}" th:srcset="@{/images/watch.png 1x, images/watch-2x.png 2x}"  alt="watch">
+                </div>
+                <p class="text-center">Hello</p>
+            </div>
+        </div>
+        <div class="row">
+            <a class="btn btn-lg mx-auto mt-4" role="button" href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">Learn More &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="home-dashboard">
+    <div class="card bg-dashboard border-light p-0" sec:authorize="hasAnyRole('ROLE_UH', 'ROLE_ADMIN', 'ROLE_OWNER')">
+        <div class="card-body">
+            <div class="row" sec:authorize="isAuthenticated()">
+                <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <p class="h5">Administration</p>
+                    <p th:utext="#{screen.message.home.page.adminInfo}"></p>
+                    <p><a class="btn btn-primary btn-sm" th:href="@{/admin}" role="button">Admin</a></p>
+                </div>
+                <div class="col-md-4" sec:authorize="hasRole('ROLE_UH')">
+                    <p class="h5">Memberships</p>
+                    <p th:utext="#{screen.message.home.page.membershipInfo}"></p>
+                    <div class="spacer d-xl-block d-lg-none d-md-block d-none"></div>
+                    <p><a class="btn btn-primary btn-sm" th:href="@{/memberships}" role="button">Memberships</a></p>
+                </div>
+                <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
+                    <p class="h5">Groupings</p>
+                    <p th:utext="#{screen.message.home.page.mygroupingsInfo}"></p>
+                    <p><a class="btn btn-primary btn-sm" th:href="@{/groupings}" role="button">Groupings</a></p>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
+
 <!-- / Content container. -->
 
-<img class="img-fluid" th:src="@{/images/uh-groupings-logo.png}" src="">
 
-
-<div th:replace="footer :: copy"></div>
+<div th:replace="footer"></div>
 </body>
 </html>
