@@ -13,8 +13,9 @@
      * @param BASE_URL - base url for api calls
      * @constructor
      */
-    function TimeoutJsController($scope, $window, $uibModal, dataProvider, BASE_URL) {
+    function TimeoutJsController($scope, $window, $uibModal, $controller, dataProvider, BASE_URL) {
 
+        angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
         $scope.seconds = 300;
         $scope.idleTime = 0;
@@ -44,11 +45,12 @@
                 $scope.countdownTimer = setInterval(timer, 1000);
                 $scope.createTimeoutModal();
             }
-            if ($scope.idleTime == 30) { // Logout user after 30 min has passed
+            if ($scope.idleTime === 30) { // Logout user after 30 min has passed
                 let r = new XMLHttpRequest();
                 r.open("POST", "/uhgroupings/logout", true);
                 r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
                 r.send();
+                $window.location.href = "/uhgroupings/";
             }
         };
 

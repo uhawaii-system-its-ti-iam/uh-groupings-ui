@@ -3,9 +3,8 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Home')"></head>
-<body ng-app="UHGroupingsApp">
+<body>
 <nav th:replace="menubar :: copy"></nav>
-
 <!--  Content container -->
 <div class="container">
     <div class="jumbotron">
@@ -25,11 +24,10 @@
                     <a class="btn btn-lg btn-light" th:href="@{/login}" role="button">Login Here</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
-                    <div ng-controller="TimeoutJsController">
-                        <form action="/logout" th:action="@{/logout}" method="post">
-                            <button class="btn btn-lg btn-light" type="submit">Logout</button>
-                        </form>
-                    </div>
+                    <form action="/logout" th:action="@{/logout}" method="post">
+                        <button class="btn btn-lg btn-light" type="submit">Logout</button>
+                    </form>
+
                 </div>
             </div>
         </div>
