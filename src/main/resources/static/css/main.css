@@ -1,26 +1,12 @@
-@font-face {
-    font-family: cinzel-regular;
-    src: url(../fonts/Cinzel-Regular.ttf);
-}
-
-@font-face {
-    font-family: cormorant-upright-regular;
-    src: url(../fonts/CormorantUpright-Regular.ttf);
-}
-
-@font-face {
-    font-family: alegreyasans-regular;
-    src: url(../fonts/AlegreyaSans-Regular.ttf);
-}
-
 html {
     position: relative;
     min-height: 100%;
 }
 
 body {
-    padding-top: 4.6875rem; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-    padding-bottom: 3.125rem;
+    font-family: 'Source Sans Pro', 'Helvetica', Arial, sans-serif;
+    padding-top: 3.5rem; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    /*padding-bottom: 3.125rem;*/
     background-color: white;
 }
 
@@ -96,21 +82,6 @@ td.uh-pre {
     word-break: break-all;
 }
 
-.uh-branding-one {
-    font-family: cinzel-regular, serif;
-    font-size: 1.6em;
-    font-style: normal;
-    letter-spacing: 2.2px;
-    color: #777;
-}
-
-.uh-branding-two {
-    font-family: cormorant-upright-regular, cursive;
-    font-size: 0.8em;
-    font-style: normal;
-    color: #777;
-}
-
 .navbar {
     background-color: white;
     padding-top: 0;
@@ -118,80 +89,55 @@ td.uh-pre {
 }
 
 .fixed-top .navbar-nav {
-    padding: 2.5rem 0 0 0;
-    font-size: .9375rem;
+    /*padding: 2.5rem 0 0 0;
+    font-size: .9375rem;*/
 }
 
 .fixed-top .navbar-brand {
     padding: 0;
-    min-height: 3.125rem;
-    min-width: 3.125rem;
 }
 
-.navbar .navbar-brand > img {
-    height: 3.125rem;
-    width: 3.125rem;
+.navbar-brand > img {
     background-color: transparent;
 }
 
-.fixed-top .navbar-nav .nav-item {
+.navbar .navbar-nav .nav-item {
     padding-left: .3125rem;
     padding-right: .3125rem;
 }
 
-.navbar-brand .uh-nav-app-name {
-    color: inherit;
-    height: 3.125rem;
-    width: auto;
-    padding-top: 0;
-    padding-left: .3125rem;
-    background-color: transparent;
-
-    font-family: alegreyasans-regular, opensans-regular, serif;
-    font-weight: normal;
-    font-size: 1.5625rem;
+.navbar .navbar-nav .nav-link {
+    color: var(--uh-dark-gray);
 }
 
-.navbar-brand .uh-nav-app-name:hover {
-    color: #B08A17;
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .nav-link:focus,
+.navbar .navbar-nav .nav-link:active {
+    color: var(--teal);
 }
 
-.fixed-top .navbar-nav .nav-link {
-    color: #212529;
-}
-
-.fixed-top .navbar-nav .nav-link:hover {
-    color: #0056b3;
-}
-
-.fixed-top .navbar-logout {
+.navbar .navbar-logout {
     padding: .5rem .5625rem;
-    font-size: .9375rem;
+    /*font-size: .9375rem;*/
     color: #212529;
     border: 0;
     text-decoration: none;
 }
 
-.fixed-top .navbar-logout:hover {
+.navbar .navbar-logout:hover {
     color: rgba(0, 0, 0, .7);
 }
 
-#uh-groupings-icon {
-    max-height: 6rem;
-    max-width: 6rem;
-    width: auto;
-    height: auto;
+.user-icon {
+    height: 100px;
+    position: relative;
+    width: 100px;
 }
 
-#home-dashboard {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    padding-left: .75rem;
-    padding-right: .75rem;
-}
-
-#home-dashboard .bg-dashboard {
-    background-color: #e9ecef;
+.user-icon .user-role {
+    bottom: 0;
+    position: absolute;
+    right: -.25rem;
 }
 
 .spacer {
@@ -208,7 +154,7 @@ td.uh-pre {
 }
 
 .card.card-with-table.card-tab-content {
-    margin-top: 0rem;
+    margin-top:0rem;
 }
 
 .card.card-tab-content, .card.card-tab-content .card-header {
@@ -249,83 +195,34 @@ table .w-30 {
     border-bottom: none;
 }
 
-.footer {
-    position: absolute;
-    padding-top: 5px;
-    bottom: 0;
-    width: 100%;
-    /* Set the fixed height of the footer here */
-    height: 50px;
-    font-size: 100%;
-    text-align: center;
-}
-
-#grouping-description {
-    padding-top: .5rem;
-}
-
 @media (min-width: 992px) {
     body {
-        padding-top: 7.1875rem; /* Required padding for .navbar-fixed-top. Change if height of navigation changes. */
-        padding-bottom: 3.125rem;
+        /*padding-top: 7.1875rem; Required padding for .navbar-fixed-top. Change if height of navigation changes. */
+        /*padding-bottom: 3.125rem;*/
     }
 
     .navbar {
         background-color: white;
     }
 
-    .fixed-top .nav {
+    .navbar .nav {
         padding: 2.5rem 1.25rem 0 0;
         background-color: white;
     }
 
-    .fixed-top .navbar-brand {
+    .navbar .navbar-brand {
         padding: 0;
-        min-height: 3.125rem;
-        min-width: 3.125rem;
     }
 
-    .fixed-top .navbar-brand > img {
-        height: 5.625rem;
-        width: 5.625rem;
+    .navbar .navbar-brand > img {
         background-color: transparent;
     }
-
-    .navbar-brand .uh-nav-app-name {
-        height: 5.625rem;
-        width: auto;
-        padding-top: 2.8125rem;
-        padding-left: .3125rem;
-        background-color: transparent;
-        display: inline-flex;
-
-        font-family: alegreyasans-regular, opensans-regular, serif;
-        font-weight: normal;
-        font-size: 1.5625rem;
-    }
-
-    .uh-branding-one {
-        font-family: cinzel-regular, serif;
-        font-size: 1.6em;
-        font-style: normal;
-        letter-spacing: 2.2px;
-        color: #777;
-    }
-
-    .uh-branding-two {
-        font-family: cormorant-upright-regular, cursive;
-        font-size: 0.8em;
-        font-style: normal;
-        color: #777;
-    }
-
 }
 
 @media (max-width: 991px) {
-    .fixed-top .navbar-logout {
+    .navbar .navbar-logout {
         padding-left: 0;
     }
-
 }
 
 .row.group-header {
@@ -405,6 +302,10 @@ table .w-30 {
     }
 }
 
+.nav-link {
+    white-space: nowrap;
+}
+
 #group-pills {
     margin-top: .5rem;
 }
@@ -436,46 +337,68 @@ table .w-30 {
 .selected-grouping-card table > tbody > tr:first-child > th, .selected-grouping-card table > tbody > tr:first-child > td {
     border-top: 0;
 }
-
-.grouping-card-description {
-    table-layout: fixed;
-    width: 80%;
-}
-
-.grouping-edit-description {
-    margin-right: 16px;
-    margin-top: 2px;
-}
-
-.grouping-description-form {
-    margin: 5px;
-}
-
-.grouping-description-form-control {
-    margin: 5px 5px 10px 5px;
-    float: left;
-    width: -webkit-calc(100% - 80px);
-    width: -moz-calc(100% - 80px);
-    width: calc(100% - 80px);
-}
-
-.grouping-description-save-icon {
-    margin-left: 14px !important;
-    margin-top: 12px;
-    margin-right: 10px;
-    float: left;
-}
-
-.grouping-description-cancel-icon {
-    margin-top: 12px;
-    float: left;
-}
-
-@media (max-width: 575.98px) {
-    .manage-grouping-body.card-body {
-        padding-left: 0;
-        padding-right: 0;
+@media (min-width: 992px) {
+    th.grouping-name {
+        min-width: 10rem;
     }
+    /*.manage-groupings td span.path {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }*/
+}
+th {
+    font-size: .8rem;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+.manage-admins td:first-child {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+.manage-groupings td:first-child {
+    /*align-items: center;
+    display: flex;*/
+}
+.manage-groupings td:first-child i {
+    flex-basis: 20px;
+    margin-right: 8px;
+}
+.manage-groupings td:first-child span {
+    flex: 1;
+}
+.manage-groupings td:last-child {
+    max-width: 220px;
+}
+th.grouping-members {
+    min-width: 8rem;
+}
+.manage-groupings td span.path {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: calc(100% - 40px);
+    white-space: nowrap;
+}
+.manage-groupings td:last {
+    align-items: center;
+    display: flex;
+}
+form.seamless {
+    display: flex;
+    min-width: 12rem;
+}
+form.seamless input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    flex: 1;
+    width: calc(100% - 50px);
+}
+form.seamless button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    flex-basis: 40px;
 }
 
 @media (max-width: 991.98px) {
@@ -492,15 +415,26 @@ table .w-30 {
     width: 3%;
 }
 
+.card {
+    overflow: hidden;
+}
+
 /*.card.page-header {
     margin-bottom: 1rem;
 }*/
 
-.nav-tabs .nav-item {
+.nav-tabs .nav-item{
     margin-top: 1rem;
 }
 
-.card {
+.card{
     margin-top: 1rem;
 }
 
+.dashboard-item-icon .fa-wrench {
+    transform: rotate(-90deg);
+}
+
+.text-tracking {
+    letter-spacing: 1px;
+}
