@@ -133,6 +133,11 @@ h1, h2, .text-left, span {
     color: #1c6070;
 }
 
+.timeout-counter {
+    color: #1811ec;
+    font-weight: bold;
+}
+
 .btn-light:hover {
     color: #212529;
     background-color: #e2e6ea;
@@ -152,17 +157,17 @@ h1, h2, .text-left, span {
     background: #e5eef1;
 }
 
-h3{
+h3 {
     color: #1c6070;
 }
 
-.loading-text{
+.loading-text {
     margin-left: 2.357em;
     color: #296191;
     float: left;
 }
 
-.done-text{
+.done-text {
     color: #296191;
     text-align: right;
 }
