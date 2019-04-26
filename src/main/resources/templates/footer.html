@@ -1,4 +1,7 @@
-<footer class="footer" th:fragment="copy">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<footer class="footer" th:fragment="copy" ng-app="UHGroupingsApp">
     <div class="container">
         <a href="https://www.hawaii.edu">
             <span class="uh-branding-one">University</span>
@@ -7,4 +10,9 @@
         </a>
         <hr/>
     </div>
+    <div sec:authorize="isAuthenticated()">
+        <div ng-controller="TimeoutJsController">
+        </div>
+    </div>
 </footer>
+</html>

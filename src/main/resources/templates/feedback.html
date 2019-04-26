@@ -3,24 +3,23 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Feedback')"></head>
-<body ng-app="UHGroupingsApp">
 <nav th:substituteby="menubar :: copy"></nav>
 
 <!--  Content container -->
 <div class="container">
- <!--   &lt;!&ndash;<h1>Feedback</h1>&ndash;&gt;
+    <!--   &lt;!&ndash;<h1>Feedback</h1>&ndash;&gt;
+
+       <div class="alert alert-success" role="alert" th:if="${success}">
+           &lt;!&ndash;<p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>&ndash;&gt;
+
+       </div>
+   -->
 
     <div class="alert alert-success" role="alert" th:if="${success}">
-        &lt;!&ndash;<p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>&ndash;&gt;
-
+        <p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>
     </div>
--->
 
-     <div class = "alert alert-success" role="alert" th:if="${success}">
-     <p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>
-</div>
-
- <div th:replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.description})"></div>
+    <div th:replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.description})"></div>
 
     <!--<div class="container">
     <div th:if="${success}" replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.alertSuccess})">

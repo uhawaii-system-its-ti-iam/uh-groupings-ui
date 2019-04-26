@@ -21,7 +21,6 @@
         $scope.loading = false;
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
-        angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
 
         /**
          * Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
@@ -84,7 +83,8 @@
          };*/
 
         $scope.optIn = function (currentPage, indexClicked) {
-            const groupingPath = $scope.pagedItemsOptInList(currentPage * indexClicked).path;
+            // const groupingPath = $scope.pagedItemsOptInList(currentPage * indexClicked).path;
+            const groupingPath = $scope.pagedItemsOptInList[currentPage][indexClicked].path;
             $scope.loading = true;
             groupingsService.optIn(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
         };
