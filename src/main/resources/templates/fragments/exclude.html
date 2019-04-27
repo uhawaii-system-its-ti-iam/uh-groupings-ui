@@ -5,14 +5,14 @@
             <h3>Exclude<span> ({{groupingExclude.length}})</span></h3>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingProgress">
-            <h4 class="loading-text">Now Loading...</h4>
+            <h4 class="loading-text" th:text="#{screen.message.common.loading.gettingmembers}"></h4>
             <div class="small-loader"></div>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingComplete">
-            <h4 class="done-text">Grouping Loaded! ✓</h4>
+            <h4 class="done-text" th:text="#{screen.message.common.loading.loadcomplete}"></h4>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="largeGrouping">
-            <h4 class="done-text">Grouping Too Large. Loading stopped.</h4>
+            <h4 class="done-text" th:text="#{screen.message.common.loading.toolarge}"></h4>
         </div>
     </div>
 

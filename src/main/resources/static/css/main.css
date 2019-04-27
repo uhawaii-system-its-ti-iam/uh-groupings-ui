@@ -208,7 +208,7 @@ td.uh-pre {
 }
 
 .card.card-with-table.card-tab-content {
-    margin-top:0rem;
+    margin-top: 0rem;
 }
 
 .card.card-tab-content, .card.card-tab-content .card-header {
@@ -250,7 +250,6 @@ table .w-30 {
 }
 
 .footer {
-    position: absolute;
     padding-top: 5px;
     bottom: 0;
     width: 100%;
@@ -437,6 +436,40 @@ table .w-30 {
     border-top: 0;
 }
 
+.grouping-card-description {
+    table-layout: fixed;
+    width: 80%;
+}
+
+.grouping-edit-description {
+    margin-right: 16px;
+    margin-top: 2px;
+}
+
+.grouping-description-form {
+    margin: 5px;
+}
+
+.grouping-description-form-control {
+    margin: 5px 5px 10px 5px;
+    float: left;
+    width: -webkit-calc(100% - 80px);
+    width: -moz-calc(100% - 80px);
+    width: calc(100% - 80px);
+}
+
+.grouping-description-save-icon {
+    margin-left: 14px !important;
+    margin-top: 12px;
+    margin-right: 10px;
+    float: left;
+}
+
+.grouping-description-cancel-icon {
+    margin-top: 12px;
+    float: left;
+}
+
 @media (max-width: 575.98px) {
     .manage-grouping-body.card-body {
         padding-left: 0;
@@ -462,11 +495,11 @@ table .w-30 {
     margin-bottom: 1rem;
 }*/
 
-.nav-tabs .nav-item{
+.nav-tabs .nav-item {
     margin-top: 1rem;
 }
 
-.card{
+.card {
     margin-top: 1rem;
 }
 

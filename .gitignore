@@ -12,3 +12,4 @@ src/main/resources/static/javascript/tsconfig.json
 src/main/resources/grouperClientLogs/*
 grouperClientLogs
 phantomjsdriver.log
+.DS_Store
