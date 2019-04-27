@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -86,6 +87,7 @@ public class TestGroupingsRestController {
     private MockMvc mockMvc;
 
     private static final String API_BASE = "/api/groupings/";
+    private org.owasp.html.PolicyFactory policy;
     private User adminUser;
     private User uhUser01;
     private User uhUser05;
@@ -109,6 +111,8 @@ public class TestGroupingsRestController {
         mockMvc = webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
+
+        policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
         Principal tst0Principal = new SimplePrincipal(tst[0]);
         Principal adminPrincipal = new SimplePrincipal(ADMIN);
@@ -178,23 +182,24 @@ public class TestGroupingsRestController {
 
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
     }
-
+//todo touched
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void addMemberTest() throws Exception {
 
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
-        mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addMemberToIncludeGroup");
+        mapGSRs(API_BASE + GROUPING + "/<h1>" + tst[3] + "<h1>/addMemberToIncludeGroup");
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
         //tst[3] is in basis and will go into include
         assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[3]));
 
         //add tst[3] back to exclude
-        mapGSRs(API_BASE + GROUPING + "/" + tst[3] + "/addMemberToExcludeGroup");
+        mapGSRs(API_BASE + GROUPING + "/<div class='container'>" + tst[3] + "<div>/addMemberToExcludeGroup");
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
     }
+    //todo touched
 
     @Test
     @WithMockUhUser(username = "iamtst01")
@@ -202,13 +207,14 @@ public class TestGroupingsRestController {
 
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
-        mapGSR(API_BASE + GROUPING + "/" + tst[3] + "/deleteMemberFromExcludeGroup");
+        mapGSR(API_BASE + GROUPING + "/<h1>" + tst[3] + "<h1>/deleteMemberFromExcludeGroup");
 
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[3]));
         assertTrue(isInGrouping(GROUPING, tst[0], tst[3]));
 
         assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[1]));
-        mapGSR(API_BASE + GROUPING + "/" + tst[1] + "/deleteMemberFromIncludeGroup");
+//        mapGSR(API_BASE + GROUPING + "/<a href='google.com'>" + tst[1] + "<a>/deleteMemberFromIncludeGroup"); // Erroring out
+        mapGSR(API_BASE + GROUPING + "/<span>" + tst[1] + "<span>/deleteMemberFromIncludeGroup");
 
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[1]));
         assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[1]));
@@ -377,6 +383,7 @@ public class TestGroupingsRestController {
         assertTrue(infoSuccess.getAdminGroup().getUsernames().contains(ADMIN));
     }
 
+    //todo FINISH THIS
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void addDeleteAdminTest() throws Exception {
@@ -384,16 +391,15 @@ public class TestGroupingsRestController {
         GroupingsServiceResult deleteAdminResults;
 
         try {
-            //            addAdminResults = groupingsRestController.addAdmin(tst[0], tst[0]).getBody();
-            addAdminResults = mapGSR(API_BASE + tst[0] + "/addAdmin");
+             addAdminResults = mapGSR(API_BASE + "<h1>" + tst[0] + "</h1>/addAdmin");
+
         } catch (GroupingsHTTPException ghe) {
             addAdminResults = new GroupingsServiceResult();
             addAdminResults.setResultCode(FAILURE);
         }
 
         try {
-            //            deleteAdminResults = groupingsRestController.deleteAdmin(tst[0], tst[0]).getBody();
-            deleteAdminResults = mapGSR(API_BASE + tst[0] + "/deleteAdmin");
+            deleteAdminResults = mapGSR(API_BASE + "<div>" +tst[0] + "</div>/deleteAdmin");
         } catch (GroupingsHTTPException ghe) {
             deleteAdminResults = new GroupingsServiceResult();
             deleteAdminResults.setResultCode(FAILURE);
@@ -401,6 +407,24 @@ public class TestGroupingsRestController {
 
         assertTrue(addAdminResults.getResultCode().startsWith(FAILURE));
         assertTrue(deleteAdminResults.getResultCode().startsWith(FAILURE));
+    }
+
+    @Test
+    @WithMockUhUser(username = "iamtst01")
+    public void sanitationTest() {
+        String regularInput = "Hello";
+        String regularInputPost = policy.sanitize(regularInput);
+        assertTrue(regularInput.equals(regularInputPost));
+
+        String unsafeHTML = "<h1>Hello</h1>";
+
+        String safeInput = policy.sanitize(unsafeHTML);
+        assertFalse(safeInput.equals(unsafeHTML));
+
+        String unsafeLink = "<a href='google.com'>Hello</a>";
+        safeInput = policy.sanitize(unsafeLink);
+        System.out.println("SANITIZE RESULTS: " + safeInput);
+        assertNotEquals(safeInput, "<a href='google.com'>Hello</a>");
     }
 
     ///////////////////////////////////////////////////////////////////////

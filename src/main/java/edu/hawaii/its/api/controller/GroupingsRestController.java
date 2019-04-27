@@ -1,18 +1,24 @@
 package edu.hawaii.its.api.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import edu.hawaii.its.api.service.HttpRequestService;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
@@ -23,6 +29,8 @@ import java.util.List;
 public class GroupingsRestController {
 
     private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
+
+    private org.owasp.html.PolicyFactory policy;
 
     @Value("${app.groupings.controller.uuid}")
     private String uuid;
@@ -58,6 +66,9 @@ public class GroupingsRestController {
     public void init() {
         Assert.hasLength(uuid, "Property 'app.groupings.controller.uuid' is required.");
         logger.info("GroupingsRestController started.");
+
+        // For sanitation
+        policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
     }
 
     @RequestMapping(value = "/",
@@ -68,6 +79,7 @@ public class GroupingsRestController {
                 .ok()
                 .body("University of Hawaii Groupings API");
     }
+
 
     /**
      * Get a member's attributes based off username
@@ -81,7 +93,10 @@ public class GroupingsRestController {
     @ResponseBody
     public ResponseEntity memberAttributes(Principal principal, @PathVariable String uid) {
         logger.info("Entered REST memberAttributes...");
-        String uri = String.format(API_2_1_BASE + "/members/%s", uid);
+
+        String safeInput = policy.sanitize(uid);
+
+        String uri = String.format(API_2_1_BASE + "/members/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -96,7 +111,8 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addAdmin(Principal principal, @PathVariable String adminToAdd) {
         logger.info("Entered REST addAdmin...");
-        String uri = String.format(API_2_1_BASE + "/admins/%s", adminToAdd);
+        String safeInput = policy.sanitize(adminToAdd);
+        String uri = String.format(API_2_1_BASE + "/admins/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
     }
 
@@ -111,7 +127,10 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteAdmin(Principal principal, @PathVariable String adminToDelete) {
         logger.info("Entered REST deleteAdmin...");
-        String uri = String.format(API_2_1_BASE + "/admins/%s", adminToDelete);
+
+        String safeInput = policy.sanitize(adminToDelete);
+
+        String uri = String.format(API_2_1_BASE + "/admins/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
@@ -129,8 +148,34 @@ public class GroupingsRestController {
     public ResponseEntity addMemberToIncludeGroup(Principal principal,
             @PathVariable String grouping,
             @PathVariable String userToAdd) {
+
+        String safeGrouping = policy.sanitize(grouping);
+        String safeUserToAdd = policy.sanitize(userToAdd);
+
         logger.info("Entered REST addMemberToIncludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", grouping, userToAdd);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", safeGrouping, safeUserToAdd);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
+    }
+
+    /**
+     * Uses  the apis includeMultipleMembers utility.
+     * adds multiple members to the include group of the Grouping who's path is in 'grouping'
+     * if the members are in the exclude group, they will be removed from it
+     * SEE:   addMembers():        general.controller.js
+     *        updateAddMembers():  general.controller.js
+     *
+     * @param grouping:   path to the Grouping who's include group the new member will be added to
+     * @param usersToAdd: usernames of the new members to be added to the include group
+     * @return information about the success of the operation
+     */
+    @RequestMapping(value = "/{grouping}/{usersToAdd}/addMembersToIncludeGroup",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity addMembersToIncludeGroup(Principal principal,
+            @PathVariable String grouping,
+            @PathVariable String usersToAdd) {
+        logger.info("Entered REST addMembersToIncludeGroup...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMultipleMembers/%s", grouping, usersToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -149,7 +194,11 @@ public class GroupingsRestController {
             @PathVariable String grouping,
             @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToExcludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", grouping, userToAdd);
+
+        String safeGrouping = policy.sanitize(grouping);
+        String safeUserToAdd = policy.sanitize(userToAdd);
+
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", safeGrouping, safeUserToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -167,7 +216,11 @@ public class GroupingsRestController {
             @PathVariable String grouping,
             @PathVariable String userToDelete) {
         logger.info("Entered REST deleteMemberFromIncludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", grouping, userToDelete);
+
+        String safeGrouping = policy.sanitize(grouping);
+        String safeUserToDelete = policy.sanitize(userToDelete);
+
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", safeGrouping, safeUserToDelete);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
@@ -184,8 +237,12 @@ public class GroupingsRestController {
     public ResponseEntity deleteMemberFromExcludeGroup(Principal principal,
             @PathVariable String grouping,
             @PathVariable String userToDelete) {
+
+        String safeGrouping = policy.sanitize(grouping);
+        String safeUserToDelete = policy.sanitize(userToDelete);
+
         logger.info("Entered REST deleteMemberFromExcludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", grouping, userToDelete);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", safeGrouping, safeUserToDelete);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
@@ -205,7 +262,11 @@ public class GroupingsRestController {
     public ResponseEntity assignOwnership(Principal principal, @PathVariable String grouping,
             @PathVariable String newOwner) {
         logger.info("Entered REST assignOwnership...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", grouping, newOwner);
+
+        String safeGrouping = policy.sanitize(grouping);
+        String safeNewOwner = policy.sanitize(newOwner);
+
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", safeGrouping, newOwner);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -226,7 +287,11 @@ public class GroupingsRestController {
     public ResponseEntity removeOwnership(Principal principal, @PathVariable String grouping,
             @PathVariable String ownerToRemove) {
         logger.info("Entered REST removeOwnership...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", grouping, ownerToRemove);
+
+        String safeGrouping = policy.sanitize(grouping);
+        String safeOwnerToRemove = policy.sanitize(ownerToRemove);
+
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", safeGrouping, safeOwnerToRemove);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
@@ -244,7 +309,10 @@ public class GroupingsRestController {
     public ResponseEntity updateDescription(Principal principal, @PathVariable String path,
                                           @RequestBody(required = false) String description) {
         logger.info("Entered REST updateDescription...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/description", path);
+
+        String safePath = policy.sanitize(path);
+
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/description", safePath);
         return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, description, HttpMethod.PUT);
     }
 
@@ -252,7 +320,6 @@ public class GroupingsRestController {
 
     /**
      * finds and returns the specified Grouping
-     *
      * @param path : String containing the path of the Grouping to be searched for
      * @return the Grouping that was searched for
      * the Grouping will contain information about
@@ -302,17 +369,22 @@ public class GroupingsRestController {
 
         // todo There might be a better way to do this, this approach is kinda gross
         String params = "";
-        if(page != null) params = params + "page=" + page;
-        if(size != null) {
-            if(!"".equals(params)) {params = params + "&";}
+        if (page != null)
+            params = params + "page=" + page;
+        if (size != null) {
+            if (!params.equals(""))
+                params = params + "&";
             params = params + "size=" + size;
         }
-        if(sortString != null) {
-            if(!"".equals(params)) {params = params + "&";}
+        if (sortString != null) {
+            if (!params.equals(""))
+                params = params + "&";
             params = params + "sortString=" + sortString;
         }
-        if(isAscending != null) {
-            if(!"".equals(params)) {params = params + "&";}
+        if (isAscending != null) {
+            if (!params.equals(""))
+                params = params + "&";
+
             params = params + "isAscending=" + isAscending;
         }
 
@@ -355,7 +427,10 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity groupingsOwnedUid(Principal principal, @PathVariable String uid) {
         logger.info("Entered REST GroupingAssignment...");
-        String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", uid);
+
+        String safeUid = policy.sanitize(uid);
+
+        String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", safeUid);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -372,7 +447,12 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity optIn(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optIn...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", grouping, principal.getName());
+
+
+        String safeGrouping= policy.sanitize(grouping);
+
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", safeGrouping, principal.getName());
+
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -389,7 +469,10 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity optOut(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optOut...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s/self", grouping, principal.getName());
+
+        String safeGrouping = policy.sanitize(grouping);
+
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s/self", safeGrouping, principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -406,8 +489,11 @@ public class GroupingsRestController {
     public ResponseEntity setListserv(Principal principal,
             @PathVariable String grouping,
             @PathVariable boolean listservOn) {
+
+        String safeGrouping = policy.sanitize(grouping);
+
         logger.info("Entered REST setListserv...");
-        return changePreference(grouping, principal.getName(), LISTSERV, listservOn);
+        return changePreference(safeGrouping, principal.getName(), LISTSERV, listservOn);
     }
 
     /**
@@ -423,8 +509,11 @@ public class GroupingsRestController {
     public ResponseEntity setLdap(Principal principal,
             @PathVariable String grouping,
             @PathVariable boolean ldapOn) {
+
+        String safeGrouping = policy.sanitize(grouping);
+
         logger.info("Entered REST setLdap...");
-        return changePreference(grouping, principal.getName(), UH_RELEASED_GROUPING, ldapOn);
+        return changePreference(safeGrouping, principal.getName(), UH_RELEASED_GROUPING, ldapOn);
     }
 
     /**
@@ -440,8 +529,11 @@ public class GroupingsRestController {
     public ResponseEntity setOptIn(Principal principal,
             @PathVariable String grouping,
             @PathVariable boolean optInOn) {
+
+        String safeGrouping = policy.sanitize(grouping);
+
         logger.info("Entered REST setOptIn...");
-        return changePreference(grouping, principal.getName(), OPT_IN, optInOn);
+        return changePreference(safeGrouping, principal.getName(), OPT_IN, optInOn);
     }
 
     /**
@@ -456,8 +548,11 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity setOptOut(Principal principal, @PathVariable String grouping,
             @PathVariable boolean optOutOn) {
+
+        String safeGrouping = policy.sanitize(grouping);
+
         logger.info("Entered REST setOptOut...");
-        return changePreference(grouping, principal.getName(), OPT_OUT, optOutOn);
+        return changePreference(safeGrouping, principal.getName(), OPT_OUT, optOutOn);
     }
 
     @RequestMapping(value = "/adminLists",
@@ -496,8 +591,7 @@ public class GroupingsRestController {
         //                .body(groupingFactoryService.addGrouping(username, grouping, basis, include, exclude, owners));
     }
 
-
-    private ResponseEntity changePreference(String grouping, String username, String preference, Boolean isOn){
+    private ResponseEntity changePreference(String grouping, String username, String preference, Boolean isOn) {
 
         String ending = "disable";
         if (isOn) {
