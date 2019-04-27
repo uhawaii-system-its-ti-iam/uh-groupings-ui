@@ -2,12 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
-<head th:replace="header(headingTitle='UH Groupings Home')">
+<head th:replace="header :: copy(headingTitle='UH Groupings Home')">
 
 
 </head>
 <body>
-<nav th:replace="menubar"></nav>
+<nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
 
@@ -64,7 +64,7 @@
                 <div class="text-center">
                     <img th:src="@{/images/watch.png}" th:srcset="@{/images/watch.png 1x, images/watch-2x.png 2x}"  alt="watch">
                 </div>
-                <p class="text-center">Hello</p>
+                <p class="text-center" th:utext="#{screen.message.home.page.groupingData}"></p>
             </div>
         </div>
         <div class="row">
