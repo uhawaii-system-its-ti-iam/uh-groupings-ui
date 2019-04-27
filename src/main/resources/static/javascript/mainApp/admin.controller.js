@@ -48,9 +48,12 @@
          */
         $scope.addAdmin = function () {
             const adminToAdd = $scope.adminToAdd;
-
+            const list = $scope.adminsList;
             if (_.isEmpty(adminToAdd)) {
-                $scope.createAddErrorModal(adminToAdd);
+              $scope.createAddErrorModal(adminToAdd);
+            } else if (adminToAdd === list) {
+              $scope.createCheckAddModal({
+              })
             } else {
                 $scope.createConfirmAddModal({
                     userToAdd: adminToAdd,

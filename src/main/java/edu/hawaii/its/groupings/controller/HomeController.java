@@ -170,8 +170,10 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/modal/addErrorModal", method = RequestMethod.GET)
-    public String addErrorModal(Locale locale, Model model) {
-        return "modal/addErrorModal";
-    }
+    public String addErrorModal(Locale locale, Model model) { return "modal/addErrorModal"; }
+
+    @RequestMapping(value = "/modal/checkAddModal", method = RequestMethod.GET)
+    public String checkAddModal(Locale locale, Model model) { return "modal/checkAddModal"; }
 
 }
+

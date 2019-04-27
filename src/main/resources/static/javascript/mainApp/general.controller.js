@@ -326,7 +326,7 @@
             } else if ($scope.existInList(userToAdd, list)) {
                 $scope.createCheckModal(userToAdd, list, false);
             } else if ($scope.isInAnotherList(userToAdd, list)) {
-                $scope.createCheckModal(userToAdd, list, true);
+              $scope.createCheckModal(userToAdd, list, true);
             } else {
                 $scope.createConfirmAddModal({
                     userToAdd: userToAdd,
@@ -448,6 +448,30 @@
             });
         };
 
+      /**
+       * Creates checkAddModal.
+       */
+      $scope.createCheckAddModal = function (user, userToAdd, listName) {
+
+          $scope.user = user;
+        $scope.userToAdd = userToAdd;
+          $scope.listName = listName;
+
+        $scope.checkAddModalInstance = $uibModal.open({
+          templateUrl: "modal/checkAddModal",
+          scope: $scope
+        });
+        $scope.checkAddModalInstance.result.then(function () {
+          $scope.user = userToAdd;
+        });
+      }, function(userToAdd, listName){
+        if ($scope.userToAdd === listName) {
+          $scope.createCheckAddModal();
+        } else {
+          $scope.updateAddMember(userToAdd, options.listName);
+        }
+      };
+
         /**
          * Closes CheckModal and proceeds with the checkModalInstance result.then function
          */
@@ -539,7 +563,7 @@
             $scope.addErrorModalInstance.close();
         };
 
-        /**
+          /**
          * Removes a user from the include or exclude group.
          * @param {string} listName - the list to remove the user from (either Include or Exclude)
          * @param {number} currentPage - the current page in the table
