@@ -45,6 +45,8 @@
             $scope.listserv = false;
             $scope.ldap = false;
 
+            $scope.syncDestMap = getAllSyncDestinations();
+
             $scope.showGrouping = false;
 
             $scope.loading = false;
@@ -124,6 +126,13 @@
                 return _.sortBy(newMembers, "name");
             };
 
+            /**
+             * @returns {String[]} list of possible sync destinations
+             */
+            function getAllSyncDestinations() {
+                return groupingsService.getSyncDestList();
+            }
+
 
             /**
              * Gets information about the grouping, such as its members and the preferences set.
@@ -174,6 +183,8 @@
                     $scope.allowOptOut = res.optOutOn;
                     $scope.listserv = res.listservOn;
                     $scope.ldap = res.ldapOn;
+
+
 
                     //Stop loading spinner and turn on loading text
                     $scope.loading = false;
@@ -983,6 +994,17 @@
                 const allowOptIn = $scope.allowOptIn;
 
                 groupingsService.setOptIn(groupingPath, allowOptIn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+            };
+
+            /**
+             * Toggles the grouping sync destinations according to the given syncDest
+             */
+            $scope.updateSyncDest = function (syncDest) {
+                const groupingPath = $scope.selectedGrouping.path;
+                //todo Use a mapping
+                const syncDestOn = "something";
+
+                groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
             };
 
             /**

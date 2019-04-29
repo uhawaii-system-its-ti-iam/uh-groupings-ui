@@ -214,6 +214,7 @@
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
+            //todo Remove in favor of setSyncDest
             /**
              * Toggles the publication destination for listserv.
              * @param {string} path - the path of the grouping to update
@@ -234,9 +235,25 @@
              * @param {boolean} ldapOn - true if the uhReleasedGroupings destination should be enabled, otherwise
              * false
              */
+            //todo Remove in favor of setSyncDest
             setLdap: function (path, ldapOn, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + ldapOn + "/setLdap";
                 dataProvider.updateData(onSuccess, onError, endpoint);
+            },
+
+            getSyncDestList: function (path, onSuccess, onError) {
+              let endpoint = BASE_URL + "syncDestinations";
+              dataProvider.loadData(onSuccess, onError, endpoint);
+            },
+
+            setSyncDest: function (path, syncDestId, turnOn, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + path + "/syncDests/" + syncDestId;
+                if(turnOn) {
+                    endpoint = endpoint.concat("/enable");
+                } else {
+                    endpoint = endpoint.concat("/disable");
+                }
+                dataProvider.updateDataWithPut(onSuccess, onError, endpoint);
             },
 
             /**
