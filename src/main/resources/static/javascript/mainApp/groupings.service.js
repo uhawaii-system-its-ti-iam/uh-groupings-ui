@@ -241,7 +241,7 @@
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
-            getSyncDestList: function (path, onSuccess, onError) {
+            getSyncDestList: function (onSuccess, onError) {
               let endpoint = BASE_URL + "syncDestinations";
               dataProvider.loadData(onSuccess, onError, endpoint);
             },

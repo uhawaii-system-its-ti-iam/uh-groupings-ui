@@ -15,6 +15,7 @@
             loadData: function (callback, callError, url) {
                 $http.get(encodeURI(url))
                     .then(function (response) {
+                        console.log(url);
                         callback(response.data);
                     }, function (response) {
                         // console.log("Error A", response);

@@ -130,7 +130,7 @@
              * @returns {String[]} list of possible sync destinations
              */
             function getAllSyncDestinations() {
-                return groupingsService.getSyncDestList();
+                return groupingsService.getSyncDestList(console.log("SUCCESS"), console.log("ERROR"));
             }
 
 
@@ -184,7 +184,7 @@
                     $scope.listserv = res.listservOn;
                     $scope.ldap = res.ldapOn;
 
-
+                    console.log(res);
 
                     //Stop loading spinner and turn on loading text
                     $scope.loading = false;
