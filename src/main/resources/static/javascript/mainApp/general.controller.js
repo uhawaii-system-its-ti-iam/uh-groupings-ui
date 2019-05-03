@@ -45,7 +45,7 @@
             $scope.listserv = false;
             $scope.ldap = false;
 
-            $scope.syncDestMap = getAllSyncDestinations();
+            $scope.syncDestMap = [];
 
             $scope.showGrouping = false;
 
@@ -75,6 +75,7 @@
             $scope.displayGrouping = function (currentPage, index) {
                 $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
                 $scope.description = $scope.selectedGrouping.description;
+                $scope.getAllSyncDestinations();
                 $scope.getGroupingInformation();
 
                 $scope.showGrouping = true;
@@ -129,17 +130,22 @@
             /**
              * @returns {String[]} list of possible sync destinations
              */
-            function getAllSyncDestinations() {
-                return groupingsService.getSyncDestList(console.log("SUCCESS"), console.log("ERROR"));
+            $scope.getAllSyncDestinations = function () {
+                groupingsService.getSyncDestList(function (res) {
+                    // console.log("This is the response of sync dest" + res);
+                    $scope.syncDestMap = res;
+                    // console.log("Mapping:"+ $scope.syncDestMap);
+                }, function (res) {
+                    if (res.statusCode === 403) {
+                        $scope.createOwnerErrorModal();
+                    }
+                });
             }
-
 
             /**
              * Gets information about the grouping, such as its members and the preferences set.
              * Retrieves information asynchronously page by page
              */
-
-
             $scope.getGroupingInformation = function () {
                 $scope.loading = true;
                 $scope.paginatingComplete = false;
@@ -185,6 +191,7 @@
                     $scope.ldap = res.ldapOn;
 
                     console.log(res);
+                    console.log($scope.syncDestMap);
 
                     //Stop loading spinner and turn on loading text
                     $scope.loading = false;
