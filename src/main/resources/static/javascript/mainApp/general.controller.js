@@ -1092,6 +1092,20 @@
                 });
             }
 
+            /**
+             * Proceeds with the syncDest confirmation
+             */
+            $scope.proceedsyncDestModal = function () {
+                $scope.syncDestInstance.close();
+            };
+
+            /**
+             * Closes the syncDest confirmation modal
+             */
+            $scope.closesyncDestModal = function () {
+                $scope.syncDestInstance.dismiss();
+            };
+
             //todo Remove
             /**
              * Create CAS/LDAP confirmation modal.
@@ -1135,7 +1149,6 @@
                 $scope.listserv = !$scope.listserv;
                 $scope.emailListInstance = $uibModal.open({
                     templateUrl: "modal/emailListModal.html",
-
                     scope: $scope
                 });
 
