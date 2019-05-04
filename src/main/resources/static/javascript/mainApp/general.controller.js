@@ -75,7 +75,7 @@
             $scope.displayGrouping = function (currentPage, index) {
                 $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
                 $scope.description = $scope.selectedGrouping.description;
-                $scope.getAllSyncDestinations();
+                // $scope.getAllSyncDestinations();
                 $scope.getGroupingInformation();
 
                 $scope.showGrouping = true;
@@ -190,8 +190,10 @@
                     $scope.listserv = res.listservOn;
                     $scope.ldap = res.ldapOn;
 
-                    console.log(res);
+                    $scope.syncDestMap = new Map(Object.entries(res.syncDestinations));
+
                     console.log($scope.syncDestMap);
+                    // console.log($scope.syncDestMap["uh-settings:attributes:for-groups:uh-grouping:destinations:listserv"]);
 
                     //Stop loading spinner and turn on loading text
                     $scope.loading = false;
@@ -1003,17 +1005,31 @@
                 groupingsService.setOptIn(groupingPath, allowOptIn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
             };
 
+            //todo Not sure whether to use all or singular method
             /**
-             * Toggles the grouping sync destinations according to the given syncDest
+             * Toggles the grouping sync destinations according to the syncDestMap
              */
-            $scope.updateSyncDest = function (syncDest) {
+            $scope.updateAllSyncDests = function () {
                 const groupingPath = $scope.selectedGrouping.path;
-                //todo Use a mapping
-                const syncDestOn = "something";
+                const syncDests = $scope.syncDestMap.keys();
 
-                groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+                syncDests.forEach((syncDest) => {
+                   const syncDestOn = $scope.syncDestMap.get(syncDest);
+                   groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+                });
             };
 
+            /**
+             * Toggles the grouping sync destinations according to a given syncDest
+             */
+            $scope.updateSingleSyncDest = function (syncDest) {
+                const groupingPath = $scope.selectedGrouping.path;
+                const syncDestOn = $scope.syncDestMap.get(syncDest);
+
+                groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+            }
+
+            //todo Remove
             /**
              * Toggles the grouping preference which creates a LISTSERV email list based off the grouping.
              */
@@ -1024,6 +1040,7 @@
                 groupingsService.setListserv(groupingPath, listservOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
             };
 
+            //todo Remove
             /**
              * Toggles the grouping preference to synchronize memberships with the uhReleasedGroupings attribute.
              */
@@ -1056,6 +1073,27 @@
             };
 
             /**
+             * Create sync destination confirmation modal.
+             */
+            $scope.createSyncDestModal = function (syncDest) {
+                const isSyncDestOn = $scope.syncDestMap.get(syncDest);
+                $scope.syncDestMap.set(syncDest, !isSyncDestOn);
+                $scope.syncDestInstance = $uibModal.open({
+                   templateUrl: "modal/syncDestModal",
+                   scope: $scope
+                });
+
+                $scope.syncDestInstance.result.then(function () {
+                    isSyncDestOn = $scope.syncDestMap.get(syncDest);
+                    $scope.syncDestMap.set(syncDest, !isSyncDestOn);
+                    $scope.updateSingleSyncDest(syncDest);
+                }).catch(function () {
+                    //do nothing
+                });
+            }
+
+            //todo Remove
+            /**
              * Create CAS/LDAP confirmation modal.
              */
             $scope.createCASLDAPModal = function () {
@@ -1073,6 +1111,7 @@
                 });
             };
 
+            //todo Remove
             /**
              * Proceeds with the CAS/LDAP confirmation
              */
@@ -1080,6 +1119,7 @@
                 $scope.CASLDAPInstance.close();
             };
 
+            //todo Remove
             /**
              * Closes the CAS/LDAP confirmation modal
              */
@@ -1087,6 +1127,7 @@
                 $scope.CASLDAPInstance.dismiss();
             };
 
+            //todo Remove
             /**
              * Create Email list confirmation modal.
              */
@@ -1107,6 +1148,7 @@
 
             };
 
+            //todo Remove
             /**
              * Proceeds with the change of the Email list
              */
@@ -1114,6 +1156,7 @@
                 $scope.emailListInstance.close();
             };
 
+            //todo Remove
             /**
              *Closes the Email list confirmation modal
              */
