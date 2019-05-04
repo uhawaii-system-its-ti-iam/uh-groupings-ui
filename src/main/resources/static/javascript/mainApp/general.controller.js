@@ -1148,7 +1148,7 @@
             $scope.createemailListModal = function () {
                 $scope.listserv = !$scope.listserv;
                 $scope.emailListInstance = $uibModal.open({
-                    templateUrl: "modal/emailListModal.html",
+                    templateUrl: "modal/emailListModal",
                     scope: $scope
                 });
 
