@@ -190,7 +190,8 @@
                     $scope.listserv = res.listservOn;
                     $scope.ldap = res.ldapOn;
 
-                    $scope.syncDestMap = new Map(Object.entries(res.syncDestinations));
+                    // $scope.syncDestMap = new Map(Object.entries(res.syncDestinations));
+                    $scope.syncDestMap = res.syncDestinations;
 
                     console.log($scope.syncDestMap);
                     // console.log($scope.syncDestMap["uh-settings:attributes:for-groups:uh-grouping:destinations:listserv"]);
@@ -1009,22 +1010,22 @@
             /**
              * Toggles the grouping sync destinations according to the syncDestMap
              */
-            $scope.updateAllSyncDests = function () {
-                const groupingPath = $scope.selectedGrouping.path;
-                const syncDests = $scope.syncDestMap.keys();
-
-                syncDests.forEach((syncDest) => {
-                   const syncDestOn = $scope.syncDestMap.get(syncDest);
-                   groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
-                });
-            };
+            // $scope.updateAllSyncDests = function () {
+            //     const groupingPath = $scope.selectedGrouping.path;
+            //     const syncDests = $scope.syncDestMap.keys();
+            //
+            //     syncDests.forEach((syncDest) => {
+            //        const syncDestOn = $scope.syncDestMap.get(syncDest);
+            //        groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+            //     });
+            // };
 
             /**
              * Toggles the grouping sync destinations according to a given syncDest
              */
             $scope.updateSingleSyncDest = function (syncDest) {
                 const groupingPath = $scope.selectedGrouping.path;
-                const syncDestOn = $scope.syncDestMap.get(syncDest);
+                const syncDestOn = $scope.syncDestMap[syncDest];
 
                 groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
             }
@@ -1076,16 +1077,22 @@
              * Create sync destination confirmation modal.
              */
             $scope.createSyncDestModal = function (syncDest) {
-                const isSyncDestOn = $scope.syncDestMap.get(syncDest);
-                $scope.syncDestMap.set(syncDest, !isSyncDestOn);
+                // const isSyncDestOn = $scope.syncDestMap.get(syncDest);
+                // $scope.syncDestMap.set(syncDest, !isSyncDestOn);
+                const isSyncDestOn = $scope.syncDestMap[syncDest];
+                $scope.syncDestMap[syncDest] = !isSyncDestOn;
+                $scope.selectedSyncDest = syncDest;
+
                 $scope.syncDestInstance = $uibModal.open({
                    templateUrl: "modal/syncDestModal",
                    scope: $scope
                 });
 
                 $scope.syncDestInstance.result.then(function () {
-                    isSyncDestOn = $scope.syncDestMap.get(syncDest);
-                    $scope.syncDestMap.set(syncDest, !isSyncDestOn);
+                    // isSyncDestOn = $scope.syncDestMap.get(syncDest);
+                    // $scope.syncDestMap.set(syncDest, !isSyncDestOn);
+                    isSyncDestOn = $scope.syncDestMap[syncDest];
+                    $scope.syncDestMap[syncDest] = !isSyncDestOn;
                     $scope.updateSingleSyncDest(syncDest);
                 }).catch(function () {
                     //do nothing
@@ -1095,14 +1102,14 @@
             /**
              * Proceeds with the syncDest confirmation
              */
-            $scope.proceedsyncDestModal = function () {
+            $scope.proceedSyncDestModal = function () {
                 $scope.syncDestInstance.close();
             };
 
             /**
              * Closes the syncDest confirmation modal
              */
-            $scope.closesyncDestModal = function () {
+            $scope.closeSyncDestModal = function () {
                 $scope.syncDestInstance.dismiss();
             };
 

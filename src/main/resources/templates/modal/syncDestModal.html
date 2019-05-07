@@ -2,8 +2,8 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">CAS/LDAP Confirmation</h5>
-    <button type="button" class="close" data-dismiss="dialog" ng-click="closeCASLDAPModal()">
+    <h5 class="modal-title" id="modal-title">{{selectedSyncDest}} Confirmation</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="closeSyncDestModal()">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
@@ -12,7 +12,7 @@
     <p th:utext="#{screen.message.modal.ldap.confirmation}"></p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="proceedCASLDAPModal()">Ok</button>
-    <button class="btn btn-default" ng-click="closeCASLDAPModal()" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-primary" ng-click="proceedSyncDestModal()">Ok</button>
+    <button class="btn btn-default" ng-click="closeSyncDestModal()" data-dismiss="modal">Cancel</button>
 </div>
 </html>
