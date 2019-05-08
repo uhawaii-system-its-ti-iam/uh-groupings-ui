@@ -536,7 +536,7 @@ public class GroupingsRestController {
         String safeSyncDestId = policy.sanitize(syncDestId);
 
         logger.info("Entered REST enableSyncDest...");
-        return changePreference(safeGrouping, principal.getName(), safeSyncDestId, true);
+        return changeSyncDest(safeGrouping, principal.getName(), safeSyncDestId, true);
     }
 
     /**
@@ -556,8 +556,8 @@ public class GroupingsRestController {
         String safeGrouping = policy.sanitize(path);
         String safeSyncDestId = policy.sanitize(syncDestId);
 
-        logger.info("Entered REST enableSyncDest...");
-        return changePreference(safeGrouping, principal.getName(), safeSyncDestId, false);
+        logger.info("Entered REST disableSyncDest...");
+        return changeSyncDest(safeGrouping, principal.getName(), safeSyncDestId, false);
     }
 
     /**
@@ -656,6 +656,16 @@ public class GroupingsRestController {
             ending = "enable";
         }
         String uri = String.format(API_2_1_BASE + "/groupings/%s/preferences/%s/%s", grouping, preference, ending);
+        return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
+    }
+
+    private ResponseEntity changeSyncDest(String grouping, String username, String syncDest, Boolean isOn) {
+
+        String ending = "disable";
+        if (isOn) {
+            ending = "enable";
+        }
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/syncDest/%s/%s", grouping, syncDest, ending);
         return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
     }
 }

@@ -192,14 +192,13 @@
                     $scope.ldap = res.releasedGroupingOn;
 
                     const syncDestResponseMapping = new Map(Object.entries(res.syncDestinations));
-
                     syncDestResponseMapping.forEach((value, key, map) => {
                         $scope.syncDestArray.push({name: key, value: value});
                     });
                     $scope.setSyncDestLabels();
 
-                    console.log($scope.ldap);
-                    console.log($scope.syncDestArray);
+                    // console.log($scope.ldap);
+                    // console.log($scope.syncDestArray);
 
                     //Stop loading spinner and turn on loading text
                     $scope.loading = false;
@@ -279,21 +278,22 @@
                 });
             };
 
-            //todo Comments
-            // $scope.updateSyncDestArray = function() {
-            //     $scope.syncDestArray = [];
-            //     $scope.syncDestMap.forEach((value, key, map) => {
-            //         $scope.syncDestArray.push({name: key, value: value});
-            //     });
-            //     $scope.setSyncDestLabels();
-            //     console.log($scope.syncDestMap);
-            //     console.log($scope.syncDestArray);
-            // };
-
-            // This is the only function we have to update manually
+            //todo IMPORTANT: This is the only function we have to update manually when adding new syncDests
+            // There's no way around this as we can't dynamically generate these strings without external data in server
             $scope.setSyncDestLabels = function () {
                 $scope.syncDestArray[0].label = "CAS/LDAP: uhReleasedGrouping";
                 $scope.syncDestArray[1].label = "Email list: <" + $scope.selectedGrouping.name + "@lists.hawaii.edu>";
+
+                $scope.syncDestArray[0].confimationModalLabel = "CAS/LDAP";
+                $scope.syncDestArray[1].confimationModalLabel = "Email List";
+
+                $scope.syncDestArray[0].tooltip = "Synchronize an individual’s membership with the individual’s CAS/LDAP attribute uhReleasedGrouping.";
+                $scope.syncDestArray[1].tooltip = "Synchronize the grouping’s membership with a corresponding LISTSERV list, which will be created as needed.";
+
+                $scope.syncDestArray[0].confirmationModalText = "Click Ok to update the CAS/LDAP preference as requested.";
+                $scope.syncDestArray[1].confirmationModalText = "Click Ok to update the Email list preference as requested.";
+
+                console.log($scope.syncDestArray);
             }
 
             // used to check the length of the text string entered in the description form box, for error handling of max length
@@ -1003,8 +1003,8 @@
                 if (!_.isUndefined(res.statusCode)) {
                     console.log("Error, Status Code: " + res.statusCode);
                     $scope.createPreferenceErrorModal();
-                } else if (_.startsWith(res[0].resultCode, "SUCCESS")) {
-                    console.log("Success");
+                } else if (_.startsWith(res.resultCode, "SUCCESS")) {
+                        console.log("Success");
                 }
             }
 
@@ -1027,20 +1027,6 @@
 
                 groupingsService.setOptIn(groupingPath, allowOptIn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
             };
-
-            //todo Not sure whether to use all or singular method
-            /**
-             * Toggles the grouping sync destinations according to the syncDestMap
-             */
-            // $scope.updateAllSyncDests = function () {
-            //     const groupingPath = $scope.selectedGrouping.path;
-            //     const syncDests = $scope.syncDestMap.keys();
-            //
-            //     syncDests.forEach((syncDest) => {
-            //        const syncDestOn = $scope.syncDestMap.get(syncDest);
-            //        groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
-            //     });
-            // };
 
             $scope.getSyncDestInArray = function (syncDestName) {
                 const indexOfSyncDest = $scope.syncDestArray.map((e) => {return e.name}).indexOf(syncDestName);
@@ -1111,10 +1097,6 @@
              * Create sync destination confirmation modal.
              */
             $scope.createSyncDestModal = function (syncDest) {
-                // const isSyncDestOn = $scope.syncDestMap.get(syncDest);
-                // $scope.syncDestMap.set(syncDest, !isSyncDestOn);
-                // const isSyncDestOn = $scope.syncDestMap[syncDest];
-                // $scope.syncDestMap[syncDest] = !isSyncDestOn;
 
                 const isSyncDestOn = $scope.getSyncDestInArray(syncDest);
                 $scope.setSyncDestInArray(syncDest, !isSyncDestOn);
@@ -1126,10 +1108,6 @@
                 });
 
                 $scope.syncDestInstance.result.then(function () {
-                    // isSyncDestOn = $scope.syncDestMap.get(syncDest);
-                    // $scope.syncDestMap.set(syncDest, !isSyncDestOn);
-                    // isSyncDestOn = $scope.syncDestMap[syncDest];
-                    // $scope.syncDestMap[syncDest] = !isSyncDestOn;
                     const isSyncDestOn = $scope.getSyncDestInArray(syncDest);
                     $scope.setSyncDestInArray(syncDest, !isSyncDestOn);
                     $scope.updateSingleSyncDest(syncDest);
