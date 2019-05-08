@@ -253,6 +253,7 @@
                 } else {
                     endpoint = endpoint.concat("/disable");
                 }
+                console.log(endpoint);
                 dataProvider.updateDataWithPut(onSuccess, onError, endpoint);
             },
 

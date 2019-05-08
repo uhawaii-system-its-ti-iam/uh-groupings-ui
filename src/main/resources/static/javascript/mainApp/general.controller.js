@@ -46,6 +46,7 @@
             $scope.ldap = false;
 
             $scope.syncDestMap = [];
+            $scope.syncDestArray = [];
 
             $scope.showGrouping = false;
 
@@ -188,13 +189,17 @@
                     $scope.allowOptIn = res.optInOn;
                     $scope.allowOptOut = res.optOutOn;
                     $scope.listserv = res.listservOn;
-                    $scope.ldap = res.ldapOn;
+                    $scope.ldap = res.releasedGroupingOn;
 
-                    // $scope.syncDestMap = new Map(Object.entries(res.syncDestinations));
-                    $scope.syncDestMap = res.syncDestinations;
+                    const syncDestResponseMapping = new Map(Object.entries(res.syncDestinations));
 
-                    console.log($scope.syncDestMap);
-                    // console.log($scope.syncDestMap["uh-settings:attributes:for-groups:uh-grouping:destinations:listserv"]);
+                    syncDestResponseMapping.forEach((value, key, map) => {
+                        $scope.syncDestArray.push({name: key, value: value});
+                    });
+                    $scope.setSyncDestLabels();
+
+                    console.log($scope.ldap);
+                    console.log($scope.syncDestArray);
 
                     //Stop loading spinner and turn on loading text
                     $scope.loading = false;
@@ -273,6 +278,23 @@
                     }
                 });
             };
+
+            //todo Comments
+            // $scope.updateSyncDestArray = function() {
+            //     $scope.syncDestArray = [];
+            //     $scope.syncDestMap.forEach((value, key, map) => {
+            //         $scope.syncDestArray.push({name: key, value: value});
+            //     });
+            //     $scope.setSyncDestLabels();
+            //     console.log($scope.syncDestMap);
+            //     console.log($scope.syncDestArray);
+            // };
+
+            // This is the only function we have to update manually
+            $scope.setSyncDestLabels = function () {
+                $scope.syncDestArray[0].label = "CAS/LDAP: uhReleasedGrouping";
+                $scope.syncDestArray[1].label = "Email list: <" + $scope.selectedGrouping.name + "@lists.hawaii.edu>";
+            }
 
             // used to check the length of the text string entered in the description form box, for error handling of max length
             $scope.descriptionLengthWarning = function () {
@@ -1020,12 +1042,24 @@
             //     });
             // };
 
+            $scope.getSyncDestInArray = function (syncDestName) {
+                const indexOfSyncDest = $scope.syncDestArray.map((e) => {return e.name}).indexOf(syncDestName);
+                const syncDestOn = $scope.syncDestArray[indexOfSyncDest].value;
+                return syncDestOn;
+            }
+
+            $scope.setSyncDestInArray = function (syncDestName, syncDestvalue) {
+                const indexOfSyncDest = $scope.syncDestArray.map((e) => {return e.name}).indexOf(syncDestName);
+                $scope.syncDestArray[indexOfSyncDest].value = syncDestvalue;
+            }
+
             /**
              * Toggles the grouping sync destinations according to a given syncDest
              */
             $scope.updateSingleSyncDest = function (syncDest) {
                 const groupingPath = $scope.selectedGrouping.path;
-                const syncDestOn = $scope.syncDestMap[syncDest];
+                // const syncDestOn = $scope.syncDestMap.get(syncDest);
+                const syncDestOn = $scope.getSyncDestInArray(syncDest);
 
                 groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
             }
@@ -1079,8 +1113,11 @@
             $scope.createSyncDestModal = function (syncDest) {
                 // const isSyncDestOn = $scope.syncDestMap.get(syncDest);
                 // $scope.syncDestMap.set(syncDest, !isSyncDestOn);
-                const isSyncDestOn = $scope.syncDestMap[syncDest];
-                $scope.syncDestMap[syncDest] = !isSyncDestOn;
+                // const isSyncDestOn = $scope.syncDestMap[syncDest];
+                // $scope.syncDestMap[syncDest] = !isSyncDestOn;
+
+                const isSyncDestOn = $scope.getSyncDestInArray(syncDest);
+                $scope.setSyncDestInArray(syncDest, !isSyncDestOn);
                 $scope.selectedSyncDest = syncDest;
 
                 $scope.syncDestInstance = $uibModal.open({
@@ -1091,8 +1128,10 @@
                 $scope.syncDestInstance.result.then(function () {
                     // isSyncDestOn = $scope.syncDestMap.get(syncDest);
                     // $scope.syncDestMap.set(syncDest, !isSyncDestOn);
-                    isSyncDestOn = $scope.syncDestMap[syncDest];
-                    $scope.syncDestMap[syncDest] = !isSyncDestOn;
+                    // isSyncDestOn = $scope.syncDestMap[syncDest];
+                    // $scope.syncDestMap[syncDest] = !isSyncDestOn;
+                    const isSyncDestOn = $scope.getSyncDestInArray(syncDest);
+                    $scope.setSyncDestInArray(syncDest, !isSyncDestOn);
                     $scope.updateSingleSyncDest(syncDest);
                 }).catch(function () {
                     //do nothing
@@ -1118,7 +1157,10 @@
              * Create CAS/LDAP confirmation modal.
              */
             $scope.createCASLDAPModal = function () {
+                console.log($scope.ldap);
                 $scope.ldap = !$scope.ldap;
+                console.log($scope.ldap);
+
                 $scope.CASLDAPInstance = $uibModal.open({
                     templateUrl: "modal/CASLDAPModal",
                     scope: $scope
@@ -1127,6 +1169,7 @@
                 $scope.CASLDAPInstance.result.then(function () {
                     $scope.ldap = !$scope.ldap;
                     $scope.updateLdap();
+                    console.log($scope.ldap);
                 }).catch(function () {
                     //do nothing
                 });

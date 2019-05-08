@@ -526,7 +526,7 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/groupings/{path}/syncDests/{syncDestId}/enable",
-            method = RequestMethod.PUT,
+            method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity enableSyncDest(Principal principal,
             @PathVariable String path,
@@ -547,7 +547,7 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/groupings/{path}/syncDests/{syncDestId}/disable",
-            method = RequestMethod.PUT,
+            method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity disableSyncDest(Principal principal,
             @PathVariable String path,
