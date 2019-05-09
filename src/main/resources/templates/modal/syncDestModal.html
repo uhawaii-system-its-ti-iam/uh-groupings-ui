@@ -9,7 +9,7 @@
 </div>
 <div class="modal-body" id="modal-body">
     <div class="alert alert-warning" role="alert" th:text="#{screen.message.modal.preferences.warning}"></div>
-    <p th:utext="selectedSyncDest.confirmationModalText"></p>
+    <p th:utext="#{screen.message.common.syncDest.confirmationModalText}"></p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedSyncDestModal()">Ok</button>

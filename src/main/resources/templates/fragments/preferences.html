@@ -53,9 +53,9 @@
                                 <span class="fa fa-question-circle clickable" aria-hidden="true"
                                       data-toggle="tooltip" data-placement="right"
                                       tabindex="0"
-                                      th:title="syncDest.tooltip"
-                                      th:attr="ng-click='createPreferenceInfoModal(\'' + #{syncDest.tooltip} + '\')',
-                                  ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{syncDest.tooltip} + '\') : null'"></span>
+                                      title="{{syncDest.tooltip}}"
+                                      th:attr="ng-click='createPreferenceInfoModal(syncDest.tooltip)',
+                                  ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(syncDest.tooltip) : null'"></span>
                             </div>
                         </div>
                     </div>

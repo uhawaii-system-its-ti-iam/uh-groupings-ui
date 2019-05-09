@@ -47,6 +47,7 @@
 
             $scope.syncDestMap = [];
             $scope.syncDestArray = [];
+            $scope.selectedSyncDest = "Hello";
 
             $scope.showGrouping = false;
 
@@ -982,6 +983,7 @@
             $scope.createPreferenceInfoModal = function (desc) {
                 $scope.preferenceInfo = desc;
 
+                console.log(desc);
                 $scope.infoModalInstance = $uibModal.open({
                     templateUrl: "modal/infoModal",
                     scope: $scope
@@ -1032,6 +1034,11 @@
                 const indexOfSyncDest = $scope.syncDestArray.map((e) => {return e.name}).indexOf(syncDestName);
                 const syncDestOn = $scope.syncDestArray[indexOfSyncDest].value;
                 return syncDestOn;
+            }
+
+            $scope.getEntireSyncDestInArray = function(syncDestName) {
+                const indexOfSyncDest = $scope.syncDestArray.map((e) => {return e.name}).indexOf(syncDestName);
+                return $scope.syncDestArray[indexOfSyncDest];
             }
 
             $scope.setSyncDestInArray = function (syncDestName, syncDestvalue) {
@@ -1100,7 +1107,9 @@
 
                 const isSyncDestOn = $scope.getSyncDestInArray(syncDest);
                 $scope.setSyncDestInArray(syncDest, !isSyncDestOn);
-                $scope.selectedSyncDest = syncDest;
+                $scope.selectedSyncDest = $scope.getEntireSyncDestInArray(syncDest);
+
+                console.log($scope.selectedSyncDest);
 
                 $scope.syncDestInstance = $uibModal.open({
                    templateUrl: "modal/syncDestModal",
