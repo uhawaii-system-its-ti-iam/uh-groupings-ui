@@ -665,7 +665,7 @@ public class GroupingsRestController {
         if (isOn) {
             ending = "enable";
         }
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/syncDest/%s/%s", grouping, syncDest, ending);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/syncDests/%s/%s", grouping, syncDest, ending);
         return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
     }
 }
