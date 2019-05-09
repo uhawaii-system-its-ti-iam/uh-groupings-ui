@@ -569,6 +569,7 @@
                 $scope.updateAddMember(user, listName);
             });
         };
+
         /**
          * Creates a modal that asks for confirmation when importing multiple users.
          * @param {object} options - the options object
@@ -584,6 +585,7 @@
                 $scope.updateAddMembers(options.usersToAdd, options.listName);
             });
         };
+
         /**
          * Creates a modal that asks for confirmation when adding a user.
          * @param {object} options - the options object
@@ -1035,7 +1037,12 @@
             groupingsService.setOptIn(groupingPath, allowOptIn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
-        $scope.getSyncDestInArray = function (syncDestName) {
+        /**
+         * Gets the SyncDest value from the array given the name of the sync dest
+         * @param {String} syncDestName Name of the Sync Dest to retrieve
+         * @return {Boolean} Sync Dest value at the given name
+         */
+        $scope.getSyncDestValueInArray = function (syncDestName) {
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name
             }).indexOf(syncDestName);
@@ -1043,6 +1050,11 @@
             return syncDestOn;
         };
 
+        /**
+         * Gets the entire syncDest object given its name
+         * @param {String} syncDestName Name of the Sync Dest to retrieve
+         * @return {Object} The entire syncDest object with the given name
+         */
         $scope.getEntireSyncDestInArray = function (syncDestName) {
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name
@@ -1050,6 +1062,11 @@
             return $scope.syncDestArray[indexOfSyncDest];
         };
 
+        /**
+         * Sets a given sync dest to a given value
+         * @param {String} syncDestName Name of the Sync Dest to set
+         * @param {Boolean} syncDestvalue The value to set the Sync Dest to
+         */
         $scope.setSyncDestInArray = function (syncDestName, syncDestvalue) {
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name
@@ -1059,13 +1076,14 @@
 
         /**
          * Toggles the grouping sync destinations according to a given syncDest
+         * @param {String} syncDestName Name of the Sync Dest to toggle
          */
-        $scope.updateSingleSyncDest = function (syncDest) {
+        $scope.updateSingleSyncDest = function (syncDestName) {
             const groupingPath = $scope.selectedGrouping.path;
             // const syncDestOn = $scope.syncDestMap.get(syncDest);
-            const syncDestOn = $scope.getSyncDestInArray(syncDest);
+            const syncDestOn = $scope.getSyncDestValueInArray(syncDestName);
 
-            groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+            groupingsService.setSyncDest(groupingPath, syncDestName, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         }
 
         /**
@@ -1091,12 +1109,13 @@
 
         /**
          * Create sync destination confirmation modal.
+         * @param {String} syncDestName Name of the Sync Dest to create modal for
          */
-        $scope.createSyncDestModal = function (syncDest) {
+        $scope.createSyncDestModal = function (syncDestName) {
 
-            const isSyncDestOn = $scope.getSyncDestInArray(syncDest);
-            $scope.setSyncDestInArray(syncDest, !isSyncDestOn);
-            $scope.selectedSyncDest = $scope.getEntireSyncDestInArray(syncDest);
+            const isSyncDestOn = $scope.getSyncDestValueInArray(syncDestName);
+            $scope.setSyncDestInArray(syncDestName, !isSyncDestOn);
+            $scope.selectedSyncDest = $scope.getEntireSyncDestInArray(syncDestName);
 
             console.log($scope.selectedSyncDest);
 
@@ -1106,9 +1125,9 @@
             });
 
             $scope.syncDestInstance.result.then(function () {
-                const isSyncDestOn = $scope.getSyncDestInArray(syncDest);
-                $scope.setSyncDestInArray(syncDest, !isSyncDestOn);
-                $scope.updateSingleSyncDest(syncDest);
+                const isSyncDestOn = $scope.getSyncDestValueInArray(syncDestName);
+                $scope.setSyncDestInArray(syncDestName, !isSyncDestOn);
+                $scope.updateSingleSyncDest(syncDestName);
             }).catch(function () {
                 //do nothing
             });
