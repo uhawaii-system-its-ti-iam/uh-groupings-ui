@@ -188,8 +188,6 @@
 
                 $scope.allowOptIn = res.optInOn;
                 $scope.allowOptOut = res.optOutOn;
-                $scope.listserv = res.listservOn;
-                $scope.ldap = res.ldapOn;
 
                 const syncDestResponseMapping = new Map(Object.entries(res.syncDestinations));
                 syncDestResponseMapping.forEach((value, key, map) => {
@@ -276,6 +274,7 @@
 
         //todo IMPORTANT: This is the only function we have to update manually when adding new syncDests
         // There's no way around this as we can't dynamically generate these strings without external data in server
+        // As far as I know, this can't go into the properties file because the checkboxes are generated dynamically
         $scope.setSyncDestLabels = function () {
             $scope.syncDestArray[0].label = "CAS/LDAP: uhReleasedGrouping";
             $scope.syncDestArray[1].label = "Email list: <" + $scope.selectedGrouping.name + "@lists.hawaii.edu>";
@@ -294,8 +293,6 @@
 
         // used to check the length of the text string entered in the description form box, for error handling of max length
         $scope.descriptionLengthWarning = function () {
-
-
             return (String($scope.modelDescription).length >= maxLength);
         };
 
@@ -318,8 +315,6 @@
 
         // used to check the length of the text string entered in the description form box, for error handling of max length
         $scope.descriptionLengthWarning = function () {
-
-
             return (String($scope.modelDescription).length >= maxLength);
         };
 
@@ -379,7 +374,6 @@
 
         };
 
-
         /**
          * Creates a modal for errors in loading data from the API.
          */
@@ -405,10 +399,8 @@
             _.forEach(group, function (member) {
                 const memberUuid = member.uuid;
                 member.inBasis = _.some($scope.groupingBasis, {uuid: memberUuid})
-
                     ? "Yes"
                     : "No";
-
             });
         };
 
@@ -459,7 +451,6 @@
                     $scope.createOwnerErrorModal();
                 }
             });
-
         };
         /**
          * Lets a user import multiple members to a grouping, in the long run this method triggers the
@@ -474,7 +465,6 @@
                 listName: list
             });
             console.log(usersToAdd);
-
         };
 
         /**
@@ -497,6 +487,7 @@
                 groupingsService.addMembersToInclude(groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
         };
+
         /**
          * Initiates the adding of a member to a list.
          * @param {string} userToAdd - user being added
@@ -510,7 +501,6 @@
             if ($scope.listName !== "admins") {
                 groupingPath = $scope.selectedGrouping.path;
             }
-
 
             const handleSuccessfulAdd = function (res) {
                 $scope.createSuccessfulAddModal({
@@ -593,7 +583,6 @@
             $scope.confirmAddModalInstance.result.then(function () {
                 $scope.updateAddMembers(options.usersToAdd, options.listName);
             });
-
         };
         /**
          * Creates a modal that asks for confirmation when adding a user.
@@ -674,7 +663,6 @@
                 $scope.createOwnerErrorModal();
             }
         };
-
 
         /**
          * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
@@ -784,8 +772,6 @@
             if (res.statusCode === 403) {
                 $scope.createOwnerErrorModal();
             }
-
-
         };
 
         /**
@@ -1082,28 +1068,6 @@
             groupingsService.setSyncDest(groupingPath, syncDest, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         }
 
-        //todo Remove
-        /**
-         * Toggles the grouping preference which creates a LISTSERV email list based off the grouping.
-         */
-        $scope.updateListserv = function () {
-            const groupingPath = $scope.selectedGrouping.path;
-            const listservOn = $scope.listserv;
-
-            groupingsService.setListserv(groupingPath, listservOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
-        }
-
-        //todo Remove
-        /**
-         * Toggles the grouping preference to synchronize memberships with the uhReleasedGroupings attribute.
-         */
-        $scope.updateLdap = function () {
-            const groupingPath = $scope.selectedGrouping.path;
-            const ldapOn = $scope.ldap;
-
-            groupingsService.setLdap(groupingPath, ldapOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
-        };
-
         /**
          * Creates a modal indicating an error in saving the grouping's preferences.
          */
@@ -1162,73 +1126,6 @@
          */
         $scope.closeSyncDestModal = function () {
             $scope.syncDestInstance.dismiss();
-        };
-
-        //todo Remove
-        /**
-         * Create CAS/LDAP confirmation modal.
-         */
-        $scope.createCASLDAPModal = function () {
-            console.log($scope.ldap);
-            $scope.ldap = !$scope.ldap;
-            console.log($scope.ldap);
-
-            $scope.CASLDAPInstance = $uibModal.open({
-                templateUrl: "modal/CASLDAPModal",
-                scope: $scope
-            });
-
-            $scope.CASLDAPInstance.result.then(function () {
-                $scope.ldap = !$scope.ldap;
-                $scope.updateLdap();
-                console.log($scope.ldap);
-            }).catch(function () {
-                //do nothing
-            });
-        };
-
-        //todo Remove
-        /**
-         * Proceeds with the CAS/LDAP confirmation
-         */
-        $scope.proceedCASLDAPModal = function () {
-            $scope.CASLDAPInstance.close();
-        };
-
-        //todo Remove
-        /**
-         * Closes the CAS/LDAP confirmation modal
-         */
-        $scope.closeCASLDAPModal = function () {
-            $scope.CASLDAPInstance.dismiss();
-        };
-
-        //todo Remove
-        /**
-         * Create Email list confirmation modal.
-         */
-        $scope.createemailListModal = function () {
-            $scope.listserv = !$scope.listserv;
-            $scope.emailListInstance = $uibModal.open({
-                templateUrl: "modal/emailListModal",
-                scope: $scope
-            });
-        };
-
-        //todo Remove
-        /**
-         * Proceeds with the change of the Email list
-         */
-        $scope.proceedemailListModal = function () {
-            $scope.emailListInstance.close();
-        };
-
-        //todo Remove
-        /**
-         *Closes the Email list confirmation modal
-         */
-        $scope.closeemailListModal = function () {
-            $scope.emailListInstance.dismiss();
         };
 
         /**

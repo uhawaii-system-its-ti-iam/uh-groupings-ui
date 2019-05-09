@@ -26,7 +26,6 @@
                     });
             },
 
-            //todo Might be possible to consolidate updateData and updateDataWithBody
             /**
              * Performs a POST request to the specified URL.
              * @param {function} callback - the function to perform on a successful request (200)
@@ -34,21 +33,6 @@
              */
             updateData: function (callback, callError, url) {
                 $http.post(encodeURI(url))
-                    .then(function (response) {
-                        callback(response.data);
-                    }, function (response) {
-                        callError(response);
-                        console.log("Error in dataProvider; status: ", response.status);
-                    });
-            },
-
-            /**
-             * Performs a PUT request to the specified URL.
-             * @param {function} callback - the function to perform on a successful request (200)
-             * @param {string} url - the URL to perform the request on
-             */
-            updateDataWithPut: function (callback, callError, url) {
-                $http.put(encodeURI(url))
                     .then(function (response) {
                         callback(response.data);
                     }, function (response) {
@@ -72,8 +56,6 @@
                         console.log("Error in dataProvider; status: ", response.status);
                     });
             },
-
-            //todo HTTP DELETE handler
 
             /**
              * Handles Java exceptions by performing a POST request.
