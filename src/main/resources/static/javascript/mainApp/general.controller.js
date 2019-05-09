@@ -186,11 +186,16 @@
                     $scope.description = res.description;
                 }
 
-
                 $scope.allowOptIn = res.optInOn;
                 $scope.allowOptOut = res.optOutOn;
                 $scope.listserv = res.listservOn;
                 $scope.ldap = res.ldapOn;
+
+                const syncDestResponseMapping = new Map(Object.entries(res.syncDestinations));
+                syncDestResponseMapping.forEach((value, key, map) => {
+                    $scope.syncDestArray.push({name: key, value: value});
+                });
+                $scope.setSyncDestLabels();
 
                 //Stop loading spinner and turn on loading text
                 $scope.loading = false;
@@ -213,83 +218,6 @@
          * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
          * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending (Z-A)
          */
-
-        $scope.getPages = function (groupingPath, page, size, sortString, isAscending) {
-
-            groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
-
-                    // Add members to grouping if the page we got wasn't completely empty of members
-                    if (res.basis.members.length !== 0 || res.include.members.length !== 0 ||
-                        res.exclude.members.length !== 0 || res.composite.members.length !== 0 || res.owners.members.length !== 0) {
-
-                        $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
-                        $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
-
-                        //Gets members in the include group
-                        $scope.groupingInclude = combineGroupMembers($scope.groupingInclude, res.include.members);
-                        $scope.addInBasis($scope.groupingInclude);
-                        $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
-
-                        //Gets members in the exclude group
-                        $scope.groupingExclude = combineGroupMembers($scope.groupingExclude, res.exclude.members);
-                        $scope.addInBasis($scope.groupingExclude);
-                        $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
-
-                        //Gets members in grouping
-                        $scope.groupingMembers = combineGroupMembers($scope.groupingMembers, res.composite.members);
-                        $scope.addWhereListed($scope.groupingMembers);
-                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
-
-                        //Gets owners of the grouping
-                        $scope.groupingOwners = combineGroupMembers($scope.groupingOwners, res.owners.members);
-                        $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-
-                        // Gets the description go the group
-                        if (res.description == null) {
-                            $scope.description = "";
-                        } else {
-                            $scope.description = res.description;
-                        }
-
-
-                        $scope.allowOptIn = res.optInOn;
-                        $scope.allowOptOut = res.optOutOn;
-                        $scope.listserv = res.listservOn;
-                        $scope.ldap = res.releasedGroupingOn;
-
-                        const syncDestResponseMapping = new Map(Object.entries(res.syncDestinations));
-                        syncDestResponseMapping.forEach((value, key, map) => {
-                            $scope.syncDestArray.push({name: key, value: value});
-                        });
-                        $scope.setSyncDestLabels();
-
-                        // console.log($scope.ldap);
-                        // console.log($scope.syncDestArray);
-
-                        //Stop loading spinner and turn on loading text
-                        $scope.loading = false;
-                        $scope.paginatingProgress = true;
-
-                        // Recursive function to retrieve the rest of the pages
-                        $scope.getPages(groupingPath, 2, PAGE_SIZE, "name", true);
-                    }
-                }, function (res) {
-                    if (res.statusCode === 403) {
-                        $scope.createOwnerErrorModal();
-                    }
-                }
-            );
-        };
-
-        /**
-         * Recursive function to get pages of a grouping asynchronously
-         * @param {String} groupingPath - Path to the grouping to retrieve data from
-         * @param {Integer} page - Page of grouping to retrieve (Paging starts from 1)
-         * @param {Integer} size - Size of page to retrieve
-         * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
-         * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending (Z-A)
-         */
-
         $scope.getPages = function (groupingPath, page, size, sortString, isAscending) {
 
             groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
@@ -1099,8 +1027,7 @@
             } else if (_.startsWith(res.resultCode, "SUCCESS")) {
                 console.log("Success");
             }
-
-        }
+        };
 
         /**
          * Toggles the grouping preference which allows users to opt out of a grouping.
@@ -1128,21 +1055,21 @@
             }).indexOf(syncDestName);
             const syncDestOn = $scope.syncDestArray[indexOfSyncDest].value;
             return syncDestOn;
-        }
+        };
 
         $scope.getEntireSyncDestInArray = function (syncDestName) {
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name
             }).indexOf(syncDestName);
             return $scope.syncDestArray[indexOfSyncDest];
-        }
+        };
 
         $scope.setSyncDestInArray = function (syncDestName, syncDestvalue) {
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name
             }).indexOf(syncDestName);
             $scope.syncDestArray[indexOfSyncDest].value = syncDestvalue;
-        }
+        };
 
         /**
          * Toggles the grouping sync destinations according to a given syncDest
@@ -1221,7 +1148,7 @@
             }).catch(function () {
                 //do nothing
             });
-        }
+        };
 
         /**
          * Proceeds with the syncDest confirmation
@@ -1286,136 +1213,135 @@
                 templateUrl: "modal/emailListModal",
                 scope: $scope
             });
+        };
 
-            //todo Remove
-            /**
-             * Proceeds with the change of the Email list
-             */
-            $scope.proceedemailListModal = function () {
-                $scope.emailListInstance.close();
-            };
+        //todo Remove
+        /**
+         * Proceeds with the change of the Email list
+         */
+        $scope.proceedemailListModal = function () {
+            $scope.emailListInstance.close();
+        };
 
-            //todo Remove
-            /**
-             *Closes the Email list confirmation modal
-             */
-            $scope.closeemailListModal = function () {
-                $scope.emailListInstance.dismiss();
-            };
+        //todo Remove
+        /**
+         *Closes the Email list confirmation modal
+         */
+        $scope.closeemailListModal = function () {
+            $scope.emailListInstance.dismiss();
+        };
 
-            /**
-             * Create owner error modal when a grouping owner
-             * is removed while still trying to access grouping
-             * owner actions.
-             */
-            $scope.createOwnerErrorModal = function () {
-                $scope.loading = false;
-                $scope.OwnerErrorModalInstance = $uibModal.open({
-                    templateUrl: "modal/ownerErrorModal",
-                    scope: $scope
-                });
-            };
+        /**
+         * Create owner error modal when a grouping owner
+         * is removed while still trying to access grouping
+         * owner actions.
+         */
+        $scope.createOwnerErrorModal = function () {
+            $scope.loading = false;
+            $scope.OwnerErrorModalInstance = $uibModal.open({
+                templateUrl: "modal/ownerErrorModal",
+                scope: $scope
+            });
+        };
 
-            /**
-             * Exports data in a table to a CSV file
-             * @param {object[]} table - the table to export
-             * @param grouping - grouping name that you are exporting from
-             * @param list - grouping list (i.e. include or exclude)
-             */
-            $scope.exportGroupToCsv = function (table, grouping, list) {
-                let data, filename, link;
+        /**
+         * Exports data in a table to a CSV file
+         * @param {object[]} table - the table to export
+         * @param grouping - grouping name that you are exporting from
+         * @param list - grouping list (i.e. include or exclude)
+         */
+        $scope.exportGroupToCsv = function (table, grouping, list) {
+            let data, filename, link;
 
-                let csv = $scope.convertListToCsv(table);
-                if (csv == null) {
-                    $scope.createApiErrorModal();
-                    return;
+            let csv = $scope.convertListToCsv(table);
+            if (csv == null) {
+                $scope.createApiErrorModal();
+                return;
+            }
+
+            filename = grouping + ":" + list + "_list.csv";
+
+            csv = "data:text/csv;charset=utf-8," + csv;
+            data = encodeURI(csv);
+
+            link = document.createElement("a");
+            link.setAttribute("href", data);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        /**
+         * Converts the data in the table into comma-separated values.
+         * @param {object[]} table - the table to convert
+         * @returns the table in CSV format
+         */
+        $scope.convertListToCsv = function (table) {
+            let str = "Last,First,Username,uhNumber,Email\r\n";
+            for (let i = 0; i < table.length; i++) {
+                let line = "";
+                line += table[i].lastName + ",";
+                line += table[i].firstName + ",";
+                line += table[i].username + ",";
+                line += table[i].uuid + ",";
+                line += table[i].username + "@hawaii.edu,";
+                str += line + "\r\n";
+            }
+            return str;
+        };
+
+        /**
+         * Determines whether a warning message should be displayed when removing yourself from a list.
+         * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
+         * returns false
+         */
+        $scope.showWarningRemovingSelf = function () {
+            return $scope.currentUser === $scope.userToRemove.username
+                && ($scope.listName === "owners" || $scope.listName === "admins");
+        };
+
+        /**
+         * Gets cookie information
+         * @param cname = name of cookie you want to look for.
+         * @returns {*}
+         */
+        $scope.getCookie = function (cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(";");
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == " ") {
+                    c = c.substring(1);
                 }
+                if (c.indexOf(name) == 0)
+                    return c.substring(name.length, c.length);
+            }
+            return "";
+        };
 
-                filename = grouping + ":" + list + "_list.csv";
+        /**
+         * Logs out a user and redirects them to the homepage.
+         */
+        $scope.proceedLogoutUser = function () {
+            $scope.RoleErrorModalInstance.close();
+            let r = new XMLHttpRequest();
+            r.open("POST", "/uhgroupings/logout", true);
+            r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
+            r.send();
+            $window.location.href = "/uhgroupings/";
+        };
 
-                csv = "data:text/csv;charset=utf-8," + csv;
-                data = encodeURI(csv);
+        /**
+         * redirects the user to the groupings page.
+         */
+        $scope.proceedRedirect = function () {
+            $scope.OwnerErrorModalInstance.close();
+            $window.location.href = "/uhgroupings/";
+        };
 
-                link = document.createElement("a");
-                link.setAttribute("href", data);
-                link.setAttribute("download", filename);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            };
-
-            /**
-             * Converts the data in the table into comma-separated values.
-             * @param {object[]} table - the table to convert
-             * @returns the table in CSV format
-             */
-            $scope.convertListToCsv = function (table) {
-                let str = "Last,First,Username,uhNumber,Email\r\n";
-                for (let i = 0; i < table.length; i++) {
-                    let line = "";
-                    line += table[i].lastName + ",";
-                    line += table[i].firstName + ",";
-                    line += table[i].username + ",";
-                    line += table[i].uuid + ",";
-                    line += table[i].username + "@hawaii.edu,";
-                    str += line + "\r\n";
-                }
-                return str;
-            };
-
-            /**
-             * Determines whether a warning message should be displayed when removing yourself from a list.
-             * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
-             * returns false
-             */
-            $scope.showWarningRemovingSelf = function () {
-                return $scope.currentUser === $scope.userToRemove.username
-                    && ($scope.listName === "owners" || $scope.listName === "admins");
-            };
-
-            /**
-             * Gets cookie information
-             * @param cname = name of cookie you want to look for.
-             * @returns {*}
-             */
-            $scope.getCookie = function (cname) {
-                let name = cname + "=";
-                let decodedCookie = decodeURIComponent(document.cookie);
-                let ca = decodedCookie.split(";");
-                for (let i = 0; i < ca.length; i++) {
-                    let c = ca[i];
-                    while (c.charAt(0) == " ") {
-                        c = c.substring(1);
-                    }
-                    if (c.indexOf(name) == 0)
-                        return c.substring(name.length, c.length);
-                }
-                return "";
-            };
-
-            /**
-             * Logs out a user and redirects them to the homepage.
-             */
-            $scope.proceedLogoutUser = function () {
-                $scope.RoleErrorModalInstance.close();
-                let r = new XMLHttpRequest();
-                r.open("POST", "/uhgroupings/logout", true);
-                r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
-                r.send();
-                $window.location.href = "/uhgroupings/";
-            };
-
-            /**
-             * redirects the user to the groupings page.
-             */
-            $scope.proceedRedirect = function () {
-                $scope.OwnerErrorModalInstance.close();
-                $window.location.href = "/uhgroupings/";
-            };
-
-        }
-
-        UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
     }
 
+    UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
 })();
