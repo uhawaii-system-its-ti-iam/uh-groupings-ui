@@ -158,7 +158,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * Uses  the apis includeMultipleMembers utility.
+     * Uses  the api's includeMultipleMembers utility.
      * adds multiple members to the include group of the Grouping who's path is in 'grouping'
      * if the members are in the exclude group, they will be removed from it
      * SEE:   addMembers():        general.controller.js
