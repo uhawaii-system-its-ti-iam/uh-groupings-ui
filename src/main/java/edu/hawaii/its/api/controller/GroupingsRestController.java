@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -79,7 +80,6 @@ public class GroupingsRestController {
                 .ok()
                 .body("University of Hawaii Groupings API");
     }
-
 
     /**
      * Get a member's attributes based off username
@@ -162,7 +162,7 @@ public class GroupingsRestController {
      * adds multiple members to the include group of the Grouping who's path is in 'grouping'
      * if the members are in the exclude group, they will be removed from it
      * SEE:   addMembers():        general.controller.js
-     *        updateAddMembers():  general.controller.js
+     * updateAddMembers():  general.controller.js
      *
      * @param grouping:   path to the Grouping who's include group the new member will be added to
      * @param usersToAdd: usernames of the new members to be added to the include group
@@ -199,6 +199,28 @@ public class GroupingsRestController {
         String safeUserToAdd = policy.sanitize(userToAdd);
 
         String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", safeGrouping, safeUserToAdd);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
+    }
+
+    /**
+     * Uses  the api's excludeMultipleMembers utility.
+     * adds multiple members to the exclude group of the Grouping who's path is in 'grouping'
+     * if the members are in the exclude group, they will be removed from it
+     * SEE:   addMembers():        general.controller.js
+     * updateAddMembers():  general.controller.js
+     *
+     * @param grouping:   path to the Grouping who's exclude group the new member will be added to
+     * @param usersToAdd: usernames of the new members to be added to the exclude group
+     * @return information about the success of the operation
+     */
+    @RequestMapping(value = "/{grouping}/{usersToAdd}/addMembersToExcludeGroup",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity addMembersToExcludeGroup(Principal principal,
+            @PathVariable String grouping,
+            @PathVariable String usersToAdd) {
+        logger.info("Entered REST addMembersToExcludeGroup...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMultipleMembers/%s", grouping, usersToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -298,7 +320,7 @@ public class GroupingsRestController {
     /**
      * Updates the description of a grouping to the new one
      *
-     * @param path:      path to the grouping that the description will be updated
+     * @param path:        path to the grouping that the description will be updated
      * @param description: String containing the description of the group to be updated
      * @return information about the descripiton and group being updated
      */
@@ -307,7 +329,7 @@ public class GroupingsRestController {
             method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateDescription(Principal principal, @PathVariable String path,
-                                          @RequestBody(required = false) String description) {
+            @RequestBody(required = false) String description) {
         logger.info("Entered REST updateDescription...");
 
         String safePath = policy.sanitize(path);
@@ -316,10 +338,9 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequestWithBody(principal.getName(), uri, description, HttpMethod.PUT);
     }
 
-
-
     /**
      * finds and returns the specified Grouping
+     *
      * @param path : String containing the path of the Grouping to be searched for
      * @return the Grouping that was searched for
      * the Grouping will contain information about
@@ -448,10 +469,10 @@ public class GroupingsRestController {
     public ResponseEntity optIn(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optIn...");
 
+        String safeGrouping = policy.sanitize(grouping);
 
-        String safeGrouping= policy.sanitize(grouping);
-
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", safeGrouping, principal.getName());
+        String uri =
+                String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", safeGrouping, principal.getName());
 
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
@@ -472,7 +493,8 @@ public class GroupingsRestController {
 
         String safeGrouping = policy.sanitize(grouping);
 
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s/self", safeGrouping, principal.getName());
+        String uri =
+                String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s/self", safeGrouping, principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 

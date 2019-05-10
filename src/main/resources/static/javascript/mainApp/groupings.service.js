@@ -103,10 +103,10 @@
             /**
              * Adds a members to the exclude group of a grouping.
              * @param {string} path - the path to the grouping
-             * @param {string} userToAdd - the usernames of the members to add
+             * @param {string} usersToAdd - the usernames of the members to add
              */
-            addMembersToExclude: function (path, userToAdd, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + userToAdd + "/addMembersToExcludeGroup";
+            addMembersToExclude: function (path, usersToAdd, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
