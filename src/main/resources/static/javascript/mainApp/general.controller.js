@@ -432,6 +432,8 @@
                 };
                 if (list === "Include") {
                     groupingsService.addMembersToInclude(groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                } else if (list === "Exclude") {
+                    groupingsService.addMembersToExclude(groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
                 }
             };
             /**
@@ -1139,12 +1141,13 @@
              * @returns the table in CSV format
              */
             $scope.convertListToCsv = function (table) {
-                let str = "Last,First,Username,Email\r\n";
+                let str = "Last,First,Username,uhNumber,Email\r\n";
                 for (let i = 0; i < table.length; i++) {
                     let line = "";
                     line += table[i].lastName + ",";
                     line += table[i].firstName + ",";
                     line += table[i].username + ",";
+                    line += table[i].uuid + ",";
                     line += table[i].username + "@hawaii.edu,";
                     str += line + "\r\n";
                 }
@@ -1201,7 +1204,9 @@
                 $window.location.href = "/uhgroupings/";
             };
 
-        }
+        };
 
         UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
-    })();
+    }
+
+)();
