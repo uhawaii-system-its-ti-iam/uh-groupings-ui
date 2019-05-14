@@ -56,12 +56,12 @@
             // used with ng-view on selected-grouping.html to toggle description editing.
             $scope.descriptionForm = false;
             //The max length usable when getting input
-            $scope.maxDescriptionLength = 40;
+            $scope.maxDescriptionLength = 100;
             //The user input
             $scope.modelDescription;
 
-            var maxLength = 40;
-            var noDescriptionMessage = "No description given for this Grouping.";
+            const maxLength = 100;
+            const noDescriptionMessage = "No description given for this Grouping.";
 
             angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
@@ -116,7 +116,7 @@
                     return _.isEmpty(member.username);
                 });
 
-                var newMembers = _.concat(initialMembers, membersToAdd);
+                let newMembers = _.concat(initialMembers, membersToAdd);
 
                 // Unique members only by UUID (assume no two users should have the same uuid)
                 newMembers = _.uniqBy(newMembers, "uuid");
@@ -257,7 +257,7 @@
             $scope.descriptionLengthWarning = function () {
 
 
-                return (String($scope.modelDescription).length >= maxLength);
+                return (String($scope.modelDescription).length > maxLength);
             };
 
             /**

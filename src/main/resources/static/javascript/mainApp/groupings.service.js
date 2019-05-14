@@ -14,6 +14,7 @@
              * @param {String} page - the page to retrieve
              * @param {String} size - the size of each page
              */
+
             getGrouping: function (path, page, size, sortString, isAscending, onSuccess, onError) {
 
                 let endpoint = BASE_URL + "groupings/" + path + "?";
