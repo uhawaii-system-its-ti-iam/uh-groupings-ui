@@ -21,6 +21,83 @@
         </ul>
     </div>
 </div>
+<div class="container">
+    <div class="row m-auto pt-4 pb-4">
+        <div class="col-lg-9 col-md-8 col-12">
+            <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
+            <p>Some memberships are optional and some are required.</p>
+        </div>
+        <div class="col-lg-3 col-md-4 col-12">
+            <input class="form-control" placeholder="Filter Groupings..." />
+        </div>
+    </div>
+    <div ng-if="membershipsList.length !== 0">
+    <div class="table-responsive">
+        <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
+            <thead>
+            <tr>
+                <th class="grouping-name" scope="col" ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'name')">
+                    Grouping Name
+                    <i class="fa sort-icon"></i>
+                </th>
+                <th class="grouping-members" scope="col">
+                    # of Members
+                </th>
+                <th class="grouping-path" scope="col">
+                    Grouping Path
+                    <i class="fa sort-icon"></i>
+                </th>
+                <th>
+                    Opt Out?
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span><i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'name' || !columnSort.membershipsList" ng-class="{ reverse: columnSort.membershipsList.reverse }"></i></span></td>
+                    <td><i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59</td>
+                    <td>
+                        <form class="seamless border border-secondary rounded">
+                            <input type="text" class="form-control border-0" value="hawaii.edu:custom:test:aaronvil:aaronvil-test"><button class="btn btn-sm"><i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                        </form>
+                    </td>
+                    <td><em>Membership Required</em></td>
+                </tr>
+                <tr>
+                    <td><span>aaronvil-test</span></td>
+                    <td><i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59</td>
+                    <td>
+                        <form class="seamless border border-secondary rounded">
+                            <input type="text" class="form-control border-0" value="hawaii.edu:custom:test:aaronvil:aaronvil-test"><button class="btn btn-sm"><i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                        </form>
+                    </td>
+                    <td><em>Membership Required</em></td>
+                </tr>
+                <tr>
+                    <td><span>aaronvil-test</span></td>
+                    <td><i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59</td>
+                    <td>
+                        <form class="seamless border border-secondary rounded">
+                            <input type="text" class="form-control border-0" value="hawaii.edu:custom:test:aaronvil:aaronvil-test"><button class="btn btn-sm"><i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                        </form>
+                    </td>
+                    <td><em>Membership Required</em></td>
+                </tr>
+            <tr>
+                <td><span>aaronvil-test</span></td>
+                <td><i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59</td>
+                <td>
+                    <form class="seamless border border-secondary rounded">
+                        <input type="text" class="form-control border-0" value="hawaii.edu:custom:test:aaronvil:aaronvil-test"><button class="btn btn-sm"><i class="fa fa=fw fa-clipboard" aria-hidden="true"></i></button>
+                    </form>
+                    <td><a class="btn dark-teal-bg btn-primary" href="#"><i class="fa fa-fw fa-user-times" aria-hidden="true"></i> Opt Out</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
 
 <!-- / Content container. -->
 </body>
