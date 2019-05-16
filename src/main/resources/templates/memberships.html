@@ -7,186 +7,98 @@
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
-<div class="container" ng-controller="MembershipJsController" data-ng-init="init()">
-    <!--<h1 class="text-left">Manage My Memberships</h1>
+<div class="seafoam-bg pt-5">
+    <div class="container">
+        <h1 class="text-center text-md-left">Manage My Memberships</h1>
+        <p class="lead text-center text-md-left">View and manage my memberships. Search for new groupings to join as a member.</p>
 
-    &lt;!&ndash; <p th:text="#{screen.message.home.test('{{currentUsername}}')}">Hi my name is aaron</p> &ndash;&gt;
-
-    <p class="text-left" th:utext="#{screen.message.memberships.page.description}"></p>-->
-
-    <div th:replace="fragments/page-header :: page-header(title='Manage My Memberships', description=#{screen.message.memberships.page.description})">
-    </div>
-
-
-    <div id="overlay" ng-show="loading">
-        <div class="loader" ng-show="loading"></div>
-    </div>
-
-    <ul class="nav nav-tabs flex-column flex-sm-row" role="tablist">
-        <li role="presentation" class="nav-item">
-            <a href="#current-memberships" data-toggle="tab" class="nav-link active" role="tab">
-                Current Memberships
-            </a>
-        </li>
-        <li role="presentation" class="nav-item">
-            <a href="#membership-opportunities" data-toggle="tab" class="nav-link" role="tab">
-                Membership Opportunities
-            </a>
-        </li>
-    </ul>
-    <!-- Content that should be viewed by the nav tabs -->
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="current-memberships" role="tabcard">
-            <div class="card card-with-table card-tab-content">
-                <div class="card-header">
-                    <div class="row m-auto">
-                        <div class="col-lg-9 col-md-8 col-12 p-0">
-                            <h2 class="card-title mb-0">My Grouping Memberships</h2>
-                            <span th:utext="#{screen.message.memberships.page.currentMembershipsInfo}"></span>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-12 p-0">
-                            <input placeholder="Filter Groupings..." type="text"
-                                   title="Filter Groupings"
-                                   ng-model="membersQuery" class="form-control"
-                                   ng-change="filter(membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', membersQuery, true)"/>
-                        </div>
-                    </div>
-                </div>
-                <div ng-if="membershipsList.length !== 0">
-                    <div class="table-responsive-sm">
-                        <table class="table table-bordered table-sm table-hover" aria-live="assertive">
-                            <thead>
-                            <tr>
-                                <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'name')"
-                                    class="w-30 clickable">
-                                    Grouping Name
-                                    <i class="fa sort-icon"
-                                       ng-show="columnSort.membershipsList.property === 'name' || !columnSort.membershipsList"
-                                       ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
-                                </th>
-                                <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'path')"
-                                    class="w-50 clickable">
-                                    Grouping Path
-                                    <i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'path'"
-                                       ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
-                                </th>
-                                <th class="w-20 text-center">Opt Out?</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships] ">
-                                <td class="w-30">{{ l.name }}</td>
-                                <td class="w-50">{{ l.path }}</td>
-                                <td class="w-20 text-center">
-                                <span ng-if="!l.optOutOn">
-                                    Membership Required
-                                </span>
-                                    <div ng-if="l.optOutOn">
-                                        <button id="optOutButton"
-                                                class="btn btn-primary btn-block opt-button text-center"
-                                                tabindex="0"
-                                                ng-click="optOut(currentPageMemberships, $index)">
-                                            Opt Out
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="pl-sm-3 pr-sm-3 pl-1 pr-1">
-                        <div class="d-lg-flex d-block justify-content-end justify-content-start">
-                            <div class="mt-lg-0 mt-2">
-                                <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMemberships', pagedItems='pagedItemsMemberships')"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div ng-if="membershipsList.length === 0" align="center">
-                    <p class="font-weight-bold" ng-hide="loading" th:text="#{screen.message.membership.empty.membershipsList}">
-                        No Groupings Available
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Divide between the tabs  -->
-        <div class="tab-pane fade" id="membership-opportunities">
-            <div class="card card-with-table card-tab-content">
-                <div class="card-header">
-                    <div class="row m-auto">
-                        <div class="col-lg-9 col-md-8 col-12 p-0">
-                            <h2 class="card-title mb-0">Available Groupings</h2>
-                            <span th:utext="#{screen.message.memberships.page.membershipOpportunitiesInfo}"></span>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-12 p-0">
-                            <input placeholder="Filter Groupings..." type="text"
-                                   title="Filter Groupings"
-                                   ng-model="optInQuery" class="form-control"
-                                   ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', optInQuery, true)"
-                                   id="optIn"/>
-                        </div>
-                    </div>
-                </div>
-                <div ng-if="optInList.length !== 0">
-                    <div class="table-responsive-sm">
-                        <table class="table table-bordered table-sm table-hover" aria-live="assertive">
-                            <thead>
-                            <tr>
-                                <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'name')"
-                                    class="w-30 clickable">
-                                    Grouping Name
-                                    <i class="fa sort-icon"
-                                       ng-show="columnSort.optInList.property === 'name' || !columnSort.optInList"
-                                       ng-class="{ reverse: columnSort.optInList.reverse }"></i>
-                                </th>
-                                <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'path')"
-                                    class="w-50 clickable">
-                                    Grouping Path
-                                    <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'path'"
-                                       ng-class="{ reverse: columnSort.optInList.reverse }"></i>
-                                </th>
-                                <th class="w-20 text-center">Opt In?</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn] ">
-                                <td class="w-30">{{ o.name }}</td>
-                                <td class="w-50" id="groupingOptInPath">{{ o.path }}</td>
-                                <td class="w-20">
-                                    <button class="btn btn-primary btn-block opt-button"
-                                            tabindex="0"
-                                            ng-click="optIn(currentPageOptIn, $index)">Opt In
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="pl-sm-3 pr-sm-3 pl-1 pr-1">
-                        <div class="d-lg-flex d-block justify-content-end justify-content-start">
-                            <div class="mt-lg-0 mt-2">
-                                <div th:replace="fragments/pagination :: pagination(currentPage='currentPageOptIn', pagedItems='pagedItemsOptInList')"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div ng-if="optInList.length === 0" align="center">
-                    <p class="font-weight-bold" ng-hide="loading" th:text="#{screen.message.membership.empty.optIn}">
-                        No Groupings Available
-                    </p>
-                </div>
-            </div>
-        </div>
+        <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist">
+            <li class="nav-item" role="presentation" ng-click="displayAdmins()">
+                <a href="#admins" class="nav-link" data-toggle="tab" role="tab">
+                    Membership Opportunities
+                </a>
+            </li>
+        </ul>
     </div>
 </div>
-
-<!-- to map out  CurrentWindow * (WindowSize - 1) + 1 -->
-
+<div class="container">
+    <div class="row m-auto pt-4 pb-4">
+        <div class="col-lg-9 col-md-8 col-12">
+            <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
+            <p>Some memberships are optional and some are required.</p>
+        </div>
+        <div class="col-lg-3 col-md-4 col-12">
+            <input class="form-control" placeholder="Filter Groupings..." />
+        </div>
+    </div>
+    <div ng-if="membershipsList.length !== 0">
+    <div class="table-responsive">
+        <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
+            <thead>
+            <tr>
+                <th class="grouping-name" scope="col" ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'name')">
+                    Grouping Name
+                    <i class="fa sort-icon"></i>
+                </th>
+                <th class="grouping-members" scope="col">
+                    # of Members
+                </th>
+                <th class="grouping-path" scope="col">
+                    Grouping Path
+                    <i class="fa sort-icon"></i>
+                </th>
+                <th>
+                    Opt Out?
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span><i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'name' || !columnSort.membershipsList" ng-class="{ reverse: columnSort.membershipsList.reverse }"></i></span></td>
+                    <td><i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59</td>
+                    <td>
+                        <form class="seamless border border-secondary rounded">
+                            <input type="text" class="form-control border-0" value="hawaii.edu:custom:test:aaronvil:aaronvil-test"><button class="btn btn-sm"><i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                        </form>
+                    </td>
+                    <td><em>Membership Required</em></td>
+                </tr>
+                <tr>
+                    <td><span>aaronvil-test</span></td>
+                    <td><i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59</td>
+                    <td>
+                        <form class="seamless border border-secondary rounded">
+                            <input type="text" class="form-control border-0" value="hawaii.edu:custom:test:aaronvil:aaronvil-test"><button class="btn btn-sm"><i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                        </form>
+                    </td>
+                    <td><em>Membership Required</em></td>
+                </tr>
+                <tr>
+                    <td><span>aaronvil-test</span></td>
+                    <td><i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59</td>
+                    <td>
+                        <form class="seamless border border-secondary rounded">
+                            <input type="text" class="form-control border-0" value="hawaii.edu:custom:test:aaronvil:aaronvil-test"><button class="btn btn-sm"><i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                        </form>
+                    </td>
+                    <td><em>Membership Required</em></td>
+                </tr>
+            <tr>
+                <td><span>aaronvil-test</span></td>
+                <td><i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59</td>
+                <td>
+                    <form class="seamless border border-secondary rounded">
+                        <input type="text" class="form-control border-0" value="hawaii.edu:custom:test:aaronvil:aaronvil-test"><button class="btn btn-sm"><i class="fa fa=fw fa-clipboard" aria-hidden="true"></i></button>
+                    </form>
+                    <td><a class="btn dark-teal-bg btn-primary" href="#"><i class="fa fa-fw fa-user-times" aria-hidden="true"></i> Opt Out</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
 
 <!-- / Content container. -->
-
-<div th:substituteby="footer :: copy"></div>
-
 </body>
 </html>

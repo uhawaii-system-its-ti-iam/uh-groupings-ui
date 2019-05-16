@@ -30,11 +30,11 @@
                 </div>
                 <div class="form-group pb-3">
                     <label for="input-email">Email address <span class="required-asterisk">*</span></label>
-                    <input type="email" class="form-control" id="input-email" placeholder="email@hawaii.edu">
+                    <input type="email" class="form-control" id="input-email" placeholder="email@hawaii.edu" th:required="required">
                 </div>
                 <div class="form-group pb-3">
                     <label for="feedback-content">Your Feedback <span class="required-asterisk">*</span></label>
-                    <textarea class="form-control" id="feedback-content" rows="6"></textarea>
+                    <textarea class="form-control" id="input-feedback" rows="6" th:required="required" ></textarea>
                 </div>
                 <button class="btn btn-primary" type="submit">Submit</button>
             </form>
