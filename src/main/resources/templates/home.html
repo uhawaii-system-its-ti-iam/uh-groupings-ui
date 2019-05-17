@@ -16,7 +16,7 @@
         <div class="col-sm-7 d-inline-flex align-items-center">
             <div>
                 <h1 class="sr-only">UH Groupings</h1>
-                <img class="img-fluid align-self-center" src="" th:src="@{/images/uh-groupings-text.png}" th:srcset="@{/images/uh-groupings-text.png 1x, /images/uh-groupings-text-2x.png 2x}" alt="UH Groupings logotype">
+                <img class="img-fluid align-self-center" src="" th:src="@{images/uh-groupings-text.png}" th:srcset="@{images/uh-groupings-text.png 1x, images/uh-groupings-text-2x.png 2x}" alt="UH Groupings logotype">
                 <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"></p>
                 <div sec:authorize="!isAuthenticated()">
                     <a class="btn btn-lg dark-teal-bg" th:href="@{/login}" role="button">Login Here</a>
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="col-sm-5 align-middle d-none d-sm-block">
-            <img class="img-fluid" th:src="@{/images/uh-groupings-logo-large.png}" th:srcset="@{/images/uh-groupings-logo-large.png 1x, /images/uh-groupings-logo-large-2x.png 2x}"  alt="UH Groupings">
+            <img class="img-fluid" th:src="@{images/uh-groupings-logo-large.png}" th:srcset="@{images/uh-groupings-logo-large.png 1x, images/uh-groupings-logo-large-2x.png 2x}"  alt="UH Groupings">
         </div>
     </div>
 </div>
@@ -48,21 +48,21 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="text-center">
-                    <img th:src="@{/images/cogs.png}" th:srcset="@{/images/cogs.png 1x, /images/cogs-2x.png 2x}"  alt="cogs">
+                    <img th:src="@{images/cogs.png}" th:srcset="@{images/cogs.png 1x, images/cogs-2x.png 2x}"  alt="cogs">
                 </div>
                 <p class="text-center" th:utext="#{screen.message.home.page.groupingControls}"></p>
             </div>
 
             <div class="col-md-4">
                 <div class="text-center">
-                    <img th:src="@{/images/id-email.png}" th:srcset="@{/images/id-email.png 1x, /images/id-email-2x.png 2x}"  alt="cogs">
+                    <img th:src="@{images/id-email.png}" th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x}"  alt="cogs">
                 </div>
                 <p class="text-center" th:utext="#{screen.message.home.page.groupingEmail}"></p>
             </div>
 
             <div class="col-md-4">
                 <div class="text-center">
-                    <img th:src="@{/images/watch.png}" th:srcset="@{/images/watch.png 1x, images/watch-2x.png 2x}"  alt="watch">
+                    <img th:src="@{images/watch.png}" th:srcset="@{images/watch.png 1x, images/watch-2x.png 2x}"  alt="watch">
                 </div>
                 <p class="text-center" th:utext="#{screen.message.home.page.groupingData}"></p>
             </div>

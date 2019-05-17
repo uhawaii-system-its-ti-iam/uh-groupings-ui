@@ -8,9 +8,9 @@
 <!--  Content container -->
 <div class="container" ng-controller="AdminJsController" data-ng-init="init()">
 
-   <!-- <h1 class="text-left">UH Groupings Administration</h1>
+    <!-- <h1 class="text-left">UH Groupings Administration</h1>
 
-    <p class="text-left" th:text="#{screen.message.admin.page.description}">Page Description </p>-->
+     <p class="text-left" th:text="#{screen.message.admin.page.description}">Page Description </p>-->
 
     <div th:replace="fragments/page-header :: page-header(title='UH Groupings Administration', description=#{screen.message.admin.page.description})">
     </div>
@@ -52,9 +52,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Table -->
-                    <div class="table-responsive-sm">
-                        <table class="table table-bordered table-sm table-hover" aria-live="assertive">
+                    <div class="table-responsive">
+                        <table class="table manage-admins table-striped table-hover" aria-live="assertive">
                             <thead>
                             <tr>
                                 <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'name')" class="clickable">
@@ -62,7 +61,6 @@
                                     <i class="fa sort-icon"
                                        ng-show="columnSort.adminsList.property === 'name' || !columnSort.adminsList"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
-                                </th>
                                 <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'uuid')" class="clickable">
                                     UH Number
                                     <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'uuid'"
@@ -74,12 +72,18 @@
                                     <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'username'"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
                                 </th>
+                                <th class="delete" scope="col">
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]">
-                                <td tabindex="0">
+                                <td>
                                     {{l.name}}
+                                </td>
+                                <td>{{l.uuid}}</td>
+                                <td>
+                                    {{l.username}}
                                     <span class="fa fa-trash-o pull-right clickable pt-1"
                                           data-toggle="tooltip" data-placement="top"
                                           tabindex="0"
@@ -87,10 +91,8 @@
                                           th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
                                           ng-click="removeAdmin(currentPageAdmins, $index)"
                                           ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">
-                                    </span>
+                                     </span>
                                 </td>
-                                <td>{{l.uuid}}</td>
-                                <td>{{l.username}}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -125,6 +127,8 @@
         <div th:replace="fragments/manage-grouping :: manage-grouping"></div>
     </div>
 </div>
+
+
 <!-- / Content container. -->
 <div th:substituteby="footer :: copy"></div>
 </body>

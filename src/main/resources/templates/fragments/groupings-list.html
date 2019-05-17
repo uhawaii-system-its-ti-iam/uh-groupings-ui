@@ -36,10 +36,17 @@
                     <td class="clickable" tabindex="0"
                         ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                         ng-click="displayGrouping(currentPageGroupings, $index)">
+                        <span class="fa fa-fw fa-pencil-square-o"></span>
                         {{l.name}}
-                        <span class="fa fa-pencil-square-o pull-right pt-1"></span>
                     </td>
-                    <td>{{l.path}}</td>
+                    <!--<td>{{l.path}}</td>-->
+                    <!-- changes here -->
+                    <td>
+                    <form class="seamless border border-secondary rounded">
+                        <input type="text" class="form-control border-0" value={{l.path}}>
+                        <button class="btn btn-sm"><i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                    </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
