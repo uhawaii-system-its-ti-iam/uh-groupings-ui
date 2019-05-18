@@ -33,8 +33,11 @@
                 </td>
                 <td>
                     <form class="seamless border border-secondary rounded">
-                        <input type="text" class="form-control border-0" value={{l.path}} id="inputPath">
-                        <button class="btn btn-sm" onclick="copyPath"><i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                        <input type="text" class="form-control border-0"
+                               value={{l.path}}
+                               id={{l.path}}>
+                        <button class="btn btn-sm" ng-click=copyPath(l)>
+                            <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
                     </form>
                 </td>
                 <td>
