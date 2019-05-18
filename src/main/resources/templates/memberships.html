@@ -25,6 +25,9 @@
     </div>
 </div>
 <div class="container" ng-controller="MembershipJsController" data-ng-init="init()">
+    <div id="overlay" ng-show="loading">
+        <div class="loader" ng-show="loading"></div>
+    </div>
     <div class="tab-content">
         <div class="tab-pane fade show active" id="current-memberships" role="tabcard">
             <div class="row m-auto pt-4 pb-4">
@@ -80,6 +83,7 @@
                                             class="btn btn-primary btn-block opt-button text-center"
                                             tabindex="0"
                                             ng-click="optOut(currentPageMemberships, $index)">
+                                        <i class="fa fa-fw fa-user-times" aria-hidden="true"></i>
                                         Opt Out
                                     </button>
                                 </div>
@@ -146,7 +150,9 @@
                             <td class="w-20">
                                 <button class="btn btn-primary btn-block opt-button"
                                         tabindex="0"
-                                        ng-click="optIn(currentPageOptIn, $index)">Opt In
+                                        ng-click="optIn(currentPageOptIn, $index)">
+                                    <i class="fa fa-fw fa-user-plus" aria-hidden="true"></i>
+                                    Opt In
                                 </button>
                             </td>
                         </tr>

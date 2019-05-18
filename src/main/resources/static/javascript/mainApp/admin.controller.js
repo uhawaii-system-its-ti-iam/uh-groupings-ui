@@ -13,6 +13,7 @@
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
         $scope.currentPageAdmins = 0;
+        $scope.pathToCopy = document.getElementById("inputPath");
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
@@ -102,6 +103,13 @@
                 }
             });
         };
+
+        $scope.copyPath = function () {
+            var copyText = $scope.pathToCopy;
+            copyText.select();
+            document.execCommand("copy");
+            alert("Copied the text: " + copyText.value);
+        }
 
     }
 

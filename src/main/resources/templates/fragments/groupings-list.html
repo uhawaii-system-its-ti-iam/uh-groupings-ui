@@ -1,60 +1,63 @@
 <th:block th:fragment="groupings-list">
-    <div class="card card-with-table"
-         th:classappend="${tabContent ? 'card-tab-content' : ''}">
-        <div class="card-header">
-            <div class="row m-auto">
-                <div class="col-lg-9 col-md-8 col-12 p-0">
-                    <h2 class="card-title mt-md-1 mt-0 mb-1" th:text="${title}"></h2>
-                </div>
-                <div class="col-lg-3 col-md-4 col-12 p-0">
-                    <input class="form-control" placeholder="Filter Groupings..." type="text"
-                           title="Filter Groupings"
-                           ng-model="groupingsQuery"
-                           ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
-                </div>
-            </div>
-        </div>
-        <div class="table-responsive-sm">
-            <table class="table table-bordered table-sm table-hover" aria-live="assertive">
-                <thead>
-                <tr>
-                    <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'name')" class="clickable">
-                        Grouping Name
-                        <i class="fa sort-icon"
-                           ng-show="columnSort.groupingsList.property === 'name' || !columnSort.groupingsList"
-                           ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
-                    </th>
-                    <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')" class="clickable">
-                        Grouping Path
-                        <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
-                           ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                    <td class="clickable" tabindex="0"
-                        ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
-                        ng-click="displayGrouping(currentPageGroupings, $index)">
-                        <span class="fa fa-fw fa-pencil-square-o"></span>
-                        {{l.name}}
-                    </td>
-                    <!--<td>{{l.path}}</td>-->
-                    <!-- changes here -->
-                    <td>
+    <div class="table-responsive-sm">
+        <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
+            <thead>
+            <tr>
+                <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'name')" class="clickable">
+                    Grouping Name
+                    <i class="fa sort-icon"
+                       ng-show="columnSort.groupingsList.property === 'name' || !columnSort.groupingsList"
+                       ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
+                </th>
+                <th class="clickable" scope="col">
+                    # of Members
+                </th>
+                <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')" class="clickable">
+                    Grouping Path
+                    <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
+                       ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
+                </th>
+                <th> Opt Out?</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
+                <td class="clickable" tabindex="0"
+                    ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
+                    ng-click="displayGrouping(currentPageGroupings, $index)">
+                    {{l.name}}
+                </td>
+                <td>
+                    <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i>
+                    59
+                </td>
+                <td>
                     <form class="seamless border border-secondary rounded">
-                        <input type="text" class="form-control border-0" value={{l.path}}>
-                        <button class="btn btn-sm"><i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                        <input type="text" class="form-control border-0" value={{l.path}} id="inputPath">
+                        <button class="btn btn-sm" onclick="copyPath"><i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
                     </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="pl-sm-3 pr-sm-3 pl-1 pr-1">
-            <div class="d-flex justify-content-lg-end justify-content-start">
-                <div th:replace="fragments/pagination :: pagination(currentPage='currentPageGroupings', pagedItems='pagedItemsGroupings')"></div>
-            </div>
+                </td>
+                <td>
+                         <span ng-if="l.optOutOn">
+                                    Membership Required
+                    </span>
+                    <div ng-if="!l.optOutOn">
+                        <button id="optOutButton"
+                                class="btn dark-teal-bg btn-primary text-center"
+                                tabindex="0"
+                                ng-click="optOut(currentPageGroupings, $index)">
+                            <i class="fa fa-fw fa-user-times" aria-hidden="true"></i>
+                            Opt Out
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pl-sm-3 pr-sm-3 pl-1 pr-1">
+        <div class="d-flex justify-content-lg-end justify-content-start">
+            <div th:replace="fragments/pagination :: pagination(currentPage='currentPageGroupings', pagedItems='pagedItemsGroupings')"></div>
         </div>
     </div>
 </th:block>

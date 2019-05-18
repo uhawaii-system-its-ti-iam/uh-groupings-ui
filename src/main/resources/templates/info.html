@@ -4,103 +4,124 @@
       lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Info')"></head>
 <body>
-    <nav th:replace="menubar :: copy"></nav>
+<nav th:replace="menubar :: copy"></nav>
 
-    <!--  Content container -->
+<!--  Content container -->
 
-    <div class="seafoam-bg pt-5 pb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="h1 text-center d-block">What is a UH Grouping?</h2>
-                </div>
-                <div class="col-md-12">
-                    <p class="lead text-center d-block">A <em>grouping</em> is a collection of members (e.g., all full-time Hilo faculty).</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <img th:src="@{images/cogs.png}" th:srcset="@{images/cogs.png 1x, images/cogs-2x.png 2x}"  alt="cogs">
-                    </div>
-                    <p class="text-center">Create groupings, manage grouping memberships, control members' self-service options, designate sync destinations, and more.</p>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <img th:src="@{images/id-email.png}" th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x}"  alt="cogs">
-                    </div>
-                    <p class="text-center">Synchronize groupings email LISTSERV lists, attributes for access control via CAS and LDAP, etc.</p>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <img th:src="@{images/watch.png}" th:srcset="@{images/watch.png 1x, images/watch-2x.png 2x}"  alt="watch">
-                    </div>
-                    <p class="text-center">Leverage group data from official sources, which can substantially reduce the manual overhead of membership management.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container pt-5 pb-5">
-        <h2 class="h5 text-uppercase font-weight-bold pb-4 text-center">General Info</h2>
+<div class="seafoam-bg pt-5 pb-5">
+    <div class="container">
         <div class="row">
-            <div class="col-md-6">
-                <h3>How do I request a new grouping?</h3>
-                <p class="pb-3">A request form is available <a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form">here</a>.</p>
-                <h3>Exactly what is a grouping?</h3>
-                <p class="pb-3">General information about groupings can be found <a href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">here</a>. A grouping's components include the Basis, Include, and Exclude lists.</p>
-                <h3>What is the Basis?</h3>
-                <p>A grouping's Basis is the portion of the grouping membership that is automatically updated. It may be empty.</p>
+            <div class="col-md-12">
+                <h2 class="h1 text-center d-block">What is a UH Grouping?</h2>
             </div>
-            <div class="col-md-6">
-                <h3>What is the Include members list?</h3>
-                <p class="pb-3">A grouping's Include is the portion of the grouping membership that is manually updated. It may be empty.</p>
-                <h3>What is the Exclude members list?</h3>
-                <p class="pb-3">A grouping's Exclude overrides automatic and manual membership by explicitly not including anyone listed here. It may be empty.</p>
-                <a class="btn btn-primary dark-teal-bg" href="mailto:its-iam-help@lists.hawaii.edu">Send Email</a>
+            <div class="col-md-12">
+                <p class="lead text-center d-block">A <em>grouping</em> is a collection of members (e.g., all full-time
+                    Hilo faculty).</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <img th:src="@{images/cogs.png}" th:srcset="@{images/cogs.png 1x, images/cogs-2x.png 2x}"
+                         alt="cogs">
+                </div>
+                <p class="text-center">Create groupings, manage grouping memberships, control members' self-service
+                    options, designate sync destinations, and more.</p>
+            </div>
+
+            <div class="col-md-4">
+                <div class="text-center">
+                    <img th:src="@{images/id-email.png}"
+                         th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x}" alt="cogs">
+                </div>
+                <p class="text-center">Synchronize groupings email LISTSERV lists, attributes for access control via CAS
+                    and LDAP, etc.</p>
+            </div>
+
+            <div class="col-md-4">
+                <div class="text-center">
+                    <img th:src="@{images/watch.png}" th:srcset="@{images/watch.png 1x, images/watch-2x.png 2x}"
+                         alt="watch">
+                </div>
+                <p class="text-center">Leverage group data from official sources, which can substantially reduce the
+                    manual overhead of membership management.</p>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="seafoam-bg pt-5 pb-5">
-        <div class="container">
-            <h2 class="h5 text-center text-uppercase font-weight-bold pb-4">Technical Information</h2>
-            <div class="row">
-                <div class="col-md-3">
-                    <h3>Resources</h3>
-                    <p class="pb-3">Source code is available on <a href="https://github.com/uhawaii-system-its-ti-iam/uhgroupings">GitHub</a>.</p>
-                </div>
-                <div class="col-md-9">
-                    <h3>Technologies</h3>
+<div class="container pt-5 pb-5">
+    <h2 class="h5 text-uppercase font-weight-bold pb-4 text-center">General Info</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>How do I request a new grouping?</h3>
+            <p class="pb-3">A request form is available <a
+                    href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form">here</a>.</p>
+            <h3>Exactly what is a grouping?</h3>
+            <p class="pb-3">General information about groupings can be found <a
+                    href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">here</a>. A grouping's components
+                include the Basis, Include, and Exclude lists.</p>
+            <h3>What is the Basis?</h3>
+            <p>A grouping's Basis is the portion of the grouping membership that is automatically updated. It may be
+                empty.</p>
+        </div>
+        <div class="col-md-6">
+            <h3>What is the Include members list?</h3>
+            <p class="pb-3">A grouping's Include is the portion of the grouping membership that is manually updated. It
+                may be empty.</p>
+            <h3>What is the Exclude members list?</h3>
+            <p class="pb-3">A grouping's Exclude overrides automatic and manual membership by explicitly not including
+                anyone listed here. It may be empty.</p>
+            <a class="btn btn-primary dark-teal-bg" href="mailto:its-iam-help@lists.hawaii.edu">Send Email</a>
+        </div>
+    </div>
+</div>
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <p>Apache Maven <a href="https://maven.apache.org/what-is-maven.html">(Introduction)</a></p>
-                            <p>Apache Tomcat <a href="https://wiki.apache.org/tomcat/FrontPage">(Welcome)</a></p>
-                            <p>Java Spring Framework <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/spring-framework-reference/htmlsingle/">(Guide)</a> <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/javadoc-api/">(API)</a> </p>
-                            <p>Spring Boot <a href="https://docs.spring.io/spring-boot/docs/1.5.12.RELEASE/reference/htmlsingle/">(Guide)</a></p>
-                        </div>
-                        <div class="col-md">
-                            <p>Spring Security <a href="https://projects.spring.io/spring-security/">(Quickstart)</a></p>
-                            <p>Thymeleaf <a href="http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#introducing-thymeleaf">(Guide)</a></p>
-                            <p>Bootstrap <a href="http://getbootstrap.com/">(Guide)</a></p>
-                            <p>AngularJS <a href="https://code.angularjs.org/1.5.8/docs/guide">(Guide)</a> <a href="https://code.angularjs.org/1.5.8/docs/api">(API)</a></p>
-                        </div>
-                        <div class="col-md-4">
-                            <p>JQuery <a href="http://api.jquery.com/">(API)</a></p>
-                            <p>Jasmine <a href="https://jasmine.github.io/">(Guide)</a></p>
-                            <p>Jenkins <a href="https://jenkins.io/doc/">(Documentation)</a></p>
-                            <p>Underscore.js <a href="https://underscorejs.org/">(Documentation)</a></p>
-                        </div>
+<div class="seafoam-bg pt-5 pb-5">
+    <div class="container">
+        <h2 class="h5 text-center text-uppercase font-weight-bold pb-4">Technical Information</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <h3>Resources</h3>
+                <p class="pb-3">Source code is available on <a
+                        href="https://github.com/uhawaii-system-its-ti-iam/uhgroupings">GitHub</a>.</p>
+            </div>
+            <div class="col-md-9">
+                <h3>Technologies</h3>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <p>Apache Maven <a href="https://maven.apache.org/what-is-maven.html">(Introduction)</a></p>
+                        <p>Apache Tomcat <a href="https://wiki.apache.org/tomcat/FrontPage">(Welcome)</a></p>
+                        <p>Java Spring Framework <a
+                                href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/spring-framework-reference/htmlsingle/">(Guide)</a>
+                            <a href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/javadoc-api/">(API)</a></p>
+                        <p>Spring Boot <a
+                                href="https://docs.spring.io/spring-boot/docs/1.5.12.RELEASE/reference/htmlsingle/">(Guide)</a>
+                        </p>
+                    </div>
+                    <div class="col-md">
+                        <p>Spring Security <a href="https://projects.spring.io/spring-security/">(Quickstart)</a></p>
+                        <p>Thymeleaf <a
+                                href="http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#introducing-thymeleaf">(Guide)</a>
+                        </p>
+                        <p>Bootstrap <a href="http://getbootstrap.com/">(Guide)</a></p>
+                        <p>AngularJS <a href="https://code.angularjs.org/1.5.8/docs/guide">(Guide)</a> <a
+                                href="https://code.angularjs.org/1.5.8/docs/api">(API)</a></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>JQuery <a href="http://api.jquery.com/">(API)</a></p>
+                        <p>Jasmine <a href="https://jasmine.github.io/">(Guide)</a></p>
+                        <p>Jenkins <a href="https://jenkins.io/doc/">(Documentation)</a></p>
+                        <p>Underscore.js <a href="https://underscorejs.org/">(Documentation)</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- / Content container. -->
-
+<!-- / Content container. -->
+<div th:replace="footer"></div>
 </body>
 </html>

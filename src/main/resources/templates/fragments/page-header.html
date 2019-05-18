@@ -1,15 +1,33 @@
-
 <th:block th:fragment="page-header">
-    <div class="card page-header">
-        <div class="card-header">
-            <div class="row" style="margin: inherit;">
-                <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 pull-left" style="padding: 0;">
-                    <h1 id="header-smaller" th:text="${title}" style="margin: inherit; padding-top: .11875em;"></h1>
-                    <p class="text-left" th:text="${description}"></p>
-                </div>
-            </div>
+    <!--<div class="row pt-5" style="margin: inherit;">-->
+    <div class="row m-auto pt-5">
+        <div class="col-lg-9 col-md-8 col-12 pull-left">
+            <!--<div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 pull-left" style="padding: 0;">-->
+            <h1 id="text-center text-md-left" th:text="${title}" style="margin: inherit; padding-top: .11875em;"></h1>
+            <p class="lead text-center text-md-left" th:text="${description}"></p>
+        </div>
+        <div class="col-lg-3 col-md-4 col-12 p-0">
+            <input class="form-control" placeholder="Filter Groupings..." type="text"
+                   title="Filter Groupings"
+                   ng-model="groupingsQuery"
+                   ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
         </div>
     </div>
 </th:block>
 
 
+<div class="row m-auto pt-4 pb-4">
+    <div class="col-lg-9 col-md-8 col-12">
+        <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
+        <p>Some memberships are optional and some are required.</p>
+    </div>
+    <div class="col-lg-3 col-md-4 col-12">
+        <input class="form-control" placeholder="Filter Groupings..."/>
+    </div>
+</div>
+<div class="col-lg-3 col-md-4 col-12 p-0">
+    <input class="form-control" placeholder="Filter Groupings..." type="text"
+           title="Filter Groupings"
+           ng-model="groupingsQuery"
+           ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
+</div>

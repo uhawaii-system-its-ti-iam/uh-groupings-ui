@@ -1,17 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Owners')"></head>
 <body ng-app="UHGroupingsApp">
-<nav th:substituteby="menubar :: copy"></nav>
+<nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
 <div class="container" ng-controller="OwnerJsController" data-ng-init="init()">
 
-<!--    <h1>Manage My Groupings</h1>
+    <!--    <h1>Manage My Groupings</h1>
 
-    <p th:utext="#{screen.message.groupings.page.description}"></p>-->
+        <p th:utext="#{screen.message.groupings.page.description}"></p>-->
 
     <div th:replace="fragments/page-header :: page-header(title='Manage My Groupings', description=#{screen.message.groupings.page.description})">
     </div>
@@ -22,11 +21,11 @@
 
     <div class="nav-tabs nav-item">
         <div ng-show="!showGrouping">
-            <div th:replace="fragments/groupings-list :: groupings-list(title='My Groupings', tabContent=false)"></div>
+            <div th:replace="fragments/groupings-list :: groupings-list"></div>
         </div>
 
         <div ng-show="showGrouping">
-            <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=false)"></div>
+            <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
 
             <div th:replace="fragments/manage-grouping :: manage-grouping"></div>
         </div>
@@ -35,7 +34,7 @@
 </div>
 <!-- / Content container. -->
 
-<div th:substituteby="footer :: copy"></div>
+<div th:replace="footer"></div>
 
 </body>
 </html>
