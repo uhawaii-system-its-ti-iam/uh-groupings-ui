@@ -27,7 +27,7 @@
     <div class="row pt-5 pb-4">
         <div class="col-lg-5 col-md-4 col-12">
             <h1 class="text-center text-md-left">Feedback</h1>
-            <p class="lead text-center text-md-left"><span th:utext="#{screen.message.feedback.page.description}"></span></p>
+            <p class="lead text-center text-md-left"><span class="feedbackDescript" th:utext="#{screen.message.feedback.page.description}"></span></p>
         </div>
         <div class="col-lg-7 col-md-8 col-12">
         <form th:action="@{/feedback}" th:object="${feedback}" method="post">
@@ -36,10 +36,10 @@
                     <span class="required-asterisk">*</span>
                 </label>
                     <select class="form-control" id="input-type" th:field="*{type}">
-                        <option value="general">GENERAL</option>
-                        <option value="problem">PROBLEM</option>
-                        <option value="feature">FEATURE</option>
-                        <option value="question">QUESTION</option>
+                        <option value="general">General</option>
+                        <option value="problem">Problem</option>
+                        <option value="feature">Feature</option>
+                        <option value="question">Question</option>
                     </select>
                 </div>
             <div class="form-group pb-3">
