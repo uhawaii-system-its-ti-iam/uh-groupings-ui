@@ -498,6 +498,7 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
+    //todo Remove
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserv
      *
@@ -518,12 +519,13 @@ public class GroupingsRestController {
         return changePreference(safeGrouping, principal.getName(), LISTSERV, listservOn);
     }
 
+    //todo Remove
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to LDAP.
      *
      * @param grouping: the path to the Grouping
      * @param ldapOn:   true if the ldap should be on, false if it should be off
-     * @return information about the success of the opertaion
+     * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{ldapOn}/setLdap",
             method = RequestMethod.POST,
@@ -536,6 +538,48 @@ public class GroupingsRestController {
 
         logger.info("Entered REST setLdap...");
         return changePreference(safeGrouping, principal.getName(), UH_RELEASED_GROUPING, ldapOn);
+    }
+
+    /**
+     * This allows an owner of a Grouping to enable that a Grouping connected to a given sync destination
+     *
+     * @param path: the path to the Grouping
+     * @param syncDestId: id of the syncDest to be enabled
+     * @return information about the success of the operation
+     */
+    @RequestMapping(value = "/groupings/{path}/syncDests/{syncDestId}/enable",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity enableSyncDest(Principal principal,
+            @PathVariable String path,
+            @PathVariable String syncDestId) {
+
+        String safeGrouping = policy.sanitize(path);
+        String safeSyncDestId = policy.sanitize(syncDestId);
+
+        logger.info("Entered REST enableSyncDest...");
+        return changeSyncDest(safeGrouping, principal.getName(), safeSyncDestId, true);
+    }
+
+    /**
+     * This allows an owner of a Grouping to disable that a Grouping connected to a given sync destination
+     *
+     * @param path: the path to the Grouping
+     * @param syncDestId: id of the syncDest to be disabled
+     * @return information about the success of the operation
+     */
+    @RequestMapping(value = "/groupings/{path}/syncDests/{syncDestId}/disable",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity disableSyncDest(Principal principal,
+            @PathVariable String path,
+            @PathVariable String syncDestId) {
+
+        String safeGrouping = policy.sanitize(path);
+        String safeSyncDestId = policy.sanitize(syncDestId);
+
+        logger.info("Entered REST disableSyncDest...");
+        return changeSyncDest(safeGrouping, principal.getName(), safeSyncDestId, false);
     }
 
     /**
@@ -563,7 +607,7 @@ public class GroupingsRestController {
      *
      * @param grouping: the path to the Grouping
      * @param optOutOn: true if the members should be able to opt out, false if not
-     * @return iformation about the success of the operation
+     * @return information about the success of the operation
      */
     @RequestMapping(value = "/{grouping}/{optOutOn}/setOptOut",
             method = RequestMethod.POST,
@@ -583,6 +627,19 @@ public class GroupingsRestController {
     public ResponseEntity adminLists(Principal principal) {
         logger.info("Entered REST adminListHolder...");
         String uri = API_2_1_BASE + "/adminsGroupings";
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * Returns a list of supported sync destinations
+     * @return List of Sync Destinations
+     */
+    @RequestMapping(value = "/syncDestinations",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getAllSyncDestinations(Principal principal) {
+        logger.info("Entered REST getAllSyncDestinations...");
+        String uri = API_2_1_BASE + "/groupings/syncDestinations";
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -613,6 +670,7 @@ public class GroupingsRestController {
         //                .body(groupingFactoryService.addGrouping(username, grouping, basis, include, exclude, owners));
     }
 
+    // Helper method to change preferenes
     private ResponseEntity changePreference(String grouping, String username, String preference, Boolean isOn) {
 
         String ending = "disable";
@@ -620,6 +678,16 @@ public class GroupingsRestController {
             ending = "enable";
         }
         String uri = String.format(API_2_1_BASE + "/groupings/%s/preferences/%s/%s", grouping, preference, ending);
+        return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
+    }
+
+    private ResponseEntity changeSyncDest(String grouping, String username, String syncDest, Boolean isOn) {
+
+        String ending = "disable";
+        if (isOn) {
+            ending = "enable";
+        }
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/syncDests/%s/%s", grouping, syncDest, ending);
         return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
     }
 }
