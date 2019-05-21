@@ -78,12 +78,12 @@ public class Grouping {
         }
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getDescription() {
+        return description;
     }
 
-    public String getDescription(){
-        return this.description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Group getBasis() {

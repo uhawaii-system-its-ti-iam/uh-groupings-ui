@@ -60,11 +60,11 @@
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
         //The max length usable when getting input
-        $scope.maxDescriptionLength = 40;
+        $scope.maxDescriptionLength = 100;
         //The user input
         $scope.modelDescription;
 
-        var maxLength = 40;
+        var maxLength = 100;
         var noDescriptionMessage = "No description given for this Grouping.";
 
         angular.extend(this, $controller("TableJsController", {$scope: $scope}));
@@ -293,29 +293,7 @@
 
         // used to check the length of the text string entered in the description form box, for error handling of max length
         $scope.descriptionLengthWarning = function () {
-            return (String($scope.modelDescription).length >= maxLength);
-        };
-
-        /**
-         * Enable or disable editing of a Grouping's description, from selected-grouping.html.
-         */
-        $scope.editDescription = function () {
-            $scope.descriptionForm = !($scope.descriptionForm);
-        };
-
-        /**
-         * Cancel the editing of a description, and revert back to base selected-grouping page.
-         */
-        $scope.cancelDescriptionEdit = function () {
-            // refer to last saved description when user cancels the edit
-            $scope.modelDescription = $scope.description;
-            $scope.descriptionForm = !($scope.descriptionForm);
-        };
-
-
-        // used to check the length of the text string entered in the description form box, for error handling of max length
-        $scope.descriptionLengthWarning = function () {
-            return (String($scope.modelDescription).length >= maxLength);
+            return (String($scope.modelDescription).length > maxLength);
         };
 
         /**

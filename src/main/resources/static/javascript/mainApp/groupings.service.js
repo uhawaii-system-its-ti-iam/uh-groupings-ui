@@ -14,6 +14,7 @@
              * @param {String} page - the page to retrieve
              * @param {String} size - the size of each page
              */
+
             getGrouping: function (path, page, size, sortString, isAscending, onSuccess, onError) {
 
                 let endpoint = BASE_URL + "groupings/" + path + "?";
@@ -97,6 +98,16 @@
              */
             addMemberToExclude: function (path, userToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToExcludeGroup";
+                dataProvider.updateData(onSuccess, onError, endpoint);
+            },
+
+            /**
+             * Adds a members to the exclude group of a grouping.
+             * @param {string} path - the path to the grouping
+             * @param {string} usersToAdd - the usernames of the members to add
+             */
+            addMembersToExclude: function (path, usersToAdd, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
