@@ -15,19 +15,3 @@
     </div>
 </th:block>
 
-
-<div class="row m-auto pt-4 pb-4">
-    <div class="col-lg-9 col-md-8 col-12">
-        <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
-        <p>Some memberships are optional and some are required.</p>
-    </div>
-    <div class="col-lg-3 col-md-4 col-12">
-        <input class="form-control" placeholder="Filter Groupings..."/>
-    </div>
-</div>
-<div class="col-lg-3 col-md-4 col-12 p-0">
-    <input class="form-control" placeholder="Filter Groupings..." type="text"
-           title="Filter Groupings"
-           ng-model="groupingsQuery"
-           ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
-</div>
