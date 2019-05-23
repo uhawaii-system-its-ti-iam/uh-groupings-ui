@@ -15,6 +15,7 @@
             loadData: function (callback, callError, url) {
                 $http.get(encodeURI(url))
                     .then(function (response) {
+                        console.log(url);
                         callback(response.data);
                     }, function (response) {
                         // console.log("Error A", response);
@@ -40,10 +41,9 @@
                     });
             },
 
-
             // Might have to clean this code up? Not complete sure yet.
             /**
-             * Performs a POST request to the specified URL.
+             * Performs a PUT request to the specified URL.
              * @param {string} url - the URL to perform the request on
              * @param {function} callback - the function to perform on a successful request (200)
              */

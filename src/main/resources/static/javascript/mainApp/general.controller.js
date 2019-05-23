@@ -45,6 +45,10 @@
         $scope.listserv = false;
         $scope.ldap = false;
 
+        $scope.syncDestMap = [];
+        $scope.syncDestArray = [];
+        $scope.selectedSyncDest = "Hello";
+
         $scope.showGrouping = false;
 
         $scope.loading = false;
@@ -63,7 +67,7 @@
         var maxLength = 40;
         var noDescriptionMessage = "No description given for this Grouping.";
 
-        angular.extend(this, $controller("TableJsController", { $scope: $scope }));
+        angular.extend(this, $controller("TableJsController", {$scope: $scope}));
 
         /**
          * Initiates the retrieval of information about the grouping clicked by the user.
@@ -73,7 +77,9 @@
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
             $scope.description = $scope.selectedGrouping.description;
+            // $scope.getAllSyncDestinations();
             $scope.getGroupingInformation();
+
 
             $scope.showGrouping = true;
         };
@@ -88,7 +94,6 @@
                 return `Error: Status Code${res.statusCode}`;
             }
         }
-
 
         /**
          * @param {object[]} members - the members of the group
@@ -124,13 +129,25 @@
             return _.sortBy(newMembers, "name");
         };
 
+        /**
+         * @returns {String[]} list of possible sync destinations
+         */
+        $scope.getAllSyncDestinations = function () {
+            groupingsService.getSyncDestList(function (res) {
+                // console.log("This is the response of sync dest" + res);
+                $scope.syncDestMap = res;
+                // console.log("Mapping:"+ $scope.syncDestMap);
+            }, function (res) {
+                if (res.statusCode === 403) {
+                    $scope.createOwnerErrorModal();
+                }
+            });
+        };
 
         /**
          * Gets information about the grouping, such as its members and the preferences set.
          * Retrieves information asynchronously page by page
          */
-
-
         $scope.getGroupingInformation = function () {
             $scope.loading = true;
             $scope.paginatingComplete = false;
@@ -169,11 +186,14 @@
                     $scope.description = res.description;
                 }
 
-
                 $scope.allowOptIn = res.optInOn;
                 $scope.allowOptOut = res.optOutOn;
-                $scope.listserv = res.listservOn;
-                $scope.ldap = res.ldapOn;
+
+                const syncDestResponseMapping = new Map(Object.entries(res.syncDestinations));
+                syncDestResponseMapping.forEach((value, key, map) => {
+                    $scope.syncDestArray.push({name: key, value: value});
+                });
+                $scope.setSyncDestLabels();
 
                 //Stop loading spinner and turn on loading text
                 $scope.loading = false;
@@ -196,7 +216,6 @@
          * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
          * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending (Z-A)
          */
-
         $scope.getPages = function (groupingPath, page, size, sortString, isAscending) {
 
             groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
@@ -248,15 +267,54 @@
                 } else if (res.statusCode === 403) {
                     $scope.createOwnerErrorModal();
                 } else {
-                    dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+                    dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
                 }
             });
         };
 
+        //todo IMPORTANT: This is the only function we have to update manually when adding new syncDests
+        // There's no way around this as we can't dynamically generate these strings without external data in server
+        // As far as I know, this can't go into the properties file because the checkboxes are generated dynamically
+        $scope.setSyncDestLabels = function () {
+            $scope.syncDestArray[0].label = "CAS/LDAP: uhReleasedGrouping";
+            $scope.syncDestArray[1].label = "Email list: <" + $scope.selectedGrouping.name + "@lists.hawaii.edu>";
+
+            $scope.syncDestArray[0].confimationModalLabel = "CAS/LDAP";
+            $scope.syncDestArray[1].confimationModalLabel = "Email List";
+
+            $scope.syncDestArray[0].tooltip = "Synchronize an individual’s membership with the individual’s CAS/LDAP attribute uhReleasedGrouping.";
+            $scope.syncDestArray[1].tooltip = "Synchronize the grouping’s membership with a corresponding LISTSERV list, which will be created as needed.";
+
+            $scope.syncDestArray[0].confirmationModalText = "Click Ok to update the CAS/LDAP preference as requested.";
+            $scope.syncDestArray[1].confirmationModalText = "Click Ok to update the Email list preference as requested.";
+
+            console.log($scope.syncDestArray);
+        };
+
         // used to check the length of the text string entered in the description form box, for error handling of max length
         $scope.descriptionLengthWarning = function () {
+            return (String($scope.modelDescription).length >= maxLength);
+        };
+
+        /**
+         * Enable or disable editing of a Grouping's description, from selected-grouping.html.
+         */
+        $scope.editDescription = function () {
+            $scope.descriptionForm = !($scope.descriptionForm);
+        };
+
+        /**
+         * Cancel the editing of a description, and revert back to base selected-grouping page.
+         */
+        $scope.cancelDescriptionEdit = function () {
+            // refer to last saved description when user cancels the edit
+            $scope.modelDescription = $scope.description;
+            $scope.descriptionForm = !($scope.descriptionForm);
+        };
 
 
+        // used to check the length of the text string entered in the description form box, for error handling of max length
+        $scope.descriptionLengthWarning = function () {
             return (String($scope.modelDescription).length >= maxLength);
         };
 
@@ -316,12 +374,6 @@
 
         };
 
-
-        $scope.displayRole = function() {
-          return "Hello!"
-        };
-
-
         /**
          * Creates a modal for errors in loading data from the API.
          */
@@ -346,11 +398,9 @@
         $scope.addInBasis = function (group) {
             _.forEach(group, function (member) {
                 const memberUuid = member.uuid;
-                member.inBasis = _.some($scope.groupingBasis, { uuid: memberUuid })
-
+                member.inBasis = _.some($scope.groupingBasis, {uuid: memberUuid})
                     ? "Yes"
                     : "No";
-
             });
         };
 
@@ -363,12 +413,12 @@
             _.forEach(compositeGroup, function (member) {
 
                 const memberUuid = member.uuid;
-                if (_.some($scope.groupingBasis, { uuid: memberUuid })) {
+                if (_.some($scope.groupingBasis, {uuid: memberUuid})) {
 
                     member.whereListed = "Basis";
                 }
 
-                if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
+                if (_.some($scope.groupingInclude, {uuid: memberUuid})) {
                     member.whereListed = _.isUndefined(member.whereListed)
                         ? "Include"
                         : "Basis / Include";
@@ -401,7 +451,6 @@
                     $scope.createOwnerErrorModal();
                 }
             });
-
         };
         /**
          * Lets a user import multiple members to a grouping, in the long run this method triggers the
@@ -416,7 +465,6 @@
                 listName: list
             });
             console.log(usersToAdd);
-
         };
 
         /**
@@ -439,6 +487,7 @@
                 groupingsService.addMembersToInclude(groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
         };
+
         /**
          * Initiates the adding of a member to a list.
          * @param {string} userToAdd - user being added
@@ -452,7 +501,6 @@
             if ($scope.listName !== "admins") {
                 groupingPath = $scope.selectedGrouping.path;
             }
-
 
             const handleSuccessfulAdd = function (res) {
                 $scope.createSuccessfulAddModal({
@@ -481,9 +529,9 @@
          */
         $scope.isInAnotherList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingExclude, { username: user });
+                return _.some($scope.groupingExclude, {username: user});
             } else if (list === "Exclude") {
-                return _.some($scope.groupingInclude, { username: user });
+                return _.some($scope.groupingInclude, {username: user});
             }
             return false;
         };
@@ -495,9 +543,9 @@
          */
         $scope.existInList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingInclude, { username: user });
+                return _.some($scope.groupingInclude, {username: user});
             } else if (list === "Exclude") {
-                return _.some($scope.groupingExclude, { username: user });
+                return _.some($scope.groupingExclude, {username: user});
             }
             return false;
         };
@@ -521,6 +569,7 @@
                 $scope.updateAddMember(user, listName);
             });
         };
+
         /**
          * Creates a modal that asks for confirmation when importing multiple users.
          * @param {object} options - the options object
@@ -535,8 +584,8 @@
             $scope.confirmAddModalInstance.result.then(function () {
                 $scope.updateAddMembers(options.usersToAdd, options.listName);
             });
-
         };
+
         /**
          * Creates a modal that asks for confirmation when adding a user.
          * @param {object} options - the options object
@@ -616,7 +665,6 @@
                 $scope.createOwnerErrorModal();
             }
         };
-
 
         /**
          * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
@@ -726,8 +774,6 @@
             if (res.statusCode === 403) {
                 $scope.createOwnerErrorModal();
             }
-
-
         };
 
         /**
@@ -944,6 +990,7 @@
         $scope.createPreferenceInfoModal = function (desc) {
             $scope.preferenceInfo = desc;
 
+            console.log(desc);
             $scope.infoModalInstance = $uibModal.open({
                 templateUrl: "modal/infoModal",
                 scope: $scope
@@ -965,10 +1012,10 @@
             if (!_.isUndefined(res.statusCode)) {
                 console.log("Error, Status Code: " + res.statusCode);
                 $scope.createPreferenceErrorModal();
-            } else if (_.startsWith(res[0].resultCode, "SUCCESS")) {
+            } else if (_.startsWith(res.resultCode, "SUCCESS")) {
                 console.log("Success");
             }
-        }
+        };
 
         /**
          * Toggles the grouping preference which allows users to opt out of a grouping.
@@ -991,24 +1038,53 @@
         };
 
         /**
-         * Toggles the grouping preference which creates a LISTSERV email list based off the grouping.
+         * Gets the SyncDest value from the array given the name of the sync dest
+         * @param {String} syncDestName Name of the Sync Dest to retrieve
+         * @return {Boolean} Sync Dest value at the given name
          */
-        $scope.updateListserv = function () {
-            const groupingPath = $scope.selectedGrouping.path;
-            const listservOn = $scope.listserv;
-
-            groupingsService.setListserv(groupingPath, listservOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+        $scope.getSyncDestValueInArray = function (syncDestName) {
+            const indexOfSyncDest = $scope.syncDestArray.map((e) => {
+                return e.name
+            }).indexOf(syncDestName);
+            const syncDestOn = $scope.syncDestArray[indexOfSyncDest].value;
+            return syncDestOn;
         };
 
         /**
-         * Toggles the grouping preference to synchronize memberships with the uhReleasedGroupings attribute.
+         * Gets the entire syncDest object given its name
+         * @param {String} syncDestName Name of the Sync Dest to retrieve
+         * @return {Object} The entire syncDest object with the given name
          */
-        $scope.updateLdap = function () {
-            const groupingPath = $scope.selectedGrouping.path;
-            const ldapOn = $scope.ldap;
-
-            groupingsService.setLdap(groupingPath, ldapOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+        $scope.getEntireSyncDestInArray = function (syncDestName) {
+            const indexOfSyncDest = $scope.syncDestArray.map((e) => {
+                return e.name
+            }).indexOf(syncDestName);
+            return $scope.syncDestArray[indexOfSyncDest];
         };
+
+        /**
+         * Sets a given sync dest to a given value
+         * @param {String} syncDestName Name of the Sync Dest to set
+         * @param {Boolean} syncDestvalue The value to set the Sync Dest to
+         */
+        $scope.setSyncDestInArray = function (syncDestName, syncDestvalue) {
+            const indexOfSyncDest = $scope.syncDestArray.map((e) => {
+                return e.name
+            }).indexOf(syncDestName);
+            $scope.syncDestArray[indexOfSyncDest].value = syncDestvalue;
+        };
+
+        /**
+         * Toggles the grouping sync destinations according to a given syncDest
+         * @param {String} syncDestName Name of the Sync Dest to toggle
+         */
+        $scope.updateSingleSyncDest = function (syncDestName) {
+            const groupingPath = $scope.selectedGrouping.path;
+            // const syncDestOn = $scope.syncDestMap.get(syncDest);
+            const syncDestOn = $scope.getSyncDestValueInArray(syncDestName);
+
+            groupingsService.setSyncDest(groupingPath, syncDestName, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+        }
 
         /**
          * Creates a modal indicating an error in saving the grouping's preferences.
@@ -1032,69 +1108,43 @@
         };
 
         /**
-         * Create CAS/LDAP confirmation modal.
+         * Create sync destination confirmation modal.
+         * @param {String} syncDestName Name of the Sync Dest to create modal for
          */
-        $scope.createCASLDAPModal = function () {
-            $scope.ldap = !$scope.ldap;
-            $scope.CASLDAPInstance = $uibModal.open({
-                templateUrl: "modal/CASLDAPModal",
+        $scope.createSyncDestModal = function (syncDestName) {
+
+            const isSyncDestOn = $scope.getSyncDestValueInArray(syncDestName);
+            $scope.setSyncDestInArray(syncDestName, !isSyncDestOn);
+            $scope.selectedSyncDest = $scope.getEntireSyncDestInArray(syncDestName);
+
+            console.log($scope.selectedSyncDest);
+
+            $scope.syncDestInstance = $uibModal.open({
+                templateUrl: "modal/syncDestModal",
                 scope: $scope
             });
 
-            $scope.CASLDAPInstance.result.then(function () {
-                $scope.ldap = !$scope.ldap;
-                $scope.updateLdap();
+            $scope.syncDestInstance.result.then(function () {
+                const isSyncDestOn = $scope.getSyncDestValueInArray(syncDestName);
+                $scope.setSyncDestInArray(syncDestName, !isSyncDestOn);
+                $scope.updateSingleSyncDest(syncDestName);
             }).catch(function () {
                 //do nothing
             });
         };
 
         /**
-         * Proceeds with the CAS/LDAP confirmation
+         * Proceeds with the syncDest confirmation
          */
-        $scope.proceedCASLDAPModal = function () {
-            $scope.CASLDAPInstance.close();
+        $scope.proceedSyncDestModal = function () {
+            $scope.syncDestInstance.close();
         };
 
         /**
-         * Closes the CAS/LDAP confirmation modal
+         * Closes the syncDest confirmation modal
          */
-        $scope.closeCASLDAPModal = function () {
-            $scope.CASLDAPInstance.dismiss();
-        };
-
-        /**
-         * Create Email list confirmation modal.
-         */
-        $scope.createemailListModal = function () {
-            $scope.listserv = !$scope.listserv;
-            $scope.emailListInstance = $uibModal.open({
-                templateUrl: "modal/emailListModal.html",
-
-                scope: $scope
-            });
-
-            $scope.emailListInstance.result.then(function () {
-                $scope.listserv = !$scope.listserv;
-                $scope.updateListserv();
-            }).catch(function () {
-                //do nothing
-            });
-
-        };
-
-        /**
-         * Proceeds with the change of the Email list
-         */
-        $scope.proceedemailListModal = function () {
-            $scope.emailListInstance.close();
-        };
-
-        /**
-         *Closes the Email list confirmation modal
-         */
-        $scope.closeemailListModal = function () {
-            $scope.emailListInstance.dismiss();
+        $scope.closeSyncDestModal = function () {
+            $scope.syncDestInstance.dismiss();
         };
 
         /**
@@ -1144,12 +1194,13 @@
          * @returns the table in CSV format
          */
         $scope.convertListToCsv = function (table) {
-            let str = "Last,First,Username,Email\r\n";
+            let str = "Last,First,Username,uhNumber,Email\r\n";
             for (let i = 0; i < table.length; i++) {
                 let line = "";
                 line += table[i].lastName + ",";
                 line += table[i].firstName + ",";
                 line += table[i].username + ",";
+                line += table[i].uuid + ",";
                 line += table[i].username + "@hawaii.edu,";
                 str += line + "\r\n";
             }
@@ -1204,15 +1255,6 @@
         $scope.proceedRedirect = function () {
             $scope.OwnerErrorModalInstance.close();
             $window.location.href = "/uhgroupings/";
-        };
-
-        /**
-         * Copies grouping path to clipboard.
-         */
-        $scope.copyPath = function (grouping) {
-            var copyText = document.getElementById(grouping.path);
-            copyText.select();
-            document.execCommand("copy");
         };
 
     }

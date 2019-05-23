@@ -21,7 +21,6 @@
         $scope.loading = false;
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
-        angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
 
         /**
          * Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user

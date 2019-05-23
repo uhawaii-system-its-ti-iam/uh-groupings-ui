@@ -12,5 +12,9 @@
             </div>
         </div>
     </div>
+    <div sec:authorize="isAuthenticated()">
+        <div ng-controller="TimeoutJsController">
+        </div>
+    </div>
 </footer>
 </html>
