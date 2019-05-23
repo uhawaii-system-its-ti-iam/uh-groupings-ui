@@ -317,6 +317,11 @@
         };
 
 
+        $scope.displayRole = function() {
+          return "Hello!"
+        };
+
+
         /**
          * Creates a modal for errors in loading data from the API.
          */
