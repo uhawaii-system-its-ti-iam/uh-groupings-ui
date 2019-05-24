@@ -1,5 +1,6 @@
 <th:block th:fragment="groupings-list">
     <div class="table-responsive-sm">
+        <th:classappend="${tabContent ? 'card-tab-content' : ''}">
         <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
             <thead>
             <tr>
@@ -28,6 +29,7 @@
                     {{l.name}}
                 </td>
                 <td>
+
                     <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i>
                     59
                 </td>

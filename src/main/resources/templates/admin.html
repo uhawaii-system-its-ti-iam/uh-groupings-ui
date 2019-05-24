@@ -123,16 +123,16 @@
                 </div>
             </div>
         </div>
-
-        <div ng-show="showGrouping">
-            <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
-
-            <div th:replace="fragments/manage-grouping :: manage-grouping"></div>
-        </div>
     </div>
+    <div ng-show="showGrouping">
+        <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
+
+        <div th:replace="fragments/manage-grouping :: manage-grouping"></div>
+    </div>
+
 </div>
 
-    <!-- / Content container. -->
-    <div th:replace="footer"></div>
+<!-- / Content container. -->
+<div th:replace="footer"></div>
 </body>
 </html>
