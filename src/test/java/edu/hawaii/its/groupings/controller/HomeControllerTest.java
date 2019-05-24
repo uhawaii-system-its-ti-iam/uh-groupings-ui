@@ -313,18 +313,10 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
-    public void requestemailListModal() throws Exception {
-        mockMvc.perform(get("/modal/emailListModal"))
+    public void requestsyncDestModal() throws Exception {
+        mockMvc.perform(get("/modal/syncDestModal"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("modal/emailListModal"));
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestLdapModal() throws Exception {
-        mockMvc.perform(get("/modal/CASLDAPModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/CASLDAPModal"));
+                .andExpect(view().name("modal/syncDestModal"));
     }
 
     @Test

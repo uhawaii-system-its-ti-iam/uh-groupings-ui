@@ -1,12 +1,14 @@
 <th:block th:fragment="page-header">
-    <!--<div class="row pt-5" style="margin: inherit;">-->
-    <div class="row m-auto pt-5">
-        <div class="col-lg-9 col-md-8 col-12 pull-left">
-            <!--<div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 pull-left" style="padding: 0;">-->
-            <h1 id="text-center text-md-left" th:text="${title}" style="margin: inherit; padding-top: .11875em;"></h1>
-            <p class="lead text-center text-md-left" th:text="${description}"></p>
+    <div class="seafoam-bg pt-5">
+        <div class="container">
+            <div class="row pt-5 pb-4">
+                <div class="col-lg-9 col-md-8 col-12">
+                    <h1 id="text-center text-md-left" th:text="${title}" style="margin: inherit; padding-top: .11875em;"></h1>
+                    <p class="lead text-center text-md-left" th:text="${description}"></p>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-3 col-md-4 col-12 p-0">
+        <div class="col-lg-3 col-md-4 col-12">
             <input class="form-control" placeholder="Filter Groupings..." type="text"
                    title="Filter Groupings"
                    ng-model="groupingsQuery"

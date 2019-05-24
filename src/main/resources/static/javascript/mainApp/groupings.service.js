@@ -102,6 +102,16 @@
             },
 
             /**
+             * Adds a members to the exclude group of a grouping.
+             * @param {string} path - the path to the grouping
+             * @param {string} usersToAdd - the usernames of the members to add
+             */
+            addMembersToExclude: function (path, usersToAdd, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
+                dataProvider.updateData(onSuccess, onError, endpoint);
+            },
+
+            /**
              * Adds a member to the exclude group of a grouping.
              * @param {string} path - the path to the grouping
              * @param {string} newOwner - the new owner to add to the grouping
@@ -215,28 +225,28 @@
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
+            //todo Might not need this as the syncDests come back in getGrouping already
             /**
-             * Toggles the publication destination for listserv.
-             * @param {string} path - the path of the grouping to update
-             * @param {boolean} listservOn - true if the listserv destination should be enabled, otherwise false
+             * Get the list of sync destinations
              */
-            setListserv: function (path, listservOn, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + listservOn + "/setListserv";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+            getSyncDestList: function (onSuccess, onError) {
+              let endpoint = BASE_URL + "syncDestinations";
+              dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
-            // setListserv(path, listservOn, onSuccess, onError){
-            //     let endpoint = BASE_URL + path + "/" + listservOn + "/setListserv";
-            //     dataProvider.updateData(onSuccess, onError, endpoint);
-            // }
             /**
-             * Toggles the publication destination for uhReleasedGroupings.
+             * Toggles the given sync destination.
              * @param {string} path - the path of the grouping to update
-             * @param {boolean} ldapOn - true if the uhReleasedGroupings destination should be enabled, otherwise
-             * false
+             * @param {boolean} ldapOn - true if the sync destination should be enabled, otherwise false
              */
-            setLdap: function (path, ldapOn, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + ldapOn + "/setLdap";
+            setSyncDest: function (path, syncDestId, turnOn, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + path + "/syncDests/" + syncDestId;
+                if(turnOn) {
+                    endpoint = endpoint.concat("/enable");
+                } else {
+                    endpoint = endpoint.concat("/disable");
+                }
+                console.log(endpoint);
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 

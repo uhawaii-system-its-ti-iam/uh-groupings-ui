@@ -5,16 +5,25 @@
 <body ng-app="UHGroupingsApp">
 <nav th:replace="menubar :: copy"></nav>
 
-<!--  Content container -->
-<div class="container" ng-controller="OwnerJsController" data-ng-init="init()">
-
-    <!--    <h1>Manage My Groupings</h1>
-
-        <p th:utext="#{screen.message.groupings.page.description}"></p>-->
-
-    <div th:replace="fragments/page-header :: page-header(title='Manage My Groupings', description=#{screen.message.groupings.page.description})">
+<div ng-controller="OwnerJsController" data-ng-init="init()">
+<!--  Content container-->
+<div class="seafoam-bg pt-0">
+    <div class="container">
+        <div class="row pt-5 pb-4">
+            <div class="col-lg-9 col-md-8 col-12">
+                <h1 class="text-center text-md-left">Manage My Groupings</h1>
+                    <p class="lead text-center text-md-left" th:utext="#{screen.message.groupings.page.description}"></p>
+            </div>
+            <div class="col-lg-3 col-md-4 col-12">
+                <input class="form-control" placeholder="Filter Groupings..." type="text"
+                       title="Filter Groupings"
+                       ng-model="groupingsQuery"
+                       ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
+            </div>
+        </div>
     </div>
-
+</div>
+<div class="container">
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
@@ -31,6 +40,7 @@
         </div>
     </div>
 
+</div>
 </div>
 <!-- / Content container. -->
 

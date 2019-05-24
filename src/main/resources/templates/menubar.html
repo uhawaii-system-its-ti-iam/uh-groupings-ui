@@ -34,7 +34,7 @@
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <form action="/logout" th:action="@{/logout}" method="post">
                         <button class="btn btn-outline-secondary" type="submit">Logout (<span
-                                sec:authentication="name" id="name"></span>)
+                                 sec:authentication="name" id="name"></span>)
                             <i class="fa fa-sign-out" aria-hidden="true"></i>
                         </button>
                     </form>

@@ -10,7 +10,6 @@
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
-        angular.extend(this, $controller("TimeoutJsController", { $scope: $scope }));
 
         /**
          * Initialize function that retrieves the groupings you own.

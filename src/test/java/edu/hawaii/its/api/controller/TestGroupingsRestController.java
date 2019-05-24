@@ -72,6 +72,12 @@ public class TestGroupingsRestController {
     @Value("${groupings.api.failure}")
     private String FAILURE;
 
+    @Value("${groupings.api.listserv}")
+    private String LISTSERV;
+
+    @Value("${groupings.api.ldap}")
+    private String UH_RELEASED_GROUPING;
+
     @Autowired
     private GroupingsRestController groupingsRestController;
 
@@ -153,8 +159,8 @@ public class TestGroupingsRestController {
         //set statuses
         groupingsRestController.setOptOut(tst0Principal, GROUPING, true);
         groupingsRestController.setOptIn(tst0Principal, GROUPING, true);
-        groupingsRestController.setLdap(tst0Principal, GROUPING, true);
-        groupingsRestController.setListserv(tst0Principal, GROUPING, true);
+        groupingsRestController.enableSyncDest(tst0Principal, GROUPING, UH_RELEASED_GROUPING);
+        groupingsRestController.enableSyncDest(tst0Principal, GROUPING, LISTSERV);
     }
 
     @Test
@@ -312,10 +318,10 @@ public class TestGroupingsRestController {
     public void changeListservStatusTest() throws Exception {
         assertTrue(isListservOn(GROUPING, tst[0]));
 
-        mapGSRs(API_BASE + GROUPING + "/false/setListserv");
+        mapGSR(API_BASE + "groupings/" + GROUPING + "/syncDests/" + LISTSERV + "/disable");
         assertFalse(isListservOn(GROUPING, tst[0]));
 
-        mapGSRs(API_BASE + GROUPING + "/true/setListserv");
+        mapGSR(API_BASE + "groupings/" + GROUPING + "/syncDests/" + LISTSERV + "/enable");
         assertTrue(isListservOn(GROUPING, tst[0]));
     }
 
@@ -324,10 +330,10 @@ public class TestGroupingsRestController {
     public void changeReleasedGroupingStatusTest() throws Exception {
         assertTrue(isReleasedGrouping(GROUPING, tst[0]));
 
-        mapGSRs(API_BASE + GROUPING + "/false/setLdap");
+        mapGSR(API_BASE + "groupings/" + GROUPING + "/syncDests/" + UH_RELEASED_GROUPING + "/disable");
         assertFalse(isReleasedGrouping(GROUPING, tst[0]));
 
-        mapGSRs(API_BASE + GROUPING + "/true/setLdap");
+        mapGSR(API_BASE + "groupings/" + GROUPING + "/syncDests/" + UH_RELEASED_GROUPING + "/enable");
         assertTrue(isReleasedGrouping(GROUPING, tst[0]));
     }
 
@@ -550,7 +556,7 @@ public class TestGroupingsRestController {
         String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
         return mapGroupingJson(groupingString)
-                .isListservOn();
+                .isSyncDestinationOn(LISTSERV);
     }
 
     private boolean isOptInOn(String grouping, String username) {
@@ -574,7 +580,7 @@ public class TestGroupingsRestController {
         String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
         return mapGroupingJson(groupingString)
-                .isReleasedGroupingOn();
+                .isSyncDestinationOn(UH_RELEASED_GROUPING);
     }
 
     private Grouping mapGroupingJson(String json) {

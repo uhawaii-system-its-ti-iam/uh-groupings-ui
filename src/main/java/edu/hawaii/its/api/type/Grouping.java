@@ -1,5 +1,8 @@
 package edu.hawaii.its.api.type;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Grouping {
 
     private String path;
@@ -26,6 +29,8 @@ public class Grouping {
 
     private boolean isOptOutOn = false;
 
+    private Map<String, Boolean> syncDestinations = new HashMap<>();
+
     // Constructor.
     public Grouping() {
         this("");
@@ -39,6 +44,21 @@ public class Grouping {
         setInclude(new EmptyGroup());
         setComposite(new EmptyGroup());
         setOwners(new EmptyGroup());
+    }
+
+    public Map<String, Boolean> getSyncDestinations() {
+        return syncDestinations;
+    }
+
+    public void setSyncDestinations(Map<String, Boolean> syncDestinations) {
+        this.syncDestinations = syncDestinations;
+    }
+
+    public boolean isSyncDestinationOn(String key) {
+        if (!syncDestinations.containsKey(key)) {
+            return false;
+        }
+        return syncDestinations.get(key);
     }
 
     public String getName() {
