@@ -75,7 +75,27 @@
                         </i>
                     </div>
                 </td>
-                <td class="basis-column text-center">{{ g.whereListed }}</td>
+                <td class="basis-column text-center">
+                    <div ng-if="g.whereListed === 'Basis'">
+                        <div class="col-md-1 col-12" id="pills-column">
+                            <ul class="nav nav-pills flex-md-column flex-row justify-content-md-start justify-content-center" id="group-pills">
+                            <a class="link" data-toggle="tab" href="#basis" aria-label="Basis Members">
+                                <i class="fa fa-id-card-o fa-fw" aria-hidden="true">
+                                </i>
+                            </a>
+                            </ul>
+                    </div>
+                    </div>
+                    <div ng-if="g.whereListed === 'Include'">
+                        <div class="col-md-1 col-12" id="pills-column">
+                            <ul class="nav nav-pills flex-md-column flex-row justify-content-md-start justify-content-center" id="group-pills">
+                                <a class="link" data-toggle="tab" href="#include" aria-label="Basis Members">
+                                    <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
+                                </a>
+                            </ul>
+                        </div>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
