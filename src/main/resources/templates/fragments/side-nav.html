@@ -1,53 +1,49 @@
 <th:block th:fragment="side-nav">
-    <div class="card-body p-0">
-        <div class="row mx-auto">
-            <div class="col-lg-1 col-md-2 col-12 teal-tint-bg pt-3 pb-3" id="pills-column">
-                <ul class="nav nav-pills flex-md-column flex-row justify-content-md-start justify-content-center"
-                    id="group-pills">
-                <li class="nav-item mx-auto" data-toggle="tooltip" data-placement="right"
-                    th:title="#{screen.message.common.tooltip.nav.members}">
-                    <a data-toggle="tab" href="#all" class="nav-link rounded-circle active"
-                       aria-label="All Members" ng-click="resetFields()">
-                        <i class="fa fa-user fa-fw" aria-hidden="true"></i>
-                    </a>
-                </li>
-                <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
-                    th:title="#{screen.message.common.tooltip.nav.basis}">
-                    <a data-toggle="tab" href="#basis" class="nav-link"
-                       aria-label="Basis Members" ng-click="resetFields()">
-                        <i class="fa fa-id-card-o fa-fw" aria-hidden="true"></i>
-                    </a>
-                </li>
-                <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
-                    th:title="#{screen.message.common.tooltip.nav.include}">
-                    <a data-toggle="tab" href="#include" class="nav-link"
-                       aria-label="Include Members" ng-click="resetFields()">
-                        <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
-                    </a>
-                </li>
-                <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
-                    th:title="#{screen.message.common.tooltip.nav.exclude}">
-                    <a data-toggle="tab" href="#exclude" class="nav-link"
-                       aria-label="Exclude Members" ng-click="resetFields()">
-                        <i class="fa fa-minus fa-fw" aria-hidden="true"></i>
-                    </a>
-                </li>
-                <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
-                    th:title="#{screen.message.common.tooltip.nav.owners}">
-                    <a data-toggle="tab" href="#owners" class="nav-link"
-                       aria-label="Grouping Owners" ng-click="resetFields()">
-                        <i class="fa fa-star fa-fw" aria-hidden="true"></i>
-                    </a>
-                </li>
-                <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
-                    th:title="#{screen.message.common.tooltip.nav.preferences}">
-                    <a data-toggle="tab" href="#preferences" class="nav-link"
-                       aria-label="Preferences" ng-click="resetFields()">
-                        <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+<div class="col-lg-1 col-md-2 col-12 teal-tint-bg pt-3 pb-3" id="pills-column">
+    <ul class="nav nav-pills flex-md-column flex-row justify-content-md-start justify-content-center"
+        id="group-pills">
+        <li class="nav-item mx-auto" data-toggle="tooltip" data-placement="right"
+            th:title="#{screen.message.common.tooltip.nav.members}">
+            <a data-toggle="tab" href="#all" class="nav-link rounded-circle active"
+               aria-label="All Members" ng-click="resetFields()">
+                <i class="fa fa-user fa-fw" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
+            th:title="#{screen.message.common.tooltip.nav.basis}">
+            <a data-toggle="tab" href="#basis" class="nav-link"
+               aria-label="Basis Members" ng-click="resetFields()">
+                <i class="fa fa-id-card-o fa-fw" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
+            th:title="#{screen.message.common.tooltip.nav.include}">
+            <a data-toggle="tab" href="#include" class="nav-link"
+               aria-label="Include Members" ng-click="resetFields()">
+                <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
+            th:title="#{screen.message.common.tooltip.nav.exclude}">
+            <a data-toggle="tab" href="#exclude" class="nav-link"
+               aria-label="Exclude Members" ng-click="resetFields()">
+                <i class="fa fa-minus fa-fw" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
+            th:title="#{screen.message.common.tooltip.nav.owners}">
+            <a data-toggle="tab" href="#owners" class="nav-link"
+               aria-label="Grouping Owners" ng-click="resetFields()">
+                <i class="fa fa-star fa-fw" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
+            th:title="#{screen.message.common.tooltip.nav.preferences}">
+            <a data-toggle="tab" href="#preferences" class="nav-link"
+               aria-label="Preferences" ng-click="resetFields()">
+                <i class="fa fa-cog fa-fw" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
 </div>
 </th:block>

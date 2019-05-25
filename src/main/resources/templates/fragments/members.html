@@ -1,89 +1,78 @@
 <th:block th:fragment="members">
-<div class="tab-content col-lg-11 col-md-10 col-12" id="pill-content">
 
-    <div class="row">
-        <div class="col-md-8">
-            <h2 class="font-weight-bold text-dark pt-4">All Members ({{groupingMembers.length}})</h2>
-            <!-- Export to CSV button -->
-            <button class="btn btn-sm btn-primary mb-4" type="submit" ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
-                <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
-                Export to CSV
-            </button>
+    <div id="all" class="tab-pane fade show active">
+
+        <div class="row">
+            <div class="col-md-8">
+                <h2 class="font-weight-bold text-dark pt-4">All Members ({{groupingMembers.length}})</h2>
+                <!-- Export to CSV button -->
+                <button class="btn btn-sm btn-primary mb-4" type="submit" ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
+                    <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
+                    Export to CSV
+                </button>
+            </div>
+            <div class="col-md-4">
+                <p class="pt-4 mb-1" ng-show="paginatingProgress" th:text="#{screen.message.common.loading.gettingmembers}"><i class="fa fa-spinner" aria-hidden="true"></i></p>
+                <p class="pt-4 mb-1" ng-show="paginatingComplete" th:text="#{screen.message.common.loading.loadcomplete}"><i class="fa fa-check" aria-hidden="true"></i></p>
+                <p class="pt-4 mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"> <i class="fa fa-check" aria-hidden="true"></i></p>
+                <input placeholder="Filter Members..." type="text" title="Filter Members"
+                       ng-model="membersQuery" class="form-control"
+                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
+            </div>
         </div>
-        <div class="col-md-4">
-            <p class="pt-4 mb-1">Grouping Loaded <i class="fa fa-check" aria-hidden="true"></i></p>
-            <input placeholder="Filter Members..." type="text" title="Filter Members"
-                   ng-model="membersQuery" class="form-control"
-                   ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
+
+
+        <div class="table-responsive-sm">
+            <table class="table table-bordered table-sm table-hover" aria-live="assertive">
+                <thead>
+                <tr>
+                    <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" class="clickable">
+                        Name
+                        <i class="fa sort-icon"
+                           ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
+                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                    </th>
+                    <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uuid')" class="clickable">
+                        UH Number
+                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uuid'"
+                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                    </th>
+                    <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'username')"
+                        class="clickable">
+                        UH Username
+                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'"
+                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                    </th>
+                    <th class="basis-column clickable"
+                        ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')">
+                        Where Listed?
+                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
+                           ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]">
+                    <td>{{g.name}}</td>
+                    <td>{{g.uuid}}</td>
+                    <td>
+                        {{g.username}}
+                        <div ng-if="g.username === ''">
+                            <span>N/A</span>
+                            <i class="fa fa-question-circle clickable" aria-hidden="true"
+                               data-toggle="tooltip" data-placement="right"
+                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                               th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                            </i>
+                        </div>
+                    </td>
+                    <td class="basis-column text-center">{{ g.whereListed }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-lg-end justify-content-start">
+            <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMembers', pagedItems='pagedItemsMembers')"></div>
         </div>
     </div>
-
-
-    <div class="row group-header">
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingProgress">
-            <h4 class="loading-text" th:text="#{screen.message.common.loading.gettingmembers}"></h4>
-            <div class="small-loader"></div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingComplete">
-            <h4 class="done-text" th:text="#{screen.message.common.loading.loadcomplete}"></h4>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="largeGrouping">
-            <h4 class="done-text" th:text="#{screen.message.common.loading.toolarge}"></h4>
-        </div>
-    </div>
-
-
-    <div class="table-responsive-sm">
-        <table class="table table-bordered table-sm table-hover" aria-live="assertive">
-            <thead>
-            <tr>
-                <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" class="clickable">
-                    Name
-                    <i class="fa sort-icon"
-                       ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
-                       ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                </th>
-                <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uuid')" class="clickable">
-                    UH Number
-                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uuid'"
-                       ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                </th>
-                <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'username')"
-                    class="clickable">
-                    UH Username
-                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'"
-                       ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                </th>
-                <th class="basis-column clickable"
-                    ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')">
-                    Where Listed?
-                    <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
-                       ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]">
-                <td>{{g.name}}</td>
-                <td>{{g.uuid}}</td>
-                <td>
-                    {{g.username}}
-                    <div ng-if="g.username === ''">
-                        <span>N/A</span>
-                        <i class="fa fa-question-circle clickable" aria-hidden="true"
-                           data-toggle="tooltip" data-placement="right"
-                           onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
-                        </i>
-                    </div>
-                </td>
-                <td class="basis-column text-center">{{ g.whereListed }}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="d-flex justify-content-lg-end justify-content-start">
-        <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMembers', pagedItems='pagedItemsMembers')"></div>
-    </div>
-</div>
 </th:block>
