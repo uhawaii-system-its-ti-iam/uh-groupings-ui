@@ -56,7 +56,8 @@
                                    ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
                             </th>
                             <th class="grouping-members" scope="col">
-                                # of Members
+<!--                                Uncomment once implemented-->
+<!--                                # of Members-->
                             </th>
                             <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'path')"
                                 class="w-50 clickable">
@@ -70,7 +71,9 @@
                         <tbody>
                         <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships] ">
                             <td class="w-30">{{ l.name }}</td>
-                            <td><i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59
+                            <td>
+<!--                                Uncomment once implemented-->
+<!--                                <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59-->
                             </td>
                             <td>
                                 <form class="seamless border border-secondary rounded">

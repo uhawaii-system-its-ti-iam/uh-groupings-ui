@@ -10,7 +10,8 @@
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
                 <th class="clickable" scope="col">
-                    # of Members
+<!--                    Same as below-->
+<!--                    # of Members-->
                 </th>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')" class="clickable">
                     Grouping Path
@@ -25,11 +26,13 @@
                 <td class="clickable" tabindex="0"
                     ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                     ng-click="displayGrouping(currentPageGroupings, $index)">
+                    <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
                     {{l.name}}
                 </td>
                 <td>
-                    <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i>
-                    59
+<!--                    Uncomment once implemented-->
+<!--                    <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i>-->
+<!--                    59-->
                 </td>
                 <td>
                     <form class="seamless border border-secondary rounded">

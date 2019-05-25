@@ -1,40 +1,30 @@
 <th:block th:fragment="selected-grouping" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="card selected-grouping-card"
          th:classappend="${tabContent ? 'card-tab-content' : ''}">
-        <div class="card-header">
-            <div class="flex-row m-auto">
-                <div class="d-sm-flex d-block justify-content-between">
-                    <div>
-                        <h2 class="card-title mt-sm-1 mt-0 mb-1">Selected Grouping</h2>
+        <div class="card mb-5 mt-5">
+            <div class="card-header teal-bg">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h2 class="card-title mt-md-1 mt-0 mb-1 text-light"> {{ selectedGrouping.name }} <i class="fa fa-pencil-square-o mr-2" aria-hidden="true"></i></h2>
                     </div>
-                    <div class="p-0">
+                    <div class="col-md-2">
+                        <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-refresh mr-2" aria-hidden="true"></i> Refresh</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <p class="font-italic text-light"> {{ selectedGrouping.path }} </p>
+                    </div>
+                    <div class="col-md-2">
                         <button ng-click="returnToGroupingsList()" class="btn btn-primary">
                             Return to Groupings
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="table-responsive-sm">
-            <table class="table table-bordered table-sm">
-                <tbody>
-                <tr>
-                    <th>Name</th>
-                    <td>{{ selectedGrouping.name }}</td>
-                </tr>
-                <tr>
-                    <th>Path</th>
-                    <td>{{ selectedGrouping.path }}</td>
-                </tr>
-                <tr>
-                    <th>Description</th>
-                    <td class="grouping-card-description">
+                <div class="row">
+                    <div class="col-md-10">
                         <div ng-show="!descriptionForm">
-                            {{ descriptionDisplay() }}
-                            <span ng-click="editDescription()" class="fa fa-pencil-square-o p-1 pull-right clickable
-                            grouping-edit-description"
-                                  th:title="#{screen.message.description.edit}">
-                            </span>
+                        <p class="font-italic text-light"> {{ descriptionDisplay() }}</p>
                         </div>
                         <div ng-show="descriptionForm" class="grouping-description-form">
                             <form>
@@ -51,23 +41,27 @@
                                        ng-value="descriptionDisplay()"
                                        ng-model="modelDescription"
                                        maxlength="{{ maxDescriptionLength }}"
-                                       id="descriptionForm"/>
-                                <span ng-click="saveDescription()"
-                                      th:title="#{screen.message.description.save}"
-                                      class="fa fa-save pull-right pt-1 clickable grouping-description-save-icon">
-                                </span>
-                                <span ng-click="cancelDescriptionEdit()"
-                                      th:title="#{screen.message.description.cancel}"
-                                      class="fa fa-times-circle pull-right pt-1 clickable
-                                      grouping-description-cancel-icon" id="descriptionString">
-                                </span>
+                                       />
                             </form>
                         </div>
-
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                    </div>
+                    <div class="col-md-2">
+                        <div ng-show="!descriptionForm">
+                            <button ng-click="editDescription()" class="btn btn-primary">
+                                Edit Description
+                            </button>
+                        </div>
+                        <div ng-show="descriptionForm">
+                            <button ng-click="cancelDescriptionEdit()" class="btn btn-primary">
+                                Cancel
+                            </button>
+                            <button ng-click="saveDescription()" class="btn btn-primary">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </th:block>
