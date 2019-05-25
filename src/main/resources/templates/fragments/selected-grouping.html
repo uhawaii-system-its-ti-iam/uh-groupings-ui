@@ -1,5 +1,5 @@
 <th:block th:fragment="selected-grouping" xmlns:th="http://www.w3.org/1999/xhtml">
-    <div class="card selected-grouping-card"
+    <div class="container"
          th:classappend="${tabContent ? 'card-tab-content' : ''}">
         <div class="card mb-5 mt-5">
             <div class="card-header teal-bg">
@@ -8,7 +8,7 @@
                         <h2 class="card-title mt-md-1 mt-0 mb-1 text-light"> {{ selectedGrouping.name }} <i class="fa fa-pencil-square-o mr-2" aria-hidden="true"></i></h2>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-refresh mr-2" aria-hidden="true"></i> Refresh</button>
+                        <button class="btn btn-sm btn-primary" type="submit" ng-click="getGroupingInformation()"><i class="fa fa-refresh mr-2" aria-hidden="true"></i> Refresh</button>
                     </div>
                 </div>
                 <div class="row">
@@ -61,6 +61,25 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div th:replace="fragments/side-nav :: side-nav"></div>
+            <div id="all" class="tab-pane fade show active">
+                <div th:replace="fragments/members :: members"></div>
+            </div>
+            <div id="basis" class="tab-pane fade">
+                <div th:replace="fragments/basis :: basis"></div>
+            </div>
+            <div id="include" class="tab-pane fade">
+                <div th:replace="fragments/include :: include"></div>
+            </div>
+            <div id="exclude" class="tab-pane fade">
+                <div th:replace="fragments/exclude :: exclude"></div>
+            </div>
+            <div id="owners" class="tab-pane fade">
+                <div th:replace="fragments/owners :: owners"></div>
+            </div>
+            <div id="preferences" class="tab-pane fade">
+                <div th:replace="fragments/preferences :: preferences"></div>
             </div>
         </div>
     </div>

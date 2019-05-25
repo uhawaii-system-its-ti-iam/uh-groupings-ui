@@ -1,9 +1,25 @@
 <th:block th:fragment="members">
+<div class="tab-content col-lg-11 col-md-10 col-12" id="pill-content">
+
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="font-weight-bold text-dark pt-4">All Members ({{groupingMembers.length}})</h2>
+            <!-- Export to CSV button -->
+            <button class="btn btn-sm btn-primary mb-4" type="submit" ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
+                <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
+                Export to CSV
+            </button>
+        </div>
+        <div class="col-md-4">
+            <p class="pt-4 mb-1">Grouping Loaded <i class="fa fa-check" aria-hidden="true"></i></p>
+            <input placeholder="Filter Members..." type="text" title="Filter Members"
+                   ng-model="membersQuery" class="form-control"
+                   ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
+        </div>
+    </div>
+
 
     <div class="row group-header">
-        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
-            <h3>All Members<span> ({{groupingMembers.length}})</span></h3>
-        </div>
         <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingProgress">
             <h4 class="loading-text" th:text="#{screen.message.common.loading.gettingmembers}"></h4>
             <div class="small-loader"></div>
@@ -16,21 +32,7 @@
         </div>
     </div>
 
-    <div class="row group-header">
-        <!-- Export to CSV button -->
-        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
-            <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
-                    ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
-                Export to CSV
-            </button>
-        </div>
-        <!-- Filter bar -->
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12 p-0">
-            <input placeholder="Filter Members..." type="text" title="Filter Members"
-                   ng-model="membersQuery" class="form-control"
-                   ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
-        </div>
-    </div>
+
     <div class="table-responsive-sm">
         <table class="table table-bordered table-sm table-hover" aria-live="assertive">
             <thead>
@@ -83,4 +85,5 @@
     <div class="d-flex justify-content-lg-end justify-content-start">
         <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMembers', pagedItems='pagedItemsMembers')"></div>
     </div>
+</div>
 </th:block>
