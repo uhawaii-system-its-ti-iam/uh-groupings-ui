@@ -47,7 +47,7 @@
             }
             if ($scope.idleTime === 30) { // Logout user after 30 min has passed
                 let r = new XMLHttpRequest();
-                r.open("POST", "/uhgroupings/logout", true);
+                r.open("POST", "/uhgroupings/logout", false);
                 r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
                 r.send();
                 $window.location.href = "/uhgroupings/";
