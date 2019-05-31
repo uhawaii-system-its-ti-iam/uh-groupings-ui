@@ -20,7 +20,7 @@
     <div class="row pt-5 pb-4">
         <div class="col-lg-5 col-md-4 col-12">
             <h1 class="text-center text-md-left">Feedback</h1>
-            <p class="lead text-center text-md-left"><span class="feedbackDescript" th:utext="#{screen.message.feedback.page.description}"></span></p>
+            <p class="lead text-center text-md-left" th:utext="#{screen.message.feedback.page.description}"></p>
         </div>
         <div class="col-lg-7 col-md-8 col-12">
         <form th:action="@{/feedback}" th:object="${feedback}" method="post">

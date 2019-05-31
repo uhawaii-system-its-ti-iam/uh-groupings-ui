@@ -5,7 +5,6 @@
 <body ng-app="UHGroupingsApp">
 <nav th:replace="menubar :: copy"></nav>
 
-<div ng-controller="OwnerJsController" data-ng-init="init()">
 <!--  Content container-->
     <div class="seafoam-bg pt-0">
         <div class="container">
@@ -23,9 +22,21 @@
             </div>
         </div>
     </div>
-    <div class="container">
-        <div id="overlay" ng-show="loading">
-            <div class="loader" ng-show="loading"></div>
+<!--Head-->
+<!--    <div class="container">-->
+<!--        <div id="overlay" ng-show="loading">-->
+<!--            <div class="loader" ng-show="loading"></div>-->
+<!--Head-->
+<!--Pulled-->
+<div class="container" ng-controller="OwnerJsController" data-ng-init="init()">
+    <div id="overlay" ng-show="loading">
+        <div class="loader" ng-show="loading"></div>
+    </div>
+
+    <div class="nav-tabs nav-item">
+        <div ng-show="!showGrouping">
+            <div th:replace="fragments/groupings-list :: groupings-list"></div>
+<!--Pulled-->
         </div>
 
         <div class="nav-tabs nav-item">
