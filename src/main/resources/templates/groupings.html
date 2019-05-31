@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Owners')"></head>
-<body ng-app="UHGroupingsApp">
+<body ng-app="UHGroupingsApp" ng-controller="OwnerJsController" data-ng-init="init()">
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container-->
@@ -22,13 +22,8 @@
             </div>
         </div>
     </div>
-<!--Head-->
-<!--    <div class="container">-->
-<!--        <div id="overlay" ng-show="loading">-->
-<!--            <div class="loader" ng-show="loading"></div>-->
-<!--Head-->
-<!--Pulled-->
-<div class="container" ng-controller="OwnerJsController" data-ng-init="init()">
+
+<div class="container">
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
@@ -36,18 +31,11 @@
     <div class="nav-tabs nav-item">
         <div ng-show="!showGrouping">
             <div th:replace="fragments/groupings-list :: groupings-list"></div>
-<!--Pulled-->
         </div>
 
-        <div class="nav-tabs nav-item">
-            <div ng-show="!showGrouping">
-                <div th:replace="fragments/groupings-list :: groupings-list"></div>
-            </div>
-
-            <div ng-show="showGrouping">
-                <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
+        <div ng-show="showGrouping">
+            <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
 <!--                <div th:replace="fragments/manage-grouping :: manage-grouping"></div>-->
-            </div>
         </div>
     </div>
 </div>
