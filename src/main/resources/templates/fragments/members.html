@@ -75,7 +75,20 @@
                         </i>
                     </div>
                 </td>
-                <td class="basis-column text-center">{{ g.whereListed }}</td>
+                <td class="basis-column text-center">
+                    <div ng-if="g.whereListed === 'Basis'">
+                        <button class="btn btn-primary" onclick="document.getElementById('basisNav').click()"
+                                aria-label="Basis Members" ng-click="resetFields()">
+                            <i class="fa fa-id-card-o fa-fw" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div ng-if="g.whereListed === 'Include'">
+                        <button class="btn btn-primary" onclick="document.getElementById('includeNav').click()"
+                                aria-label="Include Members" ng-click="resetFields()">
+                            <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
