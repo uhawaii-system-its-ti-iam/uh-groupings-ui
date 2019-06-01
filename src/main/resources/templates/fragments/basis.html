@@ -1,84 +1,74 @@
 <th:block th:fragment="basis">
+    <div id="basis" class="tab-pane fade show active">
 
-    <div class="row group-header">
-        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
-            <h3>Basis<span> ({{groupingBasis.length}})</span></h3>
+        <div class="row">
+            <div class="col-md-8">
+                <h2 class="font-weight-bold text-dark pt-4">Basis ({{groupingBasis.length}})</h2>
+                <!-- Export to CSV button -->
+                <button class="btn btn-sm btn-primary mb-4" type="submit" ng-click="exportGroupToCsv(groupingBasis, selectedGrouping.name, 'basis')">
+                    <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
+                    Export to CSV
+                </button>
+            </div>
+            <div class="col-md-4">
+                <p class="pt-4 mb-1" ng-show="paginatingProgress" th:text="#{screen.message.common.loading.gettingmembers}"><i class="fa fa-spinner" aria-hidden="true"></i></p>
+                <p class="pt-4 mb-1" ng-show="paginatingComplete" th:text="#{screen.message.common.loading.loadcomplete}"><i class="fa fa-check" aria-hidden="true"></i></p>
+                <p class="pt-4 mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"> <i class="fa fa-check" aria-hidden="true"></i></p>
+                <input placeholder="Filter Members..." type="text" title="Filter Members"
+                       ng-model="basisQuery" class="form-control"
+                       ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery, true)"/>
+            </div>
         </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingProgress">
-            <h4 class="loading-text" th:text="#{screen.message.common.loading.gettingmembers}"></h4>
-            <div class="small-loader"></div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" aria-live="assertive">
+                <thead>
+                <tr>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'name')">
+                        Name
+                        <i class="fa sort-icon"
+                           ng-show="columnSort.groupingBasis.property === 'name' || !columnSort.groupingBasis"
+                           ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
+                    </th>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'uuid')">
+                        UH Number
+                        <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'uuid'"
+                           ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
+                    </th>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'username')">
+                        UH Username
+                        <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'username'"
+                           ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="b in pagedItemsBasis[currentPageBasis]">
+                    <td>{{b.name}}</td>
+                    <td>{{b.uuid}}</td>
+                    <td>
+                        {{b.username}}
+                        <div ng-if="b.username === ''">
+                            <span>N/A</span>
+                            <i class="fa fa-question-circle clickable" aria-hidden="true"
+                               data-toggle="tooltip" data-placement="right"
+                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                               th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                            </i>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingComplete">
-            <h4 class="done-text" th:text="#{screen.message.common.loading.loadcomplete}"></h4>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="largeGrouping">
-            <h4 class="done-text" th:text="#{screen.message.common.loading.toolarge}"></h4>
+        <div class="pl-0 pr-0">
+            <div class="d-flex justify-content-lg-end justify-content-start">
+                <div th:replace="fragments/pagination :: pagination(currentPage='currentPageBasis', pagedItems='pagedItemsBasis')"></div>
+            </div>
         </div>
     </div>
 
-    <div class="row group-header">
-        <!-- Export to CSV button -->
-        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
-            <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
-                    ng-click="exportGroupToCsv(groupingBasis, selectedGrouping.name, 'basis')">
-                Export to CSV
-            </button>
-        </div>
-        <!-- Filter bar -->
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12 p-0">
-            <input class="form-control" placeholder="Filter Members..." type="text"
-                   title="Filter Members"
-                   ng-model="basisQuery"
-                   ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery, true)"/>
-        </div>
-    </div>
-    <div class="table-responsive-sm">
-        <table class="table table-bordered table-sm table-hover" aria-live="assertive">
-            <thead>
-            <tr>
-                <th class="clickable"
-                    ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'name')">
-                    Name
-                    <i class="fa sort-icon"
-                       ng-show="columnSort.groupingBasis.property === 'name' || !columnSort.groupingBasis"
-                       ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
-                </th>
-                <th class="clickable"
-                    ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'uuid')">
-                    UH Number
-                    <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'uuid'"
-                       ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
-                </th>
-                <th class="clickable"
-                    ng-click="sortBy('groupingBasis', 'pagedItemsBasis', 'username')">
-                    UH Username
-                    <i class="fa sort-icon" ng-show="columnSort.groupingBasis.property === 'username'"
-                       ng-class="{ reverse: columnSort.groupingBasis.reverse }"></i>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="b in pagedItemsBasis[currentPageBasis]">
-                <td>{{b.name}}</td>
-                <td>{{b.uuid}}</td>
-                <td>
-                    {{b.username}}
-                    <div ng-if="b.username === ''">
-                        <span>N/A</span>
-                        <i class="fa fa-question-circle clickable" aria-hidden="true"
-                           data-toggle="tooltip" data-placement="right"
-                           onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
-                        </i>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="pl-0 pr-0">
-        <div class="d-flex justify-content-lg-end justify-content-start">
-            <div th:replace="fragments/pagination :: pagination(currentPage='currentPageBasis', pagedItems='pagedItemsBasis')"></div>
-        </div>
-    </div>
 </th:block>

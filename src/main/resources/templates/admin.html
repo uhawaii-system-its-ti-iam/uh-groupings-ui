@@ -102,23 +102,22 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="pl-sm-3 pr-sm-3 pl-1 pr-1">
-                    <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
-                        <div>
-                            <form ng-submit="addAdmin()">
-                                <div class="input-group">
-                                    <input name="Add Admin" class="form-control" type="text"
-                                           title="Enter UH Username"
-                                           placeholder="UH Username" ng-model="adminToAdd"/>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit">Add</button>
-                                    </div>
+                <div class="row">
+                    <div class="col-lg-5 col-md-6 pb-4">
+                        <form ng-submit="addAdmin()">
+                            <div class="input-group">
+                                <input name="Add Admin" class="form-control" type="text"
+                                       title="Enter UH Username"
+                                       placeholder="UH Username" ng-model="adminToAdd"/>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">Add</button>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="mt-lg-0 mt-2">
-                            <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
-                        </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-lg-5 col-md-12">
+                        <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
                     </div>
                 </div>
             </div>
@@ -126,12 +125,13 @@
     </div>
     <div ng-show="showGrouping">
         <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
-
-        <div th:replace="fragments/manage-grouping :: manage-grouping"></div>
+<!--        <div th:replace="fragments/manage-grouping :: manage-grouping"></div>-->
     </div>
 </div>
 
 <!-- / Content container. -->
+</div>
 <div th:replace="footer"></div>
+
 </body>
 </html>

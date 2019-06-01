@@ -22,28 +22,28 @@
         </div>
 
 
-        <div class="table-responsive-sm">
-            <table class="table table-bordered table-sm table-hover" aria-live="assertive">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" aria-live="assertive">
                 <thead>
                 <tr>
-                    <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" class="clickable">
+                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'name')" class="clickable">
                         Name
                         <i class="fa sort-icon"
                            ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
-                    <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uuid')" class="clickable">
+                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uuid')" class="clickable">
                         UH Number
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uuid'"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
-                    <th ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'username')"
+                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'username')"
                         class="clickable">
                         UH Username
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'username'"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
-                    <th class="basis-column clickable"
+                    <th scope="col" class="basis-column clickable"
                         ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'whereListed')">
                         Where Listed?
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'whereListed'"
@@ -71,6 +71,8 @@
                 </tbody>
             </table>
         </div>
+
+
         <div class="d-flex justify-content-lg-end justify-content-start">
             <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMembers', pagedItems='pagedItemsMembers')"></div>
         </div>
