@@ -913,6 +913,7 @@
             $scope.includeQuery = "";
             $scope.membersQuery = "";
             $scope.groupingsQuery = "";
+            $scope.adminsQuery = "";
         }
 
         /**
