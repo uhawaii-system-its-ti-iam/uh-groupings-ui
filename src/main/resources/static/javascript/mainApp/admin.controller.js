@@ -16,6 +16,7 @@
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
+        angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
 
         $scope.createRoleErrorModal = function () {

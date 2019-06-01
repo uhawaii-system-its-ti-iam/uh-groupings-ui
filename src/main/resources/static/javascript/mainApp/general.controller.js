@@ -309,7 +309,10 @@
         $scope.cancelDescriptionEdit = function () {
             // refer to last saved description when user cancels the edit
             $scope.modelDescription = $scope.description;
-            $scope.descriptionForm = !($scope.descriptionForm);
+            if($scope.descriptionForm){
+                $scope.descriptionForm = !($scope.descriptionForm);
+            }
+
         };
 
         /**
@@ -913,6 +916,7 @@
             $scope.includeQuery = "";
             $scope.membersQuery = "";
             $scope.groupingsQuery = "";
+            $scope.adminsQuery = "";
         }
 
         /**

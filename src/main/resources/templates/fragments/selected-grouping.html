@@ -8,18 +8,18 @@
                         <h2 class="card-title mt-md-1 mt-0 mb-1 text-light"> {{ selectedGrouping.name }}</h2>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-sm btn-primary" type="submit" ng-click="returnToGroupingsList()"></i>Return to Groupings</button>
+                        <button class="btn btn-sm btn-primary" type="submit" ng-click="returnToGroupingsList(); cancelDescriptionEdit()"></i>Return to Groupings</button>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-10">
-                        <p class="text-light"> {{ selectedGrouping.path }} </p>
+                        <p class="text-light"> Path: {{ selectedGrouping.path }} </p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-10">
                         <div ng-show="!descriptionForm">
-                        <p class="font-italic text-light"> {{ descriptionDisplay() }} &nbsp;<i ng-click="editDescription()" class="clickable fa fa-pencil-square-o mr-2" aria-hidden="true"></i></p>
+                        <p class="text-light"> Description: {{ descriptionDisplay() }} &nbsp;<i ng-click="editDescription()" class="clickable fa fa-pencil-square-o mr-2" aria-hidden="true"></i></p>
                         </div>
                         <div ng-show="descriptionForm" class="grouping-description-form">
                             <form>
@@ -37,10 +37,10 @@
                             </form>
                         </div>
                     </div>
-                    <div ng-show="descriptionForm" class="col-md-2">
-                        <i class="clickable fa fa-check-square-o fa-2x" aria-hidden="true" ng-click="saveDescription()"></i>
+                    <div ng-show="descriptionForm">
+                        <i class="clickable fa fa-check fa-2x" aria-hidden="true" ng-click="saveDescription()"></i>
                     </div>
-                    <div ng-show="descriptionForm" class="col-md-2">
+                    <div ng-show="descriptionForm">
                         <i class="clickable fa fa-times fa-2x" aria-hidden="true" ng-click="cancelDescriptionEdit()"></i>
                     </div>
                 </div>
