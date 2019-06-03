@@ -88,6 +88,15 @@
                 </div>
                 <div class="col-sm-9 col-md-10">
                     <h1 class="h3 text-center text-md-left">Welcome, <span sec:authentication="name"></span>!</h1>
+                    <div>
+                      <h1 class="h3 text-center text-md-left">Role:
+                        <span th:switch="true">
+                          <span th:case="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Admin</span>
+                          <span th:case="${#authorization.expression('hasRole(''ROLE_OWNER'')')}">Owner</span>
+                          <span th:case="${#authorization.expression('hasRole(''ROLE_UH'')')}">Member</span>
+                        </span>
+                      </h1>
+                    </div>
 <!--                    <p class="lead text-center text-md-left"><span class="name">Your Full Name</span></p>-->
                 </div>
             </div>
@@ -96,15 +105,15 @@
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_ADMIN')">
-                    <div class="dashboard-item-icon text-primary mb-3">
-                        <i class="fa fa-key fa-3x mr-4" aria-hidden="true"></i>
-        <!--                <span class="h1">11</span>-->
-                    </div>
-                    <div class="dashboard-item-content">
-                        <h2 class="h4">Administration</h2>
-                        <p>Manage the list of Administrators for this service. Search for and manage any grouping on behalf of the owner.</p>
-                        <a class="btn dark-teal-bg" th:href="@{/admin}">Admin</a>
-                    </div>
+                <div class="dashboard-item-icon text-primary mb-3">
+                    <i class="fa fa-key fa-3x mr-4" aria-hidden="true"></i>
+    <!--                <span class="h1">11</span>-->
+                </div>
+                <div class="dashboard-item-content">
+                    <h2 class="h4">Administration</h2>
+                    <p>Manage the list of Administrators for this service. Search for and manage any grouping on behalf of the owner.</p>
+                    <a class="btn dark-teal-bg" th:href="@{/admin}">Admin</a>
+                </div>
             </div>
             <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')">
                 <div class="dashboard-item-icon text-primary mb-3">
