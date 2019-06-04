@@ -102,13 +102,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="pl-sm-3 pr-sm-3 pl-1 pr-1">
-                    <div class="d-lg-flex d-block justify-content-end justify-content-start">
                         <div class="mt-lg-0 mt-2">
                             <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMemberships', pagedItems='pagedItemsMemberships')"></div>
                         </div>
-                    </div>
-                </div>
             </div>
             <div ng-if="membershipsList.length === 0" align="center">
                 <p class="font-weight-bold" ng-hide="loading"
@@ -177,13 +173,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="pl-sm-3 pr-sm-3 pl-1 pr-1">
-                    <div class="d-lg-flex d-block justify-content-end justify-content-start">
                         <div class="mt-lg-0 mt-2">
                             <div th:replace="fragments/pagination :: pagination(currentPage='currentPageOptIn', pagedItems='pagedItemsOptInList')"></div>
                         </div>
-                    </div>
-                </div>
             </div>
             <div ng-if="optInList.length === 0" align="center">
                 <p class="font-weight-bold" ng-hide="loading"
