@@ -287,8 +287,6 @@
 
             $scope.syncDestArray[0].confirmationModalText = "Click Ok to update the CAS/LDAP preference as requested.";
             $scope.syncDestArray[1].confirmationModalText = "Click Ok to update the Email list preference as requested.";
-
-            console.log($scope.syncDestArray);
         };
 
         // used to check the length of the text string entered in the description form box, for error handling of max length
