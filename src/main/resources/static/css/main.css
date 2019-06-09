@@ -450,3 +450,13 @@ form.seamless button {
 .fa.fa-fw.fa-pencil-square-o {
     color: #007bff;
 }
+
+.btn-bottom{
+    position: absolute;
+    bottom: 0;
+    margin: -39px auto;
+}
+
+#footer-top{
+    margin-top: 3rem;
+}

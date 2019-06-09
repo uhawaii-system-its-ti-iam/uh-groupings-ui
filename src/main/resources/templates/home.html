@@ -112,7 +112,7 @@
                 <div class="dashboard-item-content">
                     <h2 class="h4">Administration</h2>
                     <p>Manage the list of Administrators for this service. Search for and manage any grouping on behalf of the owner.</p>
-                    <a class="btn dark-teal-bg" th:href="@{/admin}">Admin</a>
+                    <a class="btn dark-teal-bg btn-bottom" th:href="@{/admin}">Admin</a>
                 </div>
             </div>
             <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')" ng-controller="MembershipJsController" data-ng-init="init()">
@@ -123,7 +123,7 @@
                 <div class="dashboard-item-content" >
                     <h2 class="h4">Memberships</h2>
                     <p>View and manage my memberships. Search for new groupings to join as a member.</p>
-                    <a class="btn dark-teal-bg" th:href="@{/memberships}">Memberships</a>
+                    <a class="btn dark-teal-bg btn-bottom" th:href="@{/memberships}">Memberships</a>
                 </div>
             </div>
             <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"
@@ -135,7 +135,7 @@
                 <div class="dashboard-item-content">
                     <h2 class="h4">Groupings</h2>
                     <p>View and manage groupings I own. Manage members, configure grouping options and sync destinations.</p>
-                    <a class="btn dark-teal-bg" th:href="@{/groupings}">Groupings</a>
+                    <a class="btn dark-teal-bg btn-bottom" th:href="@{/groupings}">Groupings</a>
                 </div>
             </div>
         </div>
