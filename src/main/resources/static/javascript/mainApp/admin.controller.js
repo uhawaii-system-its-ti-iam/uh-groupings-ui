@@ -50,6 +50,7 @@
 
         $scope.displayAdmins = function () {
             $scope.resetGroupingInformation();
+            $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
             $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
             $scope.showGrouping = false;
         };
