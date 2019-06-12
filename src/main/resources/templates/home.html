@@ -6,11 +6,12 @@
 
 
 </head>
-<body>
+<body ng-app = "UHGroupingsApp" >
 <nav th:replace="menubar :: copy"></nav>
 <!--  Content container -->
 
-<div class="container mt-5 mb-5">
+
+<div class="container mt-5 mb-5" ng-controller="GeneralJsController">
     <div class="row">
         <div class="col-sm-7 d-inline-flex align-items-center">
             <div>
@@ -112,29 +113,30 @@
                 <div class="dashboard-item-content">
                     <h2 class="h4">Administration</h2>
                     <p>Manage the list of Administrators for this service. Search for and manage any grouping on behalf of the owner.</p>
-                    <a class="btn dark-teal-bg" th:href="@{/admin}">Admin</a>
+                    <a class="btn dark-teal-bg btn-bottom" th:href="@{/admin}">Admin</a>
                 </div>
             </div>
-            <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')">
+            <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')" ng-controller="MembershipJsController" data-ng-init="init()">
                 <div class="dashboard-item-icon text-primary mb-3">
                     <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
-    <!--                <span class="h1">4</span>-->
+                        <span class="h1" ng-hide="!membershipsList.length">{{membershipsList.length}}</span>
                 </div>
-                <div class="dashboard-item-content">
+                <div class="dashboard-item-content" >
                     <h2 class="h4">Memberships</h2>
                     <p>View and manage my memberships. Search for new groupings to join as a member.</p>
-                    <a class="btn dark-teal-bg" th:href="@{/memberships}">Memberships</a>
+                    <a class="btn dark-teal-bg btn-bottom" th:href="@{/memberships}">Memberships</a>
                 </div>
             </div>
-            <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
-                <div class="dashboard-item-icon text-primary mb-3">
+            <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"
+                ng-controller="OwnerJsController" data-ng-init="init()">
+                <div class="dashboard-item-icon text-primary mb-3" >
                     <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
-    <!--                <span class="h1">21</span>-->
+                    <span class="h1" ng-hide="!groupingsList.length">{{groupingsList.length}}</span>
                 </div>
                 <div class="dashboard-item-content">
                     <h2 class="h4">Groupings</h2>
                     <p>View and manage groupings I own. Manage members, configure grouping options and sync destinations.</p>
-                    <a class="btn dark-teal-bg" th:href="@{/groupings}">Groupings</a>
+                    <a class="btn dark-teal-bg btn-bottom" th:href="@{/groupings}">Groupings</a>
                 </div>
             </div>
         </div>
