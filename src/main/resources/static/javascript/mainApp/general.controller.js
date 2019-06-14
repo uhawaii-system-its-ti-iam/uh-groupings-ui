@@ -960,6 +960,7 @@
             resetFilterQueries();
             clearAddMemberInput();
             $scope.columnSort = {};
+            $scope.syncDestArray = [];
         };
 
         /**
