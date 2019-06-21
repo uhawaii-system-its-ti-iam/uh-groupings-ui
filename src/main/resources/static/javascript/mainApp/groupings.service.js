@@ -202,6 +202,8 @@
              */
             getMembershipAssignment: function (onSuccess, onError) {
                 let endpoint = BASE_URL + "members/groupings";
+                console.log("The UI endpoint call");
+                console.log(endpoint);
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
