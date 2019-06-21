@@ -33,7 +33,7 @@ public class EmailService {
 
     public void send(Feedback feedback) {
         logger.info("Feedback received in EmailService: " + feedback);
-        if (true) {
+        if (isEnabled) {
             SimpleMailMessage msg = new SimpleMailMessage();
             msg.setTo(to);
             msg.setFrom(from);
