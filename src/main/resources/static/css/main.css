@@ -194,6 +194,10 @@ table .w-30 {
     cursor: not-allowed;
 }
 
+.pagination {
+    float: right;
+}
+
 .nav.nav-tabs {
     border-bottom: none;
 }

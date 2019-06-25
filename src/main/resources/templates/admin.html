@@ -106,7 +106,7 @@
                     </table>
                 </div>
                 <div class="row">
-                    <div class="col-lg-5 col-md-6 pb-4">
+                    <div class="col-lg-7">
                         <form ng-submit="addAdmin()">
                             <div class="input-group">
                                 <input name="Add Admin" class="form-control" type="text"
@@ -118,8 +118,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-md-2"></div>
-                    <div class="col-lg-5 col-md-12">
+                    <div class="col-lg-5">
                         <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
                     </div>
                 </div>
