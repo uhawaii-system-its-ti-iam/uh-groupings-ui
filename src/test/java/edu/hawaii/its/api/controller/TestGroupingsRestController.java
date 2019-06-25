@@ -102,6 +102,12 @@ public class TestGroupingsRestController {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    /**
+     *
+     * Don't need this as you don't need the information in the overrides file
+     *
+     * 
+     */
     @PostConstruct
     public void init() {
         hasLength(env.getProperty("grouperClient.webService.url"),
