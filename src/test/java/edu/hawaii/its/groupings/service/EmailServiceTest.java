@@ -66,10 +66,7 @@ public class EmailServiceTest {
         assertThat(messageSent.getText(), containsString("John Doe"));
         assertThat(messageSent.getText(), containsString("jdoe@hawaii.edu"));
         assertThat(messageSent.getText(), containsString("Some problem happened."));
-        /*
-        todo MAKE SURE TO UNCOMMENT THIS LATER
-         */
-//        assertThat(messageSent.getText(), not(containsString("Stack Trace:")));
+        assertThat(messageSent.getText(), not(containsString("Stack Trace:")));
     }
 
     @Test
