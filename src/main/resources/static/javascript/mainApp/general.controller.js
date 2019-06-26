@@ -407,7 +407,7 @@
 
         /**
          * Adds a user to a group.
-         * @param {string} list - the list the user is being added to (either Include or Exclude jsdlkfjaslfsdalsdfks)
+         * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
             const groupingPath = $scope.selectedGrouping.path;

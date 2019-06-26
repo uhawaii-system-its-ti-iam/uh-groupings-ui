@@ -16,6 +16,14 @@ h2, h3, h4, h5, h6 {
     color: #222;
 }
 
+.cancel {
+    color: #d21515;
+}
+
+.save {
+    color: #007bff;
+}
+
 .deep-blue-bg {
     background-color: var(--deep-blue);
     color: #fff;
@@ -99,6 +107,10 @@ h2, h3, h4, h5, h6 {
 .btn.btn-lg:focus,
 .btn.btn-lg:active {
     background: var(--teal);
+}
+
+.btn.btn-sm:hover {
+    background: var(--green-blue);
 }
 
 .btn-outline-secondary:hover,
