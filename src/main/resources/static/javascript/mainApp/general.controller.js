@@ -84,6 +84,12 @@
             $scope.showGrouping = true;
         };
 
+        $scope.checkPrin = function checkPrincipal() {
+
+
+
+        };
+
         /**
          * Generic handler for unsuccessful requests to the API.
          */
