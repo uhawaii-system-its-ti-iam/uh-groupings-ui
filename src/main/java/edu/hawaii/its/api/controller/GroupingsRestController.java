@@ -10,6 +10,7 @@ import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.security.Principal;
 import java.util.List;
 
@@ -70,15 +72,27 @@ public class GroupingsRestController {
 
         // For sanitation
         policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+
+        hello();
+
     }
 
     @RequestMapping(value = "/",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> hello() {
-        return ResponseEntity
-                .ok()
-                .body("University of Hawaii Groupings API");
+    public ResponseEntity hello() {
+
+        String uri = API_2_1_BASE + "/";
+
+        return httpRequestService.makeApiCheck(uri, HttpMethod.GET);
+    }
+
+    @RequestMapping
+    private ResponseEntity checkPrincipal(Principal principal) {
+
+        String uri = API_2_1_BASE + "/check";
+
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
     /**
@@ -411,7 +425,8 @@ public class GroupingsRestController {
 
         logger.info(baseUri + params);
 
-        return httpRequestService.makeApiRequest(principal.getName(), baseUri + params, HttpMethod.GET);
+        return  new ResponseEntity(HttpStatus.FORBIDDEN);
+//        return httpRequestService.makeApiRequest("bob", baseUri + params + "/", HttpMethod.GET);
     }
 
     /**
@@ -437,7 +452,9 @@ public class GroupingsRestController {
     public ResponseEntity groupingsOwned(Principal principal) {
         logger.info("Entered REST GroupingAssignment...");
         String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", principal.getName());
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+
+//        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+        return  new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
     /**

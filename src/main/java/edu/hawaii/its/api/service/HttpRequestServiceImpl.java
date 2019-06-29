@@ -28,6 +28,16 @@ public class HttpRequestServiceImpl implements HttpRequestService {
     }
 
     @Override
+    public ResponseEntity makeApiCheck(String uri, HttpMethod method) {
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        HttpEntity httpEntity = new HttpEntity(httpHeaders);
+
+        //todo why do we need the class fromm the body of the rest template rather than RestTemplate.class?
+        return restTemplate.exchange(uri, method, httpEntity, String.class);
+    }
+
+    @Override
     public ResponseEntity makeApiRequest(String currentUser, String uri, HttpMethod method) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
