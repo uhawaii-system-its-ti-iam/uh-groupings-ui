@@ -101,6 +101,14 @@ public class GroupingsRestController {
         return httpRequestService.makeApiCheck(uri, HttpMethod.GET);
     }
 
+    @RequestMapping
+    private ResponseEntity checkPrincipal(Principal principal) {
+
+        String uri = API_2_1_BASE + "/check";
+
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
     /**
      * Get a member's attributes based off username
      *

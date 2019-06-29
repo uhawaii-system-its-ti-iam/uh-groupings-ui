@@ -51,6 +51,11 @@
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
+            getLookup: function (onSuccess, onError) {
+                let endpoint = BASE_URL + "adminLists";
+                dataProvider.loadData(onSuccess, onError, endpoint);
+            },
+
             /**
 
              * Gets information about a grouping.
