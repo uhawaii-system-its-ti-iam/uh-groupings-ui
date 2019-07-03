@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <p class="text-light"> Path: {{ selectedGrouping.path }} </p>
                     </div>
                 </div>
@@ -37,11 +37,13 @@
                             </form>
                         </div>
                     </div>
-                    <div ng-show="descriptionForm">
-                        <i class="clickable fa fa-check fa-2x" aria-hidden="true" ng-click="saveDescription()"></i>
+                  <form>
+                    <div ng-show="descriptionForm" class="grouping-description-form">
+                      <button type="button" style="background-color: #0d7078; border: #0d7078;" class="btn-sm"><i class="clickable fa fa-check fa-2x pull-left" aria-hidden="true" ng-click="saveDescription()"></i></button>
                     </div>
-                    <div ng-show="descriptionForm">
-                        <i class="clickable fa fa-times fa-2x" aria-hidden="true" ng-click="cancelDescriptionEdit()"></i>
+                  </form>
+                    <div ng-show="descriptionForm" class="grouping-description-form">
+                      <button type="button" style="background-color: #0d7078; border: #0d7078;" class="btn-sm"><i class="clickable fa fa-times fa-2x pull-right" aria-hidden="true" ng-click="cancelDescriptionEdit()"></i></button>
                     </div>
                 </div>
             </div>
