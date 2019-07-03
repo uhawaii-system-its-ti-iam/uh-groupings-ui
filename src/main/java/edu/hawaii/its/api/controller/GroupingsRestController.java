@@ -101,12 +101,16 @@ public class GroupingsRestController {
         return httpRequestService.makeApiCheck(uri, HttpMethod.GET);
     }
 
-    @RequestMapping
-    private ResponseEntity checkPrincipal(Principal principal) {
+    @RequestMapping(value = "/check",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    //todo MAKE SURE TO ADD THE PRINCIPAL PARAM BACK
+    public ResponseEntity checkPrincipal() {
 
         String uri = API_2_1_BASE + "/check";
 
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+        //TODO MAKE SURE TO REMOVE BOB AND READD PRINCIPAL
+        return httpRequestService.makeApiRequest("bob", uri, HttpMethod.GET);
     }
 
     /**

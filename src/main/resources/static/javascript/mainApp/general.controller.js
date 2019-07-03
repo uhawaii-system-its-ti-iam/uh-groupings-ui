@@ -86,7 +86,15 @@
 
         $scope.checkPrin = function checkPrincipal() {
 
+            groupingsService.getLookup(
+                function (res) {
 
+                },
+                function (res) {
+                    dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+                }
+
+            );
 
         };
 

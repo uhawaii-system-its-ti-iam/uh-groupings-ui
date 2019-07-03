@@ -29,6 +29,18 @@
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
+    <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a href="#groupings" class="nav-link active" data-toggle="tab" role="tab">
+                Manage Groupings
+            </a>
+        </li>
+        <li class="nav-item" role="presentation" ng-click="checkPrin(); displayAdmins()">
+            <a href="#admins" class="nav-link" data-toggle="tab" role="tab">
+                Manage Admins
+            </a>
+        </li>
+    </ul>
     <div ng-show="!showGrouping">
         <div class="tab-content">
             <div class="tab-pane fade show active" id="manage-groupings" role="tabcard" >
