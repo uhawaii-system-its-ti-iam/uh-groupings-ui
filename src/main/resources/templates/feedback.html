@@ -7,19 +7,72 @@
 
 <!--  Content container -->
 <div class="container">
-    <!--   &lt;!&ndash;<h1>Feedback</h1>&ndash;&gt;
-
-       <div class="alert alert-success" role="alert" th:if="${success}">
-           &lt;!&ndash;<p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>&ndash;&gt;
-
-       </div>
-   -->
-
     <div class="alert alert-success" role="alert" th:if="${success}">
         <p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>
     </div>
 
-    <div th:replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.description})"></div>
+    <!--<div class="container">
+    <div th:if="${success}" replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.alertSuccess})">
+    </div>
+    </div>
+    <p th:utext="#{screen.message.feedback.page.description}"></p>
+-->
+    <div class="row pt-5 pb-4">
+        <div class="col-lg-5 col-md-4 col-12">
+            <h1 class="text-center text-md-left">Feedback</h1>
+            <p class="lead text-center text-md-left" th:utext="#{screen.message.feedback.page.description}"></p>
+        </div>
+        <div class="col-lg-7 col-md-8 col-12">
+        <form th:action="@{/feedback}" th:object="${feedback}" method="post">
+            <div class="form-group pb-3" id="typeError">
+                <label for="input-type">Feedback type:
+                    <span class="required-asterisk">*</span>
+                </label>
+                    <select class="form-control" id="input-type" th:field="*{type}">
+                        <option value="general">General</option>
+                        <option value="problem">Problem</option>
+                        <option value="feature">Feature</option>
+                        <option value="question">Question</option>
+                    </select>
+                </div>
+            <div class="form-group pb-3">
+                <label for="input-name">Your Name (Optional): </label>
+                    <input th:field="*{name}" class="form-control" id="input-name" placeholder="John Doe"/>
+                </div>
+            <div class="form-group pb-3">
+                <label for="input-email">Email address
+                    <span class="required-asterisk">*</span>
+                </label>
+                    <input th:field="*{email}" class="form-control" id="input-email" th:required="required"/>
+                </div>
+            <div class="form-group pb-3">
+                <label for="input-feedback">Your Feedback
+                    <span class="required-asterisk">*</span>
+                </label>
+                        <textarea th:field="*{message}" class="form-control" id="input-feedback" rows="6"
+                                  th:required="required">
+                        </textarea>
+            </div>
+            <div class="d-none">
+                <label for="input-exception" class="col-sm-3 col-form-label">Exception Error</label>
+                <div class="col-sm-9">
+                    <textarea th:field="*{exceptionMessage}" class="form-control" id="input-exception"></textarea>
+                </div>
+            </div>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+        </div>
+    </div>
+    </div>
+</div>
+<!-- / Content container. -->
+ <!--   &lt;!&ndash;<h1>Feedback</h1>&ndash;&gt;
+
+    <div class="alert alert-success" role="alert" th:if="${success}">
+        &lt;!&ndash;<p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>&ndash;&gt;
+
+    </div>
+-->
 
     <!--<div class="container">
     <div th:if="${success}" replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.alertSuccess})">
@@ -30,61 +83,8 @@
 
     <p th:utext="#{screen.message.feedback.page.description}"></p>
 -->
-    <div class="border p-4">
-        <form th:action="@{/feedback}" th:object="${feedback}" method="post">
-            <div class="form-group row" id="typeError">
-                <label for="input-type" class="col-sm-3 col-form-label">Feedback type:
-                    <span class="required-asterisk">*</span>
-                </label>
-                <div class="col-sm-9">
-                    <select class="custom-select" id="input-type" th:field="*{type}">
-                        <option value="general">GENERAL</option>
-                        <option value="problem">PROBLEM</option>
-                        <option value="feature">FEATURE</option>
-                        <option value="question">QUESTION</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="input-name" class="col-sm-3 col-form-label">Your Name (Optional): </label>
-                <div class="col-sm-9">
-                    <input th:field="*{name}" class="form-control" id="input-name"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="input-email" class="col-sm-3 col-form-label">Email:
-                    <span class="required-asterisk">*</span>
-                </label>
-                <div class="col-sm-9">
-                    <input th:field="*{email}" class="form-control" id="input-email" th:required="required"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="input-feedback" class="col-sm-3 col-form-label">Your Feedback:
-                    <span class="required-asterisk">*</span>
-                </label>
-                <div class="col-sm-9">
-                        <textarea th:field="*{message}" class="form-control" id="input-feedback" rows="8"
-                                  th:required="required">
-                        </textarea>
-                </div>
-            </div>
-            <div class="d-none">
-                <label for="input-exception" class="col-sm-3 col-form-label">Exception Error</label>
-                <div class="col-sm-9">
-                    <textarea th:field="*{exceptionMessage}" class="form-control" id="input-exception"></textarea>
-                </div>
-            </div>
-            <div class="form-group row mb-0">
-                <div class="col-sm-9 offset-sm-3">
-                    <button class="btn btn-primary" type="submit">Submit</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 <!-- / Content container. -->
+<div th:replace="footer"></div>
 
-<div th:substituteby="footer :: copy"></div>
 </body>
 </html>

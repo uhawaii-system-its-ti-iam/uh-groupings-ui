@@ -103,6 +103,14 @@
             });
         };
 
+        /**
+         * Copies grouping path to clipboard.
+         */
+        $scope.copyPath = function (grouping) {
+            let copyText = document.getElementById(grouping.path);
+            copyText.select();
+            document.execCommand("copy");
+        };
     }
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);

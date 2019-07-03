@@ -76,17 +76,19 @@
          * @param {number} currentPage - the current page within the table
          * @param {number} indexClicked - the index of the grouping clicked by the user
          */
-        /*   $scope.optIn = function (currentPage, indexClicked) {
-         const groupingPath = $scope.pagedItemsOptInList[currentPage][indexClicked].path;
-         $scope.loading = true;
-         groupingsService.optIn(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
-         };*/
-
         $scope.optIn = function (currentPage, indexClicked) {
-            // const groupingPath = $scope.pagedItemsOptInList(currentPage * indexClicked).path;
             const groupingPath = $scope.pagedItemsOptInList[currentPage][indexClicked].path;
             $scope.loading = true;
             groupingsService.optIn(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
+        };
+
+        /**
+         * Copies grouping path to clipboard.
+         */
+        $scope.copyPath = function (grouping) {
+            let copyText = document.getElementById(grouping.path);
+            copyText.select();
+            document.execCommand("copy");
         };
     }
 

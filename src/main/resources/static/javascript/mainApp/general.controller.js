@@ -287,8 +287,6 @@
 
             $scope.syncDestArray[0].confirmationModalText = "Click Ok to update the CAS/LDAP preference as requested.";
             $scope.syncDestArray[1].confirmationModalText = "Click Ok to update the Email list preference as requested.";
-
-            console.log($scope.syncDestArray);
         };
 
         // used to check the length of the text string entered in the description form box, for error handling of max length
@@ -309,7 +307,10 @@
         $scope.cancelDescriptionEdit = function () {
             // refer to last saved description when user cancels the edit
             $scope.modelDescription = $scope.description;
-            $scope.descriptionForm = !($scope.descriptionForm);
+            if($scope.descriptionForm){
+                $scope.descriptionForm = !($scope.descriptionForm);
+            }
+
         };
 
         /**
@@ -406,7 +407,7 @@
 
         /**
          * Adds a user to a group.
-         * @param {string} list - the list the user is being added to (either Include or Exclude jsdlkfjaslfsdalsdfks)
+         * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
             const groupingPath = $scope.selectedGrouping.path;
