@@ -16,11 +16,12 @@
                 $http.get(encodeURI(url))
                     .then(function (response) {
                         console.log(url);
+                        console.log(response)
                         callback(response.data);
                     }, function (response) {
                         // console.log("Error A", response);
                         // if(response.data == null) return false;
-                        callError(response.data);
+                        callError(response);
                         console.log("Error in dataProvider; status: ", response.status);
 
                     });
