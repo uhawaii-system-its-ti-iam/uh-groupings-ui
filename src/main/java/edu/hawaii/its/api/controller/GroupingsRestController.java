@@ -74,6 +74,7 @@ public class GroupingsRestController {
         policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
         hello();
+        checkPrincipal();
 
     }
 
@@ -87,12 +88,16 @@ public class GroupingsRestController {
         return httpRequestService.makeApiCheck(uri, HttpMethod.GET);
     }
 
-    @RequestMapping
-    private ResponseEntity checkPrincipal(Principal principal) {
+    @RequestMapping(value = "/check",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    //todo MAKE SURE TO ADD THE PRINCIPAL PARAM BACK
+    public ResponseEntity checkPrincipal() {
 
         String uri = API_2_1_BASE + "/check";
 
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+        //TODO MAKE SURE TO REMOVE BOB AND READD PRINCIPAL
+        return httpRequestService.makeApiRequest("bob", uri, HttpMethod.GET);
     }
 
     /**
@@ -425,8 +430,8 @@ public class GroupingsRestController {
 
         logger.info(baseUri + params);
 
-        return  new ResponseEntity(HttpStatus.FORBIDDEN);
-//        return httpRequestService.makeApiRequest("bob", baseUri + params + "/", HttpMethod.GET);
+//        return  new ResponseEntity(HttpStatus.FORBIDDEN);
+        return httpRequestService.makeApiRequest(principal.getName(), baseUri + params, HttpMethod.GET);
     }
 
     /**
@@ -453,8 +458,8 @@ public class GroupingsRestController {
         logger.info("Entered REST GroupingAssignment...");
         String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", principal.getName());
 
-//        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
-        return  new ResponseEntity(HttpStatus.FORBIDDEN);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+//        return  new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
     /**

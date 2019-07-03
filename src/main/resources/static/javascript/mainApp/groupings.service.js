@@ -52,7 +52,7 @@
             },
 
             getLookup: function (onSuccess, onError) {
-                let endpoint = BASE_URL + "adminLists";
+                let endpoint = BASE_URL + "check";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 

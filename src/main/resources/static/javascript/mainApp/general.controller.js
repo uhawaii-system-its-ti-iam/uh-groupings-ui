@@ -86,7 +86,15 @@
 
         $scope.checkPrin = function checkPrincipal() {
 
+            groupingsService.getLookup(
+                function (res) {
 
+                },
+                function (res) {
+                    dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
+                }
+
+            );
 
         };
 
@@ -343,17 +351,21 @@
          */
         $scope.saveDescription = function () {
             $scope.description = $scope.modelDescription;
-            console.log("Description value: ", $scope.description);
+
             if (String($scope.description).length === 0) {
                 $scope.description = "";
             }
-            groupingsService.updateDescription($scope.selectedGrouping.path, function () {
+
+            groupingsService.updateDescription($scope.selectedGrouping.path,
+                function () {
                 // Explain why this empty todo
-            }, function (res) {
-                if (res.status === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            }, $scope.description);
+                },
+                function (res) {
+                    if (res.status === 403) {
+                        $scope.createOwnerErrorModal();
+                    }
+                }, $scope.description
+            );
             $scope.descriptionForm = !($scope.descriptionForm);
 
         };
