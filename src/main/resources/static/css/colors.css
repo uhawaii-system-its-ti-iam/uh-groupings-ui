@@ -1,3 +1,4 @@
+@import "variables.css";
 h1 {
     color: #BD9319;
 }
@@ -6,12 +7,178 @@ h2, h3, h4, h5, h6 {
     color: #9B7506;
 }
 
-.navbar-brand.uh-nav-app-name {
-    color: #BD9319;
+/* COLOR PALETTE */
+/* colors as background */
+
+.seafoam-bg {
+    background-color: var(--seafoam);
+    /*background-color: #f0f8f6;*/
+    color: #222;
 }
 
-.navbar-brand.uh-nav-app-name:hover {
-    color: #B08A17;
+.cancel {
+    color: #d21515;
+}
+
+.save {
+    color: #007bff;
+}
+
+.deep-blue-bg {
+    background-color: var(--deep-blue);
+    color: #fff;
+}
+
+.green-blue-bg {
+    background-color: var(--green-blue);
+}
+
+.dark-teal-bg {
+    background-color: var(--dark-teal);
+    color: #fff;
+}
+
+.teal-bg {
+    background-color: var(--teal);
+}
+
+.blue-bg {
+    background-color: var(--blue);
+}
+
+.light-teal-bg {
+    background-color: var(--light-teal);
+}
+
+.teal-tint-bg {
+    background-color: var(--teal-tint);
+}
+
+.black-bg {
+    background-color: var(--uh-black);
+    color: white;
+}
+
+.black-bg a,
+.dark-teal-bg a {
+    color: #fefefe;
+    text-decoration: underline;
+}
+
+.black-bg a:hover,
+.black-bg a:focus,
+.black-bg a:active,
+.dark-teal-bg a:hover,
+.dark-teal-bg a:focus,
+.dark-teal-bg a:active {
+    color: LightGray;
+}
+
+.btn.dark-teal-bg:hover,
+.btn.dark-teal-bg:focus,
+.btn.dark-teal-bg:active {
+    color: #efefef;
+    background: #004e59;
+}
+
+/* bootstrap overrides */
+.text-primary {
+    color: var(--dark-teal) !important;
+}
+
+.text-muted {
+    color: var(--teal) !important;
+}
+
+.text-info {
+    color: var(--blue) !important;
+}
+
+.btn.btn-primary,
+.btn.btn-lg {
+    background: var(--dark-teal);
+    border-color: transparent;
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus,
+.btn.btn-primary:active,
+.btn.btn-lg:hover,
+.btn.btn-lg:focus,
+.btn.btn-lg:active {
+    background: var(--teal);
+}
+
+.btn.btn-sm:hover {
+    background: var(--green-blue);
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus,
+.btn-outline-secondary:active {
+    background-color: var(--green-blue);
+    border-color: var(--green-blue);
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    background: white;
+    color: var(--dark-teal);
+}
+
+.nav-pills .nav-link.active {
+    position: relative;
+    background-color: #fff;
+}
+
+.nav-pills .nav-link.active:after {
+    content: "";
+    border-color: var(--teal);
+    border-style: solid;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+}
+
+@media screen and (max-width: 767.9px) {
+    .nav-pills .nav-link.active:after {
+        border-width: 0 10px 10px 10px;
+        border-color: transparent transparent #fff transparent;
+        bottom: -16px;
+        left: 33%;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .nav-pills .nav-link.active:after {
+        border-width: 10px 10px 10px 0;
+        border-color: transparent #fff transparent transparent;
+        top: 25%;
+        right: -35px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .nav-pills .nav-link.active:after {
+        right: -18px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .nav-pills .nav-link.active:after {
+        right: -24px;
+    }
+}
+
+.nav-pills .nav-link {
+    color: var(--dark-teal);
+    height: 44px;
+}
+
+body h1 {
+    color: var(--uh-black);
+    font-weight: 700;
 }
 
 #overlay {
@@ -20,6 +187,10 @@ h2, h3, h4, h5, h6 {
 
 .uh-branding-one {
     color: #777;
+}
+
+.btn-link {
+    color: var(--deep-blue);
 }
 
 .uh-branding-two {
@@ -34,35 +205,6 @@ h2, h3, h4, h5, h6 {
     color: #d21515;
 }
 
-.btn.btn-primary {
-    /*    background-color: #2C658D;
-        border-color: #477A9E;*/
-    color: #fff;
-    background-color: #286090;
-    border-color: #204d74;
-}
-
-.btn.btn-primary:hover {
-    /*background-color:*/
-    /*border-color:*/
-}
-
-.jumbotron {
-    /*background-color:*/
-
-    background: #f5f5f5;
-    border-color: #b5bcc7;
-}
-
-.bg-dashboard {
-    /*background-color:*/
-}
-
-/*.card.page-header */
-.card-header {
-    background-color: #e5eef1;
-}
-
 .page-item.active > .page-link {
     /*background-color:*/
     /*border-color:*/
@@ -70,10 +212,6 @@ h2, h3, h4, h5, h6 {
 
 #group-pills > .nav-item > .nav-link.active {
     /*background-color:*/
-}
-
-body {
-    background: url("../images/background.png") repeat 0px 0px #f0f0f0;
 }
 
 .card {
@@ -88,10 +226,10 @@ body {
 }
 
 
-.card-body {
+/*.card-body {
     background: #f5f5f5;
     border-color: #b5bcc7;
-}
+}*/
 
 .jumbotron .h1, .jumbotron h1 {
     font-size: 63px;
@@ -99,10 +237,6 @@ body {
 
 .jumbotron .h1, .jumbotron h1 {
     color: inherit;
-}
-
-.btn {
-    border: 1px solid transparent;
 }
 
 .btn-group-lg > .btn, .btn-lg {
@@ -125,17 +259,14 @@ body {
     color: white;
 }
 
-#name {
-    color: #5a9cb4;
+.btn:hover #name,
+.btn:focus #name,
+.btn:active #name {
+    color: #e3f2ef;
 }
 
 h1, h2, .text-left, span {
     color: #1c6070;
-}
-
-.timeout-counter {
-    color: #1811ec;
-    font-weight: bold;
 }
 
 .btn-light:hover {
@@ -152,22 +283,17 @@ h1, h2, .text-left, span {
     background: white;
 }
 
-.card-header {
-    border: 1px solid #dee2e6;
-    background: #e5eef1;
-}
-
-h3 {
+h3{
     color: #1c6070;
 }
 
-.loading-text {
-    margin-left: 2.357em;
+.loading-text{
+    margin-left: 4.357em;
     color: #296191;
     float: left;
 }
 
-.done-text {
+.done-text{
     color: #296191;
     text-align: right;
 }

@@ -1,6 +1,5 @@
-<th:block th:fragment="groupings-list">
+<th:block th:fragment="admin-groupings-list">
     <div class="table-responsive-sm">
-        <th:classappend="${tabContent ? 'card-tab-content' : ''}">
         <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
             <thead>
             <tr>
@@ -11,6 +10,7 @@
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
                 <th class="clickable" scope="col">
+<!--                    Same as below-->
 <!--                    # of Members-->
                 </th>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')" class="clickable">
@@ -18,7 +18,7 @@
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
-                <th> Opt Out?</th>
+                <!--<th> Opt Out?</th>-->
             </tr>
             </thead>
             <tbody>
@@ -26,11 +26,11 @@
                 <td class="clickable" tabindex="0"
                     ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                     ng-click="displayGrouping(currentPageGroupings, $index)">
+                    <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
                     {{l.name}}
                 </td>
                 <td>
-
-<!--                    Uncomment once utility is implemented-->
+<!--                    Uncomment once implemented-->
 <!--                    <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i>-->
 <!--                    59-->
                 </td>
@@ -43,20 +43,6 @@
                             <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
                     </form>
                 </td>
-                <td>
-                         <span ng-if="l.optOutOn">
-                                    Membership Required
-                    </span>
-                    <div ng-if="!l.optOutOn">
-                        <button id="optOutButton"
-                                class="btn dark-teal-bg btn-primary text-center"
-                                tabindex="0"
-                                ng-click="optOut(currentPageGroupings, $index)">
-                            <i class="fa fa-fw fa-user-times" aria-hidden="true"></i>
-                            Opt Out
-                        </button>
-                    </div>
-                </td>
             </tr>
             </tbody>
         </table>
@@ -64,22 +50,4 @@
     <div>
         <div th:replace="fragments/pagination :: pagination(currentPage='currentPageGroupings', pagedItems='pagedItemsGroupings')"></div>
     </div>
-
-
 </th:block>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

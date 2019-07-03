@@ -1,128 +1,118 @@
-<th:block th:fragment="include" xmlns:th="http://www.w3.org/1999/xhtml">
+<th:block th:fragment="include">
 
-    <div class="row group-header">
-        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
-            <h3>Include<span> ({{groupingInclude.length}})</span></h3>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingProgress">
-            <h4 class="loading-text" th:text="#{screen.message.common.loading.gettingmembers}"></h4>
-            <div class="small-loader"></div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="paginatingComplete">
-            <h4 class="done-text" th:text="#{screen.message.common.loading.loadcomplete}"></h4>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12" ng-show="largeGrouping">
-            <h4 class="done-text" th:text="#{screen.message.common.loading.toolarge}"></h4>
-        </div>
-    </div>
 
-    <div class="row group-header">
-        <!-- Export to CSV button -->
-        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
-            <button type="button" class="btn btn-primary" th:title="#{screen.message.common.tooltip.export.csv}"
-                    ng-click="exportGroupToCsv(groupingInclude, selectedGrouping.name, 'include')">
-                Export to CSV
-            </button>
+    <div id="include" class="tab-pane fade show active">
+
+        <div class="row">
+            <div class="col-md-8">
+                <h2 class="font-weight-bold text-dark pt-4">Include ({{groupingInclude.length}})</h2>
+                <!-- Export to CSV button -->
+                <button class="btn btn-sm btn-primary mb-4" type="submit" ng-click="exportGroupToCsv(groupingInclude, selectedGrouping.name, 'include')">
+                    <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
+                    Export to CSV
+                </button>
+            </div>
+            <div class="col-md-4">
+                <p class="pt-4 mb-1" ng-show="paginatingProgress" th:text="#{screen.message.common.loading.gettingmembers}"><i class="fa fa-spinner" aria-hidden="true"></i></p>
+                <p class="pt-4 mb-1" ng-show="paginatingComplete" th:text="#{screen.message.common.loading.loadcomplete}"><i class="fa fa-check" aria-hidden="true"></i></p>
+                <p class="pt-4 mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"> <i class="fa fa-check" aria-hidden="true"></i></p>
+                <input placeholder="Filter Members..." type="text" title="Filter Members"
+                       ng-model="includeQuery" class="form-control"
+                       ng-change="filter(groupingInclude, 'pagedItemsInclude', 'currentPageInclude', includeQuery, true)"/>
+            </div>
         </div>
-        <!-- Filter bar -->
-        <div class="col-lg-3 col-md-4 col-sm-6 col-12 p-0">
-            <input class="form-control" placeholder="Filter Members..." type="text"
-                   title="Filter Members"
-                   ng-model="includeQuery"
-                   ng-change="filter(groupingInclude, 'pagedItemsInclude', 'currentPageInclude', includeQuery, true)"/>
+
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" aria-live="assertive">
+                <thead>
+                <tr>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'name')">
+                        Name
+                        <i class="fa sort-icon"
+                           ng-show="columnSort.groupingInclude.property === 'name' || !columnSort.groupingInclude"
+                           ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
+                    </th>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'uuid')">
+                        UH Number
+                        <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'uuid'"
+                           ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
+                    </th>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'username')">
+                        UH Username
+                        <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'username'"
+                           ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
+                    </th>
+                    <th scope="col" class="basis-column clickable"
+                        ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'inBasis')">
+                        In Basis?
+                        <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'inBasis'"
+                           ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]">
+                    <td tabindex="0">
+                        {{i.name}}
+                        <span class="fa fa-trash-o pull-right clickable pt-1"
+                              data-toggle="tooltip" data-placement="top"
+                              onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                              tabindex="0"
+                              th:title="#{screen.message.common.tooltip.remove.include}"
+                              ng-keypress="$event.keyCode === 13 ? removeMember('Include', currentPageInclude, $index) : null"
+                              ng-click="removeMember('Include', currentPageInclude, $index)">
+                        </span>
+                    </td>
+                    <td>{{i.uuid}}</td>
+                    <td>
+                        {{i.username}}
+                        <div ng-if="i.username === ''">
+                            <span>N/A</span>
+                            <i class="fa fa-question-circle clickable" aria-hidden="true"
+                               data-toggle="tooltip" data-placement="right"
+                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                               th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                            </i>
+                        </div>
+                    </td>
+                    <td class="basis-column text-center">{{i.inBasis}}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-    <div class="table-responsive-sm">
-        <table class="table table-bordered table-sm table-hover" aria-live="assertive">
-            <thead>
-            <tr>
-                <th class="clickable"
-                    ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'name')">
-                    Name
-                    <i class="fa sort-icon"
-                       ng-show="columnSort.groupingInclude.property === 'name' || !columnSort.groupingInclude"
-                       ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
-                </th>
-                <th class="clickable"
-                    ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'uuid')">
-                    UH Number
-                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'uuid'"
-                       ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
-                </th>
-                <th class="clickable"
-                    ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'username')">
-                    UH Username
-                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'username'"
-                       ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
-                </th>
-                <th class="basis-column clickable"
-                    ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'inBasis')">
-                    In Basis?
-                    <i class="fa sort-icon" ng-show="columnSort.groupingInclude.property === 'inBasis'"
-                       ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]">
-                <td tabindex="0">
-                    {{i.name}}
-                    <span class="fa fa-trash-o pull-right clickable pt-1"
-                          data-toggle="tooltip" data-placement="top"
-                          onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                          tabindex="0"
-                          th:title="#{screen.message.common.tooltip.remove.include}"
-                          ng-keypress="$event.keyCode === 13 ? removeMember('Include', currentPageInclude, $index) : null"
-                          ng-click="removeMember('Include', currentPageInclude, $index)">
+        <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
+            <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
+                <form ng-submit="addMember('Include')">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="UH Username"
+                               title="Enter UH username to include"
+                               ng-model="userToAdd"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="mt-lg-0 mt-2">
+                <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageInclude', pagedItems='pagedItemsInclude')"></div>
+            </div>
+        </div>
+        <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
+            <div>
+                <form ng-submit="addMembers('Include')">
+                    <div class="input-group">
+                        <textarea placeholder="Members to Add" class="form-control" rows="1" cols="15"
+                                  title="Enter multiple UH usernames to include" ng-model="usersToAdd"></textarea>
+                        <span class="input-group-append">
+                        <button class="btn btn-primary" type="submit">Add Members</button>
                     </span>
-                </td>
-                <td>{{i.uuid}}</td>
-                <td>
-                    {{i.username}}
-                    <div ng-if="i.username === ''">
-                        <span>N/A</span>
-                        <i class="fa fa-question-circle clickable" aria-hidden="true"
-                           data-toggle="tooltip" data-placement="right"
-                           onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
-                        </i>
                     </div>
-                </td>
-                <td class="basis-column text-center">{{i.inBasis}}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
-        <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
-            <form ng-submit="addMember('Include')">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="UH Username"
-                           title="Enter UH username to include"
-                           ng-model="userToAdd"/>
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">Add</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="mt-lg-0 mt-2">
-            <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageInclude', pagedItems='pagedItemsInclude')"></div>
+                </form>
+            </div>
         </div>
     </div>
-    <!---
-    <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
-        <div>
-            <form ng-submit="addMembers('Include')">
-                <div class="input-group">
-                    <textarea placeholder="Members to Add" class="form-control" rows="1" cols="15"
-                              title="Enter multiple UH usernames to include" ng-model="usersToAdd"></textarea>
-                    <span class="input-group-append">
-                    <button class="btn btn-primary" type="submit">Add Members</button>
-                </span>
-                </div>
-            </form>
-        </div>
-    </div>
-    --->
 </th:block>
