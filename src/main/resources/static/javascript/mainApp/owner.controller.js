@@ -27,6 +27,17 @@
             });
         };
 
+        /**
+         * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
+         * @param {number} currentPage - the current page within the table
+         * @param {number} indexClicked - the index of the grouping clicked by the user
+         */
+        $scope.optOut = function (currentPage, indexClicked) {
+            const groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
+            $scope.loading = true;
+            groupingsService.optOut(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
+        };
+
     }
 
     UHGroupingsApp.controller("OwnerJsController", OwnerJsController);

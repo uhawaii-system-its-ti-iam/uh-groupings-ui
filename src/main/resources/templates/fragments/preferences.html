@@ -1,64 +1,60 @@
 <th:block th:fragment="preferences">
-    <div class="row group-header">
-        <div class="col-lg-9 col-md-8 col-sm-6 col-12 p-0 mb-sm-0 mb-2">
-            <h3>Preferences</h3>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6 col-12">
-                    <h4>User Options</h4>
-                    <div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" ng-model="allowOptIn" id="allowOptIn"
-                                   ng-change="updateAllowOptIn()"/>
-                            <label class="form-check-label" for="allowOptIn">
-                                Allow people to add themselves to this group
-                            </label>
-                            <span class="fa fa-question-circle clickable" aria-hidden="true"
-                                  data-toggle="tooltip" data-placement="right"
-                                  tabindex="0"
-                                  th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
-                                  th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\')',
-                                  ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\') : null'"></span>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="allowOptOut" ng-model="allowOptOut"
-                                   ng-change="updateAllowOptOut()"/>
-                            <label class="form-check-label" for="allowOptOut">
-                                Allow people to remove themselves from this group
-                            </label>
-                            <span class="fa fa-question-circle clickable" aria-hidden="true"
-                                  data-toggle="tooltip" data-placement="right"
-                                  tabindex="0"
-                                  th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
-                                  th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
-                                  ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'"></span>
-                        </div>
+
+    <h2 class="font-weight-bold text-dark pt-4">Preferences</h2>
+    <div id="preferences" class="tab-pane fade show active">
+        <div class="row pt-4 pb-5">
+            <div class="col-md-6 col-12">
+                <h3>User Options</h3>
+                <div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" ng-model="allowOptIn" id="allowOptIn"
+                               ng-change="updateAllowOptIn()"/>
+                        <label class="form-check-label" for="allowOptIn">
+                            Allow people to add themselves to this group
+                        </label>
+                        <span class="fa fa-question-circle clickable" aria-hidden="true"
+                              data-toggle="tooltip" data-placement="right"
+                              tabindex="0"
+                              th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
+                              th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\')',
+                              ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptIn} + '\') : null'"></span>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="allowOptOut" ng-model="allowOptOut"
+                               ng-change="updateAllowOptOut()"/>
+                        <label class="form-check-label" for="allowOptOut">
+                            Allow people to remove themselves from this group
+                        </label>
+                        <span class="fa fa-question-circle clickable" aria-hidden="true"
+                              data-toggle="tooltip" data-placement="right"
+                              tabindex="0"
+                              th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
+                              th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
+                              ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'"></span>
                     </div>
                 </div>
-                <div class="col-md-6 col-12">
-                    <h4>Sync Destinations</h4>
+            </div>
+            <div class="col-md-6 col-12">
+                <h3>Sync Destinations</h3>
+                <div>
                     <div>
-                        <div>
-                            <div class="form-check" ng-repeat="syncDest in syncDestArray">
-                                <input class="form-check-input" type="checkbox" id="syncDest.value"
-                                       ng-model="syncDest.value"
-                                       ng-change="createSyncDestModal(syncDest.name)"/>
-                                <label class="form-check-label" for="syncDest.value">
-                                    {{ syncDest.label }}
-                                </label>
-                                <span class="fa fa-question-circle clickable" aria-hidden="true"
-                                      data-toggle="tooltip" data-placement="right"
-                                      tabindex="0"
-                                      title="{{syncDest.tooltip}}"
-                                      th:attr="ng-click='createPreferenceInfoModal(syncDest.tooltip)',
-                                  ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(syncDest.tooltip) : null'"></span>
-                            </div>
+                        <div class="form-check" ng-repeat="syncDest in syncDestArray">
+                            <input class="form-check-input" type="checkbox" id="syncDest.value"
+                                   ng-model="syncDest.value"
+                                   ng-change="createSyncDestModal(syncDest.name)"/>
+                            <label class="form-check-label" for="syncDest.value">
+                                {{ syncDest.label }}
+                            </label>
+                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="right"
+                                  tabindex="0"
+                                  title="{{syncDest.tooltip}}"
+                                  th:attr="ng-click='createPreferenceInfoModal(syncDest.tooltip)',
+                              ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(syncDest.tooltip) : null'"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </th:block>
