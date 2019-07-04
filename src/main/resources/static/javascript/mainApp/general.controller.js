@@ -81,22 +81,7 @@
             // $scope.getAllSyncDestinations();
             $scope.getGroupingInformation();
 
-
             $scope.showGrouping = true;
-        };
-
-        $scope.checkPrin = function checkPrincipal() {
-
-            groupingsService.getLookup(
-                function (res) {
-
-                },
-                function (res) {
-                    dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
-                }
-
-            );
-
         };
 
         /**
@@ -106,6 +91,7 @@
             if (res.status === 403) {
                 $scope.createOwnerErrorModal();
             } else {
+                console.log("Testing placement");
                 return `Error: Status Code${res.statusCode}`;
             }
         }
