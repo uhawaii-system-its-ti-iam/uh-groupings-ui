@@ -19,10 +19,21 @@
                         console.log(response)
                         callback(response.data);
                     }, function (response) {
-                        // console.log("Error A", response);
-                        // if(response.data == null) return false;
-                        callError(response);
-                        console.log("Error in dataProvider; status: ", response.status);
+
+                        if (response.data != null) {
+                            console.log("Error in dataProvider; status: ", response.status);
+                            callError(response);
+
+                        } else {
+                            $http.post(encodeURI("feedback/error"), { exceptionMessage: "500 Internal Error, check webservice credentials" }, {
+                                headers: {
+                                    "Content-Type": "application/json"
+                                }
+                            })
+                                .then(function () {
+                                    $window.location.href = "feedback";
+                                });
+                        }
 
                     });
             },
