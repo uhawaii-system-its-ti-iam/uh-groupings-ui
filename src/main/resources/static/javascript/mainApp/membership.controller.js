@@ -38,7 +38,7 @@
 
                 $scope.loading = false;
             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+                dataProvider.handleException({ exceptionMessage: res.message }, "feedback/error", "feedback");
             });
         };
 

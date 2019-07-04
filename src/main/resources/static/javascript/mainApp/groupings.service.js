@@ -51,11 +51,6 @@
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
-            getLookup: function (onSuccess, onError) {
-                let endpoint = BASE_URL + "check";
-                dataProvider.loadData(onSuccess, onError, endpoint);
-            },
-
             /**
 
              * Gets information about a grouping.
