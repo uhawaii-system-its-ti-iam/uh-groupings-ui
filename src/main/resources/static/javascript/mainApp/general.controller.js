@@ -84,20 +84,6 @@
             $scope.showGrouping = true;
         };
 
-        $scope.checkPrin = function checkPrincipal() {
-
-            groupingsService.getLookup(
-                function (res) {
-
-                },
-                function (res) {
-                    dataProvider.handleException({exceptionMessage: res.exceptionMessage}, "feedback/error", "feedback");
-                }
-
-            );
-
-        };
-
         /**
          * Generic handler for unsuccessful requests to the API.
          */
@@ -282,7 +268,7 @@
                 } else if (res.statusCode === 403) {
                     $scope.createOwnerErrorModal();
                 } else {
-                    dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+                    dataProvider.handleException({exceptionMessage: res.message}, "feedback/error", "feedback");
                 }
             });
         };
