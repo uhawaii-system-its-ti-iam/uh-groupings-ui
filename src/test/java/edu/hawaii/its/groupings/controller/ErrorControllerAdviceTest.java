@@ -41,7 +41,7 @@ public class ErrorControllerAdviceTest {
         Object Ro = new Object();
         GcWebServiceError Gc = new GcWebServiceError(Ro);
         errorControllerAdvice.handleGcWebServiceError(Gc);
-           String gce = "<404,edu.hawaii.its.api.type.GroupingsHTTPException,{}>";
+           String gce = "<404,edu.hawaii.its.api.type.GroupingsHTTPException,[]>";
         assertThat(errorControllerAdvice.handleGcWebServiceError(Gc).toString(),equalTo(gce));
     }
 
@@ -50,7 +50,7 @@ public class ErrorControllerAdviceTest {
         RuntimeException re = new RuntimeException();
         errorControllerAdvice.handleRuntimeException(re);
         String runtime = "<500,edu.hawaii.its.api.type.GroupingsHTTPException:"
-                + " runtime exception,{}>";
+                + " runtime exception,[]>";
         assertThat(errorControllerAdvice.handleRuntimeException(re).toString(), equalTo(runtime));
     }
     @Test
@@ -159,7 +159,7 @@ public class ErrorControllerAdviceTest {
         };
         errorControllerAdvice.handleIllegalArgumentException(IAE,Req);
         String IAException = "<404,edu.hawaii.its.api.type.GroupingsHTTPException: "
-                + "Resource not available,{}>";
+                + "Resource not available,[]>";
         assertThat(errorControllerAdvice.handleIllegalArgumentException(IAE,Req).toString(), equalTo(IAException));
 
     }
@@ -168,7 +168,7 @@ public class ErrorControllerAdviceTest {
         UnsupportedOperationException UOE = new UnsupportedOperationException();
         errorControllerAdvice.handleUnsupportedOperationException(UOE);
         String UnOpE = "<501,edu.hawaii.its.api.type.GroupingsHTTPException: "
-                + "Method not implemented,{}>";
+                + "Method not implemented,[]>";
         assertThat(errorControllerAdvice.handleUnsupportedOperationException(UOE).toString(), equalTo(UnOpE));
 
     }
@@ -177,7 +177,7 @@ public class ErrorControllerAdviceTest {
         Exception E = new Exception();
         errorControllerAdvice.handleException(E);
         String exception = "<500,edu.hawaii.its.api.type.GroupingsHTTPException: "
-                + "Exception,{}>";
+                + "Exception,[]>";
         assertThat(errorControllerAdvice.handleException(E).toString(), equalTo(exception));
     }
     @Test
@@ -185,7 +185,7 @@ public class ErrorControllerAdviceTest {
         GroupingsServiceResultException GSRE = new GroupingsServiceResultException();
         errorControllerAdvice.handleGroupingsServiceResultException(GSRE);
         String SRE = "<400,edu.hawaii.its.api.type.GroupingsHTTPException: "
-                + "Groupings Service resulted in FAILURE,{}>";
+                + "Groupings Service resulted in FAILURE,[]>";
         assertThat(errorControllerAdvice.handleGroupingsServiceResultException(GSRE).toString(), equalTo(SRE));
     }
     @Test
