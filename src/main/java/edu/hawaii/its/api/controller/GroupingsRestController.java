@@ -73,8 +73,16 @@ public class GroupingsRestController {
         // For sanitation
         policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
-        hello();
+        Assert.isTrue(hello().getStatusCode().is2xxSuccessful(), "Please start the UH Groupings API first.");
 
+        Assert.isTrue((credentialCheck().getStatusCode().toString().compareTo("403")) == 0, "Possible credential error. Please check the overrides file.");
+    }
+
+    private ResponseEntity credentialCheck() {
+
+        String uri = API_2_1_BASE + "/adminsGroupings";
+
+        return httpRequestService.makeApiRequest("bob", uri, HttpMethod.GET);
     }
 
     @RequestMapping(value = "/",
