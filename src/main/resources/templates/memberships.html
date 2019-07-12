@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Membership')"></head>
-<body ng-app="UHGroupingsApp">
+<body ng-app="UHGroupingsApp" ng-controller="MembershipJsController">
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
@@ -12,11 +12,11 @@
         <h1 class="text-center text-md-left">Manage My Memberships</h1>
         <p class="lead text-center text-md-left" th:utext="#{screen.message.memberships.page.description}"></p>
         <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist">
-            <li role="presentation" class="nav-item">
+            <li role="presentation" class="nav-item" ng-click="memberFilterReset()">
                 <a href="#current-memberships" data-toggle="tab" class="nav-link active" role="tab">
                     Current Memberships
                 </a>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item" role="presentation" ng-click="memberFilterReset()">
                 <a href="#membership-opportunities" data-toggle="tab" class="nav-link" role="tab">
                     Membership Opportunities
                 </a>
@@ -24,7 +24,7 @@
         </ul>
     </div>
 </div>
-<div class="container" ng-controller="MembershipJsController" data-ng-init="init()">
+<div class="container" data-ng-init="init()">
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
