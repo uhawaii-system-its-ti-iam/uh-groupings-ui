@@ -19,22 +19,8 @@
                         console.log(response)
                         callback(response.data);
                     }, function (response) {
-
-                        if (response.data != null) {
-                            console.log("Error in dataProvider; status: ", response.status);
-                            callError(response);
-
-                        } else {
-                            $http.post(encodeURI("feedback/error"), { exceptionMessage: "500 Internal Error, check webservice credentials" }, {
-                                headers: {
-                                    "Content-Type": "application/json"
-                                }
-                            })
-                                .then(function () {
-                                    $window.location.href = "feedback";
-                                });
-                        }
-
+                        console.log("Error in dataProvider; status: ", response.status);
+                        callError(response);
                     });
             },
 
