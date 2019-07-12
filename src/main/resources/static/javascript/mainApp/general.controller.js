@@ -915,6 +915,7 @@
             $scope.membersQuery = "";
             $scope.groupingsQuery = "";
             $scope.adminsQuery = "";
+            $scope.optInQuery = "";
         }
 
         /**
