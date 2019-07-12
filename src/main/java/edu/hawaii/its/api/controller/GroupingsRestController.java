@@ -62,6 +62,9 @@ public class GroupingsRestController {
     @Value("${groupings.api.opt_out}")
     private String OPT_OUT;
 
+    @Value("${groupings.api.credential.check}")
+    private String CREDENTIAL_CHECK;
+
     @Autowired
     HttpRequestService httpRequestService;
 
@@ -82,7 +85,7 @@ public class GroupingsRestController {
 
         String uri = API_2_1_BASE + "/adminsGroupings";
 
-        return httpRequestService.makeApiRequest("bob", uri, HttpMethod.GET);
+        return httpRequestService.makeApiRequest(CREDENTIAL_CHECK, uri, HttpMethod.GET);
     }
 
     @RequestMapping(value = "/",
