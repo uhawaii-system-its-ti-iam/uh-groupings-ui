@@ -92,7 +92,7 @@ public class GroupingsRestController {
 
         String uri = API_2_1_BASE + "/adminsGroupings";
 
-        return httpRequestService.makeApiRequest("bob", uri, HttpMethod.GET);
+        return httpRequestService.makeApiRequest(CREDENTIAL_CHECK, uri, HttpMethod.GET);
     }
 
     @RequestMapping(value = "/",
