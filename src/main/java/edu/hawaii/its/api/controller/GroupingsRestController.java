@@ -78,7 +78,7 @@ public class GroupingsRestController {
 
         Assert.isTrue(hello().getStatusCode().is2xxSuccessful(), "Please start the UH Groupings API first.");
 
-        Assert.isTrue((credentialCheck().getStatusCode().toString().compareTo("403")) == 0, "Possible credential error. Please check the overrides file.");
+        Assert.isTrue(credentialCheck().getStatusCode().toString().startsWith("403"), "Possible credential error. Please check the overrides file.");
     }
 
     private ResponseEntity credentialCheck() {

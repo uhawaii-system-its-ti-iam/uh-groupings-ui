@@ -48,7 +48,7 @@ public class HomeController {
 
     @RequestMapping(value = "/404", method = RequestMethod.GET)
     public String invalid() {
-        return "redirect/";
+        return "redirect:/";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
