@@ -1,6 +1,6 @@
 <th:block th:fragment="admin-groupings-list">
-    <div class="table-responsive-sm">
-        <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
+    <div class="table-responsive">
+        <table class="table manage-groupings table-striped table-hover table-md" aria-live="assertive">
             <thead>
             <tr>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'name')" class="clickable">
@@ -23,7 +23,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                <td class="clickable" tabindex="0"
+                <td class="clickable align-middle" tabindex="0"
                     ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                     ng-click="displayGrouping(currentPageGroupings, $index)">
                     <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>

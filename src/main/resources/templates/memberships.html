@@ -7,7 +7,7 @@
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
-<div class="seafoam-bg pt-5">
+<div class="seafoam-bg pt-4">
     <div class="container">
         <h1 class="text-center text-md-left">Manage My Memberships</h1>
         <p class="lead text-center text-md-left" th:utext="#{screen.message.memberships.page.description}"></p>
@@ -24,18 +24,19 @@
         </ul>
     </div>
 </div>
+
 <div class="container" data-ng-init="init()">
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
     <div class="tab-content">
         <div class="tab-pane fade show active" id="current-memberships" role="tabcard">
-            <div class="row m-auto pt-4 pb-4">
+            <div class="row m-auto pt-2 pb-2">
                 <div class="col-lg-9 col-md-8 col-12 p-0">
                     <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
                     <p th:utext="#{screen.message.memberships.page.currentMembershipsInfo}"></p>
                 </div>
-                <div class="col-lg-3 col-md-4 col-12 p-0">
+                <div class="col-lg-3 col-md-4 col-12 p-0 pt-3">
                     <input placeholder="Filter Groupings..." type="text"
                            title="Filter Groupings"
                            ng-model="membersQuery" class="form-control"
@@ -70,7 +71,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships] ">
-                            <td class="w-30">{{ l.name }}</td>
+                            <td class="w-30 align-middle">{{ l.name }}</td>
                             <td>
 <!--                                Uncomment once implemented-->
 <!--                                <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59-->
@@ -84,7 +85,7 @@
                                         <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
                                 </form>
                             </td>
-                            <td class="w-20 text-center">
+                            <td class="w-20 align-middle text-center">
                                 <span ng-if="!l.optOutOn">
                                     Membership Required
                                 </span>
@@ -115,12 +116,12 @@
         </div>
         <!-- Membership Opportunities Tab -->
         <div class="tab-pane fade" id="membership-opportunities" role="tabcard">
-            <div class="row m-auto pt-4 pb-4">
+            <div class="row m-auto pt-2 pb-2">
                 <div class="col-lg-9 col-md-8 col-12 p-0">
                     <h2 class="card-title mt-md-1 mt-0 mb-1">Available Groupings</h2>
                     <p th:utext="#{screen.message.memberships.page.membershipOpportunitiesInfo}"></p>
                 </div>
-                <div class="col-lg-3 col-md-4 col-12 p-0">
+                <div class="col-lg-3 col-md-4 col-12 p-0 pt-3">
                     <input placeholder="Filter Groupings..." type="text"
                            title="Filter Groupings"
                            ng-model="optInQuery" class="form-control"
@@ -151,7 +152,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn] ">
-                            <td class="w-30">{{ o.name }}</td>
+                            <td class="w-30 align-middle">{{ o.name }}</td>
                             <td class="w-50" id="groupingOptInPath">
                                 <form class="seamless border border-secondary rounded">
                                     <input type="text" class="form-control border-0"
@@ -161,7 +162,7 @@
                                         <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
                                 </form>
                             </td>
-                            <td class="w-20">
+                            <td class="w-20 align-middle text-center">
                                 <button class="btn btn-primary btn-block opt-button"
                                         tabindex="0"
                                         ng-click="optIn(currentPageOptIn, $index)">
