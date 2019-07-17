@@ -47,7 +47,7 @@
             <div ng-if="membershipsList.length !== 0">
                 <div class="table-responsive">
                     <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
-                        <thead>
+                        <thead class="align-middle">
                         <tr>
                             <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'name')"
                                 class="w-30 clickable">
@@ -61,7 +61,7 @@
 <!--                                # of Members-->
                             </th>
                             <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'path')"
-                                class="w-50 clickable">
+                                class="clickable">
                                 Grouping Path
                                 <i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'path'"
                                    ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
@@ -69,16 +69,16 @@
                             <th class="w-20 text-center">Opt Out?</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="table table-borderless">
                         <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships] ">
-                            <td class="w-30 align-middle">{{ l.name }}</td>
+                            <td class="p-10 w-30">{{ l.name }}</td> <!-- w-30 -->
                             <td>
 <!--                                Uncomment once implemented-->
 <!--                                <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59-->
                             </td>
-                            <td>
+                            <td class="p-10">
                                 <form class="seamless border border-secondary rounded">
-                                    <input type="text" class="form-control border-0"
+                                    <input type="text" class="form-control form-control-sm border-0 input-sm"
                                            value={{l.path}}
                                            id={{l.path}}>
                                     <button class="btn btn-sm" ng-click=copyPath(l)>
@@ -132,7 +132,7 @@
             <div ng-if="optInList.length !== 0">
                 <div class="table-responsive">
                     <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
-                        <thead>
+                        <thead class="align-middle">
                         <tr>
                             <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'name')"
                                 class="w-30 clickable">
@@ -142,7 +142,7 @@
                                    ng-class="{ reverse: columnSort.optInList.reverse }"></i>
                             </th>
                             <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'path')"
-                                class="w-50 clickable">
+                                class="clickable">
                                 Grouping Path
                                 <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'path'"
                                    ng-class="{ reverse: columnSort.optInList.reverse }"></i>
@@ -150,12 +150,12 @@
                             <th class="w-20 text-center">Opt In?</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn] ">
-                            <td class="w-30 align-middle">{{ o.name }}</td>
-                            <td class="w-50" id="groupingOptInPath">
+                        <tbody class="table table-borderless">
+                        <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn]">
+                            <td class="p-10 w-30">{{ o.name }}</td>
+                            <td class="p-10" id="groupingOptInPath">
                                 <form class="seamless border border-secondary rounded">
-                                    <input type="text" class="form-control border-0"
+                                    <input type="text" class="form-control form-control-sm border-0"
                                            value={{o.path}}
                                            id={{o.path}}>
                                     <button class="btn btn-sm" ng-click=copyPath(o)>
@@ -163,7 +163,7 @@
                                 </form>
                             </td>
                             <td class="w-20 align-middle text-center">
-                                <button class="btn btn-primary btn-block opt-button"
+                                <button class="btn btn-primary btn-block opt-button btn-sm"
                                         tabindex="0"
                                         ng-click="optIn(currentPageOptIn, $index)">
                                     <i class="fa fa-fw fa-user-plus" aria-hidden="true"></i>
