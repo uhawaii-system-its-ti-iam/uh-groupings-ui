@@ -20,9 +20,9 @@
                 <th class="w-20 text-center"> Opt Out?</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody class="table table-borderless">
             <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                <td class="clickable align-middle" tabindex="0"
+                <td class="p-10 clickable align-middle" tabindex="0"
                     ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                     ng-click="displayGrouping(currentPageGroupings, $index)">
                     <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
@@ -35,9 +35,9 @@
 <!--                    <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i>-->
 <!--                    59-->
                 </td>
-                <td class="d-none d-md-table-cell">
+                <td class="p-10 d-none d-md-table-cell">
                     <form class="seamless border border-secondary rounded">
-                        <input type="text" class="form-control border-0"
+                        <input type="text" class="form-control form-control-sm border-0"
                                value={{l.path}}
                                id={{l.path}}>
                         <button class="btn btn-sm" ng-click=copyPath(l)>
@@ -48,7 +48,7 @@
                     <span ng-if="l.optOutOn">
                         Membership Required
                     </span>
-                    <button class="btn btn-primary btn-block opt-button"
+                    <button class="btn btn-primary btn-block opt-button btn-sm"
                             tabindex="0"
                             ng-click="optOut(currentPageGroupings, $index)">
                         <i class="fa fa-fw fa-user-plus" aria-hidden="true"></i>

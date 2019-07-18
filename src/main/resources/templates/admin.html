@@ -60,7 +60,7 @@
                 </div>
                 <div class="table-responsive-sm">
                     <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">
-                        <thead>
+                        <thead class="align-middle">
                         <tr>
                             <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'name')" class="clickable">
                                 Admin Name
@@ -82,13 +82,15 @@
                             </th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]">
-                            <td>
+                        <tbody class="table table-borderless">
+                        <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]" class="table table-sm">
+                            <td class="p-10">
                                 {{l.name}}
                             </td>
-                            <td>{{l.uuid}}</td>
-                            <td>
+                            <td class="p-10">
+                                {{l.uuid}}
+                            </td>
+                            <td class="p-10">
                                 {{l.username}}
                             </td>
                             <td>
