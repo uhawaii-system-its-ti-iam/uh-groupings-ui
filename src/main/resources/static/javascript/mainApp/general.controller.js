@@ -56,6 +56,7 @@
         $scope.paginatingComplete = false;
         $scope.largeGrouping = false;
 
+        $scope.modalType = "";
 
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
@@ -67,7 +68,7 @@
         var maxLength = 100;
         var noDescriptionMessage = "No description given for this Grouping.";
 
-        angular.extend(this, $controller("TableJsController", {$scope: $scope}));
+        angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
         /**
          * Initiates the retrieval of information about the grouping clicked by the user.
@@ -191,7 +192,7 @@
 
                 const syncDestResponseMapping = new Map(Object.entries(res.syncDestinations));
                 syncDestResponseMapping.forEach((value, key, map) => {
-                    $scope.syncDestArray.push({name: key, value: value});
+                    $scope.syncDestArray.push({ name: key, value: value });
                 });
                 $scope.setSyncDestLabels();
 
@@ -267,6 +268,7 @@
                 } else if (res.statusCode === 403) {
                     $scope.createOwnerErrorModal();
                 } else {
+                    
                     dataProvider.handleException({exceptionMessage: res.message}, "feedback/error", "feedback");
                 }
             });
@@ -307,7 +309,7 @@
         $scope.cancelDescriptionEdit = function () {
             // refer to last saved description when user cancels the edit
             $scope.modelDescription = $scope.description;
-            if($scope.descriptionForm){
+            if ($scope.descriptionForm) {
                 $scope.descriptionForm = !($scope.descriptionForm);
             }
 
@@ -381,7 +383,7 @@
         $scope.addInBasis = function (group) {
             _.forEach(group, function (member) {
                 const memberUuid = member.uuid;
-                member.inBasis = _.some($scope.groupingBasis, {uuid: memberUuid})
+                member.inBasis = _.some($scope.groupingBasis, { uuid: memberUuid })
                     ? "Yes"
                     : "No";
             });
@@ -396,12 +398,12 @@
             _.forEach(compositeGroup, function (member) {
 
                 const memberUuid = member.uuid;
-                if (_.some($scope.groupingBasis, {uuid: memberUuid})) {
+                if (_.some($scope.groupingBasis, { uuid: memberUuid })) {
 
                     member.whereListed = "Basis";
                 }
 
-                if (_.some($scope.groupingInclude, {uuid: memberUuid})) {
+                if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
                     member.whereListed = _.isUndefined(member.whereListed)
                         ? "Include"
                         : "Basis / Include";
@@ -512,9 +514,9 @@
          */
         $scope.isInAnotherList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingExclude, {username: user});
+                return _.some($scope.groupingExclude, { username: user });
             } else if (list === "Exclude") {
-                return _.some($scope.groupingInclude, {username: user});
+                return _.some($scope.groupingInclude, { username: user });
             }
             return false;
         };
@@ -526,9 +528,9 @@
          */
         $scope.existInList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingInclude, {username: user});
+                return _.some($scope.groupingInclude, { username: user });
             } else if (list === "Exclude") {
-                return _.some($scope.groupingExclude, {username: user});
+                return _.some($scope.groupingExclude, { username: user });
             }
             return false;
         };
@@ -718,6 +720,7 @@
         $scope.removeMember = function (listName, currentPage, index) {
 
             let userToRemove;
+            $scope.modalType = "remove";
             if (listName === "Include") {
                 userToRemove = $scope.pagedItemsInclude[currentPage][index];
             } else if (listName === "Exclude") {
@@ -726,7 +729,8 @@
 
             $scope.createRemoveModal({
                 user: userToRemove,
-                listName: listName
+                listName: listName,
+                scope: $scope
             });
         }, function (res) {
             if (res.statusCode === 403) {
@@ -919,6 +923,7 @@
             $scope.membersQuery = "";
             $scope.groupingsQuery = "";
             $scope.adminsQuery = "";
+            $scope.optInQuery = "";
         }
 
         /**
@@ -1029,7 +1034,7 @@
          */
         $scope.getSyncDestValueInArray = function (syncDestName) {
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
-                return e.name
+                return e.name;
             }).indexOf(syncDestName);
             const syncDestOn = $scope.syncDestArray[indexOfSyncDest].value;
             return syncDestOn;
@@ -1042,7 +1047,7 @@
          */
         $scope.getEntireSyncDestInArray = function (syncDestName) {
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
-                return e.name
+                return e.name;
             }).indexOf(syncDestName);
             return $scope.syncDestArray[indexOfSyncDest];
         };
@@ -1054,7 +1059,7 @@
          */
         $scope.setSyncDestInArray = function (syncDestName, syncDestvalue) {
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
-                return e.name
+                return e.name;
             }).indexOf(syncDestName);
             $scope.syncDestArray[indexOfSyncDest].value = syncDestvalue;
         };
@@ -1069,7 +1074,7 @@
             const syncDestOn = $scope.getSyncDestValueInArray(syncDestName);
 
             groupingsService.setSyncDest(groupingPath, syncDestName, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
-        }
+        };
 
         /**
          * Creates a modal indicating an error in saving the grouping's preferences.

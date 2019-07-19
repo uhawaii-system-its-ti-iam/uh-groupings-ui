@@ -3,20 +3,20 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Membership')"></head>
-<body ng-app="UHGroupingsApp">
+<body ng-app="UHGroupingsApp" ng-controller="MembershipJsController">
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
-<div class="seafoam-bg pt-5">
+<div class="seafoam-bg pt-4">
     <div class="container">
         <h1 class="text-center text-md-left">Manage My Memberships</h1>
         <p class="lead text-center text-md-left" th:utext="#{screen.message.memberships.page.description}"></p>
         <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist">
-            <li role="presentation" class="nav-item">
+            <li role="presentation" class="nav-item" ng-click="memberFilterReset()">
                 <a href="#current-memberships" data-toggle="tab" class="nav-link active" role="tab">
                     Current Memberships
                 </a>
-            <li class="nav-item" role="presentation">
+            <li class="nav-item" role="presentation" ng-click="memberFilterReset()">
                 <a href="#membership-opportunities" data-toggle="tab" class="nav-link" role="tab">
                     Membership Opportunities
                 </a>
@@ -24,18 +24,19 @@
         </ul>
     </div>
 </div>
-<div class="container" ng-controller="MembershipJsController" data-ng-init="init()">
+
+<div class="container" data-ng-init="init()">
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
     <div class="tab-content">
         <div class="tab-pane fade show active" id="current-memberships" role="tabcard">
-            <div class="row m-auto pt-4 pb-4">
+            <div class="row m-auto pt-2 pb-2">
                 <div class="col-lg-9 col-md-8 col-12 p-0">
                     <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
                     <p th:utext="#{screen.message.memberships.page.currentMembershipsInfo}"></p>
                 </div>
-                <div class="col-lg-3 col-md-4 col-12 p-0">
+                <div class="col-lg-3 col-md-4 col-12 p-0 pt-3">
                     <input placeholder="Filter Groupings..." type="text"
                            title="Filter Groupings"
                            ng-model="membersQuery" class="form-control"
@@ -46,7 +47,7 @@
             <div ng-if="membershipsList.length !== 0">
                 <div class="table-responsive">
                     <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
-                        <thead>
+                        <thead class="align-middle">
                         <tr>
                             <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'name')"
                                 class="w-30 clickable">
@@ -60,7 +61,7 @@
 <!--                                # of Members-->
                             </th>
                             <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'path')"
-                                class="w-50 clickable">
+                                class="clickable">
                                 Grouping Path
                                 <i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'path'"
                                    ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
@@ -68,29 +69,29 @@
                             <th class="w-20 text-center">Opt Out?</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="table table-borderless">
                         <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships] ">
-                            <td class="w-30">{{ l.name }}</td>
+                            <td class="p-10 w-30">{{ l.name }}</td> <!-- w-30 -->
                             <td>
 <!--                                Uncomment once implemented-->
 <!--                                <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59-->
                             </td>
-                            <td>
+                            <td class="p-10">
                                 <form class="seamless border border-secondary rounded">
-                                    <input type="text" class="form-control border-0"
+                                    <input type="text" class="form-control form-control-sm border-0 input-sm"
                                            value={{l.path}}
                                            id={{l.path}}>
                                     <button class="btn btn-sm" ng-click=copyPath(l)>
                                         <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
                                 </form>
                             </td>
-                            <td class="w-20 text-center">
+                            <td class="w-20 align-middle text-center">
                                 <span ng-if="!l.optOutOn">
                                     Membership Required
                                 </span>
                                 <div ng-if="l.optOutOn">
                                     <button id="optOutButton"
-                                            class="btn btn-primary btn-block opt-button text-center"
+                                            class="btn btn-primary btn-block opt-button btn-sm"
                                             tabindex="0"
                                             ng-click="optOut(currentPageMemberships, $index)">
                                         <i class="fa fa-fw fa-user-times" aria-hidden="true"></i>
@@ -115,12 +116,12 @@
         </div>
         <!-- Membership Opportunities Tab -->
         <div class="tab-pane fade" id="membership-opportunities" role="tabcard">
-            <div class="row m-auto pt-4 pb-4">
+            <div class="row m-auto pt-2 pb-2">
                 <div class="col-lg-9 col-md-8 col-12 p-0">
                     <h2 class="card-title mt-md-1 mt-0 mb-1">Available Groupings</h2>
                     <p th:utext="#{screen.message.memberships.page.membershipOpportunitiesInfo}"></p>
                 </div>
-                <div class="col-lg-3 col-md-4 col-12 p-0">
+                <div class="col-lg-3 col-md-4 col-12 p-0 pt-3">
                     <input placeholder="Filter Groupings..." type="text"
                            title="Filter Groupings"
                            ng-model="optInQuery" class="form-control"
@@ -131,7 +132,7 @@
             <div ng-if="optInList.length !== 0">
                 <div class="table-responsive">
                     <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
-                        <thead>
+                        <thead class="align-middle">
                         <tr>
                             <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'name')"
                                 class="w-30 clickable">
@@ -141,7 +142,7 @@
                                    ng-class="{ reverse: columnSort.optInList.reverse }"></i>
                             </th>
                             <th ng-click="sortBy('optInList', 'pagedItemsOptInList', 'path')"
-                                class="w-50 clickable">
+                                class="clickable">
                                 Grouping Path
                                 <i class="fa sort-icon" ng-show="columnSort.optInList.property === 'path'"
                                    ng-class="{ reverse: columnSort.optInList.reverse }"></i>
@@ -149,20 +150,20 @@
                             <th class="w-20 text-center">Opt In?</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn] ">
-                            <td class="w-30">{{ o.name }}</td>
-                            <td class="w-50" id="groupingOptInPath">
+                        <tbody class="table table-borderless">
+                        <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn]">
+                            <td class="p-10 w-30">{{ o.name }}</td>
+                            <td class="p-10" id="groupingOptInPath">
                                 <form class="seamless border border-secondary rounded">
-                                    <input type="text" class="form-control border-0"
+                                    <input type="text" class="form-control form-control-sm border-0"
                                            value={{o.path}}
                                            id={{o.path}}>
                                     <button class="btn btn-sm" ng-click=copyPath(o)>
                                         <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
                                 </form>
                             </td>
-                            <td class="w-20">
-                                <button class="btn btn-primary btn-block opt-button"
+                            <td class="w-20 align-middle text-center">
+                                <button class="btn btn-primary btn-block opt-button btn-sm"
                                         tabindex="0"
                                         ng-click="optIn(currentPageOptIn, $index)">
                                     <i class="fa fa-fw fa-user-plus" aria-hidden="true"></i>

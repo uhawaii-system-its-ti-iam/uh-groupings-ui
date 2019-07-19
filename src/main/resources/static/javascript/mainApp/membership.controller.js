@@ -20,7 +20,7 @@
 
         $scope.loading = false;
 
-        angular.extend(this, $controller("TableJsController", { $scope: $scope }));
+        angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
         /**
          * Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
@@ -40,6 +40,13 @@
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: res.message }, "feedback/error", "feedback");
             });
+        };
+
+        $scope.memberFilterReset = function () {
+            $scope.membersQuery = "";
+            $scope.optInQuery = "";
+            $scope.filter($scope.membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', $scope.membersQuery, true);
+            $scope.filter($scope.optInList, 'pagedItemsOptInList', 'currentPageOptIn', $scope.optInQuery, true);
         };
 
         /**

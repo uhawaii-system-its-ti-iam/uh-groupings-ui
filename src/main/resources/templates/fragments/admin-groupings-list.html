@@ -1,7 +1,7 @@
 <th:block th:fragment="admin-groupings-list">
-    <div class="table-responsive-sm">
-        <table class="table manage-groupings table-striped table-hover" aria-live="assertive">
-            <thead>
+    <div class="table-responsive">
+        <table class="table manage-groupings table-striped table-hover table-md" aria-live="assertive">
+            <thead class="align-middle">
             <tr>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'name')" class="clickable">
                     Grouping Name
@@ -21,9 +21,9 @@
                 <!--<th> Opt Out?</th>-->
             </tr>
             </thead>
-            <tbody>
+            <tbody class="p-2 table table-borderless">
             <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
-                <td class="clickable" tabindex="0"
+                <td class="p-10 clickable align-middle" tabindex="0"
                     ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                     ng-click="displayGrouping(currentPageGroupings, $index)">
                     <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
@@ -34,9 +34,9 @@
 <!--                    <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i>-->
 <!--                    59-->
                 </td>
-                <td>
+                <td class="p-10">
                     <form class="seamless border border-secondary rounded">
-                        <input type="text" class="form-control border-0"
+                        <input type="text" class="form-control form-control-sm border-0"
                                value={{l.path}}
                                id={{l.path}}>
                         <button class="btn btn-sm" ng-click=copyPath(l)>

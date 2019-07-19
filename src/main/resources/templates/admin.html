@@ -7,7 +7,7 @@
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
-<div class="seafoam-bg pt-5">
+<div class="seafoam-bg pt-4">
     <div class="container">
         <h1 class="text-center text-md-left">UH Groupings Administration</h1>
         <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
@@ -32,7 +32,7 @@
     <div ng-show="!showGrouping">
         <div class="tab-content">
             <div class="tab-pane fade show active" id="manage-groupings" role="tabcard" >
-                <div class="row m-auto pt-4 pb-4">
+                <div class="row m-auto pt-3 pb-3">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
                         <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
                     </div>
@@ -47,7 +47,7 @@
             </div>
             <!-- Manage Admins -->
             <div class="tab-pane fade" id="manage-admins" role="tabcard">
-                <div class="row m-auto pt-4 pb-4">
+                <div class="row m-auto pt-3 pb-3">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
                         <h2 class="card-title mt-md-1 mt-0 mb-1">Designate Admins</h2>
                     </div>
@@ -58,9 +58,9 @@
                                ng-change="filter(adminsList, 'pagedItemsAdmins', 'currentPageAdmins', adminsQuery, true)"/>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table manage-admins table-striped table-hover" aria-live="assertive">
-                        <thead>
+                <div class="table-responsive-sm">
+                    <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">
+                        <thead class="align-middle">
                         <tr>
                             <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'name')" class="clickable">
                                 Admin Name
@@ -82,13 +82,15 @@
                             </th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]">
-                            <td>
+                        <tbody class="table table-borderless">
+                        <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]" class="table table-sm">
+                            <td class="p-10">
                                 {{l.name}}
                             </td>
-                            <td>{{l.uuid}}</td>
-                            <td>
+                            <td class="p-10">
+                                {{l.uuid}}
+                            </td>
+                            <td class="p-10">
                                 {{l.username}}
                             </td>
                             <td>

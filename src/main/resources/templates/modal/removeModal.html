@@ -1,10 +1,13 @@
+<!---
+    - removeModal.html
+    - A modal that confirms with user whether or not they want to continue and remove the uhid that they selected for removal. (Does not remove a modal :) )
+--->
+
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">
-        Remove User
-    </h5>
+    <h5 class="modal-title" id="modal-title">Remove User</h5>
     <button type="button" class="close" data-dismiss="dialog" ng-click="cancelRemoveUser()">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -17,8 +20,10 @@
             <div ng-switch-when="owners">
                 <!-- Warning message that tells the user what will happen if they remove themselves -->
                 <p th:text="#{screen.message.modal.remove.message}"></p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1" th:text="#{screen.message.modal.remove.redirect.home}"></p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1" th:text="#{screen.message.modal.remove.redirect.groupings}"></p>
+                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1"
+                   th:text="#{screen.message.modal.remove.redirect.home}"></p>
+                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1"
+                   th:text="#{screen.message.modal.remove.redirect.groupings}"></p>
             </div>
             <div ng-switch-when="admins">
                 <p th:text="#{screen.message.modal.remove.admin}"></p>
@@ -26,10 +31,30 @@
             </div>
         </div>
     </div>
-
-    <p th:utext="#{screen.message.modal.remove.confirmation}"></p>
-    <p th:utext="#{screen.message.modal.remove.memberInfo}"></p>
-    <p th:text="#{screen.message.modal.remove.finalConfirm}"></p>
+    <p>
+        <span style="color: black" th:text="#{screen.message.modal.remove.confirmation}"></span>
+        <span style="color: black">{{listName}} list.</span>
+    </p>
+    <table style="width: 80%;margin-bottom: 30px;">
+        <tr>
+            <th th:utext="#{screen.message.modal.remove.name}"></th>
+            <th style="font-weight: normal">{{ userToRemove.name }}</th>
+        </tr>
+        <tr>
+            <th th:utext="#{screen.message.modal.remove.uhUserName}"></th>
+            <th class="font-weight-normal"> {{ userToRemove.username }}</th>
+        </tr>
+        <tr>
+            <th th:utext="#{screen.message.modal.remove.uhUserId}"></th>
+            <th class="font-weight-normal">{{ userToRemove.uuid }}</th>
+        </tr>
+    </table>
+    <p> Are you sure you want to remove
+        <span style="font-weight: bold">{{ userToRemove.username }}</span>
+        <span style="color: black"> from the </span>
+        <span style="color: black">{{listName}}</span>
+        <span style="color: black"> list?</span>
+    </p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedRemoveUser()">Yes</button>
