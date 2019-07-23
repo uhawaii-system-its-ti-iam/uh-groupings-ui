@@ -13,6 +13,7 @@
     //Possible switch to $log
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
+        $scope.importedText = [];
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
@@ -412,13 +413,20 @@
             let reader = new FileReader();
 
             reader.onload = function (e) {
-                $scope.importedText = e.target.result;
-                console.log($scope.importedText);
+                $scope.importedText = e.target.result.split("\n");
+                $scope.nameList = ["one", "two"];
+                $scope.confirmImportInstance = $uibModal.open({
+                    templateUrl: "modal/importModal",
+                    scope: $scope
+                });
+                $scope.confirmImportInstance.result.then(function () {
+                });
             };
             reader.readAsText(file);
         };
-
-
+        $scope.cancelImportModalInstance = function () {
+            $scope.confirmImportInstance.close();
+        };
         /**
          * Adds a user to a group.
          * @param {string} list - the list the user is being added to (either Include or Exclude)

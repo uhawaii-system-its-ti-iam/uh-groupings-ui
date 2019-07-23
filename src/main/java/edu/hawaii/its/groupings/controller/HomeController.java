@@ -185,5 +185,6 @@ public class HomeController {
     @RequestMapping(value = "/modal/ownerErrorModal", method = RequestMethod.GET)
     public String ownerErrorModal(Locale locale, Model model) {return "modal/ownerErrorModal";}
 
-
+    @RequestMapping(value = "/modal/importModal", method = RequestMethod.GET)
+    public String importModal(Locale locale, Model model) {return "modal/importModal";}
 }
