@@ -406,7 +406,7 @@
             });
         };
 
-        $scope.importMembers = function ($event) {
+        $scope.importMembers = function ($event, listName) {
             let input = $event.currentTarget.parentNode.childNodes[1];
             let file = input.files[0];
             let reader = new FileReader();
