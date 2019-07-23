@@ -7,15 +7,21 @@
             <div class="col-md-8">
                 <h2 class="font-weight-bold text-dark pt-4">Include ({{groupingInclude.length}})</h2>
                 <!-- Export to CSV button -->
-                <button class="btn btn-sm btn-primary mb-4" type="submit" ng-click="exportGroupToCsv(groupingInclude, selectedGrouping.name, 'include')">
+                <button class="btn btn-sm btn-primary mb-4" type="submit"
+                        ng-click="exportGroupToCsv(groupingInclude, selectedGrouping.name, 'include')">
                     <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
                     Export to CSV
                 </button>
             </div>
             <div class="col-md-4">
-                <p class="pt-4 mb-1" ng-show="paginatingProgress" th:text="#{screen.message.common.loading.gettingmembers}"><i class="fa fa-spinner" aria-hidden="true"></i></p>
-                <p class="pt-4 mb-1" ng-show="paginatingComplete" th:text="#{screen.message.common.loading.loadcomplete}"><i class="fa fa-check" aria-hidden="true"></i></p>
-                <p class="pt-4 mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"> <i class="fa fa-check" aria-hidden="true"></i></p>
+                <p class="pt-4 mb-1" ng-show="paginatingProgress"
+                   th:text="#{screen.message.common.loading.gettingmembers}"><i class="fa fa-spinner"
+                                                                                aria-hidden="true"></i></p>
+                <p class="pt-4 mb-1" ng-show="paginatingComplete"
+                   th:text="#{screen.message.common.loading.loadcomplete}"><i class="fa fa-check"
+                                                                              aria-hidden="true"></i></p>
+                <p class="pt-4 mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
+                        class="fa fa-check" aria-hidden="true"></i></p>
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
                        ng-model="includeQuery" class="form-control"
                        ng-change="filter(groupingInclude, 'pagedItemsInclude', 'currentPageInclude', includeQuery, true)"/>
@@ -112,6 +118,12 @@
                     </span>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
+            <div>
+                <input type="file" accept="text/plain">
+                <button class="btn btn-primary" ng-click="importMembers($event)">Import</button>
             </div>
         </div>
     </div>

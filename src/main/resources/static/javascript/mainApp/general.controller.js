@@ -406,6 +406,19 @@
             });
         };
 
+        $scope.importMembers = function ($event) {
+            let input = $event.currentTarget.parentNode.childNodes[1];
+            let file = input.files[0];
+            let reader = new FileReader();
+
+            reader.onload = function (e) {
+                $scope.importedText = e.target.result;
+                console.log($scope.importedText);
+            };
+            reader.readAsText(file);
+        };
+
+
         /**
          * Adds a user to a group.
          * @param {string} list - the list the user is being added to (either Include or Exclude)
