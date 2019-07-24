@@ -13,7 +13,7 @@
     //Possible switch to $log
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
-        $scope.importedText = [];
+        $scope.userNameList = [];
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
@@ -407,22 +407,27 @@
             });
         };
 
-        $scope.importMembers = function ($event, listName) {
+        $scope.readTextFile = function ($event, listName) {
+
             let input = $event.currentTarget.parentNode.childNodes[1];
             let file = input.files[0];
             let reader = new FileReader();
 
             reader.onload = function (e) {
-                $scope.importedText = e.target.result.split("\n");
-                $scope.nameList = ["one", "two"];
-                $scope.confirmImportInstance = $uibModal.open({
-                    templateUrl: "modal/importModal",
-                    scope: $scope
-                });
-                $scope.confirmImportInstance.result.then(function () {
-                });
+                let userNameList = e.target.result.split("\n");
+                $scope.parseUserNameList(listName, userNameList);
             };
             reader.readAsText(file);
+        };
+        $scope.parseUserNameList = function (listName, userNameList) {
+            let userNames = [...new Set(userNameList)];
+            $scope.userNameList = userNames;
+            $scope.confirmImportInstance = $uibModal.open({
+                templateUrl: "modal/importModal",
+                scope: $scope
+            });
+            $scope.confirmImportInstance.result.then(function () {
+            });
         };
         $scope.cancelImportModalInstance = function () {
             $scope.confirmImportInstance.close();
