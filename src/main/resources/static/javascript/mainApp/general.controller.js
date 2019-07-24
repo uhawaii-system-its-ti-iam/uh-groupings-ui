@@ -14,6 +14,8 @@
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
         $scope.userNameList = [];
+        $scope.itemsAlreadyInList = [];
+        $scope.itemsInOtherList = [];
 
         $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
@@ -414,23 +416,58 @@
             let reader = new FileReader();
 
             reader.onload = function (e) {
-                let userNameList = e.target.result.split("\n");
-                $scope.parseUserNameList(listName, userNameList);
+                let str = e.target.result; // get string of user names for FileReader
+                // convert string to list, then sorts and removes duplicates
+                let pendingList = $scope.createUniqArrayFromString(str);
+                //    $scope.userNameList = $scope.createUniqArrayFromString(str);
+                let itemsToRemove = [];
+                for (let item of pendingList) {
+                    if ($scope.existInList(item, listName)) {
+                        $scope.itemsAlreadyInList.push(item);
+                        itemsToRemove.push(item);
+                    } else if ($scope.isInAnotherList(item, listName)) {
+                        $scope.itemsInOtherList.push(item);
+                        itemsToRemove.push(item);
+                    }
+                }
+                $scope.userNameList = $scope.removeItemsFromArray(pendingList, itemsToRemove);
+                console.log($scope.itemsAlreadyInList);
+                $scope.confirmImportInstance = $uibModal.open({
+                    templateUrl: "modal/importModal",
+                    scope: $scope
+                });
+                $scope.confirmImportInstance.result.then(function () {
+                });
             };
             reader.readAsText(file);
         };
-        $scope.parseUserNameList = function (listName, userNameList) {
-            let userNames = [...new Set(userNameList)];
-            $scope.userNameList = userNames;
-            $scope.confirmImportInstance = $uibModal.open({
-                templateUrl: "modal/importModal",
-                scope: $scope
-            });
-            $scope.confirmImportInstance.result.then(function () {
-            });
+
+        /**
+         * Takes in the string of user names of which are separated newline characters, splits string into array, then sorts and removes the duplicate and empty string elements.
+         * Functions are called in order as follows
+         *   - split()
+         *   - Set()
+         *   - sort()
+         *   - _.without()
+         * @param str
+         * @return {[string]}
+         */
+        $scope.createUniqArrayFromString = function (str) {
+            return _.without([...new Set(str.split("\n"))].sort(), "");
         };
         $scope.cancelImportModalInstance = function () {
             $scope.confirmImportInstance.close();
+        };
+        /**
+         * Removes Items from the pendingList Array
+         * @param pendingList
+         * @param itemsToRemove
+         * @return {[]}
+         */
+        $scope.removeItemsFromArray = function (pendingList, itemsToRemove) {
+            for (let item of itemsToRemove)
+                pendingList = _.without(pendingList, _.forEach(item));
+            return pendingList;
         };
         /**
          * Adds a user to a group.
