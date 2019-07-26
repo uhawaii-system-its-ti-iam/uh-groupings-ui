@@ -12,8 +12,13 @@
 
         //Possible switch to $log
         function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
+            function UserNameObj(name, status) {
+                this.name = name;
+                this.status = status;
+            }
 
-            $scope.userNameList = [];
+            $scope.userNameList = [{}];
+
             $scope.itemsAlreadyInList = [];
             $scope.itemsInOtherList = [];
 
@@ -417,7 +422,7 @@
 
                 reader.onload = function (e) {
                     let str = e.target.result; // get string of user names for FileReader
-                    $scope.userNameList = $scope.removeInvalidUserNames($scope.createUniqArrayFromString(str), listName);
+                    $scope.userNameList = $scope.createUserNameListObject($scope.createUniqArrayFromString(str), listName);
                     $scope.confirmImportInstance = $uibModal.open({
                         templateUrl: "modal/importModal",
                         scope: $scope
@@ -426,6 +431,38 @@
                     });
                 };
                 reader.readAsText(file);
+            };
+            $scope.checkUserNameValidity = function (userName, data, listName) {
+                let status = "";
+                groupingsService.checkMember(userName, data, function (attributes) {
+                    console.log(userName + " returned true");
+                    $scope.userNameList.push(new UserNameObj(userName, "Valid"));
+                }, function (res) {
+                    if (res.statusCode === 404) {
+                        $scope.userNameList.push(new UserNameObj(userName, "Invalid"));
+                    }
+                });
+            };
+
+            function getOtherList(listName) {
+                if (listName === "Include")
+                    return "Exclude";
+                return "Include";
+            }
+
+            $scope.createUserNameListObject = function (pendingList, listName) {
+                let userNameList = [{}];
+                let status = "";
+                for (let item of pendingList) {
+                    if ($scope.existInList(item, listName)) {
+                        userNameList.push(new UserNameObj(item, listName));
+                    } else if ($scope.isInAnotherList(item, listName)) {
+                        userNameList.push(new UserNameObj(item, getOtherList(listName)));
+                    } else {
+                        $scope.checkUserNameValidity(item, userNameList, listName);
+                    }
+                }
+                return userNameList;
             };
             $scope.removeInvalidUserNames = function (pendingList, listName) {
                 let itemsToRemove = [];
@@ -458,7 +495,7 @@
              * @return {[string]}
              */
             $scope.createUniqArrayFromString = function (str) {
-                return _.without([...new Set(str.split("\n"))].sort(), "");
+                return _.without([...new Set(str.split("\n"))], "");
             };
             $scope.cancelImportModalInstance = function () {
                 $scope.confirmImportInstance.close();

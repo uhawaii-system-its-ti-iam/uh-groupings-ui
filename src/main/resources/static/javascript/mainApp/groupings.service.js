@@ -180,6 +180,18 @@
             },
 
             /**
+             * Checks if member exists.
+             * @param member
+             * @param data
+             * @param onSuccess
+             * @param onError
+             */
+            checkMember: function (member, data, onSuccess, onError) {
+                let endpoint = BASE_URL + "members/" + member;
+                dataProvider.loadData(onSuccess, onError, endpoint);
+            },
+
+            /**
              * Opts a member out of a grouping.
              * @param {string} path - the path of the grouping to opt out of
              */
@@ -232,8 +244,8 @@
              * Get the list of sync destinations
              */
             getSyncDestList: function (onSuccess, onError) {
-              let endpoint = BASE_URL + "syncDestinations";
-              dataProvider.loadData(onSuccess, onError, endpoint);
+                let endpoint = BASE_URL + "syncDestinations";
+                dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
             /**
@@ -243,7 +255,7 @@
              */
             setSyncDest: function (path, syncDestId, turnOn, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/syncDests/" + syncDestId;
-                if(turnOn) {
+                if (turnOn) {
                     endpoint = endpoint.concat("/enable");
                 } else {
                     endpoint = endpoint.concat("/disable");
