@@ -173,6 +173,8 @@
             /**
              * Gets the attributes of a user, which includes their name, uid, and uuid.
              * @param {string} member - the UH username of the member
+             * @param onSuccess
+             * @param onError
              */
             getMemberAttributes: function (member, onSuccess, onError) {
                 let endpoint = BASE_URL + "members/" + member;
@@ -180,9 +182,9 @@
             },
 
             /**
-             * Checks if member exists.
-             * @param member
-             * @param data
+             * Checks if member exists so that multiple pending user names can be displayed for the user.
+             * @param {string} member - the UH username of the member.
+             * @param {Object[]} data - array of objects which hold username and status. [{string: name, string: status}]
              * @param onSuccess
              * @param onError
              */

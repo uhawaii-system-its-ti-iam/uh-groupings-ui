@@ -12,12 +12,13 @@
 
         //Possible switch to $log
         function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
-            function UserNameObj(name, status) {
+            function Member(name, status) {
                 this.name = name;
                 this.status = status;
             }
 
             $scope.userNameList = [{}];
+            $scope.selectedRow = null;
 
             $scope.itemsAlreadyInList = [];
             $scope.itemsInOtherList = [];
@@ -76,7 +77,9 @@
             var maxLength = 100;
             var noDescriptionMessage = "No description given for this Grouping.";
 
-            angular.extend(this, $controller("TableJsController", { $scope: $scope }));
+            angular.extend(this, $controller("TableJsController", {
+                $scope: $scope
+            }));
 
             /**
              * Initiates the retrieval of information about the grouping clicked by the user.
@@ -200,7 +203,10 @@
 
                     const syncDestResponseMapping = new Map(Object.entries(res.syncDestinations));
                     syncDestResponseMapping.forEach((value, key, map) => {
-                        $scope.syncDestArray.push({ name: key, value: value });
+                        $scope.syncDestArray.push({
+                            name: key,
+                            value: value
+                        });
                     });
                     $scope.setSyncDestLabels();
 
@@ -276,7 +282,9 @@
                     } else if (res.statusCode === 403) {
                         $scope.createOwnerErrorModal();
                     } else {
-                        dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+                        dataProvider.handleException({
+                            exceptionMessage: res.exceptionMessage
+                        }, "feedback/error", "feedback");
                     }
                 });
             };
@@ -335,9 +343,9 @@
                     descriptionLength = String($scope.description);
                 }
 
-                return (descriptionLength.length > 0)
-                    ? $scope.description
-                    : noDescriptionMessage;
+                return (descriptionLength.length > 0) ?
+                    $scope.description :
+                    noDescriptionMessage;
             };
 
             /**
@@ -386,9 +394,11 @@
             $scope.addInBasis = function (group) {
                 _.forEach(group, function (member) {
                     const memberUuid = member.uuid;
-                    member.inBasis = _.some($scope.groupingBasis, { uuid: memberUuid })
-                        ? "Yes"
-                        : "No";
+                    member.inBasis = _.some($scope.groupingBasis, {
+                        uuid: memberUuid
+                    }) ?
+                        "Yes" :
+                        "No";
                 });
             };
 
@@ -401,63 +411,85 @@
                 _.forEach(compositeGroup, function (member) {
 
                     const memberUuid = member.uuid;
-                    if (_.some($scope.groupingBasis, { uuid: memberUuid })) {
+                    if (_.some($scope.groupingBasis, {
+                        uuid: memberUuid
+                    })) {
 
                         member.whereListed = "Basis";
                     }
 
-                    if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
-                        member.whereListed = _.isUndefined(member.whereListed)
-                            ? "Include"
-                            : "Basis / Include";
+                    if (_.some($scope.groupingInclude, {
+                        uuid: memberUuid
+                    })) {
+                        member.whereListed = _.isUndefined(member.whereListed) ?
+                            "Include" :
+                            "Basis / Include";
                     }
                 });
             };
 
             $scope.readTextFile = function ($event, listName) {
-
+                $scope.listName = listName;
                 let input = $event.currentTarget.parentNode.childNodes[1];
                 let file = input.files[0];
                 let reader = new FileReader();
-
                 reader.onload = function (e) {
-                    let str = e.target.result; // get string of user names for FileReader
+                    let str = e.target.result;
                     $scope.userNameList = $scope.createUserNameListObject($scope.createUniqArrayFromString(str), listName);
                     $scope.confirmImportInstance = $uibModal.open({
                         templateUrl: "modal/importModal",
                         scope: $scope
                     });
                     $scope.confirmImportInstance.result.then(function () {
+                        if (true === false) {
+                            var x = 1;
+                        }
                     });
                 };
                 reader.readAsText(file);
             };
-            $scope.checkUserNameValidity = function (userName, data, listName) {
-                let status = "";
-                groupingsService.checkMember(userName, data, function (attributes) {
-                    console.log(userName + " returned true");
-                    $scope.userNameList.push(new UserNameObj(userName, "Valid"));
+            $scope.displayMemberInfo = function () {
+                if ($scope.selectedRow === null)
+                    return "";
+                const selectedMember = $scope.userNameList[$scope.selectedRow];
+                if (selectedMember.status === "Valid")
+                    return {
+                        name: selectedMember.name,
+                        status: selectedMember.status
+                    };
+
+            };
+            $scope.memberSort = function (arr) {
+                $scope.userNameList = _.sortBy(arr, [function (o) {
+                    return o.status;
+                }]);
+            };
+            $scope.checkUserNameValidity = function (userName, data) {
+                groupingsService.checkMember(userName, data, function () {
+                    data.push(new Member(userName, "Valid"));
                 }, function (res) {
                     if (res.statusCode === 404) {
-                        $scope.userNameList.push(new UserNameObj(userName, "Invalid"));
+                        data.push(new Member(userName, "Invalid"));
                     }
                 });
             };
 
             function getOtherList(listName) {
-                if (listName === "Include")
-                    return "Exclude";
-                return "Include";
+                return (listName === "Include") ? "Exclude" : "Include";
             }
+
+            $scope.setClickedRow = function (index) {
+                $scope.selectedRow = index;
+            };
 
             $scope.createUserNameListObject = function (pendingList, listName) {
                 let userNameList = [{}];
-                let status = "";
+
                 for (let item of pendingList) {
                     if ($scope.existInList(item, listName)) {
-                        userNameList.push(new UserNameObj(item, listName));
+                        userNameList.push(new Member(item, listName));
                     } else if ($scope.isInAnotherList(item, listName)) {
-                        userNameList.push(new UserNameObj(item, getOtherList(listName)));
+                        userNameList.push(new Member(item, getOtherList(listName)));
                     } else {
                         $scope.checkUserNameValidity(item, userNameList, listName);
                     }
@@ -485,11 +517,10 @@
 
 
             /**
-             * Takes in the string of user names of which are separated newline characters, splits string into array, then sorts and removes the duplicate and empty string elements.
+             * Takes in the string of user names of which are separated by newline characters, splits string into array, then sorts and removes the duplicate and empty string elements.
              * Functions are called in order as follows
              *   - split()
              *   - Set()
-             *   - sort()
              *   - _.without()
              * @param str
              * @return {[string]}
@@ -614,9 +645,13 @@
              */
             $scope.isInAnotherList = function (user, list) {
                 if (list === "Include") {
-                    return _.some($scope.groupingExclude, { username: user });
+                    return _.some($scope.groupingExclude, {
+                        username: user
+                    });
                 } else if (list === "Exclude") {
-                    return _.some($scope.groupingInclude, { username: user });
+                    return _.some($scope.groupingInclude, {
+                        username: user
+                    });
                 }
                 return false;
             };
@@ -628,9 +663,13 @@
              */
             $scope.existInList = function (user, list) {
                 if (list === "Include") {
-                    return _.some($scope.groupingInclude, { username: user });
+                    return _.some($scope.groupingInclude, {
+                        username: user
+                    });
                 } else if (list === "Exclude") {
-                    return _.some($scope.groupingExclude, { username: user });
+                    return _.some($scope.groupingExclude, {
+                        username: user
+                    });
                 }
                 return false;
             };
@@ -745,11 +784,12 @@
                         listName: "owners"
                     });
                 }
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            };
+            },
+                function (res) {
+                    if (res.statusCode === 403) {
+                        $scope.createOwnerErrorModal();
+                    }
+                };
 
             /**
              * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
@@ -832,11 +872,12 @@
                     listName: listName,
                     scope: $scope
                 });
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            };
+            },
+                function (res) {
+                    if (res.statusCode === 403) {
+                        $scope.createOwnerErrorModal();
+                    }
+                };
 
 
             /**
@@ -857,11 +898,12 @@
                     $scope.createRemoveErrorModal(userType);
                 }
 
-            } , function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            };
+            },
+                function (res) {
+                    if (res.statusCode === 403) {
+                        $scope.createOwnerErrorModal();
+                    }
+                };
 
             /**
              * Handler for successfully removing a member from the Include or Exclude group.
@@ -1303,8 +1345,8 @@
              * returns false
              */
             $scope.showWarningRemovingSelf = function () {
-                return $scope.currentUser === $scope.userToRemove.username
-                    && ($scope.listName === "owners" || $scope.listName === "admins");
+                return $scope.currentUser === $scope.userToRemove.username &&
+                    ($scope.listName === "owners" || $scope.listName === "admins");
             };
 
             /**

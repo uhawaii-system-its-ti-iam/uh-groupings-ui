@@ -479,3 +479,8 @@ form.seamless button {
 #footer-top{
     margin-top: 3rem;
 }
+
+.selected {
+    background-color: #004e59;
+    color: white;
+}
