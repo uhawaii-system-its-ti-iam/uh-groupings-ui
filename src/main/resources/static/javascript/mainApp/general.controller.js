@@ -461,8 +461,8 @@
                     return "This username is invalid and will not be added upon confirmation";
                 else if (status === getOtherList(listName))
                     return "This user is a member of " + getOtherList(listName) +
-                        ", and on confirmation will be removed from " + getOtherList(listName) +
-                        " and added to the " + listName + " list.";
+                        " list, and on confirmation will be removed from the" + getOtherList(listName) +
+                        " list and added to the " + listName + " list.";
                 else
                     return "error";
             };
