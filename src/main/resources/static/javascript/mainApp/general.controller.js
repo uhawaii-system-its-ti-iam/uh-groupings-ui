@@ -19,6 +19,7 @@
 
             $scope.userNameList = [{}];
             $scope.selectedRow = null;
+            $scope.validUserNameCount = 0;
 
             $scope.itemsAlreadyInList = [];
             $scope.itemsInOtherList = [];
@@ -450,7 +451,51 @@
                 };
                 reader.readAsText(file);
             };
+            $scope.add_members = function () {
+                let validUserNames = $scope.removeInvalidUserNames($scope.userNameList, $scope.listName);
+                if (validUserNames.length > 0) {
+                    $scope.validUserNameCount = validUserNames.length;
+                }
+                validUserNames = toCommaSeparatedString(validUserNames);
+                $scope.create_Confirm_Add_Members_Modal(validUserNames, $scope.listName);
 
+            };
+            $scope.create_Confirm_Add_Members_Modal = function (userNameList, listName) {
+                let groupingPath = $scope.selectedGrouping.path;
+                let handleSuccessfulAdd = function () {
+                    $scope.update_Add_Members(userNameList, listName);
+                };
+                if (listName === "Include") {
+                    groupingsService.addMembersToInclude(groupingPath, userNameList, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                }
+
+            };
+
+            function toCommaSeparatedString(validUserNames) {
+                let str = validUserNames[0].name;
+                const comma = ", ";
+                for (let i = 1; i < validUserNames.length; i++) {
+                    str += (comma + validUserNames[i].name);
+                }
+                return str;
+            }
+
+            $scope.update_Add_Members = function (usersToAdd, list) {
+                $scope.confirmAddMembersModalInstance = $uibModal.open({
+                    templateUrl: "modal/confirmAddMembersModal",
+                    scope: $scope
+                });
+                $scope.confirmAddMembersModalInstance.result.finally(function () {
+                    clearAddMemberInput(list);
+                    $scope.loading = true;
+                    if ($scope.listName === "admins") {
+                        // Refreshes the groupings list and the admins list
+                        $scope.init();
+                    } else {
+                        $scope.getGroupingInformation();
+                    }
+                });
+            };
             /**
              * Takes in the string of user names of which are separated by newline characters, splits string into array, then sorts and removes the duplicate and empty string elements.
              * Functions are called in order as follows
@@ -552,13 +597,9 @@
             $scope.removeInvalidUserNames = function (pendingList, listName) {
                 let itemsToRemove = [];
                 let removalNecessary = false;
+                pendingList.shift();
                 for (let item of pendingList) {
-                    if ($scope.existInList(item, listName)) {
-                        $scope.itemsAlreadyInList.push(item);
-                        itemsToRemove.push(item);
-                        removalNecessary = true;
-                    } else if ($scope.isInAnotherList(item, listName)) {
-                        $scope.itemsInOtherList.push(item);
+                    if (item.status === listName || item.status === "Invalid") {
                         itemsToRemove.push(item);
                         removalNecessary = true;
                     }
@@ -570,6 +611,15 @@
 
 
             $scope.cancelImportModalInstance = function () {
+                $scope.confirmImportInstance.dismiss();
+            };
+
+            $scope.closeConfirmAddMembersModalInstance = function () {
+                $scope.confirmAddMembersModalInstance.dismiss();
+                $scope.cancelImportModalInstance();
+            };
+
+            $scope.proceedAddMembers = function () {
                 $scope.confirmImportInstance.close();
             };
 
