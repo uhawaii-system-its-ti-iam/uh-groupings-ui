@@ -40,8 +40,7 @@
     </div>
     <button class="btn btn-primary" ng-click="memberSort(userNameList)">Sort</button>
     <p ng-class="{'selected':$index == selectedRow}">
-        {{ displayMemberInfo($index).name }}
-        {{ displayMemberInfo($index).status }}
+        {{ displayStatusInfo() }}
     </p>
     <div style="float: left">
         <p>

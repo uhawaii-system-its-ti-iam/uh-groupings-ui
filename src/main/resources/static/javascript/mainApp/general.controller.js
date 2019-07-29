@@ -448,6 +448,24 @@
                 };
                 reader.readAsText(file);
             };
+            $scope.displayStatusInfo = function () {
+                if ($scope.selectedRow === null)
+                    return "";
+                const status = $scope.userNameList[$scope.selectedRow].status;
+                const listName = $scope.listName;
+                if (status === listName)
+                    return "This user is already a member of the " + listName + " list";
+                else if (status === "Valid")
+                    return "This user will be added upon confirmation";
+                else if (status === "Invalid")
+                    return "This username is invalid and will not be added upon confirmation";
+                else if (status === getOtherList(listName))
+                    return "This user is a member of " + getOtherList(listName) +
+                        ", and on confirmation will be removed from " + getOtherList(listName) +
+                        " and added to the " + listName + " list.";
+                else
+                    return "error";
+            };
             $scope.displayMemberInfo = function () {
                 if ($scope.selectedRow === null)
                     return "";
