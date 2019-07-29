@@ -427,7 +427,12 @@
                     }
                 });
             };
-
+            /**
+             * Reads a text file(.txt) from client side. The file should consist of a list of UH user names or ids separated by newline characters, that the user is ready to add to a grouping list (Include, Exclude, ... etc.)
+             * @author Zachary Gilbert
+             * @param $event
+             * @param listName
+             */
             $scope.readTextFile = function ($event, listName) {
                 $scope.listName = listName;
                 let input = $event.currentTarget.parentNode.childNodes[1];
@@ -441,13 +446,65 @@
                         scope: $scope
                     });
                     $scope.confirmImportInstance.result.then(function () {
-                        if (true === false) {
-                            var x = 1;
-                        }
                     });
                 };
                 reader.readAsText(file);
             };
+
+            /**
+             * Takes in the string of user names of which are separated by newline characters, splits string into array, then sorts and removes the duplicate and empty string elements.
+             * Functions are called in order as follows
+             *   - split()
+             *   - Set()
+             *   - _.without()
+             * @author Zachary Gilbert
+             * @param str
+             * @return {[string]}
+             */
+            $scope.createUniqArrayFromString = function (str) {
+                return _.without([...new Set(str.split("\n"))], "");
+
+            };
+
+            /**
+             * Checks if user names in the imported list exit in the current list, or in any other list, and uses checkUserNameValidity to check if the user name to be added is valid. Adds user name strings to an array of member objects.
+             * @author Zachary Gilbert
+             * @param pendingList - Array of username strings
+             * @param listName - Include, Exclude, ... etc
+             * @return {{}[]}
+             */
+            $scope.createUserNameListObject = function (pendingList, listName) {
+                let userNameList = [{}];
+
+                for (let item of pendingList) {
+                    if ($scope.existInList(item, listName)) {
+                        userNameList.push(new Member(item, listName));
+                    } else if ($scope.isInAnotherList(item, listName)) {
+                        userNameList.push(new Member(item, getOtherList(listName)));
+                    } else {
+                        $scope.checkUserNameValidity(item, userNameList, listName);
+                    }
+                }
+                return userNameList;
+            };
+
+            /**
+             * Sends a GET request to grouper using the groupingService checkMember method to check whether the user name is a valid member of the UH data base.
+             * If 200 is returned, status is set to valid, otherwise if a 404 is returned, status is set to invalid.
+             * @author Zachary Gilbert
+             * @param userName - UH user name
+             * @param data - Object Array
+             */
+            $scope.checkUserNameValidity = function (userName, data) {
+                groupingsService.checkMember(userName, data, function () {
+                    data.push(new Member(userName, "Valid"));
+                }, function (res) {
+                    if (res.statusCode === 404) {
+                        data.push(new Member(userName, "Invalid"));
+                    }
+                });
+            };
+
             $scope.displayStatusInfo = function () {
                 if ($scope.selectedRow === null)
                     return "";
@@ -466,54 +523,32 @@
                 else
                     return "error";
             };
-            $scope.displayMemberInfo = function () {
-                if ($scope.selectedRow === null)
-                    return "";
-                const selectedMember = $scope.userNameList[$scope.selectedRow];
-                if (selectedMember.status === "Valid")
-                    return {
-                        name: selectedMember.name,
-                        status: selectedMember.status
-                    };
 
-            };
             $scope.memberSort = function (arr) {
                 $scope.userNameList = _.sortBy(arr, [function (o) {
                     return o.status;
                 }]);
             };
-            $scope.checkUserNameValidity = function (userName, data) {
-                groupingsService.checkMember(userName, data, function () {
-                    data.push(new Member(userName, "Valid"));
-                }, function (res) {
-                    if (res.statusCode === 404) {
-                        data.push(new Member(userName, "Invalid"));
-                    }
-                });
-            };
 
+            /**
+             * Returns the other list besides listName.
+             * @author Zachary Gilbert
+             * @param listName
+             * @return {string}
+             */
             function getOtherList(listName) {
                 return (listName === "Include") ? "Exclude" : "Include";
             }
 
+            /**
+             * Sets the global scoped variable selectedRow to the index. Used in importModal.html to highlight selected text.
+             * @author Zachary Gilbert
+             * @param index
+             */
             $scope.setClickedRow = function (index) {
                 $scope.selectedRow = index;
             };
 
-            $scope.createUserNameListObject = function (pendingList, listName) {
-                let userNameList = [{}];
-
-                for (let item of pendingList) {
-                    if ($scope.existInList(item, listName)) {
-                        userNameList.push(new Member(item, listName));
-                    } else if ($scope.isInAnotherList(item, listName)) {
-                        userNameList.push(new Member(item, getOtherList(listName)));
-                    } else {
-                        $scope.checkUserNameValidity(item, userNameList, listName);
-                    }
-                }
-                return userNameList;
-            };
             $scope.removeInvalidUserNames = function (pendingList, listName) {
                 let itemsToRemove = [];
                 let removalNecessary = false;
@@ -534,23 +569,13 @@
             };
 
 
-            /**
-             * Takes in the string of user names of which are separated by newline characters, splits string into array, then sorts and removes the duplicate and empty string elements.
-             * Functions are called in order as follows
-             *   - split()
-             *   - Set()
-             *   - _.without()
-             * @param str
-             * @return {[string]}
-             */
-            $scope.createUniqArrayFromString = function (str) {
-                return _.without([...new Set(str.split("\n"))], "");
-            };
             $scope.cancelImportModalInstance = function () {
                 $scope.confirmImportInstance.close();
             };
+
             /**
              * Removes Items from the pendingList Array
+             * @author Zachary Gilbert
              * @param pendingList
              * @param itemsToRemove
              * @return {[]}
