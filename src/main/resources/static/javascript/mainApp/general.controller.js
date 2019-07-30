@@ -451,7 +451,7 @@
                 };
                 reader.readAsText(file);
             };
-            $scope.add_members = function () {
+            $scope.importMembers = function () {
                 let validUserNames = $scope.removeInvalidUserNames($scope.userNameList, $scope.listName);
                 if (validUserNames.length > 0) {
                     $scope.validUserNameCount = validUserNames.length;
@@ -473,15 +473,6 @@
 
             };
 
-            function toCommaSeparatedString(validUserNames) {
-                let str = validUserNames[0].name;
-                const comma = ", ";
-                for (let i = 1; i < validUserNames.length; i++) {
-                    str += (comma + validUserNames[i].name);
-                }
-                return str;
-            }
-
             $scope.update_Add_Members = function (usersToAdd, list) {
                 $scope.confirmAddMembersModalInstance = $uibModal.open({
                     templateUrl: "modal/confirmAddMembersModal",
@@ -499,6 +490,16 @@
                     }
                 });
             };
+
+            function toCommaSeparatedString(validUserNames) {
+                let str = validUserNames[0].name;
+                const comma = ", ";
+                for (let i = 1; i < validUserNames.length; i++) {
+                    str += (comma + validUserNames[i].name);
+                }
+                return str;
+            }
+
             /**
              * Takes in the string of user names of which are separated by newline characters, splits string into array, then sorts and removes the duplicate and empty string elements.
              * Functions are called in order as follows
@@ -557,21 +558,28 @@
                 if ($scope.selectedRow === null)
                     return "";
                 const status = $scope.userNameList[$scope.selectedRow].status;
+                const name = $scope.userNameList[$scope.selectedRow].name;
                 const listName = $scope.listName;
+
                 if (status === listName)
-                    return "This user is already a member of the " + listName + " list";
+                    return name + " is already a member of the " + listName + " list";
                 else if (status === "Valid")
-                    return "This user will be added upon confirmation";
+                    return name + " will be added upon confirmation";
                 else if (status === "Invalid")
-                    return "This username is invalid and will not be added upon confirmation";
+                    return name + " is an invalid user name and will not be added upon confirmation";
                 else if (status === getOtherList(listName))
-                    return "This user is a member of " + getOtherList(listName) +
-                        " list, and on confirmation will be removed from the" + getOtherList(listName) +
+                    return name + " is already a member of the " + getOtherList(listName) +
+                        " list, and on confirmation will be removed from the " + getOtherList(listName) +
                         " list and added to the " + listName + " list.";
                 else
                     return "error";
             };
 
+            /**
+             * Sorts the array of member objects by name
+             * @author Zachary Gilbert
+             * @param arr
+             */
             $scope.memberSort = function (arr) {
                 $scope.userNameList = _.sortBy(arr, [function (o) {
                     return o.status;
@@ -597,6 +605,13 @@
                 $scope.selectedRow = index;
             };
 
+            /**
+             * Removes the invalid user names from the pending list array of member objects and returns a list of strings containing all valid user names.
+             * @author Zachary Gilbert
+             * @param pendingList - Array of Member objects
+             * @param listName
+             * @return {*[]|*} Array of strings containing all valid user names to be added
+             */
             $scope.removeInvalidUserNames = function (pendingList, listName) {
                 let itemsToRemove = [];
                 let removalNecessary = false;
@@ -612,16 +627,27 @@
                 return pendingList;
             };
 
-
+            /**
+             * Cancels the import Modal instance
+             * @author Zachary Gilbert
+             */
             $scope.cancelImportModalInstance = function () {
                 $scope.confirmImportInstance.dismiss();
             };
 
+            /**
+             * Closes both import confirmation and import modals after import is complete
+             * @author Zachary Gilbert
+             */
             $scope.closeConfirmAddMembersModalInstance = function () {
                 $scope.confirmAddMembersModalInstance.dismiss();
                 $scope.cancelImportModalInstance();
             };
 
+            /**
+             * Closes import modal instance when user confirms that they would like to add the list they imported
+             * @author Zachary Gilbert
+             */
             $scope.proceedAddMembers = function () {
                 $scope.confirmImportInstance.close();
             };
@@ -1056,12 +1082,11 @@
                 });
 
                 $scope.removeModalInstance.result.then(function () {
+                    let userToRemove = options.user.username;
+                    let groupingPath;
                     $scope.loading = true;
 
-                    var userToRemove = options.user.username;
-
-                    // groupingPath should only be defined if listName is not "admins"
-                    if ($scope.listName != "admins") {
+                    if ($scope.listName !== "admins") {
                         groupingPath = $scope.selectedGrouping.path;
                     }
 
