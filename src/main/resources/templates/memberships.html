@@ -56,12 +56,12 @@
                                    ng-show="columnSort.membershipsList.property === 'name' || !columnSort.membershipsList"
                                    ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
                             </th>
-                            <th class="grouping-members" scope="col">
+<!--                            <th class="grouping-members" scope="col">-->
 <!--                                Uncomment once implemented-->
 <!--                                # of Members-->
-                            </th>
+<!--                            </th>-->
                             <th ng-click="sortBy('membershipsList', 'pagedItemsMemberships', 'path')"
-                                class="clickable">
+                                class="clickable d-none d-lg-table-cell">
                                 Grouping Path
                                 <i class="fa sort-icon" ng-show="columnSort.membershipsList.property === 'path'"
                                    ng-class="{ reverse: columnSort.membershipsList.reverse }"></i>
@@ -72,11 +72,11 @@
                         <tbody class="table table-borderless">
                         <tr ng-repeat="l in pagedItemsMemberships[currentPageMemberships] ">
                             <td class="p-10 w-30">{{ l.name }}</td> <!-- w-30 -->
-                            <td>
+<!--                            <td>-->
 <!--                                Uncomment once implemented-->
 <!--                                <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i> 59-->
-                            </td>
-                            <td class="p-10">
+<!--                            </td>-->
+                            <td class="p-10  d-none d-lg-table-cell">
                                 <form class="seamless border border-secondary rounded">
                                     <input type="text" class="form-control form-control-sm border-0 input-sm"
                                            value={{l.path}}
@@ -87,7 +87,7 @@
                             </td>
                             <td class="w-20 align-middle text-center">
                                 <span ng-if="!l.optOutOn">
-                                    Membership Required
+                                    Required
                                 </span>
                                 <div ng-if="l.optOutOn">
                                     <button id="optOutButton"
