@@ -76,6 +76,7 @@ public class GroupingsRestController {
     @PostConstruct
     public void init() {
         Assert.hasLength(uuid, "Property 'app.groupings.controller.uuid' is required.");
+
         logger.info("GroupingsRestController started.");
 
         // For sanitation
