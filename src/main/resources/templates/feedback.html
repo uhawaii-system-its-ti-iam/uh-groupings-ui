@@ -7,16 +7,9 @@
 
 <!--  Content container -->
 <div class="container">
-    <div class="alert alert-success" role="alert" th:if="${success}">
+    <div class="alert alert-success" role="alert" th:if="${success}" style="padding-top: 25px">
         <p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>
     </div>
-
-    <!--<div class="container">
-    <div th:if="${success}" replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.alertSuccess})">
-    </div>
-    </div>
-    <p th:utext="#{screen.message.feedback.page.description}"></p>
--->
     <div class="row pt-5 pb-4">
         <div class="col-lg-5 col-md-4 col-12">
             <h1 class="text-center text-md-left">Feedback</h1>
@@ -63,27 +56,8 @@
         </form>
         </div>
     </div>
-    </div>
 </div>
-<!-- / Content container. -->
- <!--   &lt;!&ndash;<h1>Feedback</h1>&ndash;&gt;
 
-    <div class="alert alert-success" role="alert" th:if="${success}">
-        &lt;!&ndash;<p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>&ndash;&gt;
-
-    </div>
--->
-
-    <!--<div class="container">
-    <div th:if="${success}" replace="fragments/page-header :: page-header(title='Feedback', description=#{screen.message.feedback.page.alertSuccess})">
-    </div>
-    </div>
-
-
-
-    <p th:utext="#{screen.message.feedback.page.description}"></p>
--->
-<!-- / Content container. -->
 <div th:replace="footer"></div>
 
 </body>
