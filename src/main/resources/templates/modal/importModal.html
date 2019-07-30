@@ -19,15 +19,15 @@
         <span style="color: black" th:text="#{screen.message.modal.import.confirmation}"></span>
         <span style="color: black">{{listName}} list.</span>
     </p>
-    <table style="width: 265px; float: left">
+    <table style="width: 245px; float: left">
         <thead>
         <tr style="font-weight: bold;">
-            <th>User Name</th>
-            <th>Status</th>
+            <th ng-click="memberSort(userNameList, sortNameStr, sortStatus)">User Name</th>
+            <th ng-click="memberSort(userNameList, sortStatusStr, sortStatus)">Status</th>
         </tr>
         </thead>
     </table>
-    <div style="width: 290px; height: 200px; overflow: scroll; float: left">
+    <div style="width: 290px; height: 200px; overflow: scroll; float: left; margin-right: 15px">
         <table style="height: 200px; float: left">
             <tbody>
             <tr ng-repeat="item in userNameList" ng-class="{'selected':$index == selectedRow}"
@@ -41,12 +41,16 @@
     <!--
     <button class="btn btn-primary" ng-click="memberSort(userNameList)">Sort</button>
     --->
-    <p ng-class="{'selected':$index == selectedRow}">
-        {{ displayStatusInfo() }}
+    <p ng-class="{'selected':$index == selectedRow}" style="margin-left: 10px">
+        <span style="font-weight: bold">
+            {{ getSelectedUserName() }}
+        </span>
+        {{ displaySelectedStatus() }}
     </p>
     <div style="float: left">
-        <p>
-            Are you sure you want to add these :)
+        <p> Are you sure you want to add these users to the
+            <span style="color: black">{{listName}}</span>
+            <span style="color: black"> list?</span>
         </p>
     </div>
 </div>

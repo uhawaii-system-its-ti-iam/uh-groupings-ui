@@ -20,6 +20,10 @@
             $scope.userNameList = [{}];
             $scope.selectedRow = null;
             $scope.validUserNameCount = 0;
+            $scope.sortNameStr = "name";
+            $scope.sortStatusStr = "status";
+            $scope.sortName = false;
+            $scope.sortStatus = false;
 
             $scope.itemsAlreadyInList = [];
             $scope.itemsInOtherList = [];
@@ -491,6 +495,12 @@
                 });
             };
 
+            /**
+             * Takes in an array of member objects and returns a comma separated string of all the member user names
+             * @author Zachary Gilbert
+             * @param validUserNames - Array of member objects
+             * @return {*}
+             */
             function toCommaSeparatedString(validUserNames) {
                 let str = validUserNames[0].name;
                 const comma = ", ";
@@ -553,22 +563,30 @@
                     }
                 });
             };
-
-            $scope.displayStatusInfo = function () {
+            /**
+             * Returns the userName string that is currently selected
+             * @author Zachary Gilbert
+             * @return {string|*}
+             */
+            $scope.getSelectedUserName = function () {
+                if ($scope.selectedRow === null)
+                    return "";
+                return $scope.userNameList[$scope.selectedRow].name;
+            };
+            $scope.displaySelectedStatus = function () {
                 if ($scope.selectedRow === null)
                     return "";
                 const status = $scope.userNameList[$scope.selectedRow].status;
-                const name = $scope.userNameList[$scope.selectedRow].name;
                 const listName = $scope.listName;
 
                 if (status === listName)
-                    return name + " is already a member of the " + listName + " list";
+                    return " is already a member of the " + listName + " list";
                 else if (status === "Valid")
-                    return name + " will be added upon confirmation";
+                    return " will be added upon confirmation";
                 else if (status === "Invalid")
-                    return name + " is an invalid user name and will not be added upon confirmation";
+                    return " is an invalid user name and will not be added upon confirmation";
                 else if (status === getOtherList(listName))
-                    return name + " is already a member of the " + getOtherList(listName) +
+                    return " is already a member of the " + getOtherList(listName) +
                         " list, and on confirmation will be removed from the " + getOtherList(listName) +
                         " list and added to the " + listName + " list.";
                 else
@@ -576,14 +594,59 @@
             };
 
             /**
-             * Sorts the array of member objects by name
+             * Sorts the array of member objects by name or status and in reverse of each as well.
              * @author Zachary Gilbert
              * @param arr
+             * @param sortByStr
+             * @param sortBy
              */
-            $scope.memberSort = function (arr) {
-                $scope.userNameList = _.sortBy(arr, [function (o) {
-                    return o.status;
-                }]);
+            $scope.memberSort = function (arr, sortByStr, sortBy) {
+                if (sortBy) {
+                    if (sortByStr === "name") {
+                        $scope.userNameList = _.sortBy(arr, [function (o) {
+                            return o.name;
+                        }]);
+                    } else if (sortByStr === "status") {
+                        $scope.userNameList = _.sortBy(arr, [function (o) {
+                            return o.status;
+                        }]);
+                    }
+                } else {
+                    if (sortByStr === "name") {
+                        $scope.userNameList = _.sortBy(arr, [function (o) {
+                            return o.name;
+                        }]).reverse();
+                    } else if (sortByStr === "status") {
+                        $scope.userNameList = _.sortBy(arr, [function (o) {
+                            return o.status;
+                        }]).reverse();
+                    }
+                }
+                $scope.sortStatus = !sortBy;
+                /**
+                 if (sortByStr === "name") {
+                    if (sortBy) {
+                        $scope.userNameList = _.sortBy(arr, [function (o) {
+                            return o.name;
+                        }]);
+                    } else {
+                        $scope.userNameList = _.sortBy(arr, [function (o) {
+                            return o.name;
+                        }]).reverse();
+                    }
+                    $scope.sortName = !sortBy;
+                } else if (sortByStr === "status") {
+                    if (sortBy) {
+                        $scope.userNameList = _.sortBy(arr, [function (o) {
+                            return o.status;
+                        }]);
+                    } else {
+                        $scope.userNameList = _.sortBy(arr, [function (o) {
+                            return o.status;
+                        }]).reverse();
+                    }
+                }
+                 */
             };
 
             /**
