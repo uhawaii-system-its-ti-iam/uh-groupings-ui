@@ -457,6 +457,7 @@
                     $scope.validUserNameCount = validUserNames.length;
                 }
                 validUserNames = toCommaSeparatedString(validUserNames);
+                $scope.loading = true;
                 $scope.create_Confirm_Add_Members_Modal(validUserNames, $scope.listName);
 
             };
@@ -486,6 +487,7 @@
                     templateUrl: "modal/confirmAddMembersModal",
                     scope: $scope
                 });
+                $scope.loading = false;
                 $scope.confirmAddMembersModalInstance.result.finally(function () {
                     clearAddMemberInput(list);
                     $scope.loading = true;
