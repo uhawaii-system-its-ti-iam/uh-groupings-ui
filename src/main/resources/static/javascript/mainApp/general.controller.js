@@ -465,9 +465,10 @@
                 let handleSuccessfulAdd = function () {
                     $scope.update_Add_Members(userNameList, listName);
                 };
-                if (listName === "Include") {
+                if (listName === "Include")
                     groupingsService.addMembersToInclude(groupingPath, userNameList, handleSuccessfulAdd, handleUnsuccessfulRequest);
-                }
+                else if (listName === "Exclude")
+                    groupingsService.addMembersToExclude(groupingPath, userNameList, handleSuccessfulAdd, handleUnsuccessfulRequest);
 
             };
 
@@ -692,9 +693,8 @@
                         response: res
                     });
                 };
-                if (list === "Include") {
+                if (list === "Include")
                     groupingsService.addMembersToInclude(groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
-                }
             };
 
             /**
