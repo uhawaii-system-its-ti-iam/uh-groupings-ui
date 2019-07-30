@@ -9,16 +9,11 @@
                        ng-show="columnSort.groupingsList.property === 'name' || !columnSort.groupingsList"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
-                <th class="clickable" scope="col">
-<!--                    Same as below-->
-<!--                    # of Members-->
-                </th>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')" class="clickable">
                     Grouping Path
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
-                <!--<th> Opt Out?</th>-->
             </tr>
             </thead>
             <tbody class="p-2 table table-borderless">
@@ -28,11 +23,6 @@
                     ng-click="displayGrouping(currentPageGroupings, $index)">
                     <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
                     {{l.name}}
-                </td>
-                <td>
-<!--                    Uncomment once implemented-->
-<!--                    <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i>-->
-<!--                    59-->
                 </td>
                 <td class="p-10">
                     <form class="seamless border border-secondary rounded">
