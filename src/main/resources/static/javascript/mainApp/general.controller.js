@@ -432,11 +432,12 @@
                     }
                 });
             };
+
             /**
-             * Reads a text file(.txt) from client side. The file should consist of a list of UH user names or ids separated by newline characters, that the user is ready to add to a grouping list (Include, Exclude, ... etc.)
+             * Reads a text file(.txt) from client side. The file should consist of a list of UH user names or ids separated by newline characters, that the user is ready to add to a grouping list (Include, Exclude)
              * @author Zachary Gilbert
-             * @param $event
-             * @param listName
+             * @param $event - FileReader event sent from Include.html or Exclude.html
+             * @param listName - Include or Exclude
              */
             $scope.readTextFile = function ($event, listName) {
                 $scope.listName = listName;
@@ -450,11 +451,16 @@
                         templateUrl: "modal/importModal",
                         scope: $scope
                     });
-                    $scope.confirmImportInstance.result.then(function () {
-                    });
                 };
                 reader.readAsText(file);
             };
+
+            /**
+             * - Creates a comma separated string of all valid too be members
+             * - Calls the import members modal function
+             * - Opens spinner for load
+             * @author Zachary Gilbert
+             */
             $scope.importMembers = function () {
                 let validUserNames = $scope.removeInvalidUserNames($scope.userNameList, $scope.listName);
                 if (validUserNames.length > 0) {
@@ -462,13 +468,21 @@
                 }
                 validUserNames = toCommaSeparatedString(validUserNames);
                 $scope.loading = true;
-                $scope.create_Confirm_Add_Members_Modal(validUserNames, $scope.listName);
+                $scope.createConfirmImportModal(validUserNames, $scope.listName);
 
             };
-            $scope.create_Confirm_Add_Members_Modal = function (userNameList, listName) {
+
+            /**
+             * - Posts new imported data to the grouper database
+             * - Opens import success modal
+             * @author Zachary Gilbert
+             * @param userNameList - string of comma separated user names
+             * @param listName - Include or Exclude
+             */
+            $scope.createConfirmImportModal = function (userNameList, listName) {
                 let groupingPath = $scope.selectedGrouping.path;
                 let handleSuccessfulAdd = function () {
-                    $scope.update_Add_Members(userNameList, listName);
+                    $scope.updateImportMembers(listName);
                 };
                 if (listName === "Include")
                     groupingsService.addMembersToInclude(groupingPath, userNameList, handleSuccessfulAdd, handleUnsuccessfulRequest);
@@ -477,14 +491,21 @@
 
             };
 
-            $scope.update_Add_Members = function (usersToAdd, list) {
+            /**
+             * - Creates the import members success modal
+             * - Closes spinner
+             * - Refreshes page after the modal is closed
+             * @author Zachary Gilbert
+             * @param listName
+             */
+            $scope.updateImportMembers = function (listName) {
                 $scope.confirmAddMembersModalInstance = $uibModal.open({
                     templateUrl: "modal/confirmAddMembersModal",
                     scope: $scope
                 });
                 $scope.loading = false;
                 $scope.confirmAddMembersModalInstance.result.finally(function () {
-                    clearAddMemberInput(list);
+                    clearAddMemberInput(listName);
                     $scope.loading = true;
                     if ($scope.listName === "admins") {
                         // Refreshes the groupings list and the admins list
@@ -496,10 +517,11 @@
             };
 
             /**
-             * Takes in an array of member objects and returns a comma separated string of all the member user names
+             * - Takes in an array of member objects
+             * - Returns a comma separated string of all the member user names
              * @author Zachary Gilbert
              * @param validUserNames - Array of member objects
-             * @return {*}
+             * @return {*} Comma separated string
              */
             function toCommaSeparatedString(validUserNames) {
                 let str = validUserNames[0].name;
@@ -511,13 +533,10 @@
             }
 
             /**
-             * Takes in the string of user names of which are separated by newline characters, splits string into array, then sorts and removes the duplicate and empty string elements.
-             * Functions are called in order as follows
-             *   - split()
-             *   - Set()
-             *   - _.without()
+             * - Takes in the string of user names of which are separated by newline characters
+             * - Splits string into array, then sorts and removes the duplicate and empty string elements.
              * @author Zachary Gilbert
-             * @param str
+             * @param str - String of newline separated usernames
              * @return {[string]}
              */
             $scope.createUniqArrayFromString = function (str) {
@@ -526,11 +545,13 @@
             };
 
             /**
-             * Checks if user names in the imported list exit in the current list, or in any other list, and uses checkUserNameValidity to check if the user name to be added is valid. Adds user name strings to an array of member objects.
+             * - Checks if user names in the imported list exist in the current list, or in any other list
+             * - Uses checkUserNameValidity to check if the user name to be added is valid.
+             * - Adds user name strings to an array of member objects.
              * @author Zachary Gilbert
              * @param pendingList - Array of username strings
              * @param listName - Include, Exclude, ... etc
-             * @return {{}[]}
+             * @return {{}[]} - Array of member objects
              */
             $scope.createUserNameListObject = function (pendingList, listName) {
                 let userNameList = [{}];
@@ -563,6 +584,7 @@
                     }
                 });
             };
+
             /**
              * Returns the userName string that is currently selected
              * @author Zachary Gilbert
@@ -584,7 +606,7 @@
                 else if (status === "Valid")
                     return " will be added upon confirmation";
                 else if (status === "Invalid")
-                    return " is an invalid user name and will not be added upon confirmation";
+                    return " is an invalid user name and will not be added upon confirmation.";
                 else if (status === getOtherList(listName))
                     return " is already a member of the " + getOtherList(listName) +
                         " list, and on confirmation will be removed from the " + getOtherList(listName) +
