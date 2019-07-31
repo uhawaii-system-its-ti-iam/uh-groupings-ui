@@ -557,12 +557,14 @@
                 let userNameList = [{}];
 
                 for (let item of pendingList) {
-                    if ($scope.existInList(item, listName)) {
-                        userNameList.push(new Member(item, listName));
-                    } else if ($scope.isInAnotherList(item, listName)) {
-                        userNameList.push(new Member(item, getOtherList(listName)));
-                    } else {
-                        $scope.checkUserNameValidity(item, userNameList, listName);
+                    if (item.length <= 16) {
+                        if ($scope.existInList(item, listName)) {
+                            userNameList.push(new Member(item, listName));
+                        } else if ($scope.isInAnotherList(item, listName)) {
+                            userNameList.push(new Member(item, getOtherList(listName)));
+                        } else {
+                            $scope.checkUserNameValidity(item, userNameList, listName);
+                        }
                     }
                 }
                 return userNameList;
@@ -602,7 +604,7 @@
                 const listName = $scope.listName;
 
                 if (status === listName)
-                    return " is already a member of the " + listName + " list";
+                    return " is already a member of the " + listName + " list.";
                 else if (status === "Valid")
                     return " will be added upon confirmation";
                 else if (status === "Invalid")
