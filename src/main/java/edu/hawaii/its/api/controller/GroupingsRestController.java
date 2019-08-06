@@ -432,7 +432,6 @@ public class GroupingsRestController {
 
         logger.info(baseUri + params);
 
-//        return  new ResponseEntity(HttpStatus.FORBIDDEN);
         return httpRequestService.makeApiRequest(principal.getName(), baseUri + params, HttpMethod.GET);
     }
 
@@ -461,7 +460,6 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", principal.getName());
 
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
-//        return  new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
     /**
