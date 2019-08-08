@@ -12,10 +12,6 @@
 
         //Possible switch to $log
         function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
-            function Member(name, status) {
-                this.name = name;
-                this.status = status;
-            }
 
             $scope.userNameList = [{}];
             $scope.selectedRow = null;
@@ -78,6 +74,11 @@
             $scope.maxDescriptionLength = 100;
             //The user input
             $scope.modelDescription;
+
+            function Member(name, status) {
+                this.name = name;
+                this.status = status;
+            }
 
             var maxLength = 100;
             var noDescriptionMessage = "No description given for this Grouping.";
@@ -434,23 +435,33 @@
             };
 
             /**
+             * Launches the import modal from "listName".html
+             * @author Zachary Gilbert
+             * @param listName - Include or Exclude
+             */
+            $scope.launchImportModal = function (listName) {
+                $scope.listName = listName;
+
+                $scope.confirmImportInstance = $uibModal.open({
+                    templateUrl: "modal/importModal",
+                    size: "lg",
+                    scope: $scope
+                });
+            };
+
+            /**
              * Reads a text file(.txt) from client side. The file should consist of a list of UH user names or ids separated by newline characters, that the user is ready to add to a grouping list (Include, Exclude)
              * @author Zachary Gilbert
              * @param $event - FileReader event sent from Include.html or Exclude.html
              * @param listName - Include or Exclude
              */
-            $scope.readTextFile = function ($event, listName) {
-                $scope.listName = listName;
+            $scope.readTextFile = function ($event) {
                 let input = $event.currentTarget.parentNode.childNodes[1];
                 let file = input.files[0];
                 let reader = new FileReader();
                 reader.onload = function (e) {
                     let str = e.target.result;
-                    $scope.userNameList = $scope.createUserNameListObject($scope.createUniqArrayFromString(str), listName);
-                    $scope.confirmImportInstance = $uibModal.open({
-                        templateUrl: "modal/importModal",
-                        scope: $scope
-                    });
+                    $scope.userNameList = $scope.createUserNameListObject($scope.createUniqArrayFromString(str), $scope.listName);
                 };
                 reader.readAsText(file);
             };
@@ -462,6 +473,7 @@
              * @author Zachary Gilbert
              */
             $scope.importMembers = function () {
+                $scope.imported = true;
                 let validUserNames = $scope.removeInvalidUserNames($scope.userNameList, $scope.listName);
                 if (validUserNames.length > 0) {
                     $scope.validUserNameCount = validUserNames.length;
@@ -541,7 +553,6 @@
              */
             $scope.createUniqArrayFromString = function (str) {
                 return _.without([...new Set(str.split("\n"))], "");
-
             };
 
             /**
@@ -597,6 +608,12 @@
                     return "";
                 return $scope.userNameList[$scope.selectedRow].name;
             };
+
+            $scope.hideComponent = function (id) {
+                let component = document.getElementById(id);
+                component.style.display = "none";
+            };
+
             $scope.displaySelectedStatus = function () {
                 if ($scope.selectedRow === null)
                     return "";
@@ -720,6 +737,7 @@
              */
             $scope.cancelImportModalInstance = function () {
                 $scope.confirmImportInstance.dismiss();
+                clearAddMemberInput($scope.listName);
             };
 
             /**
@@ -1282,8 +1300,19 @@
             function clearAddMemberInput(listName) {
                 switch (listName) {
                     case "Include":
+                        $scope.userNameList = [{}];
+                        $scope.selectedRow = null;
+                        $scope.validUserNameCount = 0;
+                        $scope.sortName = false;
+                        $scope.sortStatus = false;
+                        break;
                     case "Exclude":
                         $scope.userToAdd = "";
+                        $scope.userNameList = [{}];
+                        $scope.selectedRow = null;
+                        $scope.validUserNameCount = 0;
+                        $scope.sortName = false;
+                        $scope.sortStatus = false;
                         break;
                     case "owners":
                         $scope.ownerToAdd = "";

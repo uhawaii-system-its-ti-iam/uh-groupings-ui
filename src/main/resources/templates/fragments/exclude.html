@@ -102,27 +102,11 @@
                     </div>
                 </form>
             </div>
+            <div>
+                <button class="btn btn-primary" ng-click="launchImportModal('Exclude')">Import File</button>
+            </div>
             <div class="mt-lg-0 mt-2">
                 <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude')"></div>
-            </div>
-        </div>
-        <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
-            <div>
-                <form ng-submit="addMembers('Exclude')">
-                    <div class="input-group">
-                    <textarea placeholder="Members to Add" class="form-control" rows="1" cols="15"
-                              title="Enter multiple UH usernames to exclude" ng-model="usersToAdd"></textarea>
-                        <span class="input-group-append">
-                    <button class="btn btn-primary" type="submit">Add Members</button>
-                </span>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
-            <div>
-                <input type="file" accept="text/plain">
-                <button class="btn btn-primary" ng-click="readTextFile($event, 'Exclude')">Import</button>
             </div>
         </div>
     </div>

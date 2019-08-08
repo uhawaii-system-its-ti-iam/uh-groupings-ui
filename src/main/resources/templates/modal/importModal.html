@@ -19,7 +19,7 @@
         <span style="color: black" th:text="#{screen.message.modal.import.confirmation}"></span>
         <span style="color: black">{{listName}} list.</span>
     </p>
-    <table style="width: 245px; float: left">
+    <table style="width: 245px">
         <thead>
         <tr style="font-weight: bold;">
             <th ng-click="memberSort(userNameList, sortNameStr, sortStatus)">User Name</th>
@@ -27,8 +27,8 @@
         </tr>
         </thead>
     </table>
-    <div style="width: 290px; height: 200px; overflow: scroll; float: left; margin-right: 15px">
-        <table style="height: 200px; float: left">
+    <div style="width: 290px; height: 200px; overflow: scroll; margin-right: 15px ; float:left;">
+        <table>
             <tbody>
             <tr ng-repeat="item in userNameList" ng-class="{'selected':$index == selectedRow}"
                 ng-click="setClickedRow($index)">
@@ -38,24 +38,29 @@
             </tbody>
         </table>
     </div>
-    <!--
-    <button class="btn btn-primary" ng-click="memberSort(userNameList)">Sort</button>
-    --->
     <p ng-class="{'selected':$index == selectedRow}" style="margin-left: 10px">
         <span style="font-weight: bold">
             {{ getSelectedUserName() }}
         </span>
         {{ displaySelectedStatus() }}
     </p>
-    <div style="float: left">
-        <p> Are you sure you want to add these users to the
-            <span style="color: black">{{listName}}</span>
-            <span style="color: black"> list?</span>
-        </p>
+
+</div>
+<div class="modal-body">
+    <div ng-model="imported" ng-init="imported=false">
+        <input type="file" accept="text/plain" id="importInput">
+        <button class="btn btn-primary" id="importButton"
+                ng-click="readTextFile($event); imported=true; hideComponent('importInput'); hideComponent('importButton')">
+            Import
+        </button>
     </div>
+    <p ng-if="imported"> Are you sure you want to add these users to the
+        <span style="color: black">{{listName}}</span>
+        <span style="color: black"> list?</span>
+    </p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="importMembers()">Yes</button>
     <button class="btn btn-default" data-dismiss="modal" ng-click="cancelImportModalInstance()">Cancel</button>
-    </adiv>
+</div>
 </html>

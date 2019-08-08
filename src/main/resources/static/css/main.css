@@ -6,7 +6,7 @@ html {
 
 body {
     font-family: 'Source Sans Pro', 'Helvetica', Arial, sans-serif;
-    padding-top: 3.5rem;  /*Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    padding-top: 3.5rem; /*Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
     /*padding-bottom: 3.125rem;*/
     display: flex;
     min-height: 100vh;
@@ -157,7 +157,7 @@ td.uh-pre {
 }
 
 .card.card-with-table.card-tab-content {
-    margin-top:0rem;
+    margin-top: 0rem;
 }
 
 .card.card-tab-content, .card.card-tab-content .card-header {
@@ -185,12 +185,15 @@ td.uh-pre {
 table .w-20 {
     width: 20%;
 }
+
 table .w-30 {
     width: 30%;
 }
+
 table .p-5 {
     padding: 5px !important
 }
+
 table .p-10 {
     padding: 5px 10px !important
 }
@@ -349,16 +352,19 @@ table .p-10 {
 .selected-grouping-card table > tbody > tr:first-child > th, .selected-grouping-card table > tbody > tr:first-child > td {
     border-top: 0;
 }
+
 @media (min-width: 992px) {
     th.grouping-name {
         min-width: 10rem;
     }
+
     /*.manage-groupings td span.path {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }*/
 }
+
 th {
     font-size: .8rem;
     letter-spacing: .5px;
@@ -375,15 +381,19 @@ th {
     flex-basis: 20px;
     margin-right: 8px;
 }
+
 .manage-groupings td:first-child span {
     flex: 1;
 }
+
 .manage-groupings td:last-child {
     max-width: 220px;
 }
+
 th.grouping-members {
     min-width: 8rem;
 }
+
 .manage-groupings td span.path {
     display: inline-block;
     overflow: hidden;
@@ -391,10 +401,12 @@ th.grouping-members {
     width: calc(100% - 40px);
     white-space: nowrap;
 }
+
 .manage-groupings td:last {
     align-items: center;
     display: flex;
 }
+
 .manage-groupings tr td {
     padding: 0px;
 }
@@ -403,21 +415,23 @@ form.seamless {
     display: flex;
     min-width: 12rem;
 }
+
 form.seamless input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     flex: 1;
     width: calc(100% - 50px);
 }
+
 form.seamless button {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     flex-basis: 40px;
 }
+
 .form-control-sm {
     height: 20px !important;
 }
-
 
 
 @media (max-width: 991.98px) {
@@ -442,11 +456,11 @@ form.seamless button {
     margin-bottom: 1rem;
 }*/
 
-.nav-tabs .nav-item{
+.nav-tabs .nav-item {
     margin-top: 1rem;
 }
 
-.card{
+.card {
     margin-top: 1rem;
 }
 
@@ -467,20 +481,38 @@ form.seamless button {
     color: #007bff;
 }
 
-.btn-bottom{
+.btn-bottom {
     position: absolute;
     bottom: 0;
     margin: -39px auto;
 }
+
 .btn-sm {
     padding: 0px !important
 }
 
-#footer-top{
+#footer-top {
     margin-top: 3rem;
 }
 
 .selected {
     background-color: #004e59;
     color: white;
+}
+
+.animate-if {
+    color: black;
+}
+
+.animate-if.ng-enter, .animate-if.ng-leave {
+    transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+}
+.animate-if.ng-enter,
+.animate-if.ng-leave.ng-leave-active {
+    opacity:0;
+}
+
+.animate-if.ng-leave,
+.animate-if.ng-enter.ng-enter-active {
+    opacity:1;
 }
