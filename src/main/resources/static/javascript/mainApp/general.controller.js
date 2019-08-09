@@ -75,9 +75,12 @@
             //The user input
             $scope.modelDescription;
 
-            function Member(name, status) {
+            function Member(name, status, added, uhid, id) {
                 this.name = name;
                 this.status = status;
+                this.added = added;
+                this.uhid = uhid;
+                this.id = id;
             }
 
             var maxLength = 100;
@@ -570,14 +573,15 @@
                 for (let item of pendingList) {
                     if (item.length <= 16) {
                         if ($scope.existInList(item, listName)) {
-                            userNameList.push(new Member(item, listName));
+                            userNameList.push(new Member(item, listName, "No"));
                         } else if ($scope.isInAnotherList(item, listName)) {
-                            userNameList.push(new Member(item, getOtherList(listName)));
+                            userNameList.push(new Member(item, getOtherList(listName), "Yes"));
                         } else {
                             $scope.checkUserNameValidity(item, userNameList, listName);
                         }
                     }
                 }
+                console.log(userNameList);
                 return userNameList;
             };
 
@@ -589,11 +593,11 @@
              * @param data - Object Array
              */
             $scope.checkUserNameValidity = function (userName, data) {
-                groupingsService.checkMember(userName, data, function () {
-                    data.push(new Member(userName, "Valid"));
+                groupingsService.checkMember(userName, data, function (attributes) {
+                    data.push(new Member(userName, "Valid", "Yes",attributes.uhuuid, attributes.uid));
                 }, function (res) {
                     if (res.statusCode === 404) {
-                        data.push(new Member(userName, "Invalid"));
+                        data.push(new Member(userName, "Invalid", "No"));
                     }
                 });
             };

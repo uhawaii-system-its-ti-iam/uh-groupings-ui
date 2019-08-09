@@ -19,11 +19,11 @@
         <span style="color: black" th:text="#{screen.message.modal.import.confirmation}"></span>
         <span style="color: black">{{listName}} list.</span>
     </p>
-    <table style="width: 245px">
+    <table style="width: 235px">
         <thead>
         <tr style="font-weight: bold;">
             <th ng-click="memberSort(userNameList, sortNameStr, sortStatus)">User Name</th>
-            <th ng-click="memberSort(userNameList, sortStatusStr, sortStatus)">Status</th>
+            <th ng-click="memberSort(userNameList, sortStatusStr, sortStatus)">Added</th>
         </tr>
         </thead>
     </table>
@@ -33,12 +33,13 @@
             <tr ng-repeat="item in userNameList" ng-class="{'selected':$index == selectedRow}"
                 ng-click="setClickedRow($index)">
                 <td>{{item.name}}</td>
-                <td>{{item.status}}</td>
+                <td>{{item.added}}</td>
             </tr>
             </tbody>
         </table>
     </div>
-    <p ng-class="{'selected':$index == selectedRow}" style="margin-left: 10px">
+    <p ng-class="{'selected':$index == selectedRow}"
+       style="margin-left: 40px; padding-left: 40px; padding-right: 45px">
         <span style="font-weight: bold">
             {{ getSelectedUserName() }}
         </span>
