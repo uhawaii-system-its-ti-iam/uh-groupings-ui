@@ -13,7 +13,8 @@
         //Possible switch to $log
         function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
-            $scope.userNameList = [{}];
+            $scope.userNameList = [];
+
             $scope.selectedRow = null;
             $scope.validUserNameCount = 0;
             $scope.sortNameStr = "name";
@@ -478,9 +479,10 @@
             $scope.importMembers = function () {
                 $scope.imported = true;
                 let validUserNames = $scope.removeInvalidUserNames($scope.userNameList, $scope.listName);
-                if (validUserNames.length > 0) {
+
+                if (validUserNames.length > 0)
                     $scope.validUserNameCount = validUserNames.length;
-                }
+                
                 validUserNames = toCommaSeparatedString(validUserNames);
                 $scope.loading = true;
                 $scope.createConfirmImportModal(validUserNames, $scope.listName);
@@ -558,6 +560,13 @@
                 return _.without([...new Set(str.split("\n"))], "");
             };
 
+            const whichList = (item, existInList, isInOtherList, listName) => {
+                if (existInList)
+                    return new Member(item, listName, "No", "", "");
+                else if (isInOtherList)
+                    return new Member(item, getOtherList(listName), "Yes", "", "");
+                return new Member(item, "", "No", "", "");
+            };
             /**
              * - Checks if user names in the imported list exist in the current list, or in any other list
              * - Uses checkUserNameValidity to check if the user name to be added is valid.
@@ -568,20 +577,12 @@
              * @return {{}[]} - Array of member objects
              */
             $scope.createUserNameListObject = function (pendingList, listName) {
-                let userNameList = [{}];
+                let userNameList = [];
 
                 for (let item of pendingList) {
-                    if (item.length <= 16) {
-                        if ($scope.existInList(item, listName)) {
-                            userNameList.push(new Member(item, listName, "No"));
-                        } else if ($scope.isInAnotherList(item, listName)) {
-                            userNameList.push(new Member(item, getOtherList(listName), "Yes"));
-                        } else {
-                            $scope.checkUserNameValidity(item, userNameList, listName);
-                        }
-                    }
+                    if (item.length <= 16)
+                        $scope.checkUserNameValidity(whichList(item, $scope.existInList(item, listName), $scope.isInAnotherList(item, listName)), userNameList, listName);
                 }
-                console.log(userNameList);
                 return userNameList;
             };
 
@@ -589,15 +590,19 @@
              * Sends a GET request to grouper using the groupingService checkMember method to check whether the user name is a valid member of the UH data base.
              * If 200 is returned, status is set to valid, otherwise if a 404 is returned, status is set to invalid.
              * @author Zachary Gilbert
-             * @param userName - UH user name
+             * @param memberNew - UH user name
              * @param data - Object Array
              */
-            $scope.checkUserNameValidity = function (userName, data) {
-                groupingsService.checkMember(userName, data, function (attributes) {
-                    data.push(new Member(userName, "Valid", "Yes",attributes.uhuuid, attributes.uid));
+            $scope.checkUserNameValidity = function (memberNew, data) {
+                groupingsService.checkMember(memberNew.name, data, function (attributes) {
+                    const status = (str) => {
+                        return (str === "") ? "Valid" : str;
+                    };
+
+                    data.push(new Member(memberNew.name, status(memberNew.status), "Yes", attributes.uhuuid, attributes.uid));
                 }, function (res) {
                     if (res.statusCode === 404) {
-                        data.push(new Member(userName, "Invalid", "No"));
+                        data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
                     }
                 });
             };
@@ -723,9 +728,8 @@
             $scope.removeInvalidUserNames = function (pendingList, listName) {
                 let itemsToRemove = [];
                 let removalNecessary = false;
-                pendingList.shift();
                 for (let item of pendingList) {
-                    if (item.status === listName || item.status === "Invalid") {
+                    if (item.added === "No") {
                         itemsToRemove.push(item);
                         removalNecessary = true;
                     }
