@@ -10,14 +10,13 @@
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
                 <th class="clickable" scope="col">
-<!--                    # of Members-->
+                    <!--                    # of Members-->
                 </th>
                 <th ng-click="sortBy('groupingsList', 'pagedItemsGroupings', 'path')" class="clickable d-none d-md-table-cell">
                     Grouping Path
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
-                <th class="w-20 text-center"> Opt Out?</th>
             </tr>
             </thead>
             <tbody class="table table-borderless">
@@ -26,14 +25,12 @@
                     ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                     ng-click="displayGrouping(currentPageGroupings, $index)">
                     <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
-
-                  {{l.name}}
+                    {{l.name}}
                 </td>
                 <td>
-
-<!--                    Uncomment once utility is implemented-->
-<!--                    <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i>-->
-<!--                    59-->
+                    <!--                    Uncomment once utility is implemented-->
+                    <!--                    <i class="fa fa-fw fa-user text-secondary text-muted" aria-hidden="true"></i>-->
+                    <!--                    59-->
                 </td>
                 <td class="p-10 d-none d-md-table-cell">
                     <form class="seamless border border-secondary rounded">
@@ -43,17 +40,6 @@
                         <button class="btn btn-sm" ng-click=copyPath(l)>
                             <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
                     </form>
-                </td>
-                <td class="w-20 align-middle">
-                    <span ng-if="l.optOutOn">
-                        Membership Required
-                    </span>
-                    <button class="btn btn-primary btn-block opt-button btn-sm"
-                            tabindex="0"
-                            ng-click="optOut(currentPageGroupings, $index)">
-                        <i class="fa fa-fw fa-user-plus" aria-hidden="true"></i>
-                        Opt Out
-                    </button>
                 </td>
             </tr>
             </tbody>
@@ -65,19 +51,3 @@
 
 
 </th:block>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
