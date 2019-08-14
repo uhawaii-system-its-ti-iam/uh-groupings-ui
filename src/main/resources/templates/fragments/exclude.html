@@ -1,117 +1,127 @@
 <th:block th:fragment="exclude">
 
-<div id="exclude" class="tab-pane fade show active">
+    <div id="exclude" class="tab-pane fade show active">
 
-    <div class="row">
-        <div class="col-md-8">
-            <h2 class="font-weight-bold text-dark pt-4">Exclude ({{groupingExclude.length}})</h2>
-            <!-- Export to CSV button -->
-            <button class="btn btn-sm btn-primary mb-4" type="submit" ng-click="exportGroupToCsv(groupingExclude, selectedGrouping.name, 'exclude')">
-                <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
-                Export to CSV
-            </button>
-        </div>
-        <div class="col-md-4">
-            <p class="pt-4 mb-1" ng-show="paginatingProgress" th:text="#{screen.message.common.loading.gettingmembers}"><i class="fa fa-spinner" aria-hidden="true"></i></p>
-            <p class="pt-4 mb-1" ng-show="paginatingComplete" th:text="#{screen.message.common.loading.loadcomplete}"><i class="fa fa-check" aria-hidden="true"></i></p>
-            <p class="pt-4 mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"> <i class="fa fa-check" aria-hidden="true"></i></p>
-            <input placeholder="Filter Members..." type="text" title="Filter Members"
-                   ng-model="excludeQuery" class="form-control"
-                   ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', excludeQuery, true)"/>
-        </div>
-    </div>
-
-    <div class="table-responsive">
-        <table class="table table-striped table-hover" aria-live="assertive">
-            <thead>
-            <tr>
-                <th scope="col" class="clickable"
-                    ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'name')">
-                    Name
-                    <i class="fa sort-icon"
-                       ng-show="columnSort.groupingExclude.property === 'name' || !columnSort.groupingExclude"
-                       ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
-                </th>
-                <th scope="col" class="clickable"
-                    ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'uuid')">
-                    UH Number
-                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'uuid'"
-                       ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
-                </th>
-                <th scope="col" class="clickable"
-                    ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'username')">
-                    UH Username
-                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'username'"
-                       ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
-                </th>
-                <th scope="col" class="basis-column clickable"
-                    ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'inBasis')">
-                    In Basis?
-                    <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'inBasis'"
-                       ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]">
-                <td tabindex="0">
-                    {{e.name}}
-                    <span class="fa fa-trash-o pull-right clickable pt-1"
-                          data-toggle="tooltip" data-placement="top"
-                          onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                          tabindex="0"
-                          th:title="#{screen.message.common.tooltip.remove.exclude}"
-                          ng-keypress="$event.keyCode === 13 ? removeMember('Exclude', currentPageExclude, $index) : null"
-                          ng-click="removeMember('Exclude', currentPageExclude, $index)">
-                    </span>
-                </td>
-                <td>{{e.uuid}}</td>
-                <td>
-                    {{e.username}}
-                    <div ng-if="e.username === ''">
-                        <span>N/A</span>
-                        <i class="fa fa-question-circle clickable" aria-hidden="true"
-                           data-toggle="tooltip" data-placement="right"
-                           onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
-                        </i>
-                    </div>
-                </td>
-                <td class="basis-column text-center">{{e.inBasis}}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
-        <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
-            <form ng-submit="addMember('Exclude')">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="UH Username"
-                           title="Enter UH username to exclude"
-                           ng-model="userToAdd"/>
-
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">Add</button>
-                    </div>
+        <div class="row">
+            <div class="col-md-8">
+                <h1 class="font-weight-bold text-dark pt-2 mb-0">All Members ({{groupingMembers.length}})</h1>
+                <p class=" mb-1" style="display:inline-block" ng-show="paginatingProgress"
+                   th:text="#{screen.message.common.loading.gettingmembers}"></p>
+                <div class="spinner-border spinner-border-sm" style="display:inline-block"
+                     ng-hide="!paginatingProgress"
+                     role="status">
+                    <span class="sr-only">Loading...</span>
                 </div>
-            </form>
+                <p class=" mb-1" ng-show="paginatingComplete"
+                   th:text="#{screen.message.common.loading.loadcomplete}"><i class="fa fa-check"
+                                                                              aria-hidden="true"></i></p>
+                <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
+                        class="fa fa-check" aria-hidden="true"></i></p>
+            </div>
+            <div class="col-md-4 pt-2">
+                <input placeholder="Filter Members..." type="text" title="Filter Members"
+                       ng-model="membersQuery" class="form-control"
+                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
+                <!-- Export to CSV button -->
+                <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
+                        ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
+                    <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
+                    Export to CSV
+                </button>
+            </div>
         </div>
-        <div class="mt-lg-0 mt-2">
-            <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude')"></div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" aria-live="assertive">
+                <thead>
+                <tr>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'name')">
+                        Name
+                        <i class="fa sort-icon"
+                           ng-show="columnSort.groupingExclude.property === 'name' || !columnSort.groupingExclude"
+                           ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
+                    </th>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'uuid')">
+                        UH Number
+                        <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'uuid'"
+                           ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
+                    </th>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'username')">
+                        UH Username
+                        <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'username'"
+                           ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
+                    </th>
+                    <th scope="col" class="basis-column clickable"
+                        ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'inBasis')">
+                        Basis?
+                        <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'inBasis'"
+                           ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
+                    <td class="p-10" tabindex="0">
+                        {{e.name}}
+                        <span class="fa fa-trash-o pull-right clickable pt-1"
+                              data-toggle="tooltip" data-placement="top"
+                              onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                              tabindex="0"
+                              th:title="#{screen.message.common.tooltip.remove.exclude}"
+                              ng-keypress="$event.keyCode === 13 ? removeMember('Exclude', currentPageExclude, $index) : null"
+                              ng-click="removeMember('Exclude', currentPageExclude, $index)">
+                    </span>
+                    </td>
+                    <td class="p-10">{{e.uuid}}</td>
+                    <td class="p-10">
+                        {{e.username}}
+                        <div ng-if="e.username === ''">
+                            <span>N/A</span>
+                            <i class="fa fa-question-circle clickable" aria-hidden="true"
+                               data-toggle="tooltip" data-placement="right"
+                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                               th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                            </i>
+                        </div>
+                    </td>
+                    <td class="basis-column text-center p-10">{{e.inBasis}}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-    <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
-        <div>
-            <form ng-submit="addMembers('Exclude')">
-                <div class="input-group">
+        <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
+            <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
+                <form ng-submit="addMember('Exclude')">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="UH Username"
+                               title="Enter UH username to exclude"
+                               ng-model="userToAdd"/>
+
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="mt-lg-0 mt-2">
+                <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude')"></div>
+            </div>
+        </div>
+        <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
+            <div>
+                <form ng-submit="addMembers('Exclude')">
+                    <div class="input-group">
                     <textarea placeholder="Members to Add" class="form-control" rows="1" cols="15"
                               title="Enter multiple UH usernames to exclude" ng-model="usersToAdd"></textarea>
-                    <span class="input-group-append">
+                        <span class="input-group-append">
                     <button class="btn btn-primary" type="submit">Add Members</button>
                 </span>
-                </div>
-            </form>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 </th:block>

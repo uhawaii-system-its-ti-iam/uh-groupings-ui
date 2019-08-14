@@ -29,8 +29,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]">
-                <td tabindex="0">
+            <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
+                <td class="p-10" tabindex="0">
                     {{owner.name}}
                     <span class="fa fa-trash-o pull-right clickable pt-1"
                           data-toggle="tooltip" data-placement="top"
@@ -41,7 +41,7 @@
                           ng-click="removeOwner(currentPageOwners, $index)">
                     </span>
                 </td>
-                <td>
+                <td class="p-10">
                     {{owner.username}}
                     <div ng-if="owner.username === ''">
                         <span>N/A</span>

@@ -354,11 +354,6 @@ table .p-10 {
     th.grouping-name {
         min-width: 10rem;
     }
-    /*.manage-groupings td span.path {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }*/
 }
 th {
     font-size: .8rem;
@@ -419,8 +414,6 @@ form.seamless button {
     height: 20px !important;
 }
 
-
-
 @media (max-width: 991.98px) {
     .tooltip {
         display: none;
@@ -439,10 +432,6 @@ form.seamless button {
     overflow: hidden;
 }
 
-/*.card.page-header {
-    margin-bottom: 1rem;
-}*/
-
 .nav-tabs .nav-item{
     margin-top: 1rem;
 }
@@ -458,7 +447,6 @@ form.seamless button {
 .text-tracking {
     letter-spacing: 1px;
 }
-
 
 .container {
     flex: 1;
