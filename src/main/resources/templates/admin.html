@@ -16,6 +16,12 @@
                 <a href="#manage-groupings" data-toggle="tab" class="nav-link active" role="tab">
                     Manage Groupings
                 </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="#manage-owners" data-toggle="tab" class="nav-link" role="tab">
+                    Manage Owners
+                </a>
+            </li>
             <li class="nav-item" role="presentation" ng-click="displayAdmins()">
                 <a href="#manage-admins" data-toggle="tab" class="nav-link" role="tab">
                     Manage Admins
@@ -31,7 +37,23 @@
     </div>
     <div ng-show="!showGrouping">
         <div class="tab-content">
+            <!-- Manage Groupings(default) -->
             <div class="tab-pane fade show active" id="manage-groupings" role="tabcard" >
+                <div class="row m-auto pt-3 pb-3">
+                    <div class="col-lg-9 col-md-8 col-12 p-0">
+                        <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-12 p-0">
+                        <input class="form-control" placeholder="Filter Groupings..." type="text"
+                               title="Filter Groupings"
+                               ng-model="groupingsQuery"
+                               ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
+                    </div>
+                </div>
+                <div th:replace="fragments/admin-groupings-list :: admin-groupings-list(title='Manage Groupings', tabContent=true)"></div>
+            </div>
+            <!-- Manage Owners -->
+            <div class="tab-pane fade show active" id="manage-owners" role="tabcard" >
                 <div class="row m-auto pt-3 pb-3">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
                         <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
