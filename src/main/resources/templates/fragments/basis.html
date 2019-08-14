@@ -3,24 +3,34 @@
 
         <div class="row">
             <div class="col-md-8">
-                <h2 class="font-weight-bold text-dark pt-4">Basis ({{groupingBasis.length}})</h2>
+                <h1 class="font-weight-bold text-dark pt-2 mb-0">All Members ({{groupingMembers.length}})</h1>
+                <p class=" mb-1" style="display:inline-block" ng-show="paginatingProgress"
+                   th:text="#{screen.message.common.loading.gettingmembers}"></p>
+                <div class="spinner-border spinner-border-sm" style="display:inline-block"
+                     ng-hide="!paginatingProgress"
+                     role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <p class=" mb-1" ng-show="paginatingComplete"
+                   th:text="#{screen.message.common.loading.loadcomplete}"><i class="fa fa-check"
+                                                                              aria-hidden="true"></i></p>
+                <p class=" mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"><i
+                        class="fa fa-check" aria-hidden="true"></i></p>
+            </div>
+            <div class="col-md-4 pt-2">
+                <input placeholder="Filter Members..." type="text" title="Filter Members"
+                       ng-model="membersQuery" class="form-control"
+                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
                 <!-- Export to CSV button -->
-                <button class="btn btn-sm btn-primary mb-4" type="submit" ng-click="exportGroupToCsv(groupingBasis, selectedGrouping.name, 'basis')">
+                <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
+                        ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')">
                     <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
                     Export to CSV
                 </button>
             </div>
-            <div class="col-md-4">
-                <p class="pt-4 mb-1" ng-show="paginatingProgress" th:text="#{screen.message.common.loading.gettingmembers}"><i class="fa fa-spinner" aria-hidden="true"></i></p>
-                <p class="pt-4 mb-1" ng-show="paginatingComplete" th:text="#{screen.message.common.loading.loadcomplete}"><i class="fa fa-check" aria-hidden="true"></i></p>
-                <p class="pt-4 mb-1" ng-show="largeGrouping" th:text="#{screen.message.common.loading.toolarge}"> <i class="fa fa-check" aria-hidden="true"></i></p>
-                <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="basisQuery" class="form-control"
-                       ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery, true)"/>
-            </div>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-responsive-sm">
             <table class="table table-striped table-hover" aria-live="assertive">
                 <thead>
                 <tr>
@@ -46,10 +56,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="b in pagedItemsBasis[currentPageBasis]">
-                    <td>{{b.name}}</td>
-                    <td>{{b.uuid}}</td>
-                    <td>
+                <tr ng-repeat="b in pagedItemsBasis[currentPageBasis]" class="table table-sm">
+                    <td class="p-10">{{b.name}}</td>
+                    <td class="p-10">{{b.uuid}}</td>
+                    <td class="p-10">
                         {{b.username}}
                         <div ng-if="b.username === ''">
                             <span>N/A</span>
