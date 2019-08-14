@@ -19,6 +19,7 @@ h1 {
 
 h2 {
     font-size: 1.5rem;
+    padding: 0px;
 }
 
 h3 {
@@ -473,15 +474,18 @@ form.seamless button {
     margin: -39px auto;
 }
 .btn-sm {
-    padding: 0px
+    padding: 0px 5px;
 }
 
 #footer-top{
     margin-top: 3rem;
 }
 
+<<<<<<< HEAD
 .csv {
     btn-primary;
     margin:4;
     line-height:0;
 }
+=======
+>>>>>>> ccde562b8daa530cddc297123c7ade89cf27270a
