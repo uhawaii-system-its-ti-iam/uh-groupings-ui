@@ -415,15 +415,18 @@
          * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
-            const groupingPath = $scope.selectedGrouping.path;
+            var groupingPath = $scope.selectedGrouping.path;
             groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function () {
-                const userToAdd = $scope.userToAdd;
+                var userToAdd = $scope.userToAdd;
+                var inBasis = _.some($scope.groupingBasis, {username: userToAdd});
                 if (_.isEmpty(userToAdd)) {
                     $scope.createAddErrorModal(userToAdd);
                 } else if ($scope.existInList(userToAdd, list)) {
-                    $scope.createCheckModal(userToAdd, list, false);
+                    $scope.createCheckModal(userToAdd, list, false, inBasis);
                 } else if ($scope.isInAnotherList(userToAdd, list)) {
-                    $scope.createCheckModal(userToAdd, list, true);
+                    $scope.createCheckModal(userToAdd, list, true, inBasis);
+                } else if ((inBasis && list == "Include") || (!inBasis && list == "Exclude" )) {
+                    $scope.createBasisWarningModal(userToAdd, list, inBasis);
                 } else {
                     $scope.createConfirmAddModal({
                         userToAdd: userToAdd,
@@ -1149,6 +1152,35 @@
             });
         };
 
+        /**
+         * Creates warning modal if user is in being added to include and is a basis member or if
+         * a user is being added to exclude and is not a basis member
+         * @param user - user being added
+         * @param listName - grouping list (i.e. include or exclude)
+         * @param inBasis - boolean if user is in basis or not
+         */
+        $scope.createBasisWarningModal = function (user, listName, inBasis) {
+            $scope.user = user;
+            $scope.listName = listName;
+            $scope.inBasis = inBasis;
+
+            $scope.basisWarningModalInstance = $uibModal.open({
+                templateUrl: "modal/basisWarningModal",
+                scope: $scope
+            });
+
+            $scope.basisWarningModalInstance.result.then(function () {
+                $scope.updateAddMember(user, listName)
+            });
+        };
+
+        $scope.proceedBasisWarningModal = function () {
+            $scope.basisWarningModalInstance.close();
+        };
+
+        $scope.closeBasisWarningModal = function () {
+            $scope.basisWarningModalInstance.dismiss();
+        }
         /**
          * Exports data in a table to a CSV file
          * @param {object[]} table - the table to export
