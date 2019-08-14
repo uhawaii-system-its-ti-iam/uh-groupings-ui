@@ -19,6 +19,7 @@ h1 {
 
 h2 {
     font-size: 1.5rem;
+    padding: 0px;
 }
 
 h3 {
@@ -473,9 +474,10 @@ form.seamless button {
     margin: -39px auto;
 }
 .btn-sm {
-    padding: 0px !important
+    padding: 0px 5px;
 }
 
 #footer-top{
     margin-top: 3rem;
 }
+

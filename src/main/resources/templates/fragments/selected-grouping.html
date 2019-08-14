@@ -5,11 +5,14 @@
             <div class="card-header teal-bg">
                 <div class="row">
                     <div class="col-md-9">
-                        <h2 class="card-title mt-md-1 mt-0 mb-1 text-light"> {{ selectedGrouping.name }}</h2>
+                        <h2 class="card-title text-light mb-0" style="display:inline-block"> {{
+                            selectedGrouping.name }}</h2>
                     </div>
                     <div class="col-md-3">
                         <div class="float-right">
-                            <button class="btn btn-primary btn-sm" type="submit" ng-click="returnToGroupingsList(); cancelDescriptionEdit()"></i>Return to Groupings</button>
+                            <button class="btn btn-primary btn-sm" type="submit"
+                                    ng-click="returnToGroupingsList(); cancelDescriptionEdit()">Return to Groupings
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -19,32 +22,37 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <div ng-show="!descriptionForm">
-                            <p class="text-light"> <b>Description:</b> {{ descriptionDisplay() }} &nbsp;<i ng-click="editDescription()" class="clickable fa fa-pencil-square-o mr-2" aria-hidden="true"></i></p>
+                            <p class="text-light"><b>Description:</b> {{ descriptionDisplay() }} &nbsp;<i
+                                    ng-click="editDescription()" class="clickable fa fa-pencil-square-o mr-2"
+                                    aria-hidden="true"></i></p>
                         </div>
                         <div ng-show="descriptionForm" class="grouping-description-form">
-                          <form class="seamless border border-secondary rounded ng-pristine ng-valid">
-                            <div ng-show="descriptionLengthWarning()" class="alert alert-warning">
-                              <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"></p>
-                            </div>
-                            <input class="form-control"
-                                   style="float: left; border: white"
-                                   th:title="#{screen.message.admin.selectedGrouping.descriptionFormTitle}"
-                                   th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
-                                   ng-value="descriptionDisplay()"
-                                   ng-model="modelDescription"
-                                   maxlength="{{ maxDescriptionLength }}"
-                            />
-                <span ng-show="descriptionForm" class="grouping-description-form">
-                  <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;" class="btn-sm"
+                            <form class="seamless border border-secondary rounded ng-pristine ng-valid">
+                                <div ng-show="descriptionLengthWarning()" class="alert alert-warning">
+                                    <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"></p>
+                                </div>
+                                <input class="form-control"
+                                       style="float: left; border: white"
+                                       th:title="#{screen.message.admin.selectedGrouping.descriptionFormTitle}"
+                                       th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
+                                       ng-value="descriptionDisplay()"
+                                       ng-model="modelDescription"
+                                       maxlength="{{ maxDescriptionLength }}"
+                                />
+                                <span ng-show="descriptionForm" class="grouping-description-form">
+                  <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
+                          class="btn-sm"
                           data-toggle="tooltip" data-placement="top" title="Accept Description">
                     <i class="clickable fa fa-check-circle-o fa-2x" aria-hidden="true" ng-click="saveDescription()"></i></button>
                 </span>
-                <span ng-show="descriptionForm" class="grouping-description-form">
-                  <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;" class="btn-sm"
+                                <span ng-show="descriptionForm" class="grouping-description-form">
+                  <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
+                          class="btn-sm"
                           data-toggle="tooltip" data-placement="top" title="Cancel Description">
-                    <i class="clickable fa fa-times-circle-o fa-2x" aria-hidden="true" ng-click="cancelDescriptionEdit()"></i></button>
+                    <i class="clickable fa fa-times-circle-o fa-2x" aria-hidden="true"
+                       ng-click="cancelDescriptionEdit()"></i></button>
                 </span>
 
                             </form>
@@ -59,7 +67,7 @@
                         <div th:replace="fragments/side-nav :: side-nav"></div>
                     </div>
                     <div class="tab-content col-lg-11 col-md-10 col-12" id="pill-content">
-                            <div th:replace="fragments/members :: members"></div>
+                        <div th:replace="fragments/members :: members"></div>
                         <div id="basis" class="tab-pane fade">
                             <div th:replace="fragments/basis :: basis"></div>
                         </div>
