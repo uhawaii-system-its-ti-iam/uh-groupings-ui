@@ -643,9 +643,9 @@
                 return $scope.userNameList[$scope.selectedRow].uhid;
             };
 
-            $scope.hideComponent = function (id) {
+            $scope.hideComponent = function (id, setAs) {
                 let component = document.getElementById(id);
-                component.style.display = "none";
+                component.style.display = setAs;
             };
 
             $scope.displaySelectedStatus = function () {
