@@ -560,13 +560,26 @@
                 return _.without([...new Set(str.split("\n"))], "");
             };
 
+            /**
+             * Returns a Member object with the proper fields depending on which list the user intends to add members too.
+             * - If the member exists in the list, there is no need to add it therefore added equals no
+             * - Else if the member exists in another list we add which list it is in to the status field and say that added equals yes
+             * - Otherwise the member to be added doesn't exist in any lists and needs to be validated with grouper
+             * @author Zachary Gilbert
+             * @param item - String username
+             * @param existInList - the global scope method $scope.existInList is intended to be passed as the parameter
+             * @param isInOtherList - the global scope method $scope.isInAnotherList is intended to be passed as the parameter
+             * @param listName - Include or Exclude
+             * @return {Member}
+             */
             const whichList = (item, existInList, isInOtherList, listName) => {
                 if (existInList)
                     return new Member(item, listName, "No", "", "");
-                if (isInOtherList)
+                else if (isInOtherList)
                     return new Member(item, getOtherList(listName), "Yes", "", "");
                 return new Member(item, "", "No", "", "");
             };
+
             /**
              * - Checks if user names in the imported list exist in the current list, or in any other list
              * - Uses checkUserNameValidity to check if the user name to be added is valid.
@@ -595,11 +608,12 @@
              */
             $scope.checkUserNameValidity = function (memberNew, data) {
                 groupingsService.checkMember(memberNew.name, data, function (attributes) {
-                    const status = (str) => {
-                        return (str === "") ? "Valid" : str;
-                    };
 
-                    data.push(new Member(memberNew.name, status(memberNew.status), "Yes", attributes.uhuuid, attributes.uid));
+                    data.push(new Member(memberNew.name,
+                        (memberNew.status === "") ? "Valid" : memberNew.status,  //if the status field is empty, set to valid
+                        (memberNew.status === $scope.listName) ? "No" : " Yes",  //if the status field is equal to list name, set added to "No"
+                        attributes.uhuuid, attributes.uid));
+
                 }, function (res) {
                     if (res.statusCode === 404) {
                         data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
@@ -616,6 +630,17 @@
                 if ($scope.selectedRow === null)
                     return "";
                 return $scope.userNameList[$scope.selectedRow].name;
+            };
+
+            $scope.getSelectedId = function () {
+                if ($scope.selectedRow === null || $scope.userNameList[$scope.selectedRow].id === "")
+                    return "";
+                return $scope.userNameList[$scope.selectedRow].id;
+            };
+            $scope.getSelectedUid = function () {
+                if ($scope.selectedRow === null || $scope.userNameList[$scope.selectedRow].uhid === "")
+                    return "";
+                return $scope.userNameList[$scope.selectedRow].uhid;
             };
 
             $scope.hideComponent = function (id) {
