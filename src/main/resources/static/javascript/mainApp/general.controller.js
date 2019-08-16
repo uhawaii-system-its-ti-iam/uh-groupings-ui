@@ -482,7 +482,7 @@
 
                 if (validUserNames.length > 0)
                     $scope.validUserNameCount = validUserNames.length;
-                
+
                 validUserNames = toCommaSeparatedString(validUserNames);
                 $scope.loading = true;
                 $scope.createConfirmImportModal(validUserNames, $scope.listName);
@@ -563,7 +563,7 @@
             const whichList = (item, existInList, isInOtherList, listName) => {
                 if (existInList)
                     return new Member(item, listName, "No", "", "");
-                else if (isInOtherList)
+                if (isInOtherList)
                     return new Member(item, getOtherList(listName), "Yes", "", "");
                 return new Member(item, "", "No", "", "");
             };
@@ -581,7 +581,7 @@
 
                 for (let item of pendingList) {
                     if (item.length <= 16)
-                        $scope.checkUserNameValidity(whichList(item, $scope.existInList(item, listName), $scope.isInAnotherList(item, listName)), userNameList, listName);
+                        $scope.checkUserNameValidity(whichList(item, $scope.existInList(item, listName), $scope.isInAnotherList(item, listName), listName), userNameList, listName);
                 }
                 return userNameList;
             };

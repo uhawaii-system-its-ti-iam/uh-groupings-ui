@@ -55,12 +55,12 @@
             Import
         </button>
     </div>
-    <p ng-if="imported"> Are you sure you want to add these users to the
+</div>
+<div class="modal-footer">
+    <p ng-if="imported" style="padding-right: 300px"> Are you sure you want to add these users to the
         <span style="color: black">{{listName}}</span>
         <span style="color: black"> list?</span>
     </p>
-</div>
-<div class="modal-footer">
     <button class="btn btn-primary" ng-click="importMembers()">Yes</button>
     <button class="btn btn-default" data-dismiss="modal" ng-click="cancelImportModalInstance()">Cancel</button>
 </div>
