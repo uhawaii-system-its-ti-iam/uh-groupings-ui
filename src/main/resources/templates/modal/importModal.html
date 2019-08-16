@@ -31,7 +31,8 @@
         <table>
             <tbody>
             <tr ng-repeat="item in userNameList" ng-class="{'selected':$index == selectedRow}"
-                ng-click="setClickedRow($index); hideComponent('mentionUserOptions', 'none')">
+                ng-click="setClickedRow($index);
+                changeStyleAttribute('mentionUserOptions', 'display', 'none')">
                 <td>{{item.name}}</td>
                 <td>{{item.added}}</td>
             </tr>
@@ -50,11 +51,15 @@
     </p>
 
 </div>
+<!--- changeStyleAttribute method needs generic refactoring --->
 <div class="modal-body">
     <div ng-model="imported" ng-init="imported=false">
         <input type="file" accept="text/plain" id="importInput">
         <button class="btn btn-primary" id="importButton"
-                ng-click="readTextFile($event); imported=true; hideComponent('importInput', 'none'); hideComponent('importButton', 'none'); hideComponent('mentionUserOptions', 'unset')">
+                ng-click="readTextFile($event); imported=true;
+        changeStyleAttribute('importInput', 'display', 'none');
+        changeStyleAttribute('importButton', 'display', 'none');
+        changeStyleAttribute('mentionUserOptions', 'display', 'unset')">
             Import
         </button>
     </div>

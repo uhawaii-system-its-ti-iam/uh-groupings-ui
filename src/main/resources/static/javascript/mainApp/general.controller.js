@@ -643,9 +643,15 @@
                 return $scope.userNameList[$scope.selectedRow].uhid;
             };
 
-            $scope.hideComponent = function (id, setAs) {
-                let component = document.getElementById(id);
-                component.style.display = setAs;
+            /**
+             * Pass in the id of a certain html component to change a certain style
+             * @author Zachary Gilbert
+             * @param id - id of html component
+             * @param attr - attribute to be changed
+             * @param setAs - set attribute too.
+             */
+            $scope.changeStyleAttribute = function (id, attr, setAs) {
+                document.getElementById(id).style[attr] = setAs;
             };
 
             $scope.displaySelectedStatus = function () {
