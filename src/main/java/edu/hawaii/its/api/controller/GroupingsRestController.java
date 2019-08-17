@@ -82,7 +82,6 @@ public class GroupingsRestController {
         // For sanitation
         policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
-
         if(!Arrays.asList(env.getActiveProfiles()).contains("localTest")) {
             Assert.isTrue(hello().getStatusCode().is2xxSuccessful(),
                     "Please start the UH Groupings API first.");

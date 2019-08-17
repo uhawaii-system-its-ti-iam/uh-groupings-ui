@@ -469,3 +469,8 @@ form.seamless button {
     margin-top: 3rem;
 }
 
+.csv {
+    btn-primary;
+    margin:4;
+    line-height:0;
+}

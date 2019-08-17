@@ -24,7 +24,6 @@
                        ng-model="membersQuery" class="form-control"
                        ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
                 <!-- Export to CSV button -->
-
                 <button class="btn btn-primary btn-sm mb-4 pl-2 pr-2" type="submit" ng-click="exportGroupToCsv(groupingInclude, selectedGrouping.name, 'include')">
                     <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
                     Export to CSV

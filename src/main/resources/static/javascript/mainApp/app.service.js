@@ -24,7 +24,7 @@
                         callError(response);
                         console.log(JSON.stringify(response, null, 4));
                         console.log("Error in dataProvider; status: ", response.status);
-
+                        callError(response);
                     });
             },
 
