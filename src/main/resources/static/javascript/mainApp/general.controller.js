@@ -447,10 +447,11 @@
                 let str = $scope.createUniqArrayFromString($scope.usersToAdd);
                 if (str.length > 1) {
                     $scope.addMultipleMembers = true;
+                    $scope.userNameList = $scope.createUserNameListObject(str, listName);
+                    console.log($scope.userNameList);
                     $scope.launchImportModal(listName);
-                } else if(str.length === 1) {
+                } else if (str.length === 1) {
                     $scope.userToAdd = str[0];
-                    console.log(str);
                     $scope.addMember(listName);
                 }
             };
