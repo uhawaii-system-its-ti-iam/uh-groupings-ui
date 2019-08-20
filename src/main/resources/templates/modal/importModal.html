@@ -51,7 +51,7 @@
     </p>
 
 </div>
-<div class="modal-body">
+<div ng-if="!addMultipleMembers" class="modal-body">
     <div ng-model="imported" ng-init="imported=false">
         <input type="file" accept="text/plain" id="importInput">
         <button class="btn btn-primary" id="importButton"
@@ -61,6 +61,11 @@
                 changeStyleAttribute('mentionUserOptions', 'display', 'unset')">
             Import
         </button>
+    </div>
+</div>
+<div ng-if="addMultipleMembers">
+    <div class="modal-body">
+        <p>Hi there</p>
     </div>
 </div>
 <div class="modal-footer">

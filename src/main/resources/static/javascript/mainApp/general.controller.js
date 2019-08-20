@@ -14,13 +14,13 @@
         function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
             $scope.userNameList = [];
-
             $scope.selectedRow = null;
             $scope.validUserNameCount = 0;
             $scope.sortNameStr = "name";
             $scope.sortStatusStr = "status";
             $scope.sortName = false;
             $scope.sortStatus = false;
+            $scope.addMultipleMembers = false;
 
             $scope.itemsAlreadyInList = [];
             $scope.itemsInOtherList = [];
@@ -149,7 +149,7 @@
                 newMembers = _.uniqBy(newMembers, "uuid");
 
                 return _.sortBy(newMembers, "name");
-            };
+            }
 
             /**
              * @returns {String[]} list of possible sync destinations
@@ -438,6 +438,22 @@
                 });
             };
 
+            /**
+             * Lets a user import multiple members to a grouping, in the long run this method triggers the
+             * api method includeMultipleMembers.
+             * @param listName
+             */
+            $scope.addMembers = function (listName) {
+                let str = $scope.createUniqArrayFromString($scope.usersToAdd);
+                if (str.length > 1) {
+                    $scope.addMultipleMembers = true;
+                    $scope.launchImportModal(listName);
+                } else if(str.length === 1) {
+                    $scope.userToAdd = str[0];
+                    console.log(str);
+                    $scope.addMember(listName);
+                }
+            };
             /**
              * Launches the import modal from "listName".html
              * @author Zachary Gilbert
@@ -775,8 +791,8 @@
              * @author Zachary Gilbert
              */
             $scope.cancelImportModalInstance = function () {
-                $scope.confirmImportInstance.dismiss();
                 clearAddMemberInput($scope.listName);
+                $scope.confirmImportInstance.dismiss();
             };
 
             /**
@@ -833,20 +849,6 @@
                         $scope.createOwnerErrorModal();
                     }
                 });
-            };
-            /**
-             * Lets a user import multiple members to a grouping, in the long run this method triggers the
-             * api method includeMultipleMembers.
-             * @param list
-             */
-            $scope.addMembers = function (list) {
-                let str = $scope.usersToAdd;
-                let usersToAdd = str.replace(/\n/g, ", ");
-                $scope.createConfirmAddMembersModal({
-                    usersToAdd: usersToAdd,
-                    listName: list
-                });
-                console.log(usersToAdd);
             };
 
             /**
@@ -1339,19 +1341,24 @@
             function clearAddMemberInput(listName) {
                 switch (listName) {
                     case "Include":
-                        $scope.userNameList = [{}];
+                        $scope.userToAdd = "";
+                        $scope.usersToAdd = "";
+                        $scope.userNameList = [];
                         $scope.selectedRow = null;
                         $scope.validUserNameCount = 0;
                         $scope.sortName = false;
                         $scope.sortStatus = false;
+                        $scope.addMultipleMembers = false;
                         break;
                     case "Exclude":
                         $scope.userToAdd = "";
-                        $scope.userNameList = [{}];
+                        $scope.usersToAdd = "";
+                        $scope.userNameList = [];
                         $scope.selectedRow = null;
                         $scope.validUserNameCount = 0;
                         $scope.sortName = false;
                         $scope.sortStatus = false;
+                        $scope.addMultipleMembers = false;
                         break;
                     case "owners":
                         $scope.ownerToAdd = "";
