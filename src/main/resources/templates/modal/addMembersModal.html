@@ -23,7 +23,7 @@
         <table>
             <tr>
                 <td style="margin-right: 400px">
-                    <table class="table">
+                    <table>
                         <thead class="import-table-thead-tbody-tr import-table-thead">
                         <tr class="import-table-thead-tbody-tr">
                             <td ng-click="memberSort(userNameList, sortNameStr, sortStatus)">User Name</td>
@@ -42,12 +42,17 @@
                     </table>
                 </td>
                 <td style="width: 400px ; alignment: top ; padding-left: 75px ; padding-right: 10px">
+                    <p style="font-weight: bold">
+                        Status
+                    </p>
                     <div>
                         <p id="mentionUserOptions" style="display: none">
                             An entry from the list can be selected for a further explanation.
                         </p>
+
                         <p ng-class="{'selected':$index == selectedRow}">
         <span style="font-weight: bold">
+
             {{ getSelectedUserName() }}
         </span>
                             {{ displaySelectedStatus() }}
