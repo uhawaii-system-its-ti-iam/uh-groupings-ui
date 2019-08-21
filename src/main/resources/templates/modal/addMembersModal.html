@@ -1,5 +1,5 @@
 <!--
-   -  confirmAddModal.html
+    -addMembersModal.html
         -  Contains the add conformation modal
         -  See Modal Add section in messages.properties
         -  See createConfirmAddModal general.controller.js
@@ -58,23 +58,9 @@
         </table>
     </div>
 </div>
-<div ng-if="!addMultipleMembers" class="modal-body" id="importButton">
-    <div ng-model="imported" ng-init="imported=false">
-        <input type="file" accept="text/plain">
-        <button class="btn btn-primary"
-                ng-click="readTextFile($event); imported=true;
-                changeStyleAttribute('importButton', 'display', 'none');
-                changeStyleAttribute('mentionUserOptions', 'display', 'unset');
-                changeStyleAttribute('confirmationDialogue', 'display', 'unset')">
-            Import
-        </button>
-    </div>
-</div>
-<div ng-if="addMultipleMembers" ng-init="imported=true; changeStyleAttribute('mentionUserOptions', 'display', 'unset'); changeStyleAttributes('confirmationDialogue','display','unset')"></div>
-<div class="modal-footer" ng-if="imported" ng-init="
-    changeStyleAttribute('confirmationDialogue', 'display', 'unset');
-    changeStyleAttribute('mentionUserOptions', 'display', 'unset')">
-    <p id="confirmationDialogue" style="padding-right: 100px; padding-left: 20px; display: none">
+<div class="modal-footer" ng-if="addMultipleMembers"
+     ng-init="changeStyleAttribute('mentionUserOptions', 'display', 'unset')">
+    <p style="padding-right: 100px; padding-left: 20px">
         Are you sure you want to add these users to the
         <span style="color: black">{{listName}}</span>
         <span style="color: black"> list?</span>
