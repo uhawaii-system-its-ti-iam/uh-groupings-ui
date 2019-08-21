@@ -449,6 +449,7 @@
                     $scope.addMultipleMembers = true;
                     $scope.userNameList = $scope.createUserNameListObject(str, listName);
                     console.log($scope.userNameList);
+                    $scope.imported = true;
                     $scope.launchImportModal(listName);
                 } else if (str.length === 1) {
                     $scope.userToAdd = str[0];
@@ -1346,6 +1347,7 @@
                         $scope.usersToAdd = "";
                         $scope.userNameList = [];
                         $scope.selectedRow = null;
+                        $scope.imported = false;
                         $scope.validUserNameCount = 0;
                         $scope.sortName = false;
                         $scope.sortStatus = false;
@@ -1356,6 +1358,7 @@
                         $scope.usersToAdd = "";
                         $scope.userNameList = [];
                         $scope.selectedRow = null;
+                        $scope.imported = false;
                         $scope.validUserNameCount = 0;
                         $scope.sortName = false;
                         $scope.sortStatus = false;

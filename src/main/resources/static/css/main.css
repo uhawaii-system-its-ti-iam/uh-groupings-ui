@@ -521,3 +521,21 @@ form.seamless button {
 .add-import-buttons {
     padding: 7px 15px;;
 }
+
+
+.import-table-tbody {
+    display: block;
+    height: 175px;
+    overflow: auto;
+}
+
+.import-table-thead-tbody-tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.import-table-thead {
+    font-weight: bold;
+    width: calc(100% - 1em)
+}

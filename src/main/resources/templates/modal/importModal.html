@@ -19,57 +19,62 @@
         <span style="color: black" th:text="#{screen.message.modal.import.confirmation}"></span>
         <span style="color: black;">{{listName}} list.</span>
     </p>
-    <table style="width: 235px">
-        <thead>
-        <tr style="font-weight: bold;">
-            <th ng-click="memberSort(userNameList, sortNameStr, sortStatus)">User Name</th>
-            <th ng-click="memberSort(userNameList, sortStatusStr, sortStatus)">Added</th>
-        </tr>
-        </thead>
-    </table>
-    <div style="width: 290px; height: 200px; overflow: scroll; margin-right: 15px ; float:left;">
+    <div class="container">
         <table>
-            <tbody>
-            <tr ng-repeat="item in userNameList" ng-class="{'selected':$index == selectedRow}"
-                ng-click="setClickedRow($index);
+            <tr>
+                <td style="margin-right: 400px">
+                    <table class="table">
+                        <thead class="import-table-thead-tbody-tr import-table-thead">
+                        <tr class="import-table-thead-tbody-tr">
+                            <td ng-click="memberSort(userNameList, sortNameStr, sortStatus)">User Name</td>
+                            <td ng-click="memberSort(userNameList, sortStatusStr, sortStatus)">Added</td>
+                        </tr>
+                        </thead>
+                        <tbody class="mport-table-thead-tbody-tr import-table-tbody">
+                        <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList"
+                            ng-class="{'selected':$index == selectedRow}"
+                            ng-click="setClickedRow($index);
                 changeStyleAttribute('mentionUserOptions', 'display', 'none')">
-                <td>{{item.name}}</td>
-                <td>{{item.added}}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <p id="mentionUserOptions" style="display: none">
-        An entry from the list can be selected for a further explanation.
-    </p>
-    <p ng-class="{'selected':$index == selectedRow}"
-       style="margin-left: 40px; padding-left: 40px; padding-right: 45px">
+                            <td>{{item.name}}</td>
+                            <td>{{item.added}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td style="width: 400px ; alignment: top ; padding-left: 75px ; padding-right: 10px">
+                    <div>
+                        <p id="mentionUserOptions" style="display: none">
+                            An entry from the list can be selected for a further explanation.
+                        </p>
+                        <p ng-class="{'selected':$index == selectedRow}">
         <span style="font-weight: bold">
             {{ getSelectedUserName() }}
         </span>
-        {{ displaySelectedStatus() }}
-    </p>
-
+                            {{ displaySelectedStatus() }}
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
-<div ng-if="!addMultipleMembers" class="modal-body">
+<div ng-if="!addMultipleMembers" class="modal-body" id="importButton">
     <div ng-model="imported" ng-init="imported=false">
-        <input type="file" accept="text/plain" id="importInput">
-        <button class="btn btn-primary" id="importButton"
+        <input type="file" accept="text/plain">
+        <button class="btn btn-primary"
                 ng-click="readTextFile($event); imported=true;
-                changeStyleAttribute('importInput', 'display', 'none');
                 changeStyleAttribute('importButton', 'display', 'none');
-                changeStyleAttribute('mentionUserOptions', 'display', 'unset')">
+                changeStyleAttribute('mentionUserOptions', 'display', 'unset');
+                changeStyleAttribute('confirmationDialogue', 'display', 'unset')">
             Import
         </button>
     </div>
 </div>
-<div ng-if="addMultipleMembers">
-    <div class="modal-body">
-        <p>Hi there</p>
-    </div>
-</div>
-<div class="modal-footer">
-    <p ng-if="imported" style="padding-right: 300px; padding-left: 20px">
+<div ng-if="addMultipleMembers" ng-init="imported=true; changeStyleAttribute('mentionUserOptions', 'display', 'unset'); changeStyleAttributes('confirmationDialogue','display','unset')"></div>
+<div class="modal-footer" ng-if="imported" ng-init="
+    changeStyleAttribute('confirmationDialogue', 'display', 'unset');
+    changeStyleAttribute('mentionUserOptions', 'display', 'unset')">
+    <p id="confirmationDialogue" style="padding-right: 100px; padding-left: 20px; display: none">
         Are you sure you want to add these users to the
         <span style="color: black">{{listName}}</span>
         <span style="color: black"> list?</span>
