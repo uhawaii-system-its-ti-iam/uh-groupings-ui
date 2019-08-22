@@ -4,7 +4,6 @@ import edu.hawaii.its.api.service.HttpRequestService;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 
 import org.springframework.beans.factory.annotation.Autowired;

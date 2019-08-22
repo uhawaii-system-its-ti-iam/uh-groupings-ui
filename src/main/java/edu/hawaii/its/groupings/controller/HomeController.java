@@ -3,8 +3,6 @@ package edu.hawaii.its.groupings.controller;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.groupings.type.Feedback;
-import com.sun.org.apache.regexp.internal.RE;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
