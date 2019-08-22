@@ -201,8 +201,6 @@
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <warName>${project.name}</warName>
-                    <source>${java-version}</source>
-                    <target>${java-version}</target>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
