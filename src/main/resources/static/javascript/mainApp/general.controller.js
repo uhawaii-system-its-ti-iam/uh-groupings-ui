@@ -450,11 +450,26 @@
                     $scope.userNameList = $scope.createUserNameListObject(str, listName);
                     console.log($scope.userNameList);
                     $scope.imported = true;
-                    $scope.launchImportModal(listName);
+                    $scope.launchAddMembersModal(listName);
                 } else if (str.length === 1) {
                     $scope.userToAdd = str[0];
                     $scope.addMember(listName);
                 }
+            };
+
+            /**
+             * Launches the import modal from "listName".html
+             * @author Zachary Gilbert
+             * @param listName - Include or Exclude
+             */
+            $scope.launchAddMembersModal = function (listName) {
+                $scope.listName = listName;
+
+                $scope.confirmImportInstance = $uibModal.open({
+                    templateUrl: "modal/addMembersModal",
+                    size: "lg",
+                    scope: $scope
+                });
             };
             /**
              * Launches the import modal from "listName".html
@@ -559,6 +574,9 @@
              * @return {*} Comma separated string
              */
             function toCommaSeparatedString(validUserNames) {
+                if (validUserNames[0].name === undefined)
+                    validUserNames.shift();
+
                 let str = validUserNames[0].name;
                 const comma = ", ";
                 for (let i = 1; i < validUserNames.length; i++) {
@@ -649,6 +667,11 @@
                     return "";
                 return $scope.userNameList[$scope.selectedRow].name;
             };
+            $scope.getImportListStr = function (str) {
+                if ($scope.selectedRow === null)
+                    return "";
+                return str;
+            };
 
             $scope.getSelectedId = function () {
                 if ($scope.selectedRow === null || $scope.userNameList[$scope.selectedRow].id === "")
@@ -672,24 +695,36 @@
                 document.getElementById(id).style[attr] = setAs;
             };
 
-            $scope.displaySelectedStatus = function () {
+            $scope.displaySelectedStatus = function (username) {
+                let retStr = [];
                 if ($scope.selectedRow === null)
                     return "";
                 const status = $scope.userNameList[$scope.selectedRow].status;
+                let uhid = $scope.userNameList[$scope.selectedRow].uhid;
                 const listName = $scope.listName;
+                let userNameStr = "  \"" + username + "\"";
+
+                if (uhid === "")
+                    uhid = "n/a";
 
                 if (status === listName)
-                    return " is already a member of the " + listName + " list.";
+                    retStr.push(userNameStr + " is already a member of the " + listName + " list.");
                 else if (status === "Valid")
-                    return " will be added upon confirmation";
+                    retStr.push(userNameStr + " will be added upon confirmation");
                 else if (status === "Invalid")
-                    return " is an invalid user name and will not be added upon confirmation.";
+                    retStr.push(userNameStr + " is an invalid user name and will not be added upon confirmation.");
                 else if (status === getOtherList(listName))
-                    return " is already a member of the " + getOtherList(listName) +
-                        " list, and on confirmation will be removed from the " + getOtherList(listName) +
-                        " list and added to the " + listName + " list.";
-                else
-                    return "error";
+                    retStr.push(userNameStr + " is already a member of the " +
+                        getOtherList(listName) + "list, and on confirmation will be removed from the " +
+                        getOtherList(listName) + " list and added to the " + listName + " list.");
+                else {
+                    retStr.push("Error");
+                    retStr.push("");
+                    retStr.push("");
+                    return retStr;
+                }
+                retStr.push(uhid);
+                return retStr;
             };
 
             /**
