@@ -9,7 +9,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">Confirm Adding New Members</h5>
+    <h5 class="modal-title" id="modal-title">Confirm Import New Members</h5>
     <button type="button" class="close" data-dismiss="dialog" ng-click="cancelImportModalInstance()">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -30,7 +30,7 @@
                             <td ng-click="memberSort(userNameList, sortStatusStr, sortStatus)">Added</td>
                         </tr>
                         </thead>
-                        <tbody class="mport-table-thead-tbody-tr import-table-tbody">
+                        <tbody class="import-table-tbody">
                         <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList"
                             ng-class="{'selected':$index == selectedRow}"
                             ng-click="setClickedRow($index);

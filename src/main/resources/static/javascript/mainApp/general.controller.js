@@ -412,7 +412,6 @@
                 });
             };
 
-
             /**
              * Checks what lists a member in a grouping are in.
              * @param {object[]} compositeGroup - the composite / all members group
@@ -448,7 +447,6 @@
                 if (str.length > 1) {
                     $scope.addMultipleMembers = true;
                     $scope.userNameList = $scope.createUserNameListObject(str, listName);
-                    console.log($scope.userNameList);
                     $scope.imported = true;
                     $scope.launchAddMembersModal(listName);
                 } else if (str.length === 1) {
