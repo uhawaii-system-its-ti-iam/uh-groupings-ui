@@ -24,7 +24,7 @@
          */
         $(document).ready(function () {
             //Increment the idle time counter every minute.
-            let idleInterval = setInterval($scope.timerIncrement, 60000); // 1 minute
+            setInterval($scope.timerIncrement, 60000); // 1 minute
             //Zero the idle timer on mouse movement.
             $(this).click(function (e) {
                 $scope.idleTime = 0;
@@ -40,14 +40,13 @@
          */
         $scope.timerIncrement = function () {
             $scope.idleTime++;
-            //console.log($scope.idleTime);
             if ($scope.idleTime === 25) {// Create warning modal when 5 min left
                 $scope.countdownTimer = setInterval(timer, 1000);
                 $scope.createTimeoutModal();
             }
             if ($scope.idleTime === 30) { // Logout user after 30 min has passed
                 let r = new XMLHttpRequest();
-                r.open("POST", "/uhgroupings/logout", false);
+                r.open("POST", "/uhgroupings/logout", true);
                 r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
                 r.send();
                 $window.location.href = "/uhgroupings/";
