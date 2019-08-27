@@ -446,7 +446,7 @@
                 let str = $scope.createUniqArrayFromString($scope.usersToAdd);
                 if (str.length > 1) {
                     $scope.addMultipleMembers = true;
-                    $scope.userNameList = $scope.createUserNameListObject(str, listName);
+                    $scope.userNameList = createUserNameListObject(str, listName);
                     $scope.imported = true;
                     $scope.launchAddMembersModal(listName);
                 } else if (str.length === 1) {
@@ -496,7 +496,7 @@
                 let reader = new FileReader();
                 reader.onload = function (e) {
                     let str = e.target.result;
-                    $scope.userNameList = $scope.createUserNameListObject($scope.createUniqArrayFromString(str), $scope.listName);
+                    $scope.userNameList = createUserNameListObject($scope.createUniqArrayFromString(str), $scope.listName);
                 };
                 reader.readAsText(file);
             };
@@ -596,8 +596,8 @@
 
             /**
              * Returns a Member object with the proper fields depending on which list the user intends to add members too.
-             * - If the member exists in the list, there is no need to add it therefore added equals no
-             * - Else if the member exists in another list we add which list it is in to the status field and say that added equals yes
+             * - If the member exists in the list, there is no need to add it therefore the 'added' property is set to no
+             * - Else if the member exists in another list we set the 'status' property to that 'listName' and set the 'added' property to yes
              * - Otherwise the member to be added doesn't exist in any lists and needs to be validated with grouper
              * @author Zachary Gilbert
              * @param item - String username
@@ -623,12 +623,12 @@
              * @param listName - Include, Exclude, ... etc
              * @return {{}[]} - Array of member objects
              */
-            $scope.createUserNameListObject = function (pendingList, listName) {
+            function createUserNameListObject(pendingList, listName) {
                 let userNameList = [];
 
                 for (let item of pendingList) {
                     if (item.length <= 16)
-                        $scope.checkUserNameValidity(whichList(item, $scope.existInList(item, listName), $scope.isInAnotherList(item, listName), listName), userNameList, listName);
+                        checkUserNameValidity(whichList(item, $scope.existInList(item, listName), $scope.isInAnotherList(item, listName), listName), userNameList, listName);
                 }
                 return userNameList;
             };
@@ -640,7 +640,7 @@
              * @param memberNew - UH user name
              * @param data - Object Array
              */
-            $scope.checkUserNameValidity = function (memberNew, data) {
+            function checkUserNameValidity(memberNew, data) {
                 groupingsService.checkMember(memberNew.name, data, function (attributes) {
 
                     data.push(new Member(memberNew.name,
@@ -693,6 +693,11 @@
                 document.getElementById(id).style[attr] = setAs;
             };
 
+            /**
+             * Returns necessary dialogue tp display as a imported members add status
+             * @author Zachary Gilbert
+             * @param username - uh user name
+             */
             $scope.displaySelectedStatus = function (username) {
                 let retStr = [];
                 if ($scope.selectedRow === null)
@@ -728,57 +733,21 @@
             /**
              * Sorts the array of member objects by name or status and in reverse of each as well.
              * @author Zachary Gilbert
-             * @param arr
-             * @param sortByStr
-             * @param sortBy
+             * @param arr - array to sort
+             * @param order{bool} true: sort lexicographically || false: sort in reverse
+             * @param field - name or status
              */
-            $scope.memberSort = function (arr, sortByStr, sortBy) {
-                if (sortBy) {
-                    if (sortByStr === "name") {
-                        $scope.userNameList = _.sortBy(arr, [function (o) {
-                            return o.name;
-                        }]);
-                    } else if (sortByStr === "status") {
-                        $scope.userNameList = _.sortBy(arr, [function (o) {
-                            return o.status;
-                        }]);
-                    }
+            $scope.memberSort = function (arr, order, field) {
+                if (order) {
+                    $scope.userNameList = _.sortBy(arr, [function (o) {
+                        return o[field];
+                    }]);
                 } else {
-                    if (sortByStr === "name") {
-                        $scope.userNameList = _.sortBy(arr, [function (o) {
-                            return o.name;
-                        }]).reverse();
-                    } else if (sortByStr === "status") {
-                        $scope.userNameList = _.sortBy(arr, [function (o) {
-                            return o.status;
-                        }]).reverse();
-                    }
+                    $scope.userNameList = _.sortBy(arr, [function (o) {
+                        return o[field];
+                    }]).reverse();
                 }
                 $scope.sortStatus = !sortBy;
-                /**
-                 if (sortByStr === "name") {
-                    if (sortBy) {
-                        $scope.userNameList = _.sortBy(arr, [function (o) {
-                            return o.name;
-                        }]);
-                    } else {
-                        $scope.userNameList = _.sortBy(arr, [function (o) {
-                            return o.name;
-                        }]).reverse();
-                    }
-                    $scope.sortName = !sortBy;
-                } else if (sortByStr === "status") {
-                    if (sortBy) {
-                        $scope.userNameList = _.sortBy(arr, [function (o) {
-                            return o.status;
-                        }]);
-                    } else {
-                        $scope.userNameList = _.sortBy(arr, [function (o) {
-                            return o.status;
-                        }]).reverse();
-                    }
-                }
-                 */
             };
 
             /**
