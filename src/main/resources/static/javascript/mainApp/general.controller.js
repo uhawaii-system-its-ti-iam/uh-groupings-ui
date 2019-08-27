@@ -509,7 +509,7 @@
              */
             $scope.importMembers = function () {
                 $scope.imported = true;
-                let validUserNames = $scope.removeInvalidUserNames($scope.userNameList, $scope.listName);
+                let validUserNames = removeInvalidUserNames($scope.userNameList, $scope.listName);
 
                 if (validUserNames.length > 0)
                     $scope.validUserNameCount = validUserNames.length;
@@ -747,7 +747,7 @@
                         return o[field];
                     }]).reverse();
                 }
-                $scope.sortStatus = !sortBy;
+                $scope.sortStatus = !order;
             };
 
             /**
@@ -776,7 +776,7 @@
              * @param listName
              * @return {*[]|*} Array of strings containing all valid user names to be added
              */
-            $scope.removeInvalidUserNames = function (pendingList, listName) {
+            function removeInvalidUserNames(pendingList, listName) {
                 let itemsToRemove = [];
                 let removalNecessary = false;
                 for (let item of pendingList) {
