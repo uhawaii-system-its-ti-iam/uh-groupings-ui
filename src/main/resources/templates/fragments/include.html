@@ -111,18 +111,5 @@
                 <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageInclude', pagedItems='pagedItemsInclude')"></div>
             </div>
         </div>
-        <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
-            <div>
-                <form ng-submit="addMembers('Include')">
-                    <div class="input-group">
-                        <textarea placeholder="Members to Add" class="form-control" rows="1" cols="15"
-                                  title="Enter multiple UH usernames to include" ng-model="usersToAdd"></textarea>
-                        <span class="input-group-append">
-                        <button class="btn btn-primary" type="submit">Add Members</button>
-                    </span>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 </th:block>
