@@ -6,7 +6,6 @@ h1 {
 h2, h3, h4, h5, h6 {
     color: #9B7506;
 }
-
 /* COLOR PALETTE */
 /* colors as background */
 
@@ -265,7 +264,7 @@ body h1 {
     color: #e3f2ef;
 }
 
-h1, h2, .text-left, span {
+h1, h2, h5,.text-left, span {
     color: #1c6070;
 }
 
