@@ -41,6 +41,7 @@
                 $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
 
                 $scope.loading = false;
+
             }, function (res) {
                 if (res.statusCode === 403) {
                     $scope.createRoleErrorModal();

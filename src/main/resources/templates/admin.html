@@ -29,9 +29,9 @@
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
-    <div ng-show="!showGrouping">
+    <div ng-show="!showGrouping" ng-cloak>
         <div class="tab-content">
-            <div class="tab-pane fade show active" id="manage-groupings" role="tabcard" >
+            <div class="tab-pane fade show active" id="manage-groupings" role="tabcard">
                 <div class="row m-auto pt-3 pb-3">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
                         <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
@@ -95,13 +95,13 @@
                             </td>
                             <td>
                                 <i class="fa fa-trash-o pull-right clickable pt-1"
-                                      data-toggle="tooltip" data-placement="top"
-                                      tabindex="0"
-                                      onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                                      th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
-                                      ng-click="removeAdmin(currentPageAdmins, $index)"
-                                      ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">
-                                     </i>
+                                   data-toggle="tooltip" data-placement="top"
+                                   tabindex="0"
+                                   onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                                   th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
+                                   ng-click="removeAdmin(currentPageAdmins, $index)"
+                                   ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">
+                                </i>
                             </td>
                         </tr>
                         </tbody>
@@ -127,9 +127,11 @@
             </div>
         </div>
     </div>
+    <!--
     <div ng-show="showGrouping">
         <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
     </div>
+    -->
 </div>
 
 <!-- / Content container. -->
