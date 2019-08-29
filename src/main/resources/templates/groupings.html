@@ -6,14 +6,14 @@
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container-->
-<div class="seafoam-bg pt-4">
+<div class="seafoam-bg pt-4" ng-cloak>
     <div class="container">
         <h1 class="text-center text-md-left">Manage My Groupings</h1>
         <p class="lead text-center text-md-left" th:utext="#{screen.message.groupings.page.description}"></p>
     </div>
 </div>
 
-<div class="container">
+<div class="container" ng-cloak>
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
@@ -45,7 +45,7 @@
 </div>
 <!-- / Content container. -->
 </div>
-<div th:replace="footer" ></div>
+<div th:replace="footer"></div>
 
 </body>
 </html>

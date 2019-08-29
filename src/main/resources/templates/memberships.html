@@ -25,11 +25,11 @@
     </div>
 </div>
 
-<div class="container" data-ng-init="init()">
+<div class="container" data-ng-init="init()" ng-cloak>
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
-    <div class="tab-content">
+    <div class="tab-content" ng-cloak>
         <div class="tab-pane fade show active" id="current-memberships" role="tabcard">
             <div class="row m-auto pt-2 pb-2">
                 <div class="col-lg-9 col-md-8 col-12 p-0">

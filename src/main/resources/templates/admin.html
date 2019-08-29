@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container" ng-cloak>
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
@@ -61,7 +61,7 @@
                 <div class="table-responsive-sm">
                     <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">
                         <thead>
-                        <tr>
+                        <tr ng-cloak>
                             <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'name')" class="clickable">
                                 Admin Name
                                 <i class="fa sort-icon"
