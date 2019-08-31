@@ -25,11 +25,11 @@
     </div>
 </div>
 
-<div class="container" ng-cloak>
+<div class="container">
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
-    <div ng-show="!showGrouping" ng-cloak>
+    <div ng-show="!showGrouping">
         <div class="tab-content">
             <div class="tab-pane fade show active" id="manage-groupings" role="tabcard">
                 <div class="row m-auto pt-3 pb-3">
@@ -83,7 +83,8 @@
                         </tr>
                         </thead>
                         <tbody class="table table-borderless">
-                        <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]" class="table table-sm">
+                        <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]" class="table table-sm"
+                            >
                             <td class="p-10">
                                 {{l.name}}
                             </td>
