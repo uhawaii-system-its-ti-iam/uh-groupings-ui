@@ -29,8 +29,8 @@
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="current-memberships" role="tabcard">
+    <div class="tab-content" role="tablist">
+        <div class="tab-pane fade show active" id="current-memberships" role="tab">
             <div class="row m-auto pt-2 pb-2">
                 <div class="col-lg-9 col-md-8 col-12 p-0">
                     <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
@@ -70,7 +70,7 @@
                             <td class="p-10 w-30">{{ l.name }}</td> <!-- w-30 -->
                             <td class="p-10  d-none d-lg-table-cell">
                                 <form class="seamless border border-secondary rounded">
-                                    <input type="text" class="form-control form-control-sm border-0 input-sm"
+                                    <input aria-label="Grouping Path" type="text" class="form-control form-control-sm border-0 input-sm"
                                            value={{l.path}}
                                            id={{l.path}}>
                                     <button class="btn btn-sm" ng-click=copyPath(l)>
@@ -107,7 +107,7 @@
             </div>
         </div>
         <!-- Membership Opportunities Tab -->
-        <div class="tab-pane fade" id="membership-opportunities" role="tabcard">
+        <div class="tab-pane fade" id="membership-opportunities" role="tab">
             <div class="row m-auto pt-2 pb-2">
                 <div class="col-lg-9 col-md-8 col-12 p-0">
                     <h2 class="card-title mt-md-1 mt-0 mb-1">Available Groupings</h2>
@@ -147,7 +147,7 @@
                             <td class="p-10 w-30">{{ o.name }}</td>
                             <td class="p-10" id="groupingOptInPath">
                                 <form class="seamless border border-secondary rounded">
-                                    <input type="text" class="form-control form-control-sm border-0"
+                                    <input aria-label="Grouping Path" type="text" class="form-control form-control-sm border-0"
                                            value={{o.path}}
                                            id={{o.path}}>
                                     <button class="btn btn-sm" ng-click=copyPath(o)>
