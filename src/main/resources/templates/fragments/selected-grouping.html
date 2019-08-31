@@ -34,6 +34,7 @@
                                     <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"></p>
                                 </div>
                                 <input class="form-control"
+                                       aria-label="Grouping Description"
                                        style="float: left; border: white"
                                        th:title="#{screen.message.admin.selectedGrouping.descriptionFormTitle}"
                                        th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
@@ -42,23 +43,22 @@
                                        maxlength="{{ maxDescriptionLength }}"
                                 />
                                 <span ng-show="descriptionForm" class="grouping-description-form">
-                  <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
-                          class="btn-sm"
-                          data-toggle="tooltip" data-placement="top" title="Save description">
-                    <i class="clickable fa fa-check-circle-o fa-2x" aria-hidden="true" ng-click="saveDescription()"></i></button>
-                </span>
+                                    <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
+                                    class="btn-sm"
+                                    data-toggle="tooltip" data-placement="top" title="Save description">
+                                    <i class="clickable fa fa-check-circle-o fa-2x" aria-hidden="true" ng-click="saveDescription()"></i>
+                                    </button>
+                                </span>
                                 <span ng-show="descriptionForm" class="grouping-description-form">
-                  <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
-                          class="btn-sm"
-                          data-toggle="tooltip" data-placement="top" title="Cancel changes">
-                    <i class="clickable fa fa-times-circle-o fa-2x" aria-hidden="true"
-                       ng-click="cancelDescriptionEdit()"></i></button>
-                </span>
-
+                                    <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
+                                    class="btn-sm"
+                                    data-toggle="tooltip" data-placement="top" title="Cancel changes">
+                                    <i class="clickable fa fa-times-circle-o fa-2x" aria-hidden="true" ng-click="cancelDescriptionEdit()"></i>
+                                    </button>
+                                </span>
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="card-body p-0">

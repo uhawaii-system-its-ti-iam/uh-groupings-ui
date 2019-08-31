@@ -30,8 +30,8 @@
         <div class="loader" ng-show="loading"></div>
     </div>
     <div ng-show="!showGrouping">
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="manage-groupings" role="tabcard" >
+        <div class="tab-content" role="tablist">
+            <div class="tab-pane fade show active" id="manage-groupings" role="tab" >
                 <div class="row m-auto pt-3 pb-3">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
                         <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
@@ -46,7 +46,7 @@
                 <div th:replace="fragments/admin-groupings-list :: admin-groupings-list(title='Manage Groupings', tabContent=true)"></div>
             </div>
             <!-- Manage Admins -->
-            <div class="tab-pane fade" id="manage-admins" role="tabcard">
+            <div class="tab-pane fade" id="manage-admins" role="tab">
                 <div class="row m-auto pt-3 pb-3">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
                         <h2 class="card-title mt-md-1 mt-0 mb-1">Designate Admins</h2>
