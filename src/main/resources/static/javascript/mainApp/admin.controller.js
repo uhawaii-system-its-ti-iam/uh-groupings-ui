@@ -13,6 +13,7 @@
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
         $scope.currentPageAdmins = 0;
+        $scope.dataReady = false;
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
@@ -32,14 +33,14 @@
          */
         $scope.init = function () {
             // Adds the loading spinner.
-            $scope.loading = true;
             groupingsService.getAdminLists(function (res) {
                 $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
                 $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
 
                 $scope.groupingsList = _.sortBy(res.allGroupings, "name");
                 $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
-                $scope.loading = false;
+                $scope.loading = true;
+                $scope.dataReady = true;
 
             }, function (res) {
                 if (res.statusCode === 403) {

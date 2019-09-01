@@ -7,7 +7,7 @@
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
-<div class="seafoam-bg pt-4">
+<div class="seafoam-bg pt-4" ng-if="dataReady">
     <div class="container">
         <h1 class="text-center text-md-left">UH Groupings Administration</h1>
         <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
@@ -26,11 +26,11 @@
 </div>
 
 <div class="container">
-    <div id="overlay" ng-show="loading">
-        <div class="loader" ng-show="loading"></div>
+    <div id="overlay" ng-show="!loading">
+        <div class="loader" ng-show="!loading"></div>
     </div>
     <div ng-show="!showGrouping">
-        <div class="tab-content">
+        <div class="tab-content" ng-cloak>
             <div class="tab-pane fade show active" id="manage-groupings" role="tabcard">
                 <div class="row m-auto pt-3 pb-3">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
@@ -43,7 +43,8 @@
                                ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
                     </div>
                 </div>
-                <div th:replace="fragments/admin-groupings-list :: admin-groupings-list(title='Manage Groupings', tabContent=true)"></div>
+                <div th:replace="fragments/admin-groupings-list :: admin-groupings-list(title='Manage Groupings', tabContent=true)"
+                ></div>
             </div>
             <!-- Manage Admins -->
             <div class="tab-pane fade" id="manage-admins" role="tabcard">
@@ -61,7 +62,7 @@
                 <div class="table-responsive-sm">
                     <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">
                         <thead>
-                        <tr ng-cloak>
+                        <tr>
                             <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'name')" class="clickable">
                                 Admin Name
                                 <i class="fa sort-icon"
@@ -84,7 +85,7 @@
                         </thead>
                         <tbody class="table table-borderless">
                         <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]" class="table table-sm"
-                            >
+                        >
                             <td class="p-10">
                                 {{l.name}}
                             </td>
@@ -128,11 +129,9 @@
             </div>
         </div>
     </div>
-    <!--
-    <div ng-show="showGrouping">
+    <div ng-show="showGrouping" ng-cloak>
         <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
     </div>
-    -->
 </div>
 
 <!-- / Content container. -->
