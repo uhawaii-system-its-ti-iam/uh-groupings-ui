@@ -17,8 +17,8 @@
     <div id="overlay" ng-show="loading">
         <div class="loader" ng-show="loading"></div>
     </div>
-    <div ng-show="!showGrouping">
-        <div class="tab-content" ng-cloak`>
+    <div ng-show="!showGrouping" id="groupingsContainer" style="display: none">
+        <div class="tab-content" ng-init="changeStyleAttribute('groupingsContainer', 'display', 'unset')">
             <div class="tab-pane fade show active" id="manage-groupings" role="tabcard">
                 <div class="row m-auto pt-3 pb-3">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
