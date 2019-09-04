@@ -468,6 +468,9 @@
             }
         };
 
+        $scope.changeStyleAttribute = function (id, attr, setAs) {
+            document.getElementById(id).style[attr] = setAs;
+        };
         /**
          * Initiates the adding of a member to a list.
          * @param {string} userToAdd - user being added

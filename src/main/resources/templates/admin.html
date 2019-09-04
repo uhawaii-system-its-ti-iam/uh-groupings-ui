@@ -7,7 +7,7 @@
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
-<div class="seafoam-bg pt-4" ng-if="dataReady">
+<div class="seafoam-bg pt-4">
     <div class="container">
         <h1 class="text-center text-md-left">UH Groupings Administration</h1>
         <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
@@ -26,8 +26,8 @@
 </div>
 
 <div class="container">
-    <div id="overlay" ng-show="!loading">
-        <div class="loader" ng-show="!loading"></div>
+    <div id="overlay" ng-show="loading">
+        <div class="loader" ng-show="loading"></div>
     </div>
     <div ng-show="!showGrouping">
         <div class="tab-content" ng-cloak>
@@ -129,7 +129,7 @@
             </div>
         </div>
     </div>
-    <div ng-show="showGrouping" ng-cloak>
+    <div ng-show="showGrouping">
         <div th:replace="fragments/selected-grouping :: selected-grouping(tabContent=true)"></div>
     </div>
 </div>
