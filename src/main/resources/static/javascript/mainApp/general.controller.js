@@ -360,7 +360,9 @@
         $scope.createApiErrorModal = function () {
             $scope.apiErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/apiError",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
         };
 
@@ -545,7 +547,9 @@
 
             $scope.checkModalInstance = $uibModal.open({
                 templateUrl: "modal/checkModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
 
             $scope.checkModalInstance.result.then(function () {
@@ -562,7 +566,9 @@
         $scope.createConfirmAddMembersModal = function (options) {
             $scope.confirmAddModalInstance = $uibModal.open({
                 templateUrl: "modal/confirmAddModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
             $scope.confirmAddModalInstance.result.then(function () {
                 $scope.updateAddMembers(options.usersToAdd, options.listName);
@@ -588,7 +594,9 @@
                 // Ask for confirmation from the user to add the member
                 $scope.confirmAddModalInstance = $uibModal.open({
                     templateUrl: "modal/confirmAddModal",
-                    scope: $scope
+                    scope: $scope,
+                    backdrop: 'static',
+                    keyboard: false
                 });
 
                 $scope.confirmAddModalInstance.result.then(function () {
@@ -662,7 +670,9 @@
 
             $scope.addModalInstance = $uibModal.open({
                 templateUrl: "modal/addModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
 
             $scope.addModalInstance.result.finally(function () {
@@ -689,7 +699,9 @@
 
             $scope.addErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/addErrorModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
         };
 
@@ -705,7 +717,9 @@
             $scope.loading = false;
             $scope.RoleErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/roleErrorModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
         };
         /**
@@ -813,7 +827,9 @@
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal",
                 windowClass: windowClass,
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
 
             $scope.removeModalInstance.result.then(function () {
@@ -861,7 +877,9 @@
 
             $scope.removeErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/removeErrorModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
         };
 
@@ -981,7 +999,9 @@
             console.log(desc);
             $scope.infoModalInstance = $uibModal.open({
                 templateUrl: "modal/infoModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
         };
 
@@ -1080,7 +1100,9 @@
         $scope.createPreferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/preferenceErrorModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
         };
 
@@ -1109,7 +1131,9 @@
 
             $scope.syncDestInstance = $uibModal.open({
                 templateUrl: "modal/syncDestModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
 
             $scope.syncDestInstance.result.then(function () {
@@ -1144,7 +1168,9 @@
             $scope.loading = false;
             $scope.OwnerErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/ownerErrorModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
         };
 

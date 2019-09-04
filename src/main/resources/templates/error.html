@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
-<head th:substituteby="header :: copy"></head>
+<head th:replace="header :: copy"></head>
 <body>
-    <nav th:substituteby="menubar :: copy"></nav>
+<nav th:replace="menubar :: copy"></nav>
 
     <!--   Content container -->
     <div class='container-fluid'>
@@ -33,7 +33,7 @@
     </div>
     <!-- / Contact container -->
 
-    <div th:substituteby="footer :: copy"></div>
+<div th:replace="footer :: copy"></div>
 
 </body>
 </html>

@@ -76,7 +76,9 @@
         $scope.createTimeoutModal = function () {
             $scope.timeoutModalInstance = $uibModal.open({
                 templateUrl: "modal/timeoutModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
             $scope.timeoutModalInstance.result.then(function () {
                 //Filler in order to catch off click dismiss

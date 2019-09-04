@@ -22,7 +22,9 @@
             $scope.loading = false;
             $scope.RoleErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/roleErrorModal",
-                scope: $scope
+                scope: $scope,
+                backdrop: 'static',
+                keyboard: false
             });
         };
 
