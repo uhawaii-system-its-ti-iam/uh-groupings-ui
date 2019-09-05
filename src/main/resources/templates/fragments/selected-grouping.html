@@ -1,7 +1,8 @@
 <th:block th:fragment="selected-grouping" xmlns:th="http://www.w3.org/1999/xhtml">
-    <div class="container"
+    <div class="container" id="sel" style="display: none"
          th:classappend="${tabContent ? 'card-tab-content' : ''}">
-        <div class="card mb-5 mt-5">
+        <div class="card mb-5 mt-5"
+             ng-init="changeStyleAttribute('sel', 'display', 'unset')">
             <div class="card-header teal-bg">
                 <div class="row">
                     <div class="col-md-9">
