@@ -7,6 +7,7 @@
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
+<main>
 <div class="container">
     <div class="alert alert-success" role="alert" th:if="${success}" style="padding-top: 25px">
         <p th:utext="#{screen.message.feedback.page.alertSuccess}"></p>
@@ -58,7 +59,7 @@
         </div>
     </div>
 </div>
-
+</main>
 <div th:replace="footer"></div>
 
 </body>
