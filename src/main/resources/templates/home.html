@@ -10,136 +10,137 @@
 <nav th:replace="menubar :: copy"></nav>
 <!--  Content container -->
 
-
-<div class="container mt-5 mb-5">
-    <div class="row">
-        <div class="col-sm-7 d-inline-flex align-items-center">
-            <div>
-                <h1 class="sr-only">UH Groupings</h1>
-                <img class="img-fluid align-self-center" src="" th:src="@{images/uh-groupings-text.png}" th:srcset="@{images/uh-groupings-text.png 1x, images/uh-groupings-text-2x.png 2x}" alt="UH Groupings logotype">
-                <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"></p>
-                <div sec:authorize="!isAuthenticated()">
-                    <a class="btn btn-lg dark-teal-bg" th:href="@{/login}" role="button">Login Here</a>
-                </div>
-                <div sec:authorize="isAuthenticated()">
-                    <form action="/logout" th:action="@{/logout}" method="post">
-                        <button class="btn btn-lg dark-teal-bg" type="submit">Logout</button>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-5 align-middle d-none d-lg-block">
-            <img class="img-fluid" th:src="@{images/uh-groupings-logo-large.png}" th:srcset="@{images/uh-groupings-logo-large.png 1x, images/uh-groupings-logo-large-2x.png 2x}"  alt="UH Groupings">
-        </div>
-    </div>
-</div>
-
-
-<div sec:authorize="!isAuthenticated()">
-    <div class="seafoam-bg pt-5 pb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="h1 text-center d-block">What is a UH Grouping?</h2>
-                </div>
-                <div class="col-md-12">
-                    <p class="lead text-center d-block" th:utext="#{screen.message.home.page.groupingDefinition}"></p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <img th:src="@{images/cogs.png}" th:srcset="@{images/cogs.png 1x, images/cogs-2x.png 2x}"  alt="cogs">
-                    </div>
-                    <p class="text-center" th:utext="#{screen.message.home.page.groupingFeatures}"></p>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <img th:src="@{images/id-email.png}" th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x}"  alt="cogs">
-                    </div>
-                    <p class="text-center" th:utext="#{screen.message.home.page.listServ}"></p>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <img th:src="@{images/watch.png}" th:srcset="@{images/watch.png 1x, images/watch-2x.png 2x}"  alt="watch">
-                    </div>
-                    <p class="text-center" th:utext="#{screen.message.home.page.groupingData}"></p>
-                </div>
-            </div>
-            <div class="row">
-                <a class="btn btn-lg mx-auto mt-4" role="button" href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">Learn More &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div sec:authorize="isAuthenticated()">
-    <div class="seafoam-bg pt-5 pb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-3 col-md-2 mb-3 mb-sm-0">
-                    <div class="user-icon text-center rounded-circle bg-light p-3 mx-auto ml-md-0 mr-md-0">
-                        <i class="fa fa-user fa-4x" aria-hidden="true"></i>
-                        <i class="user-role rounded-circle blue-bg text-light fa fa-key fa-sm p-2" aria-hidden="true"></i>
-                    </div>
-                </div>
-                <div class="col-sm-9 col-md-10">
-                    <h1 class="h3 text-center text-md-left">Welcome, <span sec:authentication="name"></span>!</h1>
-                    <div>
-                      <h1 class="h3 text-center text-md-left">Role:
-                        <span th:switch="true">
-                          <span th:case="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Admin</span>
-                          <span th:case="${#authorization.expression('hasRole(''ROLE_OWNER'')')}">Owner</span>
-                          <span th:case="${#authorization.expression('hasRole(''ROLE_UH'')')}">Member</span>
-                        </span>
-                      </h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<main>
     <div class="container mt-5 mb-5">
         <div class="row">
-            <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_ADMIN')">
-                <div class="dashboard-item-icon text-primary mb-3">
-                    <i class="fa fa-key fa-3x mr-4" aria-hidden="true"></i>
-                </div>
-                <div class="dashboard-item-content">
-                    <h2 class="h4">Administration</h2>
-                    <p>Manage the list of Administrators for this service. Search for and manage any grouping on behalf of the owner.</p>
-                    <a class="btn dark-teal-bg btn-bottom" th:href="@{/admin}">Admin</a>
-                </div>
-            </div>
-            <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')" ng-controller="MembershipJsController" data-ng-init="init()">
-                <div class="dashboard-item-icon text-primary mb-3">
-                    <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
-                        <span class="h1" ng-hide="!membershipsList.length">{{membershipsList.length}}</span>
-                </div>
-                <div class="dashboard-item-content" >
-                    <h2 class="h4">Memberships</h2>
-                    <p>View and manage my memberships. Search for new groupings to join as a member.</p>
-                    <a class="btn dark-teal-bg btn-bottom" th:href="@{/memberships}">Memberships</a>
+            <div class="col-sm-7 d-inline-flex align-items-center">
+                <div>
+                    <h1 class="sr-only">UH Groupings</h1>
+                    <img class="img-fluid align-self-center" src="" th:src="@{images/uh-groupings-text.png}" th:srcset="@{images/uh-groupings-text.png 1x, images/uh-groupings-text-2x.png 2x}" alt="UH Groupings logotype">
+                    <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"></p>
+                    <div sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-lg dark-teal-bg" th:href="@{/login}" role="button">Login Here</a>
+                    </div>
+                    <div sec:authorize="isAuthenticated()">
+                        <form action="/logout" th:action="@{/logout}" method="post">
+                            <button class="btn btn-lg dark-teal-bg" type="submit">Logout</button>
+                        </form>
+
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"
-                ng-controller="OwnerJsController" data-ng-init="init()">
-                <div class="dashboard-item-icon text-primary mb-3" >
-                    <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
-                    <span class="h1" ng-hide="!groupingsList.length">{{groupingsList.length}}</span>
+            <div class="col-sm-5 align-middle d-none d-lg-block">
+                <img class="img-fluid" th:src="@{images/uh-groupings-logo-large.png}" th:srcset="@{images/uh-groupings-logo-large.png 1x, images/uh-groupings-logo-large-2x.png 2x}"  alt="UH Groupings">
+            </div>
+        </div>
+    </div>
+
+
+    <div sec:authorize="!isAuthenticated()">
+        <div class="seafoam-bg pt-5 pb-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="h1 text-center d-block">What is a UH Grouping?</h2>
+                    </div>
+                    <div class="col-md-12">
+                        <p class="lead text-center d-block" th:utext="#{screen.message.home.page.groupingDefinition}"></p>
+                    </div>
                 </div>
-                <div class="dashboard-item-content">
-                    <h2 class="h4">Groupings</h2>
-                    <p>View and manage groupings I own. Manage members, configure grouping options and sync destinations.</p>
-                    <a class="btn dark-teal-bg btn-bottom" th:href="@{/groupings}">Groupings</a>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <img th:src="@{images/cogs.png}" th:srcset="@{images/cogs.png 1x, images/cogs-2x.png 2x}"  alt="cogs">
+                        </div>
+                        <p class="text-center" th:utext="#{screen.message.home.page.groupingFeatures}"></p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <img th:src="@{images/id-email.png}" th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x}"  alt="cogs">
+                        </div>
+                        <p class="text-center" th:utext="#{screen.message.home.page.listServ}"></p>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <img th:src="@{images/watch.png}" th:srcset="@{images/watch.png 1x, images/watch-2x.png 2x}"  alt="watch">
+                        </div>
+                        <p class="text-center" th:utext="#{screen.message.home.page.groupingData}"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <a class="btn btn-lg mx-auto mt-4" role="button" href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">Learn More &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+
+    <div sec:authorize="isAuthenticated()">
+        <div class="seafoam-bg pt-5 pb-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3 col-md-2 mb-3 mb-sm-0">
+                        <div class="user-icon text-center rounded-circle bg-light p-3 mx-auto ml-md-0 mr-md-0">
+                            <i class="fa fa-user fa-4x" aria-hidden="true"></i>
+                            <i class="user-role rounded-circle blue-bg text-light fa fa-key fa-sm p-2" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-9 col-md-10">
+                        <h1 class="h3 text-center text-md-left">Welcome, <span sec:authentication="name"></span>!</h1>
+                        <div>
+                          <h1 class="h3 text-center text-md-left">Role:
+                            <span th:switch="true">
+                              <span th:case="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">Admin</span>
+                              <span th:case="${#authorization.expression('hasRole(''ROLE_OWNER'')')}">Owner</span>
+                              <span th:case="${#authorization.expression('hasRole(''ROLE_UH'')')}">Member</span>
+                            </span>
+                          </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-5 mb-5">
+            <div class="row">
+                <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <div class="dashboard-item-icon text-primary mb-3">
+                        <i class="fa fa-key fa-3x mr-4" aria-hidden="true"></i>
+                    </div>
+                    <div class="dashboard-item-content">
+                        <h2 class="h4">Administration</h2>
+                        <p>Manage the list of Administrators for this service. Search for and manage any grouping on behalf of the owner.</p>
+                        <a class="btn dark-teal-bg btn-bottom" th:href="@{/admin}">Admin</a>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')" ng-controller="MembershipJsController" data-ng-init="init()">
+                    <div class="dashboard-item-icon text-primary mb-3">
+                        <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
+                            <span class="h1" ng-hide="!membershipsList.length">{{membershipsList.length}}</span>
+                    </div>
+                    <div class="dashboard-item-content" >
+                        <h2 class="h4">Memberships</h2>
+                        <p>View and manage my memberships. Search for new groupings to join as a member.</p>
+                        <a class="btn dark-teal-bg btn-bottom" th:href="@{/memberships}">Memberships</a>
+                    </div>
+                </div>
+                <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"
+                    ng-controller="OwnerJsController" data-ng-init="init()">
+                    <div class="dashboard-item-icon text-primary mb-3" >
+                        <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
+                        <span class="h1" ng-hide="!groupingsList.length">{{groupingsList.length}}</span>
+                    </div>
+                    <div class="dashboard-item-content">
+                        <h2 class="h4">Groupings</h2>
+                        <p>View and manage groupings I own. Manage members, configure grouping options and sync destinations.</p>
+                        <a class="btn dark-teal-bg btn-bottom" th:href="@{/groupings}">Groupings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
 <!-- / Content container. -->
 
