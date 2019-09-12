@@ -17,7 +17,6 @@
                     <i class="fa sort-icon" ng-show="columnSort.groupingsList.property === 'path'"
                        ng-class="{ reverse: columnSort.groupingsList.reverse }"></i>
                 </th>
-                <th class="w-20 text-center"> Opt Out?</th>
             </tr>
             </thead>
             <tbody class="table table-borderless">
@@ -44,18 +43,6 @@
                             <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
                     </form>
                 </td>
-                <td class="w-20 align-middle">
-                    <span ng-if="l.optOutOn">
-                        Membership Required
-                    </span>
-                    <button class="btn btn-primary btn-block opt-button btn-sm"
-                            aria-label="Opt Out Button"
-                            tabindex="0"
-                            ng-click="optOut(currentPageGroupings, $index)">
-                        <i class="fa fa-fw fa-user-plus" aria-hidden="true"></i>
-                        Opt Out
-                    </button>
-                </td>
             </tr>
             </tbody>
         </table>
@@ -66,19 +53,3 @@
 
 
 </th:block>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
