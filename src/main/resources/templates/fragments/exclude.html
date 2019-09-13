@@ -21,7 +21,7 @@
                        ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
                 <!-- Export to CSV button -->
                 <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
-                        ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
+                        ng-click="exportGroupToCsv(groupingExclude, selectedGrouping.name, 'exclude')"
                         ng-hide="!paginatingComplete">
                     <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
                     Export to CSV
