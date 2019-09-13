@@ -1,78 +1,89 @@
 <th:block th:fragment="owners">
 
-<div id="owners" class="tab-pane fade show active">
+    <div id="owners" class="tab-pane fade show active">
 
-    <div class="row">
-        <div class="col-md-8">
-            <h2 class="font-weight-bold text-dark pt-4">Owners ({{groupingOwners.length}})</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <h1 class="font-weight-bold text-dark pt-2 mb-0">Owners ({{groupingOwners.length}})</h1>
+            </div>
+            <div class="col-md-4 pt-2">
+                <input placeholder="Filter Members..." type="text" title="Filter Members"
+                ng-model="ownersQuery" class="form-control"
+                ng-change="filter(groupingOwners, 'pagedItemsOwners', 'currentPageOwners', ownersQuery, true)"/>
+                <!--Export to CSV button -->
+                <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
+                        ng-click="exportGroupToCsv(groupingOwners, selectedGrouping.name, 'owners')"
+                        ng-hide="!paginatingComplete">
+                    <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
+                    Export to CSV
+                </button>
+            </div>
         </div>
-    </div>
 
-
-    <div class="table-responsive">
-        <table class="table table-striped table-hover" aria-live="assertive">
-            <thead>
-            <tr>
-                <th scope="col" class="clickable"
-                    ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'name')">
-                    Name
-                    <i class="fa sort-icon"
-                       ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners"
-                       ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
-                </th>
-                <th scope="col" class="clickable"
-                    ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'username')">
-                    UH Username
-                    <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'username'"
-                       ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
-                <td class="p-10" tabindex="0">
-                    {{owner.name}}
-                    <span class="fa fa-trash-o pull-right clickable pt-1"
-                          data-toggle="tooltip" data-placement="top"
-                          onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                          tabindex="0"
-                          th:title="#{screen.message.common.tooltip.remove.owner}"
-                          ng-keypress="$event.keyCode === 13 ? removeOwner(currentPageOwners, $index) : null"
-                          ng-click="removeOwner(currentPageOwners, $index)">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" aria-live="assertive">
+                <thead>
+                <tr>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'name')">
+                        Name
+                        <i class="fa sort-icon"
+                           ng-show="columnSort.groupingOwners.property === 'name' || !columnSort.groupingOwners"
+                           ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
+                    </th>
+                    <th scope="col" class="clickable"
+                        ng-click="sortBy('groupingOwners', 'pagedItemsOwners', 'username')">
+                        UH Username
+                        <i class="fa sort-icon" ng-show="columnSort.groupingOwners.property === 'username'"
+                           ng-class="{ reverse: columnSort.groupingOwners.reverse }"></i>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="owner in pagedItemsOwners[currentPageOwners]" class="table table-sm">
+                    <td class="p-10" tabindex="0">
+                        {{owner.name}}
+                        <span class="fa fa-trash-o pull-right clickable pt-1"
+                              data-toggle="tooltip" data-placement="top"
+                              onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                              tabindex="0"
+                              th:title="#{screen.message.common.tooltip.remove.owner}"
+                              ng-keypress="$event.keyCode === 13 ? removeOwner(currentPageOwners, $index) : null"
+                              ng-click="removeOwner(currentPageOwners, $index)">
                     </span>
-                </td>
-                <td class="p-10">
-                    {{owner.username}}
-                    <div ng-if="owner.username === ''">
-                        <span>N/A</span>
-                        <i class="fa fa-question-circle clickable" aria-hidden="true"
-                           data-toggle="tooltip" data-placement="right"
-                           onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
-                        </i>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
-        <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
-            <form ng-submit="addOwner()">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="UH Username"
-                           title="Enter UH username for ownership"
-                           ng-model="ownerToAdd"
-                           id="owner-input"/>
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">Add</button>
-                    </div>
-                </div>
-            </form>
+                    </td>
+                    <td class="p-10">
+                        {{owner.username}}
+                        <div ng-if="owner.username === ''">
+                            <span>N/A</span>
+                            <i class="fa fa-question-circle clickable" aria-hidden="true"
+                               data-toggle="tooltip" data-placement="right"
+                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                               th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                            </i>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="mt-lg-0 mt-2">
-            <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageOwners', pagedItems='pagedItemsOwners')"></div>
+        <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
+            <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
+                <form ng-submit="addOwner()">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="UH Username"
+                               title="Enter UH username for ownership"
+                               ng-model="ownerToAdd"
+                               id="owner-input"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="mt-lg-0 mt-2">
+                <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageOwners', pagedItems='pagedItemsOwners')"></div>
+            </div>
         </div>
     </div>
-</div>
 </th:block>
