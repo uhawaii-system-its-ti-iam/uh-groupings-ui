@@ -41,8 +41,8 @@
 
                 $scope.groupingsList = _.sortBy(res.allGroupings, "name");
                 $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
-
                 $scope.loading = false;
+
             }, function (res) {
                 if (res.statusCode === 403) {
                     $scope.createRoleErrorModal();
@@ -109,7 +109,7 @@
          * Copies grouping path to clipboard.
          */
         $scope.copyPath = function (grouping) {
-            let copyText = document.getElementById(grouping.path);
+            var copyText = document.getElementById(grouping.path);
             copyText.select();
             document.execCommand("copy");
         };
