@@ -18,8 +18,8 @@
             </div>
             <div class="col-md-4 pt-2">
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="membersQuery" class="form-control"
-                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
+                       ng-model="includeQuery" class="form-control"
+                       ng-change="filter(groupingInclude, 'pagedItemsInclude', 'currentPageInclude', includeQuery, true)"/>
                 <!-- Export to CSV button -->
                 <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
                         ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
