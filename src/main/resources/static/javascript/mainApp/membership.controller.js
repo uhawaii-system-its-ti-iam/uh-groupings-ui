@@ -93,7 +93,7 @@
          * Copies grouping path to clipboard.
          */
         $scope.copyPath = function (grouping) {
-            var copyText = document.getElementById(grouping.path);
+            let copyText = document.getElementById(grouping.path);
             copyText.select();
             document.execCommand("copy");
         };

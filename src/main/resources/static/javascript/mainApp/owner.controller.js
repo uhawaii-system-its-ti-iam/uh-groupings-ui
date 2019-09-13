@@ -28,17 +28,14 @@
         };
 
         /**
-         * Copies the path of a grouping through the clipboard button
-         *
-         * @param {Object} grouping - the current selected grouping
+         * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
+         * @param {number} currentPage - the current page within the table
+         * @param {number} indexClicked - the index of the grouping clicked by the user
          */
-
-        $scope.copyPath = function (grouping) {
-            var copyText = document.getElementById(grouping.path);
-
-            copyText.select();
-            document.execCommand("copy");
-
+        $scope.optOut = function (currentPage, indexClicked) {
+            const groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
+            $scope.loading = true;
+            groupingsService.optOut(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
         };
 
     }

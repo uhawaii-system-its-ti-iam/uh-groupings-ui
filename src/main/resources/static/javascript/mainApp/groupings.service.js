@@ -201,7 +201,7 @@
              * Gets the groupings a user is a part of, the groupings they can opt in to, and the groupings they own.
              */
             getMembershipAssignment: function (onSuccess, onError) {
-                let endpoint = BASE_URL + "members/groupings/";
+                let endpoint = BASE_URL + "members/groupings";
                 // console.log("The UI endpoint call");
                 console.log(endpoint);
                 dataProvider.loadData(onSuccess, onError, endpoint);
