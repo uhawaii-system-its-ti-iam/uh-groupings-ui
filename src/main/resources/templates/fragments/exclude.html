@@ -4,7 +4,7 @@
 
         <div class="row">
             <div class="col-md-8">
-                <h1 class="font-weight-bold text-dark pt-2 mb-0">Exclude ({{groupingMembers.length}})</h1>
+                <h1 class="font-weight-bold text-dark pt-2 mb-0">Exclude ({{groupingExclude.length}})</h1>
                 <p class=" mb-1" style="display:inline-block" ng-show="paginatingProgress"
                    th:text="#{screen.message.common.loading.gettingmembers}"></p>
                 <div class="spinner-border spinner-border-sm" style="display:inline-block"
@@ -17,8 +17,8 @@
             </div>
             <div class="col-md-4 pt-2">
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="membersQuery" class="form-control"
-                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
+                       ng-model="excludeQuery" class="form-control"
+                       ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', excludeQuery, true)"/>
                 <!-- Export to CSV button -->
                 <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
                         ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"

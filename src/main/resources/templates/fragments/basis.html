@@ -3,7 +3,7 @@
 
         <div class="row">
             <div class="col-md-8">
-                <h1 class="font-weight-bold text-dark pt-2 mb-0">Basis Members ({{groupingMembers.length}})</h1>
+                <h1 class="font-weight-bold text-dark pt-2 mb-0">Basis Members ({{groupingBasis.length}})</h1>
                 <p class=" mb-1" style="display:inline-block" ng-show="paginatingProgress"
                    th:text="#{screen.message.common.loading.gettingmembers}"></p>
                 <div class="spinner-border spinner-border-sm" style="display:inline-block"
@@ -16,8 +16,8 @@
             </div>
             <div class="col-md-4 pt-2">
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="membersQuery" class="form-control"
-                       ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
+                       ng-model="basisQuery" class="form-control"
+                       ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery, true)"/>
                 <!-- Export to CSV button -->
                 <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
                         ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"

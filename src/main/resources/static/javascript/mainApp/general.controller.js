@@ -179,6 +179,7 @@
                 //Gets owners of the grouping
                 $scope.groupingOwners = setGroupMembers(res.owners.members);
                 $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
 
                 // Gets the description go the group
                 if (res.description == null) {
@@ -246,6 +247,7 @@
                     //Gets owners of the grouping
                     $scope.groupingOwners = combineGroupMembers($scope.groupingOwners, res.owners.members);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                    $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
 
                     // Retrieve the next page
                     $scope.getPages(groupingPath, page + 1, size, "name", true);
@@ -944,6 +946,7 @@
             $scope.groupingsQuery = "";
             $scope.adminsQuery = "";
             $scope.optInQuery = "";
+            $scope.ownersQuery = "";
         }
 
         /**
