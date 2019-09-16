@@ -689,6 +689,7 @@
                     $scope.init();
                 } else {
                     $scope.getGroupingInformation();
+                    $scope.syncDestArray = [];
                 }
             });
         };
@@ -786,6 +787,7 @@
          */
         function handleMemberRemove() {
             $scope.getGroupingInformation();
+            $scope.syncDestArray = [];
         }
 
         /**
@@ -795,6 +797,7 @@
             // Reload the grouping if you are not removing yourself, or if deleting anyone from the admins page
             if ($scope.currentUser !== $scope.userToRemove.username || !_.isUndefined($scope.adminsList)) {
                 $scope.getGroupingInformation();
+                $scope.syncDestArray = [];
             } else if ($scope.currentUser === $scope.userToRemove.username) {
                 // Removing self from last grouping owned -> redirect to home page
                 if ($scope.groupingsList.length === 1) {
