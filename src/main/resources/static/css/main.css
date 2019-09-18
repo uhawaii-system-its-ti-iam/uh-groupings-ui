@@ -420,6 +420,10 @@ form.seamless button {
     }
 }
 
+.tooltip {
+    pointer-events: none;
+}
+
 .fa.fa-trash-o {
     margin-right: .75rem;
 }
