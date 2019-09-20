@@ -1,92 +1,97 @@
-<th:block th:fragment="selected-grouping" xmlns:th="http://www.w3.org/1999/xhtml">
+<th:block th:fragment="selected-grouping" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
     <div class="container" id="sel" style="display: none"
          th:classappend="${tabContent ? 'card-tab-content' : ''}">
         <div class="card mb-5 mt-5"
              ng-init="changeStyleAttribute('sel', 'display', 'unset')">
-            <div class="card-header teal-bg">
-                <div class="row">
-                    <div class="col-md-9">
-                        <h2 class="card-title text-light mb-0" style="display:inline-block"> {{
-                            selectedGrouping.name }}</h2>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="float-right">
-                            <button class="btn btn-primary btn-sm" type="submit"
-                                    ng-click="returnToGroupingsList(); cancelDescriptionEdit()">Return to Groupings
-                            </button>
+            <section>
+                <div class="card-header teal-bg">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h2 class="card-title text-light mb-0" style="display:inline-block"> {{ selectedGrouping.name }}</h2>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="float-right">
+                                <button class="btn btn-primary btn-sm" type="submit"
+                                        ng-click="returnToGroupingsList(); cancelDescriptionEdit()">Return to Groupings
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <p class="text-light mb-0"><b> Path:</b> {{ selectedGrouping.path }} </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div ng-show="!descriptionForm">
-                            <p class="text-light mb-0"><b>Description:</b> {{ descriptionDisplay() }} &nbsp;<i
-                                    ng-click="editDescription()" class="clickable fa fa-pencil-square-o mr-2"
-                                    aria-hidden="true"></i></p>
-                        </div>
-                        <div ng-show="descriptionForm" class="grouping-description-form">
-                            <form class="seamless border border-secondary rounded ng-pristine ng-valid">
-                                <div ng-show="descriptionLengthWarning()" class="alert alert-warning">
-                                    <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"></p>
-                                </div>
-                                <input class="form-control"
-                                       aria-label="Grouping Description"
-                                       style="float: left; border: white"
-                                       th:title="#{screen.message.admin.selectedGrouping.descriptionFormTitle}"
-                                       th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
-                                       ng-value="descriptionDisplay()"
-                                       ng-model="modelDescription"
-                                       maxlength="{{ maxDescriptionLength }}"
-                                />
-                                <span ng-show="descriptionForm" class="grouping-description-form">
-                                    <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
-                                    class="btn-sm"
-                                    data-toggle="tooltip" data-placement="top" title="Save description">
-                                    <i class="clickable fa fa-check-circle-o fa-2x" aria-hidden="true" ng-click="saveDescription()"></i>
-                                    </button>
-                                </span>
-                                <span ng-show="descriptionForm" class="grouping-description-form">
-                                    <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
-                                    class="btn-sm"
-                                    data-toggle="tooltip" data-placement="top" title="Cancel changes">
-                                    <i class="clickable fa fa-times-circle-o fa-2x" aria-hidden="true" ng-click="cancelDescriptionEdit()"></i>
-                                    </button>
-                                </span>
-                            </form>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="text-light mb-0"><b> Path:</b> {{ selectedGrouping.path }} </p>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="row mx-auto">
-                    <div class="col-lg-1 col-md-2 col-12 teal-tint-bg pt-3 pb-3" id="pills-column">
-                        <div th:replace="fragments/side-nav :: side-nav"></div>
-                    </div>
-                    <div class="tab-content col-lg-11 col-md-10 col-12" id="pill-content">
-                        <div th:replace="fragments/members :: members"></div>
-                        <div id="basis" class="tab-pane fade">
-                            <div th:replace="fragments/basis :: basis"></div>
-                        </div>
-                        <div id="include" class="tab-pane fade">
-                            <div th:replace="fragments/include :: include"></div>
-                        </div>
-                        <div id="exclude" class="tab-pane fade">
-                            <div th:replace="fragments/exclude :: exclude"></div>
-                        </div>
-                        <div id="owners" class="tab-pane fade">
-                            <div th:replace="fragments/owners :: owners"></div>
-                        </div>
-                        <div id="preferences" class="tab-pane fade">
-                            <div th:replace="fragments/preferences :: preferences"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div ng-show="!descriptionForm">
+                                <p class="text-light mb-0"><b>Description:</b> {{ descriptionDisplay() }} &nbsp;<button style="border: none; color: white"
+                                        ng-click="editDescription()" class="clickable fa fa-pencil-square-o mr-2 teal-bg" tabindex="0"
+                                        aria-hidden="true"></button></p>
+                            </div>
+                            <div ng-show="descriptionForm" class="grouping-description-form">
+                                <form class="seamless border border-secondary rounded ng-pristine ng-valid">
+                                    <div ng-show="descriptionLengthWarning()" class="alert alert-warning">
+                                        <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"></p>
+                                    </div>
+                                    <input class="form-control"
+                                           aria-label="Grouping Description"
+                                           style="float: left; border: white"
+                                           th:title="#{screen.message.admin.selectedGrouping.descriptionFormTitle}"
+                                           th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
+                                           ng-value="descriptionDisplay()"
+                                           ng-model="modelDescription"
+                                           maxlength="{{ maxDescriptionLength }}"
+                                    />
+                                    <span ng-show="descriptionForm" class="grouping-description-form">
+                                        <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
+                                        class="btn-sm"
+                                        data-toggle="tooltip" data-placement="top" title="Save description"
+                                        ng-click="saveDescription()">
+                                        <i class="clickable fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                    <span ng-show="descriptionForm" class="grouping-description-form">
+                                        <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
+                                        class="btn-sm"
+                                        data-toggle="tooltip" data-placement="top" title="Cancel changes"
+                                        ng-click="cancelDescriptionEdit()">
+                                        <i class="clickable fa fa-times-circle-o fa-2x" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
+            <section>
+                <div class="card-body p-0">
+                    <div class="row mx-auto">
+                        <div class="col-lg-1 col-md-2 col-12 teal-tint-bg pt-3 pb-3" id="pills-column">
+                            <div th:replace="fragments/side-nav :: side-nav"></div>
+                        </div>
+                        <div class="tab-content col-lg-11 col-md-10 col-12" id="pill-content">
+                            <div th:replace="fragments/members :: members"></div>
+                            <div id="basis" class="tab-pane fade">
+                                <div th:replace="fragments/basis :: basis"></div>
+                            </div>
+                            <div id="include" class="tab-pane fade">
+                                <div th:replace="fragments/include :: include"></div>
+                            </div>
+                            <div id="exclude" class="tab-pane fade">
+                                <div th:replace="fragments/exclude :: exclude"></div>
+                            </div>
+                            <div id="owners" class="tab-pane fade">
+                                <div th:replace="fragments/owners :: owners"></div>
+                            </div>
+                            <div id="preferences" class="tab-pane fade">
+                                <div th:replace="fragments/preferences :: preferences"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 </th:block>
