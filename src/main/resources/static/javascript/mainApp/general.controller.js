@@ -63,7 +63,11 @@
         //The max length usable when getting input
         $scope.maxDescriptionLength = 100;
         //The user input
-        $scope.modelDescription;
+        $scope.modelDescription = "";
+        //Variable for holding description
+        let groupingDescription = "";
+
+        let displayTracker = 1;
 
         //Flag used for getGroupingInformation function to end async call
         let loadMembersList = false;
@@ -82,7 +86,6 @@
          */
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
-            $scope.description = $scope.selectedGrouping.description;
             // $scope.getAllSyncDestinations();
             $scope.getGroupingInformation();
 
@@ -207,10 +210,11 @@
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
 
                     // Gets the description go the group
-                    if (res.description == null) {
-                        $scope.description = "";
+                    if (res.description === null) {
+                        groupingDescription = "";
                     } else {
-                        $scope.description = res.description;
+                        groupingDescription = res.description;
+                        displayTracker = 1;
                     }
 
                     $scope.allowOptIn = res.optInOn;
@@ -348,7 +352,9 @@
             $scope.syncDestArray[1].confirmationModalText = "Click Ok to update the Email list preference as requested.";
         };
 
-        // used to check the length of the text string entered in the description form box, for error handling of max length
+        /**
+         * Check the length of the text string entered in the description form box, for error handling of max length
+         */
         $scope.descriptionLengthWarning = function () {
             return (String($scope.modelDescription).length > maxLength);
         };
@@ -365,7 +371,8 @@
          */
         $scope.cancelDescriptionEdit = function () {
             // refer to last saved description when user cancels the edit
-            $scope.modelDescription = $scope.description;
+            $scope.modelDescription =  groupingDescription;
+
             if ($scope.descriptionForm) {
                 $scope.descriptionForm = !($scope.descriptionForm);
             }
@@ -377,16 +384,13 @@
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function () {
-            var descriptionLength;
-
-            if ($scope.description === "") {
-                (descriptionLength = "");
-            } else {
-                descriptionLength = String($scope.description);
+            if($scope.showGrouping === true && displayTracker === 1) {
+                $scope.modelDescription = groupingDescription;
+                displayTracker = 0;
             }
 
-            return (descriptionLength.length > 0)
-                ? $scope.description
+            return (groupingDescription.length > 0)
+                ? groupingDescription
                 : noDescriptionMessage;
         };
 
@@ -396,19 +400,23 @@
          *          --> error checking?
          */
         $scope.saveDescription = function () {
-            $scope.description = $scope.modelDescription;
-            console.log("Description value: ", $scope.description);
-            if (String($scope.description).length === 0) {
-                $scope.description = "";
+            if(groupingDescription.localeCompare($scope.modelDescription) !== 0) {
+                groupingDescription = $scope.modelDescription;
+
+                groupingsService.updateDescription($scope.selectedGrouping.path,
+                    function () {
+                        // Explain why this empty todo
+                    },
+                    function (res) {
+                        if (res.status === 403) {
+                            $scope.createOwnerErrorModal();
+                        }
+                    },
+                    groupingDescription);
+                $scope.descriptionForm = !($scope.descriptionForm);
+            } else {
+                $scope.cancelDescriptionEdit();
             }
-            groupingsService.updateDescription($scope.selectedGrouping.path, function () {
-                // Explain why this empty todo
-            }, function (res) {
-                if (res.status === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            }, $scope.description);
-            $scope.descriptionForm = !($scope.descriptionForm);
 
         };
 
@@ -1043,6 +1051,9 @@
             $scope.showGrouping = false;
             loadMembersList = false;
 
+            $scope.modelDescription = "";
+            groupingDescription = "";
+            displayTracker = 1;
         };
 
         /**
