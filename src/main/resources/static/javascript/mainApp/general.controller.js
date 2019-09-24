@@ -64,6 +64,8 @@
         $scope.maxDescriptionLength = 100;
         //The user input
         $scope.modelDescription;
+        //Variable for holding description
+        let groupingDescription;
 
         //Flag used for getGroupingInformation function to end async call
         let loadMembersList = false;
@@ -82,7 +84,6 @@
          */
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
-            $scope.description = $scope.selectedGrouping.description;
             // $scope.getAllSyncDestinations();
             $scope.getGroupingInformation();
 
@@ -207,10 +208,10 @@
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
 
                     // Gets the description go the group
-                    if (res.description == null) {
-                        $scope.description = "";
+                    if (res.description === null) {
+                        groupingDescription = "";
                     } else {
-                        $scope.description = res.description;
+                        groupingDescription = res.description;
                     }
 
                     $scope.allowOptIn = res.optInOn;
@@ -377,16 +378,10 @@
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function () {
-            var descriptionLength;
+            $scope.modelDescription = groupingDescription;
 
-            if ($scope.description === "") {
-                (descriptionLength = "");
-            } else {
-                descriptionLength = String($scope.description);
-            }
-
-            return (descriptionLength.length > 0)
-                ? $scope.description
+            return (groupingDescription.length > 0)
+                ? groupingDescription
                 : noDescriptionMessage;
         };
 
