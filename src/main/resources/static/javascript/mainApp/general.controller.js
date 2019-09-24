@@ -63,9 +63,11 @@
         //The max length usable when getting input
         $scope.maxDescriptionLength = 100;
         //The user input
-        $scope.modelDescription;
+        $scope.modelDescription = "";
         //Variable for holding description
-        let groupingDescription;
+        let groupingDescription = "";
+
+        let displayTracker = 1;
 
         //Flag used for getGroupingInformation function to end async call
         let loadMembersList = false;
@@ -382,7 +384,10 @@
          */
         $scope.descriptionDisplay = function () {
 
-            $scope.modelDescription = groupingDescription;
+            if(displayTracker === 1) {
+                $scope.modelDescription = groupingDescription;
+                displayTracker = 0;
+            }
 
             return (groupingDescription.length > 0)
                 ? groupingDescription
@@ -1047,7 +1052,8 @@
             loadMembersList = false;
 
             $scope.modelDescription = "";
-
+            groupingDescription = "";
+            displayTracker = 1;
         };
 
         /**

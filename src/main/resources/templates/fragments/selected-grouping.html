@@ -41,6 +41,7 @@
                                            th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
                                            ng-value="descriptionDisplay()"
                                            ng-model="modelDescription"
+                                           ng-model-options="{ updateOn: 'blur' }"
                                            maxlength="{{ maxDescriptionLength }}"
                                     />
                                     <span ng-show="descriptionForm" class="grouping-description-form">
