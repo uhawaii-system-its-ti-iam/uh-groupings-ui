@@ -384,7 +384,7 @@
          */
         $scope.descriptionDisplay = function () {
 
-            if(displayTracker === 1) {
+            if($scope.showGrouping === true && displayTracker === 1) {
                 $scope.modelDescription = groupingDescription;
                 displayTracker = 0;
             }
