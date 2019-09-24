@@ -214,6 +214,7 @@
                         groupingDescription = "";
                     } else {
                         groupingDescription = res.description;
+                        displayTracker = 1;
                     }
 
                     $scope.allowOptIn = res.optInOn;
@@ -384,9 +385,17 @@
          */
         $scope.descriptionDisplay = function () {
 
+            console.log("Outisde if statement: " + displayTracker);
+            console.log("Variable: " + groupingDescription);
+            console.log("model: " + $scope.modelDescription);
+
+
             if($scope.showGrouping === true && displayTracker === 1) {
                 $scope.modelDescription = groupingDescription;
                 displayTracker = 0;
+                console.log("Inside statement: " + displayTracker);
+                console.log("Variable: " + groupingDescription);
+                console.log("model: " + $scope.modelDescription);
             }
 
             return (groupingDescription.length > 0)
