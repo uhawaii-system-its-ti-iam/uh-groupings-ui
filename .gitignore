@@ -13,3 +13,4 @@ src/main/resources/grouperClientLogs/*
 grouperClientLogs
 phantomjsdriver.log
 .DS_Store
+*.log

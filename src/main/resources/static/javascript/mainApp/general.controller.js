@@ -366,7 +366,8 @@
          */
         $scope.cancelDescriptionEdit = function () {
             // refer to last saved description when user cancels the edit
-            $scope.modelDescription = $scope.description;
+            $scope.modelDescription =  groupingDescription;
+
             if ($scope.descriptionForm) {
                 $scope.descriptionForm = !($scope.descriptionForm);
             }
@@ -378,6 +379,7 @@
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function () {
+
             $scope.modelDescription = groupingDescription;
 
             return (groupingDescription.length > 0)
@@ -391,19 +393,23 @@
          *          --> error checking?
          */
         $scope.saveDescription = function () {
-            $scope.description = $scope.modelDescription;
-            console.log("Description value: ", $scope.description);
-            if (String($scope.description).length === 0) {
-                $scope.description = "";
+            if(groupingDescription.localeCompare($scope.modelDescription) !== 0) {
+                groupingDescription = $scope.modelDescription;
+
+                groupingsService.updateDescription($scope.selectedGrouping.path,
+                    function () {
+                        // Explain why this empty todo
+                    },
+                    function (res) {
+                        if (res.status === 403) {
+                            $scope.createOwnerErrorModal();
+                        }
+                    },
+                    groupingDescription);
+                $scope.descriptionForm = !($scope.descriptionForm);
+            } else {
+                $scope.cancelDescriptionEdit();
             }
-            groupingsService.updateDescription($scope.selectedGrouping.path, function () {
-                // Explain why this empty todo
-            }, function (res) {
-                if (res.status === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            }, $scope.description);
-            $scope.descriptionForm = !($scope.descriptionForm);
 
         };
 
@@ -1037,6 +1043,8 @@
 
             $scope.showGrouping = false;
             loadMembersList = false;
+
+            $scope.modelDescription = "";
 
         };
 
