@@ -371,7 +371,7 @@
          */
         $scope.cancelDescriptionEdit = function () {
             // refer to last saved description when user cancels the edit
-            $scope.modelDescription =  groupingDescription;
+            $scope.modelDescription = groupingDescription;
 
             if ($scope.descriptionForm) {
                 $scope.descriptionForm = !($scope.descriptionForm);
@@ -384,7 +384,7 @@
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function () {
-            if($scope.showGrouping === true && displayTracker === 1) {
+            if ($scope.showGrouping === true && displayTracker === 1) {
                 $scope.modelDescription = groupingDescription;
                 displayTracker = 0;
             }
@@ -400,7 +400,7 @@
          *          --> error checking?
          */
         $scope.saveDescription = function () {
-            if(groupingDescription.localeCompare($scope.modelDescription) !== 0) {
+            if (groupingDescription.localeCompare($scope.modelDescription) !== 0) {
                 groupingDescription = $scope.modelDescription;
 
                 groupingsService.updateDescription($scope.selectedGrouping.path,
@@ -427,7 +427,7 @@
             $scope.apiErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/apiError",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
         };
@@ -469,7 +469,7 @@
                 if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
                     member.whereListed = _.isUndefined(member.whereListed)
                         ? "Include"
-                        : "Basis / Include";
+                        : "Basis & Include";
                 }
             });
         };
@@ -482,14 +482,14 @@
             var groupingPath = $scope.selectedGrouping.path;
             groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function () {
                 var userToAdd = $scope.userToAdd;
-                var inBasis = _.some($scope.groupingBasis, {username: userToAdd});
+                var inBasis = _.some($scope.groupingBasis, { username: userToAdd });
                 if (_.isEmpty(userToAdd)) {
                     $scope.createAddErrorModal(userToAdd);
                 } else if ($scope.existInList(userToAdd, list)) {
                     $scope.createCheckModal(userToAdd, list, false, inBasis);
                 } else if ($scope.isInAnotherList(userToAdd, list)) {
                     $scope.createCheckModal(userToAdd, list, true, inBasis);
-                } else if ((inBasis && list == "Include") || (!inBasis && list == "Exclude" )) {
+                } else if ((inBasis && list == "Include") || (!inBasis && list == "Exclude")) {
                     $scope.createBasisWarningModal(userToAdd, list, inBasis);
                 } else {
                     $scope.createConfirmAddModal({
@@ -618,7 +618,7 @@
             $scope.checkModalInstance = $uibModal.open({
                 templateUrl: "modal/checkModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
 
@@ -637,7 +637,7 @@
             $scope.confirmAddModalInstance = $uibModal.open({
                 templateUrl: "modal/confirmAddModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
             $scope.confirmAddModalInstance.result.then(function () {
@@ -665,7 +665,7 @@
                 $scope.confirmAddModalInstance = $uibModal.open({
                     templateUrl: "modal/confirmAddModal",
                     scope: $scope,
-                    backdrop: 'static',
+                    backdrop: "static",
                     keyboard: false
                 });
 
@@ -741,7 +741,7 @@
             $scope.addModalInstance = $uibModal.open({
                 templateUrl: "modal/addModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
 
@@ -771,7 +771,7 @@
             $scope.addErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/addErrorModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
         };
@@ -789,7 +789,7 @@
             $scope.RoleErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/roleErrorModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
         };
@@ -901,7 +901,7 @@
                 templateUrl: "modal/removeModal",
                 windowClass: windowClass,
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
 
@@ -951,7 +951,7 @@
             $scope.removeErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/removeErrorModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
         };
@@ -1079,7 +1079,7 @@
             $scope.infoModalInstance = $uibModal.open({
                 templateUrl: "modal/infoModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
         };
@@ -1180,7 +1180,7 @@
             $scope.preferenceErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/preferenceErrorModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
         };
@@ -1211,7 +1211,7 @@
             $scope.syncDestInstance = $uibModal.open({
                 templateUrl: "modal/syncDestModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
 
@@ -1242,7 +1242,7 @@
             });
 
             $scope.basisWarningModalInstance.result.then(function () {
-                $scope.updateAddMember(user, listName)
+                $scope.updateAddMember(user, listName);
             });
         };
 
@@ -1252,7 +1252,7 @@
 
         $scope.closeBasisWarningModal = function () {
             $scope.basisWarningModalInstance.dismiss();
-        }
+        };
 
         /**
          * Proceeds with the syncDest confirmation
@@ -1278,7 +1278,7 @@
             $scope.OwnerErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/ownerErrorModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
         };
