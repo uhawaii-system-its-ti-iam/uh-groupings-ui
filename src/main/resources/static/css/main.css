@@ -193,6 +193,7 @@ table .p-5 {
     padding: 5px !important
 }
 table .p-10 {
+    white-space: nowrap;
     padding: 5px 10px !important
 }
 
