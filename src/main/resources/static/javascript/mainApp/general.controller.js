@@ -674,25 +674,6 @@
         };
 
         /**
-         * - Checks if user names in the imported list exist in the current list, or in any other list
-         * - Uses checkUserNameValidity to check if the user name to be added is valid.
-         * - Adds user name strings to an array of member objects.
-         * @author Zachary Gilbert
-         * @param pendingList - Array of username strings
-         * @param listName - Include, Exclude, ... etc
-         * @return {{}[]} - Array of member objects
-         */
-        function createUserNameListObject(pendingList, listName) {
-            let userNameList = [];
-
-            for (let item of pendingList) {
-                if (item.length <= 16)
-                    checkUserNameValidity(whichList(item, $scope.existInList(item, listName), $scope.isInAnotherList(item, listName), listName), userNameList, listName);
-            }
-            return userNameList;
-        };
-
-        /**
          * Sends a GET request to grouper using the groupingService checkMember method to check whether the user name is a valid member of the UH data base.
          * If 200 is returned, status is set to valid, otherwise if a 404 is returned, status is set to invalid.
          * @author Zachary Gilbert
@@ -712,6 +693,26 @@
                     data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
                 }
             });
+        };
+
+
+        /**
+         * - Checks if user names in the imported list exist in the current list, or in any other list
+         * - Uses checkUserNameValidity to check if the user name to be added is valid.
+         * - Adds user name strings to an array of member objects.
+         * @author Zachary Gilbert
+         * @param pendingList - Array of username strings
+         * @param listName - Include, Exclude, ... etc
+         * @return {{}[]} - Array of member objects
+         */
+        function createUserNameListObject(pendingList, listName) {
+            let userNameList = [];
+
+            for (let item of pendingList) {
+                if (item.length <= 16)
+                    checkUserNameValidity(whichList(item, $scope.existInList(item, listName), $scope.isInAnotherList(item, listName), listName), userNameList, listName);
+            }
+            return userNameList;
         };
 
         /**
@@ -1420,8 +1421,26 @@
         function clearAddMemberInput(listName) {
             switch (listName) {
                 case "Include":
+                    $scope.userToAdd = "";
+                    $scope.usersToAdd = "";
+                    $scope.userNameList = [];
+                    $scope.selectedRow = null;
+                    $scope.imported = false;
+                    $scope.validUserNameCount = 0;
+                    $scope.sortName = false;
+                    $scope.sortStatus = false;
+                    $scope.addMultipleMembers = false;
+                    break;
                 case "Exclude":
                     $scope.userToAdd = "";
+                    $scope.usersToAdd = "";
+                    $scope.userNameList = [];
+                    $scope.selectedRow = null;
+                    $scope.imported = false;
+                    $scope.validUserNameCount = 0;
+                    $scope.sortName = false;
+                    $scope.sortStatus = false;
+                    $scope.addMultipleMembers = false;
                     break;
                 case "owners":
                     $scope.ownerToAdd = "";

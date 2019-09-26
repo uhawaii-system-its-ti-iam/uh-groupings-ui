@@ -178,6 +178,18 @@
                 let endpoint = BASE_URL + "members/" + member;
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
+            
+            /**
+             * Checks if member exists so that multiple pending user names can be displayed for the user.
+             * @param {string} member - the UH username of the member.
+             * @param {Object[]} data - array of objects which hold username and status. [{string: name, string: status}]
+             * @param onSuccess
+             * @param onError
+             */
+            checkMember: function (member, data, onSuccess, onError) {
+                let endpoint = BASE_URL + "members/" + member;
+                dataProvider.loadData(onSuccess, onError, endpoint);
+            },
 
             /**
              * Opts a member out of a grouping.
@@ -232,8 +244,8 @@
              * Get the list of sync destinations
              */
             getSyncDestList: function (onSuccess, onError) {
-              let endpoint = BASE_URL + "syncDestinations";
-              dataProvider.loadData(onSuccess, onError, endpoint);
+                let endpoint = BASE_URL + "syncDestinations";
+                dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
             /**
@@ -243,7 +255,7 @@
              */
             setSyncDest: function (path, syncDestId, turnOn, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/syncDests/" + syncDestId;
-                if(turnOn) {
+                if (turnOn) {
                     endpoint = endpoint.concat("/enable");
                 } else {
                     endpoint = endpoint.concat("/disable");
