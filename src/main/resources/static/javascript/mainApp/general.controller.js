@@ -74,7 +74,7 @@
             //The max length usable when getting input
             $scope.maxDescriptionLength = 100;
             //The user input
-            $scope.modelDescription;
+            $scope.modelDescription = "";
 
             function Member(name, status, added, uhid, id) {
                 this.name = name;
@@ -84,8 +84,18 @@
                 this.id = id;
             }
 
-            var maxLength = 100;
-            var noDescriptionMessage = "No description given for this Grouping.";
+            //Variable for holding description
+            let groupingDescription = "";
+
+            let displayTracker = 1;
+
+            //Flag used for getGroupingInformation function to end async call
+            let loadMembersList = false;
+            //Keeps track of async calls made throughout this js controller
+            let asyncThreadCount = 0;
+
+            let maxLength = 100;
+            let noDescriptionMessage = "No description given for this Grouping.";
 
             angular.extend(this, $controller("TableJsController", {
                 $scope: $scope
