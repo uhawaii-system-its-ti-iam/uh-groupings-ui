@@ -203,8 +203,10 @@
                  * @param {String} groupingPath - Path to the grouping to retrieve data from
                  * @param {Integer} currentPage - Page of grouping to retrieve (increments after each async/await call)
                  * @param {Integer} PAGE_SIZE - Size of page to retrieve (Located in app.constants)
-                 * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
-                 * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending (Z-A)
+                 * @param {String} sortString - Parameter to sort the grouping database by before retrieving
+                 *     information
+                 * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for
+                 *     descending (Z-A)
                  */
                 groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async function (res) {
 
@@ -292,7 +294,8 @@
          * @param {Integer} page - Page of grouping to retrieve (Paging starts from 1)
          * @param {Integer} size - Size of page to retrieve
          * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
-         * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending (Z-A)
+         * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending
+         *     (Z-A)
          */
         $scope.getPages = function (groupingPath, page, size, sortString, isAscending) {
 
@@ -300,7 +303,8 @@
              * Promise returned so that the async/await call can be completed
              * Which will only complete if resolve is called
              * Resolve will be called based on 2 accounts:
-             *    1) groupingPath has changed so async call needs to be terminated before starting to load new groupingPath
+             *    1) groupingPath has changed so async call needs to be terminated before starting to load new
+             * groupingPath
              *    2) All members in a grouping have been loaded
              */
             return new Promise((resolve) =>
@@ -496,10 +500,12 @@
                 }
             });
         };
+
         /**
          * Lets a user import multiple members to a grouping, in the long run this method triggers the
          * api method includeMultipleMembers.
-         * @param listName
+         * @author Zachary Gilbert
+         * @param listName - Include or Exclude
          */
         $scope.addMembers = function (listName) {
             let str = $scope.createUniqArrayFromString($scope.usersToAdd);
@@ -544,7 +550,8 @@
         };
 
         /**
-         * Reads a text file(.txt) from client side. The file should consist of a list of UH user names or ids separated by newline characters, that the user is ready to add to a grouping list (Include, Exclude)
+         * Reads a text file(.txt) from client side. The file should consist of a list of UH user names or ids
+         * separated by newline characters, that the user is ready to add to a grouping list (Include, Exclude)
          * @author Zachary Gilbert
          * @param $event - FileReader event sent from Include.html or Exclude.html
          * @param listName - Include or Exclude
@@ -643,8 +650,9 @@
         }
 
         /**
-         * - Takes in the string of user names of which are separated by newline characters
-         * - Splits string into array, then sorts and removes the duplicate and empty string elements.
+         * Take in a string of user names of which are separated by newline characters. Split that string into array
+         * strings such that each element starts at where each newline character previously existed. Sort and remove
+         * the duplicate and empty string elements.
          * @author Zachary Gilbert
          * @param str - String of newline separated usernames
          * @return {[string]}
@@ -654,14 +662,16 @@
         };
 
         /**
-         * Returns a Member object with the proper fields depending on which list the user intends to add members too.
+         * Return a Member object with the proper fields depending on which list the user intends to add members too.
          * - If the member exists in the list, there is no need to add it therefore the 'added' property is set to no
-         * - Else if the member exists in another list we set the 'status' property to that 'listName' and set the 'added' property to yes
+         * - Else if the member exists in another list we set the 'status' property to that 'listName' and set the
+         * 'added' property to yes
          * - Otherwise the member to be added doesn't exist in any lists and needs to be validated with grouper
          * @author Zachary Gilbert
          * @param item - String username
          * @param existInList - the global scope method $scope.existInList is intended to be passed as the parameter
-         * @param isInOtherList - the global scope method $scope.isInAnotherList is intended to be passed as the parameter
+         * @param isInOtherList - the global scope method $scope.isInAnotherList is intended to be passed as the
+         *     parameter
          * @param listName - Include or Exclude
          * @return {Member}
          */
@@ -674,8 +684,9 @@
         };
 
         /**
-         * Sends a GET request to grouper using the groupingService checkMember method to check whether the user name is a valid member of the UH data base.
-         * If 200 is returned, status is set to valid, otherwise if a 404 is returned, status is set to invalid.
+         * Send a GET request to grouper using the groupingService checkMember method to check whether the user name
+         * is a valid member of the UH data base. If 200 is returned, status is set to valid, otherwise if a 404 is
+         * returned, status is set to invalid.
          * @author Zachary Gilbert
          * @param memberNew - UH user name
          * @param data - Object Array
@@ -684,8 +695,10 @@
             groupingsService.checkMember(memberNew.name, data, function (attributes) {
 
                 data.push(new Member(memberNew.name,
-                    (memberNew.status === "") ? "Valid" : memberNew.status,  //if the status field is empty, set to valid
-                    (memberNew.status === $scope.listName) ? "No" : " Yes",  //if the status field is equal to list name, set added to "No"
+                    (memberNew.status === "") ? "Valid" : memberNew.status,
+
+                    (memberNew.status === $scope.listName) ? "No" : " Yes",
+
                     attributes.uhuuid, attributes.uid));
 
             }, function (res) {
@@ -697,7 +710,7 @@
 
 
         /**
-         * - Checks if user names in the imported list exist in the current list, or in any other list
+         * - Check if user names in the imported list exist in the current list, or in any other list
          * - Uses checkUserNameValidity to check if the user name to be added is valid.
          * - Adds user name strings to an array of member objects.
          * @author Zachary Gilbert
@@ -716,7 +729,7 @@
         };
 
         /**
-         * Returns the userName string that is currently selected
+         * Return userName string that is associated with the member in the selected row
          * @author Zachary Gilbert
          * @return {string|*}
          */
@@ -725,32 +738,47 @@
                 return "";
             return $scope.userNameList[$scope.selectedRow].name;
         };
+
+        /**
+         * Return @param(str) string if a row is selected
+         * @param str
+         * @return {string|*}
+         */
         $scope.getImportListStr = function (str) {
             if ($scope.selectedRow === null)
                 return "";
             return str;
         };
 
-        $scope.getSelectedId = function () {
+        /**
+         * Return id string that is associated with the member in the selected row
+         * @return {string|*}
+         $scope.getSelectedId = function () {
             if ($scope.selectedRow === null || $scope.userNameList[$scope.selectedRow].id === "")
                 return "";
             return $scope.userNameList[$scope.selectedRow].id;
+
         };
-        $scope.getSelectedUid = function () {
+         */
+        /**
+         * Return uhid number that is associated with the member in the selected row
+         * @return {string|*}
+         $scope.getSelectedUid = function () {
             if ($scope.selectedRow === null || $scope.userNameList[$scope.selectedRow].uhid === "")
                 return "";
             return $scope.userNameList[$scope.selectedRow].uhid;
         };
+         */
 
         /**
-         * Pass in the id of a certain html component to change a certain style
+         * Set the attribute of a html component associated with id.
          * @author Zachary Gilbert
          * @param id - id of html component
-         * @param attr - attribute to be changed
+         * @param attribute
          * @param setAs - set attribute too.
          */
-        $scope.changeStyleAttribute = function (id, attr, setAs) {
-            document.getElementById(id).style[attr] = setAs;
+        $scope.changeStyleAttribute = function (id, attribute, setAs) {
+            document.getElementById(id).style[attribute] = setAs;
         };
 
         /**
@@ -821,7 +849,8 @@
         }
 
         /**
-         * Sets the global scoped variable selectedRow to the index. Used in importModal.html to highlight selected text.
+         * Sets the global scoped variable selectedRow to the index. Used in importModal.html to highlight selected
+         * text.
          * @author Zachary Gilbert
          * @param index
          */
@@ -830,7 +859,8 @@
         };
 
         /**
-         * Removes the invalid user names from the pending list array of member objects and returns a list of strings containing all valid user names.
+         * Removes the invalid user names from the pending list array of member objects and returns a list of strings
+         * containing all valid user names.
          * @author Zachary Gilbert
          * @param pendingList - Array of Member objects
          * @param listName
