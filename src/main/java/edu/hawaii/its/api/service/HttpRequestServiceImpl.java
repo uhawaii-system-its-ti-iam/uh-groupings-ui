@@ -27,6 +27,10 @@ public class HttpRequestServiceImpl implements HttpRequestService {
                 .build();
     }
 
+    /*
+    Make an http request to the API with path variables
+     */
+
     @Override
     public ResponseEntity makeApiRequest(String currentUser, String uri, HttpMethod method) {
 
@@ -37,6 +41,10 @@ public class HttpRequestServiceImpl implements HttpRequestService {
         //todo why do we need the class fromm the body of the rest template rather than RestTemplate.class?
         return restTemplate.exchange(uri, method, httpEntity, String.class);
     }
+
+    /*
+    Make an hhtp request to the API with path variables and description in the body
+     */
 
     @Override
     public ResponseEntity makeApiRequestWithBody(String currentUser, String uri, String data, HttpMethod method) {
