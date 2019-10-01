@@ -353,7 +353,7 @@
                     } else if (res.statusCode === 403) {
                         $scope.createOwnerErrorModal();
                     } else {
-                        dataProvider.handleException({ exceptionMessage: res.exceptionMessage }, "feedback/error", "feedback");
+                        dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
                     }
                     //stops while loop and completes promise then returns
                     loadMembersList = false;
@@ -432,7 +432,7 @@
 
                 groupingsService.updateDescription($scope.selectedGrouping.path,
                     function () {
-                        // Explain why this empty todo
+                        // This is currently empty due to not needing to do anything with a successful response
                     },
                     function (res) {
                         if (res.status === 403) {
