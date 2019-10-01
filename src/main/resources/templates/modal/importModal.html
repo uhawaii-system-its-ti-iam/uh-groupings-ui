@@ -18,6 +18,7 @@
     <p>
         <span style="color: black" th:text="#{screen.message.modal.import.confirmation}"></span>
         <span style="color: black;">{{listName}} list.</span>
+        {{checkImportSize()}}
     </p>
     <div class="container">
         <table>
@@ -76,7 +77,8 @@
                 changeStyleAttribute('importButton', 'display', 'none');
                 changeStyleAttribute('importStatus', 'display', 'unset');
                 changeStyleAttribute('mentionUserOptions', 'display', 'unset');
-                changeStyleAttribute('confirmationDialogue', 'display', 'unset')">
+                changeStyleAttribute('confirmationDialogue', 'display', 'unset')"
+                ng->
             Import
         </button>
     </div>

@@ -899,6 +899,21 @@
             $scope.confirmImportInstance.close();
         };
 
+        $scope.checkImportSize = function () {
+            if ($scope.userNameList.length > 10) {
+                $scope.launchImportErrorModal();
+            }
+            return String($scope.userNameList.length);
+        };
+        $scope.launchImportErrorModal = function () {
+            $scope.cancelImportModalInstance();
+            $scope.closeConfirmAddMembersModalInstance();
+            $scope.confirmImportErrorInstance = $uibModal.open({
+                templateUrl: "modal/importErrorModal",
+                scope: $scope
+            });
+        };
+
         /**
          * Remove Items from the pendingList Array
          * @author Zachary Gilbert

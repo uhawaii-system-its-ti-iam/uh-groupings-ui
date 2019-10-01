@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Error Adding User</h5>
+</div>
+<div class="modal-body" id="modal-body">
+    <div ng-if="user.length > 0">
+        <p th:text="#{screen.message.modal.add.fail}"></p>
+        <p th:text="#{screen.message.modal.add.ensureValid}"></p>
+    </div>
+    <div ng-if="user.length === 0">
+        <p th:utext="#{screen.message.modal.add.empty}">Empty</p>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="closeAddErrorModal()">OK</button>
+</div>
+</html>
