@@ -764,7 +764,7 @@
          */
 
         /**
-         * Set the attribute of a html component associated with id.
+         * Set a style attribute of a html component associated with id.
          * @author Zachary Gilbert
          * @param id - id of html component
          * @param attribute
