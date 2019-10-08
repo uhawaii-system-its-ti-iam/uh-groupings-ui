@@ -900,7 +900,7 @@
         };
 
         $scope.checkImportSize = function () {
-            if ($scope.userNameList.length > 10) {
+            if ($scope.userNameList.length > 100) {
                 $scope.launchImportErrorModal();
             }
             return String($scope.userNameList.length);
