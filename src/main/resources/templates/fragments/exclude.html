@@ -92,21 +92,24 @@
         </div>
         <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
-                <form ng-submit="addMember('Exclude')">
+                <form ng-submit="addMembers('Exclude')">
                     <div class="input-group">
-                        <input class="form-control" type="text" placeholder="UH Username"
-                               title="Enter UH username to exclude"
-                               ng-model="userToAdd"/>
-
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">Add</button>
+                        <textarea placeholder="Members to Add"
+                                  class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="1"
+                                  title="Enter multiple UH usernames to include" ng-model="usersToAdd"
+                                  style="resize: none">
+                        </textarea>
+                        <button class="btn btn-primary" type="submit">Add</button>
+                        <div class="add-import-buttons">
+                            <button class="btn btn-primary" ng-click="launchImportModal('Exclude')">Import File</button>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="mt-lg-0 mt-2">
-                <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude')"></div>
-            </div>
         </div>
+        <div class="mt-lg-0 mt-2">
+            <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude')"></div>
+        </div>
+    </div>
     </div>
 </th:block>

@@ -1,0 +1,81 @@
+<!--
+    -addMembersModal.html
+        -  Contains the add conformation modal
+        -  See Modal Add section in messages.properties
+        -  See createConfirmAddModal general.controller.js
+-->
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Confirm Adding New Members</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="cancelImportModalInstance()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" id="modal-body">
+    <p>
+        <span style="color: black" th:text="#{screen.message.modal.import.confirmation}"></span>
+        <span style="color: black;">{{listName}} list.</span>
+    </p>
+    <div class="container">
+        <table>
+            <tr>
+                <td style="margin-right: 400px">
+                    <table>
+                        <thead class="import-table-thead-tbody-tr import-table-thead">
+                        <tr class="import-table-thead-tbody-tr">
+                            <td ng-click="memberSort(userNameList,  sortStatus, 'name')">User Name</td>
+                            <td ng-click="memberSort(userNameList,  sortStatus, 'status')">Added</td>
+                        </tr>
+                        </thead>
+                        <tbody class="import-table-tbody">
+                        <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList"
+                            ng-class="{'selected':$index == selectedRow}"
+                            ng-click="setClickedRow($index);
+                changeStyleAttribute('mentionUserOptions', 'display', 'none')">
+                            <td>{{item.name}}</td>
+                            <td>{{item.added}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td style="width: 400px ; alignment: top ; padding-left: 75px ; padding-right: 10px">
+                    <div>
+                        <p id="mentionUserOptions" style="display: none">
+                            An entry from the list can be selected for a further explanation.
+                        </p>
+                        <div ng-class="{'selected':$index == selectedRow}">
+                            <p style="font-weight: bold">
+                                {{ getImportListStr("Status: ")}}
+                                <span style="font-weight: normal; color: black">
+                                    {{ displaySelectedStatus(getSelectedUserName())[0] }}
+                                </span>
+                            </p>
+                            <p>
+                            <span style="font-weight: bold; color: black">
+                                {{ getImportListStr("User's Name:  ")}}
+                            </span>
+                                <span style="font-weight: normal; color: black">
+                            {{ displaySelectedStatus(getSelectedUserName())[1] }}
+                            </span>
+                            </p>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="modal-footer" ng-if="addMultipleMembers"
+     ng-init="changeStyleAttribute('mentionUserOptions', 'display', 'unset')">
+    <p style="padding-right: 100px; padding-left: 20px">
+        Are you sure you want to add these users to the
+        <span style="color: black">{{listName}}</span>
+        <span style="color: black"> list?</span>
+    </p>
+    <button class="btn btn-primary" ng-click="importMembers()">Yes</button>
+    <button class="btn btn-default" data-dismiss="modal" ng-click="cancelImportModalInstance()">Cancel</button>
+</div>
+</html>
