@@ -501,6 +501,14 @@
             });
         };
 
+
+        $scope.getInBasis = function (id, str) {
+            if (str === "Yes")
+                document.getElementById(id).className = "fa fa-check";
+            else
+                document.getElementById(id).className = "fa fa-times";
+        };
+
         /**
          * Import multiple members to a grouping, in the long run this method triggers the
          * api method includeMultipleMembers.
