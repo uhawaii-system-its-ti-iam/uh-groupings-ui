@@ -7,7 +7,8 @@
                 <div class="card-header teal-bg">
                     <div class="row">
                         <div class="col-md-9">
-                            <h2 class="card-title text-light mb-0" style="display:inline-block"> {{ selectedGrouping.name }}</h2>
+                            <h2 class="card-title text-light mb-0" style="display:inline-block"> {{
+                                selectedGrouping.name }}</h2>
                         </div>
                         <div class="col-md-3">
                             <div class="float-right">
@@ -25,9 +26,12 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div ng-show="!descriptionForm">
-                                <p class="text-light mb-0"><b>Description:</b> {{ descriptionDisplay() }} &nbsp;<button style="border: none; color: white"
-                                        ng-click="editDescription()" class="clickable fa fa-pencil-square-o mr-2 teal-bg" tabindex="0"
-                                        aria-hidden="true"></button></p>
+                                <p class="text-light mb-0"><b>Description:</b> {{ descriptionDisplay() }} &nbsp;<button
+                                        style="border: none; color: white"
+                                        ng-click="editDescription()"
+                                        class="clickable fa fa-pencil-square-o mr-2 teal-bg" tabindex="0"
+                                        aria-hidden="true"></button>
+                                </p>
                             </div>
                             <div ng-show="descriptionForm" class="grouping-description-form">
                                 <form class="seamless border border-secondary rounded ng-pristine ng-valid">
@@ -46,18 +50,20 @@
                                            ng-trim="false"
                                     />
                                     <span ng-show="descriptionForm" class="grouping-description-form">
-                                        <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
-                                        class="btn-sm"
-                                        data-toggle="tooltip" data-placement="top" title="Save description"
-                                        ng-click="saveDescription()">
+                                        <button type="button"
+                                                style="background-color: white; color: #004252; border: white; margin: 5px;"
+                                                class="btn-sm"
+                                                data-toggle="tooltip" data-placement="top" title="Save description"
+                                                ng-click="saveDescription()">
                                         <i class="clickable fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
                                         </button>
                                     </span>
                                     <span ng-show="descriptionForm" class="grouping-description-form">
-                                        <button type="button" style="background-color: white; color: #004252; border: white; margin: 5px;"
-                                        class="btn-sm"
-                                        data-toggle="tooltip" data-placement="top" title="Cancel changes"
-                                        ng-click="cancelDescriptionEdit()">
+                                        <button type="button"
+                                                style="background-color: white; color: #004252; border: white; margin: 5px;"
+                                                class="btn-sm"
+                                                data-toggle="tooltip" data-placement="top" title="Cancel changes"
+                                                ng-click="cancelDescriptionEdit()">
                                         <i class="clickable fa fa-times-circle-o fa-2x" aria-hidden="true"></i>
                                         </button>
                                     </span>

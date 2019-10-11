@@ -85,7 +85,9 @@
                             </i>
                         </div>
                     </td>
-                    <td class="basis-column text-center p-10">{{e.inBasis}}</td>
+                    <td class="basis-column text-center p-10">
+                        <i id="inBasis" class="fa fa-{{strIsVal(e.inBasis, 'Yes', 'check', 'times')}} text-dark"></i>
+                    </td>
                 </tr>
                 </tbody>
             </table>

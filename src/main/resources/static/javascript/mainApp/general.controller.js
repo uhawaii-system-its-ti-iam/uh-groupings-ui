@@ -502,6 +502,16 @@
         };
 
         /**
+         * If str is equal to val, return tru, otherwise return fal
+         * @author Zachary Gilbert
+         * @param str
+         * @return {string}
+         */
+        $scope.strIsVal = function (str, val, tru, fal) {
+            return (str === val) ? tru : fal;
+        };
+
+        /**
          * Import multiple members to a grouping, in the long run this method triggers the
          * api method includeMultipleMembers.
          * @author Zachary Gilbert
