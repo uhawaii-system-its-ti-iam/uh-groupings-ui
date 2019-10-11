@@ -501,12 +501,14 @@
             });
         };
 
-
-        $scope.getInBasis = function (id, str) {
-            if (str === "Yes")
-                document.getElementById(id).className = "fa fa-check";
-            else
-                document.getElementById(id).className = "fa fa-times";
+        /**
+         * If str is equal to val, return tru, otherwise return fal
+         * @author Zachary Gilbert
+         * @param str
+         * @return {string}
+         */
+        $scope.strIsVal = function (str, val, tru, fal) {
+            return (str === val) ? tru : fal;
         };
 
         /**

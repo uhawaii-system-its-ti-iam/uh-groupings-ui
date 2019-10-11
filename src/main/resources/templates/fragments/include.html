@@ -86,9 +86,8 @@
                             </i>
                         </div>
                     </td>
-                    <mdb-icon fas icon="check"></mdb-icon>
                     <td class="basis-column text-center p-10">
-                        <i id="inBasis" ng-init="getInBasis('inBasis', i.inBasis)"></i>
+                        <i id="inBasis" class="fa fa-{{strIsVal(i.inBasis, 'Yes', 'check', 'times')}} text-dark"> </i>
                     </td>
                 </tr>
                 </tbody>
