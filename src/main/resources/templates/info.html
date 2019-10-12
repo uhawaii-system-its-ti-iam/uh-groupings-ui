@@ -3,83 +3,125 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <head th:replace="header :: copy(headingTitle='UH Groupings Info')"></head>
-<body ng-app = "UHGroupingsApp" >
+<body ng-app="UHGroupingsApp">
 <nav th:replace="menubar :: copy"></nav>
 
 <!--  Content container -->
 <main>
-<div class="seafoam-bg pt-5 pb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2 class="h1 text-center d-block">What is a UH Grouping?</h2>
-            </div>
-            <div class="col-md-12">
-                <p class="lead text-center d-block">A <em>grouping</em> is a collection of members (e.g., all full-time
-                    Hilo faculty).</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="text-center">
-                    <img th:src="@{images/cogs.png}" th:srcset="@{images/cogs.png 1x, images/cogs-2x.png 2x}"
-                         alt="cogs">
+    <div class="seafoam-bg pt-5 pb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="h1 text-center d-block">What is a UH Grouping?</h2>
                 </div>
-                <p class="text-center">Create groupings, manage grouping memberships, control members' self-service
-                    options, designate sync destinations, and more.</p>
+                <div class="col-md-12">
+                    <p class="lead text-center d-block">A <em>grouping</em> is a collection of members (e.g., all full-time
+                        Hilo faculty).</p>
+                </div>
             </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <img th:src="@{images/cogs.png}" th:srcset="@{images/cogs.png 1x, images/cogs-2x.png 2x}"
+                             alt="cogs">
+                    </div>
+                    <p class="text-center">Create groupings, manage grouping memberships, control members' self-service
+                        options, designate sync destinations, and more.</p>
+                </div>
 
-            <div class="col-md-4">
-                <div class="text-center">
-                    <img th:src="@{images/id-email.png}"
-                         th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x}" alt="cogs">
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <img th:src="@{images/id-email.png}"
+                             th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x}" alt="cogs">
+                    </div>
+                    <p class="text-center">Synchronize groupings email LISTSERV lists, attributes for access control via
+                        CAS and LDAP, etc.</p>
                 </div>
-                <p class="text-center">Synchronize groupings email LISTSERV lists, attributes for access control via CAS
-                    and LDAP, etc.</p>
-            </div>
 
-            <div class="col-md-4">
-                <div class="text-center">
-                    <img th:src="@{images/watch.png}" th:srcset="@{images/watch.png 1x, images/watch-2x.png 2x}"
-                         alt="watch">
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <img th:src="@{images/watch.png}" th:srcset="@{images/watch.png 1x, images/watch-2x.png 2x}"
+                             alt="watch">
+                    </div>
+                    <p class="text-center">Leverage group data from official sources, which can substantially reduce the
+                        manual overhead of membership management.</p>
                 </div>
-                <p class="text-center">Leverage group data from official sources, which can substantially reduce the
-                    manual overhead of membership management.</p>
             </div>
         </div>
     </div>
-</div>
 
-<div class="container pt-5 pb-5">
-    <h2 class="h5 text-uppercase font-weight-bold pb-4 text-center">General Info</h2>
-    <div class="row">
-        <div class="col-md-6">
-            <h3>How do I request a new grouping?</h3>
-            <p class="pb-3">A request form is available <a class="link"
-                    href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form">here</a>.</p>
-            <h3>Exactly what is a grouping?</h3>
-            <p class="pb-3">General information about groupings can be found <a class="link"
-                    href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">here</a>. A grouping's components
-                include the Basis, Include, and Exclude lists.</p>
-            <h3>What is the Basis?</h3>
-            <p>A grouping's Basis is the portion of the grouping membership that is automatically updated. It may be
-                empty.</p>
-        </div>
-        <div class="col-md-6">
-            <h3>What is the Include members list?</h3>
-            <p class="pb-3">A grouping's Include is the portion of the grouping membership that is manually updated. It
-                may be empty.</p>
-            <h3>What is the Exclude members list?</h3>
-            <p class="pb-3">A grouping's Exclude overrides automatic and manual membership by explicitly not including
-                anyone listed here. It may be empty.</p>
-            <a class="btn btn-primary dark-teal-bg" href="mailto:its-iam-help@lists.hawaii.edu">Send Email</a>
+    <div class="container pt-5 pb-5">
+        <h2 class="h5 text-uppercase font-weight-bold pb-4 text-center">General Info</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>How do I request a new grouping?</h3>
+                <p class="pb-3">A request form is available
+                    <a class="link" href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings+Request+Form">here</a>.
+                </p>
+                <h3>Exactly what is a grouping?</h3>
+                <p class="pb-3">General information about groupings can be found
+                    <a class="link" href="https://www.hawaii.edu/bwiki/display/UHIAM/UH+Groupings">here</a>.
+                    A grouping's components include the Basis, Include, and Exclude lists.</p>
+                <h3>What is the Basis?</h3>
+                <p>A grouping's Basis is the portion of the grouping membership that is automatically updated. It may be
+                    empty.</p>
+            </div>
+            <div class="col-md-6">
+                <h3>What is the Include members list?</h3>
+                <p class="pb-3">A grouping's Include is the portion of the grouping membership that is manually updated.
+                    It may be empty.</p>
+                <h3>What is the Exclude members list?</h3>
+                <p class="pb-3">A grouping's Exclude overrides automatic and manual membership by explicitly not
+                    including
+                    anyone listed here. It may be empty.</p>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="seafoam-bg pt-5 pb-5">
+    <div class="seafoam-bg pt-5">
+        <div class="container pb-5">
+            <h2 class="h5 text-uppercase font-weight-bold pb-4 text-center">What Happens If</h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>I was an owner of just one grouping and someone (me or another owner) deleted my ownership
+                        while I was still logged in.</h3>
+                    <p class="pb-3">You will still see the Groupings menu option, but you will get an error message when
+                        you
+                        click on it. Next time you log in, the Groupings menu option will no longer appear, assuming
+                        that you
+                        don't reaquire the ownership of a grouping before then.
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>I was not an owner of any groupings and someone made me an owner while I was still logged
+                        in.
+                    </h3>
+                    <p class="pb-3">You will have to log out and then log back in again to see the Groupings menu
+                        option.
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>I was an admin and someone (me or another admin) deleted my admin role while I was still
+                        logged in.
+                    </h3>
+                    <p class="pb-3">You will still see the Admin menu option, but you will get an error message when you
+                        click on it.
+                        Next time you log in, the Admin menu option will no longer appear, assuming that you don't
+                        reaquire
+                        the Admin role before then.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="container">
-        <h2 class="h5 text-center text-uppercase font-weight-bold pb-4">Technical Information</h2>
+        <h2 class="h5 text-center text-uppercase font-weight-bold pb-4 pt-4">Technical Information</h2>
         <div class="row">
             <div class="col-md-3">
                 <h3>Resources</h3>
@@ -91,19 +133,27 @@
 
                 <div class="row">
                     <div class="col-md-4">
-                        <p>Apache Maven <a class="link" href="https://maven.apache.org/what-is-maven.html">(Introduction)</a></p>
-                        <p>Apache Tomcat <a class="link" href="http://tomcat.apache.org/tomcat-8.5-doc/index.html">(Welcome)</a></p>
-                        <p>Java Spring Framework <a class="link"
-                                href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/spring-framework-reference/htmlsingle/">(Guide)</a>
-                            <a class="link" href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/javadoc-api/">(API)</a></p>
-                        <p>Spring Boot <a
-                                class="link" href="https://docs.spring.io/spring-boot/docs/1.5.12.RELEASE/reference/htmlsingle/">(Guide)</a>
+                        <p>Apache Maven
+                            <a class="link" href="https://maven.apache.org/what-is-maven.html">(Introduction)</a></p>
+                        <p>Apache Tomcat
+                            <a class="link" href="http://tomcat.apache.org/tomcat-8.5-doc/index.html">(Welcome)</a></p>
+                        <p>Java Spring Framework
+                            <a class="link"
+                               href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/spring-framework-reference/htmlsingle/">(Guide)</a>
+                            <a class="link"
+                               href="http://docs.spring.io/spring/docs/4.3.5.RELEASE/javadoc-api/">(API)</a>
+                        </p>
+                        <p>Spring Boot
+                            <a class="link"
+                               href="https://docs.spring.io/spring-boot/docs/1.5.12.RELEASE/reference/htmlsingle/">(Guide)</a>
                         </p>
                     </div>
                     <div class="col-md">
-                        <p>Spring Security <a class="link" href="https://projects.spring.io/spring-security/">(Quickstart)</a></p>
-                        <p>Thymeleaf <a
-                                class="link" href="http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#introducing-thymeleaf">(Guide)</a>
+                        <p>Spring Security
+                            <a class="link" href="https://projects.spring.io/spring-security/">(Quickstart)</a></p>
+                        <p>Thymeleaf
+                            <a class="link"
+                               href="http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html#introducing-thymeleaf">(Guide)</a>
                         </p>
                         <p>Bootstrap <a class="link" href="http://getbootstrap.com/">(Guide)</a></p>
                         <p>AngularJS <a class="link" href="https://code.angularjs.org/1.5.8/docs/guide">(Guide)</a> <a
@@ -119,7 +169,6 @@
             </div>
         </div>
     </div>
-</div>
 </main>
 <!-- / Content container. -->
 <div th:replace="footer"></div>

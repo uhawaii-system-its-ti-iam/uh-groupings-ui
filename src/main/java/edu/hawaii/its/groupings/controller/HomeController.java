@@ -5,6 +5,7 @@ import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.groupings.type.Feedback;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -97,7 +98,8 @@ public class HomeController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/feedback")
-    public String feedbackSubmit(@ModelAttribute Feedback feedback, Model model, RedirectAttributes redirectAttributes) {
+    public String feedbackSubmit(@ModelAttribute Feedback feedback, Model model,
+            RedirectAttributes redirectAttributes) {
         logger.info("User has submitted feedback.");
         emailService.send(feedback);
         // Ensure the feedback form is reset after submission.
@@ -150,7 +152,9 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/modal/syncDestModal", method = RequestMethod.GET)
-    public String syncDestModal(Locale locale, Model model) { return "modal/syncDestModal"; }
+    public String syncDestModal(Locale locale, Model model) {
+        return "modal/syncDestModal";
+    }
 
     @RequestMapping(value = "/modal/emailListModal", method = RequestMethod.GET)
     public String emailListModal(Locale locale, Model model) {
@@ -178,12 +182,32 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/modal/roleErrorModal", method = RequestMethod.GET)
-    public String roleErrorModal(Locale locale, Model model) {return "modal/roleErrorModal";}
+    public String roleErrorModal(Locale locale, Model model) {
+        return "modal/roleErrorModal";
+    }
 
     @RequestMapping(value = "/modal/ownerErrorModal", method = RequestMethod.GET)
-    public String ownerErrorModal(Locale locale, Model model) {return "modal/ownerErrorModal";}
+    public String ownerErrorModal(Locale locale, Model model) {
+        return "modal/ownerErrorModal";
+    }
 
     @RequestMapping(value = "/modal/basisWarningModal", method = RequestMethod.GET)
-    public String basisWarningModal(Locale locale, Model model) {return "modal/basisWarningModal"; }
+    public String basisWarningModal(Locale locale, Model model) {
+        return "modal/basisWarningModal";
+    }
 
+    @RequestMapping(value = "/modal/importModal", method = RequestMethod.GET)
+    public String importModal(Locale locale, Model model) {
+        return "modal/importModal";
+    }
+
+    @RequestMapping(value = "/modal/addMembersModal", method = RequestMethod.GET)
+    public String addMembersModal(Locale locale, Model model) {
+        return "modal/addMembersModal";
+    }
+
+    @RequestMapping(value = "/modal/confirmAddMembersModal", method = RequestMethod.GET)
+    public String confirmAddMembersModal(Locale locale, Model model) {
+        return "modal/confirmAddMembersModal";
+    }
 }
