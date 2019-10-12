@@ -396,6 +396,17 @@ th.grouping-members {
     padding: 0px;
 }
 
+@media (max-width: 789px) {
+    .card-title {
+        text-align: center;
+    }
+}
+
+@media (max-width: 789px) {
+    .card-title-text {
+        text-align: center;
+    }
+}
 form.seamless {
     display: flex;
     min-width: 12rem;
