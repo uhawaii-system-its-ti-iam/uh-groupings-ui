@@ -313,6 +313,7 @@ table .p-10 {
 @media (max-width: 575.98px) {
     .nav.nav-tabs.flex-column > .nav-item > .nav-link {
         border: none;
+        background-color: #e3f2ef;
     }
 }
 
