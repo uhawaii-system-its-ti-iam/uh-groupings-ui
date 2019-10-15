@@ -313,6 +313,7 @@ table .p-10 {
 @media (max-width: 575.98px) {
     .nav.nav-tabs.flex-column > .nav-item > .nav-link {
         border: none;
+        background-color: #e3f2ef;
     }
 }
 
@@ -396,6 +397,17 @@ th.grouping-members {
     padding: 0px;
 }
 
+@media (max-width: 789px) {
+    .card-title {
+        text-align: center;
+    }
+}
+
+@media (max-width: 789px) {
+    .card-title-text {
+        text-align: center;
+    }
+}
 form.seamless {
     display: flex;
     min-width: 12rem;
