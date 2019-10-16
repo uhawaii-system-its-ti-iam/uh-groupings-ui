@@ -87,7 +87,7 @@
                         </div>
                     </td>
                     <td class="basis-column text-center p-10">
-                        <i id="inBasis" class="fa fa-{{strIsVal(i.inBasis, 'Yes', 'check', 'times')}} text-dark"></i>
+                        <i id="inBasis" class="fa fa-{{(i.inBasis === 'Yes') ? 'check' : 'times'}} text-dark"></i>
                     </td>
                 </tr>
                 </tbody>
@@ -101,7 +101,7 @@
                                title="Enter one or more usernames" ng-model="usersToAdd" style="width: 275px"/>
 
                         <div>
-                            <button class="btn btn-primary" type="submit">Add</button>
+                            <button class="btn btn-primary" type="submit" style="margin-left: 2px">Add</button>
                             <button class="btn btn-primary"
                                     ng-click="launchImportModal('Include')">Import File
                             </button>
