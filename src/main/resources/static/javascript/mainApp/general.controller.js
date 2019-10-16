@@ -503,7 +503,7 @@
 
         /**
          * If str is equal to val, return tru, otherwise return fal
-         * @author Zachary Gilbert
+         *
          * @param str
          * @return {string}
          */
@@ -514,7 +514,7 @@
         /**
          * Import multiple members to a grouping, in the long run this method triggers the
          * api method includeMultipleMembers.
-         * @author Zachary Gilbert
+         *
          * @param listName - Include or Exclude
          */
         $scope.addMembers = function (listName) {
@@ -532,7 +532,7 @@
 
         /**
          * Launch the add members Modal modal from <listName>.html
-         * @author Zachary Gilbert
+         *
          * @param listName - Include or Exclude
          */
         $scope.launchAddMembersModal = function (listName) {
@@ -547,7 +547,7 @@
 
         /**
          * Launch the import Modal modal from <listName>.html
-         * @author Zachary Gilbert
+         *
          * @param listName - Include or Exclude
          */
         $scope.launchImportModal = function (listName) {
@@ -563,7 +563,7 @@
         /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
          * separated by newline characters.
-         * @author Zachary Gilbert
+         *
          * @param $event - FileReader event sent from Include.html or Exclude.html
          */
         $scope.readTextFile = function ($event) {
@@ -581,7 +581,7 @@
          * - Create a comma separated string of all valid too be members
          * - Call the import members modal function
          * - Open spinner for load
-         * @author Zachary Gilbert
+         *
          */
         $scope.importMembers = function () {
             $scope.imported = true;
@@ -599,7 +599,7 @@
         /**
          * - Post new imported data to the grouper database
          * - Open import success modal
-         * @author Zachary Gilbert
+         *
          * @param userNameList - string of comma separated user names
          * @param listName - Include or Exclude
          */
@@ -618,7 +618,7 @@
          * - Create the import members success modal
          * - Close spinner
          * - Refresh page after the modal is closed
-         * @author Zachary Gilbert
+         *
          * @param listName
          */
         $scope.updateImportMembers = function (listName) {
@@ -641,7 +641,7 @@
 
         /**
          * Take in an array of member objects and return a comma separated string of all the member user names
-         * @author Zachary Gilbert
+         *
          * @param validUserNames - Array of member objects
          * @return {*} Comma separated string
          */
@@ -660,7 +660,7 @@
         /**
          * Split a string into an array of strings with respect to newline characters.
          * {"one\ntwo\nthree"} ---> {"one", "two", "three"}
-         * @author Zachary Gilbert
+         *
          * @param str - String of newline separated usernames
          * @return {[string]}
          */
@@ -674,7 +674,7 @@
          * - Else if the member exists in another list we set the 'status' property to that 'listName' and set the
          * 'added' property to yes
          * - Otherwise the member to be added doesn't exist in any lists and needs to be validated with grouper
-         * @author Zachary Gilbert
+         *
          * @param item - String username
          * @param existInList - the global scope method $scope.existInList is intended to be passed as the parameter
          * @param isInOtherList - the global scope method $scope.isInAnotherList is intended to be passed as the
@@ -692,7 +692,7 @@
 
         /**
          * Send a GET request to grouper in order to verify the validity of a UH user name
-         * @author Zachary Gilbert
+         *
          * @param memberNew - UH user name
          * @param data - Object Array
          */
@@ -716,7 +716,7 @@
 
         /**
          * Add all the valid user names from pendingList to userNameList
-         * @author Zachary Gilbert
+         *
          * @param pendingList - Array of username strings
          * @param listName - Include, Exclude, ... etc
          * @return {{}[]} - Array of member objects
@@ -733,7 +733,7 @@
 
         /**
          * Return userName string that is associated with the member in the selected row
-         * @author Zachary Gilbert
+         *
          * @return {string|*}
          */
         $scope.getSelectedUserName = function () {
@@ -775,7 +775,7 @@
 
         /**
          * Set a style attribute of a html component associated with id.
-         * @author Zachary Gilbert
+         *
          * @param id - id of html component
          * @param attribute
          * @param setAs - set attribute too.
@@ -786,7 +786,7 @@
 
         /**
          * Returns necessary dialogue to display as a imported members add status
-         * @author Zachary Gilbert
+         *
          * @param username - uh user name
          */
         $scope.displaySelectedStatus = function (username) {
@@ -823,7 +823,7 @@
 
         /**
          * Sort array(arr) alphabetically or in reverse with respect to the field
-         * @author Zachary Gilbert
+         *
          * @param arr - array to sort
          * @param order{bool} true: sort lexicographically || false: sort in reverse
          * @param field - name or status
@@ -843,7 +843,7 @@
 
         /**
          * Return the other list besides listName.
-         * @author Zachary Gilbert
+         *
          * @param listName
          * @return {string}
          */
@@ -854,7 +854,7 @@
         /**
          * Set the global scoped variable selectedRow to the index. Use in importModal.html to highlight selected
          * text.
-         * @author Zachary Gilbert
+         *
          * @param index
          */
         $scope.setClickedRow = function (index) {
@@ -864,7 +864,7 @@
         /**
          * Remove the invalid user names from the pending list array of member objects and return a list of strings
          * containing all valid user names.
-         * @author Zachary Gilbert
+         *
          * @param pendingList - Array of Member objects
          * @param listName
          * @return {*[]|*} Array of strings containing all valid user names to be added
@@ -885,7 +885,7 @@
 
         /**
          * Cancel the import Modal instance
-         * @author Zachary Gilbert
+         *
          */
         $scope.cancelImportModalInstance = function () {
             clearAddMemberInput($scope.listName);
@@ -894,7 +894,7 @@
 
         /**
          * Close both import confirmation and import modals after import is complete
-         * @author Zachary Gilbert
+         *
          */
         $scope.closeConfirmAddMembersModalInstance = function () {
             $scope.confirmAddMembersModalInstance.dismiss();
@@ -903,7 +903,7 @@
 
         /**
          * Close import modal instance when user confirms that they would like to add the list they imported
-         * @author Zachary Gilbert
+         *
          */
         $scope.proceedAddMembers = function () {
             $scope.confirmImportInstance.close();
@@ -926,7 +926,6 @@
 
         /**
          * Remove Items from the pendingList Array
-         * @author Zachary Gilbert
          * @param pendingList
          * @param itemsToRemove
          * @return {[]}
@@ -936,6 +935,7 @@
                 pendingList = _.without(pendingList, _.forEach(item));
             return pendingList;
         };
+
         /**
          * Adds a user to a group.
          * @param {string} list - the list the user is being added to (either Include or Exclude)
@@ -965,9 +965,8 @@
                 }
             });
         };
-        /**
 
-         /**
+        /**
          * Creates a modal display for members added, and calls addMembersToInclude service.
          * @param usersToAdd
          * @param list
