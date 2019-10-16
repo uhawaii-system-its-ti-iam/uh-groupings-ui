@@ -519,6 +519,7 @@
          */
         $scope.addMembers = function (listName) {
             let str = $scope.createUniqArrayFromString($scope.usersToAdd);
+            console.log($scope.usersToAdd);
             if (str.length > 1) {
                 $scope.addMultipleMembers = true;
                 $scope.userNameList = createUserNameListObject(str, listName);
@@ -618,7 +619,6 @@
          * - Create the import members success modal
          * - Close spinner
          * - Refresh page after the modal is closed
-         *
          * @param listName
          */
         $scope.updateImportMembers = function (listName) {
@@ -641,7 +641,6 @@
 
         /**
          * Take in an array of member objects and return a comma separated string of all the member user names
-         *
          * @param validUserNames - Array of member objects
          * @return {*} Comma separated string
          */
@@ -660,7 +659,6 @@
         /**
          * Split a string into an array of strings with respect to newline characters.
          * {"one\ntwo\nthree"} ---> {"one", "two", "three"}
-         *
          * @param str - String of newline separated usernames
          * @return {[string]}
          */
@@ -692,7 +690,6 @@
 
         /**
          * Send a GET request to grouper in order to verify the validity of a UH user name
-         *
          * @param memberNew - UH user name
          * @param data - Object Array
          */
@@ -716,7 +713,6 @@
 
         /**
          * Add all the valid user names from pendingList to userNameList
-         *
          * @param pendingList - Array of username strings
          * @param listName - Include, Exclude, ... etc
          * @return {{}[]} - Array of member objects
@@ -733,7 +729,6 @@
 
         /**
          * Return userName string that is associated with the member in the selected row
-         *
          * @return {string|*}
          */
         $scope.getSelectedUserName = function () {
@@ -775,7 +770,6 @@
 
         /**
          * Set a style attribute of a html component associated with id.
-         *
          * @param id - id of html component
          * @param attribute
          * @param setAs - set attribute too.
@@ -786,7 +780,6 @@
 
         /**
          * Returns necessary dialogue to display as a imported members add status
-         *
          * @param username - uh user name
          */
         $scope.displaySelectedStatus = function (username) {
@@ -823,7 +816,6 @@
 
         /**
          * Sort array(arr) alphabetically or in reverse with respect to the field
-         *
          * @param arr - array to sort
          * @param order{bool} true: sort lexicographically || false: sort in reverse
          * @param field - name or status

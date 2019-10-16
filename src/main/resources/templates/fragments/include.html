@@ -97,14 +97,21 @@
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
                 <form ng-submit="addMembers('Include')">
                     <div class="input-group">
+                        <!--
                         <textarea placeholder="Members to Add"
                                   class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="1"
                                   title="Enter multiple UH usernames to include" ng-model="usersToAdd"
                                   style="resize: none">
                         </textarea>
-                        <button class="btn btn-primary" type="submit">Add</button>
+                        --->
+                        <input class="form-control" placeholder="Members to add" type="text"
+                               title="Enter one or more usernames" ng-model="usersToAdd" style="width: 250px"/>
                         <div class="add-import-buttons">
-                            <button class="btn btn-primary" ng-click="launchImportModal('Include')">Import File</button>
+                            <span>
+                              <button class="btn btn-primary" type="submit">Add</button>
+                              <button class="btn btn-primary"
+                                      ng-click="launchImportModal('Include')">Import File</button>
+                            </span>
                         </div>
                     </div>
                 </form>
