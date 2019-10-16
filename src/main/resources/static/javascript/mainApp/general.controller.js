@@ -518,8 +518,7 @@
          * @param listName - Include or Exclude
          */
         $scope.addMembers = function (listName) {
-            let str = $scope.createUniqArrayFromString($scope.usersToAdd);
-            console.log($scope.usersToAdd);
+            let str = $scope.createUniqArrayFromString($scope.usersToAdd, " ");
             if (str.length > 1) {
                 $scope.addMultipleMembers = true;
                 $scope.userNameList = createUserNameListObject(str, listName);
@@ -573,7 +572,7 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.userNameList = createUserNameListObject($scope.createUniqArrayFromString(str), $scope.listName);
+                $scope.userNameList = createUserNameListObject($scope.createUniqArrayFromString(str, "\n"), $scope.listName);
             };
             reader.readAsText(file);
         };
@@ -660,10 +659,11 @@
          * Split a string into an array of strings with respect to newline characters.
          * {"one\ntwo\nthree"} ---> {"one", "two", "three"}
          * @param str - String of newline separated usernames
+         * @param delimit - Split string by delimi (delimiting) character
          * @return {[string]}
          */
-        $scope.createUniqArrayFromString = function (str) {
-            return _.without([...new Set(str.split("\n"))], "");
+        $scope.createUniqArrayFromString = function (str, delimi) {
+            return _.without([...new Set(str.split(delimi))], "");
         };
 
         /**
