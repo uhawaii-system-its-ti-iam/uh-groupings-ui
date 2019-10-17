@@ -22,20 +22,17 @@
     <div class="container">
         <table>
             <tr>
-                <td style="margin-right: 300px">
+                <td>
                     <table>
                         <thead class="import-table-thead-tbody-tr import-table-thead">
-                        <tr class="import-table-thead-tbody-tr">
+                        <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
                             <td ng-click="memberSort(userNameList,  sortStatus, 'name')">User Name</td>
                             <td ng-click="memberSort(userNameList,  sortStatus, 'status')">Added</td>
                             <td>Status</td>
                         </tr>
                         </thead>
                         <tbody class="import-table-tbody">
-                        <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList"
-                            ng-class="{'selected':$index == selectedRow}"
-                            ng-click="setClickedRow($index);
-                changeStyleAttribute('mentionUserOptions', 'display', 'none')">
+                        <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList">
                             <td>{{item.name}}</td>
                             <td>{{item.added}}</td>
                             <td>
@@ -48,7 +45,9 @@
                 <td>
 
                 </td>
-                <!--
+
+                <!-- Implement a selection highlight for table list and dynamically load specific data of member to a field
+
                 <td style="width: 400px ; alignment: top ; padding-left: 75px ; padding-right: 10px">
                     <div>
                         <p id="mentionUserOptions" style="display: none">

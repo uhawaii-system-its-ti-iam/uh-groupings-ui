@@ -538,11 +538,14 @@ form.seamless button {
 
 .import-table-thead-tbody-tr {
     display: table;
-    width: 80%;
+    width: 75%;
     table-layout: fixed;
+    white-space: nowrap;
+
 }
 
 .import-table-thead {
     font-weight: bold;
-    width: 80%;
+    width: 100%;
+    white-space: nowrap;
 }

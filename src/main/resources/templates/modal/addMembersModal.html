@@ -22,47 +22,27 @@
     <div class="container">
         <table>
             <tr>
-                <td style="margin-right: 400px">
+                <td>
                     <table>
                         <thead class="import-table-thead-tbody-tr import-table-thead">
-                        <tr class="import-table-thead-tbody-tr">
+                        <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
                             <td ng-click="memberSort(userNameList,  sortStatus, 'name')">User Name</td>
                             <td ng-click="memberSort(userNameList,  sortStatus, 'status')">Added</td>
+                            <td>Status</td>
                         </tr>
                         </thead>
                         <tbody class="import-table-tbody">
-                        <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList"
-                            ng-class="{'selected':$index == selectedRow}"
-                            ng-click="setClickedRow($index);
-                changeStyleAttribute('mentionUserOptions', 'display', 'none')">
+                        <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList">
                             <td>{{item.name}}</td>
                             <td>{{item.added}}</td>
+                            <td>
+                                {{ displaySelectedStatus($index) }}
+                            </td>
                         </tr>
                         </tbody>
                     </table>
                 </td>
-                <td style="width: 400px ; alignment: top ; padding-left: 75px ; padding-right: 10px">
-                    <div>
-                        <p id="mentionUserOptions" style="display: none">
-                            An entry from the list can be selected for a further explanation.
-                        </p>
-                        <div ng-class="{'selected':$index == selectedRow}">
-                            <p style="font-weight: bold">
-                                {{ getImportListStr("Status: ")}}
-                                <span style="font-weight: normal; color: black">
-                                    {{ displaySelectedStatus(getSelectedUserName())[0] }}
-                                </span>
-                            </p>
-                            <p>
-                            <span style="font-weight: bold; color: black">
-                                {{ getImportListStr("User's Name:  ")}}
-                            </span>
-                                <span style="font-weight: normal; color: black">
-                            {{ displaySelectedStatus(getSelectedUserName())[1] }}
-                            </span>
-                            </p>
-                        </div>
-                    </div>
+                <td>
                 </td>
             </tr>
         </table>
