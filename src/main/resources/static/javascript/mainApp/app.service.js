@@ -21,7 +21,6 @@
                         // console.log("Error A", response);
                         // if(response.data == null) return false;
                         callError(response);
-                        console.log(JSON.stringify(response, null, 4));
                         console.log("Error in dataProvider; status: ", response.status);
 
                     });
@@ -42,11 +41,13 @@
                     });
             },
 
-            // Might have to clean this code up? Not complete sure yet.
+            // Might have to clean this code up? Not completely sure yet.
             /**
              * Performs a PUT request to the specified URL.
-             * @param {string} url - the URL to perform the request on
              * @param {function} callback - the function to perform on a successful request (200)
+             * @param {function} callError - the function to perform on a unsuccessful request
+             * @param {string} url - the URL to perform the request on
+             * @param {string} data - data to be updated
              */
             updateDataWithBody: function (callback, callError, url, data) {
                 $http.put(encodeURI(url), data)
