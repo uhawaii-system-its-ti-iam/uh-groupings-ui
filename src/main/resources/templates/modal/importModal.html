@@ -18,17 +18,17 @@
     <p>
         <span style="color: black" th:text="#{screen.message.modal.import.confirmation}"></span>
         <span style="color: black;">{{listName}} list.</span>
-        {{checkImportSize()}}
     </p>
     <div class="container">
         <table>
             <tr>
-                <td style="margin-right: 400px">
+                <td style="margin-right: 300px">
                     <table>
                         <thead class="import-table-thead-tbody-tr import-table-thead">
                         <tr class="import-table-thead-tbody-tr">
                             <td ng-click="memberSort(userNameList,  sortStatus, 'name')">User Name</td>
                             <td ng-click="memberSort(userNameList,  sortStatus, 'status')">Added</td>
+                            <td>Status</td>
                         </tr>
                         </thead>
                         <tbody class="import-table-tbody">
@@ -38,10 +38,17 @@
                 changeStyleAttribute('mentionUserOptions', 'display', 'none')">
                             <td>{{item.name}}</td>
                             <td>{{item.added}}</td>
+                            <td>
+                                {{ displaySelectedStatus($index) }}
+                            </td>
                         </tr>
                         </tbody>
                     </table>
                 </td>
+                <td>
+
+                </td>
+                <!--
                 <td style="width: 400px ; alignment: top ; padding-left: 75px ; padding-right: 10px">
                     <div>
                         <p id="mentionUserOptions" style="display: none">
@@ -65,6 +72,7 @@
                         </div>
                     </div>
                 </td>
+                -->
             </tr>
         </table>
     </div>

@@ -734,7 +734,7 @@
         $scope.getSelectedUserName = function () {
             if ($scope.selectedRow === null)
                 return "";
-            return $scope.userNameList[$scope.selectedRow].name;
+            return $scope.userNameList[$scope.selectedRow].uhid;
         };
 
         /**
@@ -782,35 +782,26 @@
          * Returns necessary dialogue to display as a imported members add status
          * @param username - uh user name
          */
-        $scope.displaySelectedStatus = function (username) {
-            let retStr = [];
-            if ($scope.selectedRow === null)
-                return "";
-            const status = $scope.userNameList[$scope.selectedRow].status;
-            let uhid = $scope.userNameList[$scope.selectedRow].uhid;
+        $scope.displaySelectedStatus = function (row) {
+            let retStr = "";
+            const status = $scope.userNameList[row].status;
+            let uhid = $scope.userNameList[row].uhid;
             const listName = $scope.listName;
+            const username = $scope.userNameList[row].name;
             let userNameStr = "  \"" + username + "\"";
 
             if (uhid === "")
                 uhid = "n/a";
 
             if (status === listName)
-                retStr.push(userNameStr + " is already a member of the " + listName + " list.");
-            else if (status === "Valid")
-                retStr.push(userNameStr + " will be added upon confirmation");
+                retStr = "Already a member of the " + listName + " list.";
+            else if (status === "Valid" || status === getOtherList((listName)))
+                retStr = uhid;
             else if (status === "Invalid")
-                retStr.push(userNameStr + " is an invalid user name and will not be added upon confirmation.");
-            else if (status === getOtherList(listName))
-                retStr.push(userNameStr + " is already a member of the " +
-                    getOtherList(listName) + "list, and on confirmation will be removed from the " +
-                    getOtherList(listName) + " list and added to the " + listName + " list.");
+                retStr = userNameStr + " is an invalid user name and will not be added upon confirmation.";
             else {
-                retStr.push("Error");
-                retStr.push("");
-                retStr.push("");
-                return retStr;
+                retStr = "Error";
             }
-            retStr.push(uhid);
             return retStr;
         };
 
