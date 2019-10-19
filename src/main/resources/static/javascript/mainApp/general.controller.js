@@ -97,7 +97,7 @@
         //Keeps track of async calls made throughout this js controller
         let asyncThreadCount = 0;
 
-        let MAX_IMPORT = 2;
+        let MAX_IMPORT = 100;
         let maxLength = 100;
         let noDescriptionMessage = "No description given for this Grouping.";
 
@@ -574,8 +574,9 @@
             reader.onload = function (e) {
                 let str = e.target.result;
                 $scope.userNameList = createUserNameListObject($scope.createUniqArrayFromString(str, "\n"), $scope.listName);
-                console.log(scope.userNameList.length);
-                if ($scope.userNameList.length > MAX_IMPORT)
+                console.log("COUNT: " + $scope.userNameList.length);
+                console.log($scope.userNameList);
+                if ($scope.validUserNameCount > MAX_IMPORT)
                     $scope.launchImportErrorModal();
             };
             reader.readAsText(file);
@@ -666,7 +667,9 @@
          * @return {[string]}
          */
         $scope.createUniqArrayFromString = function (str, delimi) {
-            return _.without([...new Set(str.split(delimi))], "");
+            let arr = _.without([...new Set(str.split(delimi))], "");
+            $scope.validUserNameCount = arr.length;
+            return arr;
         };
 
         /**
@@ -698,17 +701,14 @@
          */
         function checkUserNameValidity(memberNew, data) {
             groupingsService.checkMember(memberNew.name, data, function (attributes) {
-
                 data.push(new Member(memberNew.name,
                     (memberNew.status === "") ? "Valid" : memberNew.status,
                     (memberNew.status === $scope.listName) ? "No" : " Yes",
                     attributes.uhuuid, attributes.uid));
 
             }, function (res) {
-                console.log("RES_STATUS_CODE: " + res.statusCode);
-                data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
-                if (res.statusCode === 403) {
-                }
+                if (res.statusCode === undefined || res.statusCode === 404)
+                    data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
             });
         }
 
