@@ -97,6 +97,7 @@
         //Keeps track of async calls made throughout this js controller
         let asyncThreadCount = 0;
 
+        let MAX_IMPORT = 2;
         let maxLength = 100;
         let noDescriptionMessage = "No description given for this Grouping.";
 
@@ -573,6 +574,9 @@
             reader.onload = function (e) {
                 let str = e.target.result;
                 $scope.userNameList = createUserNameListObject($scope.createUniqArrayFromString(str, "\n"), $scope.listName);
+                console.log(scope.userNameList.length);
+                if ($scope.userNameList.length > MAX_IMPORT)
+                    $scope.launchImportErrorModal();
             };
             reader.readAsText(file);
         };
@@ -581,7 +585,6 @@
          * - Create a comma separated string of all valid too be members
          * - Call the import members modal function
          * - Open spinner for load
-         *
          */
         $scope.importMembers = function () {
             $scope.imported = true;
@@ -698,14 +701,13 @@
 
                 data.push(new Member(memberNew.name,
                     (memberNew.status === "") ? "Valid" : memberNew.status,
-
                     (memberNew.status === $scope.listName) ? "No" : " Yes",
-
                     attributes.uhuuid, attributes.uid));
 
             }, function (res) {
-                if (res.statusCode === 404) {
-                    data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
+                console.log("RES_STATUS_CODE: " + res.statusCode);
+                data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
+                if (res.statusCode === 403) {
                 }
             });
         }
@@ -749,26 +751,6 @@
         };
 
         /**
-         * Return id string that is associated with the member in the selected row
-         * @return {string|*}
-         $scope.getSelectedId = function () {
-            if ($scope.selectedRow === null || $scope.userNameList[$scope.selectedRow].id === "")
-                return "";
-            return $scope.userNameList[$scope.selectedRow].id;
-
-        };
-         */
-        /**
-         * Return uhid number that is associated with the member in the selected row
-         * @return {string|*}
-         $scope.getSelectedUid = function () {
-            if ($scope.selectedRow === null || $scope.userNameList[$scope.selectedRow].uhid === "")
-                return "";
-            return $scope.userNameList[$scope.selectedRow].uhid;
-        };
-         */
-
-        /**
          * Set a style attribute of a html component associated with id.
          * @param id - id of html component
          * @param attribute
@@ -798,7 +780,7 @@
             else if (status === "Valid" || status === getOtherList((listName)))
                 retStr = uhid;
             else if (status === "Invalid")
-                retStr = userNameStr + " is an invalid user name and will not be added upon confirmation.";
+                retStr = status;
             else {
                 retStr = "Error";
             }
@@ -892,12 +874,6 @@
             $scope.confirmImportInstance.close();
         };
 
-        $scope.checkImportSize = function () {
-            if ($scope.userNameList.length > 100) {
-                $scope.launchImportErrorModal();
-            }
-            return String($scope.userNameList.length);
-        };
         $scope.launchImportErrorModal = function () {
             $scope.cancelImportModalInstance();
             $scope.closeConfirmAddMembersModalInstance();

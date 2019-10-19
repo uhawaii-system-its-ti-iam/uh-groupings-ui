@@ -5,9 +5,8 @@
         -  See createConfirmAddModal general.controller.js
 -->
 
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+    lang="en">
 <div class="modal-header">
     <h5 class="modal-title" id="modal-title">Confirm Import New Members</h5>
     <button type="button" class="close" data-dismiss="dialog" ng-click="cancelImportModalInstance()">
@@ -25,20 +24,20 @@
                 <td>
                     <table>
                         <thead class="import-table-thead-tbody-tr import-table-thead">
-                        <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
-                            <td ng-click="memberSort(userNameList,  sortStatus, 'name')">User Name</td>
-                            <td ng-click="memberSort(userNameList,  sortStatus, 'status')">Added</td>
-                            <td>Status</td>
-                        </tr>
+                            <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
+                                <td ng-click="memberSort(userNameList,  sortStatus, 'name')">User Name</td>
+                                <td ng-click="memberSort(userNameList,  sortStatus, 'status')">Added</td>
+                                <td>Status</td>
+                            </tr>
                         </thead>
                         <tbody class="import-table-tbody">
-                        <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList">
-                            <td>{{item.name}}</td>
-                            <td>{{item.added}}</td>
-                            <td>
-                                {{ displaySelectedStatus($index) }}
-                            </td>
-                        </tr>
+                            <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList">
+                                <td>{{item.name}}</td>
+                                <td>{{item.added}}</td>
+                                <td>
+                                    {{ displaySelectedStatus($index) }}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </td>
@@ -79,13 +78,11 @@
 <div class="modal-body" id="importButton">
     <div ng-model="imported" ng-init="imported=false">
         <input type="file" accept="text/plain">
-        <button class="btn btn-primary"
-                ng-click="readTextFile($event); imported=true;
+        <button class="btn btn-primary" ng-click="readTextFile($event); imported=true;
                 changeStyleAttribute('importButton', 'display', 'none');
                 changeStyleAttribute('importStatus', 'display', 'unset');
                 changeStyleAttribute('mentionUserOptions', 'display', 'unset');
-                changeStyleAttribute('confirmationDialogue', 'display', 'unset')"
-                ng->
+                changeStyleAttribute('confirmationDialogue', 'display', 'unset')" ng->
             Import
         </button>
     </div>
@@ -101,4 +98,5 @@
     <button class="btn btn-primary" ng-click="importMembers()">Yes</button>
     <button class="btn btn-default" data-dismiss="modal" ng-click="cancelImportModalInstance()">Cancel</button>
 </div>
+
 </html>
