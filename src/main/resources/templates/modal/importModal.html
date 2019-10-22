@@ -6,7 +6,7 @@
 -->
 
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-    lang="en">
+      lang="en">
 <div class="modal-header">
     <h5 class="modal-title" id="modal-title">Confirm Import New Members</h5>
     <button type="button" class="close" data-dismiss="dialog" ng-click="cancelImportModalInstance()">
@@ -24,53 +24,26 @@
                 <td>
                     <table>
                         <thead class="import-table-thead-tbody-tr import-table-thead">
-                            <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
-                                <td ng-click="memberSort(userNameList,  sortStatus, 'name')">User Name</td>
-                                <td ng-click="memberSort(userNameList,  sortStatus, 'status')">Added</td>
-                                <td>Status</td>
-                            </tr>
+                        <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
+                            <td ng-click="memberSort(userNameList,  sortStatus, 'name')">User Name</td>
+                            <td ng-click="memberSort(userNameList,  sortStatus, 'status')">Added</td>
+                            <td>Status</td>
+                        </tr>
                         </thead>
                         <tbody class="import-table-tbody">
-                            <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList">
-                                <td>{{item.name}}</td>
-                                <td>{{item.added}}</td>
-                                <td>
-                                    {{ displaySelectedStatus($index) }}
-                                </td>
-                            </tr>
+                        <tr class="import-table-thead-tbody-tr" ng-repeat="item in userNameList">
+                            <td>{{item.name}}</td>
+                            <td>{{item.added}}</td>
+                            <td>
+                                {{ displaySelectedStatus($index) }}
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </td>
                 <td>
 
                 </td>
-
-                <!-- Implement a selection highlight for table list and dynamically load specific data of member to a field
-
-                <td style="width: 400px ; alignment: top ; padding-left: 75px ; padding-right: 10px">
-                    <div>
-                        <p id="mentionUserOptions" style="display: none">
-                            An entry from the list can be selected for a further explanation.
-                        </p>
-                        <div ng-class="{'selected':$index == selectedRow}">
-                            <p style="font-weight: bold">
-                                {{ getImportListStr("Status: ")}}
-                                <span style="font-weight: normal; color: black">
-                                    {{ displaySelectedStatus(getSelectedUserName())[0] }}
-                                </span>
-                            </p>
-                            <p>
-                            <span style="font-weight: bold; color: black">
-                                {{ getImportListStr("User's Name:  ")}}
-                            </span>
-                                <span style="font-weight: normal; color: black">
-                            {{ displaySelectedStatus(getSelectedUserName())[1] }}
-                            </span>
-                            </p>
-                        </div>
-                    </div>
-                </td>
-                -->
             </tr>
         </table>
     </div>
@@ -91,8 +64,12 @@
     changeStyleAttribute('confirmationDialogue', 'display', 'unset');
     changeStyleAttribute('mentionUserOptions', 'display', 'unset')">
     <p id="confirmationDialogue" style="padding-right: 100px; padding-left: 20px">
-        Are you sure you want to add these users to the
-        <span style="color: black">{{listName}}</span>
+        Are you sure you want to add
+        <span class="blu-bold">{{ VALID_UNAME_COUNT }}</span>
+        of
+        <span class="blu-bold">{{ importCount }}</span>
+        users to the
+        <span style="color: black">{{ listName }}</span>
         <span style="color: black"> list?</span>
     </p>
     <button class="btn btn-primary" ng-click="importMembers()">Yes</button>

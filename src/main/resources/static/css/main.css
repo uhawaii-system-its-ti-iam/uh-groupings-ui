@@ -549,3 +549,8 @@ form.seamless button {
     width: 100%;
     white-space: nowrap;
 }
+
+.blu-bold {
+    color: #212529;
+    font-weight: bold;
+}

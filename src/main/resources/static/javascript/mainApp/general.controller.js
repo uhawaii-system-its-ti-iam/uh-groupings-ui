@@ -15,7 +15,9 @@
 
         $scope.userNameList = [];
         $scope.selectedRow = null;
-        $scope.validUserNameCount = 0;
+        $scope.importCount = 0;
+        $scope.VALID_UNAME_COUNT = 0;
+        $scope.MAX_IMPORT = 100;
         $scope.sortNameStr = "name";
         $scope.sortStatusStr = "status";
         $scope.sortName = false;
@@ -97,7 +99,6 @@
         //Keeps track of async calls made throughout this js controller
         let asyncThreadCount = 0;
 
-        let MAX_IMPORT = 100;
         let maxLength = 100;
         let noDescriptionMessage = "No description given for this Grouping.";
 
@@ -533,7 +534,6 @@
 
         /**
          * Launch the add members Modal modal from <listName>.html
-         *
          * @param listName - Include or Exclude
          */
         $scope.launchAddMembersModal = function (listName) {
@@ -548,7 +548,6 @@
 
         /**
          * Launch the import Modal modal from <listName>.html
-         *
          * @param listName - Include or Exclude
          */
         $scope.launchImportModal = function (listName) {
@@ -564,7 +563,6 @@
         /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
          * separated by newline characters.
-         *
          * @param $event - FileReader event sent from Include.html or Exclude.html
          */
         $scope.readTextFile = function ($event) {
@@ -574,10 +572,6 @@
             reader.onload = function (e) {
                 let str = e.target.result;
                 $scope.userNameList = createUserNameListObject($scope.createUniqArrayFromString(str, "\n"), $scope.listName);
-                console.log("COUNT: " + $scope.userNameList.length);
-                console.log($scope.userNameList);
-                if ($scope.validUserNameCount > MAX_IMPORT)
-                    $scope.launchImportErrorModal();
             };
             reader.readAsText(file);
         };
@@ -603,7 +597,6 @@
         /**
          * - Post new imported data to the grouper database
          * - Open import success modal
-         *
          * @param userNameList - string of comma separated user names
          * @param listName - Include or Exclude
          */
@@ -668,7 +661,7 @@
          */
         $scope.createUniqArrayFromString = function (str, delimi) {
             let arr = _.without([...new Set(str.split(delimi))], "");
-            $scope.validUserNameCount = arr.length;
+            $scope.importCount = arr.length;
             return arr;
         };
 
@@ -706,12 +699,14 @@
                     (memberNew.status === $scope.listName) ? "No" : " Yes",
                     attributes.uhuuid, attributes.uid));
 
+                    $scope.VALID_UNAME_COUNT += (memberNew.status !== $scope.listName);
+
             }, function (res) {
                 if (res.statusCode === undefined || res.statusCode === 404)
                     data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
             });
-        }
 
+        }
 
         /**
          * Add all the valid user names from pendingList to userNameList
@@ -769,8 +764,6 @@
             const status = $scope.userNameList[row].status;
             let uhid = $scope.userNameList[row].uhid;
             const listName = $scope.listName;
-            const username = $scope.userNameList[row].name;
-            let userNameStr = "  \"" + username + "\"";
 
             if (uhid === "")
                 uhid = "n/a";
@@ -781,9 +774,9 @@
                 retStr = uhid;
             else if (status === "Invalid")
                 retStr = status;
-            else {
+            else
                 retStr = "Error";
-            }
+
             return retStr;
         };
 
@@ -808,7 +801,6 @@
 
         /**
          * Return the other list besides listName.
-         *
          * @param listName
          * @return {string}
          */
@@ -819,7 +811,6 @@
         /**
          * Set the global scoped variable selectedRow to the index. Use in importModal.html to highlight selected
          * text.
-         *
          * @param index
          */
         $scope.setClickedRow = function (index) {
@@ -829,7 +820,6 @@
         /**
          * Remove the invalid user names from the pending list array of member objects and return a list of strings
          * containing all valid user names.
-         *
          * @param pendingList - Array of Member objects
          * @param listName
          * @return {*[]|*} Array of strings containing all valid user names to be added
@@ -850,7 +840,6 @@
 
         /**
          * Cancel the import Modal instance
-         *
          */
         $scope.cancelImportModalInstance = function () {
             clearAddMemberInput($scope.listName);
@@ -859,7 +848,6 @@
 
         /**
          * Close both import confirmation and import modals after import is complete
-         *
          */
         $scope.closeConfirmAddMembersModalInstance = function () {
             $scope.confirmAddMembersModalInstance.dismiss();
@@ -868,7 +856,6 @@
 
         /**
          * Close import modal instance when user confirms that they would like to add the list they imported
-         *
          */
         $scope.proceedAddMembers = function () {
             $scope.confirmImportInstance.close();
