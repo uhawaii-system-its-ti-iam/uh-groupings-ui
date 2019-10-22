@@ -1423,6 +1423,8 @@
                     $scope.sortName = false;
                     $scope.sortStatus = false;
                     $scope.addMultipleMembers = false;
+                    $scope.VALID_UNAME_COUNT = 0;
+                    $scope.importCount = 0;
                     break;
                 case "Exclude":
                     $scope.userToAdd = "";
@@ -1434,6 +1436,8 @@
                     $scope.sortName = false;
                     $scope.sortStatus = false;
                     $scope.addMultipleMembers = false;
+                    $scope.VALID_UNAME_COUNT = 0;
+                    $scope.importCount = 0;
                     break;
                 case "owners":
                     $scope.ownerToAdd = "";

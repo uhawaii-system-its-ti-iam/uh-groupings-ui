@@ -51,8 +51,12 @@
 <div class="modal-footer" ng-if="addMultipleMembers"
      ng-init="changeStyleAttribute('mentionUserOptions', 'display', 'unset')">
     <p style="padding-right: 100px; padding-left: 20px">
-        Are you sure you want to add these users to the
-        <span style="color: black">{{listName}}</span>
+        Are you sure you want to add
+        <span class="blu-bold">{{ VALID_UNAME_COUNT }}</span>
+        of
+        <span class="blu-bold">{{ importCount }}</span>
+        users to the
+        <span style="color: black">{{ listName }}</span>
         <span style="color: black"> list?</span>
     </p>
     <button class="btn btn-primary" ng-click="importMembers()">Yes</button>
