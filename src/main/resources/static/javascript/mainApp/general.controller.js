@@ -15,7 +15,9 @@
 
         $scope.userNameList = [];
         $scope.selectedRow = null;
-        $scope.validUserNameCount = 0;
+        $scope.importCount = 0;
+        $scope.VALID_UNAME_COUNT = 0;
+        $scope.MAX_IMPORT = 100;
         $scope.sortNameStr = "name";
         $scope.sortStatusStr = "status";
         $scope.sortName = false;
@@ -503,7 +505,7 @@
 
         /**
          * If str is equal to val, return tru, otherwise return fal
-         * @author Zachary Gilbert
+         *
          * @param str
          * @return {string}
          */
@@ -514,11 +516,11 @@
         /**
          * Import multiple members to a grouping, in the long run this method triggers the
          * api method includeMultipleMembers.
-         * @author Zachary Gilbert
+         *
          * @param listName - Include or Exclude
          */
         $scope.addMembers = function (listName) {
-            let str = $scope.createUniqArrayFromString($scope.usersToAdd);
+            let str = $scope.createUniqArrayFromString($scope.usersToAdd, " ");
             if (str.length > 1) {
                 $scope.addMultipleMembers = true;
                 $scope.userNameList = createUserNameListObject(str, listName);
@@ -532,7 +534,6 @@
 
         /**
          * Launch the add members Modal modal from <listName>.html
-         * @author Zachary Gilbert
          * @param listName - Include or Exclude
          */
         $scope.launchAddMembersModal = function (listName) {
@@ -547,7 +548,6 @@
 
         /**
          * Launch the import Modal modal from <listName>.html
-         * @author Zachary Gilbert
          * @param listName - Include or Exclude
          */
         $scope.launchImportModal = function (listName) {
@@ -563,7 +563,6 @@
         /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
          * separated by newline characters.
-         * @author Zachary Gilbert
          * @param $event - FileReader event sent from Include.html or Exclude.html
          */
         $scope.readTextFile = function ($event) {
@@ -572,7 +571,7 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.userNameList = createUserNameListObject($scope.createUniqArrayFromString(str), $scope.listName);
+                $scope.userNameList = createUserNameListObject($scope.createUniqArrayFromString(str, "\n"), $scope.listName);
             };
             reader.readAsText(file);
         };
@@ -581,7 +580,6 @@
          * - Create a comma separated string of all valid too be members
          * - Call the import members modal function
          * - Open spinner for load
-         * @author Zachary Gilbert
          */
         $scope.importMembers = function () {
             $scope.imported = true;
@@ -599,7 +597,6 @@
         /**
          * - Post new imported data to the grouper database
          * - Open import success modal
-         * @author Zachary Gilbert
          * @param userNameList - string of comma separated user names
          * @param listName - Include or Exclude
          */
@@ -618,7 +615,6 @@
          * - Create the import members success modal
          * - Close spinner
          * - Refresh page after the modal is closed
-         * @author Zachary Gilbert
          * @param listName
          */
         $scope.updateImportMembers = function (listName) {
@@ -641,7 +637,6 @@
 
         /**
          * Take in an array of member objects and return a comma separated string of all the member user names
-         * @author Zachary Gilbert
          * @param validUserNames - Array of member objects
          * @return {*} Comma separated string
          */
@@ -660,12 +655,14 @@
         /**
          * Split a string into an array of strings with respect to newline characters.
          * {"one\ntwo\nthree"} ---> {"one", "two", "three"}
-         * @author Zachary Gilbert
          * @param str - String of newline separated usernames
+         * @param delimit - Split string by delimi (delimiting) character
          * @return {[string]}
          */
-        $scope.createUniqArrayFromString = function (str) {
-            return _.without([...new Set(str.split("\n"))], "");
+        $scope.createUniqArrayFromString = function (str, delimi) {
+            let arr = _.without([...new Set(str.split(delimi))], "");
+            $scope.importCount = arr.length;
+            return arr;
         };
 
         /**
@@ -674,7 +671,7 @@
          * - Else if the member exists in another list we set the 'status' property to that 'listName' and set the
          * 'added' property to yes
          * - Otherwise the member to be added doesn't exist in any lists and needs to be validated with grouper
-         * @author Zachary Gilbert
+         *
          * @param item - String username
          * @param existInList - the global scope method $scope.existInList is intended to be passed as the parameter
          * @param isInOtherList - the global scope method $scope.isInAnotherList is intended to be passed as the
@@ -692,31 +689,27 @@
 
         /**
          * Send a GET request to grouper in order to verify the validity of a UH user name
-         * @author Zachary Gilbert
          * @param memberNew - UH user name
          * @param data - Object Array
          */
         function checkUserNameValidity(memberNew, data) {
             groupingsService.checkMember(memberNew.name, data, function (attributes) {
-
                 data.push(new Member(memberNew.name,
                     (memberNew.status === "") ? "Valid" : memberNew.status,
-
                     (memberNew.status === $scope.listName) ? "No" : " Yes",
-
                     attributes.uhuuid, attributes.uid));
 
-            }, function (res) {
-                if (res.statusCode === 404) {
-                    data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
-                }
-            });
-        }
+                    $scope.VALID_UNAME_COUNT += (memberNew.status !== $scope.listName);
 
+            }, function (res) {
+                if (res.statusCode === undefined || res.statusCode === 404)
+                    data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
+            });
+
+        }
 
         /**
          * Add all the valid user names from pendingList to userNameList
-         * @author Zachary Gilbert
          * @param pendingList - Array of username strings
          * @param listName - Include, Exclude, ... etc
          * @return {{}[]} - Array of member objects
@@ -733,13 +726,12 @@
 
         /**
          * Return userName string that is associated with the member in the selected row
-         * @author Zachary Gilbert
          * @return {string|*}
          */
         $scope.getSelectedUserName = function () {
             if ($scope.selectedRow === null)
                 return "";
-            return $scope.userNameList[$scope.selectedRow].name;
+            return $scope.userNameList[$scope.selectedRow].uhid;
         };
 
         /**
@@ -754,28 +746,7 @@
         };
 
         /**
-         * Return id string that is associated with the member in the selected row
-         * @return {string|*}
-         $scope.getSelectedId = function () {
-            if ($scope.selectedRow === null || $scope.userNameList[$scope.selectedRow].id === "")
-                return "";
-            return $scope.userNameList[$scope.selectedRow].id;
-
-        };
-         */
-        /**
-         * Return uhid number that is associated with the member in the selected row
-         * @return {string|*}
-         $scope.getSelectedUid = function () {
-            if ($scope.selectedRow === null || $scope.userNameList[$scope.selectedRow].uhid === "")
-                return "";
-            return $scope.userNameList[$scope.selectedRow].uhid;
-        };
-         */
-
-        /**
          * Set a style attribute of a html component associated with id.
-         * @author Zachary Gilbert
          * @param id - id of html component
          * @param attribute
          * @param setAs - set attribute too.
@@ -786,44 +757,31 @@
 
         /**
          * Returns necessary dialogue to display as a imported members add status
-         * @author Zachary Gilbert
          * @param username - uh user name
          */
-        $scope.displaySelectedStatus = function (username) {
-            let retStr = [];
-            if ($scope.selectedRow === null)
-                return "";
-            const status = $scope.userNameList[$scope.selectedRow].status;
-            let uhid = $scope.userNameList[$scope.selectedRow].uhid;
+        $scope.displaySelectedStatus = function (row) {
+            let retStr = "";
+            const status = $scope.userNameList[row].status;
+            let uhid = $scope.userNameList[row].uhid;
             const listName = $scope.listName;
-            let userNameStr = "  \"" + username + "\"";
 
             if (uhid === "")
                 uhid = "n/a";
 
             if (status === listName)
-                retStr.push(userNameStr + " is already a member of the " + listName + " list.");
-            else if (status === "Valid")
-                retStr.push(userNameStr + " will be added upon confirmation");
+                retStr = "Already a member of the " + listName + " list.";
+            else if (status === "Valid" || status === getOtherList((listName)))
+                retStr = uhid;
             else if (status === "Invalid")
-                retStr.push(userNameStr + " is an invalid user name and will not be added upon confirmation.");
-            else if (status === getOtherList(listName))
-                retStr.push(userNameStr + " is already a member of the " +
-                    getOtherList(listName) + "list, and on confirmation will be removed from the " +
-                    getOtherList(listName) + " list and added to the " + listName + " list.");
-            else {
-                retStr.push("Error");
-                retStr.push("");
-                retStr.push("");
-                return retStr;
-            }
-            retStr.push(uhid);
+                retStr = status;
+            else
+                retStr = "Error";
+
             return retStr;
         };
 
         /**
          * Sort array(arr) alphabetically or in reverse with respect to the field
-         * @author Zachary Gilbert
          * @param arr - array to sort
          * @param order{bool} true: sort lexicographically || false: sort in reverse
          * @param field - name or status
@@ -843,7 +801,6 @@
 
         /**
          * Return the other list besides listName.
-         * @author Zachary Gilbert
          * @param listName
          * @return {string}
          */
@@ -854,7 +811,6 @@
         /**
          * Set the global scoped variable selectedRow to the index. Use in importModal.html to highlight selected
          * text.
-         * @author Zachary Gilbert
          * @param index
          */
         $scope.setClickedRow = function (index) {
@@ -864,7 +820,6 @@
         /**
          * Remove the invalid user names from the pending list array of member objects and return a list of strings
          * containing all valid user names.
-         * @author Zachary Gilbert
          * @param pendingList - Array of Member objects
          * @param listName
          * @return {*[]|*} Array of strings containing all valid user names to be added
@@ -885,7 +840,6 @@
 
         /**
          * Cancel the import Modal instance
-         * @author Zachary Gilbert
          */
         $scope.cancelImportModalInstance = function () {
             clearAddMemberInput($scope.listName);
@@ -894,7 +848,6 @@
 
         /**
          * Close both import confirmation and import modals after import is complete
-         * @author Zachary Gilbert
          */
         $scope.closeConfirmAddMembersModalInstance = function () {
             $scope.confirmAddMembersModalInstance.dismiss();
@@ -903,18 +856,11 @@
 
         /**
          * Close import modal instance when user confirms that they would like to add the list they imported
-         * @author Zachary Gilbert
          */
         $scope.proceedAddMembers = function () {
             $scope.confirmImportInstance.close();
         };
 
-        $scope.checkImportSize = function () {
-            if ($scope.userNameList.length > 100) {
-                $scope.launchImportErrorModal();
-            }
-            return String($scope.userNameList.length);
-        };
         $scope.launchImportErrorModal = function () {
             $scope.cancelImportModalInstance();
             $scope.closeConfirmAddMembersModalInstance();
@@ -926,7 +872,6 @@
 
         /**
          * Remove Items from the pendingList Array
-         * @author Zachary Gilbert
          * @param pendingList
          * @param itemsToRemove
          * @return {[]}
@@ -936,6 +881,7 @@
                 pendingList = _.without(pendingList, _.forEach(item));
             return pendingList;
         };
+
         /**
          * Adds a user to a group.
          * @param {string} list - the list the user is being added to (either Include or Exclude)
@@ -965,9 +911,8 @@
                 }
             });
         };
-        /**
 
-         /**
+        /**
          * Creates a modal display for members added, and calls addMembersToInclude service.
          * @param usersToAdd
          * @param list
@@ -1478,6 +1423,8 @@
                     $scope.sortName = false;
                     $scope.sortStatus = false;
                     $scope.addMultipleMembers = false;
+                    $scope.VALID_UNAME_COUNT = 0;
+                    $scope.importCount = 0;
                     break;
                 case "Exclude":
                     $scope.userToAdd = "";
@@ -1489,6 +1436,8 @@
                     $scope.sortName = false;
                     $scope.sortStatus = false;
                     $scope.addMultipleMembers = false;
+                    $scope.VALID_UNAME_COUNT = 0;
+                    $scope.importCount = 0;
                     break;
                 case "owners":
                     $scope.ownerToAdd = "";
