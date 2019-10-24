@@ -1488,7 +1488,6 @@
         $scope.createPreferenceInfoModal = function (desc) {
             $scope.preferenceInfo = desc;
 
-            console.log(desc);
             $scope.infoModalInstance = $uibModal.open({
                 templateUrl: "modal/infoModal",
                 scope: $scope,
