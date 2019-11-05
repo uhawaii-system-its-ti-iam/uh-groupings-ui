@@ -1,32 +1,33 @@
 <th:block th:fragment="side-nav">
+
     <ul class="nav nav-pills flex-md-column flex-row justify-content-md-start justify-content-center"
         id="group-pills">
         <li class="nav-item mx-auto" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.members}">
             <a data-toggle="tab" href="#all" class="nav-link rounded-circle active"
                aria-label="All Members" ng-click="resetFields()">
-                <i class="fa fa-user fa-fw" aria-hidden="true"></i>
+                <i class="fa fa-users" aria-hidden="true"></i>
             </a>
         </li>
         <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.basis}">
             <a data-toggle="tab" href="#basis" class="nav-link rounded-circle"
                aria-label="Basis Members" ng-click="resetFields()">
-                <i class="fa fa-id-card-o fa-fw" aria-hidden="true"></i>
+                <i class="fa fa-id-card-o" aria-hidden="true"></i>
             </a>
         </li>
         <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.include}">
             <a data-toggle="tab" href="#include" class="nav-link rounded-circle"
                aria-label="Include Members" ng-click="resetFields()">
-                <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-user-plus" aria-hidden="false"></i>
             </a>
         </li>
         <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.exclude}">
             <a data-toggle="tab" href="#exclude" class="nav-link rounded-circle"
                aria-label="Exclude Members" ng-click="resetFields()">
-                <i class="fa fa-minus fa-fw" aria-hidden="true"></i>
+                <i class="fas fa-user-minus" aria-hidden="true"></i>
             </a>
         </li>
         <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
