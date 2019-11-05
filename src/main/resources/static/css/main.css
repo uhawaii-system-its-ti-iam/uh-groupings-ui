@@ -321,6 +321,12 @@ table .p-10 {
     }
 }
 
+@media (max-width: 575.98px) {
+    .img-fluid {
+        width: 210px;
+    }
+}
+
 .nav-link {
     white-space: nowrap;
 }
