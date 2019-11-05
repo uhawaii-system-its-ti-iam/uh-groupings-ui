@@ -317,6 +317,13 @@ table .p-10 {
     .nav.nav-tabs.flex-column > .nav-item > .nav-link {
         border: none;
         background-color: #e3f2ef;
+        padding: 0px 0px 2px 0px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .img-fluid {
+        width: 210px;
     }
 }
 
