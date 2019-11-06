@@ -561,3 +561,26 @@ form.seamless button {
     color: #212529;
     font-weight: bold;
 }
+
+/**
+ * Styling for selected grouping header.
+ * Styles the gourping name and 'Return to Groupings'
+ * button, so on mobile, the button sits on top of the
+ * grouping name, eliminating whitespace.
+ */
+@media screen and (max-width: 500px) {
+    #selectedGroupHeader {
+        display:table; /* The row is now a table */
+        /* Centering */
+        margin: auto;
+        width: 100%;
+        padding: 0px;
+    }
+    .col-md-9 {
+        display: table-footer-group; /* Makes the grouping name the footer of table */
+    }
+    .col-md-3 {
+        display: table-header-group; /* Makes the button the header of table */
+
+    }
+}
