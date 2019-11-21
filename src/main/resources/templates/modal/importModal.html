@@ -63,7 +63,7 @@
 <div class="modal-footer" ng-if="imported" ng-init="
     changeStyleAttribute('confirmationDialogue', 'display', 'unset');
     changeStyleAttribute('mentionUserOptions', 'display', 'unset')">
-    <p id="confirmationDialogue" style="padding-right: 100px; padding-left: 20px">
+    <p ng-if="VALID_UNAME_COUNT > 0" id="confirmationDialogue" style="padding-right: 100px; padding-left: 20px">
         Are you sure you want to add
         <span class="blu-bold">{{ VALID_UNAME_COUNT }}</span>
         of
@@ -72,7 +72,10 @@
         <span style="color: black">{{ listName }}</span>
         <span style="color: black"> list?</span>
     </p>
-    <button class="btn btn-primary" ng-click="importMembers()">Yes</button>
+    <p ng-if="VALID_UNAME_COUNT <= 0" style="margin: auto; width:50%">
+        No valid users to add.
+    </p>
+    <button ng-if="VALID_UNAME_COUNT > 0" class="btn btn-primary" ng-click="importMembers()">Yes</button>
     <button class="btn btn-default" data-dismiss="modal" ng-click="cancelImportModalInstance()">Cancel</button>
 </div>
 
