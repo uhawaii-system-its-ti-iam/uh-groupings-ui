@@ -8,12 +8,14 @@ import edu.hawaii.its.api.type.Grouping;
 import edu.hawaii.its.api.type.GroupingAssignment;
 import edu.hawaii.its.api.type.GroupingsHTTPException;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
+import edu.hawaii.its.api.type.SyncDestination;
 import edu.hawaii.its.groupings.access.Role;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import org.jasig.cas.client.authentication.SimplePrincipal;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -32,6 +34,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -175,6 +179,44 @@ public class TestGroupingsRestController {
     }
 
     @Test
+    public void getAllSyncDestinationsTest() {
+
+        ObjectMapper om = new ObjectMapper();
+        List<SyncDestination> destinations = new ArrayList<>();
+
+        // Testing with ADMIN.
+        try {
+            Principal principal = new SimplePrincipal(ADMIN);
+
+            destinations = Arrays.asList(
+                om.readValue(groupingsRestController.getAllSyncDestinations(principal, GROUPING).getBody().toString(),
+                    SyncDestination[].class));
+            assertTrue(destinations.size() > 0);
+        } catch (Exception e) {
+
+        }
+
+        // Testing with Owner.
+        try {
+
+            Principal principal = new SimplePrincipal(uhUser01.getUsername());
+
+            destinations = Arrays.asList(
+                om.readValue(groupingsRestController.getAllSyncDestinations(principal, GROUPING).getBody().toString(),
+                    SyncDestination[].class));
+            assertTrue(destinations.size() > 0);
+        } catch (Exception e) {
+
+        }
+
+        // Testing with a regular user.
+        Principal principal = new SimplePrincipal(uhUser05.getUsername());
+        assertEquals(groupingsRestController.getAllSyncDestinations(principal, GROUPING).getStatusCode().toString(), "403 FORBIDDEN");
+
+
+    }
+
+    @Test
     @WithMockUhUser(username = "iamtst01")
     public void assignAndRemoveOwnershipTest() throws Exception {
 
@@ -288,7 +330,9 @@ public class TestGroupingsRestController {
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
     }
-//Test not used
+
+    // Test not used
+    @Ignore
     @Test
     public void ownedGroupingsTest() throws Exception {
 

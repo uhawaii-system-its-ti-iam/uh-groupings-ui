@@ -659,14 +659,19 @@ public class GroupingsRestController {
 
     /**
      * Returns a list of supported sync destinations
+     *
      * @return List of Sync Destinations
      */
-    @RequestMapping(value = "/syncDestinations",
+    @RequestMapping(value = "/groupings/{path}/syncDestinations",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> getAllSyncDestinations(Principal principal) {
+    public ResponseEntity getAllSyncDestinations(Principal principal,
+            @PathVariable String path) {
         logger.info("Entered REST getAllSyncDestinations...");
-        String uri = API_2_1_BASE + "/groupings/syncDestinations";
+
+        String safePath = policy.sanitize(path);
+
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/syncDestinations", safePath);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 

@@ -8,18 +8,25 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GroupingTest {
 
     private Grouping grouping;
     private Group group;
     private String emptyGroup;
     private boolean Test = true;
+    private List<SyncDestination> destinations = new ArrayList<>();
 
     @Before
     public void setUp(){
         grouping = new Grouping();
         group = new Group();
         emptyGroup = "Group [path=, members=[]]";
+        destinations.add(new SyncDestination("test:released", "released"));
+        destinations.add(new SyncDestination("test:listserv", "listserv"));
+        grouping.setSyncDestinations(destinations);
     }
 
     @Test
@@ -54,10 +61,10 @@ public class GroupingTest {
     assertTrue(grouping.isOptInOn());
     grouping.setOptOutOn(Test);
     assertTrue(grouping.isOptOutOn());
-    grouping.setListservOn(Test);
-    assertTrue(grouping.isListservOn());
-    grouping.setReleasedGroupingOn(Test);
-    assertTrue(grouping.isReleasedGroupingOn());
+    grouping.setSyncDestination("test:listserv", Test);
+    assertTrue(grouping.isSyncDestinationOn("test:listserv"));
+    grouping.setSyncDestination("test:released", Test);
+    assertTrue(grouping.isSyncDestinationOn("test:released"));
     assertNotNull(grouping.toString());
     }
 }

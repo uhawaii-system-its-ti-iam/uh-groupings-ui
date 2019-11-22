@@ -10,6 +10,7 @@
             /**
              * Performs a GET request to the specified URL.
              * @param {function} callback - the function to perform on a successful request (200)
+             * @param callError
              * @param {string} url - the URL to perform the request on
              */
             loadData: function (callback, callError, url) {
@@ -18,8 +19,6 @@
                         console.log(url);
                         callback(response.data);
                     }, function (response) {
-                        // console.log("Error A", response);
-                        // if(response.data == null) return false;
                         callError(response);
                         console.log("Error in dataProvider; status: ", response.status);
 
