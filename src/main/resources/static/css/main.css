@@ -584,3 +584,22 @@ form.seamless button {
 
     }
 }
+
+@media screen and (min-width: 3000px) {
+    #selectedGroupHeader {
+
+        /* Centering */
+        margin: auto;
+        width: 100%;
+        padding: 0px;
+        display: table;
+    }
+
+    .col-md-9 {
+        display: table-footer-group
+    }
+
+    .col-md-3 {
+        display: table-header-group;
+    }
+}
