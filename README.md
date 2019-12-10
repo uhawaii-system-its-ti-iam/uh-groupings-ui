@@ -15,8 +15,6 @@ First, you need to setup [Maven Wrapper](https://www.baeldung.com/maven-wrapper)
 
     $ mvn -N io.takari:maven:wrapper
 
-Be sure to set up a M2_REPO environment variable.
-
 ##### Java
 You'll need a Java JDK to build and run the project (version 1.8).
 
