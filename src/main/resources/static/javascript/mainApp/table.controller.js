@@ -180,12 +180,17 @@
             $scope[tableName] = $filter("orderBy")($scope[tableName], propertyName, reverse);
 
             // Filter out the sorted list by the corresponding query
+            
             if( tableName === "adminsList") {
                 // Quick fix for /admin - Manage Admins
                 $scope.filter($scope[tableName], "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, false);
             } else if (tableName === "groupingsList") {
                 // Quick fix for /admin - Manage Groupings
-                $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true)
+                $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, false)
+            } else if( tableName === "membershipsList") {
+                $scope.filter($scope[tableName], "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, false);
+            } else if( tableName === "optInList") {
+                $scope.filter($scope[tableName], "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, false);
             } else {
                 // Paginate the table again
                $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
