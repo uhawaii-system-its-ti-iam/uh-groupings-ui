@@ -18,7 +18,7 @@
         /**
          * Paginates a list of items.
          * @param {object[]} list - the unpaginated list
-         * @returns {object[]} a paginated list
+         * @returns {object[]} a paginated list, an array of arrays of objects with each sub array having a maximum of $scope.itemsPerPage objects
          */
         $scope.groupToPages = function (list) {
             if (!_.isArray(list) || $scope.itemsPerPage < 1) {
@@ -178,8 +178,18 @@
             }
             let reverse = $scope.columnSort[tableName].reverse;
             $scope[tableName] = $filter("orderBy")($scope[tableName], propertyName, reverse);
-            // Paginate the table again
-            $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
+
+            // Filter out the sorted list by the corresponding query
+            if( tableName === "adminsList") {
+                // Quick fix for /admin - Manage Admins
+                $scope.filter($scope[tableName], "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, false);
+            } else if (tableName === "groupingsList") {
+                // Quick fix for /admin - Manage Groupings
+                $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true)
+            } else {
+                // Paginate the table again
+               $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
+            }
         };
 
     }
