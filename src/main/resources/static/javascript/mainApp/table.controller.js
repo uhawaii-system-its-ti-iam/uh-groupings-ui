@@ -180,17 +180,24 @@
             $scope[tableName] = $filter("orderBy")($scope[tableName], propertyName, reverse);
 
             // Filter out the sorted list by the corresponding query
-            
             if( tableName === "adminsList") {
-                // Quick fix for /admin - Manage Admins
                 $scope.filter($scope[tableName], "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, false);
             } else if (tableName === "groupingsList") {
-                // Quick fix for /admin - Manage Groupings
                 $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, false)
             } else if( tableName === "membershipsList") {
                 $scope.filter($scope[tableName], "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, false);
             } else if( tableName === "optInList") {
                 $scope.filter($scope[tableName], "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, false);
+            } else if (tableName === "groupingMembers") {
+                $scope.filter($scope[tableName], "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
+            } else if (tableName === "groupingBasis") {
+                $scope.filter($scope[tableName], "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
+            } else if (tableName === "groupingInclude") {
+                $scope.filter($scope[tableName], "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
+            } else if (tableName === "groupingExclude") {
+                $scope.filter($scope[tableName], "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
+            } else if (tableName === "groupingOwners") {
+                $scope.filter($scope[tableName], "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
             } else {
                 // Paginate the table again
                $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
