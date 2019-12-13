@@ -29,17 +29,17 @@ public class UserContextServiceImpl implements UserContextService {
     }
 
     @Override
-    public String getCurrentUhuuid() {
+    public String getCurrentUhUuid() {
         User user = getCurrentUser();
-        return user != null ? user.getUhuuid() : "";
+        return user != null ? user.getUhUuid() : "";
     }
 
     @Override
-    public void setCurrentUhuuid(String uhuuid) {
+    public void setCurrentUhUuid(String uhUuid) {
         User user = getCurrentUser();
         if (user != null) {
             if (user.hasRole(Role.ADMIN)) {
-                user.setUhuuid(uhuuid);
+                user.setUhUuid(uhUuid);
             }
         }
     }

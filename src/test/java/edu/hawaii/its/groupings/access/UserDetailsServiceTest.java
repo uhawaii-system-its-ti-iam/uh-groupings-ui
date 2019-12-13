@@ -35,7 +35,7 @@ public class UserDetailsServiceTest {
     public void testAdminUsers() {
         Map<String, Object> map = new HashMap<>();
         map.put("uid", "duckart");
-        map.put("uhuuid", "89999999");
+        map.put("uhUuid", "89999999");
         AttributePrincipal principal = new AttributePrincipalImpl("duckart", map);
         Assertion assertion = new AssertionImpl(principal);
         UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl(userBuilder);
@@ -44,7 +44,7 @@ public class UserDetailsServiceTest {
         // Basics.
         assertEquals("duckart", user.getUsername());
         assertEquals("duckart", user.getUid());
-        assertEquals("89999999", user.getUhuuid());
+        assertEquals("89999999", user.getUhUuid());
 
         // Granted Authorities.
         assertTrue(user.getAuthorities().size() > 0);
@@ -57,14 +57,14 @@ public class UserDetailsServiceTest {
 
         map = new HashMap<>();
         map.put("uid", "someuser");
-        map.put("uhuuid", "10000001");
+        map.put("uhUuid", "10000001");
         principal = new AttributePrincipalImpl("someuser", map);
         assertion = new AssertionImpl(principal);
         user = (User) userDetailsService.loadUserDetails(assertion);
 
         assertEquals("someuser", user.getUsername());
         assertEquals("someuser", user.getUid());
-        assertEquals("10000001", user.getUhuuid());
+        assertEquals("10000001", user.getUhUuid());
 
         assertTrue(user.getAuthorities().size() > 0);
         assertTrue(user.hasRole(Role.ANONYMOUS));
@@ -77,7 +77,7 @@ public class UserDetailsServiceTest {
     public void testEmployees() {
         Map<String, Object> map = new HashMap<>();
         map.put("uid", "jjcale");
-        map.put("uhuuid", "10000004");
+        map.put("uhUuid", "10000004");
 
         AttributePrincipal principal = new AttributePrincipalImpl("jjcale", map);
         Assertion assertion = new AssertionImpl(principal);
@@ -87,7 +87,7 @@ public class UserDetailsServiceTest {
         // Basics.
         assertEquals("jjcale", user.getUsername());
         assertEquals("jjcale", user.getUid());
-        assertEquals("10000004", user.getUhuuid());
+        assertEquals("10000004", user.getUhUuid());
 
         // Granted Authorities.
         assertEquals(3, user.getAuthorities().size());

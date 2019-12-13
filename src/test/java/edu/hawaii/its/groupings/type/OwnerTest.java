@@ -37,10 +37,10 @@ public class OwnerTest {
     }
 
     @Test
-    public void uhuuid() {
-        assertThat(owner.getUhuuid(), equalTo(null));
-        owner.setUhuuid("uhuuid");
-        assertThat(owner.getUhuuid(), equalTo("uhuuid"));
+    public void uhUuid() {
+        assertThat(owner.getUhUuid(), equalTo(null));
+        owner.setUhUuid("uhUuid");
+        assertThat(owner.getUhUuid(), equalTo("uhUuid"));
     }
 
     @Test
