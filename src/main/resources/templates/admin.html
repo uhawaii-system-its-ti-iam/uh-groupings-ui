@@ -70,9 +70,9 @@
                                     <i class="fa sort-icon"
                                        ng-show="columnSort.adminsList.property === 'name' || !columnSort.adminsList"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
-                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'uuid')" class="clickable">
+                                <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'uhUuid')" class="clickable">
                                     UH Number
-                                    <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'uuid'"
+                                    <i class="fa sort-icon" ng-show="columnSort.adminsList.property === 'uhUuid'"
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
                                 </th>
                                 <th ng-click="sortBy('adminsList', 'pagedItemsAdmins', 'username')"
@@ -92,7 +92,7 @@
                                     {{l.name}}
                                 </td>
                                 <td class="p-10" tabindex="0">
-                                    {{l.uuid}}
+                                    {{l.uhUuid}}
                                 </td>
                                 <td class="p-10" tabindex="0">
                                     {{l.username}}

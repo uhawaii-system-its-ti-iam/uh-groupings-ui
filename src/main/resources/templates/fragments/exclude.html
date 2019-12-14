@@ -41,9 +41,9 @@
                            ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                     </th>
                     <th scope="col" class="clickable"
-                        ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'uuid')">
+                        ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'uhUuid')">
                         UH Number
-                        <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'uuid'"
+                        <i class="fa sort-icon" ng-show="columnSort.groupingExclude.property === 'uhUuid'"
                            ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                     </th>
                     <th scope="col" class="clickable"
@@ -73,7 +73,7 @@
                               ng-click="removeMember('Exclude', currentPageExclude, $index)">
                     </span>
                     </td>
-                    <td class="p-10">{{e.uuid}}</td>
+                    <td class="p-10">{{e.uhUuid}}</td>
                     <td class="p-10">
                         {{e.username}}
                         <div ng-if="e.username === ''">

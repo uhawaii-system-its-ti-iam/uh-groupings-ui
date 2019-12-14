@@ -19,7 +19,7 @@
     <table style="width: 80%;margin-bottom: 30px;">
         <tr>
             <th th:utext="#{screen.message.modal.add.name}"></th>
-            <th style="font-weight: normal">{{uhuuidToAdd}}</th>
+            <th style="font-weight: normal">{{fullNameToAdd}}</th>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.add.uhUserName}"></th>
@@ -28,7 +28,7 @@
     </table>
 
     <p> Are you sure you want to add
-        <span style="font-weight: bold">{{ nameToAdd }}</span>
+        <span style="font-weight: bold">{{ givenNameToAdd }}</span>
         <span style="color: black"> to the </span>
         <span style="color: black">{{listName}}</span>
         <span style="color: black"> list?</span>
