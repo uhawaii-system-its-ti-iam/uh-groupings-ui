@@ -40,9 +40,9 @@
                            ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
-                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uuid')" class="clickable">
+                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uhUuid')" class="clickable">
                         UH Number
-                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uuid'"
+                        <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uhUuid'"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
                     <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'username')"
@@ -62,7 +62,7 @@
                 <tbody>
                 <tr ng-repeat="g in pagedItemsMembers[currentPageMembers]" class="table table-sm">
                     <td class="p-10">{{g.name}}</td>
-                    <td class="p-10">{{g.uuid}}</td>
+                    <td class="p-10">{{g.uhUuid}}</td>
                     <td class="p-10">
                         {{g.username}}
                         <div ng-if="g.username === ''">

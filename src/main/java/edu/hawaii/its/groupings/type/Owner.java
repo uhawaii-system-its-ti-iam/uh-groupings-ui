@@ -5,7 +5,7 @@ public class Owner {
     private String privilegeName;
     private String name;
     private String uid;
-    private String uhuuid;
+    private String uhUuid;
 
     // Constructor.
     public Owner() {
@@ -41,12 +41,12 @@ public class Owner {
         this.uid = uid;
     }
 
-    public String getUhuuid() {
-        return uhuuid;
+    public String getUhUuid() {
+        return uhUuid;
     }
 
-    public void setUhuuid(String uhuuid) {
-        this.uhuuid = uhuuid;
+    public void setUhUuid(String uhUuid) {
+        this.uhUuid = uhUuid;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Owner {
                 + "privilegeName=" + privilegeName
                 + ", name=" + name
                 + ", uid=" + uid
-                + ", uhuuid=" + uhuuid
+                + ", uhUuid=" + uhUuid
                 + "]";
     }
 }

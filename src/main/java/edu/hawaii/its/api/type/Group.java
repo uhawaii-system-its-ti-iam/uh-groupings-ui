@@ -60,12 +60,12 @@ public class Group implements Comparable<Group> {
         return names;
     }
 
-    public List<String> getUuids() {
-        List<String> uuids = new ArrayList<>();
+    public List<String> getUhUuids() {
+        List<String> uhUuids = new ArrayList<>();
         for (Person person : members) {
-            uuids.add(person.getUuid());
+            uhUuids.add(person.getUhUuid());
         }
-        return uuids;
+        return uhUuids;
     }
 
     public List<String> getUsernames() {

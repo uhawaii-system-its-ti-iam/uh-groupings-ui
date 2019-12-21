@@ -27,7 +27,7 @@ public class UserTest {
 
         assertEquals("a", user.getUsername());
         assertEquals("a", user.getUid());
-        assertNull(user.getUhuuid());
+        assertNull(user.getUhUuid());
         assertNull(user.getAttributes());
 
         authorities = new LinkedHashSet<>();
@@ -36,7 +36,7 @@ public class UserTest {
 
         assertEquals("b", user.getUsername());
         assertEquals("b", user.getUid());
-        assertEquals("12345", user.getUhuuid());
+        assertEquals("12345", user.getUhUuid());
         assertNull(user.getAttributes());
 
         user.setAttributes(new UhCasAttributes());
@@ -47,7 +47,7 @@ public class UserTest {
     public void accessors() {
         Map<Object, Object> map = new HashMap<>();
         map.put("uid", "duckart");
-        map.put("uhuuid", "666666");
+        map.put("uhUuid", "666666");
         map.put("cn", "Frank");
         map.put("mail", "frank@example.com");
         map.put("eduPersonAffiliation", "aff");
@@ -59,6 +59,6 @@ public class UserTest {
         assertThat(user.getAttribute("uid"), equalTo("duckart"));
         assertThat(user.getName(), equalTo("Frank"));
         assertThat(user.toString(), containsString("uid=a"));
-        assertThat(user.toString(), containsString("uhuuid=null"));
+        assertThat(user.toString(), containsString("uhUuid=null"));
     }
 }

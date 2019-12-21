@@ -268,7 +268,7 @@ public class GroupTest {
         persons.add(new Person("A", "B", "C"));
         group = new Group("manzanera", persons);
         String expected = "Group [path=manzanera, "
-                + "members=[Person [name=A, uuid=B, username=C]]]";
+                + "members=[Person [name=A, uhUuid=B, username=C]]]";
         assertThat(group.toString(), equalTo(expected));
     }
 

@@ -59,12 +59,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     /**
      * Assigns roles to user
      *
-     * @param uhuuid   : The UH uuid of the user.
+     * @param uhUuid   : The UH uuid of the user.
      * @param username : The username of the person to find the user.
      * @return : Returns an array list of roles assigned to the user.
      */
     @Override
-    public RoleHolder fetchRoles(String uhuuid, String username) {
+    public RoleHolder fetchRoles(String uhUuid, String username) {
         RoleHolder roleHolder = new RoleHolder();
         roleHolder.add(Role.ANONYMOUS);
         roleHolder.add(Role.UH);
@@ -79,7 +79,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             roleHolder.add(Role.ADMIN);
         }
 
-        List<Role> roles = userMap.get(uhuuid);
+        List<Role> roles = userMap.get(uhUuid);
         if (roles != null) {
             for (Role role : roles) {
                 roleHolder.add(role);

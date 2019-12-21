@@ -139,7 +139,7 @@
             });
 
             // Unique members only by UUID (assume no two users should have the same uuid)
-            members = _.uniqBy(members, "uuid");
+            members = _.uniqBy(members, "uhUuid");
 
             return _.sortBy(members, "name");
         }
@@ -158,7 +158,7 @@
             var newMembers = _.concat(initialMembers, membersToAdd);
 
             // Unique members only by UUID (assume no two users should have the same uuid)
-            newMembers = _.uniqBy(newMembers, "uuid");
+            newMembers = _.uniqBy(newMembers, "uhUuid");
 
             return _.sortBy(newMembers, "name");
         };
@@ -474,8 +474,8 @@
          */
         $scope.addInBasis = function (group) {
             _.forEach(group, function (member) {
-                const memberUuid = member.uuid;
-                member.inBasis = _.some($scope.groupingBasis, { uuid: memberUuid })
+                const memberUhUuid = member.uhUuid;
+                member.inBasis = _.some($scope.groupingBasis, { uhUuid: memberUhUuid })
                     ? "Yes"
                     : "No";
             });
@@ -489,13 +489,13 @@
         $scope.addWhereListed = function (compositeGroup) {
             _.forEach(compositeGroup, function (member) {
 
-                const memberUuid = member.uuid;
-                if (_.some($scope.groupingBasis, { uuid: memberUuid })) {
+                const memberUhUuid = member.uhUuid;
+                if (_.some($scope.groupingBasis, { uhUuid: memberUhUuid })) {
 
                     member.whereListed = "Basis";
                 }
 
-                if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
+                if (_.some($scope.groupingInclude, { uhUuid: memberUhUuid })) {
                     member.whereListed = _.isUndefined(member.whereListed)
                         ? "Include"
                         : "Basis & Include";
@@ -697,7 +697,7 @@
                 data.push(new Member(memberNew.name,
                     (memberNew.status === "") ? "Valid" : memberNew.status,
                     (memberNew.status === $scope.listName) ? "No" : " Yes",
-                    attributes.uhuuid, attributes.uid));
+                    attributes.uhUuid, attributes.uid));
 
                     $scope.VALID_UNAME_COUNT += (memberNew.status !== $scope.listName);
 
@@ -1046,8 +1046,9 @@
             const userToAdd = options.userToAdd;
 
             groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                $scope.nameToAdd = attributes.cn;
-                $scope.uhuuidToAdd = attributes.uhuuid;
+                $scope.fullNameToAdd = attributes.cn;
+                $scope.givenNameToAdd = attributes.givenName;
+                $scope.uhUuidToAdd = attributes.uhUuid;
                 $scope.uidToAdd = attributes.uid;
 
                 $scope.listName = options.listName;
@@ -1735,7 +1736,7 @@
                 line += table[i].lastName + ",";
                 line += table[i].firstName + ",";
                 line += table[i].username + ",";
-                line += table[i].uuid + ",";
+                line += table[i].uhUuid + ",";
                 line += table[i].username + "@hawaii.edu,";
                 str += line + "\r\n";
             }

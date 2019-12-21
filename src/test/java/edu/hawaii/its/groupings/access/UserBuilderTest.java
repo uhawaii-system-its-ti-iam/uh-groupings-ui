@@ -33,13 +33,13 @@ public class UserBuilderTest {
     public void testAdminUsers() {
         Map<String, String> map = new HashMap<>();
         map.put("uid", "duckart");
-        map.put("uhuuid", "89999999");
+        map.put("uhUuid", "89999999");
         User user = userBuilder.make(map);
 
         // Basics.
         assertEquals("duckart", user.getUsername());
         assertEquals("duckart", user.getUid());
-        assertEquals("89999999", user.getUhuuid());
+        assertEquals("89999999", user.getUhUuid());
 
         // Granted Authorities.
         assertTrue(user.getAuthorities().size() > 0);
@@ -50,12 +50,12 @@ public class UserBuilderTest {
 
         map = new HashMap<>();
         map.put("uid", "someuser");
-        map.put("uhuuid", "10000001");
+        map.put("uhUuid", "10000001");
         user = userBuilder.make(map);
 
         assertEquals("someuser", user.getUsername());
         assertEquals("someuser", user.getUid());
-        assertEquals("10000001", user.getUhuuid());
+        assertEquals("10000001", user.getUhUuid());
 
         assertTrue(user.getAuthorities().size() > 0);
         assertTrue(user.hasRole(Role.ANONYMOUS));
@@ -68,13 +68,13 @@ public class UserBuilderTest {
     public void testEmployees() {
         Map<String, String> map = new HashMap<>();
         map.put("uid", "jjcale");
-        map.put("uhuuid", "10000004");
+        map.put("uhUuid", "10000004");
         User user = userBuilder.make(map);
 
         // Basics.
         assertEquals("jjcale", user.getUsername());
         assertEquals("jjcale", user.getUid());
-        assertEquals("10000004", user.getUhuuid());
+        assertEquals("10000004", user.getUhUuid());
 
         // Granted Authorities.
         assertEquals(3, user.getAuthorities().size());
@@ -92,13 +92,13 @@ public class UserBuilderTest {
         uids.add("aaaaaaa");
         uids.add("bbbbbbb");
         map.put("uid", uids);
-        map.put("uhuuid", "10000003");
+        map.put("uhUuid", "10000003");
         User user = userBuilder.make(map);
 
         // Basics.
         assertEquals("aaaaaaa", user.getUsername());
         assertEquals("aaaaaaa", user.getUid());
-        assertEquals("10000003", user.getUhuuid());
+        assertEquals("10000003", user.getUhUuid());
 
         // Granted Authorities.
         assertEquals(4, user.getAuthorities().size());
@@ -112,13 +112,13 @@ public class UserBuilderTest {
     public void testNotAnEmployee() {
         Map<String, String> map = new HashMap<>();
         map.put("uid", "nobody");
-        map.put("uhuuid", "10000009");
+        map.put("uhUuid", "10000009");
         User user = userBuilder.make(map);
 
         // Basics.
         assertEquals("nobody", user.getUsername());
         assertEquals("nobody", user.getUid());
-        assertEquals("10000009", user.getUhuuid());
+        assertEquals("10000009", user.getUhUuid());
 
         // Granted Authorities.
         assertEquals(2, user.getAuthorities().size());
