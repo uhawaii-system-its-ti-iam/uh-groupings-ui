@@ -100,28 +100,28 @@ describe("TableController", function () {
                     firstName: "John",
                     lastName: "Doe",
                     username: "jdoe",
-                    uuid: "12345678"
+                    uhUuid: "12345678"
                 },
                 {
                     $$hashKey: "random",
                     firstName: "Jane",
                     lastName: "Doe",
                     username: "janed",
-                    uuid: "23456789"
+                    uhUuid: "23456789"
                 },
                 {
                     $$hashKey: "something",
                     firstName: "Dennis",
                     lastName: "Jefferson",
                     username: "dj",
-                    uuid: "65478912"
+                    uhUuid: "65478912"
                 },
                 {
                     $$hashKey: "another",
                     firstName: "Dave",
                     lastName: "Williams",
                     username: "dave",
-                    uuid: "72897556"
+                    uhUuid: "72897556"
                 }
             ];
             scope.itemsPerPage = 1;

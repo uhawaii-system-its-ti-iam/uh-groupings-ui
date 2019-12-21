@@ -50,21 +50,21 @@ describe("GeneralController", function () {
             {
                 name: "User One",
                 username: "user1",
-                uuid: "00000001",
+                uhUuid: "00000001",
                 firstName: "User",
                 lastName: "One"
             },
             {
                 name: "User Four",
                 username: "user4",
-                uuid: "00000004",
+                uhUuid: "00000004",
                 firstName: "User",
                 lastName: "Four"
             },
             {
                 name: "User Seven",
                 username: "user7",
-                uuid: "00000007",
+                uhUuid: "00000007",
                 firstName: "User",
                 lastName: "Seven"
             }
@@ -75,21 +75,21 @@ describe("GeneralController", function () {
             {
                 name: "User One",
                 username: "user1",
-                uuid: "00000001",
+                uhUuid: "00000001",
                 firstName: "User",
                 lastName: "One"
             },
             {
                 name: "User Two",
                 username: "user2",
-                uuid: "00000002",
+                uhUuid: "00000002",
                 firstName: "User",
                 lastName: "Two"
             },
             {
                 name: "User Three",
                 username: "user3",
-                uuid: "00000003",
+                uhUuid: "00000003",
                 firstName: "User",
                 lastName: "Three"
             }
@@ -100,14 +100,14 @@ describe("GeneralController", function () {
             {
                 name: "User Four",
                 username: "user4",
-                uuid: "00000004",
+                uhUuid: "00000004",
                 firstName: "User",
                 lastName: "Four"
             },
             {
                 name: "User Five",
                 username: "user5",
-                uuid: "00000005",
+                uhUuid: "00000005",
                 firstName: "User",
                 lastName: "Five"
             }
@@ -118,7 +118,7 @@ describe("GeneralController", function () {
         scope.groupingMembers.push({
             name: "User Seven",
             username: "user7",
-            uuid: "00000007",
+            uhUuid: "00000007",
             firstName: "User",
             lastName: "Seven"
         });
@@ -128,7 +128,7 @@ describe("GeneralController", function () {
             {
                 name: "User Six",
                 username: "user6",
-                uuid: "00000006",
+                uhUuid: "00000006",
                 firstName: "User",
                 lastName: "Six"
             }
@@ -423,7 +423,7 @@ describe("GeneralController", function () {
                 scope.userToRemove = {
                     username: "jdoe",
                     name: "John Doe",
-                    uuid: "12345678"
+                    uhUuid: "12345678"
                 };
             });
 
