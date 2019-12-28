@@ -27,7 +27,7 @@
                         </form>
 
                     </div>
-                    <div sec:authorize="isAuthenticated()">
+                    <div sec:authorize="isAuthenticated()" ng-controller="OutageJsController" data-ng-init="init()">
                         <form action="/logout" th:action="@{/logout}" method="post">
                             <button class="btn btn-lg dark-teal-bg" type="submit">Logout</button>
                         </form>
