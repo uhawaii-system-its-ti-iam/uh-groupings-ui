@@ -342,4 +342,12 @@ public class HomeControllerTest {
                 .andExpect(view().name("modal/timeoutModal"));
     }
 
+    @Test
+    @WithMockUhUser(username = "uh")
+    public void requestPlannedMaintenanceModal() throws Exception {
+        mockMvc.perform(get("/modal/plannedMaintenanceModal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("modal/plannedMaintenanceModal"));
+    }
+
 }

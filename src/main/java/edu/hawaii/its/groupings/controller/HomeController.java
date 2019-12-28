@@ -210,4 +210,9 @@ public class HomeController {
     public String confirmAddMembersModal(Locale locale, Model model) {
         return "modal/confirmAddMembersModal";
     }
+
+    @RequestMapping(value = "/modal/plannedMaintenanceModal", method = RequestMethod.GET)
+    public String plannedMaintenanceModal(Locale locale, Model model) {
+        return "modal/plannedMaintenanceModal";
+    }
 }
