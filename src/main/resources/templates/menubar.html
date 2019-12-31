@@ -43,9 +43,11 @@
         </div>
     </div>
 </nav>
-<div class="plannedMaintenanceNotification dark-teal-bg" th:fragment="copy">
-    <div class="container" style="width: auto; margin: 0 auto; display: inline-block">
-    <p style="color: white" style="display: inline-block">A planned maintnenance is scheduled on... , please note UH groupings will not be online during this time. </p>
+<div class="dark-teal-bg" id="plannedMainNoti" th:fragment="copy" ng-controller="OutageJsController">
+    <div class="container" id="plannedMainNotiContainer">
+        <div>
+            <p th:utext="#{screen.message.modal.planned.maintenance}"><p>{{ planned | date: "medium"}}. We'll be back online on, {{ backOnline | date: "medium"}}</p></p>
+        </div>
 </div>
 </div>
 </html>
