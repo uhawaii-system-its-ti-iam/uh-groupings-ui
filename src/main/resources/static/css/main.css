@@ -13,6 +13,8 @@ body {
     flex-direction: column;
 }
 
+
+
 h1 {
     font-size: 2rem;
 }
@@ -507,6 +509,7 @@ form.seamless button {
 
 #footer-top {
     margin-top: 3rem;
+
 }
 
 .selected {
@@ -566,4 +569,8 @@ form.seamless button {
     width: 100%;
     margin: 0 auto;
     padding-top: 1.75%;
+}
+
+#dates {
+    text-decoration: underline;
 }
