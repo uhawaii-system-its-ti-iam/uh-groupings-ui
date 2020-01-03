@@ -11,7 +11,7 @@
          * Instatiating the planned maintenance, current, and
          * back online dates.
          */
-        $scope.planned = new Date('2020-01-04'); // Set the date which UH groupings will be down.
+        $scope.planned = new Date('2020-01-01'); // Set the date which UH groupings will be down.
         $scope.today = new Date(); // Current date.
         $scope.backOnline = new Date('2020-01-02'); // Set the date which UH groupings will be back online.
 
@@ -52,7 +52,9 @@
         $scope.myvalue = false;
         if(numDays == 2 || numDays == 1) {
             $scope.openPlannedOutageModal();
-            $scope.myvalue = true;
+            $scope.showAlert = function() {
+                $scope.myvalue = true;
+            }
         }
         else {
             $scope.myvalue = false;
