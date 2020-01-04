@@ -8,9 +8,9 @@ body {
     font-family: 'Source Sans Pro', 'Helvetica', Arial, sans-serif;
     padding-top: 3.5rem; /*Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
     /*padding-bottom: 3.125rem;*/
-    display: flex;
+    display: flex; /* Creates flexboxes. */
     min-height: 100vh;
-    flex-direction: column;
+    flex-direction: column; /* Makes the body display vertical. */
 }
 
 h1 {
@@ -28,6 +28,11 @@ h3 {
 
 h4 {
     font-size: 1rem;
+}
+
+main {
+    flex: 1; /* IMPORTANT FOR STICKY FOOTER. */
+             /* Intializes the length which containers will expand or shrink. */
 }
 
 .loader {
