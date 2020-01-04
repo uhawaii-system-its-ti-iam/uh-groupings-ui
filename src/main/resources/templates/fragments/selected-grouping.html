@@ -6,12 +6,12 @@
              ng-init="changeStyleAttribute('sel', 'display', 'unset')">
             <section>
                 <div class="card-header teal-bg">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <h2 class="card-title text-light mb-0" style="display:inline-block"> {{
+                    <div class="row" id="selectedGroupHeader">
+                        <div class="col-md-8" id="groupNameCol">
+                            <h2 class="card-title text-light mb-0"> {{
                                 selectedGrouping.name }}</h2>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4" id="returnToGroup">
                             <div class="float-right">
                                 <button class="btn btn-primary btn-sm" type="submit"
                                         ng-click="returnToGroupingsList(); cancelDescriptionEdit()">Return to Groupings
