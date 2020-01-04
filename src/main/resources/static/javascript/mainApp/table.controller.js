@@ -18,7 +18,7 @@
         /**
          * Paginates a list of items.
          * @param {object[]} list - the unpaginated list
-         * @returns {object[]} a paginated list
+         * @returns {object[]} a paginated list, an array of arrays of objects with each sub array having a maximum of $scope.itemsPerPage objects
          */
         $scope.groupToPages = function (list) {
             if (!_.isArray(list) || $scope.itemsPerPage < 1) {
@@ -178,8 +178,30 @@
             }
             let reverse = $scope.columnSort[tableName].reverse;
             $scope[tableName] = $filter("orderBy")($scope[tableName], propertyName, reverse);
-            // Paginate the table again
-            $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
+
+            // Filter out the sorted list by the corresponding query
+            if( tableName === "adminsList") {
+                $scope.filter($scope[tableName], "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, false);
+            } else if (tableName === "groupingsList") {
+                $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, false)
+            } else if( tableName === "membershipsList") {
+                $scope.filter($scope[tableName], "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, false);
+            } else if( tableName === "optInList") {
+                $scope.filter($scope[tableName], "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, false);
+            } else if (tableName === "groupingMembers") {
+                $scope.filter($scope[tableName], "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
+            } else if (tableName === "groupingBasis") {
+                $scope.filter($scope[tableName], "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
+            } else if (tableName === "groupingInclude") {
+                $scope.filter($scope[tableName], "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
+            } else if (tableName === "groupingExclude") {
+                $scope.filter($scope[tableName], "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
+            } else if (tableName === "groupingOwners") {
+                $scope.filter($scope[tableName], "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
+            } else {
+                // Paginate the table again
+               $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
+            }
         };
 
     }
