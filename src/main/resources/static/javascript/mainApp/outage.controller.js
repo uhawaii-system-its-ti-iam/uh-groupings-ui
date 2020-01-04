@@ -46,6 +46,12 @@
             $scope.myvalue = false;
         }
 
+        $scope.cancelPlannedOutage = function() {
+            $scope.showAlert = function () {
+                $scope.myvalue = false;
+            }
+        }
+
         /**
          * Setting the time UH groupings will be back online.
          */

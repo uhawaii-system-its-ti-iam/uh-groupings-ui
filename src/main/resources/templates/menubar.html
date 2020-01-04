@@ -45,10 +45,23 @@
 </nav>
 <div class="dark-teal-bg" id="plannedMainNoti" th:fragment="copy" ng-show="myvalue" ng-controller="OutageJsController">
     <div class="container" id="plannedMainNotiContainer">
-        <p>UH groupings will be offline on <a id="dates">{{ planned | date: "medium"}}</a> due to maintenance. We'll be back online on <a id="dates">{{ backOnline | date: "medium"}}</a>.</p>
+        <p>UH groupings will be offline on <a id="dates">{{ planned | date: "medium"}}</a> due to maintenance. We'll be back online on <a id="dates">{{ backOnline | date: "medium"}}</a>.
+        <button type="button" class="close" data-dismiss="dialog" ng-click="cancelPlannedOutage()">
+            <span style="color: white" aria-hidden="true">x</span>
+        </button>
+        </p>
 </div>
     <div ng-show="showAlert()">
     </div>
+
 </div>
 </html>
+
+
+
+
+
+
+
+
 
