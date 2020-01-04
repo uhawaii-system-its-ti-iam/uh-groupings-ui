@@ -43,12 +43,12 @@
         </div>
     </div>
 </nav>
-<div class="dark-teal-bg" id="plannedMainNoti" th:fragment="copy" ng-controller="OutageJsController">
+<div class="dark-teal-bg" id="plannedMainNoti" th:fragment="copy" ng-show="myvalue" ng-controller="OutageJsController">
     <div class="container" id="plannedMainNotiContainer">
-        <div>
-            <p th:utext="#{screen.message.modal.planned.maintenance}"><p>{{ planned | date: "medium"}}. We'll be back online on, {{ backOnline | date: "medium"}}</p></p>
-        </div>
+        <p>UH groupings will be offline on <a id="dates">{{ planned | date: "medium"}}</a> due to maintenance. We'll be back online on <a id="dates">{{ backOnline | date: "medium"}}</a>.</p>
 </div>
+    <div ng-show="showAlert()">
+    </div>
 </div>
 </html>
 
