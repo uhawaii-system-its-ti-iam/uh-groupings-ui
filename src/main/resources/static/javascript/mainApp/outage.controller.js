@@ -11,7 +11,7 @@
          * Instatiating the planned maintenance, current, and
          * back online dates.
          */
-        $scope.planned = new Date('2020-01-01'); // Set the date which UH groupings will be down.
+        $scope.planned = new Date('2020-01-05'); // Set the date which UH groupings will be down.
         $scope.today = new Date(); // Current date.
         $scope.backOnline = new Date('2020-01-02'); // Set the date which UH groupings will be back online.
 
@@ -32,26 +32,12 @@
         var numDays = Math.round(Difference_In_Day);
 
 
-        $scope.openPlannedOutageModal = function() {
-            $scope.outageModalInstance = $uibModal.open({
-                templateUrl: "modal/plannedMaintenanceModal",
-                scope: $scope,
-                backdrop: 'static',
-                keyboard: false,
-            });
-
-            $scope.cancelPlannedOutageModal = function() {
-                $scope.outageModalInstance.close();
-            }
-        };
-
         /**
          * Modal should open if the current date is either
          * 2 days away or 1 day away.
          */
         $scope.myvalue = false;
-        if(numDays == 2 || numDays == 1) {
-            $scope.openPlannedOutageModal();
+        if(numDays == 2 || numDays == 1 || numDays == 0) {
             $scope.showAlert = function() {
                 $scope.myvalue = true;
             }
@@ -68,32 +54,6 @@
         // Using 24 hour format.
         $scope.backOnline.setMinutes(10);
 
-
-        /**
-         * $scope.myvalue = false;
-         * $scope.showAlert = function() {
-         *     var numDays = 12;
-         *     if(numDays != 12) {
-         *         $scope.myvalue = true;
-         *     }
-         *     else {
-         *         $scope.myvalue = false;
-         *     }
-         * }
-         */
-
-
-        /** menubar.html
-         * <div ng-controller="OutageJsController">
-         *     <div ng-show="myvalue" class="ng-cloak">
-         *         [What is being shown]
-         *         </div>
-         * <div id="containerDetailsTicket" class="clearfix" ng-show="showAlert()">
-         *     </div>
-         *
-         *
-         * <div>
-         */
 
 
     }
