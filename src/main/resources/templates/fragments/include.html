@@ -1,5 +1,8 @@
 <th:block th:fragment="include">
-
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
 
     <div id="include-display" class="tab-pane fade show active">
 
@@ -41,10 +44,15 @@
                 <tr>
                     <th scope="col" class="clickable"
                         ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'name')">
-                        Name
+                        <div class="form-check">
+                            <input class="form-check-input position-left" type="checkbox" id="selectall"
+                                   value="option1" data-toggle="tooltip" data-placement="top" title="Check all"
+                                   aria-label="assertive">
+                            Name
                         <i class="fa sort-icon"
                            ng-show="columnSort.groupingInclude.property === 'name' || !columnSort.groupingInclude"
                            ng-class="{ reverse: columnSort.groupingInclude.reverse }"></i>
+                        </div>
                     </th>
                     <th scope="col" class="clickable"
                         ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'uhUuid')">
@@ -69,7 +77,12 @@
                 <tbody>
                 <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm">
                     <td class="p-10" tabindex="0">
-                        {{i.name}}
+                        <div class="form-check">
+                            <input class="form-check-input position-left singlechkbox" type="checkbox"
+                                   id="blankCheckbox"
+                                   value="option1"
+                                   aria-label="assertive">
+                            {{i.name}}
                         <span class="fa fa-trash-o pull-right clickable pt-1"
                               data-toggle="tooltip" data-placement="top"
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
@@ -78,6 +91,7 @@
                               ng-keypress="$event.keyCode === 13 ? removeMember('Include', currentPageInclude, $index) : null"
                               ng-click="removeMember('Include', currentPageInclude, $index)">
                         </span>
+                        </div>
                     </td>
                     <td class="p-10">{{i.uhUuid}}</td>
                     <td class="p-10">
@@ -96,13 +110,35 @@
                     </td>
                 </tr>
                 </tbody>
+                <script type="text/javascript">
+                    jQuery(function ($) {
+                        $("body").on("click", "#selectall", function () {
+                            $(".singlechkbox").prop("checked", this.checked);
+                        });
+
+                        $("body").on("click", ".singlechkbox", function () {
+                            if ($(".singlechkbox").length == $(".singlechkbox:checked").length) {
+                                $("#selectall").prop("checked", "checked");
+                            } else {
+                                $("#selectall").removeAttr("checked");
+                            }
+
+                        });
+                    });
+                </script>
             </table>
         </div>
         <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
+<<<<<<< HEAD
                 <form>
                     <div class="input-group" style="width: 500px">
                         <input class="form-control" placeholder="Members to add" type="search"
+=======
+                <form ng-submit="addMembers('Include')">
+                    <div class="input-group" style="width: 550px">
+                        <input class="form-control" placeholder="Members to add" type="text"
+>>>>>>> batch delete ui changes
                                title="Enter one or more usernames" ng-model="usersToAdd" style="width: 275px"/>
                         <div>
                             <button class="btn btn-primary" ng-click="addMembers('Include')" style="margin-left: 2px">
@@ -111,9 +147,13 @@
                             <button class="btn btn-primary" ng-click="launchImportModal('Include')">
                                 Import File
                             </button>
+<<<<<<< HEAD
                             <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse"
                                  style="display:inline-block">
                             </div>
+=======
+                            <button class="btn btn-primary" type="submit" style="margin-left: 2px">Delete</button>
+>>>>>>> batch delete ui changes
                         </div>
                     </div>
                 </form>

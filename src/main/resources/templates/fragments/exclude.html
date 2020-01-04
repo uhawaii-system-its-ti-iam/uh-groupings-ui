@@ -38,10 +38,14 @@
                 <tr>
                     <th scope="col" class="clickable"
                         ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'name')">
-                        Name
-                        <i class="fa sort-icon"
-                           ng-show="columnSort.groupingExclude.property === 'name' || !columnSort.groupingExclude"
-                           ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
+                        <div class="form-check">
+                            <input class="form-check-input position-left" type="checkbox" id="selectall"
+                                   value="option1" data-toggle="tooltip" data-placement="top" title="Check all"
+                                   aria-label="assertive">
+                            Name
+                            <i class="fa sort-icon"
+                               ng-show="columnSort.groupingExclude.property === 'name' || !columnSort.groupingExclude"
+                               ng-class="{ reverse: columnSort.groupingExclude.reverse }"></i>
                     </th>
                     <th scope="col" class="clickable"
                         ng-click="sortBy('groupingExclude', 'pagedItemsExclude', 'uhUuid')">
@@ -66,14 +70,19 @@
                 <tbody>
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
                     <td class="p-10" tabindex="0">
-                        {{e.name}}
-                        <span class="fa fa-trash-o pull-right clickable pt-1"
-                              data-toggle="tooltip" data-placement="top"
-                              onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                              tabindex="0"
-                              th:title="#{screen.message.common.tooltip.remove.exclude}"
-                              ng-keypress="$event.keyCode === 13 ? removeMember('Exclude', currentPageExclude, $index) : null"
-                              ng-click="removeMember('Exclude', currentPageExclude, $index)">
+                        <div class="form-check">
+                            <input class="form-check-input position-left singlechkbox" type="checkbox"
+                                   id="blankCheckbox"
+                                   value="option1"
+                                   aria-label="assertive">
+                            {{e.name}}
+                            <span class="fa fa-trash-o pull-right clickable pt-1"
+                                  data-toggle="tooltip" data-placement="top"
+                                  onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                                  tabindex="0"
+                                  th:title="#{screen.message.common.tooltip.remove.exclude}"
+                                  ng-keypress="$event.keyCode === 13 ? removeMember('Exclude', currentPageExclude, $index) : null"
+                                  ng-click="removeMember('Exclude', currentPageExclude, $index)">
                     </span>
                     </td>
                     <td class="p-10">{{e.uhUuid}}</td>
@@ -93,27 +102,53 @@
                     </td>
                 </tr>
                 </tbody>
+                <script type="text/javascript">
+                    jQuery(function ($) {
+                        $("body").on("click", "#selectall", function () {
+                            $(".singlechkbox").prop("checked", this.checked);
+                        });
+
+                        $("body").on("click", ".singlechkbox", function () {
+                            if ($(".singlechkbox").length == $(".singlechkbox:checked").length) {
+                                $("#selectall").prop("checked", "checked");
+                            } else {
+                                $("#selectall").removeAttr("checked");
+                            }
+
+                        });
+                    });
+                </script>
             </table>
         </div>
         <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
+                <<<<<<< HEAD
                 <form>
                     <div class="input-group" style="width: 500px">
-                        <input class="form-control" placeholder="Members to add" type="text"
-                               title="Enter one or more usernames" ng-model="usersToAdd" style="width: 275px"/>
-                        <div>
-                            <button class="btn btn-primary" ng-click="addMembers('Exclude')" style="margin-left: 2px">
-                                Add
-                            </button>
-                            <button class="btn btn-primary"
-                                    ng-click="launchImportModal('Exclude')">Import File
-                            </button>
-                            <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse"
-                                 style="display:inline-block">
+                        =======
+                        <form ng-submit="addMembers('Exclude')">
+                            <div class="input-group" style="width: 550px">
+                                >>>>>>> batch delete ui changes
+                                <input class="form-control" placeholder="Members to add" type="text"
+                                       title="Enter one or more usernames" ng-model="usersToAdd" style="width: 275px"/>
+                                <div>
+                                    <button class="btn btn-primary" ng-click="addMembers('Exclude')" style="margin-left: 2px">
+                                        Add
+                                    </button>
+                                    <button class="btn btn-primary"
+                                            ng-click="launchImportModal('Exclude')">Import File
+                                    </button>
+                                    <<<<<<< HEAD
+                                    <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse"
+                                         style="display:inline-block">
+                                    </div>
+                                    =======
+                                    <button class="btn btn-primary" type="submit" style="margin-left: 2px">Delete
+                                    </button>
+                                    >>>>>>> batch delete ui changes
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </form>
+                        </form>
             </div>
         </div>
         <div class="mt-lg-0 mt-2">
