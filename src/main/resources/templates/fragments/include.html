@@ -95,14 +95,16 @@
         </div>
         <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
-                <form ng-submit="addMembers('Include')">
+                <form>
                     <div class="input-group" style="width: 500px">
                         <input class="form-control" placeholder="Members to add" type="search"
                                title="Enter one or more usernames" ng-model="usersToAdd" style="width: 275px"/>
                         <div>
-                            <button class="btn btn-primary" type="submit" style="margin-left: 2px">Add</button>
-                            <button class="btn btn-primary"
-                                    ng-click="launchImportModal('Include')">Import File
+                            <button class="btn btn-primary" ng-click="addMembers('Include')" style="margin-left: 2px">
+                                Add
+                            </button>
+                            <button class="btn btn-primary" ng-click="launchImportModal('Include')">
+                                Import File
                             </button>
                         </div>
                     </div>
