@@ -3,7 +3,6 @@
         -  Contains the add conformation modal
         -  See Modal Add section in messages.properties
         -  See createConfirmAddModal general.controller.js
--->
 
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
@@ -77,6 +76,27 @@
     </p>
     <button ng-if="VALID_UNAME_COUNT > 0" class="btn btn-primary" ng-click="importMembers()">Yes</button>
     <button class="btn btn-default" data-dismiss="modal" ng-click="cancelImportModalInstance()">Cancel</button>
+</div>
+
+</html>
+-->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Import</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="cancelImportModalInstance()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" id="modal-body">
+    <div>
+        <input type="file" accept="text/plain">
+        <button class="btn btn-primary" ng-click="readTextFile($event)">
+            Import
+        </button>
+    </div>
+</div>
+<div class="modal-footer">
 </div>
 
 </html>
