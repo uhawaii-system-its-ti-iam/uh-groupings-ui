@@ -17,11 +17,11 @@
         $scope.importCount = 0;
         $scope.VALID_UNAME_COUNT = 0;
         $scope.MAX_IMPORT = 100;
+        $scope.MULTI_ADD_COUNT = 0;
         $scope.sortNameStr = "name";
         $scope.sortStatusStr = "status";
         $scope.sortName = false;
         $scope.sortStatus = false;
-        $scope.addMultipleMembers = false;
 
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
@@ -498,14 +498,16 @@
          * @param listName - Include or Exclude
          */
         $scope.addMembers = function (listName) {
-            let str = $scope.createUniqArrayFromString($scope.usersToAdd, " ");
-            if (str.length > 1) {
-                $scope.addMultipleMembers = true;
-                $scope.userNameList = createUserNameListObject(str, listName);
-                $scope.imported = true;
-                $scope.launchAddMembersModal(listName);
-            } else if (str.length === 1) {
-                $scope.userToAdd = str[0];
+            $scope.listName = listName;
+            let num_members = ($scope.usersToAdd.split(" ").length - 1);
+
+            if (num_members > 0) {
+                $scope.usersToAdd = $scope.usersToAdd.split(/[ ,]+/).join(",");
+                console.log("Num_Members: " + num_members);
+                console.log($scope.usersToAdd);
+                $scope.addMultipleMembers($scope.usersToAdd, listName);
+            } else {
+                $scope.userToAdd = $scope.usersToAdd[0];
                 $scope.addMember(listName);
             }
         };
@@ -572,6 +574,21 @@
 
         };
 
+        $scope.addMultipleMembers = function (list, listName) {
+            let groupingPath = $scope.selectedGrouping.path;
+            let handleSuccessfulAdd = function (res) {
+                console.log(res);
+                /*
+                $scope.updateImportMembers(listName);
+
+                 */
+            };
+            if (listName === "Include")
+                groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
+            else if (listName === "Exclude")
+                groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
+
+        };
         /**
          * - Post new imported data to the grouper database
          * - Open import success modal
@@ -677,7 +694,7 @@
                     (memberNew.status === $scope.listName) ? "No" : " Yes",
                     attributes.uhUuid, attributes.uid));
 
-                    $scope.VALID_UNAME_COUNT += (memberNew.status !== $scope.listName);
+                $scope.VALID_UNAME_COUNT += (memberNew.status !== $scope.listName);
 
             }, function (res) {
                 if (res.statusCode === undefined || res.statusCode === 404)
@@ -1400,7 +1417,6 @@
                     $scope.validUserNameCount = 0;
                     $scope.sortName = false;
                     $scope.sortStatus = false;
-                    $scope.addMultipleMembers = false;
                     $scope.VALID_UNAME_COUNT = 0;
                     $scope.importCount = 0;
                     break;
@@ -1413,7 +1429,6 @@
                     $scope.validUserNameCount = 0;
                     $scope.sortName = false;
                     $scope.sortStatus = false;
-                    $scope.addMultipleMembers = false;
                     $scope.VALID_UNAME_COUNT = 0;
                     $scope.importCount = 0;
                     break;
