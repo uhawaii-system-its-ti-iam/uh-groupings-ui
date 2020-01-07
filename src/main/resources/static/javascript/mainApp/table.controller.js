@@ -7,6 +7,7 @@
      */
     function TableJsController($scope, $filter) {
 
+        var currentPage; // Variable used to hold the current page that user was on before selecting a grouping.
         $scope.columnSort = {};
 
         $scope.itemsPerPage = 20;
@@ -107,29 +108,40 @@
          * @param {string} pagedListVar - the name of the variable contaning the paginated list
          */
         $scope.setPage = function (action, pageVar, pagedListVar) {
-            switch (action) {
-                case "First":
-                    $scope[pageVar] = 0;
-                    break;
-                case "Prev":
-                    if ($scope[pageVar] > 0) {
-                        $scope[pageVar]--;
-                    }
-                    break;
-                case "Set":
-                    if (this.n >= 0 && this.n <= $scope[pagedListVar].length - 1) {
-                        $scope[pageVar] = this.n;
-                    }
-                    break;
-                case "Next":
-                    if ($scope[pageVar] < $scope[pagedListVar].length - 1) {
-                        $scope[pageVar] = $scope[pageVar] + 1;
-                    }
-                    break;
-                case "Last":
-                    $scope[pageVar] = $scope[pagedListVar].length - 1;
-                    break;
-            }
+                switch (action) {
+                    case "First":
+                        $scope[pageVar] = 0;
+                        currentPage = $scope[pageVar];
+                        break;
+                    case "Prev":
+                        if ($scope[pageVar] > 0) {
+                            $scope[pageVar]--;
+                            currentPage = $scope[pageVar];
+                        }
+                        break;
+                    case "Set":
+                        if(currentPage == undefined) { // When the current page is the first page and the user didn't click on any of the items on the pagination.
+                            $scope[pageVar] = 0;
+                            currentPage = $scope[pageVar];
+                        }
+                        if (this.n >= 0 && this.n <= $scope[pagedListVar].length - 1) {
+                            $scope[pageVar] = this.n;
+                            currentPage = $scope[pageVar];
+                        }
+                        $scope[pageVar] = currentPage;
+                        break;
+                    case "Next":
+                        if ($scope[pageVar] < $scope[pagedListVar].length - 1) {
+                            $scope[pageVar] = $scope[pageVar] + 1;
+                            currentPage = $scope[pageVar];
+                        }
+                        break;
+                    case "Last":
+                        $scope[pageVar] = $scope[pagedListVar].length - 1;
+                        currentPage = $scope[pageVar];
+                        break;
+                }
+
         };
 
         /**
