@@ -1468,8 +1468,6 @@
             $scope.modelDescription = "";
             groupingDescription = "";
             displayTracker = 1;
-
-            $scope.setPage("Set", "currentPageGroupings", "pagedItemsGroupings"); // Function call to setPage that sets the current page which the user was on before a group was selected.
         };
 
         /**
