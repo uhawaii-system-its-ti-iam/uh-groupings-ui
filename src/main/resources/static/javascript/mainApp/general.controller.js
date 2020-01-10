@@ -16,7 +16,7 @@
         $scope.selectedRow = null;
         $scope.importCount = 0;
         $scope.VALID_UNAME_COUNT = 0;
-        $scope.MAX_IMPORT = 100;
+        $scope.MAX_IMPORT = 3;
         $scope.MULTI_ADD_COUNT = 0;
         $scope.sortNameStr = "name";
         $scope.sortStatusStr = "status";
@@ -491,26 +491,6 @@
             return (str === val) ? tru : fal;
         };
 
-        /**
-         * Import multiple members to a grouping, in the long run this method triggers the
-         * api method includeMultipleMembers.
-         *
-         * @param listName - Include or Exclude
-         */
-        $scope.addMembers = function (listName) {
-            $scope.listName = listName;
-            let num_members = ($scope.usersToAdd.split(" ").length - 1);
-
-            if (num_members > 0) {
-                $scope.usersToAdd = $scope.usersToAdd.split(/[ ,]+/).join(",");
-                console.log("Num_Members: " + num_members);
-                console.log($scope.usersToAdd);
-                $scope.addMultipleMembers($scope.usersToAdd, listName);
-            } else {
-                $scope.userToAdd = $scope.usersToAdd[0];
-                $scope.addMember(listName);
-            }
-        };
 
         /**
          * Launch the add members Modal modal from <listName>.html
@@ -541,6 +521,28 @@
         };
 
         /**
+         * Import multiple members to a grouping, in the long run this method triggers the
+         * api method includeMultipleMembers.
+         *
+         * @param listName - Include or Exclude
+         */
+        $scope.addMembers = function (listName) {
+            $scope.listName = listName;
+            let num_members = ($scope.usersToAdd.split(" ").length - 1);
+
+            if (num_members > 0) {
+                let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
+
+                console.log("Num_Members: " + num_members);
+                console.log(users);
+
+                $scope.addMultipleMembers(users, listName, num_members);
+            } else {
+                $scope.userToAdd = $scope.usersToAdd[0];
+                $scope.addMember(listName);
+            }
+        };
+        /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
          * separated by newline characters.
          * @param $event - FileReader event sent from Include.html or Exclude.html
@@ -551,7 +553,8 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.userNameList = createUserNameListObject($scope.createUniqArrayFromString(str, "\n"), $scope.listName);
+                $scope.usersToAdd = str.split(/[ \n]+/).join(" ");
+                $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
         };
@@ -574,7 +577,23 @@
 
         };
 
-        $scope.addMultipleMembers = function (list, listName) {
+        $scope.addMultipleMembers = function (list, listName, size) {
+            let groupingPath = $scope.selectedGrouping.path;
+            if (size > $scope.MAX_IMPORT)
+                $scope.launchCreateGenericOkModal("Test", "this is a body", undefined);
+            let handleSuccessfulAdd = function (res) {
+                console.log(res);
+                $scope.updateImportMembers(listName);
+
+            };
+            if (listName === "Include")
+                groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
+            else if (listName === "Exclude")
+                groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
+
+        };
+
+        $scope.addMultipleMembersAsync = async function (list, listName, size) {
             let groupingPath = $scope.selectedGrouping.path;
             let handleSuccessfulAdd = function (res) {
                 console.log(res);
@@ -584,9 +603,9 @@
                  */
             };
             if (listName === "Include")
-                groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
             else if (listName === "Exclude")
-                groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
 
         };
         /**
@@ -630,117 +649,16 @@
             });
         };
 
-        /**
-         * Take in an array of member objects and return a comma separated string of all the member user names
-         * @param validUserNames - Array of member objects
-         * @return {*} Comma separated string
-         */
-        function toCommaSeparatedString(validUserNames) {
-            if (validUserNames[0].name === undefined)
-                validUserNames.shift();
-
-            let str = validUserNames[0].name;
-            const comma = ", ";
-            for (let i = 1; i < validUserNames.length; i++) {
-                str += (comma + validUserNames[i].name);
-            }
-            return str;
-        }
-
-        /**
-         * Split a string into an array of strings with respect to newline characters.
-         * {"one\ntwo\nthree"} ---> {"one", "two", "three"}
-         * @param str - String of newline separated usernames
-         * @param delimit - Split string by delimi (delimiting) character
-         * @return {[string]}
-         */
-        $scope.createUniqArrayFromString = function (str, delimi) {
-            let arr = _.without([...new Set(str.split(delimi))], "");
-            $scope.importCount = arr.length;
-            return arr;
-        };
-
-        /**
-         * Return a Member object with the proper fields depending on which list the user intends to add members too.
-         * - If the member exists in the list, there is no need to add it therefore the 'added' property is set to no
-         * - Else if the member exists in another list we set the 'status' property to that 'listName' and set the
-         * 'added' property to yes
-         * - Otherwise the member to be added doesn't exist in any lists and needs to be validated with grouper
-         *
-         * @param item - String username
-         * @param existInList - the global scope method $scope.existInList is intended to be passed as the parameter
-         * @param isInOtherList - the global scope method $scope.isInAnotherList is intended to be passed as the
-         *     parameter
-         * @param listName - Include or Exclude
-         * @return {Member}
-         */
-        const whichList = (item, existInList, isInOtherList, listName) => {
-            if (existInList)
-                return new Member(item, listName, "No", "", "");
-            else if (isInOtherList)
-                return new Member(item, getOtherList(listName), "Yes", "", "");
-            return new Member(item, "", "No", "", "");
-        };
-
-        /**
-         * Send a GET request to grouper in order to verify the validity of a UH user name
-         * @param memberNew - UH user name
-         * @param data - Object Array
-         */
-        function checkUserNameValidity(memberNew, data) {
-            groupingsService.checkMember(memberNew.name, data, function (attributes) {
-                data.push(new Member(memberNew.name,
-                    (memberNew.status === "") ? "Valid" : memberNew.status,
-                    (memberNew.status === $scope.listName) ? "No" : " Yes",
-                    attributes.uhUuid, attributes.uid));
-
-                $scope.VALID_UNAME_COUNT += (memberNew.status !== $scope.listName);
-
-            }, function (res) {
-                if (res.statusCode === undefined || res.statusCode === 404)
-                    data.push(new Member(memberNew.name, "Invalid", "No", "", ""));
+        $scope.launchImportErrorModal = function () {
+            $scope.cancelImportModalInstance();
+            $scope.confirmImportErrorInstance = $uibModal.open({
+                templateUrl: "modal/importErrorModal",
+                scope: $scope
             });
-
-        }
-
-        /**
-         * Add all the valid user names from pendingList to userNameList
-         * @param pendingList - Array of username strings
-         * @param listName - Include, Exclude, ... etc
-         * @return {{}[]} - Array of member objects
-         */
-        function createUserNameListObject(pendingList, listName) {
-            let userNameList = [];
-
-            for (let item of pendingList) {
-                if (item.length <= 16)
-                    checkUserNameValidity(whichList(item, $scope.existInList(item, listName), $scope.isInAnotherList(item, listName), listName), userNameList, listName);
-            }
-            return userNameList;
-        }
-
-        /**
-         * Return userName string that is associated with the member in the selected row
-         * @return {string|*}
-         */
-        $scope.getSelectedUserName = function () {
-            if ($scope.selectedRow === null)
-                return "";
-            return $scope.userNameList[$scope.selectedRow].uhid;
         };
 
         /**
-         * Return @param(str) string if a row is selected
-         * @param str
-         * @return {string|*}
-         */
-        $scope.getImportListStr = function (str) {
-            if ($scope.selectedRow === null)
-                return "";
-            return str;
-        };
-
-        /**
+         /**
          * Set a style attribute of a html component associated with id.
          * @param id - id of html component
          * @param attribute
@@ -750,88 +668,6 @@
             document.getElementById(id).style[attribute] = setAs;
         };
 
-        /**
-         * Returns necessary dialogue to display as a imported members add status
-         * @param username - uh user name
-         */
-        $scope.displaySelectedStatus = function (row) {
-            let retStr = "";
-            const status = $scope.userNameList[row].status;
-            let uhid = $scope.userNameList[row].uhid;
-            const listName = $scope.listName;
-
-            if (uhid === "")
-                uhid = "n/a";
-
-            if (status === listName)
-                retStr = "Already a member of the " + listName + " list.";
-            else if (status === "Valid" || status === getOtherList((listName)))
-                retStr = uhid;
-            else if (status === "Invalid")
-                retStr = status;
-            else
-                retStr = "Error";
-
-            return retStr;
-        };
-
-        /**
-         * Sort array(arr) alphabetically or in reverse with respect to the field
-         * @param arr - array to sort
-         * @param order{bool} true: sort lexicographically || false: sort in reverse
-         * @param field - name or status
-         */
-        $scope.memberSort = function (arr, order, field) {
-            if (order) {
-                $scope.userNameList = _.sortBy(arr, [function (o) {
-                    return o[field];
-                }]);
-            } else {
-                $scope.userNameList = _.sortBy(arr, [function (o) {
-                    return o[field];
-                }]).reverse();
-            }
-            $scope.sortStatus = !order;
-        };
-
-        /**
-         * Return the other list besides listName.
-         * @param listName
-         * @return {string}
-         */
-        function getOtherList(listName) {
-            return (listName === "Include") ? "Exclude" : "Include";
-        }
-
-        /**
-         * Set the global scoped variable selectedRow to the index. Use in importModal.html to highlight selected
-         * text.
-         * @param index
-         */
-        $scope.setClickedRow = function (index) {
-            $scope.selectedRow = index;
-        };
-
-        /**
-         * Remove the invalid user names from the pending list array of member objects and return a list of strings
-         * containing all valid user names.
-         * @param pendingList - Array of Member objects
-         * @param listName
-         * @return {*[]|*} Array of strings containing all valid user names to be added
-         */
-        function removeInvalidUserNames(pendingList, listName) {
-            let itemsToRemove = [];
-            let removalNecessary = false;
-            for (let item of pendingList) {
-                if (item.added === "No") {
-                    itemsToRemove.push(item);
-                    removalNecessary = true;
-                }
-            }
-            if (removalNecessary)
-                return $scope.removeItemsFromArray(pendingList, itemsToRemove);
-            return pendingList;
-        }
 
         /**
          * Cancel the import Modal instance
@@ -856,11 +692,12 @@
             $scope.confirmImportInstance.close();
         };
 
-        $scope.launchImportErrorModal = function () {
-            $scope.cancelImportModalInstance();
-            $scope.closeConfirmAddMembersModalInstance();
-            $scope.confirmImportErrorInstance = $uibModal.open({
-                templateUrl: "modal/importErrorModal",
+        $scope.launchCreateGenericOkModal = function (title, body, onClose) {
+            $scope.currentModalTitle = title;
+            $scope.currentModalBody = body;
+
+            $scope.createGenericOkModal = $uibModal.open({
+                templateUrl: "modal/messageOkModal",
                 scope: $scope
             });
         };

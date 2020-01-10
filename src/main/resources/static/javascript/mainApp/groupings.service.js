@@ -178,7 +178,7 @@
                 let endpoint = BASE_URL + "members/" + member;
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
-            
+
             /**
              * Checks if member exists so that multiple pending user names can be displayed for the user.
              * @param {string} member - the UH username of the member.
