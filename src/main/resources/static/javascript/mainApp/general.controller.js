@@ -580,7 +580,7 @@
         $scope.addMultipleMembers = function (list, listName, size) {
             let groupingPath = $scope.selectedGrouping.path;
             if (size > $scope.MAX_IMPORT)
-                $scope.launchCreateGenericOkModal("Test", "this is a body", undefined);
+                $scope.launchCreateGenericOkModal("Test", `You are attempting to add a large group of size ${size}, this could take a while.`);
             let handleSuccessfulAdd = function (res) {
                 console.log(res);
                 $scope.updateImportMembers(listName);
@@ -692,12 +692,12 @@
             $scope.confirmImportInstance.close();
         };
 
-        $scope.launchCreateGenericOkModal = function (title, body, onClose) {
+        $scope.launchCreateGenericOkModal = function (title, body) {
             $scope.currentModalTitle = title;
             $scope.currentModalBody = body;
 
             $scope.createGenericOkModal = $uibModal.open({
-                templateUrl: "modal/messageOkModal",
+                templateUrl: "modal/genericOkModal",
                 scope: $scope
             });
         };
