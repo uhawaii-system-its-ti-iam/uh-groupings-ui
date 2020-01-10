@@ -91,7 +91,7 @@
 <div class="modal-body" id="modal-body">
     <div>
         <input type="file" accept="text/plain">
-        <button class="btn btn-primary" ng-click="readTextFile($event)">
+        <button class="btn btn-primary" ng-click="readTextFile($event); cancelImportModalInstance()">
             Import
         </button>
     </div>
