@@ -16,7 +16,6 @@
                 $http.get(encodeURI(url))
                     .then(function (response) {
                         console.log(url);
-                        console.log(response.data);
                         callback(response.data);
                     }, function (response) {
                         // console.log("Error A", response);
