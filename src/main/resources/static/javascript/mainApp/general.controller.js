@@ -553,7 +553,7 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.usersToAdd = str.split(/[ \n]+/).join(" ");
+                $scope.usersToAdd = (str.split(/[\n]+/).join(" ")).slice(0, -1);
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
@@ -584,13 +584,14 @@
             let handleSuccessfulAdd = function (res) {
                 console.log(res);
                 $scope.updateImportMembers(listName);
-
+            };
+            let fourOfour = function (res) {
+                $scope.updateImportMembers(listName);
             };
             if (listName === "Include")
-                groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, fourOfour);
             else if (listName === "Exclude")
-                groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
-
+                groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, fourOfour);
         };
 
         $scope.addMultipleMembersAsync = async function (list, listName, size) {
