@@ -111,7 +111,6 @@
          */
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
-            // $scope.getAllSyncDestinations();
             $scope.getGroupingInformation();
 
 
@@ -167,7 +166,9 @@
          * @returns {String[]} list of possible sync destinations
          */
         $scope.getAllSyncDestinations = function () {
-            groupingsService.getSyncDestList(function (res) {
+            const groupingPath = $scope.selectedGrouping.path;
+            groupingsService.getSyncDestList(groupingPath, function (res) {
+                console.log(res);
                 // console.log("This is the response of sync dest" + res);
                 $scope.syncDestMap = res;
                 // console.log("Mapping:"+ $scope.syncDestMap);
@@ -247,11 +248,7 @@
                     $scope.allowOptIn = res.optInOn;
                     $scope.allowOptOut = res.optOutOn;
 
-                    const syncDestResponseMapping = new Map(Object.entries(res.syncDestinations));
-                    syncDestResponseMapping.forEach((value, key, map) => {
-                        $scope.syncDestArray.push({ name: key, value: value });
-                    });
-                    $scope.setSyncDestLabels();
+                    $scope.syncDestArray = res.syncDestinations;
 
                     //Stop loading spinner and turn on loading text
                     $scope.loading = false;
@@ -274,7 +271,6 @@
                         } catch (error) {
                             console.log("Getting members from grouping has errored out please reload page to resume. If not please proceed to the feedback page and report the problem you have come across.");
                         }
-
                         currentPage++;
                     }
                 }, function (res) {
@@ -362,23 +358,6 @@
                     resolve();
                 })
             );
-        };
-
-        //todo IMPORTANT: This is the only function we have to update manually when adding new syncDests
-        // There's no way around this as we can't dynamically generate these strings without external data in server
-        // As far as I know, this can't go into the properties file because the checkboxes are generated dynamically
-        $scope.setSyncDestLabels = function () {
-            $scope.syncDestArray[0].label = "CAS/LDAP: uhReleasedGrouping";
-            $scope.syncDestArray[1].label = "Email list: <" + $scope.selectedGrouping.name + "@lists.hawaii.edu>";
-
-            $scope.syncDestArray[0].confimationModalLabel = "CAS/LDAP";
-            $scope.syncDestArray[1].confimationModalLabel = "Email List";
-
-            $scope.syncDestArray[0].tooltip = "Synchronize an individual’s membership with the individual’s CAS/LDAP attribute uhReleasedGrouping.";
-            $scope.syncDestArray[1].tooltip = "Synchronize the grouping’s membership with a corresponding LISTSERV list, which will be created as needed.";
-
-            $scope.syncDestArray[0].confirmationModalText = "Click Ok to update the CAS/LDAP preference as requested.";
-            $scope.syncDestArray[1].confirmationModalText = "Click Ok to update the Email list preference as requested.";
         };
 
         /**
@@ -1546,7 +1525,7 @@
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name;
             }).indexOf(syncDestName);
-            const syncDestOn = $scope.syncDestArray[indexOfSyncDest].value;
+            const syncDestOn = $scope.syncDestArray[indexOfSyncDest].isSynced;
             return syncDestOn;
         };
 
@@ -1571,7 +1550,7 @@
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name;
             }).indexOf(syncDestName);
-            $scope.syncDestArray[indexOfSyncDest].value = syncDestvalue;
+            $scope.syncDestArray[indexOfSyncDest].isSynced = syncDestvalue;
         };
 
         /**
@@ -1580,7 +1559,6 @@
          */
         $scope.updateSingleSyncDest = function (syncDestName) {
             const groupingPath = $scope.selectedGrouping.path;
-            // const syncDestOn = $scope.syncDestMap.get(syncDest);
             const syncDestOn = $scope.getSyncDestValueInArray(syncDestName);
 
             groupingsService.setSyncDest(groupingPath, syncDestName, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);

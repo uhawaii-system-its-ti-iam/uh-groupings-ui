@@ -39,11 +39,11 @@
                 <div>
                     <div>
                         <div class="form-check" ng-repeat="syncDest in syncDestArray">
-                            <input class="form-check-input" type="checkbox" id="syncDest.value"
-                                   ng-model="syncDest.value"
+                            <input class="form-check-input" type="checkbox" id="syncDest.isSynced"
+                                   ng-model="syncDest.isSynced"
                                    ng-change="createSyncDestModal(syncDest.name)"/>
-                            <label class="form-check-label" for="syncDest.value">
-                                {{ syncDest.label }}
+                            <label class="form-check-label" for="syncDest.isSynced">
+                                {{ syncDest.description }}
                             </label>
                             <span class="fa fa-question-circle clickable" aria-hidden="true"
                                   data-toggle="tooltip" data-placement="right"

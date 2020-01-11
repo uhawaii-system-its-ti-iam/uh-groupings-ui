@@ -1,6 +1,8 @@
 package edu.hawaii.its.api.type;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Grouping {
@@ -21,15 +23,13 @@ public class Grouping {
 
     private Group owners;
 
-    private boolean isListservOn = false;
-
-    private boolean isReleasedGroupingOn = false;
-
     private boolean isOptInOn = false;
 
     private boolean isOptOutOn = false;
 
-    private Map<String, Boolean> syncDestinations = new HashMap<>();
+    private List<SyncDestination> syncDestinations = new ArrayList<>();
+
+    private  Map<String, Boolean> syncDestinationsState = new HashMap<>();
 
     // Constructor.
     public Grouping() {
@@ -46,19 +46,33 @@ public class Grouping {
         setOwners(new EmptyGroup());
     }
 
-    public Map<String, Boolean> getSyncDestinations() {
+    public List<SyncDestination> getSyncDestinations() {
         return syncDestinations;
     }
 
-    public void setSyncDestinations(Map<String, Boolean> syncDestinations) {
+    public void setSyncDestinations(List<SyncDestination> syncDestinations) {
         this.syncDestinations = syncDestinations;
+
+        for (SyncDestination destination : syncDestinations) {
+
+            syncDestinationsState.put(destination.getName(), destination.getIsSynced());
+        }
     }
 
     public boolean isSyncDestinationOn(String key) {
-        if (!syncDestinations.containsKey(key)) {
-            return false;
+
+        return syncDestinationsState.get(key);
+    }
+
+    public void setSyncDestination(String key, Boolean boo) {
+
+        syncDestinationsState.replace(key, boo);
+
+        for (SyncDestination destination : syncDestinations) {
+            if(destination.getName().equals(key)) {
+                destination.setIsSynced(boo);
+            }
         }
-        return syncDestinations.get(key);
     }
 
     public String getName() {
@@ -126,22 +140,6 @@ public class Grouping {
         this.owners = owners != null ? owners : new EmptyGroup();
     }
 
-    public boolean isListservOn() {
-        return isListservOn;
-    }
-
-    public boolean isReleasedGroupingOn(){
-        return isReleasedGroupingOn;
-    }
-
-    public void setListservOn(boolean listservOn) {
-        this.isListservOn = listservOn;
-    }
-
-    public void setReleasedGroupingOn(boolean releasedGroupingOn) {
-        this.isReleasedGroupingOn = releasedGroupingOn;
-    }
-
     public boolean isOptInOn() {
         return isOptInOn;
     }
@@ -162,8 +160,6 @@ public class Grouping {
     public String toString() {
         return "Grouping [name=" + name
                 + ", path=" + path
-                + ", ListservOn=" + isListservOn()
-                + ", ReleasedGroupingOn=" + isReleasedGroupingOn()
                 + ", OptInOn=" + isOptInOn()
                 + ", OptOutOn=" + isOptOutOn()
                 + ", basis=" + basis
