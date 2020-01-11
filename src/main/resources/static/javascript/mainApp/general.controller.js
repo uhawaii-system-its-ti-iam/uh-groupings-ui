@@ -1481,8 +1481,6 @@
             $scope.columnSort = {};
             $scope.syncDestArray = [];
 
-            // Displays the first page of the filter value when user presses "Return to Groupings".
-            $scope.setPage("First", "currentPageGroupings", "pagedItemsGroupings");
         };
 
 
