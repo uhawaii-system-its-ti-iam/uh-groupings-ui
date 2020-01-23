@@ -44,7 +44,7 @@
                 $scope.loading = false;
 
             }, function (res) {
-                if (res.statusCode === 403) {
+                if (res.status === 403) {
                     $scope.createRoleErrorModal();
                 }
             });
