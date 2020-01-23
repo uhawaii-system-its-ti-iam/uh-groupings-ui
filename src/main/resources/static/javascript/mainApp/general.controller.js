@@ -10,7 +10,6 @@
      * @param groupingsService - service for creating requests to the groupings API
      */
 
-    //Possible switch to $log
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
         $scope.userNameList = [];
