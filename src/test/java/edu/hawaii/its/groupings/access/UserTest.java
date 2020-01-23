@@ -9,9 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -25,8 +23,8 @@ public class UserTest {
         User user = new User("a", authorities);
         assertNotNull(user);
 
-        assertEquals("a", user.getUsername());
-        assertEquals("a", user.getUid());
+        assertThat(user.getUsername(), is("a"));
+        assertThat(user.getUid(), is("a"));
         assertNull(user.getUhUuid());
         assertNull(user.getAttributes());
 
@@ -34,13 +32,13 @@ public class UserTest {
         authorities.add(new SimpleGrantedAuthority(Role.ANONYMOUS.longName()));
         user = new User("b", "12345", authorities);
 
-        assertEquals("b", user.getUsername());
-        assertEquals("b", user.getUid());
-        assertEquals("12345", user.getUhUuid());
+        assertThat(user.getUsername(), is("b"));
+        assertThat(user.getUid(), is("b"));
+        assertThat(user.getUhUuid(), is("12345"));
         assertNull(user.getAttributes());
 
         user.setAttributes(new UhCasAttributes());
-        assertEquals("", user.getName());
+        assertThat(user.getName(), is(""));
     }
 
     @Test
