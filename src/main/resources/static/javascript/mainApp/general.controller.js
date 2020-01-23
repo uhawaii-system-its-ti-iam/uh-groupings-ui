@@ -1381,7 +1381,6 @@
             $scope.excludeQuery = "";
             $scope.includeQuery = "";
             $scope.membersQuery = "";
-            $scope.groupingsQuery = "";
             $scope.adminsQuery = "";
             $scope.optInQuery = "";
             $scope.ownersQuery = "";
@@ -1438,9 +1437,6 @@
         $scope.returnToGroupingsList = function () {
             $scope.resetGroupingInformation();
 
-            // Ensure the groupings list is reset with the now-blank filter
-            $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
-
             $scope.showGrouping = false;
             loadMembersList = false;
 
@@ -1459,7 +1455,9 @@
             clearAddMemberInput();
             $scope.columnSort = {};
             $scope.syncDestArray = [];
+
         };
+
 
         /**
          * Creates a modal with a description of the preference selected.
