@@ -40,6 +40,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -211,7 +212,7 @@ public class TestGroupingsRestController {
 
         // Testing with a regular user.
         Principal principal = new SimplePrincipal(uhUser05.getUsername());
-        assertEquals(groupingsRestController.getAllSyncDestinations(principal, GROUPING).getStatusCode().toString(), "403 FORBIDDEN");
+        assertThat("403 FORBIDDEN", is(groupingsRestController.getAllSyncDestinations(principal, GROUPING).getStatusCode().toString()));
 
 
     }
@@ -418,15 +419,15 @@ public class TestGroupingsRestController {
         Grouping storeEmpty = mapGrouping(GROUPING_STORE_EMPTY);
         Grouping trueEmpty = mapGrouping(GROUPING_TRUE_EMPTY);
 
-        assertEquals(0, storeEmpty.getComposite().getMembers().size());
-        assertEquals(0, storeEmpty.getExclude().getMembers().size());
+        assertThat(storeEmpty.getComposite().getMembers().size(), is(0));
+        assertThat(storeEmpty.getExclude().getMembers().size(), is(0));
         assertTrue(storeEmpty.getInclude().getMembers().size() == 0);
         assertTrue(storeEmpty.getOwners().getUsernames().contains(tst[0]));
 
-        assertEquals(0, trueEmpty.getBasis().getMembers().size());
-        assertEquals(0, trueEmpty.getComposite().getMembers().size());
-        assertEquals(0, trueEmpty.getExclude().getMembers().size());
-        assertEquals(0, trueEmpty.getInclude().getMembers().size());
+        assertThat(trueEmpty.getBasis().getMembers().size(), is(0));
+        assertThat(trueEmpty.getComposite().getMembers().size(), is(0));
+        assertThat(trueEmpty.getExclude().getMembers().size(), is(0));
+        assertThat(trueEmpty.getInclude().getMembers().size(), is(0));
         assertTrue(trueEmpty.getOwners().getUsernames().contains(tst[0]));
 
     }

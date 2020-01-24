@@ -1,6 +1,7 @@
 package edu.hawaii.its.groupings.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -15,7 +16,7 @@ public class StringsTest {
     @Test
     public void fill() {
         String s = Strings.fill('$', 6);
-        assertEquals("$$$$$$", s);
+        assertThat(s, is("$$$$$$"));
     }
 
     @Test
@@ -41,19 +42,19 @@ public class StringsTest {
     @Test
     public void trunctate() {
         String s = "abcdefghijk";
-        assertEquals("abc", Strings.truncate(s, 3));
-        assertEquals("ab", Strings.truncate(s, 2));
-        assertEquals("a", Strings.truncate(s, 1));
-        assertEquals("", Strings.truncate(s, 0));
-        assertEquals(s, Strings.truncate(s, 11));
-        assertEquals(s, Strings.truncate(s, 12));
+        assertThat(Strings.truncate(s, 3), is("abc"));
+        assertThat(Strings.truncate(s, 2), is("ab"));
+        assertThat(Strings.truncate(s, 1), is("a"));
+        assertThat(Strings.truncate(s, 0), is(""));
+        assertThat(Strings.truncate(s, 11), is(s));
+        assertThat(Strings.truncate(s, 12), is(s));
 
         assertNull(Strings.truncate(null, 0));
         assertNull(Strings.truncate(null, 1));
 
         // Note this result:
         try {
-            assertEquals(s, Strings.truncate(s, -1));
+            assertThat(Strings.truncate(s, -1), is(s));
         } catch (Exception ex) {
             assertTrue(ex instanceof IndexOutOfBoundsException);
         }

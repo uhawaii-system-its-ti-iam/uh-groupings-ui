@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -86,32 +86,32 @@ public class PersonTest {
         Person p0 = new Person();
         assertNotEquals(p0, null);
         assertNotEquals(p0, new String());
-        assertEquals(p0, p0);
+        assertThat(p0, is(p0));
 
         Person p1 = new Person();
-        assertEquals(p0, p1);
-        assertEquals(p1, p0);
+        assertThat(p1, is(p0));
+        assertThat(p0, is(p1));
 
         p0.setName("name");
         assertNotEquals(p0, p1);
         assertNotEquals(p1, p0);
         p1.setName("name");
-        assertEquals(p0, p1);
-        assertEquals(p1, p0);
+        assertThat(p1, is(p0));
+        assertThat(p0, is(p1));
 
         p0.setUhUuid("uhUuid");
         assertNotEquals(p0, p1);
         assertNotEquals(p1, p0);
         p1.setUhUuid("uhUuid");
-        assertEquals(p0, p1);
-        assertEquals(p1, p0);
+        assertThat(p1, is(p0));
+        assertThat(p0, is(p1));
 
         p0.setUsername("username");
         assertNotEquals(p0, p1);
         assertNotEquals(p1, p0);
         p1.setUsername("username");
-        assertEquals(p0, p1);
-        assertEquals(p1, p0);
+        assertThat(p1, is(p0));
+        assertThat(p0, is(p1));
     }
 
     @Test

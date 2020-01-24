@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -58,7 +56,7 @@ public class GroupTest {
     public void equals() {
         Group g0 = new Group();
         assertThat(g0, equalTo(g0));
-        assertEquals(g0, g0);
+        assertThat(g0, is(g0));
         assertFalse(g0.equals(null));
         assertNotEquals(g0, new String());
 
@@ -125,23 +123,23 @@ public class GroupTest {
         g0 = new Group();
         assertFalse(g0.equals(null));
         assertNotEquals(g0, new String());
-        assertEquals(g0, g0);
+        assertThat(g0, is(g0));
 
         g1 = new Group();
-        assertEquals(g0, g1);
-        assertEquals(g1, g0);
+        assertThat(g1, is(g0));
+        assertThat(g0, is(g1));
         ReflectionTestUtils.setField(g0, "members", null);
         assertNotEquals(g0, g1);
         assertNotEquals(g1, g0);
         ReflectionTestUtils.setField(g1, "members", null);
-        assertEquals(g0, g1);
-        assertEquals(g1, g0);
+        assertThat(g1, is(g0));
+        assertThat(g0, is(g0));
         ReflectionTestUtils.setField(g0, "path", null);
         assertNotEquals(g0, g1);
         assertNotEquals(g1, g0);
         ReflectionTestUtils.setField(g1, "path", null);
-        assertEquals(g0, g1);
-        assertEquals(g1, g0);
+        assertThat(g1, is(g0));
+        assertThat(g0, is(g1));
     }
 
     @Test
@@ -246,8 +244,8 @@ public class GroupTest {
         g0 = new Group("a", list0);
         g1 = new Group("a", list1);
         assertThat(g0.compareTo(g1), equalTo(0));
-        assertEquals(g0, g1);
-        assertEquals(g1, g0);
+        assertThat(g1, is(g0));
+        assertThat(g0, is(g1));
 
         g1.getMembers().get(3).setName("e");
         assertThat(g0.compareTo(g1), equalTo(-1));
