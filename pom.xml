@@ -23,7 +23,7 @@
         <org.jasig.cas.client-version>3.6.1</org.jasig.cas.client-version>
 
         <jquery-version>3.4.1</jquery-version>
-        <angular-mocks-version>1.7.5</angular-mocks-version>
+        <angular-mocks-version>1.7.9</angular-mocks-version>
         <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version>
 
         <angularjs-version>1.7.8</angularjs-version>
@@ -161,7 +161,7 @@
             <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>org.webjars.bower</groupId>
+            <groupId>org.webjars.npm</groupId>
             <artifactId>angular-mocks</artifactId>
             <version>${angular-mocks-version}</version>
         </dependency>
@@ -179,7 +179,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator-core</artifactId>
-            <version>0.37</version>
+            <version>0.43</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -191,6 +191,21 @@
             <artifactId>kotlin-test</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.1.2.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.64</version>
         </dependency>
     </dependencies>
 
