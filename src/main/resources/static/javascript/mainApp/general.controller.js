@@ -10,7 +10,6 @@
      * @param groupingsService - service for creating requests to the groupings API
      */
 
-    //Possible switch to $log
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
         $scope.userNameList = [];
@@ -111,7 +110,6 @@
          */
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
-            // $scope.getAllSyncDestinations();
             $scope.getGroupingInformation();
 
 
@@ -167,7 +165,9 @@
          * @returns {String[]} list of possible sync destinations
          */
         $scope.getAllSyncDestinations = function () {
-            groupingsService.getSyncDestList(function (res) {
+            const groupingPath = $scope.selectedGrouping.path;
+            groupingsService.getSyncDestList(groupingPath, function (res) {
+                console.log(res);
                 // console.log("This is the response of sync dest" + res);
                 $scope.syncDestMap = res;
                 // console.log("Mapping:"+ $scope.syncDestMap);
@@ -247,11 +247,7 @@
                     $scope.allowOptIn = res.optInOn;
                     $scope.allowOptOut = res.optOutOn;
 
-                    const syncDestResponseMapping = new Map(Object.entries(res.syncDestinations));
-                    syncDestResponseMapping.forEach((value, key, map) => {
-                        $scope.syncDestArray.push({ name: key, value: value });
-                    });
-                    $scope.setSyncDestLabels();
+                    $scope.syncDestArray = res.syncDestinations;
 
                     //Stop loading spinner and turn on loading text
                     $scope.loading = false;
@@ -274,7 +270,6 @@
                         } catch (error) {
                             console.log("Getting members from grouping has errored out please reload page to resume. If not please proceed to the feedback page and report the problem you have come across.");
                         }
-
                         currentPage++;
                     }
                 }, function (res) {
@@ -362,23 +357,6 @@
                     resolve();
                 })
             );
-        };
-
-        //todo IMPORTANT: This is the only function we have to update manually when adding new syncDests
-        // There's no way around this as we can't dynamically generate these strings without external data in server
-        // As far as I know, this can't go into the properties file because the checkboxes are generated dynamically
-        $scope.setSyncDestLabels = function () {
-            $scope.syncDestArray[0].label = "CAS/LDAP: uhReleasedGrouping";
-            $scope.syncDestArray[1].label = "Email list: <" + $scope.selectedGrouping.name + "@lists.hawaii.edu>";
-
-            $scope.syncDestArray[0].confimationModalLabel = "CAS/LDAP";
-            $scope.syncDestArray[1].confimationModalLabel = "Email List";
-
-            $scope.syncDestArray[0].tooltip = "Synchronize an individual’s membership with the individual’s CAS/LDAP attribute uhReleasedGrouping.";
-            $scope.syncDestArray[1].tooltip = "Synchronize the grouping’s membership with a corresponding LISTSERV list, which will be created as needed.";
-
-            $scope.syncDestArray[0].confirmationModalText = "Click Ok to update the CAS/LDAP preference as requested.";
-            $scope.syncDestArray[1].confirmationModalText = "Click Ok to update the Email list preference as requested.";
         };
 
         /**
@@ -504,31 +482,6 @@
         };
 
         /**
-         * If str is equal to val, return tru, otherwise return fal
-         *
-         * @param str
-         * @return {string}
-         */
-        $scope.strIsVal = function (str, val, tru, fal) {
-            return (str === val) ? tru : fal;
-        };
-
-
-        /**
-         * Launch the add members Modal modal from <listName>.html
-         * @param listName - Include or Exclude
-         */
-        $scope.launchAddMembersModal = function (listName) {
-            $scope.listName = listName;
-
-            $scope.confirmImportInstance = $uibModal.open({
-                templateUrl: "modal/addMembersModal",
-                size: "lg",
-                scope: $scope
-            });
-        };
-
-        /**
          * Launch the import Modal modal from <listName>.html
          * @param listName - Include or Exclude
          */
@@ -560,7 +513,7 @@
 
                 $scope.addMultipleMembers(users, listName, num_members);
             } else {
-                $scope.userToAdd = $scope.usersToAdd[0];
+                $scope.userToAdd = $scope.usersToAdd;
                 $scope.addMember(listName);
             }
         };
@@ -581,71 +534,20 @@
             reader.readAsText(file);
         };
 
-        /**
-         * - Create a comma separated string of all valid too be members
-         * - Call the import members modal function
-         * - Open spinner for load
-         */
-        $scope.importMembers = function () {
-            $scope.imported = true;
-            let validUserNames = removeInvalidUserNames($scope.userNameList, $scope.listName);
-
-            if (validUserNames.length > 0)
-                $scope.validUserNameCount = validUserNames.length;
-
-            validUserNames = toCommaSeparatedString(validUserNames);
-            $scope.loading = true;
-            $scope.createConfirmImportModal(validUserNames, $scope.listName);
-
-        };
-
-        $scope.addMultipleMembers = function (list, listName, size) {
+        $scope.addMultipleMembers = async function (list, listName, size) {
             let groupingPath = $scope.selectedGrouping.path;
-            if (size > $scope.MAX_IMPORT)
-                $scope.launchCreateGenericOkModal("Test", `You are attempting to add a large group of size ${size}, this could take a while.`);
+            let timeoutModal = function () {
+                return launchCreateGenericOkModal("Test", `You are attempting to add a large group of size ${size}, this could take a while.`);
+            };
+
             let handleSuccessfulAdd = function (res) {
                 console.log(res);
                 $scope.updateImportMembers(listName);
             };
-            let fourOfour = function (res) {
-                $scope.updateImportMembers(listName);
-            };
             if (listName === "Include")
-                groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, fourOfour);
+                await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
             else if (listName === "Exclude")
-                groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, fourOfour);
-        };
-
-        $scope.addMultipleMembersAsync = async function (list, listName, size) {
-            let groupingPath = $scope.selectedGrouping.path;
-            let handleSuccessfulAdd = function (res) {
-                console.log(res);
-                /*
-                $scope.updateImportMembers(listName);
-
-                 */
-            };
-            if (listName === "Include")
-                await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            else if (listName === "Exclude")
-                await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
-
-        };
-        /**
-         * - Post new imported data to the grouper database
-         * - Open import success modal
-         * @param userNameList - string of comma separated user names
-         * @param listName - Include or Exclude
-         */
-        $scope.createConfirmImportModal = function (userNameList, listName) {
-            let groupingPath = $scope.selectedGrouping.path;
-            let handleSuccessfulAdd = function () {
-                $scope.updateImportMembers(listName);
-            };
-            if (listName === "Include")
-                groupingsService.addMembersToInclude(groupingPath, userNameList, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            else if (listName === "Exclude")
-                groupingsService.addMembersToExclude(groupingPath, userNameList, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
         };
 
         /**
@@ -715,7 +617,7 @@
             $scope.confirmImportInstance.close();
         };
 
-        $scope.launchCreateGenericOkModal = function (title, body) {
+        function launchCreateGenericOkModal(title, body) {
             $scope.currentModalTitle = title;
             $scope.currentModalBody = body;
 
@@ -1257,7 +1159,6 @@
             $scope.excludeQuery = "";
             $scope.includeQuery = "";
             $scope.membersQuery = "";
-            $scope.groupingsQuery = "";
             $scope.adminsQuery = "";
             $scope.optInQuery = "";
             $scope.ownersQuery = "";
@@ -1312,9 +1213,6 @@
         $scope.returnToGroupingsList = function () {
             $scope.resetGroupingInformation();
 
-            // Ensure the groupings list is reset with the now-blank filter
-            $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
-
             $scope.showGrouping = false;
             loadMembersList = false;
 
@@ -1333,7 +1231,9 @@
             clearAddMemberInput();
             $scope.columnSort = {};
             $scope.syncDestArray = [];
+
         };
+
 
         /**
          * Creates a modal with a description of the preference selected.
@@ -1399,7 +1299,7 @@
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name;
             }).indexOf(syncDestName);
-            const syncDestOn = $scope.syncDestArray[indexOfSyncDest].value;
+            const syncDestOn = $scope.syncDestArray[indexOfSyncDest].isSynced;
             return syncDestOn;
         };
 
@@ -1424,7 +1324,7 @@
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name;
             }).indexOf(syncDestName);
-            $scope.syncDestArray[indexOfSyncDest].value = syncDestvalue;
+            $scope.syncDestArray[indexOfSyncDest].isSynced = syncDestvalue;
         };
 
         /**
@@ -1433,7 +1333,6 @@
          */
         $scope.updateSingleSyncDest = function (syncDestName) {
             const groupingPath = $scope.selectedGrouping.path;
-            // const syncDestOn = $scope.syncDestMap.get(syncDest);
             const syncDestOn = $scope.getSyncDestValueInArray(syncDestName);
 
             groupingsService.setSyncDest(groupingPath, syncDestName, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);

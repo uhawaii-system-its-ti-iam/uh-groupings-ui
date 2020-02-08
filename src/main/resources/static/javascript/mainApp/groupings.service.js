@@ -86,9 +86,13 @@
              * @param {string} path - the path to the grouping
              * @param {string} userToAdd - the usernames of the members to add
              */
-            addMembersToInclude: function (path, usersToAdd, onSuccess, onError) {
+            addMembersToInclude: function (path, usersToAdd, onSuccess, onError, modal) {
                 var endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                return new Promise(resolve => {
+                    dataProvider.updateDataWithTimeoutModal(onSuccess, onError, endpoint, modal);
+                });
+
+
             },
 
             /**
@@ -105,10 +109,15 @@
              * Adds a members to the exclude group of a grouping.
              * @param {string} path - the path to the grouping
              * @param {string} usersToAdd - the usernames of the members to add
+             * @param onSuccess
+             * @param onError
+             * @param modal
              */
-            addMembersToExclude: function (path, usersToAdd, onSuccess, onError) {
+            addMembersToExclude: function (path, usersToAdd, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                return new Promise(resolve => {
+                    dataProvider.updateDataWithTimeoutModal(onSuccess, onError, endpoint, modal);
+                });
             },
 
             /**
@@ -242,8 +251,8 @@
             /**
              * Get the list of sync destinations
              */
-            getSyncDestList: function (onSuccess, onError) {
-                let endpoint = BASE_URL + "syncDestinations";
+            getSyncDestList: function (path, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + path + "/syncDestinations";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
