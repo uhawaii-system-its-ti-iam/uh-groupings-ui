@@ -39,6 +39,25 @@
                         console.log("Error in dataProvider; status: ", response.status);
                     });
             },
+            /**
+             *
+             * @param {function} callback
+             * @param {function} callError
+             * @param {string} url
+             * @param {function} modal
+             */
+            updateDataWithTimeoutModal: function (callback, callError, url, modal) {
+                let timeoutID = setTimeout(modal, 5000);
+                $http.post(encodeURI(url))
+                    .then(function (response) {
+                        clearTimeout(timeoutID);
+                        callback(response.data);
+                    }, function (response) {
+                        clearTimeout(timeoutID);
+                        callError(response);
+                        console.log("Error in dataProvider; status: ", response.status);
+                    });
+            },
 
             // Might have to clean this code up? Not completely sure yet.
             /**

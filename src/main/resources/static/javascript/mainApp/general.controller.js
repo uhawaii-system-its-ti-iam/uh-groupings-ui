@@ -482,31 +482,6 @@
         };
 
         /**
-         * If str is equal to val, return tru, otherwise return fal
-         *
-         * @param str
-         * @return {string}
-         */
-        $scope.strIsVal = function (str, val, tru, fal) {
-            return (str === val) ? tru : fal;
-        };
-
-
-        /**
-         * Launch the add members Modal modal from <listName>.html
-         * @param listName - Include or Exclude
-         */
-        $scope.launchAddMembersModal = function (listName) {
-            $scope.listName = listName;
-
-            $scope.confirmImportInstance = $uibModal.open({
-                templateUrl: "modal/addMembersModal",
-                size: "lg",
-                scope: $scope
-            });
-        };
-
-        /**
          * Launch the import Modal modal from <listName>.html
          * @param listName - Include or Exclude
          */
@@ -538,7 +513,7 @@
 
                 $scope.addMultipleMembers(users, listName, num_members);
             } else {
-                $scope.userToAdd = $scope.usersToAdd[0];
+                $scope.userToAdd = $scope.usersToAdd;
                 $scope.addMember(listName);
             }
         };
@@ -559,71 +534,20 @@
             reader.readAsText(file);
         };
 
-        /**
-         * - Create a comma separated string of all valid too be members
-         * - Call the import members modal function
-         * - Open spinner for load
-         */
-        $scope.importMembers = function () {
-            $scope.imported = true;
-            let validUserNames = removeInvalidUserNames($scope.userNameList, $scope.listName);
-
-            if (validUserNames.length > 0)
-                $scope.validUserNameCount = validUserNames.length;
-
-            validUserNames = toCommaSeparatedString(validUserNames);
-            $scope.loading = true;
-            $scope.createConfirmImportModal(validUserNames, $scope.listName);
-
-        };
-
-        $scope.addMultipleMembers = function (list, listName, size) {
+        $scope.addMultipleMembers = async function (list, listName, size) {
             let groupingPath = $scope.selectedGrouping.path;
-            if (size > $scope.MAX_IMPORT)
-                $scope.launchCreateGenericOkModal("Test", `You are attempting to add a large group of size ${size}, this could take a while.`);
+            let timeoutModal = function () {
+                return launchCreateGenericOkModal("Test", `You are attempting to add a large group of size ${size}, this could take a while.`);
+            };
+
             let handleSuccessfulAdd = function (res) {
                 console.log(res);
                 $scope.updateImportMembers(listName);
             };
-            let fourOfour = function (res) {
-                $scope.updateImportMembers(listName);
-            };
             if (listName === "Include")
-                groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, fourOfour);
+                await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
             else if (listName === "Exclude")
-                groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, fourOfour);
-        };
-
-        $scope.addMultipleMembersAsync = async function (list, listName, size) {
-            let groupingPath = $scope.selectedGrouping.path;
-            let handleSuccessfulAdd = function (res) {
-                console.log(res);
-                /*
-                $scope.updateImportMembers(listName);
-
-                 */
-            };
-            if (listName === "Include")
-                await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            else if (listName === "Exclude")
-                await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
-
-        };
-        /**
-         * - Post new imported data to the grouper database
-         * - Open import success modal
-         * @param userNameList - string of comma separated user names
-         * @param listName - Include or Exclude
-         */
-        $scope.createConfirmImportModal = function (userNameList, listName) {
-            let groupingPath = $scope.selectedGrouping.path;
-            let handleSuccessfulAdd = function () {
-                $scope.updateImportMembers(listName);
-            };
-            if (listName === "Include")
-                groupingsService.addMembersToInclude(groupingPath, userNameList, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            else if (listName === "Exclude")
-                groupingsService.addMembersToExclude(groupingPath, userNameList, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
         };
 
         /**
@@ -693,7 +617,7 @@
             $scope.confirmImportInstance.close();
         };
 
-        $scope.launchCreateGenericOkModal = function (title, body) {
+        function launchCreateGenericOkModal(title, body) {
             $scope.currentModalTitle = title;
             $scope.currentModalBody = body;
 
