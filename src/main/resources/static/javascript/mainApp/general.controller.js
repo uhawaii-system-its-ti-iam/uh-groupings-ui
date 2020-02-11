@@ -519,6 +519,7 @@
                             if your import count of ${num_members} is larger than the small import threshold of 
                             ${$scope.MULTIADD_THRESHOLD}. Could be a while`);
                     }
+                    $scope.addMultipleMembers(users, listName);
                 }
             } else {
                 $scope.userToAdd = $scope.usersToAdd;
@@ -591,8 +592,7 @@
         $scope.launchMultiAddResultModal = function (listName) {
             $scope.multiAddResultModalInstance = $uibModal.open({
                 templateUrl: "modal/multiAddResultModal",
-                scope: $scope,
-                size: "lg"
+                scope: $scope
             });
             $scope.loading = false;
             $scope.multiAddResultModalInstance.result.finally(function () {
