@@ -493,12 +493,6 @@
             });
         };
 
-        /**
-         * Import multiple members to a grouping, in the long run this method triggers the
-         * api method includeMultipleMembers.
-         *
-         * @param listName - Include or Exclude
-         */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
             let num_members = ($scope.usersToAdd.split(" ").length - 1);
@@ -522,13 +516,14 @@
                             if your import count of ${num_members} is larger than the small import threshold of 
                             ${$scope.MULTIADD_THRESHOLD}. Could be a while`);
                     }
-                    $scope.addMultipleMembers(users, listName, num_members);
+                    $scope.addMultipleMembers(users, listName);
                 }
             } else {
                 $scope.userToAdd = $scope.usersToAdd;
                 $scope.addMember(listName);
             }
         };
+
         /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
          * separated by newline characters.
@@ -546,37 +541,39 @@
             reader.readAsText(file);
         };
 
-        $scope.addMultipleMembers = async function (list, listName, size) {
+        $scope.addMultipleMembers = async function (list, listName) {
             let groupingPath = $scope.selectedGrouping.path;
+
             let timeoutModal = function () {
-                return launchCreateGenericOkModal("Lagging Import", `Exiting your browser will not affect the import and 
-                    you will receive an email with the add results once the add is complete.`);
+                return launchCreateGenericOkModal(
+                    "Lagging Import",
+                    `Exiting your browser will not affect the import and you will receive an email with the 
+                    add results once the add is complete.`);
             };
 
             let handleSuccessfulAdd = function (res) {
-                $scope.waitingForImportResponse = false;
-                for (let i = 0; i < res.length; i++) {
-                    $scope.multiAddResults[i] = res[i].person;
-                }
+                $scope.waitingForImportResponse = false; /* Spinner off */
 
-                if (undefined !== res[0].person)
+                for (let i = 0; i < res.length; i++)
+                    $scope.multiAddResults[i] = res[i].person;
+
+                if (undefined !== res[0].person) {
                     $scope.personProps = Object.keys(res[0].person);
+                    $scope.personProps.shift();
+                }
 
                 $scope.launchMultiAddResultModal(listName);
             };
-            $scope.waitingForImportResponse = true;
+            $scope.waitingForImportResponse = true; /* Spinner on */
+
             if (listName === "Include")
-                await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd,
+                    handleUnsuccessfulRequest, timeoutModal);
             else if (listName === "Exclude")
-                await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd,
+                    handleUnsuccessfulRequest, timeoutModal);
         };
 
-        /**
-         * - Create the import members success modal
-         * - Close spinner
-         * - Refresh page after the modal is closed
-         * @param listName
-         */
         $scope.launchMultiAddResultModal = function (listName) {
             $scope.multiAddResultModalInstance = $uibModal.open({
                 templateUrl: "modal/multiAddResultModal",

@@ -2,7 +2,7 @@
       lang="en">
 <div class="modal-header">
     <h5 class="modal-title" id="modal-title">Multi Add Results</h5>
-    <button type="button" class="close" data-dismiss="dialog" ng-click="closeMultiAddResultModalInstance()">
+    <button type="button" class="close" data-dismiss="dialog" ng-click="closeMultiAddResultInstance()">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
@@ -13,32 +13,26 @@
     </p>
     <div class="container">
         <table>
-            <tr>
-                <td>
-                    <table>
-                        <thead class="import-table-thead-tbody-tr import-table-thead">
-                        <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
-                            <!-- Display table headings -->
-                            <td ng-repeat="prop in personProps ">{{ prop }}</td>
-                        </tr>
-                        </thead>
-                        <tbody class="import-table-tbody">
-                        <tr class="import-table-thead-tbody-tr" ng-repeat="person in multiAddResults">
-                            <!-- Display table data -->
-                            <td ng-repeat="prop in personProps">
-                                {{ person[prop] }}
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </td>
-                <td>
-
+            <thead class="import-table-thead-tbody-tr import-table-thead">
+            <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
+                <!-- Display table headings -->
+                <td ng-repeat="prop in personProps ">{{ prop }}</td>
+            </tr>
+            </thead>
+            <tbody class="import-table-tbody">
+            <tr class="import-table-thead-tbody-tr" ng-repeat="person in multiAddResults">
+                <!-- Display table data -->
+                <td ng-repeat="prop in personProps">
+                    {{ person[prop] }}
                 </td>
             </tr>
+            </tbody>
         </table>
     </div>
 </div>
-<div class="modal-footer"></div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="closeMultiAddResultInstance()">Ok</button>
+</div>
+
 
 </html>
