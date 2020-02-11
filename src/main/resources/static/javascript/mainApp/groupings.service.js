@@ -91,8 +91,6 @@
                 return new Promise(resolve => {
                     dataProvider.updateDataWithTimeoutModal(onSuccess, onError, endpoint, modal);
                 });
-
-
             },
 
             /**

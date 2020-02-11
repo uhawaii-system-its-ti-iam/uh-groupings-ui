@@ -47,7 +47,7 @@
              * @param {function} modal
              */
             updateDataWithTimeoutModal: function (callback, callError, url, modal) {
-                let timeoutID = setTimeout(modal, 20000);
+                let timeoutID = setTimeout(modal, 60000);
                 $http.post(encodeURI(url))
                     .then(function (response) {
                         clearTimeout(timeoutID);
