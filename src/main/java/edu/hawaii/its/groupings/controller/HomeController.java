@@ -220,4 +220,8 @@ public class HomeController {
     public String genericOkModal(Locale locale, Model model) {
         return "modal/genericOkModal";
     }
+    @RequestMapping(value = "/modal/multiAddResultModal", method = RequestMethod.GET)
+    public String multiAddResultModal(Locale locale, Model model) {
+        return "modal/multiAddResultModal";
+    }
 }

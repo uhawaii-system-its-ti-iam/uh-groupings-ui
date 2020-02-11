@@ -106,6 +106,9 @@
                             <button class="btn btn-primary" ng-click="launchImportModal('Include')">
                                 Import File
                             </button>
+                            <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse"
+                                 style="display:inline-block">
+                            </div>
                         </div>
                     </div>
                 </form>
