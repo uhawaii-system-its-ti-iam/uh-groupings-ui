@@ -493,6 +493,11 @@
             });
         };
 
+        /**
+         * Take $scope.usersToAdd count the number of words it contains and split it into a comma separated string, then
+         * decide whether to a multi add or a single add is necessary.
+         * @param listName
+         */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
             let num_members = ($scope.usersToAdd.split(" ").length - 1);
@@ -516,7 +521,6 @@
                             if your import count of ${num_members} is larger than the small import threshold of 
                             ${$scope.MULTIADD_THRESHOLD}. Could be a while`);
                     }
-                    $scope.addMultipleMembers(users, listName);
                 }
             } else {
                 $scope.userToAdd = $scope.usersToAdd;
@@ -541,9 +545,16 @@
             reader.readAsText(file);
         };
 
+        /**
+         * Send the list of users to be added to the server as an HTTP POST request.
+         * @param list - comma separated string of user names to be added
+         * @param listName - current list being added to
+         * @returns {Promise<void>}
+         */
         $scope.addMultipleMembers = async function (list, listName) {
             let groupingPath = $scope.selectedGrouping.path;
 
+            /* Callback: Return a modal which is launched after n seconds, see updateDataWithTimeoutModal() in app.service.js */
             let timeoutModal = function () {
                 return launchCreateGenericOkModal(
                     "Lagging Import",
@@ -551,6 +562,7 @@
                     add results once the add is complete.`);
             };
 
+            /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Spinner off */
 
@@ -574,6 +586,10 @@
                     handleUnsuccessfulRequest, timeoutModal);
         };
 
+        /**
+         * Launch a modal containing a table of the results(user info) received from the the server's response message.
+         * @param listName - current list being added to
+         */
         $scope.launchMultiAddResultModal = function (listName) {
             $scope.multiAddResultModalInstance = $uibModal.open({
                 templateUrl: "modal/multiAddResultModal",
@@ -593,6 +609,9 @@
             });
         };
 
+        /**
+         * Close the import modal instance then launch an error modal.
+         */
         $scope.launchImportErrorModal = function () {
             $scope.cancelImportModalInstance();
             $scope.confirmImportErrorInstance = $uibModal.open({
@@ -612,7 +631,9 @@
             document.getElementById(id).style[attribute] = setAs;
         };
 
-
+        /**
+         * Clear all data from the add member(s) instance. Close the modal.
+         */
         $scope.closeMultiAddResultInstance = function () {
             clearAddMemberInput($scope.listName);
             $scope.multiAddResultModalInstance.dismiss();
@@ -640,6 +661,11 @@
             $scope.confirmImportInstance.close();
         };
 
+        /**
+         * Launch a modal with a title, body message, and an ok button which closes the modal.
+         * @param title - message title to be displayed in modal header
+         * @param body - message body to be displayed in modal body
+         */
         function launchCreateGenericOkModal(title, body) {
             $scope.currentModalTitle = title;
             $scope.currentModalBody = body;
