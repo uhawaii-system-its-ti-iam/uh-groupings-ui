@@ -507,8 +507,6 @@
                 let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
 
                 $scope.usersToAdd = [];
-                console.log("Num_Members: " + num_members);
-                console.log(users);
                 if (num_members > $scope.MAX_IMPORT) {
                     launchCreateGenericOkModal(
                         "Out of Bounds Import Warning",
