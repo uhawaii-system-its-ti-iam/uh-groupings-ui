@@ -503,9 +503,11 @@
             $scope.listName = listName;
             let num_members = ($scope.usersToAdd.split(" ").length - 1);
 
+
             if (num_members > 0) {
                 let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
 
+                $scope.usersToAdd = [];
                 console.log("Num_Members: " + num_members);
                 console.log(users);
                 if (num_members > $scope.MAX_IMPORT) {
@@ -553,14 +555,12 @@
 
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false;
-                console.log(res);
                 for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
                 }
 
                 if (undefined !== res[0].person)
                     $scope.personProps = Object.keys(res[0].person);
-                console.log($scope.personProps);
 
                 $scope.launchMultiAddResultModal(listName);
             };
@@ -583,7 +583,6 @@
                 scope: $scope,
                 size: "lg"
             });
-            /*
             $scope.loading = false;
             $scope.multiAddResultModalInstance.result.finally(function () {
                 clearAddMemberInput(listName);
@@ -595,8 +594,6 @@
                     $scope.getGroupingInformation();
                 }
             });
-
-             */
         };
 
         $scope.launchImportErrorModal = function () {
