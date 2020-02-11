@@ -12,16 +12,14 @@
 
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
-        $scope.userNameList = [];
-        $scope.selectedRow = null;
         $scope.importCount = 0;
         $scope.VALID_UNAME_COUNT = 0;
-        $scope.MAX_IMPORT = 3;
+        $scope.MULTIADD_THRESHOLD = 10;
+        $scope.MAX_IMPORT = 100000;
         $scope.MULTI_ADD_COUNT = 0;
-        $scope.sortNameStr = "name";
-        $scope.sortStatusStr = "status";
-        $scope.sortName = false;
-        $scope.sortStatus = false;
+        $scope.multiAddResults = [];
+        $scope.personProps = [];
+        $scope.waitingForImportResponse = false;
 
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
@@ -510,8 +508,20 @@
 
                 console.log("Num_Members: " + num_members);
                 console.log(users);
-
-                $scope.addMultipleMembers(users, listName, num_members);
+                if (num_members > $scope.MAX_IMPORT) {
+                    launchCreateGenericOkModal(
+                        "Out of Bounds Import Warning",
+                        `Importing more than ${$scope.MAX_IMPORT} users is not allowed.`);
+                } else {
+                    if (num_members > $scope.MULTIADD_THRESHOLD) {
+                        launchCreateGenericOkModal(
+                            "Large Import Warning",
+                            `You are attempting to import ${num_members} new users to the ${listName}. Note that 
+                            if your import count of ${num_members} is larger than the small import threshold of 
+                            ${$scope.MULTIADD_THRESHOLD}. Could be a while`);
+                    }
+                    $scope.addMultipleMembers(users, listName, num_members);
+                }
             } else {
                 $scope.userToAdd = $scope.usersToAdd;
                 $scope.addMember(listName);
@@ -537,13 +547,24 @@
         $scope.addMultipleMembers = async function (list, listName, size) {
             let groupingPath = $scope.selectedGrouping.path;
             let timeoutModal = function () {
-                return launchCreateGenericOkModal("Test", `You are attempting to add a large group of size ${size}, this could take a while.`);
+                return launchCreateGenericOkModal("Lagging Import", `Exiting your browser will not affect the import and 
+                    you will receive an email with the add results once the add is complete.`);
             };
 
             let handleSuccessfulAdd = function (res) {
+                $scope.waitingForImportResponse = false;
                 console.log(res);
-                $scope.updateImportMembers(listName);
+                for (let i = 0; i < res.length; i++) {
+                    $scope.multiAddResults[i] = res[i].person;
+                }
+
+                if (undefined !== res[0].person)
+                    $scope.personProps = Object.keys(res[0].person);
+                console.log($scope.personProps);
+
+                $scope.launchMultiAddResultModal(listName);
             };
+            $scope.waitingForImportResponse = true;
             if (listName === "Include")
                 await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
             else if (listName === "Exclude")
@@ -556,13 +577,15 @@
          * - Refresh page after the modal is closed
          * @param listName
          */
-        $scope.updateImportMembers = function (listName) {
-            $scope.confirmAddMembersModalInstance = $uibModal.open({
-                templateUrl: "modal/confirmAddMembersModal",
-                scope: $scope
+        $scope.launchMultiAddResultModal = function (listName) {
+            $scope.multiAddResultModalInstance = $uibModal.open({
+                templateUrl: "modal/multiAddResultModal",
+                scope: $scope,
+                size: "lg"
             });
+            /*
             $scope.loading = false;
-            $scope.confirmAddMembersModalInstance.result.finally(function () {
+            $scope.multiAddResultModalInstance.result.finally(function () {
                 clearAddMemberInput(listName);
                 $scope.loading = true;
                 if ($scope.listName === "admins") {
@@ -572,6 +595,8 @@
                     $scope.getGroupingInformation();
                 }
             });
+
+             */
         };
 
         $scope.launchImportErrorModal = function () {
@@ -594,6 +619,10 @@
         };
 
 
+        $scope.closeMultiAddResultInstance = function () {
+            clearAddMemberInput($scope.listName);
+            $scope.multiAddResultModalInstance.dismiss();
+        };
         /**
          * Cancel the import Modal instance
          */
