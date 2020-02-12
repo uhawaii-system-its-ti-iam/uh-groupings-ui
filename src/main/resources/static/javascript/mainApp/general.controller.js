@@ -12,11 +12,10 @@
 
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
-        $scope.importCount = 0;
-        $scope.VALID_UNAME_COUNT = 0;
-        $scope.MULTIADD_THRESHOLD = 10;
-        $scope.MAX_IMPORT = 100000;
-        $scope.MULTI_ADD_COUNT = 0;
+        $scope.userToAdd = "";
+        $scope.usersToAdd = [];
+        $scope.multiAddThreshold = 100;
+        $scope.maxImport = 100000;
         $scope.multiAddResults = [];
         $scope.personProps = [];
         $scope.waitingForImportResponse = false;
@@ -76,15 +75,6 @@
 
         //The user input
         $scope.modelDescription = "";
-
-        /* Encapsulate grouping member attributes */
-        function Member(name, status, added, uhid, id) {
-            this.name = name;
-            this.status = status;
-            this.added = added;
-            this.uhid = uhid;
-            this.id = id;
-        }
 
         //Variable for holding description
         let groupingDescription = "";
@@ -480,8 +470,8 @@
         };
 
         /**
-         * Launch the import Modal modal from <listName>.html
-         * @param listName - Include or Exclude
+         * Launch a modal containing a browse local file system for import button.
+         * @param listName - Current list
          */
         $scope.launchImportModal = function (listName) {
             $scope.listName = listName;
@@ -507,17 +497,17 @@
                 let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
 
                 $scope.usersToAdd = [];
-                if (num_members > $scope.MAX_IMPORT) {
+                if (num_members > $scope.maxImport) {
                     launchCreateGenericOkModal(
                         "Out of Bounds Import Warning",
-                        `Importing more than ${$scope.MAX_IMPORT} users is not allowed.`);
+                        `Importing more than ${$scope.maxImport} users is not allowed.`);
                 } else {
-                    if (num_members > $scope.MULTIADD_THRESHOLD) {
+                    if (num_members > $scope.multiAddThreshold) {
                         launchCreateGenericOkModal(
                             "Large Import Warning",
-                            `You are attempting to import ${num_members} new users to the ${listName}. Note that 
-                            if your import count of ${num_members} is larger than the small import threshold of 
-                            ${$scope.MULTIADD_THRESHOLD}. Could be a while`);
+                            `You are attempting to import ${num_members} new users to the ${listName} list.
+                             Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
+                             the import results will be sent.`);
                     }
                     $scope.addMultipleMembers(users, listName);
                 }
@@ -556,15 +546,15 @@
             /* Callback: Return a modal which is launched after n seconds, see updateDataWithTimeoutModal() in app.service.js */
             let timeoutModal = function () {
                 return launchCreateGenericOkModal(
-                    "Lagging Import",
-                    `Exiting your browser will not affect the import and you will receive an email with the 
-                    add results once the add is complete.`);
+                    "Slow Import Warning",
+                    `This import could take awhile to complete. The process however does not require the browser 
+                    to be open in order to finish.`);
             };
 
             /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Spinner off */
-
+                console.log(res);
                 for (let i = 0; i < res.length; i++)
                     $scope.multiAddResults[i] = res[i].person;
 
@@ -1221,25 +1211,17 @@
                     $scope.userToAdd = "";
                     $scope.usersToAdd = "";
                     $scope.userNameList = [];
-                    $scope.selectedRow = null;
-                    $scope.imported = false;
-                    $scope.validUserNameCount = 0;
-                    $scope.sortName = false;
-                    $scope.sortStatus = false;
-                    $scope.VALID_UNAME_COUNT = 0;
-                    $scope.importCount = 0;
+                    $scope.multiAddResults = [];
+                    $scope.waitingForImportResponse = false;
+                    $scope.personProps = [];
                     break;
                 case "Exclude":
                     $scope.userToAdd = "";
                     $scope.usersToAdd = "";
                     $scope.userNameList = [];
-                    $scope.selectedRow = null;
-                    $scope.imported = false;
-                    $scope.validUserNameCount = 0;
-                    $scope.sortName = false;
-                    $scope.sortStatus = false;
-                    $scope.VALID_UNAME_COUNT = 0;
-                    $scope.importCount = 0;
+                    $scope.multiAddResults = [];
+                    $scope.waitingForImportResponse = false;
+                    $scope.personProps = [];
                     break;
                 case "owners":
                     $scope.ownerToAdd = "";
