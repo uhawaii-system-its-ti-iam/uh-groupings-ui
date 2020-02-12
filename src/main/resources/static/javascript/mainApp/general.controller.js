@@ -609,7 +609,6 @@
         };
 
         /**
-         /**
          * Set a style attribute of a html component associated with id.
          * @param id - id of html component
          * @param attribute
@@ -632,14 +631,6 @@
         $scope.cancelImportModalInstance = function () {
             clearAddMemberInput($scope.listName);
             $scope.confirmImportInstance.dismiss();
-        };
-
-        /**
-         * Close both import confirmation and import modals after import is complete
-         */
-        $scope.closeConfirmAddMembersModalInstance = function () {
-            $scope.confirmAddMembersModalInstance.dismiss();
-            $scope.cancelImportModalInstance();
         };
 
         /**
