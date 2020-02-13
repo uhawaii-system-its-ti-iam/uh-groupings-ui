@@ -6,9 +6,8 @@
      */
     UHGroupingsApp.factory("dataProvider", function ($http, $window) {
         return {
-            //todo It might be possible to use async/await function to change the promise behavior to better accomodate async getGrouping
             /**
-             * Performs a GET request to the specified URL.
+             * Perform a GET request to the specified URL.
              * @param {function} callback - the function to perform on a successful request (200)
              * @param callError
              * @param {string} url - the URL to perform the request on
@@ -26,7 +25,7 @@
             },
 
             /**
-             * Performs a POST request to the specified URL.
+             * Perform a POST request to the specified URL.
              * @param {function} callback - the function to perform on a successful request (200)
              * @param {string} url - the URL to perform the request on
              */
@@ -40,9 +39,29 @@
                     });
             },
 
-            // Might have to clean this code up? Not completely sure yet.
             /**
-             * Performs a PUT request to the specified URL.
+             * POST data to the server, if the response is OK then call the callBack function, if the response is an
+             * error then call the callError function. If the response is not received in n seconds, launch a modal.
+             * @param {function} callback - Execute if response returns OK
+             * @param {function} callError - Execute if response returns as an error.
+             * @param {string} url - Path to which data is being posted too.
+             * @param {function} modal - Launch a modal using a call back function.
+             */
+            updateDataWithTimeoutModal: function (callback, callError, url, modal) {
+                let timeoutID = setTimeout(modal, 60000);
+                $http.post(encodeURI(url))
+                    .then(function (response) {
+                        clearTimeout(timeoutID);
+                        callback(response.data);
+                    }, function (response) {
+                        clearTimeout(timeoutID);
+                        callError(response);
+                        console.log("Error in dataProvider; status: ", response.status);
+                    });
+            },
+
+            /**
+             * Perform a PUT request to the specified URL.
              * @param {function} callback - the function to perform on a successful request (200)
              * @param {function} callError - the function to perform on a unsuccessful request
              * @param {string} url - the URL to perform the request on
@@ -59,7 +78,7 @@
             },
 
             /**
-             * Handles Java exceptions by performing a POST request.
+             * Handle Java exceptions by performing a POST request.
              * @param {object} exceptionData - an object containing the exception (stored as a string)
              * @param {string} url - the endpoint to perform the POST request
              * @param {string} redirectUrl - the location to redirect after

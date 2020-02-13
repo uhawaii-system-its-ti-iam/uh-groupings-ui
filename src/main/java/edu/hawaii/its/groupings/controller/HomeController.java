@@ -201,6 +201,11 @@ public class HomeController {
         return "modal/importModal";
     }
 
+    @RequestMapping(value = "modal/importErrorModal", method = RequestMethod.GET)
+    public String importErrorModal(Locale locale, Model model) {
+        return "modal/importErrorModal";
+    }
+
     @RequestMapping(value = "/modal/addMembersModal", method = RequestMethod.GET)
     public String addMembersModal(Locale locale, Model model) {
         return "modal/addMembersModal";
@@ -209,5 +214,14 @@ public class HomeController {
     @RequestMapping(value = "/modal/confirmAddMembersModal", method = RequestMethod.GET)
     public String confirmAddMembersModal(Locale locale, Model model) {
         return "modal/confirmAddMembersModal";
+    }
+
+    @RequestMapping(value = "/modal/genericOkModal", method = RequestMethod.GET)
+    public String genericOkModal(Locale locale, Model model) {
+        return "modal/genericOkModal";
+    }
+    @RequestMapping(value = "/modal/multiAddResultModal", method = RequestMethod.GET)
+    public String multiAddResultModal(Locale locale, Model model) {
+        return "modal/multiAddResultModal";
     }
 }
