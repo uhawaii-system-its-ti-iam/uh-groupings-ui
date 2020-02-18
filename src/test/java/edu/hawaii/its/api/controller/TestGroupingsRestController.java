@@ -156,6 +156,9 @@ public class TestGroupingsRestController {
         //add to exclude
         groupingsRestController.addMemberToExcludeGroup(tst0Principal, GROUPING, tst[3]);
 
+        groupingsRestController.deleteMemberFromIncludeGroup(tst0Principal, GROUPING_STORE_EMPTY, tst[0]);
+        groupingsRestController.deleteMemberFromIncludeGroup(tst0Principal, GROUPING_TRUE_EMPTY, tst[0]);
+
         //remove from exclude
         groupingsRestController.deleteMemberFromExcludeGroup(tst0Principal, GROUPING, tst[4]);
         groupingsRestController.deleteMemberFromExcludeGroup(tst0Principal, GROUPING, tst[5]);
