@@ -17,6 +17,7 @@
         $scope.multiAddThreshold = 100;
         $scope.maxImport = 100000;
         $scope.multiAddResults = [];
+        $scope.multiAddResultsGeneric = [];
         $scope.personProps = [];
         $scope.waitingForImportResponse = false;
 
@@ -66,6 +67,10 @@
         $scope.largeGrouping = false;
 
         $scope.modalType = "";
+
+        $scope.groupingCSV = [];
+        $scope.groupNameCSV = [];
+
 
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
@@ -555,14 +560,14 @@
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Spinner off */
                 console.log(res);
-                for (let i = 0; i < res.length; i++)
+                for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
-
+                    $scope.multiAddResultsGeneric[i] = res[i].person;
+                }
                 if (undefined !== res[0].person) {
                     $scope.personProps = Object.keys(res[0].person);
                     $scope.personProps.shift();
                 }
-
                 $scope.launchMultiAddResultModal(listName);
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
@@ -1514,6 +1519,61 @@
             }
             return str;
         };
+
+        /**
+         * Exports generic data in a table to a CSV file
+         * @param {object[]} table - the table to export
+         * @param grouping - grouping name that you are exporting from
+         * @param list - grouping list (i.e. include or exclude)
+         */
+        $scope.exportGroupToCsvGeneric = function (table,grouping ,list) {
+
+            table = $scope.multiAddResultsGeneric;
+
+            let data, filename, link;
+
+            let csv = $scope.convertListToCsvGeneric(table);
+            if (csv == null) {
+                $scope.createApiErrorModal();
+                return;
+            }
+
+            filename = grouping + ":" + list + "_list.csv";
+
+            csv = "data:text/csv;charset=utf-8," + csv;
+            data = encodeURI(csv);
+
+            link = document.createElement("a");
+            link.setAttribute("href", data);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        /**
+         * Converts the generic data in the table into comma-separated values.
+         * @param {object[]} table - the table to convert
+         * @returns the table in CSV format
+         */
+        $scope.convertListToCsvGeneric = function (table) {
+            let str = "";
+            for(let i = 0;i < Object.keys(table[0]).length;i++) {
+                console.log(Object.keys(table[0])[i]);
+                str += Object.keys(table[0])[i] + ",";
+            }
+            str += "\r\n";
+
+            for (let i = 0; i < table.length; i++) {
+                let line = "";
+                for(let j = 0;j < Object.values(table[i]).length; j++){
+                    line += Object.values(table[i])[j] + ",";
+                }
+                str += line + "\r\n";
+            }
+            return str;
+        };
+
 
         /**
          * Determines whether a warning message should be displayed when removing yourself from a list.
