@@ -17,6 +17,7 @@
         $scope.multiAddThreshold = 100;
         $scope.maxImport = 100000;
         $scope.multiAddResults = [];
+        $scope.multiAddResultsGeneric = [];
         $scope.personProps = [];
         $scope.waitingForImportResponse = false;
 
@@ -559,9 +560,10 @@
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Spinner off */
                 console.log(res);
-                for (let i = 0; i < res.length; i++)
+                for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
-
+                    $scope.multiAddResultsGeneric[i] = res[i].person;
+                }
                 if (undefined !== res[0].person) {
                     $scope.personProps = Object.keys(res[0].person);
                     $scope.personProps.shift();
@@ -1518,19 +1520,15 @@
             return str;
         };
 
-        //--------------------------------------------------------------------------------------------------------------
+        /**
+         * Exports generic data in a table to a CSV file
+         * @param {object[]} table - the table to export
+         * @param grouping - grouping name that you are exporting from
+         * @param list - grouping list (i.e. include or exclude)
+         */
         $scope.exportGroupToCsvGeneric = function (table,grouping ,list) {
-            if (list === "Include") {
-                table = $scope.groupingInclude;
-            } else if (list === "Exclude") {
-                table = $scope.groupingExclude;
-            } else if (list === "owners") {
-                table = $scope.groupingOwners;
-            } else if (list === "basis") {
-            table = $scope.groupingBasis;
-            } else if (list === "all") {
-                table = $scope.groupingMembers;
-            }
+
+            table = $scope.multiAddResultsGeneric;
 
             let data, filename, link;
 
@@ -1553,7 +1551,11 @@
             document.body.removeChild(link);
         };
 
-
+        /**
+         * Converts the generic data in the table into comma-separated values.
+         * @param {object[]} table - the table to convert
+         * @returns the table in CSV format
+         */
         $scope.convertListToCsvGeneric = function (table) {
             let str = "";
             for(let i = 0;i < Object.keys(table[0]).length;i++) {
@@ -1571,7 +1573,6 @@
             }
             return str;
         };
-        //--------------------------------------------------------------------------------------------------------------
 
 
         /**
