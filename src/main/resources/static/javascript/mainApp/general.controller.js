@@ -67,6 +67,10 @@
 
         $scope.modalType = "";
 
+        $scope.groupingCSV = [];
+        $scope.groupNameCSV = [];
+
+
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
 
@@ -562,7 +566,6 @@
                     $scope.personProps = Object.keys(res[0].person);
                     $scope.personProps.shift();
                 }
-
                 $scope.launchMultiAddResultModal(listName);
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
@@ -1514,6 +1517,62 @@
             }
             return str;
         };
+
+        //--------------------------------------------------------------------------------------------------------------
+        $scope.exportGroupToCsvGeneric = function (table,grouping ,list) {
+            if (list === "Include") {
+                table = $scope.groupingInclude;
+            } else if (list === "Exclude") {
+                table = $scope.groupingExclude;
+            } else if (list === "owners") {
+                table = $scope.groupingOwners;
+            } else if (list === "basis") {
+            table = $scope.groupingBasis;
+            } else if (list === "all") {
+                table = $scope.groupingMembers;
+            }
+
+            let data, filename, link;
+
+            let csv = $scope.convertListToCsvGeneric(table);
+            if (csv == null) {
+                $scope.createApiErrorModal();
+                return;
+            }
+
+            filename = grouping + ":" + list + "_list.csv";
+
+            csv = "data:text/csv;charset=utf-8," + csv;
+            data = encodeURI(csv);
+
+            link = document.createElement("a");
+            link.setAttribute("href", data);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+
+        $scope.convertListToCsvGeneric = function (table) {
+            let str = "";
+            for(let i = 0;i < Object.keys(table[0]).length;i++) {
+                console.log(Object.keys(table[0])[i]);
+                str += Object.keys(table[0])[i] + ",";
+            }
+            str += "\r\n";
+
+            for (let i = 0; i < table.length; i++) {
+                let line = "";
+                for(let j = 0;j < Object.values(table[i]).length; j++){
+                    line += Object.values(table[i])[j] + ",";
+                }
+                str += line + "\r\n";
+            }
+            return str;
+        };
+        //--------------------------------------------------------------------------------------------------------------
+
 
         /**
          * Determines whether a warning message should be displayed when removing yourself from a list.
