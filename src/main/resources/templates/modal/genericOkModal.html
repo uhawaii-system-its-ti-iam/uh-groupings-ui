@@ -1,0 +1,15 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">
+        {{currentModalTitle}}
+    </h5>
+</div>
+<div class="modal-body" id="modal-body">
+    {{currentModalBody}}
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="createGenericOkModal.dismiss()">OK</button>
+</div>
+</html>

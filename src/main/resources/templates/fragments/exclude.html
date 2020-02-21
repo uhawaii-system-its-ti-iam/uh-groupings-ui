@@ -1,7 +1,5 @@
 <th:block th:fragment="exclude">
-
     <div id="exclude-display" class="tab-pane fade show active">
-
         <div class="row">
             <div class="col-md-8">
                 <h1 class="font-weight-bold text-dark pt-2 mb-0">Exclude ({{groupingExclude.length}})</h1>
@@ -94,15 +92,20 @@
         </div>
         <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
-                <form ng-submit="addMembers('Exclude')">
+                <form>
                     <div class="input-group" style="width: 500px">
                         <input class="form-control" placeholder="Members to add" type="text"
                                title="Enter one or more usernames" ng-model="usersToAdd" style="width: 275px"/>
                         <div>
-                            <button class="btn btn-primary" type="submit" style="margin-left: 2px">Add</button>
+                            <button class="btn btn-primary" ng-click="addMembers('Exclude')" style="margin-left: 2px">
+                                Add
+                            </button>
                             <button class="btn btn-primary"
                                     ng-click="launchImportModal('Exclude')">Import File
                             </button>
+                            <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse"
+                                 style="display:inline-block">
+                            </div>
                         </div>
                     </div>
                 </form>
