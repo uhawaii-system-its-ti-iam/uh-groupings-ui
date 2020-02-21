@@ -1,10 +1,13 @@
 (function () {
-
     /**
      * Service function that provides GET and POST requests for getting or updating data
      * @name dataProvider
      */
     UHGroupingsApp.factory("dataProvider", function ($http, $window) {
+
+        //Global time limit variable for time out modal.
+        var timeLimit = 20000;
+
         return {
             /**
              * Perform a GET request to the specified URL.
@@ -39,6 +42,7 @@
                     });
             },
 
+
             /**
              * POST data to the server, if the response is OK then call the callBack function, if the response is an
              * error then call the callError function. If the response is not received in n seconds, launch a modal.
@@ -48,7 +52,7 @@
              * @param {function} modal - Launch a modal using a call back function.
              */
             updateDataWithTimeoutModal: function (callback, callError, url, modal) {
-                let timeoutID = setTimeout(modal, 60000);
+                let timeoutID = setTimeout(modal,timeLimit);
                 $http.post(encodeURI(url))
                     .then(function (response) {
                         clearTimeout(timeoutID);
