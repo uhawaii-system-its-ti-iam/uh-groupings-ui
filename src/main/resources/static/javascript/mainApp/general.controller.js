@@ -1529,7 +1529,7 @@
         $scope.exportGroupToCsvGeneric = function (table,grouping ,list) {
 
             table = $scope.multiAddResultsGeneric;
-
+            console.log(table);
             let data, filename, link;
 
             let csv = $scope.convertListToCsvGeneric(table);
