@@ -61,12 +61,11 @@ public class GroupingsRestController {
     @Value("${groupings.api.opt_out}")
     private String OPT_OUT;
 
-
     /*
      * This is a dummy name and should never become a real user. In the event that it does, it would cause the app to
      * crash. A solution to this would be either remove the dummy user from the database or use a different fake name
      * that would then become the dummy name.
-    */
+     */
     @Value("${groupings.api.check}")
     private String CREDENTIAL_CHECK_USER;
 
@@ -85,11 +84,11 @@ public class GroupingsRestController {
         policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
         /*
-        * Checks to make sure that the API is running and that there are no issues with the overrides file.
-        *
-        * Gets the active profiles and only runs the tests the active profile relies on the API.
-        */
-        if(!Arrays.asList(env.getActiveProfiles()).contains("localTest")) {
+         * Checks to make sure that the API is running and that there are no issues with the overrides file.
+         *
+         * Gets the active profiles and only runs the tests the active profile relies on the API.
+         */
+        if (!Arrays.asList(env.getActiveProfiles()).contains("localTest")) {
 
             // Stops the application from running if the API is not up and displays error message to console.
             Assert.isTrue(isBackendUp().getStatusCode().is2xxSuccessful(),
@@ -420,17 +419,17 @@ public class GroupingsRestController {
         if (page != null)
             params = params + "page=" + page;
         if (size != null) {
-            if (!params.equals(""))
+            if (!"".equals(params))
                 params = params + "&";
             params = params + "size=" + size;
         }
         if (sortString != null) {
-            if (!params.equals(""))
+            if (!"".equals(params))
                 params = params + "&";
             params = params + "sortString=" + sortString;
         }
         if (isAscending != null) {
-            if (!params.equals(""))
+            if (!"".equals(params))
                 params = params + "&";
 
             params = params + "isAscending=" + isAscending;
@@ -526,6 +525,7 @@ public class GroupingsRestController {
     }
 
     //todo Remove
+
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserv
      *
@@ -547,6 +547,7 @@ public class GroupingsRestController {
     }
 
     //todo Remove
+
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to LDAP.
      *
@@ -570,7 +571,7 @@ public class GroupingsRestController {
     /**
      * This allows an owner of a Grouping to enable that a Grouping connected to a given sync destination
      *
-     * @param path: the path to the Grouping
+     * @param path:       the path to the Grouping
      * @param syncDestId: id of the syncDest to be enabled
      * @return information about the success of the operation
      */
@@ -591,7 +592,7 @@ public class GroupingsRestController {
     /**
      * This allows an owner of a Grouping to disable that a Grouping connected to a given sync destination
      *
-     * @param path: the path to the Grouping
+     * @param path:       the path to the Grouping
      * @param syncDestId: id of the syncDest to be disabled
      * @return information about the success of the operation
      */
@@ -728,12 +729,12 @@ public class GroupingsRestController {
     }
 
     /*
-    *
-    * Helper function for checking overrides file.
-    *
-    * Makes an HTTP request to the API, specifically getting the list of admins and all groupings.
-    * Should return a 403 Forbidden since CREDENTIAL_CHECK_USER should never exist.
-    */
+     *
+     * Helper function for checking overrides file.
+     *
+     * Makes an HTTP request to the API, specifically getting the list of admins and all groupings.
+     * Should return a 403 Forbidden since CREDENTIAL_CHECK_USER should never exist.
+     */
     private ResponseEntity credentialCheck() {
 
         String uri = API_2_1_BASE + "/adminsGroupings";
@@ -748,7 +749,7 @@ public class GroupingsRestController {
      * Makes an HTTP request to the API, specifically getting the landing page.
      * Should return a 200 OK.
      */
-    private  ResponseEntity isBackendUp() {
+    private ResponseEntity isBackendUp() {
         String uri = API_2_1_BASE + "/";
 
         return httpRequestService.makeApiRequest(CREDENTIAL_CHECK_USER, uri, HttpMethod.GET);
