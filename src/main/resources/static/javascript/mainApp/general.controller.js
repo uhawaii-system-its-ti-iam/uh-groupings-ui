@@ -513,8 +513,7 @@
                             "Large Import Warning",
                             `You are attempting to import ${num_members} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
-                             the import results will be sent.`,
-                            8000);
+                             the import results will be sent.`);
                     }
                     $scope.addMultipleMembers(users, listName);
                 }
@@ -662,10 +661,13 @@
                 templateUrl: "modal/genericOkModal",
                 scope: $scope
             });
-            let closeOnTimeout = function () {
-                $scope.createGenericOkModal.dismiss();
-            };
-            setTimeout(closeOnTimeout, timeTillClose);
+
+            if (undefined !== timeTillClose) {
+                let closeOnTimeout = function () {
+                    $scope.createGenericOkModal.dismiss();
+                };
+                setTimeout(closeOnTimeout, timeTillClose);
+            }
         }
 
         /**
