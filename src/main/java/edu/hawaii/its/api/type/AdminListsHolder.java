@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminListsHolder {
-    List<Grouping> allGroupings = new ArrayList<>();
-    Group adminGroup = new EmptyGroup();
+    List<Grouping> allGroupings;
+    Group adminGroup;
 
     public AdminListsHolder() {
-        //empty
+        this.allGroupings = new ArrayList<>();
+        this.adminGroup = new EmptyGroup();
     }
 
     public AdminListsHolder(List<Grouping> allGroupings, Group adminGroup) {
