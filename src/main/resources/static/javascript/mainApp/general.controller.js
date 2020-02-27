@@ -688,21 +688,21 @@
          * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
-            var groupingPath = $scope.selectedGrouping.path;
+            let groupingPath = $scope.selectedGrouping.path;
             groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function () {
-                var userToAdd = $scope.userToAdd;
-                var inBasis = _.some($scope.groupingBasis, { username: userToAdd });
-                if (_.isEmpty(userToAdd)) {
-                    $scope.createAddErrorModal(userToAdd);
-                } else if ($scope.existInList(userToAdd, list)) {
-                    $scope.createCheckModal(userToAdd, list, false, inBasis);
-                } else if ($scope.isInAnotherList(userToAdd, list)) {
-                    $scope.createCheckModal(userToAdd, list, true, inBasis);
-                } else if ((inBasis && list == "Include") || (!inBasis && list == "Exclude")) {
-                    $scope.createBasisWarningModal(userToAdd, list, inBasis);
+                let user = $scope.userToAdd;
+                let inBasis = _.some($scope.groupingBasis, { username: user });
+                if (_.isEmpty(user)) {
+                    $scope.createAddErrorModal(user);
+                } else if ($scope.existInList(user, list)) {
+                    $scope.createCheckModal(user, list, false, inBasis);
+                } else if ($scope.isInAnotherList(user, list)) {
+                    $scope.createCheckModal(user, list, true, inBasis);
+                } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
+                    $scope.createBasisWarningModal(user, list, inBasis);
                 } else {
                     $scope.createConfirmAddModal({
-                        userToAdd: userToAdd,
+                        userToAdd: user,
                         listName: list
                     });
                 }

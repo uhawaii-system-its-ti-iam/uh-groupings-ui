@@ -20,9 +20,8 @@
 
         $scope.createRoleErrorModal = function () {
             $scope.loading = false;
-            let p = "modal/roleErrorModal";
             $scope.RoleErrorModalInstance = $uibModal.open({
-                templateUrl: p,
+                templateUrl: "modal/roleErrorModal",
                 scope: $scope,
                 backdrop: "static",
                 keyboard: false
