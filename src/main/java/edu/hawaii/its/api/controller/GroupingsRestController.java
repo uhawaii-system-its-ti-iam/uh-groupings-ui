@@ -312,8 +312,8 @@ public class GroupingsRestController {
         logger.info("Entered REST assignOwnership...");
 
         String safeGrouping = policy.sanitize(grouping);
-
         String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", safeGrouping, newOwner);
+
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
