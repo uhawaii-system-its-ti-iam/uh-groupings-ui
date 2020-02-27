@@ -1,6 +1,7 @@
 package edu.hawaii.its.groupings.access;
 
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class UserBuilderTest {
     @Autowired
     private UserBuilder userBuilder;
 
+    // Refactor or Delete, may need to test for admin user for test coverage
+    @Ignore
     @Test
     public void testAdminUsers() {
         Map<String, String> map = new HashMap<>();
@@ -63,6 +66,8 @@ public class UserBuilderTest {
         assertTrue(user.hasRole(Role.ADMIN));
     }
 
+    // Delete this. No need to test for employees.
+    @Ignore
     @Test
     public void testEmployees() {
         Map<String, String> map = new HashMap<>();
@@ -84,6 +89,8 @@ public class UserBuilderTest {
         assertFalse(user.hasRole(Role.ADMIN));
     }
 
+    // Delete this. No need to test for employees
+    @Ignore
     @Test
     public void testEmployeesWithMultivalueUid() {
         Map<String, Object> map = new HashMap<>();
