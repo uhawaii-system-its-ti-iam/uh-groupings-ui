@@ -645,6 +645,7 @@ public class TestGroupingsRestController {
         }
     }
 
+    /*
     private GroupingAssignment mapGroupingAssignmentJson(String json) {
         try {
             return OBJECT_MAPPER.readValue(json, GroupingAssignment.class);
@@ -652,4 +653,5 @@ public class TestGroupingsRestController {
             throw new GroupingsHTTPException(e.getMessage(), e.getCause());
         }
     }
+     */
 }
