@@ -91,6 +91,26 @@
             }
             return `${minutes}:${remainingSeconds}`;
         }
+
+        /**
+         * Restart createTimeoutModalPromise
+         */
+        function restartTimeouts() {
+            if(angular.isDefined(createTimeoutModalPromise)) {
+                createTimeoutModalPromise = undefined;
+                createTimeoutModalPromise = $timeout(() => {
+                    $scope.createTimeoutModal();
+                }, MAX_TIME_IDLE);
+
+                createTimeoutModalPromise.then(() => {
+                    // timeout ends and modal is created
+                }, () => {
+                    // User resets timer or function execution fails
+                    restartTimeouts();
+                });
+            }
+        }
+        
         /**
          * Creates timeout modal.
          */
@@ -141,24 +161,6 @@
             }, endpoint);
         };
 
-        /**
-         * Restart createTimeoutModalPromise  
-         */
-        function restartTimeouts() {
-            if(angular.isDefined(createTimeoutModalPromise)) {
-                createTimeoutModalPromise = undefined;
-                createTimeoutModalPromise = $timeout(() => {
-                    $scope.createTimeoutModal();
-                }, MAX_TIME_IDLE);
-
-                createTimeoutModalPromise.then(() => {
-                    // timeout ends and modal is created
-                }, () => {
-                    // User resets timer or function execution fails 
-                    restartTimeouts();
-                });
-            }
-        }
 
         function restartCountdown() {
             $interval.cancel(countdownTimerPromise);
