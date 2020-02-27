@@ -58,8 +58,8 @@ public class GroupTest {
         Group g0 = new Group();
         assertThat(g0, equalTo(g0));
         assertThat(g0, is(g0));
-        assertFalse(g0.equals(null));
-        assertNotEquals(g0, new String());
+        assertNotEquals(g0, null);
+        assertNotEquals(g0, "");
 
         Group g1 = new Group();
         assertThat(g0, equalTo(g1));
