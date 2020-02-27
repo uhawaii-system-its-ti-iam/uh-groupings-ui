@@ -333,15 +333,6 @@ public class TestGroupingsRestController {
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
     }
 
-    // Test not used
-    @Ignore
-    @Test
-    public void ownedGroupingsTest() throws Exception {
-
-        List<Grouping> groupings = mapOwnedGroupings(uhUser01);
-
-    }
-
     @Test
     @WithMockUhUser(username = "iamtst04")
     public void optInTest() throws Exception {
