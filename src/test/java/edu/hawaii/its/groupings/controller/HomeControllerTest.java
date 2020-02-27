@@ -287,6 +287,14 @@ public class HomeControllerTest {
                 .andExpect(view().name("modal/removeModal"));
     }
 
+    //    @Test
+    //    @WithMockUhUser(username = "uh")
+    //    public void requestOptModal() throws Exception {
+    //        mockMvc.perform(get("/modal/optModal"))
+    //                .andExpect(status().isOk())
+    //                .andExpect(view().name("modal/optModal"));
+    //    }
+
     @Test
     @WithMockUhUser(username = "uh")
     public void requestCheckModal() throws Exception {
