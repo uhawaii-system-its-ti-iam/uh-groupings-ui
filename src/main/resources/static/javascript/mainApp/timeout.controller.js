@@ -182,7 +182,7 @@
                     // Redirect user to URL in location header in HTTP reponse, should be home page
                     $window.location.href = request.responseURL;
                 }
-            }
+            };
             const requestBody = "_csrf: " + $scope.getCookie("XSRF-TOKEN");
             request.send(requestBody);
         }
