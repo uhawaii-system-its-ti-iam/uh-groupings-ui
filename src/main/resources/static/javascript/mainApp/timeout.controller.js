@@ -110,7 +110,7 @@
                 });
             }
         }
-        
+
         /**
          * Creates timeout modal.
          */
