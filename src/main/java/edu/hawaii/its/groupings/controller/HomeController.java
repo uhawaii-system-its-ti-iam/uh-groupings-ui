@@ -161,11 +161,6 @@ public class HomeController {
         return "modal/emailListModal";
     }
 
-    @RequestMapping(value = "/modal/CASLDAPModal", method = RequestMethod.GET)
-    public String CASLDAPModal(Locale locale, Model model) {
-        return "modal/CASLDAPModal";
-    }
-
     @RequestMapping(value = "/modal/removeErrorModal", method = RequestMethod.GET)
     public String removeErrorModal(Locale locale, Model model) {
         return "modal/removeErrorModal";
@@ -220,6 +215,7 @@ public class HomeController {
     public String genericOkModal(Locale locale, Model model) {
         return "modal/genericOkModal";
     }
+
     @RequestMapping(value = "/modal/multiAddResultModal", method = RequestMethod.GET)
     public String multiAddResultModal(Locale locale, Model model) {
         return "modal/multiAddResultModal";

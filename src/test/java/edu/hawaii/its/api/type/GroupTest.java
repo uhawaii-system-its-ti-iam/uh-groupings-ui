@@ -2,6 +2,7 @@ package edu.hawaii.its.api.type;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -121,8 +122,8 @@ public class GroupTest {
         assertThat(g0, not(equalTo(g1)));
 
         g0 = new Group();
-        assertFalse(g0.equals(null));
-        assertNotEquals(g0, new String());
+        assertNotEquals(g0, null);
+        assertNotEquals(g0, "");
         assertThat(g0, is(g0));
 
         g1 = new Group();

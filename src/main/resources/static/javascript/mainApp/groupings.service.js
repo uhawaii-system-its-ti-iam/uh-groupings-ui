@@ -22,22 +22,22 @@
 
                 let params = "";
 
-                if (page != null) {
+                if (page !== null) {
                     params = params + "page=" + page;
                 }
-                if (size != null) {
+                if (size !== null) {
                     if (params !== "") {
                         params = params + "&";
                     }
                     params = params + "size=" + size;
                 }
-                if (sortString != null) {
+                if (sortString !== null) {
                     if (params !== "") {
                         params = params + "&";
                     }
                     params = params + "sortString=" + sortString;
                 }
-                if (isAscending != null) {
+                if (isAscending !== null) {
                     if (params !== "") {
                         params = params + "&";
                     }
@@ -59,7 +59,7 @@
              */
 
             updateDescription: function (path, onSuccess, onError, data) {
-                var endpoint = BASE_URL + "groupings/" + path + "/description";
+                let endpoint = BASE_URL + "groupings/" + path + "/description";
                 dataProvider.updateDataWithBody(onSuccess, onError, endpoint, data);
             },
 
@@ -87,7 +87,7 @@
              * @param {string} userToAdd - the usernames of the members to add
              */
             addMembersToInclude: function (path, usersToAdd, onSuccess, onError, modal) {
-                var endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
+                let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
                 return new Promise(resolve => {
                     dataProvider.updateDataWithTimeoutModal(onSuccess, onError, endpoint, modal);
                 });

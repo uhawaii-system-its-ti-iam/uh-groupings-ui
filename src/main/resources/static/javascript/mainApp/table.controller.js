@@ -180,13 +180,13 @@
             $scope[tableName] = $filter("orderBy")($scope[tableName], propertyName, reverse);
 
             // Filter out the sorted list by the corresponding query
-            if( tableName === "adminsList") {
+            if (tableName === "adminsList") {
                 $scope.filter($scope[tableName], "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, false);
             } else if (tableName === "groupingsList") {
-                $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, false)
-            } else if( tableName === "membershipsList") {
+                $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, false);
+            } else if (tableName === "membershipsList") {
                 $scope.filter($scope[tableName], "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, false);
-            } else if( tableName === "optInList") {
+            } else if (tableName === "optInList") {
                 $scope.filter($scope[tableName], "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, false);
             } else if (tableName === "groupingMembers") {
                 $scope.filter($scope[tableName], "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
@@ -200,7 +200,7 @@
                 $scope.filter($scope[tableName], "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
             } else {
                 // Paginate the table again
-               $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
+                $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
             }
         };
 

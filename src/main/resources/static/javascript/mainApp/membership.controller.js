@@ -38,15 +38,15 @@
 
                 $scope.loading = false;
             }, function (res) {
-                dataProvider.handleException({exceptionMessage: JSON.stringify(res, null, 4)}, "feedback/error", "feedback");
+                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
             });
         };
 
         $scope.memberFilterReset = function () {
             $scope.membersQuery = "";
             $scope.optInQuery = "";
-            $scope.filter($scope.membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', $scope.membersQuery, true);
-            $scope.filter($scope.optInList, 'pagedItemsOptInList', 'currentPageOptIn', $scope.optInQuery, true);
+            $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, true);
+            $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
         };
 
         /**

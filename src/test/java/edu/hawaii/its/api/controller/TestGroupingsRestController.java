@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.owasp.html.Sanitizers;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -108,10 +109,7 @@ public class TestGroupingsRestController {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
-     *
      * Don't need this as you don't need the information in the overrides file
-     *
-     *
      */
     @PostConstruct
     public void init() {
@@ -190,8 +188,9 @@ public class TestGroupingsRestController {
             Principal principal = new SimplePrincipal(ADMIN);
 
             destinations = Arrays.asList(
-                om.readValue(groupingsRestController.getAllSyncDestinations(principal, GROUPING).getBody().toString(),
-                    SyncDestination[].class));
+                    om.readValue(
+                            groupingsRestController.getAllSyncDestinations(principal, GROUPING).getBody().toString(),
+                            SyncDestination[].class));
             assertTrue(destinations.size() > 0);
         } catch (Exception e) {
 
@@ -203,8 +202,9 @@ public class TestGroupingsRestController {
             Principal principal = new SimplePrincipal(uhUser01.getUsername());
 
             destinations = Arrays.asList(
-                om.readValue(groupingsRestController.getAllSyncDestinations(principal, GROUPING).getBody().toString(),
-                    SyncDestination[].class));
+                    om.readValue(
+                            groupingsRestController.getAllSyncDestinations(principal, GROUPING).getBody().toString(),
+                            SyncDestination[].class));
             assertTrue(destinations.size() > 0);
         } catch (Exception e) {
 
@@ -212,8 +212,8 @@ public class TestGroupingsRestController {
 
         // Testing with a regular user.
         Principal principal = new SimplePrincipal(uhUser05.getUsername());
-        assertThat("403 FORBIDDEN", is(groupingsRestController.getAllSyncDestinations(principal, GROUPING).getStatusCode().toString()));
-
+        assertThat("403 FORBIDDEN",
+                is(groupingsRestController.getAllSyncDestinations(principal, GROUPING).getStatusCode().toString()));
 
     }
 
@@ -237,7 +237,8 @@ public class TestGroupingsRestController {
 
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
     }
-//todo touched
+
+    //todo touched
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void addMemberTest() throws Exception {
@@ -268,7 +269,7 @@ public class TestGroupingsRestController {
         assertTrue(isInGrouping(GROUPING, tst[0], tst[3]));
 
         assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[1]));
-//        mapGSR(API_BASE + GROUPING + "/<a href='google.com'>" + tst[1] + "<a>/deleteMemberFromIncludeGroup"); // Erroring out
+        //        mapGSR(API_BASE + GROUPING + "/<a href='google.com'>" + tst[1] + "<a>/deleteMemberFromIncludeGroup"); // Erroring out
         mapGSR(API_BASE + GROUPING + "/<span>" + tst[1] + "<span>/deleteMemberFromIncludeGroup");
 
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[1]));
@@ -330,15 +331,6 @@ public class TestGroupingsRestController {
         grouping = mapGrouping(GROUPING);
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
-    }
-
-    // Test not used
-    @Ignore
-    @Test
-    public void ownedGroupingsTest() throws Exception {
-
-        List<Grouping> groupings = mapOwnedGroupings(uhUser01);
-
     }
 
     @Test
@@ -448,7 +440,7 @@ public class TestGroupingsRestController {
         GroupingsServiceResult deleteAdminResults;
 
         try {
-             addAdminResults = mapGSR(API_BASE + "<h1>" + tst[0] + "</h1>/addAdmin");
+            addAdminResults = mapGSR(API_BASE + "<h1>" + tst[0] + "</h1>/addAdmin");
 
         } catch (GroupingsHTTPException ghe) {
             addAdminResults = new GroupingsServiceResult();
@@ -456,7 +448,7 @@ public class TestGroupingsRestController {
         }
 
         try {
-            deleteAdminResults = mapGSR(API_BASE + "<div>" +tst[0] + "</div>/deleteAdmin");
+            deleteAdminResults = mapGSR(API_BASE + "<div>" + tst[0] + "</div>/deleteAdmin");
         } catch (GroupingsHTTPException ghe) {
             deleteAdminResults = new GroupingsServiceResult();
             deleteAdminResults.setResultCode(FAILURE);
@@ -592,6 +584,7 @@ public class TestGroupingsRestController {
                 .contains(username);
     }
 
+    /*
     private boolean isGroupingOwner(String grouping, String ownerUsername, String username) {
         Principal principal = new SimplePrincipal(ownerUsername);
         String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
@@ -601,6 +594,7 @@ public class TestGroupingsRestController {
                 .getUsernames()
                 .contains(username);
     }
+     */
 
     private boolean isListservOn(String grouping, String username) {
         Principal principal = new SimplePrincipal(username);
@@ -642,6 +636,7 @@ public class TestGroupingsRestController {
         }
     }
 
+    /*
     private GroupingAssignment mapGroupingAssignmentJson(String json) {
         try {
             return OBJECT_MAPPER.readValue(json, GroupingAssignment.class);
@@ -649,4 +644,5 @@ public class TestGroupingsRestController {
             throw new GroupingsHTTPException(e.getMessage(), e.getCause());
         }
     }
+     */
 }
