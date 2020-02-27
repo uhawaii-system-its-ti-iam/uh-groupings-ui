@@ -183,7 +183,7 @@
             if( tableName === "adminsList") {
                 $scope.filter($scope[tableName], "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, false);
             } else if (tableName === "groupingsList") {
-                $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, false)
+                $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, false);
             } else if( tableName === "membershipsList") {
                 $scope.filter($scope[tableName], "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, false);
             } else if( tableName === "optInList") {
