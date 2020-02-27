@@ -505,14 +505,16 @@
                 if (num_members > $scope.maxImport) {
                     launchCreateGenericOkModal(
                         "Out of Bounds Import Warning",
-                        `Importing more than ${$scope.maxImport} users is not allowed.`);
+                        `Importing more than ${$scope.maxImport} users is not allowed.`,
+                        8000);
                 } else {
                     if (num_members > $scope.multiAddThreshold) {
                         launchCreateGenericOkModal(
                             "Large Import Warning",
                             `You are attempting to import ${num_members} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
-                             the import results will be sent.`);
+                             the import results will be sent.`,
+                            8000);
                     }
                     $scope.addMultipleMembers(users, listName);
                 }
@@ -553,7 +555,8 @@
                 return launchCreateGenericOkModal(
                     "Slow Import Warning",
                     `This import could take awhile to complete. The process however does not require the browser 
-                    to be open in order to finish.`);
+                    to be open in order to finish.`,
+                    8000);
             };
 
             /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
@@ -649,8 +652,9 @@
          * Launch a modal with a title, body message, and an ok button which closes the modal.
          * @param title - message title to be displayed in modal header
          * @param body - message body to be displayed in modal body
+         * @param timeTillClose - Millisecond till modal is modal is automatically closed.
          */
-        function launchCreateGenericOkModal(title, body) {
+        function launchCreateGenericOkModal(title, body, timeTillClose) {
             $scope.currentModalTitle = title;
             $scope.currentModalBody = body;
 
@@ -658,7 +662,14 @@
                 templateUrl: "modal/genericOkModal",
                 scope: $scope
             });
-        };
+
+            if (undefined !== timeTillClose) {
+                let closeOnTimeout = function () {
+                    $scope.createGenericOkModal.dismiss();
+                };
+                setTimeout(closeOnTimeout, timeTillClose);
+            }
+        }
 
         /**
          * Remove Items from the pendingList Array
@@ -1526,10 +1537,10 @@
          * @param grouping - grouping name that you are exporting from
          * @param list - grouping list (i.e. include or exclude)
          */
-        $scope.exportGroupToCsvGeneric = function (table,grouping ,list) {
+        $scope.exportGroupToCsvGeneric = function (table, grouping, list) {
 
             table = $scope.multiAddResultsGeneric;
-
+            console.log(table);
             let data, filename, link;
 
             let csv = $scope.convertListToCsvGeneric(table);
@@ -1558,7 +1569,7 @@
          */
         $scope.convertListToCsvGeneric = function (table) {
             let str = "";
-            for(let i = 0;i < Object.keys(table[0]).length;i++) {
+            for (let i = 0; i < Object.keys(table[0]).length; i++) {
                 console.log(Object.keys(table[0])[i]);
                 str += Object.keys(table[0])[i] + ",";
             }
@@ -1566,7 +1577,7 @@
 
             for (let i = 0; i < table.length; i++) {
                 let line = "";
-                for(let j = 0;j < Object.values(table[i]).length; j++){
+                for (let j = 0; j < Object.values(table[i]).length; j++) {
                     line += Object.values(table[i])[j] + ",";
                 }
                 str += line + "\r\n";

@@ -29,10 +29,37 @@
         <angularjs-version>1.7.8</angularjs-version>
         <bootstrap-version>4.3.1</bootstrap-version>
 
-        <lodash-version>4.17.15</lodash-version>
-        <kotlin.version>1.3.61</kotlin.version>
+        <lodash-version>4.17.4</lodash-version>
+        <kotlin.version>1.3.21</kotlin.version>
+
         <spring.version>5.2.3.RELEASE</spring.version>
     </properties>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -332,7 +359,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
+                <version>1.3.61</version>
                 <executions>
                     <execution>
                         <id>compile</id>
