@@ -23,7 +23,7 @@
             $scope.RoleErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/roleErrorModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
         };
