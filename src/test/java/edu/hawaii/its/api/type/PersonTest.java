@@ -85,7 +85,7 @@ public class PersonTest {
     public void equals() {
         Person p0 = new Person();
         assertNotEquals(p0, null);
-        assertNotEquals(p0, new String());
+        assertNotEquals(p0, "");
         assertThat(p0, is(p0));
 
         Person p1 = new Person();

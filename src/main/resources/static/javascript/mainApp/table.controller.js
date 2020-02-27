@@ -107,7 +107,6 @@
          * @param {string} pagedListVar - the name of the variable contaning the paginated list
          */
         $scope.setPage = function (action, pageVar, pagedListVar) {
-            console.log(pageVar);
             switch (action) {
                 case "First":
                     $scope[pageVar] = 0;
