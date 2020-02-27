@@ -99,7 +99,8 @@ public final class Dates {
         return formatDate(toLocalDateTime(date), formatStr);
     }
 
-    public static String formatDate(LocalDateTime datetime, String formatStr) {
+    public static String formatDate(LocalDateTime datetime, String str) {
+        String formatStr = str;
         if (datetime == null) {
             return "";
         }
