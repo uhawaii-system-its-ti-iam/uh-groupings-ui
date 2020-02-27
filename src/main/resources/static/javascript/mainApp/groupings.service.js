@@ -56,7 +56,6 @@
             },
 
             /**
-
              * Gets information about a grouping.
              * @param {string} path - the path to the grouping
              * @param onSuccess
@@ -64,7 +63,7 @@
              * @param {string} data - description to be updated
              */
 
-            updateDescription (path, onSuccess, onError, data) {
+            updateDescription(path, onSuccess, onError, data) {
                 let endpoint = BASE_URL + "groupings/" + path + "/description";
                 dataProvider.updateDataWithBody(onSuccess, onError, endpoint, data);
             },
@@ -72,7 +71,7 @@
             /**
              * Gets the list of admins and groupings.
              */
-            getAdminLists (onSuccess, onError) {
+            getAdminLists(onSuccess, onError) {
                 let endpoint = BASE_URL + "adminLists";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
@@ -84,7 +83,7 @@
              * @param onSuccess
              * @param onError
              */
-            addMemberToInclude (path, userToAdd, onSuccess, onError) {
+            addMemberToInclude(path, userToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -97,7 +96,7 @@
              * @param onError
              * @param modal
              */
-            addMembersToInclude (path, usersToAdd, onSuccess, onError, modal) {
+            addMembersToInclude(path, usersToAdd, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
                 return new Promise(resolve => {
                     dataProvider.updateDataWithTimeoutModal(onSuccess, onError, endpoint, modal);
@@ -111,7 +110,7 @@
              * @param onSuccess
              * @param onError
              */
-            addMemberToExclude (path, userToAdd, onSuccess, onError) {
+            addMemberToExclude(path, userToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToExcludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -124,7 +123,7 @@
              * @param onError
              * @param modal
              */
-            addMembersToExclude (path, usersToAdd, onSuccess, onError, modal) {
+            addMembersToExclude(path, usersToAdd, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
                 return new Promise(resolve => {
                     dataProvider.updateDataWithTimeoutModal(onSuccess, onError, endpoint, modal);
@@ -138,7 +137,7 @@
              * @param onSuccess
              * @param onError
              */
-            assignOwnership (path, newOwner, onSuccess, onError) {
+            assignOwnership(path, newOwner, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + newOwner + "/assignOwnership";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -149,7 +148,7 @@
              * @param onSuccess
              * @param onError
              */
-            addAdmin (adminToAdd, onSuccess, onError) {
+            addAdmin(adminToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + adminToAdd + "/addAdmin";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -161,7 +160,7 @@
              * @param onSuccess
              * @param onError
              */
-            removeMemberFromInclude (path, member, onSuccess, onError) {
+            removeMemberFromInclude(path, member, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -173,7 +172,7 @@
              * @param onSuccess
              * @param onError
              */
-            removeMemberFromExclude (path, member, onSuccess, onError) {
+            removeMemberFromExclude(path, member, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromExcludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -185,7 +184,7 @@
              * @param onSuccess
              * @param onError
              */
-            removeOwner (path, ownerToRemove, onSuccess, onError) {
+            removeOwner(path, ownerToRemove, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + ownerToRemove + "/removeOwnership";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -196,7 +195,7 @@
              * @param onSuccess
              * @param onError
              */
-            removeAdmin (adminToRemove, onSuccess, onError) {
+            removeAdmin(adminToRemove, onSuccess, onError) {
                 let endpoint = BASE_URL + adminToRemove + "/deleteAdmin";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -207,7 +206,7 @@
              * @param onSuccess
              * @param onError
              */
-            getMemberAttributes (member, onSuccess, onError) {
+            getMemberAttributes(member, onSuccess, onError) {
                 let endpoint = BASE_URL + "members/" + member;
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
@@ -217,7 +216,7 @@
              * @param onSuccess
              * @param onError
              */
-            optOut (path, onSuccess, onError) {
+            optOut(path, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/optOut";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -228,7 +227,7 @@
              * @param onSuccess
              * @param onError
              */
-            optIn (path, onSuccess, onError) {
+            optIn(path, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/optIn";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -236,7 +235,7 @@
             /**
              * Gets the groupings a user is a part of, the groupings they can opt in to, and the groupings they own.
              */
-            getMembershipAssignment (onSuccess, onError) {
+            getMembershipAssignment(onSuccess, onError) {
                 let endpoint = BASE_URL + "members/groupings/";
                 console.log(endpoint);
                 dataProvider.loadData(onSuccess, onError, endpoint);
@@ -249,7 +248,7 @@
              * @param onSuccess
              * @param onError
              */
-            setOptIn (path, optInOn, onSuccess, onError) {
+            setOptIn(path, optInOn, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + optInOn + "/setOptIn";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -261,7 +260,7 @@
              * @param onSuccess
              * @param onError
              */
-            setOptOut (path, optOutOn, onSuccess, onError) {
+            setOptOut(path, optOutOn, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + optOutOn + "/setOptOut";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -270,7 +269,7 @@
             /**
              * Get the list of sync destinations
              */
-            getSyncDestList (path, onSuccess, onError) {
+            getSyncDestList(path, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/syncDestinations";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
@@ -283,7 +282,7 @@
              * @param onSuccess
              * @param onError
              */
-            setSyncDest (path, syncDestId, turnOn, onSuccess, onError) {
+            setSyncDest(path, syncDestId, turnOn, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/syncDests/" + syncDestId;
                 if (turnOn) {
                     endpoint = endpoint.concat("/enable");
@@ -296,7 +295,7 @@
             /**
              * Gets the groupings a member owns.
              */
-            getGroupingsOwned (onSuccess, onError) {
+            getGroupingsOwned(onSuccess, onError) {
                 let endpoint = BASE_URL + "owners/groupings";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             }

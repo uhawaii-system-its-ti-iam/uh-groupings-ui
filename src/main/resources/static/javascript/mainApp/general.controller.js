@@ -1100,13 +1100,8 @@
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
-
-                var userToRemove = options.user.username;
-
-                // groupingPath should only be defined if listName is not "admins"
-                if ($scope.listName != "admins") {
-                    groupingPath = $scope.selectedGrouping.path;
-                }
+                let userToRemove = options.user.username;
+                let groupingPath = $scope.selectedGrouping.path;
 
                 if ($scope.listName === "Include") {
                     groupingsService.removeMemberFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
