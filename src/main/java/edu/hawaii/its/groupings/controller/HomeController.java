@@ -141,11 +141,6 @@ public class HomeController {
         return "modal/removeModal";
     }
 
-    @RequestMapping(value = "/modal/optModal", method = RequestMethod.GET)
-    public String optModal(Locale locale, Model model) {
-        return "modal/optModal";
-    }
-
     @RequestMapping(value = "/modal/confirmAddModal", method = RequestMethod.GET)
     public String confirmAddModal(Locale locale, Model model) {
         return "modal/confirmAddModal";

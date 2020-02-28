@@ -10,13 +10,18 @@
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
                 ng-model="ownersQuery" class="form-control"
                 ng-change="filter(groupingOwners, 'pagedItemsOwners', 'currentPageOwners', ownersQuery, true)"/>
-                <!--Export to CSV button -->
-                <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
-                        ng-click="exportGroupToCsv(groupingOwners, selectedGrouping.name, 'owners')"
-                        ng-hide="!paginatingComplete">
-                    <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
-                    Export to CSV
-                </button>
+                <!-- Export to CSV button -->
+                <div class="float-right"
+                     uib-tooltip="Export will be available once all members are loaded"
+                     tooltip-enable="!paginatingComplete"
+                     style="display:inline-block">
+                    <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
+                            ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
+                            ng-disabled="!paginatingComplete">
+                        <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
+                        Export to CSV
+                    </button>
+                </div>
             </div>
         </div>
 
