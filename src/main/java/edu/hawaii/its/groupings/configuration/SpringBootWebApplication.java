@@ -1,7 +1,5 @@
 package edu.hawaii.its.groupings.configuration;
 
-import com.google.common.reflect.ClassPath;
-
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,9 +25,9 @@ public class SpringBootWebApplication extends SpringBootServletInitializer {
         SpringApplication.run(SpringBootWebApplication.class, args);
     }
 
-    /*
-    * Post Construct runs the method only once after bean initialization, these will run if there
-    * are no beans to initialize. This should run before the actual application runs.
+    /**
+     * Post Construct runs the method only once after bean initialization, these will run if there
+     * are no beans to initialize. This should run before the actual application runs.
      */
     @PostConstruct
     private void checkForPwd() throws IOException {
@@ -43,12 +41,12 @@ public class SpringBootWebApplication extends SpringBootServletInitializer {
         // Uses a string to make a pattern to compare to.
         Pattern pattern = Pattern.compile("grouperClient.webService.password");
         Matcher matcher = null;
-        while(fileScanner.hasNextLine()) {
+        while (fileScanner.hasNextLine()) {
             String line = fileScanner.nextLine();
             lineID++;
             // Creates a matcher object to look through the line given.
             matcher = pattern.matcher(line);
-            if(matcher.find()) {
+            if (matcher.find()) {
                 lineNumbers.add(lineID);
             }
         }
