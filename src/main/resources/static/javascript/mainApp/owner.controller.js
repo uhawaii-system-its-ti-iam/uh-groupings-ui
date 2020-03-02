@@ -23,7 +23,7 @@
 
                 $scope.loading = false;
             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4)}, "feedback/error", "feedback");
+                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
             });
         };
 
@@ -45,4 +45,5 @@
 
     UHGroupingsApp.controller("OwnerJsController", OwnerJsController);
 
-})();
+}());
+//})();

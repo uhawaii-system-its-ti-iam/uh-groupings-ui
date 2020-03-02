@@ -1634,4 +1634,5 @@
     }
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
-})();
+}());
+//})();
