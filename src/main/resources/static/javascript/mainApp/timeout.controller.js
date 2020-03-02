@@ -19,8 +19,8 @@
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
-        let createTimeoutModalPromise = undefined;
-        let countdownTimerPromise = undefined;
+        let createTimeoutModalPromise = {};
+        let countdownTimerPromise = {};
         let isModalOpen = false;
         const MAX_TIME_IDLE = 1000 * 60 * 25; // Time until modal opens - 25 minutes in milliseconds
         const TIME_TO_LOGOUT = 60 * 5; // When modal opens, seconds left until user is logged out
@@ -60,11 +60,11 @@
         $scope.$on("$destroy", function (event) {
             if (angular.isDefined(createTimeoutModalPromise)) {
                 $timeout.cancel(createTimeoutModalPromise);
-                createTimeoutModalPromise = undefined;
+                createTimeoutModalPromise = {};
             }
             if (angular.isDefined(countdownTimerPromise)) {
                 $timeout.cancel(countdownTimerPromise);
-                countdownTimerPromise = undefined;
+                countdownTimerPromise = {};
             }
         });
 
@@ -97,7 +97,7 @@
          */
         function restartTimeouts() {
             if (angular.isDefined(createTimeoutModalPromise)) {
-                createTimeoutModalPromise = undefined;
+                createTimeoutModalPromise = {};
                 createTimeoutModalPromise = $timeout(() => {
                     $scope.createTimeoutModal();
                 }, MAX_TIME_IDLE);
@@ -164,7 +164,7 @@
 
         function restartCountdown() {
             $interval.cancel(countdownTimerPromise);
-            countdownTimerPromise = undefined;
+            countdownTimerPromise = {};
             $scope.secondsRemaining = TIME_TO_LOGOUT;
             $scope.timeRemaining = secondsToMinutes(TIME_TO_LOGOUT);
         }

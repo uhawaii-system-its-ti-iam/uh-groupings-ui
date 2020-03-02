@@ -160,7 +160,6 @@
         $scope.getAllSyncDestinations = function () {
             const groupingPath = $scope.selectedGrouping.path;
             groupingsService.getSyncDestList(groupingPath, function (res) {
-                console.log(res);
                 // console.log("This is the response of sync dest" + res);
                 $scope.syncDestMap = res;
                 // console.log("Mapping:"+ $scope.syncDestMap);
@@ -250,7 +249,7 @@
                     currentPage++;
                     loadMembersList = true;
 
-                    //While true loop that calls members asynchornously from Grouper based on PAGE_SIZE
+                    //While true loop that calls members asynchronously from Grouper based on PAGE_SIZE
                     while (loadMembersList) {
                         /**
                          *Calls getPages function to load the rest of the members,
@@ -562,7 +561,6 @@
             /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Spinner off */
-                console.log(res);
                 for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
                     $scope.multiAddResultsGeneric[i] = res[i].person;
@@ -1402,8 +1400,6 @@
             $scope.setSyncDestInArray(syncDestName, !isSyncDestOn);
             $scope.selectedSyncDest = $scope.getEntireSyncDestInArray(syncDestName);
 
-            console.log($scope.selectedSyncDest);
-
             $scope.syncDestInstance = $uibModal.open({
                 templateUrl: "modal/syncDestModal",
                 scope: $scope,
@@ -1510,7 +1506,7 @@
         /**
          * Converts the data in the table into comma-separated values.
          * @param {object[]} table - the table to convert
-         * @returns the table in CSV format
+         * @returns string table in CSV format
          */
         $scope.convertListToCsv = function (table) {
             let str = "Last,First,Username,uhNumber,Email\r\n";
@@ -1535,11 +1531,10 @@
         $scope.exportGroupToCsvGeneric = function (table, grouping, list) {
 
             table = $scope.multiAddResultsGeneric;
-            console.log(table);
             let data, filename, link;
 
             let csv = $scope.convertListToCsvGeneric(table);
-            if (csv == null) {
+            if (csv === null) {
                 $scope.createApiErrorModal();
                 return;
             }
@@ -1565,7 +1560,6 @@
         $scope.convertListToCsvGeneric = function (table) {
             let str = "";
             for (let i = 0; i < Object.keys(table[0]).length; i++) {
-                console.log(Object.keys(table[0])[i]);
                 str += Object.keys(table[0])[i] + ",";
             }
             str += "\r\n";
@@ -1602,10 +1596,10 @@
             let ca = decodedCookie.split(";");
             for (let i = 0; i < ca.length; i++) {
                 let c = ca[i];
-                while (c.charAt(0) == " ") {
+                while (c.charAt(0) === " ") {
                     c = c.substring(1);
                 }
-                if (c.indexOf(name) == 0)
+                if (c.indexOf(name) === 0)
                     return c.substring(name.length, c.length);
             }
             return "";
