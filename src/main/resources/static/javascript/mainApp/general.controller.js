@@ -494,23 +494,23 @@
          */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
-            let num_members = ($scope.usersToAdd.split(" ").length - 1);
+            let numMembers = ($scope.usersToAdd.split(" ").length - 1);
 
 
-            if (num_members > 0) {
+            if (numMembers > 0) {
                 let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
 
                 $scope.usersToAdd = [];
-                if (num_members > $scope.maxImport) {
+                if (numMembers > $scope.maxImport) {
                     launchCreateGenericOkModal(
                         "Out of Bounds Import Warning",
                         `Importing more than ${$scope.maxImport} users is not allowed.`,
                         8000);
                 } else {
-                    if (num_members > $scope.multiAddThreshold) {
+                    if (numMembers > $scope.multiAddThreshold) {
                         launchCreateGenericOkModal(
                             "Large Import Warning",
-                            `You are attempting to import ${num_members} new users to the ${listName} list.
+                            `You are attempting to import ${numMembers} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
                              the import results will be sent.`,
                             8000);
