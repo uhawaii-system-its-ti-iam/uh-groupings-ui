@@ -19,8 +19,8 @@
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
-        let createTimeoutModalPromise = undefined;
-        let countdownTimerPromise = undefined;
+        let createTimeoutModalPromise = {};
+        let countdownTimerPromise = {};
         let isModalOpen = false;
         const MAX_TIME_IDLE = 1000 * 60 * 25; // Time until modal opens - 25 minutes in milliseconds
         const TIME_TO_LOGOUT = 60 * 5; // When modal opens, seconds left until user is logged out
@@ -44,27 +44,27 @@
 
             // If user clicks, reset timeout
             $(this).click(function (e) {
-                if(!isModalOpen) {
+                if (!isModalOpen) {
                     $timeout.cancel(createTimeoutModalPromise);
                 }
             });
             // If user presses a key on the keyboard reset timeout
             $(this).keypress(function (e) {
-                if(!isModalOpen) {
-                $timeout.cancel(createTimeoutModalPromise);
+                if (!isModalOpen) {
+                    $timeout.cancel(createTimeoutModalPromise);
                 }
             });
         });
 
         /* When DOM is destroyed, clear timeouts and intervals */
-        $scope.$on("$destroy", function (event) {  
-            if(angular.isDefined(createTimeoutModalPromise)) {
+        $scope.$on("$destroy", function (event) {
+            if (angular.isDefined(createTimeoutModalPromise)) {
                 $timeout.cancel(createTimeoutModalPromise);
-                createTimeoutModalPromise = undefined; 
+                createTimeoutModalPromise = {};
             }
-            if(angular.isDefined(countdownTimerPromise)) {
+            if (angular.isDefined(countdownTimerPromise)) {
                 $timeout.cancel(countdownTimerPromise);
-                countdownTimerPromise = undefined;  
+                countdownTimerPromise = {};
             }
         });
 
@@ -73,15 +73,15 @@
          */
         function timer() {
             $scope.timeRemaining = secondsToMinutes($scope.secondsRemaining);
-            if($scope.secondsRemaining <= 0) {
+            if ($scope.secondsRemaining <= 0) {
                 $scope.logoutOnIdle();
-                restartTimeouts();             
+                restartTimeouts();
             }
             $scope.secondsRemaining--;
         }
 
-        /** 
-         * Helper function to convert an amount of seconds to minutes in a formatted string 
+        /**
+         * Helper function to convert an amount of seconds to minutes in a formatted string
          */
         function secondsToMinutes(seconds) {
             let minutes = Math.round((seconds - 30) / 60);
@@ -96,8 +96,8 @@
          * Restart createTimeoutModalPromise
          */
         function restartTimeouts() {
-            if(angular.isDefined(createTimeoutModalPromise)) {
-                createTimeoutModalPromise = undefined;
+            if (angular.isDefined(createTimeoutModalPromise)) {
+                createTimeoutModalPromise = {};
                 createTimeoutModalPromise = $timeout(() => {
                     $scope.createTimeoutModal();
                 }, MAX_TIME_IDLE);
@@ -118,7 +118,7 @@
             $scope.timeoutModalInstance = $uibModal.open({
                 templateUrl: "modal/timeoutModal",
                 scope: $scope,
-                backdrop: 'static',
+                backdrop: "static",
                 keyboard: false
             });
             /* Callback when timeout modal is opened */
@@ -164,10 +164,11 @@
 
         function restartCountdown() {
             $interval.cancel(countdownTimerPromise);
-            countdownTimerPromise = undefined;
+            countdownTimerPromise = {};
             $scope.secondsRemaining = TIME_TO_LOGOUT;
             $scope.timeRemaining = secondsToMinutes(TIME_TO_LOGOUT);
         }
+
         /*
             Logout method used only when user is idle for too long.
             The other logout method is implemented in the html.
@@ -178,15 +179,15 @@
             request.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
             // Attach event handler when POST request is successful
             request.onreadystatechange = () => {
-                if(request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
                     // Redirect user to URL in location header in HTTP reponse, should be home page
                     $window.location.href = request.responseURL;
                 }
             };
             const requestBody = "_csrf: " + $scope.getCookie("XSRF-TOKEN");
             request.send(requestBody);
-        }
+        };
     }
 
     UHGroupingsApp.controller("TimeoutJsController", TimeoutJsController);
-})();
+}());

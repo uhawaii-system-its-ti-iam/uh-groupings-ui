@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
-import edu.hawaii.its.api.type.GroupingAssignment;
 import edu.hawaii.its.api.type.GroupingsHTTPException;
 import edu.hawaii.its.api.type.GroupingsServiceResult;
 import edu.hawaii.its.api.type.SyncDestination;
@@ -15,7 +14,6 @@ import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import org.jasig.cas.client.authentication.SimplePrincipal;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

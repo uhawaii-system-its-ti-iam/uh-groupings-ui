@@ -5,6 +5,7 @@ import edu.hawaii.its.groupings.type.Feedback;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -333,7 +334,8 @@ public class HomeControllerTest {
         mockMvc.perform(get("/modal/addErrorModal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("modal/addErrorModal"));
-        }
+    }
+
     @Test
     @WithMockUhUser(username = "uh")
     public void requestTimeoutModal() throws Exception {

@@ -26,8 +26,13 @@ public class Strings {
 
     public static String truncate(String value, int length) {
         String s = value;
-        if (s != null && s.length() > length) {
-            s = s.substring(0, length);
+
+        try {
+            if (s != null && s.length() > length) {
+                s = s.substring(0, length);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println("Index is out of Bounds " + e.getMessage());
         }
         return s;
     }

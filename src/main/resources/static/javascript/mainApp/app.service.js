@@ -15,7 +15,7 @@
              * @param callError
              * @param {string} url - the URL to perform the request on
              */
-            loadData (callback, callError, url) {
+            loadData(callback, callError, url) {
                 $http.get(encodeURI(url))
                     .then(function (response) {
                         callback(response.data);
@@ -31,7 +31,7 @@
              * @param {function} callback - the function to perform on a successful request (200)
              * @param {string} url - the URL to perform the request on
              */
-            updateData (callback, callError, url) {
+            updateData(callback, callError, url) {
                 $http.post(encodeURI(url))
                     .then(function (response) {
                         callback(response.data);
@@ -50,8 +50,8 @@
              * @param {string} url - Path to which data is being posted too.
              * @param {function} modal - Launch a modal using a call back function.
              */
-            updateDataWithTimeoutModal (callback, callError, url, modal) {
-                let timeoutID = setTimeout(modal,timeLimit);
+            updateDataWithTimeoutModal(callback, callError, url, modal) {
+                let timeoutID = setTimeout(modal, timeLimit);
                 $http.post(encodeURI(url))
                     .then(function (response) {
                         clearTimeout(timeoutID);
@@ -70,7 +70,7 @@
              * @param {string} url - the URL to perform the request on
              * @param {string} data - data to be updated
              */
-            updateDataWithBody (callback, callError, url, data) {
+            updateDataWithBody(callback, callError, url, data) {
                 $http.put(encodeURI(url), data)
                     .then(function (response) {
                         callback(response);
@@ -86,7 +86,7 @@
              * @param {string} url - the endpoint to perform the POST request
              * @param {string} redirectUrl - the location to redirect after
              */
-            handleException (exceptionData, url, redirectUrl) {
+            handleException(exceptionData, url, redirectUrl) {
                 $http.post(encodeURI(url), exceptionData, {
                     headers: {
                         "Content-Type": "application/json"
@@ -99,4 +99,5 @@
         };
     });
 
-})();
+}());
+//})();
