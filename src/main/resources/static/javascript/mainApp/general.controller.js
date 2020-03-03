@@ -29,6 +29,7 @@
         $scope.groupingsList = [];
         $scope.pagedItemsGroupings = [];
         $scope.currentPageGroupings = 0;
+        $scope.selectedGrouping = {};
 
         $scope.groupingBasis = [];
         $scope.pagedItemsBasis = [];
