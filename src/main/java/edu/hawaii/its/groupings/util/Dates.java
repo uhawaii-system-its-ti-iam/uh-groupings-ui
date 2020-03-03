@@ -161,7 +161,6 @@ public final class Dates {
 
     public static LocalDate toLocalDate(Date date) {
         Date result = new Date();
-        ZonedDateTime zonedDateTime = null;
         try {
             if (date instanceof java.sql.Date) {
                 result.setTime(date.getTime());
@@ -172,8 +171,9 @@ public final class Dates {
             return zoneDateTime.toLocalDate();
 
         } catch (ClassCastException e) {
-
+            System.err.println(e.getMessage());
         }
+        return null;
     }
 
     public static Date toDate(LocalDate localDate) {
