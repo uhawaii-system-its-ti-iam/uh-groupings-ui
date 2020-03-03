@@ -91,7 +91,7 @@
         //Keeps track of async calls made throughout this js controller
         let asyncThreadCount = 0;
 
-        let maxLength = 100;
+        let maxLength = 100;//pagedItemsGroupings
         let noDescriptionMessage = "No description given for this Grouping.";
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
@@ -102,9 +102,8 @@
          * @param {number} index - the index of the grouping clicked by the user
          */
         $scope.displayGrouping = function (currentPage, index) {
-            $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
+            $scope.selectedGrouping = $scope.pagedItemsGroupings[parseInt(currentPage)][parseInt(index)];
             $scope.getGroupingInformation();
-
 
             $scope.showGrouping = true;
         };
