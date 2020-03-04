@@ -102,7 +102,7 @@
          * @param {number} index - the index of the grouping clicked by the user
          */
         $scope.displayGrouping = function (currentPage, index) {
-            $scope.selectedGrouping = $scope.pagedItemsGroupings[parseInt(currentPage)][parseInt(index)];
+            $scope.selectedGrouping = $scope.pagedItemsGroupings[parseInt(currentPage, 10)][parseInt(index, 10)];
             $scope.getGroupingInformation();
 
             $scope.showGrouping = true;
@@ -561,8 +561,8 @@
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Spinner off */
                 for (let i = 0; i < res.length; i++) {
-                    $scope.multiAddResults[parseInt(i)] = res[parseInt(i)].person;
-                    $scope.multiAddResultsGeneric[parseInt(i)] = res[parseInt(i)].person;
+                    $scope.multiAddResults[parseInt(i, 10)] = res[parseInt(i, 10)].person;
+                    $scope.multiAddResultsGeneric[parseInt(i, 10)] = res[parseInt(i, 10)].person;
                 }
                 if (undefined !== res[0].person) {
                     $scope.personProps = Object.keys(res[0].person);
@@ -995,9 +995,9 @@
             let userToRemove;
             $scope.modalType = "remove";
             if (listName === "Include") {
-                userToRemove = $scope.pagedItemsInclude[parseInt(currentPage)][parseInt(index)];
+                userToRemove = $scope.pagedItemsInclude[parseInt(currentPage, 10)][parseInt(index, 10)];
             } else if (listName === "Exclude") {
-                userToRemove = $scope.pagedItemsExclude[parseInt(currentPage)][parseInt(index)];
+                userToRemove = $scope.pagedItemsExclude[parseInt(currentPage, 10)][parseInt(index, 10)];
             }
 
             $scope.createRemoveModal({
@@ -1511,11 +1511,11 @@
             let str = "Last,First,Username,uhNumber,Email\r\n";
             for (let i = 0; i < table.length; i++) {
                 let line = "";
-                line += table[parseInt(i)].lastName + ",";
-                line += table[parseInt(i)].firstName + ",";
-                line += table[parseInt(i)].username + ",";
-                line += table[parseInt(i)].uhUuid + ",";
-                line += table[parseInt(i)].username + "@hawaii.edu,";
+                line += table[parseInt(i, 10)].lastName + ",";
+                line += table[parseInt(i, 10)].firstName + ",";
+                line += table[parseInt(i, 10)].username + ",";
+                line += table[parseInt(i, 10)].uhUuid + ",";
+                line += table[parseInt(i, 10)].username + "@hawaii.edu,";
                 str += line + "\r\n";
             }
             return str;

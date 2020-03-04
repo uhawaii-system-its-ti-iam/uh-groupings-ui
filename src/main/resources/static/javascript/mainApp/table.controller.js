@@ -109,25 +109,25 @@
         $scope.setPage = function (action, pageVar, pagedListVar) {
             switch (action) {
                 case "First":
-                    $scope[parseInt(pageVar)] = 0;
+                    $scope[parseInt(pageVar, 10)] = 0;
                     break;
                 case "Prev":
-                    if ($scope[parseInt(pageVar)] > 0) {
-                        $scope[parseInt(pageVar)]--;
+                    if ($scope[parseInt(pageVar, 10)] > 0) {
+                        $scope[parseInt(pageVar, 10)]--;
                     }
                     break;
                 case "Set":
                     if (this.n >= 0 && this.n <= $scope[pagedListVar].length - 1) {
-                        $scope[parseInt(pageVar)] = this.n;
+                        $scope[parseInt(pageVar, 10)] = this.n;
                     }
                     break;
                 case "Next":
-                    if ($scope[parseInt(pageVar)] < $scope[JSON.stringify(pageVar)].length - 1) {
-                        $scope[parseInt(pageVar)] = $scope[JSON.stringify(pageVar)] + 1;
+                    if ($scope[parseInt(pageVar, 10)] < $scope[JSON.stringify(pageVar)].length - 1) {
+                        $scope[parseInt(pageVar, 10)] = $scope[JSON.stringify(pageVar)] + 1;
                     }
                     break;
                 case "Last":
-                    $scope[parseInt(pageVar)] = $scope[JSON.stringify(pageVar)].length - 1;
+                    $scope[parseInt(pageVar, 10)] = $scope[JSON.stringify(pageVar)].length - 1;
                     break;
             }
         };
