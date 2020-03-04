@@ -27,9 +27,9 @@
             var pagedList = [];
             for (let i = 0; i < list.length; i++) {
                 if (i % $scope.itemsPerPage === 0) {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [list[i]];
+                    pagedList[parseInt(Math.floor(i / $scope.itemsPerPage), 10)] = [list[parseInt(i, 10)]];
                 } else {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)].push(list[i]);
+                    pagedList[parseInt(Math.floor(i / $scope.itemsPerPage), 10)].push(list[parseInt(i, 10)]);
                 }
             }
             return pagedList;
@@ -70,10 +70,10 @@
 
             let filteredItems = $filter("filter")(list, function (item) {
                 for (let key in item) {
-                    if (_.has(item, key)
-                        && isFilterableColumn(key)
-                        && _.isString(item[key])
-                        && containsSubstring(item[key], query)) {
+                    if (_.has(item, JSON.stringify(key))
+                        && isFilterableColumn(JSON.stringify(key))
+                        && _.isString(item[JSON.stringify(key)])
+                        && containsSubstring(item[JSON.stringify(key)], query)) {
                         return true;
                     }
                 }
@@ -81,10 +81,10 @@
 
             // Resets the page number
             if (resetPage) {
-                $scope[pageVar] = 0;
+                $scope[parseInt(pageVar)] = 0;
             }
             // Paginates the filtered items
-            $scope[pagedListVar] = $scope.groupToPages(filteredItems);
+            $scope[JSON.stringify(pagedListVar)] = $scope.groupToPages(filteredItems);
         };
 
         /**
@@ -109,25 +109,25 @@
         $scope.setPage = function (action, pageVar, pagedListVar) {
             switch (action) {
                 case "First":
-                    $scope[pageVar] = 0;
+                    $scope[parseInt(pageVar, 10)] = 0;
                     break;
                 case "Prev":
-                    if ($scope[pageVar] > 0) {
-                        $scope[pageVar]--;
+                    if ($scope[parseInt(pageVar, 10)] > 0) {
+                        $scope[parseInt(pageVar, 10)]--;
                     }
                     break;
                 case "Set":
-                    if (this.n >= 0 && this.n <= $scope[pagedListVar].length - 1) {
-                        $scope[pageVar] = this.n;
+                    if (this.n >= 0 && this.n <= $scope[JSON.stringify(pagedListVar)].length - 1) {
+                        $scope[parseInt(pageVar, 10)] = this.n;
                     }
                     break;
                 case "Next":
-                    if ($scope[pageVar] < $scope[pagedListVar].length - 1) {
-                        $scope[pageVar] = $scope[pageVar] + 1;
+                    if ($scope[parseInt(pageVar, 10)] < $scope[JSON.stringify(pageVar)].length - 1) {
+                        $scope[parseInt(pageVar, 10)] = $scope[JSON.stringify(pageVar)] + 1;
                     }
                     break;
                 case "Last":
-                    $scope[pageVar] = $scope[pagedListVar].length - 1;
+                    $scope[parseInt(pageVar, 10)] = $scope[JSON.stringify(pageVar)].length - 1;
                     break;
             }
         };
@@ -159,48 +159,48 @@
          */
         $scope.sortBy = function (tableName, pagedTableName, propertyName) {
             // Table has not been sorted by any column yet
-            if (!$scope.columnSort[tableName]) {
+            if (!$scope.columnSort[JSON.stringify(tableName)]) {
                 if (propertyName === DEFAULT_COLUMN_NAME) {
-                    $scope.columnSort[tableName] = { property: DEFAULT_COLUMN_NAME, reverse: true };
+                    $scope.columnSort[JSON.stringify(tableName)] = { property: DEFAULT_COLUMN_NAME, reverse: true };
                 } else {
                     // Otherwise, set the new property and sort in ascending order
-                    $scope.columnSort[tableName] = { property: propertyName, reverse: false };
+                    $scope.columnSort[JSON.stringify(tableName)] = { property: propertyName, reverse: false };
                 }
             } else {
                 // Clicking on the same property will just reverse the direction
-                if (propertyName === $scope.columnSort[tableName].property) {
-                    $scope.columnSort[tableName].reverse = !$scope.columnSort[tableName].reverse;
+                if (propertyName === $scope.columnSort[JSON.stringify(tableName)].property) {
+                    $scope.columnSort[JSON.stringify(tableName)].reverse = !$scope.columnSort[JSON.stringify(tableName)].reverse;
                 } else {
                     // Otherwise, set the new property and sort in ascending order
-                    $scope.columnSort[tableName].property = propertyName;
-                    $scope.columnSort[tableName].reverse = false;
+                    $scope.columnSort[JSON.stringify(tableName)].property = propertyName;
+                    $scope.columnSort[JSON.stringify(tableName)].reverse = false;
                 }
             }
-            let reverse = $scope.columnSort[tableName].reverse;
-            $scope[tableName] = $filter("orderBy")($scope[tableName], propertyName, reverse);
+            let reverse = $scope.columnSort[JSON.stringify(tableName)].reverse;
+            $scope[JSON.stringify(tableName)] = $filter("orderBy")($scope[JSON.stringify(tableName)], propertyName, reverse);
 
             // Filter out the sorted list by the corresponding query
             if (tableName === "adminsList") {
-                $scope.filter($scope[tableName], "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, false);
+                $scope.filter($scope[JSON.stringify(tableName)], "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, false);
             } else if (tableName === "groupingsList") {
-                $scope.filter($scope[tableName], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, false);
+                $scope.filter($scope[JSON.stringify(tableName)], "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, false);
             } else if (tableName === "membershipsList") {
-                $scope.filter($scope[tableName], "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, false);
+                $scope.filter($scope[JSON.stringify(tableName)], "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, false);
             } else if (tableName === "optInList") {
-                $scope.filter($scope[tableName], "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, false);
+                $scope.filter($scope[JSON.stringify(tableName)], "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, false);
             } else if (tableName === "groupingMembers") {
-                $scope.filter($scope[tableName], "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
+                $scope.filter($scope[JSON.stringify(tableName)], "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, false);
             } else if (tableName === "groupingBasis") {
-                $scope.filter($scope[tableName], "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
+                $scope.filter($scope[JSON.stringify(tableName)], "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, false);
             } else if (tableName === "groupingInclude") {
-                $scope.filter($scope[tableName], "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
+                $scope.filter($scope[JSON.stringify(tableName)], "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, false);
             } else if (tableName === "groupingExclude") {
-                $scope.filter($scope[tableName], "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
+                $scope.filter($scope[JSON.stringify(tableName)], "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, false);
             } else if (tableName === "groupingOwners") {
-                $scope.filter($scope[tableName], "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
+                $scope.filter($scope[JSON.stringify(tableName)], "pagedItemsOwners", "currentPageOwners", $scope.ownersQuery, false);
             } else {
                 // Paginate the table again
-                $scope[pagedTableName] = $scope.groupToPages($scope[tableName]);
+                $scope[JSON.stringify(pagedTableName)] = $scope.groupToPages($scope[JSON.stringify(tableName)]);
             }
         };
 

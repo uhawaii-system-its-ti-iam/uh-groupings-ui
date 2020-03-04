@@ -91,7 +91,7 @@
         //Keeps track of async calls made throughout this js controller
         let asyncThreadCount = 0;
 
-        let maxLength = 100;
+        let maxLength = 100;//pagedItemsGroupings
         let noDescriptionMessage = "No description given for this Grouping.";
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
@@ -102,9 +102,8 @@
          * @param {number} index - the index of the grouping clicked by the user
          */
         $scope.displayGrouping = function (currentPage, index) {
-            $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
+            $scope.selectedGrouping = $scope.pagedItemsGroupings[parseInt(currentPage, 10)][parseInt(index, 10)];
             $scope.getGroupingInformation();
-
 
             $scope.showGrouping = true;
         };
@@ -562,8 +561,8 @@
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Spinner off */
                 for (let i = 0; i < res.length; i++) {
-                    $scope.multiAddResults[i] = res[i].person;
-                    $scope.multiAddResultsGeneric[i] = res[i].person;
+                    $scope.multiAddResults[parseInt(i, 10)] = res[parseInt(i, 10)].person;
+                    $scope.multiAddResultsGeneric[parseInt(i, 10)] = res[parseInt(i, 10)].person;
                 }
                 if (undefined !== res[0].person) {
                     $scope.personProps = Object.keys(res[0].person);
@@ -621,7 +620,7 @@
          * @param setAs - set attribute too.
          */
         $scope.changeStyleAttribute = function (id, attribute, setAs) {
-            document.getElementById(id).style[attribute] = setAs;
+            document.getElementById(id).style[JSON.stringify(attribute)] = setAs;
         };
 
         /**
@@ -996,9 +995,9 @@
             let userToRemove;
             $scope.modalType = "remove";
             if (listName === "Include") {
-                userToRemove = $scope.pagedItemsInclude[currentPage][index];
+                userToRemove = $scope.pagedItemsInclude[parseInt(currentPage, 10)][parseInt(index, 10)];
             } else if (listName === "Exclude") {
-                userToRemove = $scope.pagedItemsExclude[currentPage][index];
+                userToRemove = $scope.pagedItemsExclude[parseInt(currentPage, 10)][parseInt(index, 10)];
             }
 
             $scope.createRemoveModal({
@@ -1512,11 +1511,11 @@
             let str = "Last,First,Username,uhNumber,Email\r\n";
             for (let i = 0; i < table.length; i++) {
                 let line = "";
-                line += table[i].lastName + ",";
-                line += table[i].firstName + ",";
-                line += table[i].username + ",";
-                line += table[i].uhUuid + ",";
-                line += table[i].username + "@hawaii.edu,";
+                line += table[parseInt(i, 10)].lastName + ",";
+                line += table[parseInt(i, 10)].firstName + ",";
+                line += table[parseInt(i, 10)].username + ",";
+                line += table[parseInt(i, 10)].uhUuid + ",";
+                line += table[parseInt(i, 10)].username + "@hawaii.edu,";
                 str += line + "\r\n";
             }
             return str;
