@@ -620,7 +620,7 @@
          * @param setAs - set attribute too.
          */
         $scope.changeStyleAttribute = function (id, attribute, setAs) {
-            document.getElementById(id).style[attribute] = setAs;
+            document.getElementById(id).style[JSON.stringify(attribute)] = setAs;
         };
 
         /**

@@ -73,7 +73,7 @@
          * @param {number} indexClicked - the index of the grouping clicked by the user
          */
         $scope.optOut = function (currentPage, indexClicked) {
-            const groupingPath = $scope.pagedItemsMemberships[currentPage][indexClicked].path;
+            const groupingPath = $scope.pagedItemsMemberships[parseInt(currentPage, 10)][parseInt(indexClicked, 10)].path;
             $scope.loading = true;
             groupingsService.optOut(groupingPath, handleSuccessfulOpt, handleUnsuccessfulOpt);
         };

@@ -27,9 +27,9 @@
             var pagedList = [];
             for (let i = 0; i < list.length; i++) {
                 if (i % $scope.itemsPerPage === 0) {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)] = [list[i]];
+                    pagedList[parseInt(Math.floor(i / $scope.itemsPerPage), 10)] = [list[parseInt(i, 10)]];
                 } else {
-                    pagedList[Math.floor(i / $scope.itemsPerPage)].push(list[i]);
+                    pagedList[parseInt(Math.floor(i / $scope.itemsPerPage), 10)].push(list[parseInt(i, 10)]);
                 }
             }
             return pagedList;
@@ -117,7 +117,7 @@
                     }
                     break;
                 case "Set":
-                    if (this.n >= 0 && this.n <= $scope[pagedListVar].length - 1) {
+                    if (this.n >= 0 && this.n <= $scope[JSON.stringify(pagedListVar)].length - 1) {
                         $scope[parseInt(pageVar, 10)] = this.n;
                     }
                     break;
@@ -168,8 +168,8 @@
                 }
             } else {
                 // Clicking on the same property will just reverse the direction
-                if (propertyName === $scope.columnSort[tableName].property) {
-                    $scope.columnSort[JSON.stringify(tableName)].reverse = !$scope.columnSort[tableName].reverse;
+                if (propertyName === $scope.columnSort[JSON.stringify(tableName)].property) {
+                    $scope.columnSort[JSON.stringify(tableName)].reverse = !$scope.columnSort[JSON.stringify(tableName)].reverse;
                 } else {
                     // Otherwise, set the new property and sort in ascending order
                     $scope.columnSort[JSON.stringify(tableName)].property = propertyName;
