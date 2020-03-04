@@ -87,7 +87,7 @@
          */
         $scope.removeAdmin = function (currentPage, index) {
             groupingsService.getAdminLists(function () {
-                const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+                const adminToRemove = $scope.pagedItemsAdmins[parseInt(currentPage)][parseInt(index)];
 
                 if ($scope.adminsList.length > 1) {
                     $scope.createRemoveModal({

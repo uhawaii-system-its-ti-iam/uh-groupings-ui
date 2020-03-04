@@ -561,8 +561,8 @@
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Spinner off */
                 for (let i = 0; i < res.length; i++) {
-                    $scope.multiAddResults[i] = res[i].person;
-                    $scope.multiAddResultsGeneric[i] = res[i].person;
+                    $scope.multiAddResults[parseInt(i)] = res[parseInt(i)].person;
+                    $scope.multiAddResultsGeneric[parseInt(i)] = res[parseInt(i)].person;
                 }
                 if (undefined !== res[0].person) {
                     $scope.personProps = Object.keys(res[0].person);
@@ -995,9 +995,9 @@
             let userToRemove;
             $scope.modalType = "remove";
             if (listName === "Include") {
-                userToRemove = $scope.pagedItemsInclude[currentPage][index];
+                userToRemove = $scope.pagedItemsInclude[parseInt(currentPage)][parseInt(index)];
             } else if (listName === "Exclude") {
-                userToRemove = $scope.pagedItemsExclude[currentPage][index];
+                userToRemove = $scope.pagedItemsExclude[parseInt(currentPage)][parseInt(index)];
             }
 
             $scope.createRemoveModal({
@@ -1511,11 +1511,11 @@
             let str = "Last,First,Username,uhNumber,Email\r\n";
             for (let i = 0; i < table.length; i++) {
                 let line = "";
-                line += table[i].lastName + ",";
-                line += table[i].firstName + ",";
-                line += table[i].username + ",";
-                line += table[i].uhUuid + ",";
-                line += table[i].username + "@hawaii.edu,";
+                line += table[parseInt(i)].lastName + ",";
+                line += table[parseInt(i)].firstName + ",";
+                line += table[parseInt(i)].username + ",";
+                line += table[parseInt(i)].uhUuid + ",";
+                line += table[parseInt(i)].username + "@hawaii.edu,";
                 str += line + "\r\n";
             }
             return str;
