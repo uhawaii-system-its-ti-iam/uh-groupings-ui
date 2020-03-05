@@ -574,12 +574,20 @@
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
 
-            if (listName === "Include")
-                await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd,
-                    handleUnsuccessfulRequest, timeoutModal);
-            else if (listName === "Exclude")
-                await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd,
-                    handleUnsuccessfulRequest, timeoutModal);
+            let fun = "addMembersTo";
+            await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
+            (groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+
+
+            /*
+             if (listName === "Include")
+                 await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd,
+                     handleUnsuccessfulRequest, timeoutModal);
+             else if (listName === "Exclude")
+                 await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd,
+                     handleUnsuccessfulRequest, timeoutModal);
+
+             */
         };
 
         /**
