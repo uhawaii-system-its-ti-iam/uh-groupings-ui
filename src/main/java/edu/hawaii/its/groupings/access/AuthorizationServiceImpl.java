@@ -21,13 +21,6 @@ import java.util.Map;
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
 
-    //
-    // TODO: This needs to be implemented with real lookups.
-    //
-
-    @Value("#{'${app.user.roles}'.split(',')}")
-    private List<String> users;
-
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private Map<String, List<Role>> userMap = new HashMap<>();
@@ -36,25 +29,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     GroupingsRestController groupingsRestController;
 
     private static final Log logger = LogFactory.getLog(AuthorizationServiceImpl.class);
-
-    @PostConstruct
-    public void init() {
-        Assert.notNull(users, "property 'app.user.roles' is required.");
-
-        for (String u : users) {
-            String[] uhn = u.split("@");
-            if (uhn.length > 0) {
-                String id = uhn[0];
-                List<Role> roles = new ArrayList<>();
-                if (uhn.length > 1) {
-                    for (String s : uhn[1].split("\\+")) {
-                        roles.add(Role.valueOf(s));
-                    }
-                }
-                userMap.put(id, roles);
-            }
-        }
-    }
 
     /**
      * Assigns roles to user
