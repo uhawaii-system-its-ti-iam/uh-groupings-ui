@@ -498,15 +498,19 @@
          * @param listName - Include or Exclude
          */
         $scope.addMembers = function (listName) {
-            let str = $scope.createUniqArrayFromString($scope.usersToAdd, " ");
-            if (str.length > 1) {
-                $scope.addMultipleMembers = true;
-                $scope.userNameList = createUserNameListObject(str, listName);
-                $scope.imported = true;
-                $scope.launchAddMembersModal(listName);
-            } else if (str.length === 1) {
-                $scope.userToAdd = str[0];
-                $scope.addMember(listName);
+            if ($scope.usersToAdd === undefined || _.isEmpty($scope.usersToAdd)) {
+                $scope.createAddErrorModal("");
+            } else {
+                let str = $scope.createUniqArrayFromString($scope.usersToAdd, " ");
+                if (str.length > 1) {
+                    $scope.addMultipleMembers = true;
+                    $scope.userNameList = createUserNameListObject(str, listName);
+                    $scope.imported = true;
+                    $scope.launchAddMembersModal(listName);
+                } else if (str.length === 1) {
+                    $scope.userToAdd = str[0];
+                    $scope.addMember(listName);
+                }
             }
         };
 
@@ -1083,8 +1087,8 @@
 
             const ownerToAdd = $scope.ownerToAdd;
 
-            if (_.isEmpty(ownerToAdd)) {
-                $scope.createAddErrorModal(ownerToAdd);
+            if (ownerToAdd === undefined || _.isEmpty(ownerToAdd)) {
+                $scope.createAddErrorModal("");
             } else {
                 $scope.createConfirmAddModal({
                     userToAdd: ownerToAdd,
