@@ -549,6 +549,7 @@
          */
         $scope.addMultipleMembers = async function (list, listName) {
             let groupingPath = $scope.selectedGrouping.path;
+            $scope.removeMultipleUsers(list);
 
             /* Callback: Return a modal which is launched after n seconds, see updateDataWithTimeoutModal() in app.service.js */
             let timeoutModal = function () {
@@ -1156,6 +1157,16 @@
          */
         $scope.closeRemoveErrorModal = function () {
             $scope.removeErrorModalInstance.close();
+        };
+
+        $scope.removeMultipleUsers = (list) => {
+
+            groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, list,
+                (res) => {
+                    console.log(res);
+                }, (res) => {
+                    console.log(res);
+                });
         };
 
         /**
