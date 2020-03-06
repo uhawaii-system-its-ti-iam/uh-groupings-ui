@@ -499,7 +499,7 @@
          */
         $scope.addMembers = function (listName) {
             if ($scope.usersToAdd === undefined || _.isEmpty($scope.usersToAdd)) {
-                $scope.createAddErrorModal($scope.usersToAdd);
+                $scope.createAddErrorModal("");
             } else {
                 let str = $scope.createUniqArrayFromString($scope.usersToAdd, " ");
                 if (str.length > 1) {
