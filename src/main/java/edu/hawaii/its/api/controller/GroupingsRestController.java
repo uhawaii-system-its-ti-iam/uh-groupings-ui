@@ -271,6 +271,21 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", safeGrouping, safeUserToDelete);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
+    @RequestMapping(value = "/{grouping}/{usersToDelete}/deleteMembersFromIncludeGroup",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity deleteMembersFromIncludeGroup(Principal principal,
+            @PathVariable String grouping,
+            @PathVariable String usersToDelete) {
+
+        String safeGrouping = policy.sanitize(grouping);
+        String safeUserToDelete = policy.sanitize(usersToDelete);
+
+        logger.info("Entered REST deleteMembersFromIncludeGroup...");
+        String uri =
+                String.format(API_2_1_BASE + "/groupings/%s/includeMultipleMembers/%s", safeGrouping, safeUserToDelete);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
+    }
 
     /**
      * deletes a member in the exclude group of the Grouping who's path is in 'grouping'
@@ -291,6 +306,22 @@ public class GroupingsRestController {
 
         logger.info("Entered REST deleteMemberFromExcludeGroup...");
         String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", safeGrouping, safeUserToDelete);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
+    }
+
+    @RequestMapping(value = "/{grouping}/{usersToDelete}/deleteMembersFromExcludeGroup",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity deleteMembersFromExcludeGroup(Principal principal,
+            @PathVariable String grouping,
+            @PathVariable String usersToDelete) {
+
+        String safeGrouping = policy.sanitize(grouping);
+        String safeUserToDelete = policy.sanitize(usersToDelete);
+
+        logger.info("Entered REST deleteMembersFromExcludeGroup...");
+        String uri =
+                String.format(API_2_1_BASE + "/groupings/%s/excludeMultipleMembers/%s", safeGrouping, safeUserToDelete);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
