@@ -478,7 +478,7 @@
          * Launch a modal containing a browse local file system for import button.
          * @param listName - Current list
          */
-
+        
         $scope.launchImportModal = function (listName) {
             $scope.listName = listName;
 
