@@ -562,7 +562,9 @@
 
             /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
             let handleSuccessfulAdd = function (res) {
-                $scope.waitingForImportResponse = false; /* Spinner off */
+                console.log(res);
+                /*
+                $scope.waitingForImportResponse = false;
                 for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
                     $scope.multiAddResultsGeneric[i] = res[i].person;
@@ -572,8 +574,10 @@
                     $scope.personProps.shift();
                 }
                 $scope.launchMultiAddResultModal(listName);
+
+                 */
             };
-            $scope.waitingForImportResponse = true; /* Spinner on */
+            $scope.waitingForImportResponse = true;
 
             let fun = "addMembersTo";
             await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
