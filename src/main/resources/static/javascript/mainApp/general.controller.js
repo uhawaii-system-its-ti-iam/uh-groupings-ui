@@ -402,7 +402,6 @@
         $scope.saveDescription = function () {
             if (groupingDescription.localeCompare($scope.modelDescription) !== 0) {
                 groupingDescription = $scope.modelDescription;
-
                 groupingsService.updateDescription($scope.selectedGrouping.path,
                     function () {
                         // This is currently empty due to not needing to do anything with a successful response
