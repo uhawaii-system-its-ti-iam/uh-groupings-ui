@@ -164,6 +164,10 @@
                 let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
+            removeMembersFromInclude(path, members, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + members + "/deleteMembersFromIncludeGroup";
+                dataProvider.updateData(onSuccess, onError, endpoint);
+            },
 
             /**
              * Removes a member from the exclude group of a grouping.
@@ -174,6 +178,11 @@
              */
             removeMemberFromExclude(path, member, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromExcludeGroup";
+                dataProvider.updateData(onSuccess, onError, endpoint);
+            },
+
+            removeMembersFromExclude(path, members, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + members + "/deleteMembersFromExcludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
