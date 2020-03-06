@@ -1163,9 +1163,9 @@
 
             groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, list,
                 (res) => {
-                    console.log(res);
+                    //console.log(res);
                 }, (res) => {
-                    console.log(res);
+                    // console.log(res);
                 });
         };
 
