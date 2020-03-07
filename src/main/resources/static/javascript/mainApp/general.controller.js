@@ -492,7 +492,8 @@
             return _.without([...new Set(str.split(delimi))], "");
         };
 
-        $scope.addMultipleMembersFast = async (usersToAdd) => {
+        $scope.addMultipleMembersFast = async (usersToAdd, listName) => {
+
             let potentialMembers = $scope.createUniqArrayFromString(usersToAdd, " ");
             let membersToAdd = "";
             const delay = ms => new Promise(res => setTimeout(res, ms));
@@ -500,7 +501,6 @@
                 groupingsService.checkMember(potentialMembers[i],
                     (res) => {
                         membersToAdd += res.uid + ",";
-                        console.log("Success");
                     },
                     (res) => {
                     });
@@ -508,6 +508,8 @@
             await delay(1000);
             if ("" !== membersToAdd)
                 membersToAdd = membersToAdd.slice(0, -1);
+
+            $scope.addMultipleMembers(membersToAdd, listName);
 
         };
         /**
@@ -525,7 +527,8 @@
                         "Out of Bounds Import Warning",
                         `Importing more than ${$scope.maxImport} users is not allowed.`,
                         8000);
-                } else if (numMembers > $scope.multiAddThreshold) {
+                }
+                else if (numMembers > $scope.multiAddThreshold) {
                     let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
                     launchCreateGenericOkModal(
                         "Large Import Warning",
@@ -535,12 +538,13 @@
                         8000);
                     $scope.addMultipleMembers(users, listName);
                 } else {
-                    $scope.addMultipleMembersFast($scope.usersToAdd);
                 }
+                $scope.addMultipleMembersFast($scope.usersToAdd, listName);
             } else {
                 $scope.userToAdd = $scope.usersToAdd;
                 $scope.addMember(listName);
             }
+
         };
 
         /**
@@ -592,9 +596,9 @@
                     $scope.personProps = Object.keys(res[0].person);
                     $scope.personProps.shift();
                 }
-                $scope.launchMultiAddResultModal(listName);
 
                  */
+                $scope.launchMultiAddResultModal(listName);
             };
             $scope.waitingForImportResponse = true;
 
