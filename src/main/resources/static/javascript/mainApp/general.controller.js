@@ -495,31 +495,35 @@
          */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
-            let numMembers = ($scope.usersToAdd.split(" ").length - 1);
+            if (_.isEmpty($scope.usersToAdd)) {
+                $scope.createAddErrorModal($scope.usersToAdd);
+            } else {
+                let numMembers = ($scope.usersToAdd.split(" ").length - 1);
 
-            if (numMembers > 0) {
-                let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
+                if (numMembers > 0) {
+                    let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
 
-                $scope.usersToAdd = [];
-                if (numMembers > $scope.maxImport) {
-                    launchCreateGenericOkModal(
-                        "Out of Bounds Import Warning",
-                        `Importing more than ${$scope.maxImport} users is not allowed.`,
-                        8000);
-                } else {
-                    if (numMembers > $scope.multiAddThreshold) {
+                    $scope.usersToAdd = [];
+                    if (numMembers > $scope.maxImport) {
                         launchCreateGenericOkModal(
-                            "Large Import Warning",
-                            `You are attempting to import ${numMembers} new users to the ${listName} list.
+                            "Out of Bounds Import Warning",
+                            `Importing more than ${$scope.maxImport} users is not allowed.`,
+                            8000);
+                    } else {
+                        if (numMembers > $scope.multiAddThreshold) {
+                            launchCreateGenericOkModal(
+                                "Large Import Warning",
+                                `You are attempting to import ${numMembers} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
                              the import results will be sent.`,
-                            8000);
+                                8000);
+                        }
+                        $scope.addMultipleMembers(users, listName);
                     }
-                    $scope.addMultipleMembers(users, listName);
+                } else {
+                    $scope.userToAdd = $scope.usersToAdd;
+                    $scope.addMember(listName);
                 }
-            } else {
-                $scope.userToAdd = $scope.usersToAdd;
-                $scope.addMember(listName);
             }
         };
 
@@ -699,9 +703,7 @@
             groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function () {
                 let user = $scope.userToAdd;
                 let inBasis = _.some($scope.groupingBasis, { username: user });
-                if (_.isEmpty(user)) {
-                    $scope.createAddErrorModal(user);
-                } else if ($scope.existInList(user, list)) {
+                if ($scope.existInList(user, list)) {
                     $scope.createCheckModal(user, list, false, inBasis);
                 } else if ($scope.isInAnotherList(user, list)) {
                     $scope.createCheckModal(user, list, true, inBasis);
