@@ -9,7 +9,7 @@
         <p th:text="#{screen.message.modal.add.fail}"></p>
         <p th:text="#{screen.message.modal.add.ensureValid}"></p>
     </div>
-    <div ng-if="user.length === 0">
+    <div ng-if="user.length === 0 || user === undefined">
         <p th:utext="#{screen.message.modal.add.empty}">Empty</p>
     </div>
 </div>

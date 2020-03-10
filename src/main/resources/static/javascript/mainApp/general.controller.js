@@ -13,7 +13,7 @@
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
 
         $scope.userToAdd = "";
-        $scope.usersToAdd = [];
+        $scope.usersToAdd = "";
         $scope.multiAddThreshold = 100;
         $scope.maxImport = 100000;
         $scope.multiAddResults = [];
@@ -496,7 +496,6 @@
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
             let numMembers = ($scope.usersToAdd.split(" ").length - 1);
-
 
             if (numMembers > 0) {
                 let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
