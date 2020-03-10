@@ -196,16 +196,6 @@ public class HomeController {
         return "modal/importErrorModal";
     }
 
-    @RequestMapping(value = "/modal/addMembersModal", method = RequestMethod.GET)
-    public String addMembersModal(Locale locale, Model model) {
-        return "modal/addMembersModal";
-    }
-
-    @RequestMapping(value = "/modal/confirmAddMembersModal", method = RequestMethod.GET)
-    public String confirmAddMembersModal(Locale locale, Model model) {
-        return "modal/confirmAddMembersModal";
-    }
-
     @RequestMapping(value = "/modal/genericOkModal", method = RequestMethod.GET)
     public String genericOkModal(Locale locale, Model model) {
         return "modal/genericOkModal";
