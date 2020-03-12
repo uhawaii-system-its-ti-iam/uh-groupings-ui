@@ -103,6 +103,11 @@
                 });
             },
 
+            generic(onSuccess, onError) {
+                let endPoint = BASE_URL + "generic";
+                dataProvider.loadData(onSuccess, onError, endPoint);
+            },
+
             /**
              * Adds a member to the exclude group of a grouping.
              * @param {string} path - the path to the grouping

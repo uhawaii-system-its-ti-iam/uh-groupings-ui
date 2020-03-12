@@ -179,6 +179,18 @@
             //creates loading screen
             $scope.loading = true;
             $scope.paginatingComplete = false;
+            groupingsService.generic((res) => {
+
+                let object = {};
+                let keys = Object.keys(res.map);
+
+                for (let i = 0; i < keys.length; i++) {
+                    object[keys[i]] = res.data[res.map[keys[i]]];
+                }
+
+                console.log(object.grouping);
+
+            }, (res) => console.log(res));
 
             //Increments due to being called again
             asyncThreadCount++;
