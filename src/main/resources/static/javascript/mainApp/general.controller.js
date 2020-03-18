@@ -20,7 +20,6 @@
         $scope.multiAddResultsGeneric = [];
         $scope.personProps = [];
         $scope.waitingForImportResponse = false;
-        $scope.membersToAdd = "";
 
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
@@ -488,63 +487,41 @@
                 scope: $scope
             });
         };
-        $scope.createUniqArrayFromString = function (str, delimi) {
-            return _.without([...new Set(str.split(delimi))], "");
-        };
 
-        $scope.addMultipleMembersFast = async (usersToAdd, listName) => {
-
-            let potentialMembers = $scope.createUniqArrayFromString(usersToAdd, " ");
-            let membersToAdd = "";
-            const delay = ms => new Promise(res => setTimeout(res, ms));
-            for (let i = 0; i < potentialMembers.length; i++) {
-                groupingsService.checkMember(potentialMembers[i],
-                    (res) => {
-                        membersToAdd += res.uid + ",";
-                    },
-                    (res) => {
-                    });
-            }
-            await delay(1000);
-            if ("" !== membersToAdd)
-                membersToAdd = membersToAdd.slice(0, -1);
-
-            $scope.addMultipleMembers(membersToAdd, listName);
-
-        };
         /**
-         * Decide which add function to call with respect to the length of $scope.usersToAdd
+         * Take $scope.usersToAdd count the number of words it contains and split it into a comma separated string, then
+         * decide whether to a multi add or a single add is necessary.
          * @param listName
-         * @returns {Promise<void>}
          */
-        $scope.addMembers = async (listName) => {
+        $scope.addMembers = function (listName) {
             $scope.listName = listName;
             let numMembers = ($scope.usersToAdd.split(" ").length - 1);
 
+
             if (numMembers > 0) {
+                let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
+
+                $scope.usersToAdd = [];
                 if (numMembers > $scope.maxImport) {
                     launchCreateGenericOkModal(
                         "Out of Bounds Import Warning",
                         `Importing more than ${$scope.maxImport} users is not allowed.`,
                         8000);
-                }
-                else if (numMembers > $scope.multiAddThreshold) {
-                    let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
-                    launchCreateGenericOkModal(
-                        "Large Import Warning",
-                        `You are attempting to import ${numMembers} new users to the ${listName} list.
+                } else {
+                    if (numMembers > $scope.multiAddThreshold) {
+                        launchCreateGenericOkModal(
+                            "Large Import Warning",
+                            `You are attempting to import ${numMembers} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
                              the import results will be sent.`,
-                        8000);
+                            8000);
+                    }
                     $scope.addMultipleMembers(users, listName);
-                } else {
                 }
-                $scope.addMultipleMembersFast($scope.usersToAdd, listName);
             } else {
                 $scope.userToAdd = $scope.usersToAdd;
                 $scope.addMember(listName);
             }
-
         };
 
         /**
@@ -585,9 +562,7 @@
 
             /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
             let handleSuccessfulAdd = function (res) {
-                console.log(res);
-                /*
-                $scope.waitingForImportResponse = false;
+                $scope.waitingForImportResponse = false; /* Spinner off */
                 for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
                     $scope.multiAddResultsGeneric[i] = res[i].person;
@@ -596,11 +571,9 @@
                     $scope.personProps = Object.keys(res[0].person);
                     $scope.personProps.shift();
                 }
-
-                 */
                 $scope.launchMultiAddResultModal(listName);
             };
-            $scope.waitingForImportResponse = true;
+            $scope.waitingForImportResponse = true; /* Spinner on */
 
             let fun = "addMembersTo";
             await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
