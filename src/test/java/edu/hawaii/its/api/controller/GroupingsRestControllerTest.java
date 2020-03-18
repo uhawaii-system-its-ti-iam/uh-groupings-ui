@@ -209,8 +209,8 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getSetListserv() throws Exception {
-        String uri_true = REST_CONTROLLER_BASE + GROUPING + "/true/setListserv";
-        String uri_false = REST_CONTROLLER_BASE + GROUPING + "/false/setListserv";
+        String uri_true = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/listserv/enable";
+        String uri_false = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/listserv/disable";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -227,8 +227,8 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getSetLdap() throws Exception {
-        String uri_true = REST_CONTROLLER_BASE + GROUPING + "/true/setLdap";
-        String uri_false = REST_CONTROLLER_BASE + GROUPING + "/false/setLdap";
+        String uri_true = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/uhReleasedGrouping/disable";
+        String uri_false = REST_CONTROLLER_BASE + "groupings/" + GROUPING + "/syncDests/uhReleasedGrouping/disable";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -311,14 +311,4 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(get(REST_CONTROLLER_BASE + "adminLists"))
                 .andExpect(status().isOk());
     }
-
-    @Test
-    @WithMockUhUser
-    public void getAddGrouping() throws Exception {
-
-        mockMvc.perform(post(REST_CONTROLLER_BASE + "fakeGroup/fakeBasis/fakeInclude/fakeExclude/fakeOwners/addGrouping")
-                .with(csrf()))
-                .andExpect(status().is5xxServerError());
-    }
-
 }
