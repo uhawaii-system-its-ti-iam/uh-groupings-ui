@@ -168,7 +168,10 @@
                 let endpoint = BASE_URL + path + "/" + members + "/deleteMembersFromIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
-
+            checkMember(member,  onSuccess, onError) {
+                let endpoint = BASE_URL + "members/" + member;
+                dataProvider.loadData(onSuccess, onError, endpoint);
+            },
             /**
              * Removes a member from the exclude group of a grouping.
              * @param {string} path - the path to the grouping
