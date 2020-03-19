@@ -165,6 +165,7 @@ public class TestGroupingsRestController {
 
         //remove from owners
         groupingsRestController.removeOwnership(tst0Principal, GROUPING, tst[1]);
+        groupingsRestController.removeOwnership(tst0Principal,GROUPING, tst[5]);
 
         //set statuses
         groupingsRestController.setOptOut(tst0Principal, GROUPING, true);
@@ -322,7 +323,7 @@ public class TestGroupingsRestController {
         assertTrue(include.getNames().contains(tstName[0]));
         assertTrue(include.getNames().contains(tstName[1]));
         assertTrue(include.getNames().contains(tstName[2]));
-
+        
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));
         mapGSR(API_BASE + grouping.getPath() + "/" + tst[5] + "/assignOwnership");
         grouping = mapGrouping(GROUPING);
