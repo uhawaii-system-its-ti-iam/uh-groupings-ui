@@ -171,6 +171,7 @@
             });
         };
 
+
         /**
          * Gets information about the grouping, such as its members and the preferences set.
          * Retrieves information asynchronously page by page
@@ -181,14 +182,16 @@
             $scope.paginatingComplete = false;
             groupingsService.generic((res) => {
 
-                let object = {};
-                let keys = Object.keys(res.map);
-
-                for (let i = 0; i < keys.length; i++) {
-                    object[keys[i]] = res.data[res.map[keys[i]]];
-                }
-
-                console.log(object.grouping);
+                console.log("Response Not Parsed");
+                console.log("---------------------------------------------------------------");
+                console.log(res);
+                console.log("---------------------------------------------------------------");
+                console.log("---------------------------------------------------------------");
+                console.log("Response Parsed");
+                console.log("---------------------------------------------------------------");
+                let obj = groupingsService.parseGenericResponseData(res);
+                console.log(obj);
+                console.log("---------------------------------------------------------------");
 
             }, (res) => console.log(res));
 

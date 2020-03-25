@@ -312,6 +312,24 @@
             getGroupingsOwned(onSuccess, onError) {
                 let endpoint = BASE_URL + "owners/groupings";
                 dataProvider.loadData(onSuccess, onError, endpoint);
+            },
+
+            /**
+             * Create a object from the JSON response data received from API, Only works on restful api method calls
+             * which return type GenericServiceResult.
+             * @param response body received from Http response.
+             * @returns {{}}
+             */
+            parseGenericResponseData(response) {
+                let parsedObject = {};
+                if (!(_.isEqual(["map", "data"], Object.keys(response))))
+                    parsedObject = { "Response Parse Error": "Keys were not set due to response format", ...response };
+                else {
+                    let keys = Object.keys(response.map);
+                    for (let i = 0; i < keys.length; i++)
+                        parsedObject[keys[i]] = response.data[response.map[keys[i]]];
+                }
+                return parsedObject;
             }
         };
     });
