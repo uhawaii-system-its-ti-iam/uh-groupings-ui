@@ -404,6 +404,18 @@ public class GroupingsRestController {
     }
 
     /**
+     * Check if principle is owner
+     */
+    @RequestMapping(value = "/owner/grouping",
+    method = RequestMethod.GET,
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity isOwner(Principal principal) {
+        logger.info("Entered REST isOwner...");
+        String uri = String.format(API_2_1_BASE + "/owner/%s/grouping", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
      * @return a list of groupings that a user owns
      */
     @RequestMapping(value = "/owners/{uid}/groupings",
