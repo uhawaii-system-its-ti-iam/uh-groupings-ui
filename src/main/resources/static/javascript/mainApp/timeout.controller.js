@@ -155,9 +155,9 @@
         $scope.pingServer = function () {
             const endpoint = BASE_URL + "members/aaronvil";
             dataProvider.loadData(function (res) {
-                console.log("Success in pinging tomcat");
+                //console.log("Success in pinging tomcat");
             }, function (res) {
-                console.log("Error in pinging tomcat");
+                //console.log("Error in pinging tomcat");
             }, endpoint);
         };
 

@@ -261,7 +261,7 @@
 
                             //Catches in both fetch and response
                         } catch (error) {
-                            console.log("Getting members from grouping has errored out please reload page to resume. If not please proceed to the feedback page and report the problem you have come across.");
+                            //console.log("Getting members from grouping has errored out please reload page to resume. If not please proceed to the feedback page and report the problem you have come across.");
                         }
                         currentPage++;
                     }
@@ -1312,12 +1312,12 @@
          */
         function handleSuccessfulPreferenceToggle(res) {
             if (!_.isUndefined(res.statusCode)) {
-                console.log("Error, Status Code: " + res.statusCode);
+                //console.log("Error, Status Code: " + res.statusCode);
                 $scope.createPreferenceErrorModal();
             } else if (_.startsWith(res.resultCode, "SUCCESS")) {
-                console.log("Success");
+                //console.log("Success");
             }
-        };
+        }
 
         /**
          * Toggles the grouping preference which allows users to opt out of a grouping.
