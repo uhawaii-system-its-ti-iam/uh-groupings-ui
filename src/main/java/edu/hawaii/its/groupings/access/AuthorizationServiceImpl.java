@@ -104,7 +104,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             AdminListsHolder adminListsHolder = OBJECT_MAPPER.readValue(adminListHolderJson, AdminListsHolder.class);
 
             // todo eliminate this entire public function and replace with the isAdmin api call
-            if (!(adminListsHolder.getAdminGroup().getMembers().size() == 0)) {
+            if (adminListsHolder.getAdminGroup().getMembers().size() != 0) {
                 logger.info("this person is an admin");
                 return true;
             } else {
