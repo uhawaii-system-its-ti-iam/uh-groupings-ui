@@ -1,5 +1,7 @@
 package edu.hawaii.its.groupings.access;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.api.type.AdminListsHolder;
@@ -66,7 +68,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     /**
      * Determines if a user is an owner of any grouping.
      *
-     * @param username - self-explanitory
+     * @param username - uid of user
      * @return true if the person has groupings that they own, otherwise false.
      */
     public boolean fetchOwner(String username) {
@@ -74,18 +76,19 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             logger.info("//////////////////////////////");
             Principal principal = new SimplePrincipal(username);
 
-            // todo eliminate this entire public function and replace with the isOwner api call
             String groupingAssignmentJson = (String) groupingsRestController.isOwner(principal).getBody();
-            Map<String, String> groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, Map.class);
+            if (null != groupingAssignmentJson) {
+                Map<String, String> groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, Map.class);
 
-            if ("SUCCESS".equals(groupingAssignment.get("resultCode"))) {
-                logger.info("This person is an owner");
-                return true;
-            } else {
-                logger.info("This person is not owner");
+                if ("SUCCESS".equals(groupingAssignment.get("resultCode"))) {
+                    logger.info("This person is an owner");
+                    return true;
+                } else {
+                    logger.info("This person is not owner");
+                }
             }
-        } catch (Exception e) {
-            logger.info("The grouping for this person is " + e.getMessage());
+        } catch (NullPointerException | JsonProcessingException ne) {
+            logger.error(ne.getMessage());
         }
         return false;
     }
