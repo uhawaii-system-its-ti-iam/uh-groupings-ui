@@ -4,6 +4,7 @@ import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -69,4 +70,5 @@ public class AuthorizationServiceTest {
         assertFalse(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
     }
+
 }

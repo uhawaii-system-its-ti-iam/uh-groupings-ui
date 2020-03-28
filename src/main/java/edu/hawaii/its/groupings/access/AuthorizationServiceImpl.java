@@ -6,6 +6,7 @@ import edu.hawaii.its.api.type.AdminListsHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.authentication.SimplePrincipal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -74,10 +75,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             Principal principal = new SimplePrincipal(username);
 
             // todo eliminate this entire public function and replace with the isOwner api call
-            String groupingAssignmentJson = (String) groupingsRestController.groupingsOwned(principal).getBody();
-            List groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, List.class);
+            String groupingAssignmentJson = (String) groupingsRestController.isOwner(principal).getBody();
+            Map<String, String> groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, Map.class);
 
-            if (groupingAssignment.size() != 0) {
+            if ("SUCCESS".equals(groupingAssignment.get("resultCode"))) {
                 logger.info("This person is an owner");
                 return true;
             } else {
