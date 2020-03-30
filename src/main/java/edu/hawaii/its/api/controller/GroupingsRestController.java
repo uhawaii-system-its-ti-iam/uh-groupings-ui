@@ -116,14 +116,6 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
-    @RequestMapping(value = "/generic",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity generic(Principal principal) {
-        String uri = API_2_1_BASE + "/generic";
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
-    }
-
     /**
      * adds a member to the admin group
      *
