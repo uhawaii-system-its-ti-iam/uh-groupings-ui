@@ -1219,6 +1219,7 @@
             $scope.adminsQuery = "";
             $scope.optInQuery = "";
             $scope.ownersQuery = "";
+            $scope.peopleQuery = "";
         }
 
         /**

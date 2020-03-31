@@ -193,6 +193,16 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
+    @RequestMapping(value = "/members/{uid}/groupings",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity membershipAssignment(Principal principal,
+        @PathVariable String uid) {
+        logger.info("Entered REST MembershipAssignment...");
+        String uri = String.format(API_2_1_BASE + "/members/%s/groupings", uid);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
     /**
      * if the user is allowed to opt into the grouping
      * this will add them to the include group of that grouping

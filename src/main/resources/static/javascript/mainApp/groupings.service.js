@@ -252,6 +252,15 @@
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
+
+            /*todo:copy code*/
+            getMembershipAssignmentForUser: function (onSuccess, onError, username) {
+                let endpoint = BASE_URL + "members/" + username + "/groupings/";
+                console.log(endpoint);
+                console.log(username);
+                dataProvider.loadData(onSuccess, onError, endpoint);
+            },
+
             /**
              * Toggles the preference option to allow users to opt into a grouping.
              * @param {string} path - the path of the grouping to update
@@ -329,6 +338,4 @@
             }
         };
     });
-
-//})();
 }());

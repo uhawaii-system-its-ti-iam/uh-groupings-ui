@@ -13,6 +13,11 @@
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
         $scope.currentPageAdmins = 0;
+        $scope.peopleList = [];
+        $scope.pagedItemsPeople = [];
+        $scope.currentPagePeople = 0;
+        $scope.people = "";
+        //add variable
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
@@ -50,12 +55,48 @@
             });
         };
 
+        $scope.searchForMemberships = function () {
+            $scope.loading = true;
+            groupingsService.getMembershipAssignmentForUser(function (res) {
+
+                $scope.peopleList = _.sortBy(res.groupingsIn, "name");
+                let owned = _.sortBy(res.groupingsOwned, "name");
+                $scope.peopleList.push.apply($scope.peopleList, owned);
+                $scope.peopleList = _.sortBy($scope.peopleList, "name");
+                $scope.filter($scope.peopleList, "pagedItemsPeople", "currentPagePeople", $scope.peopleQuery, true);
+                _.forEach($scope.pagedItemsPeople[$scope.currentPagePeople], function (group) {
+                    if(owned.some(grouping => grouping.name === group.name)) {
+                        group["isOwner"] = true;
+                    } else {
+                        group["isOwner"] = false;
+                    }
+                    group["inBasis"] = res.inBasis[group.name];
+                    group["inInclude"] = res.inInclude[group.name];
+                    group["inExclude"] = res.inExclude[group.name];
+                });
+                console.log("Printing the res:");
+                console.log($scope.peopleList);
+                $scope.loading = false;
+            }, function (res) {
+                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
+            }, $scope.people);
+        };
+
         $scope.displayAdmins = function () {
             $scope.resetGroupingInformation();
             $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
             $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
             $scope.showGrouping = false;
         };
+
+        /*todo:people copy*/
+        $scope.displayPeople = function () {
+            $scope.resetGroupingInformation();
+            $scope.filter($scope.peopleList, "pagedItemsPeople", "currentPagePeople", $scope.peopleQuery, true);
+            $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+            $scope.showGrouping = false;
+        };
+
 
         /**
          * Adds a user to the admin list.
@@ -118,4 +159,3 @@
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
 
 }());
-//})();

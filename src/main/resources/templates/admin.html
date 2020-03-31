@@ -20,6 +20,10 @@
                 <a href="#manage-admins" data-toggle="tab" class="nav-link" role="tab">
                     Manage Admins
                 </a>
+            <li class="nav-item" role="presentation" ng-click="displayPeople()">
+                <a href="#manage-people" data-toggle="tab" class="nav-link" role="tab">
+                    Manage Person
+                </a>
             </li>
         </ul>
     </div>
@@ -123,6 +127,83 @@
                                 </div>
                             </form>
                         </div>
+                        <div class="col-lg-5">
+                            <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Manage People -->
+                <div class="tab-pane fade" id="manage-people" role="tab">
+                    <div class="row m-auto pt-3 pb-3">
+                        <div class="col-lg-9 col-md-8 col-12 p-0">
+                            <h2 class="card-title mt-md-1 mt-0 mb-1">Person</h2>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-12 p-0">
+                            <form ng-submit="searchForMemberships()">
+                                <div class="input-group">
+                                    <input name="Search People" class="form-control" type="text"
+                                           title="Enter UH Username"
+                                           placeholder="UH Username" ng-model="people"/>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive-sm">
+                        <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">
+                            <thead>
+                            <tr>
+                                <th ng-click="sortBy('peopleList', 'pagedItemsPeople', 'name')" class="clickable">
+                                    Grouping
+                                    <i class="fa sort-icon"
+                                       ng-show="columnSort.peopleList.property === 'name' || !columnSort.peopleList"
+                                       ng-class="{ reverse: columnSort.peopleList.reverse }"></i>
+                                <th>
+                                    Owner?
+                                </th>
+                                <th>
+                                    Basis?
+                                </th>
+                                <th>
+                                    Include?
+                                </th>
+                                <th>
+                                    Exclude?
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody class="table table-borderless">
+                            <tr ng-repeat="l in pagedItemsPeople[currentPagePeople]" class="table table-sm">
+                                <td class="p-10" tabindex="0">
+                                    {{l.name}}
+                                </td>
+                                <td class="p-10" tabindex="0">
+                                    {{l.isOwner}}
+                                </td>
+                                <td class="p-10" tabindex="0">
+                                    {{l.inBasis}}
+                                </td>
+                                <td class="p-10" tabindex="0">
+                                    {{l.inInclude}}
+                                </td>
+                                <td>
+                                    {{l.inExclude}}
+<!--                                    <i class="fa fa-trash-o pull-right clickable pt-1"-->
+<!--                                       data-toggle="tooltip" data-placement="top"-->
+<!--                                       tabindex="0">-->
+<!--                                       onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"-->
+<!--                                       th:title="#{screen.message.admin.tooltip.nav.delete.admin}"-->
+<!--                                       ng-click="removeAdmin(currentPageAdmins, $index)"-->
+<!--                                       ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">-->
+<!--                                    </i>-->
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-5">
                             <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
                         </div>
