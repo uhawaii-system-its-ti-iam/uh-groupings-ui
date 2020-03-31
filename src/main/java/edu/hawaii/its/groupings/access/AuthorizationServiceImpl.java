@@ -8,6 +8,9 @@ import edu.hawaii.its.api.type.AdminListsHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.authentication.SimplePrincipal;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,8 +21,10 @@ import javax.annotation.PostConstruct;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
@@ -78,16 +83,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
             String groupingAssignmentJson = (String) groupingsRestController.isOwner(principal).getBody();
             if (null != groupingAssignmentJson) {
-                Map<String, String> groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, Map.class);
-
-                if ("SUCCESS".equals(groupingAssignment.get("resultCode"))) {
-                    logger.info("This person is an owner");
-                    return true;
-                } else {
-                    logger.info("This person is not owner");
-                }
+                JSONObject jsonObject = new JSONObject(groupingAssignmentJson);
+                JSONArray data = jsonObject.getJSONArray("data");
+                logger.info(data.getJSONObject(0));
+                return data.getBoolean(1);
             }
-        } catch (NullPointerException | JsonProcessingException ne) {
+        } catch (NullPointerException | JSONException ne) {
             logger.error(ne.getMessage());
         }
         return false;
