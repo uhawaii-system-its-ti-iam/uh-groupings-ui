@@ -405,7 +405,10 @@ public class GroupingsRestController {
     }
 
     /**
-     * Check if principle is owner
+     * True if principal is an owner of any grouping.
+     *
+     * @param principal - uid in question.
+     * @return - GenericServiceResult {groupingsServiceResult: GroupingsServiceResult, isOwner: bool }.
      */
     @RequestMapping(value = "/owner/",
             method = RequestMethod.GET,

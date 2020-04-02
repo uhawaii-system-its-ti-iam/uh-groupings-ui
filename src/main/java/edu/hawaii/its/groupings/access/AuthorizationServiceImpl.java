@@ -13,18 +13,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
@@ -39,7 +33,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private static final Log logger = LogFactory.getLog(AuthorizationServiceImpl.class);
 
     /**
-     * Assigns roles to user
+     * Assign roles to user
      *
      * @param uhUuid   : The UH uuid of the user.
      * @param username : The username of the person to find the user.
@@ -51,12 +45,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         roleHolder.add(Role.ANONYMOUS);
         roleHolder.add(Role.UH);
 
-        //Determines if user is an owner.
+        //Determine if user is an owner.
         if (fetchOwner(username)) {
             roleHolder.add(Role.OWNER);
         }
 
-        //Determines if a user is an admin.
+        //Determine if a user is an admin.
         if (fetchAdmin(username)) {
             roleHolder.add(Role.ADMIN);
         }
@@ -71,7 +65,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     /**
-     * Determines if a user is an owner of any grouping.
+     * Determine if a user is an owner of any grouping.
      *
      * @param username - uid of user
      * @return true if the person has groupings that they own, otherwise false.
@@ -85,8 +79,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             if (null != groupingAssignmentJson) {
                 JSONObject jsonObject = new JSONObject(groupingAssignmentJson);
                 JSONArray data = jsonObject.getJSONArray("data");
-                logger.info(data.getJSONObject(0));
-                return data.getBoolean(1);
+                JSONObject result = data.getJSONObject(0);
+                logger.info(result);
+                if ("SUCCESS".equals(result.get("resultCode")))
+                    return data.getBoolean(1);
+                return false;
             }
         } catch (NullPointerException | JSONException ne) {
             logger.error(ne.getMessage());
@@ -95,7 +92,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     /**
-     * Determines if a user is an admin in grouping admin.
+     * Determine if a user is an admin in grouping admin.
      *
      * @param username - self-explanatory
      * @return true if the person gets pass the grouping admins check by checking if they can get all the groupings.
