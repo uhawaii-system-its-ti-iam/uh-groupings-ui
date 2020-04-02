@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -71,24 +72,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      * @return true if the person has groupings that they own, otherwise false.
      */
     public boolean fetchOwner(String username) {
-        try {
-            logger.info("//////////////////////////////");
-            Principal principal = new SimplePrincipal(username);
-
-            String groupingAssignmentJson = (String) groupingsRestController.isOwner(principal).getBody();
-            if (null != groupingAssignmentJson) {
-                JSONObject jsonObject = new JSONObject(groupingAssignmentJson);
-                JSONArray data = jsonObject.getJSONArray("data");
-                JSONObject result = data.getJSONObject(0);
-                logger.info(result);
-                if ("SUCCESS".equals(result.get("resultCode")))
-                    return data.getBoolean(1);
-                return false;
-            }
-        } catch (NullPointerException | JSONException ne) {
-            logger.error(ne.getMessage());
-        }
-        return false;
+        logger.info("//////////////////////////////");
+        Principal principal = new SimplePrincipal(username);
+        return checkResultCodeJsonObject((String) groupingsRestController.isOwner(principal).getBody());
     }
 
     /**
@@ -99,23 +85,24 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      */
     public boolean fetchAdmin(String username) {
         logger.info("//////////////////////////////");
+        Principal principal = new SimplePrincipal(username);
+        return checkResultCodeJsonObject((String) groupingsRestController.isAdmin(principal).getBody());
+    }
+
+    private boolean checkResultCodeJsonObject(String groupingAssignmentJson) {
         try {
-
-            Principal principal = new SimplePrincipal(username);
-            String adminListHolderJson = (String) groupingsRestController.adminLists(principal).getBody();
-            AdminListsHolder adminListsHolder = OBJECT_MAPPER.readValue(adminListHolderJson, AdminListsHolder.class);
-
-            // todo eliminate this entire public function and replace with the isAdmin api call
-            if (!(adminListsHolder.getAdminGroup().getMembers().size() == 0)) {
-                logger.info("this person is an admin");
-                return true;
-            } else {
-                logger.info("this person is not an admin");
+            if (null != groupingAssignmentJson) {
+                JSONObject jsonObject = new JSONObject(groupingAssignmentJson);
+                JSONArray data = jsonObject.getJSONArray("data");
+                JSONObject result = data.getJSONObject(0);
+                logger.info(result);
+                if ("SUCCESS".equals(result.get("resultCode")))
+                    return data.getBoolean(1);
+                return false;
             }
-        } catch (Exception e) {
+        } catch (NullPointerException | JSONException e) {
             logger.info("Error in getting admin info. Error message: " + e.getMessage());
         }
-        logger.info("//////////////////////////////");
         return false;
     }
 }

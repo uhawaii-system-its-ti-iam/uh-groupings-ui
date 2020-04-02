@@ -117,6 +117,21 @@ public class GroupingsRestController {
     }
 
     /**
+     * True if principal is an admin.
+     *
+     * @param principal - uid in question.
+     * @return - GenericServiceResult {groupingsServiceResult: GroupingsServiceResult, isAdmin: bool }.
+     */
+    @RequestMapping(value = "/admin/",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity isAdmin(Principal principal) {
+        logger.info("Entered REST isAdmin...");
+        String uri = String.format(API_2_1_BASE + "/owner/%s/", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
      * adds a member to the admin group
      *
      * @param adminToAdd: username of the new admin to add
