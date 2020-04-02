@@ -21,7 +21,7 @@
                         callback(response.data);
                     }, function (response) {
                         callError(response);
-                        console.log("Error in dataProvider; status: ", response.status);
+                        console.log("Error in dataProvider; status: ", response);
 
                     });
             },

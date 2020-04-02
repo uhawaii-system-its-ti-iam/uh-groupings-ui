@@ -700,11 +700,13 @@
          */
         $scope.addMember = function (list) {
             let groupingPath = $scope.selectedGrouping.path;
-            groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function () {
+            groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function (res) {
                 let user = $scope.userToAdd;
                 let inBasis = _.some($scope.groupingBasis, { username: user });
                 if ($scope.existInList(user, list)) {
                     $scope.createCheckModal(user, list, false, inBasis);
+                } else if (res.status === 404) {
+                    $scope.createAddErrorModal($scope.userToAdd);
                 } else if ($scope.isInAnotherList(user, list)) {
                     $scope.createCheckModal(user, list, true, inBasis);
                 } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
@@ -716,7 +718,7 @@
                     });
                 }
             }, function (res) {
-                if (res.statusCode === 403) {
+                if (res.status === 403) {
                     $scope.createOwnerErrorModal();
                 }
             });
@@ -875,9 +877,7 @@
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
-                if (res.statusCode === 404) {
                     $scope.createAddErrorModal(userToAdd);
-                }
             });
         };
 
