@@ -43,18 +43,17 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public RoleHolder fetchRoles(String uhUuid, String username) {
         RoleHolder roleHolder = new RoleHolder();
+        Principal principal = new SimplePrincipal(username);
         roleHolder.add(Role.ANONYMOUS);
         roleHolder.add(Role.UH);
 
         //Determine if user is an owner.
-        if (fetchOwner(username)) {
+        if (checkResultCodeJsonObject((String) groupingsRestController.isOwner(principal).getBody()))
             roleHolder.add(Role.OWNER);
-        }
 
         //Determine if a user is an admin.
-        if (fetchAdmin(username)) {
-            roleHolder.add(Role.ADMIN);
-        }
+        if (checkResultCodeJsonObject((String) groupingsRestController.isAdmin(principal).getBody()))
+            roleHolder.add(Role.OWNER);
 
         List<Role> roles = userMap.get(uhUuid);
         if (roles != null) {
@@ -66,29 +65,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     /**
-     * Determine if a user is an owner of any grouping.
+     * Return a boolean if the result code of a response is a Success, otherwise return false.
      *
-     * @param username - uid of user
-     * @return true if the person has groupings that they own, otherwise false.
+     * @param groupingAssignmentJson - in this case the response can be represented as follows.
+     *                               {response {data [groupingsServiceResult: class, Boolean: object]}}
+     * @return boolean
      */
-    public boolean fetchOwner(String username) {
-        logger.info("//////////////////////////////");
-        Principal principal = new SimplePrincipal(username);
-        return checkResultCodeJsonObject((String) groupingsRestController.isOwner(principal).getBody());
-    }
-
-    /**
-     * Determine if a user is an admin in grouping admin.
-     *
-     * @param username - self-explanatory
-     * @return true if the person gets pass the grouping admins check by checking if they can get all the groupings.
-     */
-    public boolean fetchAdmin(String username) {
-        logger.info("//////////////////////////////");
-        Principal principal = new SimplePrincipal(username);
-        return checkResultCodeJsonObject((String) groupingsRestController.isAdmin(principal).getBody());
-    }
-
     private boolean checkResultCodeJsonObject(String groupingAssignmentJson) {
         try {
             if (null != groupingAssignmentJson) {
@@ -98,7 +80,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 logger.info(result);
                 if ("SUCCESS".equals(result.get("resultCode")))
                     return data.getBoolean(1);
-                return false;
             }
         } catch (NullPointerException | JSONException e) {
             logger.info("Error in getting admin info. Error message: " + e.getMessage());
