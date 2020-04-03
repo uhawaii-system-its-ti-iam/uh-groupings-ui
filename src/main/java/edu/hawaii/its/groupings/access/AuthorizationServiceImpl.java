@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Null;
@@ -48,11 +49,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         roleHolder.add(Role.UH);
 
         //Determine if user is an owner.
-        if (checkResultCodeJsonObject((String) groupingsRestController.isOwner(principal).getBody()))
+        if (checkResultCodeJsonObject(groupingsRestController.isOwner(principal)))
             roleHolder.add(Role.OWNER);
 
         //Determine if a user is an admin.
-        if (checkResultCodeJsonObject((String) groupingsRestController.isAdmin(principal).getBody()))
+        if (checkResultCodeJsonObject(groupingsRestController.isAdmin(principal)))
             roleHolder.add(Role.ADMIN);
 
         List<Role> roles = userMap.get(uhUuid);
@@ -67,11 +68,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     /**
      * Return a boolean if the result code of a response is a Success, otherwise return false.
      *
-     * @param groupingAssignmentJson - in this case the response can be represented as follows.
-     *                               {response {data [groupingsServiceResult: class, Boolean: object]}}
+     * @param response - in this case the response can be represented as follows.
+     *                 {response {data [groupingsServiceResult: class, Boolean: object]}}
      * @return boolean
      */
-    private boolean checkResultCodeJsonObject(String groupingAssignmentJson) {
+    private boolean checkResultCodeJsonObject(ResponseEntity response) {
+        String groupingAssignmentJson = (String) response.getBody();
         try {
             if (null != groupingAssignmentJson) {
                 JSONObject jsonObject = new JSONObject(groupingAssignmentJson);
