@@ -53,7 +53,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         //Determine if a user is an admin.
         if (checkResultCodeJsonObject((String) groupingsRestController.isAdmin(principal).getBody()))
-            roleHolder.add(Role.OWNER);
+            roleHolder.add(Role.ADMIN);
 
         List<Role> roles = userMap.get(uhUuid);
         if (roles != null) {
