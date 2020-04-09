@@ -1,9 +1,12 @@
 package edu.hawaii.its.groupings.access;
 
+import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import org.jasig.cas.client.authentication.SimplePrincipal;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,6 +25,9 @@ public class AuthorizationServiceTest {
 
     @Autowired
     private AuthorizationService authorizationService;
+
+    @Autowired
+    private GroupingsRestController groupingsRestController;
 
     @Test
     public void basics() {
@@ -68,5 +74,6 @@ public class AuthorizationServiceTest {
         assertTrue(roleHolder.contains(Role.UH));
         assertFalse(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
+
     }
 }

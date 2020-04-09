@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -108,11 +109,24 @@ public class GroupingsRestController {
     }
 
     @RequestMapping(value = "/adminLists",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity adminLists(Principal principal) {
         logger.info("Entered REST adminListHolder...");
         String uri = API_2_1_BASE + "/adminsGroupings";
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * True if principal is an admin.
+     *
+     * @param principal - uid in question.
+     * @return - GenericServiceResult {groupingsServiceResult: GroupingsServiceResult, isAdmin: bool }.
+     */
+    @GetMapping(value = "/admins")
+    public ResponseEntity isAdmin(Principal principal) {
+        logger.info("Entered REST isAdmin...");
+        String uri = String.format(API_2_1_BASE + "/admins/%s/", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -123,8 +137,8 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/{adminToAdd}/addAdmin",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addAdmin(Principal principal, @PathVariable String adminToAdd) {
         logger.info("Entered REST addAdmin...");
         String safeInput = policy.sanitize(adminToAdd);
@@ -139,8 +153,8 @@ public class GroupingsRestController {
      * @return information about the success of the operation
      */
     @RequestMapping(value = "/{adminToDelete}/deleteAdmin",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteAdmin(Principal principal, @PathVariable String adminToDelete) {
         logger.info("Entered REST deleteAdmin...");
 
@@ -175,8 +189,8 @@ public class GroupingsRestController {
      * Groupings that the user can opt into
      */
     @RequestMapping(value = "/members/groupings",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity membershipAssignment(Principal principal) {
         logger.info("Entered REST MembershipAssignment...");
         String uri = String.format(API_2_1_BASE + "/members/%s/groupings", principal.getName());
@@ -192,15 +206,15 @@ public class GroupingsRestController {
      * @return information about the success of opting in
      */
     @RequestMapping(value = "/{grouping}/optIn",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity optIn(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optIn...");
 
         String safeGrouping = policy.sanitize(grouping);
 
         String uri =
-            String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", safeGrouping, principal.getName());
+                String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", safeGrouping, principal.getName());
 
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
@@ -214,15 +228,15 @@ public class GroupingsRestController {
      * @return information about the success of opting out
      */
     @RequestMapping(value = "/{grouping}/optOut",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity optOut(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optOut...");
 
         String safeGrouping = policy.sanitize(grouping);
 
         String uri =
-            String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s/self", safeGrouping, principal.getName());
+                String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s/self", safeGrouping, principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -337,6 +351,7 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", safeGrouping, safeUserToDelete);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
+
     @RequestMapping(value = "/{grouping}/{usersToDelete}/deleteMembersFromIncludeGroup",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -395,8 +410,8 @@ public class GroupingsRestController {
      * @return a list of groupings that a user owns
      */
     @RequestMapping(value = "/owners/groupings",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity groupingsOwned(Principal principal) {
         logger.info("Entered REST GroupingAssignment...");
         String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", principal.getName());
@@ -404,11 +419,24 @@ public class GroupingsRestController {
     }
 
     /**
+     * True if principal is an owner of any grouping.
+     *
+     * @param principal - uid in question.
+     * @return - GenericServiceResult {groupingsServiceResult: GroupingsServiceResult, isOwner: bool }.
+     */
+    @GetMapping(value = "/owners")
+    public ResponseEntity isOwner(Principal principal) {
+        logger.info("Entered REST isOwner...");
+        String uri = String.format(API_2_1_BASE + "/owners/%s/", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
      * @return a list of groupings that a user owns
      */
     @RequestMapping(value = "/owners/{uid}/groupings",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity groupingsOwnedUid(Principal principal, @PathVariable String uid) {
         logger.info("Entered REST GroupingAssignment...");
 
@@ -481,13 +509,13 @@ public class GroupingsRestController {
     //todo Consolidate getGrouping and getPaginatedGrouping into one call
     @RequestMapping(value = "/groupings/{path:.+}",
 
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity grouping(Principal principal, @PathVariable String path,
-        @RequestParam(required = false) Integer page,
-        @RequestParam(required = false) Integer size,
-        @RequestParam(required = false) String sortString,
-        @RequestParam(required = false) Boolean isAscending) {
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) String sortString,
+            @RequestParam(required = false) Boolean isAscending) {
         logger.info("Entered REST getGrouping...");
         String baseUri = String.format(API_2_1_BASE + "/groupings/%s?", path);
 

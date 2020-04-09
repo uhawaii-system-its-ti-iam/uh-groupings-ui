@@ -1,19 +1,23 @@
 package edu.hawaii.its.groupings.access;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.api.type.AdminListsHolder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.authentication.SimplePrincipal;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import javax.validation.constraints.Null;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +35,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private static final Log logger = LogFactory.getLog(AuthorizationServiceImpl.class);
 
     /**
-     * Assigns roles to user
+     * Assign roles to user
      *
      * @param uhUuid   : The UH uuid of the user.
      * @param username : The username of the person to find the user.
@@ -40,18 +44,17 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public RoleHolder fetchRoles(String uhUuid, String username) {
         RoleHolder roleHolder = new RoleHolder();
+        Principal principal = new SimplePrincipal(username);
         roleHolder.add(Role.ANONYMOUS);
         roleHolder.add(Role.UH);
 
-        //Determines if user is an owner.
-        if (fetchOwner(username)) {
+        //Determine if user is an owner.
+        if (checkResultCodeJsonObject(groupingsRestController.isOwner(principal)))
             roleHolder.add(Role.OWNER);
-        }
 
-        //Determines if a user is an admin.
-        if (fetchAdmin(username)) {
+        //Determine if a user is an admin.
+        if (checkResultCodeJsonObject(groupingsRestController.isAdmin(principal)))
             roleHolder.add(Role.ADMIN);
-        }
 
         List<Role> roles = userMap.get(uhUuid);
         if (roles != null) {
@@ -63,57 +66,27 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     /**
-     * Determines if a user is an owner of any grouping.
+     * Return a boolean if the result code of a response is a Success, otherwise return false.
      *
-     * @param username - self-explanitory
-     * @return true if the person has groupings that they own, otherwise false.
+     * @param response - in this case the response can be represented as follows.
+     *                 {response {data [groupingsServiceResult: class, Boolean: object]}}
+     * @return boolean
      */
-    public boolean fetchOwner(String username) {
+    public boolean checkResultCodeJsonObject(ResponseEntity response) {
+        String groupingAssignmentJson = (String) response.getBody();
         try {
-            logger.info("//////////////////////////////");
-            Principal principal = new SimplePrincipal(username);
-
-            // todo eliminate this entire public function and replace with the isOwner api call
-            String groupingAssignmentJson = (String) groupingsRestController.groupingsOwned(principal).getBody();
-            List groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, List.class);
-
-            if (groupingAssignment.size() != 0) {
-                logger.info("This person is an owner");
-                return true;
-            } else {
-                logger.info("This person is not owner");
+            if (null != groupingAssignmentJson) {
+                JSONObject jsonObject = new JSONObject(groupingAssignmentJson);
+                System.out.println(jsonObject);
+                JSONArray data = jsonObject.getJSONArray("data");
+                JSONObject result = data.getJSONObject(0);
+                logger.info(result);
+                if ("SUCCESS".equals(result.get("resultCode")))
+                    return data.getBoolean(1);
             }
-        } catch (Exception e) {
-            logger.info("The grouping for this person is " + e.getMessage());
-        }
-        return false;
-    }
-
-    /**
-     * Determines if a user is an admin in grouping admin.
-     *
-     * @param username - self-explanatory
-     * @return true if the person gets pass the grouping admins check by checking if they can get all the groupings.
-     */
-    public boolean fetchAdmin(String username) {
-        logger.info("//////////////////////////////");
-        try {
-
-            Principal principal = new SimplePrincipal(username);
-            String adminListHolderJson = (String) groupingsRestController.adminLists(principal).getBody();
-            AdminListsHolder adminListsHolder = OBJECT_MAPPER.readValue(adminListHolderJson, AdminListsHolder.class);
-
-            // todo eliminate this entire public function and replace with the isAdmin api call
-            if (!(adminListsHolder.getAdminGroup().getMembers().size() == 0)) {
-                logger.info("this person is an admin");
-                return true;
-            } else {
-                logger.info("this person is not an admin");
-            }
-        } catch (Exception e) {
+        } catch (NullPointerException | JSONException e) {
             logger.info("Error in getting admin info. Error message: " + e.getMessage());
         }
-        logger.info("//////////////////////////////");
         return false;
     }
 }
