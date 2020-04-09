@@ -4,6 +4,7 @@ import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -133,8 +134,8 @@ public class UserBuilderTest {
         assertThat(user.getAuthorities().size(), is(2));
         assertTrue(user.hasRole(Role.ANONYMOUS));
         assertTrue(user.hasRole(Role.UH));
-     //   assertFalse(user.hasRole(Role.EMPLOYEE));
-      //  assertFalse(user.hasRole(Role.ADMIN));
+        assertFalse(user.hasRole(Role.EMPLOYEE));
+        assertFalse(user.hasRole(Role.ADMIN));
     }
 
     @Test
