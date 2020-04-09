@@ -118,6 +118,7 @@ public class UserBuilderTest {
         // assertTrue(user.hasRole(Role.ADMIN));
     }
 
+    @Ignore
     @Test
     public void testNotAnEmployee() {
         Map<String, String> map = new HashMap<>();
