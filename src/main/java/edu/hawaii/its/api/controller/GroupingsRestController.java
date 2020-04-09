@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -122,9 +123,7 @@ public class GroupingsRestController {
      * @param principal - uid in question.
      * @return - GenericServiceResult {groupingsServiceResult: GroupingsServiceResult, isAdmin: bool }.
      */
-    @RequestMapping(value = "/admin/",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/admins")
     public ResponseEntity isAdmin(Principal principal) {
         logger.info("Entered REST isAdmin...");
         String uri = String.format(API_2_1_BASE + "/admins/%s/", principal.getName());
@@ -425,9 +424,7 @@ public class GroupingsRestController {
      * @param principal - uid in question.
      * @return - GenericServiceResult {groupingsServiceResult: GroupingsServiceResult, isOwner: bool }.
      */
-    @RequestMapping(value = "/owner",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/owners")
     public ResponseEntity isOwner(Principal principal) {
         logger.info("Entered REST isOwner...");
         String uri = String.format(API_2_1_BASE + "/owners/%s/", principal.getName());
