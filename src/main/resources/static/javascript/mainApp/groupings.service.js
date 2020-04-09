@@ -54,7 +54,9 @@
 
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
-
+            generic(onSuccess, onError) {
+                dataProvider.loadData(onSuccess, onError, BASE_URL + "generic/");
+            },
             /**
              * Gets information about a grouping.
              * @param {string} path - the path to the grouping
@@ -310,7 +312,7 @@
             },
             parseGenericResponseData(response) {
                 let parsedObject = {};
-                if (!(_.isEqual(["map", "data"], Object.keys(response))))
+                if (!(_.isEqual(["data", "map"], Object.keys(response))))
                     parsedObject = { "Response Parse Error": "Keys were not set due to response format", ...response };
                 else {
                     let keys = Object.keys(response.map);

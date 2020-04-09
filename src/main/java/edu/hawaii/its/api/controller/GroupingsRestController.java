@@ -108,6 +108,11 @@ public class GroupingsRestController {
         return ResponseEntity.ok("University of Hawaii UHGroupings");
     }
 
+    @GetMapping(value = "/generic")
+    public ResponseEntity generic(Principal principal) {
+        return httpRequestService.makeApiRequest(principal.getName(), API_2_1_BASE + "/generic", HttpMethod.GET);
+    }
+
     @GetMapping(value = "/adminLists")
     public ResponseEntity adminLists(Principal principal) {
         logger.info("Entered REST adminListHolder...");

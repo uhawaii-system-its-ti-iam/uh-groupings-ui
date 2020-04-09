@@ -180,6 +180,10 @@
             $scope.loading = true;
             $scope.paginatingComplete = false;
 
+            groupingsService.generic((res) => {
+                console.log(res);
+                console.log(groupingsService.parseGenericResponseData(res));
+            }, (res) => console.log(res));
             //Increments due to being called again
             asyncThreadCount++;
 
