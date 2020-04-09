@@ -127,7 +127,7 @@ public class GroupingsRestController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity isAdmin(Principal principal) {
         logger.info("Entered REST isAdmin...");
-        String uri = String.format(API_2_1_BASE + "/owner/%s/", principal.getName());
+        String uri = String.format(API_2_1_BASE + "/admins/%s/", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -425,12 +425,12 @@ public class GroupingsRestController {
      * @param principal - uid in question.
      * @return - GenericServiceResult {groupingsServiceResult: GroupingsServiceResult, isOwner: bool }.
      */
-    @RequestMapping(value = "/owner/",
+    @RequestMapping(value = "/owner",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity isOwner(Principal principal) {
         logger.info("Entered REST isOwner...");
-        String uri = String.format(API_2_1_BASE + "/owner/%s/", principal.getName());
+        String uri = String.format(API_2_1_BASE + "/owners/%s/", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
