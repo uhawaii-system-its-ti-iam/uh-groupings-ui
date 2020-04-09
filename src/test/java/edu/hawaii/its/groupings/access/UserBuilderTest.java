@@ -94,7 +94,6 @@ public class UserBuilderTest {
 
     // Delete this. Do not need to test for Employees
     // Related to ticket-500, used hardcoded values that were deleted.
-    @Ignore
     @Test
     public void testEmployeesWithMultivalueUid() {
         Map<String, Object> map = new HashMap<>();
@@ -111,11 +110,11 @@ public class UserBuilderTest {
         assertThat(user.getUhUuid(), is("10000003"));
 
         // Granted Authorities.
-        assertThat(user.getAuthorities().size(), is(4));
+        assertThat(user.getAuthorities().size(), is(2));
         assertTrue(user.hasRole(Role.ANONYMOUS));
         assertTrue(user.hasRole(Role.UH));
-        assertTrue(user.hasRole(Role.EMPLOYEE));
-        assertTrue(user.hasRole(Role.ADMIN));
+        //assertTrue(user.hasRole(Role.EMPLOYEE));
+        //assertTrue(user.hasRole(Role.ADMIN));
     }
 
     @Test
