@@ -75,8 +75,31 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      *                 {response {data [groupingsServiceResult: class, Boolean: object]}}
      * @return boolean
      */
+<<<<<<< HEAD
     public boolean checkResultCodeJsonObject(ResponseEntity response) {
         String groupingAssignmentJson = (String) response.getBody();
+=======
+    public boolean fetchOwner(String username) {
+        try {
+            logger.info("//////////////////////////////");
+            Principal principal = new SimplePrincipal(username);
+
+            // todo eliminate this entire public function and replace with the isOwner api call
+            String groupingAssignmentJson = (String) groupingsRestController.groupingsOwned(principal).getBody();
+            List groupingAssignment = OBJECT_MAPPER.readValue(groupingAssignmentJson, List.class);
+
+            if (groupingAssignment.size() != 0) {
+                logger.info("This person is an owner");
+                return true;
+            } else {
+                logger.info("This person is not owner");
+            }
+        } catch (Exception e) {
+            logger.warn("The grouping for this person is ", e);
+        }
+        return false;
+    }
+>>>>>>> Cleaned try-catch method
 
         if (null == groupingAssignmentJson)
             return false;
