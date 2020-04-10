@@ -62,6 +62,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 roleHolder.add(role);
             }
         }
+        System.out.println("------------------------------------------------------");
+        System.out.println(roleHolder.getAuthorities());
+        System.out.println("------------------------------------------------------");
         return roleHolder;
     }
 
@@ -74,16 +77,17 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      */
     public boolean checkResultCodeJsonObject(ResponseEntity response) {
         String groupingAssignmentJson = (String) response.getBody();
+
+        if (null == groupingAssignmentJson)
+            return false;
         try {
-            if (null != groupingAssignmentJson) {
-                JSONObject jsonObject = new JSONObject(groupingAssignmentJson);
-                System.out.println(jsonObject);
-                JSONArray data = jsonObject.getJSONArray("data");
-                JSONObject result = data.getJSONObject(0);
-                logger.info(result);
-                if ("SUCCESS".equals(result.get("resultCode")))
-                    return data.getBoolean(1);
-            }
+            JSONObject jsonObject = new JSONObject(groupingAssignmentJson);
+            System.out.println(jsonObject);
+            JSONArray data = jsonObject.getJSONArray("data");
+            JSONObject result = data.getJSONObject(0);
+            logger.info(result);
+            if ("SUCCESS".equals(result.get("resultCode")))
+                return data.getBoolean(1);
         } catch (NullPointerException | JSONException e) {
             logger.info("Error in getting admin info. Error message: " + e.getMessage());
         }
