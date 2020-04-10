@@ -21,6 +21,12 @@
         $scope.personProps = [];
         $scope.waitingForImportResponse = false;
 
+        $scope.userToDelete = "";
+        $scope.usersToDelete = [];
+        $scope.multiDeleteThreshold = 100;
+        $scope.multiDeleteResults = [];
+        $scope.multiDeleteResultsGeneric = [];
+
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
 
@@ -525,6 +531,42 @@
         };
 
         /**
+         * Take $scope.usersToDelete count the number of words it contains and split it into a comma separated string, then
+         * decide whether to a multi add or a single add is necessary.
+         * @param listName
+         */
+        $scope.deleteMembers = function (listName) {
+            $scope.listName = listName;
+            let numMembers = ($scope.usersToDelete.split(" ").length - 1);
+
+
+            if (numMembers > 0) {
+                let users = $scope.usersToDelete.split(/[ ,]+/).join(",");
+
+                $scope.usersToDelete = [];
+                if (numMembers > $scope.maxImport) {
+                    launchCreateGenericOkModal(
+                        "Out of Bounds Import Warning",
+                        `Importing more than ${$scope.maxImport} users is not allowed.`,
+                        8000);
+                } else {
+                    if (numMembers > $scope.multiDeleteThreshold) {
+                        launchCreateGenericOkModal(
+                            "Large Import Warning",
+                            `You are attempting to import ${numMembers} new users to the ${listName} list.
+                             Imports larger than ${$scope.multiDeleteThreshold} can take a few minutes.  An email with 
+                             the import results will be sent.`,
+                            8000);
+                    }
+                    $scope.deleteMultipleMembers(users, listName);
+                }
+            } else {
+                $scope.userToDelete = $scope.usersToDelete;
+                $scope.deleteMember(listName);
+            }
+        };
+
+        /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
          * separated by newline characters.
          * @param $event - FileReader event sent from Include.html or Exclude.html
@@ -592,6 +634,56 @@
         };
 
         /**
+         * Send the list of users to be deleted from the server as an HTTP POST request.
+         * @param list - comma separated string of user names to be added
+         * @param listName - current list being added to
+         * @returns {Promise<void>}
+         */
+        $scope.deleteMultipleMembers = async function (list, listName) {
+            let groupingPath = $scope.selectedGrouping.path;
+            $scope.removeMultipleUsers(list);
+
+            /* Callback: Return a modal which is launched after n seconds, see updateDataWithTimeoutModal() in app.service.js */
+            let timeoutModal = function () {
+                return launchCreateGenericOkModal(
+                    "Slow Import Warning",
+                    `This import could take awhile to complete. The process however does not require the browser 
+                    to be open in order to finish.`,
+                    8000);
+            };
+
+            /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
+            let handleSuccessfulAdd = function (res) {
+                $scope.waitingForImportResponse = false; /* Spinner off */
+                for (let i = 0; i < res.length; i++) {
+                    $scope.multiDeleteResults[i] = res[i].person;
+                    $scope.multiDeleteResultsGeneric[i] = res[i].person;
+                }
+                if (undefined !== res[0].person) {
+                    $scope.personProps = Object.keys(res[0].person);
+                    $scope.personProps.shift();
+                }
+                $scope.launchMultiDeleteResultModal(listName);
+            };
+            $scope.waitingForImportResponse = true; /* Spinner on */
+
+            let fun = "addMembersTo";
+            await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
+            (groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+
+
+            /*
+             if (listName === "Include")
+                 await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd,
+                     handleUnsuccessfulRequest, timeoutModal);
+             else if (listName === "Exclude")
+                 await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd,
+                     handleUnsuccessfulRequest, timeoutModal);
+
+             */
+        };
+
+        /**
          * Launch a modal containing a table of the results(user info) received from the the server's response message.
          * @param listName - current list being added to
          */
@@ -603,6 +695,28 @@
             $scope.loading = false;
             $scope.multiAddResultModalInstance.result.finally(function () {
                 clearAddMemberInput(listName);
+                $scope.loading = true;
+                if ($scope.listName === "admins") {
+                    // Refreshes the groupings list and the admins list
+                    $scope.init();
+                } else {
+                    $scope.getGroupingInformation();
+                }
+            });
+        };
+
+        /**
+         * Launch a modal containing a table of the results(user info) received from the the server's response message.
+         * @param listName - current list being added to
+         */
+        $scope.launchMultiDeleteResultModal = function (listName) {
+            $scope.multiDeleteResultModalInstance = $uibModal.open({
+                templateUrl: "modal/multiDeleteResultModal",
+                scope: $scope
+            });
+            $scope.loading = false;
+            $scope.multiDeleteResultModalInstance.result.finally(function () {
+                clearDeleteMemberInput(listName);
                 $scope.loading = true;
                 if ($scope.listName === "admins") {
                     // Refreshes the groupings list and the admins list
@@ -1163,9 +1277,9 @@
 
             groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, list,
                 (res) => {
-                    //console.log(res);
+                    console.log(res);
                 }, (res) => {
-                    // console.log(res);
+                    console.log(res);
                 });
         };
 

@@ -1,0 +1,44 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Multi Delete Results</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="closeMultiDeleteResultInstance()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" id="modal-body">
+    <p>
+        <span style="color: black">The following users were successfully deleted from </span>
+        <span style="color: black;">{{listName}} list.</span>
+    </p>
+    <div class="container">
+        <table>
+            <thead class="import-table-thead-tbody-tr import-table-thead">
+            <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
+                <!-- Display table headings -->
+                <td ng-repeat="prop in personProps ">{{ prop }}</td>
+            </tr>
+            </thead>
+            <tbody class="import-table-tbody">
+            <tr class="import-table-thead-tbody-tr" ng-repeat="person in multiDeleteResults">
+                <!-- Display table data -->
+                <td ng-repeat="prop in personProps">
+                    {{ person[prop] }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="submit"
+            ng-click="exportGroupToCsvGeneric(groupingCSV, selectedGrouping.name, listName)"
+            ng-hide="!paginatingComplete">
+        <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
+        Export to CSV
+    </button>
+    <button class="btn btn-primary" ng-click="closeMultiDeleteResultInstance()">Ok</button>
+</div>
+
+
+</html>
