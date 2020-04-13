@@ -54,7 +54,9 @@
 
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
-
+            generic(onSuccess, onError) {
+                dataProvider.loadData(onSuccess, onError, BASE_URL + "generic/");
+            },
             /**
              * Gets information about a grouping.
              * @param {string} path - the path to the grouping
@@ -307,6 +309,23 @@
             getGroupingsOwned(onSuccess, onError) {
                 let endpoint = BASE_URL + "owners/groupings";
                 dataProvider.loadData(onSuccess, onError, endpoint);
+            },
+
+            /**
+             * Parse a generic response data type.
+             * @param response
+             * @returns {{}}
+             */
+            parseGenericResponseData(response) {
+                let parsedObject = {};
+                if (!(_.isEqual(["data", "map"], Object.keys(response))))
+                    parsedObject = { "Response Parse Error": "Keys were not set due to response format", ...response };
+                else {
+                    let keys = Object.keys(response.map);
+                    for (let i = 0; i < keys.length; i++)
+                        parsedObject[keys[i]] = response.data[response.map[keys[i]]];
+                }
+                return parsedObject;
             }
         };
     });
