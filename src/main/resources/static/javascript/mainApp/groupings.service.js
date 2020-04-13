@@ -310,6 +310,12 @@
                 let endpoint = BASE_URL + "owners/groupings";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
+
+            /**
+             * Parse a generic response data type.
+             * @param response
+             * @returns {{}}
+             */
             parseGenericResponseData(response) {
                 let parsedObject = {};
                 if (!(_.isEqual(["data", "map"], Object.keys(response))))
