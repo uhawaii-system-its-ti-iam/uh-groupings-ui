@@ -49,12 +49,14 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         roleHolder.add(Role.UH);
 
         //Determine if user is an owner.
-        if (checkResultCodeJsonObject(groupingsRestController.isOwner(principal)))
+        if (checkResultCodeJsonObject(groupingsRestController.isOwner(principal))) {
             roleHolder.add(Role.OWNER);
+        }
 
         //Determine if a user is an admin.
-        if (checkResultCodeJsonObject(groupingsRestController.isAdmin(principal)))
+        if (checkResultCodeJsonObject(groupingsRestController.isAdmin(principal))) {
             roleHolder.add(Role.ADMIN);
+        }
 
         List<Role> roles = userMap.get(uhUuid);
         if (roles != null) {
@@ -62,9 +64,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 roleHolder.add(role);
             }
         }
-        System.out.println("------------------------------------------------------");
-        System.out.println(roleHolder.getAuthorities());
-        System.out.println("------------------------------------------------------");
         return roleHolder;
     }
 
@@ -86,8 +85,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             JSONArray data = jsonObject.getJSONArray("data");
             JSONObject result = data.getJSONObject(0);
             logger.info(result);
-            if ("SUCCESS".equals(result.get("resultCode")))
+            if ("SUCCESS".equals(result.get("resultCode"))) {
                 return data.getBoolean(1);
+            }
         } catch (NullPointerException | JSONException e) {
             logger.info("Error in getting admin info. Error message: " + e.getMessage());
         }
