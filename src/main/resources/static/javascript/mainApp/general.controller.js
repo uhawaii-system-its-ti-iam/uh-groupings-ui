@@ -567,6 +567,15 @@
         };
 
         /**
+         * Adds members that have a check in the checkbox to a list.
+         * @param listName - list that the users are added to.
+         */
+        $scope.addCheckedMemberToList = function(listName) {
+
+        };
+
+
+        /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
          * separated by newline characters.
          * @param $event - FileReader event sent from Include.html or Exclude.html
