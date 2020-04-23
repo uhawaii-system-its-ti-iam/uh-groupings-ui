@@ -573,10 +573,8 @@
             let selectedUser = $scope.pagedItemsExclude[currentPage][index];
             if($scope.usersToDelete.indexOf(selectedUser, 0) === -1) {
                 $scope.usersToDelete.push(selectedUser);
-                console.log($scope.usersToDelete);
             } else {
                 $scope.usersToDelete.splice($scope.usersToDelete.indexOf(selectedUser));
-                console.log($scope.usersToDelete);
             }
         };
 
