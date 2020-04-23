@@ -78,7 +78,6 @@
         $scope.groupingCSV = [];
         $scope.groupNameCSV = [];
 
-
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
 
@@ -567,11 +566,19 @@
         };
 
         /**
-         * Adds members that have a check in the checkbox to a list.
-         * @param listName - list that the users are added to.
+         * Toggles selection of a user when the checkbox next to their name is checked.
+         * @param currentPage - the page that the users are in.
+         * @param index - the index of the array that the users are currently a part of.
          */
-        $scope.addCheckedMemberToList = function(listName) {
-
+        $scope.toggleSelection = function(currentPage, index) {
+            let selectedUser = $scope.pagedItemsExclude[currentPage][index];
+            if($scope.usersToDelete.indexOf(selectedUser, 0) === -1) {
+                $scope.usersToDelete.push(selectedUser);
+                console.log($scope.usersToDelete);
+            } else {
+                $scope.usersToDelete.splice($scope.usersToDelete.indexOf(selectedUser));
+                console.log($scope.usersToDelete);
+            }
         };
 
 
