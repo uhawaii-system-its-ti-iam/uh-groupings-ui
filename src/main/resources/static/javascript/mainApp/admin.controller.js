@@ -59,17 +59,10 @@
             $scope.loading = true;
             groupingsService.getMembershipAssignmentForUser(function (res) {
 
-                $scope.peopleList = _.sortBy(res.groupingsIn, "name");
-                let owned = _.sortBy(res.groupingsOwned, "name");
-                $scope.peopleList.push.apply($scope.peopleList, owned);
-                $scope.peopleList = _.sortBy($scope.peopleList, "name");
+                $scope.peopleList = _.sortBy(res.combinedGroupings, "name");
                 $scope.filter($scope.peopleList, "pagedItemsPeople", "currentPagePeople", $scope.peopleQuery, true);
                 _.forEach($scope.pagedItemsPeople[$scope.currentPagePeople], function (group) {
-                    if(owned.some(grouping => grouping.name === group.name)) {
-                        group["isOwner"] = true;
-                    } else {
-                        group["isOwner"] = false;
-                    }
+                    group["isOwner"] = res.inOwner[group.name];
                     group["inBasis"] = res.inBasis[group.name];
                     group["inInclude"] = res.inInclude[group.name];
                     group["inExclude"] = res.inExclude[group.name];
