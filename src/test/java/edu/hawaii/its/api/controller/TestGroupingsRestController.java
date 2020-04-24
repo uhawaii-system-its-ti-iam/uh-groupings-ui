@@ -585,18 +585,6 @@ public class TestGroupingsRestController {
                 .contains(username);
     }
 
-    /*
-    private boolean isGroupingOwner(String grouping, String ownerUsername, String username) {
-        Principal principal = new SimplePrincipal(ownerUsername);
-        String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
-                .getBody();
-        return mapGroupingJson(groupingString)
-                .getOwners()
-                .getUsernames()
-                .contains(username);
-    }
-     */
-
     private boolean isListservOn(String grouping, String username) {
         Principal principal = new SimplePrincipal(username);
         String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
@@ -636,14 +624,4 @@ public class TestGroupingsRestController {
             throw new GroupingsHTTPException(e.getMessage(), e.getCause());
         }
     }
-
-    /*
-    private GroupingAssignment mapGroupingAssignmentJson(String json) {
-        try {
-            return OBJECT_MAPPER.readValue(json, GroupingAssignment.class);
-        } catch (Exception e) {
-            throw new GroupingsHTTPException(e.getMessage(), e.getCause());
-        }
-    }
-     */
 }
