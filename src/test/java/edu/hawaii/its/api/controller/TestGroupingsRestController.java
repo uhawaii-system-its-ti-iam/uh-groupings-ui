@@ -183,7 +183,7 @@ public class TestGroupingsRestController {
     public void getAllSyncDestinationsTest() {
 
         ObjectMapper om = new ObjectMapper();
-        List<SyncDestination> destinations = new ArrayList<>();
+        List<SyncDestination> destinations;
 
         // Testing with ADMIN.
         try {
@@ -240,24 +240,23 @@ public class TestGroupingsRestController {
         assertFalse(g.getOwners().getUsernames().contains(tst[1]));
     }
 
-    //todo touched
     @Test
     @WithMockUhUser(username = "iamtst01")
     public void addMemberTest() throws Exception {
 
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
+        assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[3]));
 
+        //tst[3] is currently in basis and will go into include
         mapGSRs(API_BASE + GROUPING + "/<h1>" + tst[3] + "<h1>/addMemberToIncludeGroup");
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[3]));
-
-        //tst[3] is in basis and will go into include
         assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[3]));
 
         //add tst[3] back to exclude
         mapGSRs(API_BASE + GROUPING + "/<div class='container'>" + tst[3] + "<div>/addMemberToExcludeGroup");
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
+        assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[3]));
     }
-    //todo touched
 
     @Test
     @WithMockUhUser(username = "iamtst01")
@@ -268,17 +267,17 @@ public class TestGroupingsRestController {
         mapGSR(API_BASE + GROUPING + "/<h1>" + tst[3] + "<h1>/deleteMemberFromExcludeGroup");
 
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[3]));
-        assertTrue(isInGrouping(GROUPING, tst[0], tst[3]));
+        assertTrue(isInBasisGroup(GROUPING, tst[0], tst[3]));
+        assertTrue(isInCompositeGrouping(GROUPING, tst[0], tst[3]));
 
         assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[1]));
-        //        mapGSR(API_BASE + GROUPING + "/<a href='google.com'>" + tst[1] + "<a>/deleteMemberFromIncludeGroup"); // Erroring out
         mapGSR(API_BASE + GROUPING + "/<span>" + tst[1] + "<span>/deleteMemberFromIncludeGroup");
 
         assertFalse(isInExcludeGroup(GROUPING, tst[0], tst[1]));
         assertFalse(isInIncludeGroup(GROUPING, tst[0], tst[1]));
 
-        assertTrue(isInGrouping(GROUPING, tst[0], tst[2]));
-        assertTrue(isInGrouping(GROUPING, tst[0], tst[5]));
+        assertTrue(isInCompositeGrouping(GROUPING, tst[0], tst[2]));
+        assertTrue(isInCompositeGrouping(GROUPING, tst[0], tst[5]));
         assertTrue(isInBasisGroup(GROUPING, tst[0], tst[5]));
         assertTrue(isInIncludeGroup(GROUPING, tst[0], tst[2]));
     }
@@ -339,7 +338,7 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst04")
     public void optInTest() throws Exception {
         //tst[3] is not in Grouping, but is in basis and exclude
-        assertFalse(isInGrouping(GROUPING, tst[0], tst[3]));
+        assertFalse(isInCompositeGrouping(GROUPING, tst[0], tst[3]));
         assertTrue(isInBasisGroup(GROUPING, tst[0], tst[3]));
         assertTrue(isInExcludeGroup(GROUPING, tst[0], tst[3]));
 
@@ -351,7 +350,7 @@ public class TestGroupingsRestController {
     @WithMockUhUser(username = "iamtst06")
     public void optOutTest() throws Exception {
         //tst[5] is in the Grouping and in the basis
-        assertTrue(isInGrouping(GROUPING, tst[0], tst[5]));
+        assertTrue(isInCompositeGrouping(GROUPING, tst[0], tst[5]));
         assertTrue(isInBasisGroup(GROUPING, tst[0], tst[5]));
 
         //tst[5] opts out of Grouping
@@ -576,7 +575,7 @@ public class TestGroupingsRestController {
                 .contains(username);
     }
 
-    private boolean isInGrouping(String grouping, String ownerUsername, String username) {
+    private boolean isInCompositeGrouping(String grouping, String ownerUsername, String username) {
         Principal principal = new SimplePrincipal(ownerUsername);
         String groupingString = (String) groupingsRestController.grouping(principal, grouping, null, null, null, null)
                 .getBody();
