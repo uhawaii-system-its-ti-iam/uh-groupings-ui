@@ -62,10 +62,10 @@
                 $scope.peopleList = _.sortBy(res.combinedGroupings, "name");
                 $scope.filter($scope.peopleList, "pagedItemsPeople", "currentPagePeople", $scope.peopleQuery, true);
                 _.forEach($scope.pagedItemsPeople[$scope.currentPagePeople], function (group) {
-                    group["isOwner"] = res.inOwner[group.name];
-                    group["inBasis"] = res.inBasis[group.name];
-                    group["inInclude"] = res.inInclude[group.name];
-                    group["inExclude"] = res.inExclude[group.name];
+                    group["isOwner"] = res.inOwner[group.path];
+                    group["inBasis"] = res.inBasis[group.path];
+                    group["inInclude"] = res.inInclude[group.path];
+                    group["inExclude"] = res.inExclude[group.path];
                 });
                 console.log("Printing the res:");
                 console.log($scope.peopleList);
