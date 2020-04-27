@@ -27,6 +27,8 @@
         $scope.multiDeleteResults = [];
         $scope.multiDeleteResultsGeneric = [];
 
+        $scope.usersToModify = [];
+
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
 
@@ -1060,7 +1062,8 @@
          */
         $scope.removeMembersWithDeleteButton = function (listName) {
             $scope.listName = listName;
-            console.log("delete!");
+            let users = $scope.usersToDelete.split(/[ ,]+/).join(",");
+            console.log(users);
         };
 
 
