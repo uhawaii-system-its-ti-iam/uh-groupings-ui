@@ -73,7 +73,7 @@
                         <div class="form-check">
                             <input class="form-check-input position-left singlechkbox" type="checkbox"
                                    id="blankCheckbox"
-                                   ng-click="toggleSelection(currentPageExclude, $index)"
+                                   ng-click="toggleSelectionForDeletion(currentPageExclude, $index)"
                                    aria-label="assertive">
                             {{e.name}}
                             <span class="fa fa-trash-o pull-right clickable pt-1"
@@ -130,7 +130,7 @@
                                     <button class="btn btn-primary" ng-click="addMembers('Exclude')" style="margin-left: 4px">
                                         Add
                                     </button>
-                                    <button class="btn btn-delete" ng-click="deleteMembers('Exclude')"
+                                    <button class="btn btn-delete" ng-click="removeMembersWithDeleteButton('Exclude')"
                                             style="margin-left: 2px; margin-right: 2px">
                                         Delete
                                     </button>

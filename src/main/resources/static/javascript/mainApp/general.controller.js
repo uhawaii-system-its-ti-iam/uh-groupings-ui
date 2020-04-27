@@ -530,46 +530,12 @@
         };
 
         /**
-         * Take $scope.usersToDelete count the number of words it contains and split it into a comma separated string, then
-         * decide whether to a multi add or a single add is necessary.
-         * @param listName
-         */
-        $scope.deleteMembers = function (listName) {
-            $scope.listName = listName;
-            let numMembers = ($scope.usersToDelete.split(" ").length - 1);
-
-            if (numMembers > 0) {
-                let users = $scope.usersToDelete.split(/[ ,]+/).join(",");
-
-                $scope.usersToDelete = [];
-                if (numMembers > $scope.maxImport) {
-                    launchCreateGenericOkModal(
-                        "Out of Bounds Import Warning",
-                        `Importing more than ${$scope.maxImport} users is not allowed.`,
-                        8000);
-                } else {
-                    if (numMembers > $scope.multiDeleteThreshold) {
-                        launchCreateGenericOkModal(
-                            "Large Import Warning",
-                            `You are attempting to import ${numMembers} new users to the ${listName} list.
-                             Imports larger than ${$scope.multiDeleteThreshold} can take a few minutes.  An email with 
-                             the import results will be sent.`,
-                            8000);
-                    }
-                    $scope.deleteMultipleMembers(users, listName);
-                }
-            } else {
-                $scope.userToDelete = $scope.usersToDelete;
-                $scope.deleteMember(listName);
-            }
-        };
-
-        /**
-         * Toggles selection of a user when the checkbox next to their name is checked.
+         * Toggles selection of a user when the checkbox next to their name is checked. If a user is selected,
+         * they are added to a list of users to delete when the 'Delete' button is clicked.
          * @param currentPage - the page that the users are in.
          * @param index - the index of the array that the users are currently a part of.
          */
-        $scope.toggleSelection = function(currentPage, index) {
+        $scope.toggleSelectionForDeletion = function(currentPage, index) {
             let selectedUser = $scope.pagedItemsExclude[currentPage][index];
             if($scope.usersToDelete.indexOf(selectedUser, 0) === -1) {
                 $scope.usersToDelete.push(selectedUser);
@@ -577,7 +543,6 @@
                 $scope.usersToDelete.splice($scope.usersToDelete.indexOf(selectedUser));
             }
         };
-
 
         /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
@@ -627,45 +592,6 @@
                     $scope.personProps.shift();
                 }
                 $scope.launchMultiAddResultModal(listName);
-            };
-            $scope.waitingForImportResponse = true; /* Spinner on */
-
-            let fun = "addMembersTo";
-            await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
-            (groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
-        };
-
-        /**
-         * Send the list of users to be deleted from the server as an HTTP POST request.
-         * @param list - comma separated string of user names to be added
-         * @param listName - current list being added to
-         * @returns {Promise<void>}
-         */
-        $scope.deleteMultipleMembers = async function (list, listName) {
-            let groupingPath = $scope.selectedGrouping.path;
-            $scope.removeMultipleUsers(list);
-
-            /* Callback: Return a modal which is launched after n seconds, see updateDataWithTimeoutModal() in app.service.js */
-            let timeoutModal = function () {
-                return launchCreateGenericOkModal(
-                    "Slow Import Warning",
-                    `This import could take awhile to complete. The process however does not require the browser 
-                    to be open in order to finish.`,
-                    8000);
-            };
-
-            /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
-            let handleSuccessfulAdd = function (res) {
-                $scope.waitingForImportResponse = false; /* Spinner off */
-                for (let i = 0; i < res.length; i++) {
-                    $scope.multiDeleteResults[i] = res[i].person;
-                    $scope.multiDeleteResultsGeneric[i] = res[i].person;
-                }
-                if (undefined !== res[0].person) {
-                    $scope.personProps = Object.keys(res[0].person);
-                    $scope.personProps.shift();
-                }
-                $scope.launchMultiDeleteResultModal(listName);
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
 
@@ -1125,6 +1051,16 @@
             if (res.statusCode === 403) {
                 $scope.createOwnerErrorModal();
             }
+        };
+
+        /**
+         * Removes members upon clicking the delete button. Can remove a single member or multiple members
+         * in the list usersToDelete.
+         * @param listName - Name of the list that the user(s) will be deleted from.
+         */
+        $scope.removeMembersWithDeleteButton = function (listName) {
+            $scope.listName = listName;
+            console.log("delete!");
         };
 
 
