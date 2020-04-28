@@ -502,13 +502,13 @@
          */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
-            let numMembers = ($scope.usersToAdd.split(" ").length - 1);
+            let numMembers = ($scope.usersToModify.split(" ").length - 1);
 
 
             if (numMembers > 0) {
-                let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
+                let users = $scope.usersToModify.split(/[ ,]+/).join(",");
 
-                $scope.usersToAdd = [];
+                $scope.usersToModify = [];
                 if (numMembers > $scope.maxImport) {
                     launchCreateGenericOkModal(
                         "Out of Bounds Import Warning",
@@ -526,7 +526,7 @@
                     $scope.addMultipleMembers(users, listName);
                 }
             } else {
-                $scope.userToAdd = $scope.usersToAdd;
+                $scope.userToAdd = $scope.usersToModify;
                 $scope.addMember(listName);
             }
         };
@@ -539,10 +539,12 @@
          */
         $scope.toggleSelectionForDeletion = function(currentPage, index) {
             let selectedUser = $scope.pagedItemsExclude[currentPage][index];
-            if($scope.usersToDelete.indexOf(selectedUser, 0) === -1) {
-                $scope.usersToDelete.push(selectedUser);
+            if($scope.usersToModify.indexOf(selectedUser, 0) === -1) {
+                $scope.usersToModify.push(selectedUser.username);
+                console.log($scope.usersToModify);
             } else {
-                $scope.usersToDelete.splice($scope.usersToDelete.indexOf(selectedUser));
+                $scope.usersToModify.splice($scope.usersToDelete.indexOf(selectedUser.username));
+                console.log($scope.usersToModify)
             }
         };
 
@@ -1062,7 +1064,7 @@
          */
         $scope.removeMembersWithDeleteButton = function (listName) {
             $scope.listName = listName;
-            let users = $scope.usersToDelete.split(/[ ,]+/).join(",");
+            let users = $scope.usersToModify.split(/[ ,]+/).join(",");
             console.log(users);
         };
 
