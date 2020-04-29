@@ -539,12 +539,10 @@
          */
         $scope.toggleSelectionForDeletion = function(currentPage, index) {
             let selectedUser = $scope.pagedItemsExclude[currentPage][index];
-            if($scope.usersToModify.indexOf(selectedUser, 0) === -1) {
+            if($scope.usersToModify.indexOf(selectedUser.username, 0) === -1) {
                 $scope.usersToModify.push(selectedUser.username);
-                console.log($scope.usersToModify);
             } else {
                 $scope.usersToModify.splice($scope.usersToDelete.indexOf(selectedUser.username));
-                console.log($scope.usersToModify)
             }
         };
 
@@ -1064,8 +1062,8 @@
          */
         $scope.removeMembersWithDeleteButton = function (listName) {
             $scope.listName = listName;
+            console.log($scope.usersToModify);
             let users = $scope.usersToModify.split(/[ ,]+/).join(",");
-            console.log(users);
         };
 
 
