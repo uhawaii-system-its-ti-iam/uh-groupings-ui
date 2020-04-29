@@ -16,7 +16,6 @@
         $scope.peopleList = [];
         $scope.pagedItemsPeople = [];
         $scope.currentPagePeople = 0;
-        $scope.people = "";
         //add variable
 
         // Allow this controller to use functions from the General Controller
@@ -62,17 +61,15 @@
                 $scope.peopleList = _.sortBy(res.combinedGroupings, "name");
                 $scope.filter($scope.peopleList, "pagedItemsPeople", "currentPagePeople", $scope.peopleQuery, true);
                 _.forEach($scope.pagedItemsPeople[$scope.currentPagePeople], function (group) {
-                    group["isOwner"] = res.inOwner[group.path];
+                    group["inOwner"] = res.inOwner[group.path];
                     group["inBasis"] = res.inBasis[group.path];
                     group["inInclude"] = res.inInclude[group.path];
                     group["inExclude"] = res.inExclude[group.path];
                 });
-                console.log("Printing the res:");
-                console.log($scope.peopleList);
                 $scope.loading = false;
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
-            }, $scope.people);
+            }, $scope.personToLookup);
         };
 
         $scope.displayAdmins = function () {

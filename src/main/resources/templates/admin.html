@@ -21,7 +21,7 @@
                     Manage Admins
                 </a>
             <li class="nav-item" role="presentation" ng-click="displayPeople()">
-                <a href="#manage-people" data-toggle="tab" class="nav-link" role="tab">
+                <a href="#manage-person" data-toggle="tab" class="nav-link" role="tab">
                     Manage Person
                 </a>
             </li>
@@ -132,18 +132,18 @@
                         </div>
                     </div>
                 </div>
-                <!-- Manage People -->
-                <div class="tab-pane fade" id="manage-people" role="tab">
+                <!-- Manage Person -->
+                <div class="tab-pane fade" id="manage-person" role="tab">
                     <div class="row m-auto pt-3 pb-3">
                         <div class="col-lg-9 col-md-8 col-12 p-0">
-                            <h2 class="card-title mt-md-1 mt-0 mb-1">Person</h2>
+                            <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Person</h2>
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
                             <form ng-submit="searchForMemberships()">
                                 <div class="input-group">
-                                    <input name="Search People" class="form-control" type="text"
+                                    <input name="Search Person" class="form-control" type="text"
                                            title="Enter UH Username"
-                                           placeholder="UH Username" ng-model="people"/>
+                                           placeholder="UH Username" ng-model="personToLookup"/>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">Search</button>
                                     </div>
@@ -155,11 +155,8 @@
                         <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">
                             <thead>
                             <tr>
-                                <th ng-click="sortBy('peopleList', 'pagedItemsPeople', 'name')" class="clickable">
+                                <th>
                                     Grouping
-                                    <i class="fa sort-icon"
-                                       ng-show="columnSort.peopleList.property === 'name' || !columnSort.peopleList"
-                                       ng-class="{ reverse: columnSort.peopleList.reverse }"></i>
                                 <th>
                                     Owner?
                                 </th>
@@ -180,16 +177,36 @@
                                     {{l.name}}
                                 </td>
                                 <td class="p-10" tabindex="0">
-                                    {{l.isOwner}}
+                                    <div ng-if="l.inOwner">
+                                        <i class="fa fa-check text-dark"></i>
+                                    </div>
+                                    <div ng-if="!l.inOwner">
+                                        <i class="fa fa-times text-dark"></i>
+                                    </div>
                                 </td>
                                 <td class="p-10" tabindex="0">
-                                    {{l.inBasis}}
+                                    <div ng-if="l.inBasis">
+                                        <i class="fa fa-check text-dark"></i>
+                                    </div>
+                                    <div ng-if="!l.inBasis">
+                                        <i class="fa fa-times text-dark"></i>
+                                    </div>
                                 </td>
                                 <td class="p-10" tabindex="0">
-                                    {{l.inInclude}}
+                                    <div ng-if="l.inInclude">
+                                        <i class="fa fa-check text-dark"></i>
+                                    </div>
+                                    <div ng-if="!l.inInclude">
+                                        <i class="fa fa-times text-dark"></i>
+                                    </div>
                                 </td>
                                 <td>
-                                    {{l.inExclude}}
+                                    <div ng-if="l.inExclude">
+                                        <i class="fa fa-check text-dark"></i>
+                                    </div>
+                                    <div ng-if="!l.inExclude">
+                                        <i class="fa fa-times text-dark"></i>
+                                    </div>
 <!--                                    <i class="fa fa-trash-o pull-right clickable pt-1"-->
 <!--                                       data-toggle="tooltip" data-placement="top"-->
 <!--                                       tabindex="0">-->
@@ -205,7 +222,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-5">
-                            <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
+                            <div th:replace="fragments/pagination :: pagination(currentPage='currentPagePeople', pagedItems='pagedItemsPeople')"></div>
                         </div>
                     </div>
                 </div>
