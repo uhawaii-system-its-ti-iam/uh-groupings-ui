@@ -1028,13 +1028,13 @@
             });
         };
         /**
-         * Removes a user from the include or exclude group.
+         * Removes a user from the include or exclude group by clicking the "trashcan" button next to their name.
          * @param {string} listName - the list to remove the user from (either Include or Exclude)
          * @param {number} currentPage - the current page in the table
          * @param {number} index - the index of the user clicked by the user
          * account
          */
-        $scope.removeMember = function (listName, currentPage, index) {
+        $scope.removeMemberWithTrashcan = function (listName, currentPage, index) {
 
             let userToRemove;
             $scope.modalType = "remove";
@@ -1057,13 +1057,12 @@
 
         /**
          * Removes members upon clicking the delete button. Can remove a single member or multiple members
-         * in the list usersToDelete.
+         * in the list usersToModify.
          * @param listName - Name of the list that the user(s) will be deleted from.
          */
         $scope.removeMembersWithDeleteButton = function (listName) {
             $scope.listName = listName;
             console.log($scope.usersToModify);
-            let users = $scope.usersToModify.split(/[ ,]+/).join(",");
         };
 
 

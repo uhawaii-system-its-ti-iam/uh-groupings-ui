@@ -81,8 +81,8 @@
                                   onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                                   tabindex="0"
                                   th:title="#{screen.message.common.tooltip.remove.exclude}"
-                                  ng-keypress="$event.keyCode === 13 ? removeMember('Exclude', currentPageExclude, $index) : null"
-                                  ng-click="removeMember('Exclude', currentPageExclude, $index)">
+                                  ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Exclude', currentPageExclude, $index) : null"
+                                  ng-click="removeMemberWithTrashcan('Exclude', currentPageExclude, $index)">
                     </span>
                     </td>
                     <td class="p-10">{{e.uhUuid}}</td>
