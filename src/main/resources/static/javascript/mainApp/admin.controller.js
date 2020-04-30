@@ -13,10 +13,9 @@
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
         $scope.currentPageAdmins = 0;
-        $scope.peopleList = [];
-        $scope.pagedItemsPeople = [];
-        $scope.currentPagePeople = 0;
-        //add variable
+        $scope.personList = [];
+        $scope.pagedItemsPerson = [];
+        $scope.currentPagePerson = 0;
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
@@ -54,13 +53,13 @@
             });
         };
 
-        $scope.searchForMemberships = function () {
+        $scope.searchForUserGroupingInformation = function () {
             $scope.loading = true;
             groupingsService.getMembershipAssignmentForUser(function (res) {
 
-                $scope.peopleList = _.sortBy(res.combinedGroupings, "name");
-                $scope.filter($scope.peopleList, "pagedItemsPeople", "currentPagePeople", $scope.peopleQuery, true);
-                _.forEach($scope.pagedItemsPeople[$scope.currentPagePeople], function (group) {
+                $scope.personList = _.sortBy(res.combinedGroupings, "name");
+                $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+                _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (group) {
                     group["inOwner"] = res.inOwner[group.path];
                     group["inBasis"] = res.inBasis[group.path];
                     group["inInclude"] = res.inInclude[group.path];
@@ -80,11 +79,12 @@
         };
 
         /*todo:people copy*/
-        $scope.displayPeople = function () {
+        $scope.displayPerson = function () {
             $scope.resetGroupingInformation();
-            $scope.filter($scope.peopleList, "pagedItemsPeople", "currentPagePeople", $scope.peopleQuery, true);
-            $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+            $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+            $scope.pagedItemsPerson = $scope.groupToPages($scope.personList);
             $scope.showGrouping = false;
+            $scope.personToLookup = "";
         };
 
 

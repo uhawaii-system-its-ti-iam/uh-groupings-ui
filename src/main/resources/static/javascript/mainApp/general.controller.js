@@ -1178,21 +1178,21 @@
             $scope.groupingInclude = [];
             $scope.groupingExclude = [];
             $scope.groupingOwners = [];
-            $scope.peopleList = [];
+            $scope.personList = [];
 
             $scope.pagedItemsMembers = [];
             $scope.pagedItemsBasis = [];
             $scope.pagedItemsInclude = [];
             $scope.pagedItemsExclude = [];
             $scope.pagedItemsOwners = [];
-            $scope.pagedItemsPeople = [];
+            $scope.pagedItemsPerson = [];
 
             $scope.currentPageMembers = 0;
             $scope.currentPageBasis = 0;
             $scope.currentPageInclude = 0;
             $scope.currentPageExclude = 0;
             $scope.currentPageOwners = 0;
-            $scope.currentPagePeople = 0;
+            $scope.currentPagePerson = 0;
         }
 
         /**
@@ -1222,7 +1222,7 @@
             $scope.adminsQuery = "";
             $scope.optInQuery = "";
             $scope.ownersQuery = "";
-            $scope.peopleQuery = "";
+            $scope.personQuery = "";
         }
 
         /**

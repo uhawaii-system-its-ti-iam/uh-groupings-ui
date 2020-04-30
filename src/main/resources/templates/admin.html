@@ -20,7 +20,7 @@
                 <a href="#manage-admins" data-toggle="tab" class="nav-link" role="tab">
                     Manage Admins
                 </a>
-            <li class="nav-item" role="presentation" ng-click="displayPeople()">
+            <li class="nav-item" role="presentation" ng-click="displayPerson()">
                 <a href="#manage-person" data-toggle="tab" class="nav-link" role="tab">
                     Manage Person
                 </a>
@@ -139,7 +139,7 @@
                             <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Person</h2>
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
-                            <form ng-submit="searchForMemberships()">
+                            <form ng-submit="searchForUserGroupingInformation()">
                                 <div class="input-group">
                                     <input name="Search Person" class="form-control" type="text"
                                            title="Enter UH Username"
@@ -150,12 +150,18 @@
                                 </div>
                             </form>
                         </div>
+                        <div class="col-lg-3 col-md-4 col-12 p-0">
+                            <input class="form-control" placeholder="Filter Admins..." type="search"
+                                   title="Filter Admins"
+                                   ng-model="personQuery"
+                                   ng-change="filter(personList, 'pagedItemsPerson', 'currentPagePerson', personQuery, true)"/>
+                        </div>
                     </div>
                     <div class="table-responsive-sm">
                         <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">
                             <thead>
                             <tr>
-                                <th>
+                                <th ng-click="sortBy('personList', 'pagedItemsPerson', 'name')" class="clickable">
                                     Grouping
                                 <th>
                                     Owner?
@@ -169,10 +175,13 @@
                                 <th>
                                     Exclude?
                                 </th>
+                                <th>
+                                    Remove
+                                </th>
                             </tr>
                             </thead>
                             <tbody class="table table-borderless">
-                            <tr ng-repeat="l in pagedItemsPeople[currentPagePeople]" class="table table-sm">
+                            <tr ng-repeat="l in pagedItemsPerson[currentPagePerson]" class="table table-sm">
                                 <td class="p-10" tabindex="0">
                                     {{l.name}}
                                 </td>
@@ -216,13 +225,19 @@
 <!--                                       ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">-->
 <!--                                    </i>-->
                                 </td>
+                                <td>
+                                    <div ng-if="l.inOwner || l.inInclude">
+                                        <label><input type="checkbox"></label>
+                                    </div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="row">
+                        <div class="col-lg-7"></div>
                         <div class="col-lg-5">
-                            <div th:replace="fragments/pagination :: pagination(currentPage='currentPagePeople', pagedItems='pagedItemsPeople')"></div>
+                            <div th:replace="fragments/pagination :: pagination(currentPage='currentPagePerson', pagedItems='pagedItemsPerson')"></div>
                         </div>
                     </div>
                 </div>
