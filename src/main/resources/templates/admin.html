@@ -149,6 +149,16 @@
                                     </div>
                                 </div>
                             </form>
+                            <form ng-submit="removeFromGroups()">
+                                <div class="input-group">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit">Press Me Now</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div>
+                                <label>Check All <input type="checkbox" ng-click="updateCheckBoxes()" ng-model="checkAll"></label>
+                            </div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
                             <input class="form-control" placeholder="Filter Admins..." type="search"
@@ -227,7 +237,8 @@
                                 </td>
                                 <td>
                                     <div ng-if="l.inOwner || l.inInclude">
-                                        <label><input type="checkbox"></label>
+                                        <label><input type="checkbox"
+                                        ng-model="l.isSelected" ng-change="updateCheckAll(l)"></label>
                                     </div>
                                 </td>
                             </tr>

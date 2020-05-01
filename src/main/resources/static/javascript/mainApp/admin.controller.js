@@ -17,6 +17,9 @@
         $scope.pagedItemsPerson = [];
         $scope.currentPagePerson = 0;
 
+        let totalCheckBoxCount = 0;
+        let count = 0;
+
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
@@ -64,6 +67,10 @@
                     group["inBasis"] = res.inBasis[group.path];
                     group["inInclude"] = res.inInclude[group.path];
                     group["inExclude"] = res.inExclude[group.path];
+                    if (group.inInclude || group.inOwner) {
+                        group["isSelected"] = false;
+                        totalCheckBoxCount = totalCheckBoxCount + 1;
+                    }
                 });
                 $scope.loading = false;
             }, function (res) {
@@ -85,6 +92,48 @@
             $scope.pagedItemsPerson = $scope.groupToPages($scope.personList);
             $scope.showGrouping = false;
             $scope.personToLookup = "";
+        };
+
+        $scope.removeFromGroups = function () {
+            $scope.selectedGroupings = [];
+            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
+                if(grouping.isSelected) {
+                    if(grouping.inOwner){
+                        $scope.selectedGroupings.push(grouping.path + ":owners");
+                    }
+                    if(grouping.inInclude){
+                        $scope.selectedGroupings.push(grouping.path + ":include")
+                    }
+                }
+            });
+
+        };
+
+        $scope.updateCheckBoxes = function () {
+          $scope.checkAll = !$scope.checkAll;
+            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
+                if (grouping.inInclude || grouping.inOwner) {
+                    grouping.isSelected = $scope.checkAll;
+                }
+            });
+            if($scope.checkAll) {
+                count = totalCheckBoxCount;
+            } else {
+                count = 0;
+            }
+        };
+
+        $scope.updateCheckAll = function(grouping) {
+
+            if(grouping.isSelected){
+                count = count + 1;
+            } else {
+                count = count - 1;
+            }
+
+            $scope.checkAll = (count === totalCheckBoxCount);
+
+            console.log("Count: " + count + ", Total: " + totalCheckBoxCount);
         };
 
 
