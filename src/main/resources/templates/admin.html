@@ -35,7 +35,8 @@
             <div class="loader" ng-show="loading"></div>
         </div>
         <div ng-show="!showGrouping" id="adminContainer" style="display: none">
-            <div class="tab-content" role="tablist" ng-init="changeStyleAttribute('adminContainer', 'display', 'unset')">
+            <div class="tab-content" role="tablist"
+                 ng-init="changeStyleAttribute('adminContainer', 'display', 'unset')">
                 <!-- Manage Groupings -->
                 <div class="tab-pane fade show active" id="manage-groupings" role="tab">
                     <div class="row m-auto pt-3 pb-3">
@@ -149,22 +150,25 @@
                                     </div>
                                 </div>
                             </form>
-                            <form ng-submit="removeFromGroups()">
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit">Press Me Now</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <div>
-                                <label>Check All <input type="checkbox" ng-click="updateCheckBoxes()" ng-model="checkAll"></label>
-                            </div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
                             <input class="form-control" placeholder="Filter Admins..." type="search"
                                    title="Filter Admins"
                                    ng-model="personQuery"
                                    ng-change="filter(personList, 'pagedItemsPerson', 'currentPagePerson', personQuery, true)"/>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <form ng-submit="removeFromGroups()">
+                                <div class="input-group">
+                                    <div class="input-group-append">
+                                        <label>Check All <input type="checkbox" ng-click="updateCheckBoxes()"
+                                                                ng-model="checkAll"></label>
+                                        <div>
+                                            <button class="btn btn-primary" type="submit">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="table-responsive-sm">
@@ -198,6 +202,8 @@
                                 <td class="p-10" tabindex="0">
                                     <div ng-if="l.inOwner">
                                         <i class="fa fa-check text-dark"></i>
+                                        <label><input type="checkbox"
+                                                      ng-model="l.isSelected" ng-change="updateCheckAll(l)"></label>
                                     </div>
                                     <div ng-if="!l.inOwner">
                                         <i class="fa fa-times text-dark"></i>
@@ -214,6 +220,8 @@
                                 <td class="p-10" tabindex="0">
                                     <div ng-if="l.inInclude">
                                         <i class="fa fa-check text-dark"></i>
+                                        <label><input type="checkbox"
+                                                      ng-model="l.isSelected" ng-change="updateCheckAll(l)"></label>
                                     </div>
                                     <div ng-if="!l.inInclude">
                                         <i class="fa fa-times text-dark"></i>
@@ -226,19 +234,19 @@
                                     <div ng-if="!l.inExclude">
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
-<!--                                    <i class="fa fa-trash-o pull-right clickable pt-1"-->
-<!--                                       data-toggle="tooltip" data-placement="top"-->
-<!--                                       tabindex="0">-->
-<!--                                       onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"-->
-<!--                                       th:title="#{screen.message.admin.tooltip.nav.delete.admin}"-->
-<!--                                       ng-click="removeAdmin(currentPageAdmins, $index)"-->
-<!--                                       ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">-->
-<!--                                    </i>-->
+                                    <!--                                    <i class="fa fa-trash-o pull-right clickable pt-1"-->
+                                    <!--                                       data-toggle="tooltip" data-placement="top"-->
+                                    <!--                                       tabindex="0">-->
+                                    <!--                                       onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"-->
+                                    <!--                                       th:title="#{screen.message.admin.tooltip.nav.delete.admin}"-->
+                                    <!--                                       ng-click="removeAdmin(currentPageAdmins, $index)"-->
+                                    <!--                                       ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">-->
+                                    <!--                                    </i>-->
                                 </td>
                                 <td>
                                     <div ng-if="l.inOwner || l.inInclude">
                                         <label><input type="checkbox"
-                                        ng-model="l.isSelected" ng-change="updateCheckAll(l)"></label>
+                                                      ng-model="l.isSelected" ng-change="updateCheckAll(l)"></label>
                                     </div>
                                 </td>
                             </tr>

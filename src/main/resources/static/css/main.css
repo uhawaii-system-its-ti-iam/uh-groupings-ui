@@ -608,4 +608,6 @@ form.seamless button {
          display: inline-block; /* displays 'return to groupings button' inline */
     }
 }
-
+label input {
+    margin-left:10px;
+}
