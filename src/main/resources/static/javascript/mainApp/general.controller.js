@@ -559,7 +559,6 @@
          */
         $scope.addMultipleMembers = async function (list, listName) {
             let groupingPath = $scope.selectedGrouping.path;
-            $scope.removeMultipleUsers(list);
 
             /* Callback: Return a modal which is launched after n seconds, see updateDataWithTimeoutModal() in app.service.js */
             let timeoutModal = function () {
@@ -1038,10 +1037,6 @@
                 listName: listName,
                 scope: $scope
             });
-        }, function (res) {
-            if (res.statusCode === 403) {
-                $scope.createOwnerErrorModal();
-            }
         };
 
         /**
@@ -1071,17 +1066,12 @@
                 const userType = "owner";
                 $scope.createRemoveErrorModal(userType);
             }
-
-        } , function (res) {
-            if (res.statusCode === 403) {
-                $scope.createOwnerErrorModal();
-            }
         };
 
         /**
          * Handler for successfully removing a member from the Include or Exclude group.
          */
-        function handleMemberRemove() {
+        function handleMemberRemove(res) {
             $scope.getGroupingInformation();
             $scope.syncDestArray = [];
         }
