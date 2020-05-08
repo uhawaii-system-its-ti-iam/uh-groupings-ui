@@ -14,48 +14,45 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
+
 @ControllerAdvice
 public class ErrorControllerAdvice {
-
-    // TODO: change this to HATEOAS style
-    //  Do we need to use @ResponseBody for the methods or is this already being handled?
-    //  Do we need to use @ResponseStatus for the methods or is the HTTP status already being added?
-    //  Should we use VndErrors() type and get rid of the Groupings specific error types?
 
     private static final Log logger = LogFactory.getLog(ErrorControllerAdvice.class);
 
     @Autowired
     private UserContextService userContextService;
 
+    @ExceptionHandler(GroupingsServiceResultException.class)
+    public ResponseEntity<GroupingsHTTPException> handleGroupingsServiceResultException(GroupingsServiceResultException gsre) {
+      return exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
+    }
+
     @ExceptionHandler (GcWebServiceError.class)
     public ResponseEntity<GroupingsHTTPException> handleGcWebServiceError(GcWebServiceError gce) {
         return exceptionResponse(gce.getMessage(), gce, 404);
     }
-
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<GroupingsHTTPException> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
         return exceptionResponse("Resource not available", iae, 404);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<GroupingsHTTPException> handleRuntimeException(RuntimeException re) {
-        return exceptionResponse("runtime exception", re, 500);
-    }
-
-    @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<GroupingsHTTPException> handleUnsupportedOperationException(UnsupportedOperationException nie) {
-        return exceptionResponse("Method not implemented", nie, 501);
-    }
-
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({Exception.class, RuntimeException.class})
     public ResponseEntity<GroupingsHTTPException> handleException(Exception exception) {
         return exceptionResponse("Exception", exception, 500);
     }
 
-    @ExceptionHandler(GroupingsServiceResultException.class)
-    public ResponseEntity<GroupingsHTTPException> handleGroupingsServiceResultException(GroupingsServiceResultException gsre) {
-        return exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
+    @ExceptionHandler({MessagingException.class, IOException.class})
+    public ResponseEntity<GroupingsHTTPException> handleMessagingException(Exception e) {
+      return exceptionResponse("Mail service exception", e, 500);
+    }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<GroupingsHTTPException> handleUnsupportedOperationException(UnsupportedOperationException nie) {
+      return exceptionResponse("Method not implemented", nie, 501);
     }
 
     //todo this is for the HolidayRestControllerTest test (should we really have this behavior?)
