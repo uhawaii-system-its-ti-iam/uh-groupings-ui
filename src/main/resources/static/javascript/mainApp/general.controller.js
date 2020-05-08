@@ -541,9 +541,24 @@
             let selectedUser = $scope.pagedItemsExclude[currentPage][index];
             if($scope.usersToModify.indexOf(selectedUser.username, 0) === -1) {
                 $scope.usersToModify.push(selectedUser.username);
+                console.log($scope.usersToModify)
             } else {
                 $scope.usersToModify.splice($scope.usersToDelete.indexOf(selectedUser.username));
+                console.log($scope.usersToModify);
             }
+        };
+
+        /**
+         * Toggles selection of all users when the "select all" checkbox is checked.
+         * @param currentPage - The current page that the users are on.
+         */
+        $scope.toggleSelectAllUsersExclude = function(currentPage) {
+            let hasBeenChecked = false;
+            if(hasBeenChecked === false) {
+                $scope.pagedItemsExclude[currentPage].forEach(user => $scope.usersToModify.push(user.username));
+                hasBeenChecked = true;
+            }
+            console.log($scope.usersToModify);
         };
 
         /**
@@ -1027,6 +1042,7 @@
                 keyboard: false
             });
         };
+
         /**
          * Removes a user from the include or exclude group by clicking the "trashcan" button next to their name.
          * @param {string} listName - the list to remove the user from (either Include or Exclude)
@@ -1062,6 +1078,7 @@
          */
         $scope.removeMembersWithDeleteButton = function (listName) {
             $scope.listName = listName;
+            let userToRemove;
             console.log($scope.usersToModify);
         };
 
