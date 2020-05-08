@@ -321,11 +321,11 @@ public class GroupingsRestController {
      * @param userToDelete: username of the user to be deleted from the include group
      * @return information about the success of the operation
      */
-    @PostMapping(value = "/{grouping}/{userToDelete}/deleteMemberFromIncludeGroup")
+    @PostMapping(value = "/{grouping}/{userToDelete}/removeMembersFromIncludeGroup")
     public ResponseEntity deleteMemberFromIncludeGroup(Principal principal,
             @PathVariable String grouping,
             @PathVariable String userToDelete) {
-        logger.info("Entered REST deleteMemberFromIncludeGroup...");
+        logger.info("Entered REST removeMembersFromIncludeGroup...");
 
         String safeGrouping = policy.sanitize(grouping);
         String safeUserToDelete = policy.sanitize(userToDelete);
@@ -341,7 +341,7 @@ public class GroupingsRestController {
      * @param userToDelete: username of the user to be deleted from the exclude group
      * @return information about the success of the operation
      */
-    @PostMapping(value = "/{grouping}/{userToDelete}/deleteMemberFromExcludeGroup")
+    @PostMapping(value = "/{grouping}/{userToDelete}/removeMembersFromExcludeGroup")
     public ResponseEntity deleteMemberFromExcludeGroup(Principal principal,
             @PathVariable String grouping,
             @PathVariable String userToDelete) {
@@ -349,7 +349,7 @@ public class GroupingsRestController {
         String safeGrouping = policy.sanitize(grouping);
         String safeUserToDelete = policy.sanitize(userToDelete);
 
-        logger.info("Entered REST deleteMemberFromExcludeGroup...");
+        logger.info("Entered REST removeMembersFromExcludeGroup...");
         String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", safeGrouping, safeUserToDelete);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
