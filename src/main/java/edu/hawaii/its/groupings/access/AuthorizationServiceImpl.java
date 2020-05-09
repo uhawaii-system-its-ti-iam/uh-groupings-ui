@@ -84,10 +84,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             JSONObject jsonObject = new JSONObject(groupingAssignmentJson);
             System.out.println(jsonObject);
             JSONArray data = jsonObject.getJSONArray("data");
-            JSONObject result = data.getJSONObject(0);
+            JSONObject result = jsonObject.getJSONObject("groupingsServiceResult");
+            logger.info("**************************************************");
             logger.info(result);
+            logger.info("**************************************************");
             if ("SUCCESS".equals(result.get("resultCode")))
-                return data.getBoolean(1);
+                return data.getBoolean(0);
         } catch (NullPointerException | JSONException e) {
             logger.info("Error in getting admin info. Error message: " + e.getMessage());
         }
