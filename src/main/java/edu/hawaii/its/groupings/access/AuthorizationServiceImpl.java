@@ -62,17 +62,16 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 roleHolder.add(role);
             }
         }
-        System.out.println("------------------------------------------------------");
-        System.out.println(roleHolder.getAuthorities());
-        System.out.println("------------------------------------------------------");
+        logger.info("------------------------------------------------------");
+        logger.info(roleHolder.getAuthorities());
+        logger.info("------------------------------------------------------");
         return roleHolder;
     }
 
     /**
      * Return a boolean if the result code of a response is a Success, otherwise return false.
      *
-     * @param response - in this case the response can be represented as follows.
-     *                 {response {data [groupingsServiceResult: class, Boolean: object]}}
+     * @param response from API.
      * @return boolean
      */
     public boolean checkResultCodeJsonObject(ResponseEntity response) {
@@ -85,9 +84,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             System.out.println(jsonObject);
             JSONArray data = jsonObject.getJSONArray("data");
             JSONObject result = jsonObject.getJSONObject("groupingsServiceResult");
-            logger.info("**************************************************");
+            logger.info("------------------------------------------------------");
             logger.info(result);
-            logger.info("**************************************************");
+            logger.info("------------------------------------------------------");
             if ("SUCCESS".equals(result.get("resultCode")))
                 return data.getBoolean(0);
         } catch (NullPointerException | JSONException e) {
