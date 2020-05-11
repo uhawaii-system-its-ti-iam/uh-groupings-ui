@@ -6,6 +6,7 @@ import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("localTest")
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 public class GroupingsRestControllerTest {
 
     private static final String GROUPING = "grouping";
@@ -60,7 +61,6 @@ public class GroupingsRestControllerTest {
         when(httpRequestService.makeApiRequest(anyString(), anyString(), any(HttpMethod.class)))
                 .thenReturn(new ResponseEntity(HttpStatus.BAD_REQUEST));
     }
-
 
     @Test
     @WithMockUhUser
@@ -160,12 +160,11 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().isOk());
     }
 
-
     @Test
     @WithMockUhUser
     public void getDeleteMember() throws Exception {
-        String uri_include = REST_CONTROLLER_BASE + "grouping/user/deleteMemberFromIncludeGroup";
-        String uri_exclude = REST_CONTROLLER_BASE + GROUPING + "/user/deleteMemberFromExcludeGroup";
+        String uri_include = REST_CONTROLLER_BASE + "grouping/user/removeMembersFromIncludeGroup";
+        String uri_exclude = REST_CONTROLLER_BASE + GROUPING + "/user/removeMembersFromExcludeGroup";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
