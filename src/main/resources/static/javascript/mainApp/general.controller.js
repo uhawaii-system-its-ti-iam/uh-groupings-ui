@@ -89,6 +89,9 @@
         //The user input
         $scope.modelDescription = "";
 
+        // Variable that holds the checkbox value
+        $scope.checkboxValueModel = {};
+
         //Variable for holding description
         let groupingDescription = "";
 
@@ -531,32 +534,11 @@
             }
         };
 
-        /**
-         * Toggles selection of a user when the checkbox next to their name is checked. If a user is selected,
-         * they are added to a list of users to delete when the 'Delete' button is clicked.
-         * @param currentPage - the page that the users are in.
-         * @param index - the index of the array that the users are currently a part of.
-         */
-        $scope.toggleSelectionForDeletion = function(currentPage, index) {
-            let selectedUser = $scope.pagedItemsExclude[currentPage][index];
-            if($scope.usersToModify.indexOf(selectedUser.username, 0) === -1) {
-                $scope.usersToModify.push(selectedUser.username);
-                console.log($scope.usersToModify)
-            } else {
-                $scope.usersToModify.splice($scope.usersToDelete.indexOf(selectedUser.username));
-                console.log($scope.usersToModify);
-            }
-        };
-
-        /**
-         * Toggles selection of all users when the "select all" checkbox is checked.
-         * @param currentPage - The current page that the users are on.
-         */
-        $scope.toggleSelectAllUsersExclude = function(currentPage) {
-            let hasBeenChecked = false;
-            if(hasBeenChecked === false) {
-                $scope.pagedItemsExclude[currentPage].forEach(user => $scope.usersToModify.push(user.username));
-                hasBeenChecked = true;
+        $scope.addCheckedUserToList = function(currentPage, index) {
+            $scope.checkboxValueModel = { value1 : false, value2 : true };
+            $scope.user = $scope.pagedItemsExclude[currentPage][index];
+            if($scope.checkboxValueModel.value2) {
+                $scope.usersToModify.push($scope.user.username);
             }
             console.log($scope.usersToModify);
         };

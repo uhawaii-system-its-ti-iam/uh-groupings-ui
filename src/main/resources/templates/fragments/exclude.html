@@ -71,10 +71,10 @@
                 <tbody>
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
                     <td class="p-10" tabindex="0">
-                        <div class="form-check">
+                        <div class="form-check" ng-model="checkboxValueModel">
                             <input class="form-check-input position-left singlechkbox" type="checkbox"
                                    id="blankCheckbox"
-                                   ng-click="toggleSelectionForDeletion(currentPageExclude, $index)"
+                                   ng-click="checkboxValueModel.value2"
                                    aria-label="assertive">
                             {{e.name}}
                             <span class="fa fa-trash-o pull-right clickable pt-1"
@@ -131,7 +131,7 @@
                                     <button class="btn btn-primary" ng-click="addMembers('Exclude')" style="margin-left: 4px">
                                         Add
                                     </button>
-                                    <button class="btn btn-delete" ng-click="removeMembersWithDeleteButton('Exclude')"
+                                    <button class="btn btn-delete" ng-click="addCheckedUserToList(pagedItemsExclude, $index)"
                                             style="margin-left: 2px; margin-right: 2px">
                                         Delete
                                     </button>
