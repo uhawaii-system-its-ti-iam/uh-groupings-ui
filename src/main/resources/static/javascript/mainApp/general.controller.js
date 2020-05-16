@@ -89,8 +89,8 @@
         //The user input
         $scope.modelDescription = "";
 
-        // Variable that holds the checkbox value
-        $scope.checkboxValueModel = {};
+        // Object that contains users that have a checkbox checked
+        $scope.usersInCheckboxList = { };
 
         //Variable for holding description
         let groupingDescription = "";
@@ -532,15 +532,6 @@
                 $scope.userToAdd = $scope.usersToModify;
                 $scope.addMember(listName);
             }
-        };
-
-        $scope.addCheckedUserToList = function(currentPage, index) {
-            $scope.checkboxValueModel = { value1 : false, value2 : true };
-            $scope.user = $scope.pagedItemsExclude[currentPage][index];
-            if($scope.checkboxValueModel.value2) {
-                $scope.usersToModify.push($scope.user.username);
-            }
-            console.log($scope.usersToModify);
         };
 
         /**
@@ -1059,9 +1050,7 @@
          * @param listName - Name of the list that the user(s) will be deleted from.
          */
         $scope.removeMembersWithDeleteButton = function (listName) {
-            $scope.listName = listName;
-            let userToRemove;
-            console.log($scope.usersToModify);
+            console.log($scope.usersInCheckboxList);
         };
 
 

@@ -41,7 +41,6 @@
                         <div class="form-check">
                             <input class="form-check-input position-left" type="checkbox" id="selectall"
                                    value="option1" data-toggle="tooltip" data-placement="top" title="Check all"
-                                   ng-click="toggleSelectAllUsersExclude(currentPageExclude)"
                                    aria-label="assertive">
                             Name
                             <i class="fa sort-icon"
@@ -71,10 +70,11 @@
                 <tbody>
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
                     <td class="p-10" tabindex="0">
-                        <div class="form-check" ng-model="checkboxValueModel">
+                        <div class="form-check">
                             <input class="form-check-input position-left singlechkbox" type="checkbox"
+                                   ng-model="usersInCheckboxList[e.username]"
+                                   ng-click="usersInCheckboxList[e.username] = true"
                                    id="blankCheckbox"
-                                   ng-click="checkboxValueModel.value2"
                                    aria-label="assertive">
                             {{e.name}}
                             <span class="fa fa-trash-o pull-right clickable pt-1"
@@ -84,7 +84,8 @@
                                   th:title="#{screen.message.common.tooltip.remove.exclude}"
                                   ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Exclude', currentPageExclude, $index) : null"
                                   ng-click="removeMemberWithTrashcan('Exclude', currentPageExclude, $index)">
-                    </span>
+                            </span>
+                        </div>
                     </td>
                     <td class="p-10">{{e.uhUuid}}</td>
                     <td class="p-10">
@@ -131,7 +132,7 @@
                                     <button class="btn btn-primary" ng-click="addMembers('Exclude')" style="margin-left: 4px">
                                         Add
                                     </button>
-                                    <button class="btn btn-delete" ng-click="addCheckedUserToList(pagedItemsExclude, $index)"
+                                    <button class="btn btn-delete" ng-click="removeMembersWithDeleteButton('Exclude')"
                                             style="margin-left: 2px; margin-right: 2px">
                                         Delete
                                     </button>
