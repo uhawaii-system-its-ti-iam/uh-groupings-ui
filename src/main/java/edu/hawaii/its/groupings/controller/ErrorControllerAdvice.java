@@ -45,10 +45,11 @@ public class ErrorControllerAdvice {
         return exceptionResponse("Exception", exception, 500);
     }
 
+    /*
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<GroupingsHTTPException> handleRuntimeException(Exception exception) {
       return exceptionResponse("Runtime Exception", exception, 500);
-    }
+    }*/
 
     @ExceptionHandler({MessagingException.class, IOException.class})
     public ResponseEntity<GroupingsHTTPException> handleMessagingException(Exception e) {

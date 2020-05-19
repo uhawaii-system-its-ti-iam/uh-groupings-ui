@@ -46,15 +46,6 @@ public class ErrorControllerAdviceTest {
     }
 
     @Test
-    public void runtimeTest() {
-        RuntimeException re = new RuntimeException();
-        errorControllerAdvice.handleRuntimeException(re);
-        String runtime = "<500,edu.hawaii.its.api.type.GroupingsHTTPException:"
-                + " runtime exception,[]>";
-        assertThat(errorControllerAdvice.handleRuntimeException(re).toString(), equalTo(runtime));
-    }
-
-    @Test
     public void illegalArgumentTest() {
         IllegalArgumentException IAE = new IllegalArgumentException();
         WebRequest Req = new WebRequest() {
@@ -182,6 +173,13 @@ public class ErrorControllerAdviceTest {
         String exception = "<500,edu.hawaii.its.api.type.GroupingsHTTPException: "
                 + "Exception,[]>";
         assertThat(errorControllerAdvice.handleException(E).toString(), equalTo(exception));
+
+        RuntimeException re = new RuntimeException();
+        errorControllerAdvice.handleException(re);
+        String runtime = "<500,edu.hawaii.its.api.type.GroupingsHTTPException:"
+            + " Exception,[]>";
+        assertThat(errorControllerAdvice.handleException(re).toString(), equalTo(runtime));
+
     }
 
     @Test
