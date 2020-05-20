@@ -40,16 +40,16 @@ public class ErrorControllerAdvice {
         return exceptionResponse("Resource not available", iae, 404);
     }
 
-    @ExceptionHandler({Exception.class, RuntimeException.class})
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<GroupingsHTTPException> handleException(Exception exception) {
         return exceptionResponse("Exception", exception, 500);
     }
 
-    /*
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<GroupingsHTTPException> handleRuntimeException(Exception exception) {
       return exceptionResponse("Runtime Exception", exception, 500);
-    }*/
+    }
 
     @ExceptionHandler({MessagingException.class, IOException.class})
     public ResponseEntity<GroupingsHTTPException> handleMessagingException(Exception e) {
