@@ -567,6 +567,11 @@ form.seamless button {
     font-weight: bold;
 }
 
+.center-checkbox {
+    width: 20px;
+    margin: 0 auto;
+}
+
 /**
  * Styling for selected grouping header.
  * Styles the grouping name and 'Return to Groupings'
