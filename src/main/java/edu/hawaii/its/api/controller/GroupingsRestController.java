@@ -342,6 +342,10 @@ public class GroupingsRestController {
     public ResponseEntity deleteMemberFromExcludeGroup(Principal principal,
             @PathVariable String path,
             @PathVariable String uid) {
+        System.err.println("***********************************************");
+        System.err.println(path);
+        System.err.println(uid);
+        System.err.println("***********************************************");
         logger.info("Entered REST removeMembersFromExcludeGroup...");
         String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", policy.sanitize(path),
                 policy.sanitize(uid));

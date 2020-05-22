@@ -90,7 +90,7 @@
         $scope.modelDescription = "";
 
         // Object that contains users that have a checkbox checked
-        $scope.usersInCheckboxList = { };
+        $scope.usersInCheckboxList = {};
 
         //Variable for holding description
         let groupingDescription = "";
@@ -1023,7 +1023,6 @@
          * account
          */
         $scope.removeMemberWithTrashcan = function (listName, currentPage, index) {
-
             let userToRemove;
             $scope.modalType = "remove";
             if (listName === "Include") {
@@ -1039,6 +1038,7 @@
             });
         };
 
+
         /**
          * Removes members upon clicking the delete button. Can remove a single member or multiple members
          * in the list usersToModify.
@@ -1046,7 +1046,15 @@
          */
         $scope.removeMembersWithDeleteButton = function (listName) {
             console.log($scope.usersInCheckboxList);
+            groupingsService["removeMemberFrom" + listName]($scope.selectedGrouping.path, (_.keys(_.pickBy($scope.usersInCheckboxList))).join(","), (res) => {
+                console.log(groupingsService.parseGenericResponseData(res));
+            }, (res) => console.log(res));
+            $scope.getGroupingInformation();
         };
+
+        function getUidsToRemove(obj) {
+            return (_.keys(_.pickBy(obj))).join(",");
+        }
 
 
         /**
