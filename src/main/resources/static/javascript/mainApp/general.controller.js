@@ -505,11 +505,11 @@
          */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
-            let numMembers = ($scope.usersToModify.split(" ").length - 1);
+            let numMembers = ($scope.usersToAdd.split(" ").length - 1);
 
 
             if (numMembers > 0) {
-                let users = $scope.usersToModify.split(/[ ,]+/).join(",");
+                let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
 
                 $scope.usersToModify = [];
                 if (numMembers > $scope.maxImport) {
@@ -583,10 +583,7 @@
                 $scope.launchMultiAddResultModal(listName);
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
-
-            let fun = "addMembersTo";
-            await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
-            (groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+            await groupingsService["addMembersTo" + listName](groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
         };
 
         /**
@@ -1038,7 +1035,6 @@
             });
         };
 
-
         /**
          * Removes members upon clicking the delete button. Can remove a single member or multiple members
          * in the list usersToModify.
@@ -1051,11 +1047,6 @@
             }, (res) => console.log(res));
             $scope.getGroupingInformation();
         };
-
-        function getUidsToRemove(obj) {
-            return (_.keys(_.pickBy(obj))).join(",");
-        }
-
 
         /**
          * Removes a grouping owner. There must be at least one grouping owner remaining.
