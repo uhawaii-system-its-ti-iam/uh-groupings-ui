@@ -879,7 +879,7 @@
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
-                    $scope.createAddErrorModal(userToAdd);
+                $scope.createAddErrorModal(userToAdd);
             });
         };
 
@@ -1086,8 +1086,9 @@
             $scope.getGroupingInformation();
             $scope.syncDestArray = [];
         }
+
         function handleMultiMemberRemove() {
-            for (let i = 0; i < $scope.multiMemberPaths.length; i++){
+            for (let i = 0; i < $scope.multiMemberPaths.length; i++) {
                 $scope.selectedGrouping.path = $scope.multiMemberPaths[i];
                 $scope.getGroupingInformation();
                 $scope.syncDestArray = [];
@@ -1175,7 +1176,7 @@
          */
         $scope.createRemoveFromGroupsModal = function (options) {
             $scope.userToRemove = options.user;
-            $scope.listName =  options.listName.join(", ");
+            $scope.listName = options.listName.join(", ");
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal",
@@ -1188,7 +1189,7 @@
                 $scope.loading = true;
                 let userToRemove = options.user.username;
                 let groupingPath = $scope.selectedGroupings;
-                groupingsService.removeFromGroups(groupingPath,userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
+                groupingsService.removeFromGroups(groupingPath, userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
                 $scope.personToLookup = userToRemove;
             });
         };
