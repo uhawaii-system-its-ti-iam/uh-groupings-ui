@@ -496,8 +496,6 @@
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
             let numMembers = ($scope.usersToAdd.split(" ").length - 1);
-
-
             if (numMembers > 0) {
                 let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
 
