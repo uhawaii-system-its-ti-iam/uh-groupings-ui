@@ -880,6 +880,35 @@
             });
         };
 
+        /*$scope.createConfirmUserRemoveModal = function (options) {
+            const userToRemove = options.userToRemove;
+
+            groupingsService.getMemberAttributes(userToAdd, function (attributes) {
+                $scope.fullNameToAdd = attributes.cn;
+                $scope.givenNameToAdd = attributes.givenName;
+                $scope.uhUuidToAdd = attributes.uhUuid;
+                $scope.uidToAdd = attributes.uid;
+
+                $scope.listName = options.listName;
+
+                // Ask for confirmation from the user to add the member
+                $scope.confirmAddModalInstance = $uibModal.open({
+                    templateUrl: "modal/confirmAddModal",
+                    scope: $scope,
+                    backdrop: "static",
+                    keyboard: false
+                });
+
+                $scope.confirmAddModalInstance.result.then(function () {
+                    $scope.updateAddMember(userToAdd, options.listName);
+                });
+            }, function (res) {
+                if (res.statusCode === 404) {
+                    $scope.createAddErrorModal(userToAdd);
+                }
+            });
+        };*/
+
         /**
          * Closes CheckModal and proceeds with the checkModalInstance result.then function
          */
@@ -1095,6 +1124,9 @@
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
+            console.log(options.user);
+            console.log(options.listName);
+
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
 
@@ -1120,6 +1152,44 @@
                 } else if ($scope.listName === "admins") {
                     groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
                 }
+            });
+        };
+
+        /**
+         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * a request is made to delete the user.
+         * @param {object} options - the options object
+         * @param {object} options.user - the user being removed
+         * @param {string} options.groups - groups the user is being removed from
+         */
+        $scope.createRemoveFromGroupsModal = function (options) {
+            $scope.userToRemove = options.user;
+            $scope.listName = options.listName;
+
+            console.log(options.user);
+            console.log(options.listName);
+
+            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+
+
+            $scope.removeModalInstance = $uibModal.open({
+                templateUrl: "modal/removeModal",
+                windowClass: windowClass,
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+
+            $scope.removeModalInstance.result.then(function () {
+                $scope.loading = true;
+
+                //Call to use groupingsService endpoint
+                console.log("WE MADE IT");
+                console.log($scope.selectedGroupings);
+                let userToRemove = options.user.username;
+
+
+                groupingsService.removeFromGroups($scope.selectedGroupings,userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
             });
         };
 

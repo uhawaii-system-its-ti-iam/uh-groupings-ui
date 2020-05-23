@@ -16,6 +16,7 @@
         $scope.personList = [];
         $scope.pagedItemsPerson = [];
         $scope.currentPagePerson = 0;
+        $scope.selectedGroupingsNames = [];
 
         let totalCheckBoxCount = 0;
         let count = 0;
@@ -58,7 +59,7 @@
 
         $scope.searchForUserGroupingInformation = function () {
             $scope.loading = true;
-            groupingsService.getMembershipAssignmentForUser(function (res) {
+            groupingsService. getMembershipAssignmentForUser(function (res) {
 
                 $scope.personList = _.sortBy(res.combinedGroupings, "name");
                 $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
@@ -96,14 +97,38 @@
 
         $scope.removeFromGroups = function () {
             $scope.selectedGroupings = [];
+            $scope.selectedGroupingsNames = [];
+
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
                 if(grouping.isSelected) {
                     if(grouping.inOwner){
                         $scope.selectedGroupings.push(grouping.path + ":owners");
+                        let temp = grouping.path;
+                        temp = temp.split(":").pop();
+                        $scope.selectedGroupingsNames.push(temp);
                     }
                     if(grouping.inInclude){
                         $scope.selectedGroupings.push(grouping.path + ":include")
+                        let temp = grouping.path;
+                        temp = temp.split(":").pop();
+                        $scope.selectedGroupingsNames.push(temp);
                     }
+                }
+            });
+
+            groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
+                let userToRemove = {
+                    username: attributes.uid,
+                    name: attributes.cn,
+                    uhUuid: attributes.uhUuid
+                };
+                if (_.isEmpty($scope.selectedGroupings)) {
+                    $scope.createOwnerErrorModal($scope.selectedGroupings);
+                } else {
+                    $scope.createRemoveFromGroupsModal({
+                        user: userToRemove,
+                        listName: $scope.selectedGroupingsNames
+                    });
                 }
             });
 

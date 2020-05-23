@@ -165,6 +165,25 @@ public class GroupingsRestController {
     }
 
     /**
+     * deletes a member from the multiple groups
+     *
+     * @param groupings: username of the admin to be deleted
+     * @return information about the success of the operation
+     */
+    @PostMapping(value = "/{groupings}/{userToDelete}/removeFromGroups")
+    public ResponseEntity removeFromGroups(Principal principal,
+            @PathVariable String groupings,
+            @PathVariable String userToDelete) {
+        logger.info("Entered REST removeFromGroups...");
+
+        String safeGroupings = policy.sanitize(groupings);
+        String safeUserToDelete = policy.sanitize(userToDelete);
+
+        String uri = String.format(API_2_1_BASE + "/admins/%s/includeMembers/%s", safeGroupings, safeUserToDelete);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
+    }
+
+    /**
      * Get a member's attributes based off username
      *
      * @param uid: Username of user to obtain attributes about
