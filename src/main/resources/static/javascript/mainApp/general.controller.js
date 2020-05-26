@@ -204,30 +204,36 @@
                  *     descending (Z-A)
                  */
                 groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async function (res) {
+                    console.log(res);
 
                     // Gets members in the basis group
                     $scope.groupingBasis = setGroupMembers(res.basis.members);
                     $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
+                    console.log($scope.basisQuery);
 
                     //Gets members in the include group
                     $scope.groupingInclude = setGroupMembers(res.include.members);
                     $scope.addInBasis($scope.groupingInclude);
                     $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
+                    console.log($scope.includeQuery);
 
                     //Gets members in the exclude group
                     $scope.groupingExclude = setGroupMembers(res.exclude.members);
                     $scope.addInBasis($scope.groupingExclude);
                     $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
+                    console.log($scope.excludeQuery);
 
                     //Gets members in grouping
                     $scope.groupingMembers = setGroupMembers(res.composite.members);
                     $scope.addWhereListed($scope.groupingMembers);
                     $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
+                    console.log($scope.membersQuery);
 
                     //Gets owners of the grouping
                     $scope.groupingOwners = setGroupMembers(res.owners.members);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
+                    console.log($scope.ownersQuery);
 
                     // Gets the description go the group
                     if (res.description === null) {
@@ -300,6 +306,7 @@
             return new Promise((resolve) =>
                 groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
 
+                    console.log(res);
                     // Keep loading members till there are no members left and resolve promise
                     if (res.basis.members.length !== 0 || res.include.members.length !== 0 ||
                         res.exclude.members.length !== 0 || res.composite.members.length !== 0 || res.owners.members.length !== 0) {

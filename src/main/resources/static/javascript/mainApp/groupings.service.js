@@ -49,7 +49,7 @@
                 }
 
                 endpoint = endpoint + params;
-                // console.log(endpoint);
+                console.log(endpoint);
 
 
                 dataProvider.loadData(onSuccess, onError, endpoint);
