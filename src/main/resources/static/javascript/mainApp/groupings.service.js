@@ -11,7 +11,7 @@
             /**
              * Get page of a grouping
              * @param {String} path - the path to the grouping
-             * @param {String} page - the page to retrieve
+             * @param {number} page - the page to retrieve
              * @param {String} size - the size of each page
              * @param sortString
              * @param isAscending

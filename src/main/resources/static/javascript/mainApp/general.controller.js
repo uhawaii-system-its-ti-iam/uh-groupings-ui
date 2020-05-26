@@ -72,6 +72,8 @@
         $scope.groupingCSV = [];
         $scope.groupNameCSV = [];
 
+        let CURRENT_PAGE = 0;
+
 
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
@@ -143,6 +145,7 @@
          */
         function combineGroupMembers(initialMembers, membersToAdd) {
 
+            /*
             _.remove(membersToAdd, function (member) {
                 return _.isEmpty(member.username);
             });
@@ -153,6 +156,9 @@
             newMembers = _.uniqBy(newMembers, "uhUuid");
 
             return _.sortBy(newMembers, "name");
+             */
+            let newMembers = _.concat(initialMembers, membersToAdd);
+            return newMembers;
         };
 
         /**
@@ -171,11 +177,88 @@
             });
         };
 
+        function getGroupingOnSuccess(res) {
+
+            $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
+            $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
+
+            //Gets members in the include group
+            $scope.groupingInclude = combineGroupMembers($scope.groupingInclude, res.include.members);
+            $scope.addInBasis($scope.groupingInclude);
+            $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
+
+            //Gets members in the exclude group
+            $scope.groupingExclude = combineGroupMembers($scope.groupingExclude, res.exclude.members);
+            $scope.addInBasis($scope.groupingExclude);
+            $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
+
+            //Gets members in grouping
+            let size = $scope.groupingMembers.length;
+            $scope.groupingMembers = combineGroupMembers($scope.groupingMembers, res.composite.members);
+            $scope.addWhereListed($scope.groupingMembers);
+            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
+
+            //Gets owners of the grouping
+            $scope.groupingOwners = combineGroupMembers($scope.groupingOwners, res.owners.members);
+            $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+            $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
+
+            // Gets the description go the group
+            if (res.description === null) {
+                groupingDescription = "";
+            } else {
+                groupingDescription = res.description;
+                displayTracker = 1;
+            }
+
+            $scope.allowOptIn = res.optInOn;
+            $scope.allowOptOut = res.optOutOn;
+
+            $scope.syncDestArray = res.syncDestinations;
+
+            //Stop loading spinner and turn on loading text
+            $scope.loading = false;
+            $scope.paginatingProgress = true;
+
+            //increments page to load and allows members to iteratively be loaded
+            loadMembersList = true;
+            console.log("CurrentPage: " + CURRENT_PAGE);
+            console.log("Size: " + size);
+            const path = $scope.selectedGrouping.path;
+            if (size < $scope.groupingMembers.length) {
+                CURRENT_PAGE++;
+                groupingsService.getGrouping(
+                    path,
+                    CURRENT_PAGE,
+                    PAGE_SIZE,
+                    "name",
+                    true,
+                    getGroupingOnSuccess,
+                    (res) => console.log(res));
+            }
+        }
+
+        $scope.getGroupingInformation = () => {
+            $scope.loading = true;
+            const path = $scope.selectedGrouping.path;
+            CURRENT_PAGE++;
+            groupingsService.getGrouping(
+                path,
+                CURRENT_PAGE,
+                PAGE_SIZE,
+                "name",
+                true,
+                getGroupingOnSuccess,
+                (res) => console.log(res)
+            );
+
+
+        };
         /**
          * Gets information about the grouping, such as its members and the preferences set.
          * Retrieves information asynchronously page by page
          */
-        $scope.getGroupingInformation = function () {
+        $scope.getGroupingInformationi = function () {
             //creates loading screen
             $scope.loading = true;
             $scope.paginatingComplete = false;
@@ -204,36 +287,30 @@
                  *     descending (Z-A)
                  */
                 groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async function (res) {
-                    console.log(res);
 
                     // Gets members in the basis group
                     $scope.groupingBasis = setGroupMembers(res.basis.members);
                     $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
-                    console.log($scope.basisQuery);
 
                     //Gets members in the include group
                     $scope.groupingInclude = setGroupMembers(res.include.members);
                     $scope.addInBasis($scope.groupingInclude);
                     $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
-                    console.log($scope.includeQuery);
 
                     //Gets members in the exclude group
                     $scope.groupingExclude = setGroupMembers(res.exclude.members);
                     $scope.addInBasis($scope.groupingExclude);
                     $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
-                    console.log($scope.excludeQuery);
 
                     //Gets members in grouping
                     $scope.groupingMembers = setGroupMembers(res.composite.members);
                     $scope.addWhereListed($scope.groupingMembers);
                     $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
-                    console.log($scope.membersQuery);
 
                     //Gets owners of the grouping
                     $scope.groupingOwners = setGroupMembers(res.owners.members);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
-                    console.log($scope.ownersQuery);
 
                     // Gets the description go the group
                     if (res.description === null) {
