@@ -133,9 +133,7 @@
             });
 
             // Unique members only by UUID (assume no two users should have the same uuid)
-            members = _.uniqBy(members, "uhUuid");
-
-            return _.sortBy(members, "name");
+            return _.uniqBy(members, "uhUuid");
         }
 
         /**
@@ -148,13 +146,8 @@
             _.remove(membersToAdd, function (member) {
                 return _.isEmpty(member.username);
             });
-
-            let newMembers = _.concat(initialMembers, membersToAdd);
-
             // Unique members only by UUID (assume no two users should have the same uuid)
-            newMembers = _.uniqBy(newMembers, "uhUuid");
-
-            return _.sortBy(newMembers, "name");
+            return _.uniqBy(_.concat(initialMembers, membersToAdd), "uhUuid");
         };
 
         /**
@@ -174,6 +167,7 @@
         };
 
         function getGroupingOnSuccess(res) {
+            $scope.loading = false;
             $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
             $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
 
