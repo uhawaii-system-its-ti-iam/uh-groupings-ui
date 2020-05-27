@@ -219,11 +219,13 @@
                 );
             } else {
                 $scope.paginatingProgress = false;
+                $scope.paginatingComplete = true;
             }
         }
 
         $scope.getGroupingInformation = () => {
             $scope.loading = true;
+            $scope.paginatingComplete = false;
             const path = $scope.selectedGrouping.path;
             groupingsService.getGroupingMetaData(path, (res) => {
                     $scope.loading = false;
