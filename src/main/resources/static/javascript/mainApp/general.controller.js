@@ -166,6 +166,14 @@
             });
         };
 
+        function launchOwnerErrorModal() {
+            return (res) => {
+                if (res.statusCode === 403) {
+                    $scope.createOwnerErrorModal();
+                }
+            };
+        }
+
         function getGroupingOnSuccess(res) {
             $scope.loading = false;
             $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
@@ -207,7 +215,8 @@
                     "name",
                     true,
                     getGroupingOnSuccess,
-                    (res) => console.log(res));
+                    launchOwnerErrorModal
+                );
             } else {
                 $scope.paginatingProgress = false;
             }
@@ -229,12 +238,11 @@
                         displayTracker = 1;
                     }
                 },
-                (res) => console.log(res));
+                launchOwnerErrorModal
+            );
             CURRENT_PAGE++;
             groupingsService.getGrouping(path, CURRENT_PAGE, PAGE_SIZE, "name", true,
-                getGroupingOnSuccess,
-                (res) => console.log(res)
-            );
+                getGroupingOnSuccess, launchOwnerErrorModal);
         };
         /**
          * Gets information about the grouping, such as its members and the preferences set.
@@ -365,7 +373,6 @@
             return new Promise((resolve) =>
                 groupingsService.getGrouping(groupingPath, page, size, sortString, isAscending, function (res) {
 
-                    console.log(res);
                     // Keep loading members till there are no members left and resolve promise
                     if (res.basis.members.length !== 0 || res.include.members.length !== 0 ||
                         res.exclude.members.length !== 0 || res.composite.members.length !== 0 || res.owners.members.length !== 0) {
@@ -638,21 +645,12 @@
                 $scope.launchMultiAddResultModal(listName);
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
-
-            let fun = "addMembersTo";
-            await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
-            (groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
-
-
-            /*
-             if (listName === "Include")
-                 await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd,
-                     handleUnsuccessfulRequest, timeoutModal);
-             else if (listName === "Exclude")
-                 await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd,
-                     handleUnsuccessfulRequest, timeoutModal);
-
-             */
+            await groupingsService["addMembersTo" + listName](
+                groupingPath,
+                list,
+                handleSuccessfulAdd,
+                handleUnsuccessfulRequest,
+                timeoutModal);
         };
 
         /**
