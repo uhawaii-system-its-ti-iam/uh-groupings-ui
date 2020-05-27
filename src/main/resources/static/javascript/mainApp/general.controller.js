@@ -145,20 +145,16 @@
          */
         function combineGroupMembers(initialMembers, membersToAdd) {
 
-            /*
             _.remove(membersToAdd, function (member) {
                 return _.isEmpty(member.username);
             });
 
-            var newMembers = _.concat(initialMembers, membersToAdd);
+            let newMembers = _.concat(initialMembers, membersToAdd);
 
             // Unique members only by UUID (assume no two users should have the same uuid)
             newMembers = _.uniqBy(newMembers, "uhUuid");
 
             return _.sortBy(newMembers, "name");
-             */
-            let newMembers = _.concat(initialMembers, membersToAdd);
-            return newMembers;
         };
 
         /**
@@ -209,6 +205,7 @@
             const path = $scope.selectedGrouping.path;
             if (size < $scope.groupingMembers.length) {
                 CURRENT_PAGE++;
+                $scope.paginatingProgress = true;
                 groupingsService.getGrouping(
                     path,
                     CURRENT_PAGE,
@@ -217,35 +214,30 @@
                     true,
                     getGroupingOnSuccess,
                     (res) => console.log(res));
+            } else {
+                $scope.paginatingProgress = false;
             }
         }
 
         $scope.getGroupingInformation = () => {
             $scope.loading = true;
             const path = $scope.selectedGrouping.path;
-            groupingsService.getGroupingMetaData(path,
-                (res) => {
+            groupingsService.getGroupingMetaData(path, (res) => {
+                    $scope.loading = false;
+                    $scope.allowOptIn = res.optInOn;
+                    $scope.allowOptOut = res.optOutOn;
+                    $scope.syncDestArray = res.syncDestinations;
+                    CURRENT_PAGE++;
                     if (res.description === null) {
                         groupingDescription = "";
                     } else {
                         groupingDescription = res.description;
                         displayTracker = 1;
                     }
-                    $scope.allowOptIn = res.optInOn;
-                    $scope.allowOptOut = res.optOutOn;
-                    $scope.syncDestArray = res.syncDestinations;
-                    $scope.loading = false;
-                    $scope.paginatingProgress = true;
-                    CURRENT_PAGE++;
                 },
                 (res) => console.log(res));
             CURRENT_PAGE++;
-            groupingsService.getGrouping(
-                path,
-                CURRENT_PAGE,
-                PAGE_SIZE,
-                "name",
-                true,
+            groupingsService.getGrouping(path, CURRENT_PAGE, PAGE_SIZE, "name", true,
                 getGroupingOnSuccess,
                 (res) => console.log(res)
             );
