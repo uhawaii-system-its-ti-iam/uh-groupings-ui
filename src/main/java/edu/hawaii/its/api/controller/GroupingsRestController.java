@@ -461,6 +461,13 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
+    @GetMapping(value = "/groupings/{path:.+}/metaData")
+    public ResponseEntity getGroupingMetaData(Principal principal, @PathVariable String path) {
+        logger.info("Entered REST getGroupingMetaData...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/metaData", path);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
     /**
      * finds and returns the specified Grouping
      *
@@ -503,7 +510,6 @@ public class GroupingsRestController {
 
             params = params + "isAscending=" + isAscending;
         }
-
         logger.info(baseUri + params);
 
         return httpRequestService.makeApiRequest(principal.getName(), baseUri + params, HttpMethod.GET);

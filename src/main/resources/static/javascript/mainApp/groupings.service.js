@@ -49,10 +49,11 @@
                 }
 
                 endpoint = endpoint + params;
-                console.log(endpoint);
-
-
                 dataProvider.loadData(onSuccess, onError, endpoint);
+            },
+
+            getGroupingMetaData(path, onSuccess, onError) {
+                dataProvider.loadData(onSuccess, onError, BASE_URL + "groupings/" + path + "/metaData");
             },
             generic(onSuccess, onError) {
                 dataProvider.loadData(onSuccess, onError, BASE_URL + "generic/");

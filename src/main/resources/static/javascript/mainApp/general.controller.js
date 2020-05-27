@@ -178,7 +178,6 @@
         };
 
         function getGroupingOnSuccess(res) {
-
             $scope.groupingBasis = combineGroupMembers($scope.groupingBasis, res.basis.members);
             $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
 
@@ -204,26 +203,9 @@
             $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
 
             // Gets the description go the group
-            if (res.description === null) {
-                groupingDescription = "";
-            } else {
-                groupingDescription = res.description;
-                displayTracker = 1;
-            }
-
-            $scope.allowOptIn = res.optInOn;
-            $scope.allowOptOut = res.optOutOn;
-
-            $scope.syncDestArray = res.syncDestinations;
-
-            //Stop loading spinner and turn on loading text
-            $scope.loading = false;
-            $scope.paginatingProgress = true;
 
             //increments page to load and allows members to iteratively be loaded
             loadMembersList = true;
-            console.log("CurrentPage: " + CURRENT_PAGE);
-            console.log("Size: " + size);
             const path = $scope.selectedGrouping.path;
             if (size < $scope.groupingMembers.length) {
                 CURRENT_PAGE++;
@@ -241,6 +223,22 @@
         $scope.getGroupingInformation = () => {
             $scope.loading = true;
             const path = $scope.selectedGrouping.path;
+            groupingsService.getGroupingMetaData(path,
+                (res) => {
+                    if (res.description === null) {
+                        groupingDescription = "";
+                    } else {
+                        groupingDescription = res.description;
+                        displayTracker = 1;
+                    }
+                    $scope.allowOptIn = res.optInOn;
+                    $scope.allowOptOut = res.optOutOn;
+                    $scope.syncDestArray = res.syncDestinations;
+                    $scope.loading = false;
+                    $scope.paginatingProgress = true;
+                    CURRENT_PAGE++;
+                },
+                (res) => console.log(res));
             CURRENT_PAGE++;
             groupingsService.getGrouping(
                 path,
@@ -251,8 +249,6 @@
                 getGroupingOnSuccess,
                 (res) => console.log(res)
             );
-
-
         };
         /**
          * Gets information about the grouping, such as its members and the preferences set.
