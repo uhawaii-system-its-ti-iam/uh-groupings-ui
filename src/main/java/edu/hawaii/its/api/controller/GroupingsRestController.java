@@ -179,7 +179,7 @@ public class GroupingsRestController {
         String safeGroupings = policy.sanitize(groupings);
         String safeUserToDelete = policy.sanitize(userToDelete);
 
-        String uri = String.format(API_2_1_BASE + "/admins/%s/includeMembers/%s", safeGroupings, safeUserToDelete);
+        String uri = String.format(API_2_1_BASE + "/admins/%s/%s", safeGroupings, safeUserToDelete);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
