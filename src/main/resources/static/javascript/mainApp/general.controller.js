@@ -192,7 +192,7 @@
                 let currentPage = 1;
 
                 const groupingPath = $scope.selectedGrouping.path;
-
+                console.log("Grouping Path in info: " + groupingPath);
                 /**
                  * Function to get pages of a grouping asynchronously
                  * @param {String} groupingPath - Path to the grouping to retrieve data from
@@ -203,6 +203,7 @@
                  * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for
                  *     descending (Z-A)
                  */
+
                 groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async function (res) {
 
                     // Gets members in the basis group
@@ -1181,15 +1182,14 @@
             });
 
             $scope.removeModalInstance.result.then(function () {
+
                 $scope.loading = true;
-
-                //Call to use groupingsService endpoint
-                console.log("WE MADE IT");
-                console.log($scope.selectedGroupings);
                 let userToRemove = options.user.username;
+                let groupingPath = $scope.selectedGroupings;
 
-
-                groupingsService.removeFromGroups($scope.selectedGroupings,userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                groupingsService.removeFromGroups(groupingPath,userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                $scope.personToLookup = userToRemove;
+                $scope.searchForUserGroupingInformation();
             });
         };
 

@@ -98,9 +98,9 @@
         $scope.removeFromGroups = function () {
             $scope.selectedGroupings = [];
             $scope.selectedGroupingsNames = [];
-
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
                 if(grouping.isSelected) {
+                    $scope.selectedGrouping.path = grouping.path;
                     if(grouping.inOwner){
                         $scope.selectedGroupings.push(grouping.path + ":owners");
                         let temp = grouping.path;
@@ -116,21 +116,23 @@
                 }
             });
 
-            groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
-                let userToRemove = {
-                    username: attributes.uid,
-                    name: attributes.cn,
-                    uhUuid: attributes.uhUuid
-                };
-                if (_.isEmpty($scope.selectedGroupings)) {
-                    $scope.createOwnerErrorModal($scope.selectedGroupings);
-                } else {
-                    $scope.createRemoveFromGroupsModal({
-                        user: userToRemove,
-                        listName: $scope.selectedGroupingsNames
-                    });
-                }
-            });
+            if($scope.personToLookup != null) {
+                groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
+                    let userToRemove = {
+                        username: attributes.uid,
+                        name: attributes.cn,
+                        uhUuid: attributes.uhUuid
+                    };
+                    if (_.isEmpty($scope.selectedGroupings)) {
+                        $scope.createOwnerErrorModal($scope.selectedGroupings);
+                    } else {
+                        $scope.createRemoveFromGroupsModal({
+                            user: userToRemove,
+                            listName: $scope.selectedGroupingsNames
+                        });
+                    }
+                });
+            }
 
         };
 
