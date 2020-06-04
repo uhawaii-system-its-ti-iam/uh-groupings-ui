@@ -1083,8 +1083,12 @@
             $scope.syncDestArray = [];
         }
         function handleMultiMemberRemove() {
-            $scope.getGroupingInformation();
-            $scope.syncDestArray = [];
+            for (let i = 0; i < $scope.multiMemberPaths.length; i++){
+                $scope.selectedGrouping.path = $scope.multiMemberPaths[i];
+                $scope.getGroupingInformation();
+                $scope.syncDestArray = [];
+            }
+            $scope.searchForUserGroupingInformation();
         }
 
         /**
@@ -1182,7 +1186,6 @@
                 let groupingPath = $scope.selectedGroupings;
                 groupingsService.removeFromGroups(groupingPath,userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
                 $scope.personToLookup = userToRemove;
-                $scope.searchForUserGroupingInformation();
             });
         };
 

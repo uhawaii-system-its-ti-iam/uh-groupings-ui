@@ -261,8 +261,6 @@
             /*todo:copy code*/
             getMembershipAssignmentForUser: function (onSuccess, onError, username) {
                 let endpoint = BASE_URL + "members/" + username + "/groupings/";
-                console.log(endpoint);
-                console.log(username);
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 

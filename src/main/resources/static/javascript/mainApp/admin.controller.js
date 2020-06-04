@@ -17,6 +17,7 @@
         $scope.pagedItemsPerson = [];
         $scope.currentPagePerson = 0;
         $scope.selectedGroupingsNames = [];
+        $scope.multiMemberPaths = [];
 
         let totalCheckBoxCount = 0;
         let count = 0;
@@ -104,9 +105,12 @@
                     if (i == 0) {
                         let temp = grouping.path;
                         $scope.selectedGrouping.path = temp;
+                        $scope.multiMemberPaths[i] = temp;
+
                     }else{
                         let temp = grouping.path;
                         $scope.selectedGrouping.path = $scope.selectedGrouping.path + temp;
+                        $scope.multiMemberPaths[i] = temp;
                     }
                     if(grouping.inOwner){
                         $scope.selectedGroupings.push(grouping.path + ":owners");
