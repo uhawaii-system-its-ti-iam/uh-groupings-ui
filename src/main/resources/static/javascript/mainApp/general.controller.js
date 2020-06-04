@@ -190,9 +190,7 @@
              */
             if (asyncThreadCount === 1) {
                 let currentPage = 1;
-
                 const groupingPath = $scope.selectedGrouping.path;
-                console.log("Grouping Path in info: " + groupingPath);
                 /**
                  * Function to get pages of a grouping asynchronously
                  * @param {String} groupingPath - Path to the grouping to retrieve data from
@@ -1084,6 +1082,10 @@
             $scope.getGroupingInformation();
             $scope.syncDestArray = [];
         }
+        function handleMultiMemberRemove() {
+            $scope.getGroupingInformation();
+            $scope.syncDestArray = [];
+        }
 
         /**
          * Handler for successfully removing an owner from a grouping.
@@ -1165,14 +1167,8 @@
          */
         $scope.createRemoveFromGroupsModal = function (options) {
             $scope.userToRemove = options.user;
-            $scope.listName = options.listName;
-
-            console.log(options.user);
-            console.log(options.listName);
-
+            $scope.listName =  options.listName.join(", ");
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
-
-
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal",
                 windowClass: windowClass,
@@ -1180,14 +1176,11 @@
                 backdrop: "static",
                 keyboard: false
             });
-
             $scope.removeModalInstance.result.then(function () {
-
                 $scope.loading = true;
                 let userToRemove = options.user.username;
                 let groupingPath = $scope.selectedGroupings;
-
-                groupingsService.removeFromGroups(groupingPath,userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                groupingsService.removeFromGroups(groupingPath,userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
                 $scope.personToLookup = userToRemove;
                 $scope.searchForUserGroupingInformation();
             });

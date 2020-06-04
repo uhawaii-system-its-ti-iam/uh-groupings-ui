@@ -98,9 +98,16 @@
         $scope.removeFromGroups = function () {
             $scope.selectedGroupings = [];
             $scope.selectedGroupingsNames = [];
+            let i = 0;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
                 if(grouping.isSelected) {
-                    $scope.selectedGrouping.path = grouping.path;
+                    if (i == 0) {
+                        let temp = grouping.path;
+                        $scope.selectedGrouping.path = temp;
+                    }else{
+                        let temp = grouping.path;
+                        $scope.selectedGrouping.path = $scope.selectedGrouping.path + temp;
+                    }
                     if(grouping.inOwner){
                         $scope.selectedGroupings.push(grouping.path + ":owners");
                         let temp = grouping.path;
@@ -114,6 +121,7 @@
                         $scope.selectedGroupingsNames.push(temp);
                     }
                 }
+                i++;
             });
 
             if($scope.personToLookup != null) {

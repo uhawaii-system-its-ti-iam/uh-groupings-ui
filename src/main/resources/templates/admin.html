@@ -151,25 +151,25 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="col-lg-3 col-md-4 col-12 p-0">
+
+                        <div class="col-auto mr-auto col-lg-3 col-md-4 col-12 p-0">
                             <input class="form-control" placeholder="Filter Admins..." type="search"
                                    title="Filter Admins"
                                    ng-model="personQuery"
                                    ng-change="filter(personList, 'pagedItemsPerson', 'currentPagePerson', personQuery, true)"/>
                         </div>
-                        <div class="col-md-4 ml-auto">
+                        <div>
                             <form ng-submit="removeFromGroups()">
                                 <div class="input-group">
                                     <div class="input-group-append">
-                                        <label>Check All <input type="checkbox" ng-click="updateCheckBoxes()"
-                                                                ng-model="checkAll"></label>
-                                        <div>
-                                            <button class="btn btn-primary" type="submit">Remove</button>
-                                        </div>
+                                        <label class="my-auto">Check All<input class="check-space" type="checkbox" ng-click="updateCheckBoxes()"
+                                                                    ng-model="checkAll"></label>
+                                        <button class="btn btn-danger pull-right" type="submit">Remove</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
+
                     </div>
                     <div class="table-responsive-sm">
                         <table class="table manage-admins table-striped table-hover table-md" aria-live="assertive">
