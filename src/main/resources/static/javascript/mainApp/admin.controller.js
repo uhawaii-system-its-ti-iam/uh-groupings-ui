@@ -13,6 +13,14 @@
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
         $scope.currentPageAdmins = 0;
+        $scope.personList = [];
+        $scope.pagedItemsPerson = [];
+        $scope.currentPagePerson = 0;
+        $scope.selectedGroupingsNames = [];
+        $scope.multiMemberPaths = [];
+
+        let totalCheckBoxCount = 0;
+        let count = 0;
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
@@ -50,12 +58,123 @@
             });
         };
 
+        $scope.searchForUserGroupingInformation = function () {
+            $scope.loading = true;
+            groupingsService. getMembershipAssignmentForUser(function (res) {
+
+                $scope.personList = _.sortBy(res.combinedGroupings, "name");
+                $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+                _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (group) {
+                    group["inOwner"] = res.inOwner[group.path];
+                    group["inBasis"] = res.inBasis[group.path];
+                    group["inInclude"] = res.inInclude[group.path];
+                    group["inExclude"] = res.inExclude[group.path];
+                    if (group.inInclude || group.inOwner) {
+                        group["isSelected"] = false;
+                        totalCheckBoxCount = totalCheckBoxCount + 1;
+                    }
+                });
+                $scope.loading = false;
+            }, function (res) {
+                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
+            }, $scope.personToLookup);
+        };
+
         $scope.displayAdmins = function () {
             $scope.resetGroupingInformation();
             $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
             $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
             $scope.showGrouping = false;
         };
+
+        /*todo:people copy*/
+        $scope.displayPerson = function () {
+            $scope.resetGroupingInformation();
+            $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+            $scope.pagedItemsPerson = $scope.groupToPages($scope.personList);
+            $scope.showGrouping = false;
+            $scope.personToLookup = "";
+        };
+
+        $scope.removeFromGroups = function () {
+            $scope.selectedGroupings = [];
+            $scope.selectedGroupingsNames = [];
+            let i = 0;
+            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
+                if(grouping.isSelected) {
+                    if (i == 0) {
+                        let temp = grouping.path;
+                        $scope.selectedGrouping.path = temp;
+                        $scope.multiMemberPaths[i] = temp;
+
+                    }else{
+                        let temp = grouping.path;
+                        $scope.selectedGrouping.path = $scope.selectedGrouping.path + temp;
+                        $scope.multiMemberPaths[i] = temp;
+                    }
+                    if(grouping.inOwner){
+                        $scope.selectedGroupings.push(grouping.path + ":owners");
+                        let temp = grouping.path;
+                        temp = temp.split(":").pop();
+                        $scope.selectedGroupingsNames.push(temp);
+                    }
+                    if(grouping.inInclude){
+                        $scope.selectedGroupings.push(grouping.path + ":include")
+                        let temp = grouping.path;
+                        temp = temp.split(":").pop();
+                        $scope.selectedGroupingsNames.push(temp);
+                    }
+                }
+                i++;
+            });
+
+            if($scope.personToLookup != null) {
+                groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
+                    let userToRemove = {
+                        username: attributes.uid,
+                        name: attributes.cn,
+                        uhUuid: attributes.uhUuid
+                    };
+                    if (_.isEmpty($scope.selectedGroupings)) {
+                        $scope.createOwnerErrorModal($scope.selectedGroupings);
+                    } else {
+                        $scope.createRemoveFromGroupsModal({
+                            user: userToRemove,
+                            listName: $scope.selectedGroupingsNames
+                        });
+                    }
+                });
+            }
+
+        };
+
+        $scope.updateCheckBoxes = function () {
+          $scope.checkAll = !$scope.checkAll;
+            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
+                if (grouping.inInclude || grouping.inOwner) {
+                    grouping.isSelected = $scope.checkAll;
+                }
+            });
+            if($scope.checkAll) {
+                count = totalCheckBoxCount;
+            } else {
+                count = 0;
+            }
+        };
+
+        $scope.updateCheckAll = function(grouping) {
+
+            if(grouping.isSelected){
+                count = count + 1;
+            } else {
+                count = count - 1;
+            }
+
+            $scope.checkAll = (count === totalCheckBoxCount);
+
+            console.log("Count: " + count + ", Total: " + totalCheckBoxCount);
+        };
+
 
         /**
          * Adds a user to the admin list.
@@ -118,4 +237,3 @@
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
 
 }());
-//})();

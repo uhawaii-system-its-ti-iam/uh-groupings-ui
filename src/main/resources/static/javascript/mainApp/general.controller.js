@@ -190,9 +190,7 @@
              */
             if (asyncThreadCount === 1) {
                 let currentPage = 1;
-
                 const groupingPath = $scope.selectedGrouping.path;
-
                 /**
                  * Function to get pages of a grouping asynchronously
                  * @param {String} groupingPath - Path to the grouping to retrieve data from
@@ -203,6 +201,7 @@
                  * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for
                  *     descending (Z-A)
                  */
+
                 groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async function (res) {
 
                     // Gets members in the basis group
@@ -880,6 +879,35 @@
             });
         };
 
+        /*$scope.createConfirmUserRemoveModal = function (options) {
+            const userToRemove = options.userToRemove;
+
+            groupingsService.getMemberAttributes(userToAdd, function (attributes) {
+                $scope.fullNameToAdd = attributes.cn;
+                $scope.givenNameToAdd = attributes.givenName;
+                $scope.uhUuidToAdd = attributes.uhUuid;
+                $scope.uidToAdd = attributes.uid;
+
+                $scope.listName = options.listName;
+
+                // Ask for confirmation from the user to add the member
+                $scope.confirmAddModalInstance = $uibModal.open({
+                    templateUrl: "modal/confirmAddModal",
+                    scope: $scope,
+                    backdrop: "static",
+                    keyboard: false
+                });
+
+                $scope.confirmAddModalInstance.result.then(function () {
+                    $scope.updateAddMember(userToAdd, options.listName);
+                });
+            }, function (res) {
+                if (res.statusCode === 404) {
+                    $scope.createAddErrorModal(userToAdd);
+                }
+            });
+        };*/
+
         /**
          * Closes CheckModal and proceeds with the checkModalInstance result.then function
          */
@@ -1054,6 +1082,14 @@
             $scope.getGroupingInformation();
             $scope.syncDestArray = [];
         }
+        function handleMultiMemberRemove() {
+            for (let i = 0; i < $scope.multiMemberPaths.length; i++){
+                $scope.selectedGrouping.path = $scope.multiMemberPaths[i];
+                $scope.getGroupingInformation();
+                $scope.syncDestArray = [];
+            }
+            $scope.searchForUserGroupingInformation();
+        }
 
         /**
          * Handler for successfully removing an owner from a grouping.
@@ -1095,6 +1131,9 @@
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
+            console.log(options.user);
+            console.log(options.listName);
+
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
 
@@ -1120,6 +1159,33 @@
                 } else if ($scope.listName === "admins") {
                     groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
                 }
+            });
+        };
+
+        /**
+         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * a request is made to delete the user.
+         * @param {object} options - the options object
+         * @param {object} options.user - the user being removed
+         * @param {string} options.groups - groups the user is being removed from
+         */
+        $scope.createRemoveFromGroupsModal = function (options) {
+            $scope.userToRemove = options.user;
+            $scope.listName =  options.listName.join(", ");
+            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+            $scope.removeModalInstance = $uibModal.open({
+                templateUrl: "modal/removeModal",
+                windowClass: windowClass,
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+            $scope.removeModalInstance.result.then(function () {
+                $scope.loading = true;
+                let userToRemove = options.user.username;
+                let groupingPath = $scope.selectedGroupings;
+                groupingsService.removeFromGroups(groupingPath,userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
+                $scope.personToLookup = userToRemove;
             });
         };
 
@@ -1178,18 +1244,21 @@
             $scope.groupingInclude = [];
             $scope.groupingExclude = [];
             $scope.groupingOwners = [];
+            $scope.personList = [];
 
             $scope.pagedItemsMembers = [];
             $scope.pagedItemsBasis = [];
             $scope.pagedItemsInclude = [];
             $scope.pagedItemsExclude = [];
             $scope.pagedItemsOwners = [];
+            $scope.pagedItemsPerson = [];
 
             $scope.currentPageMembers = 0;
             $scope.currentPageBasis = 0;
             $scope.currentPageInclude = 0;
             $scope.currentPageExclude = 0;
             $scope.currentPageOwners = 0;
+            $scope.currentPagePerson = 0;
         }
 
         /**
@@ -1219,6 +1288,7 @@
             $scope.adminsQuery = "";
             $scope.optInQuery = "";
             $scope.ownersQuery = "";
+            $scope.personQuery = "";
         }
 
         /**

@@ -165,6 +165,25 @@ public class GroupingsRestController {
     }
 
     /**
+     * deletes a member from the multiple groups
+     *
+     * @param groupings: username of the admin to be deleted
+     * @return information about the success of the operation
+     */
+    @PostMapping(value = "/{groupings}/{userToDelete}/removeFromGroups")
+    public ResponseEntity removeFromGroups(Principal principal,
+            @PathVariable String groupings,
+            @PathVariable String userToDelete) {
+        logger.info("Entered REST removeFromGroups...");
+
+        String safeGroupings = policy.sanitize(groupings);
+        String safeUserToDelete = policy.sanitize(userToDelete);
+
+        String uri = String.format(API_2_1_BASE + "/admins/%s/%s", safeGroupings, safeUserToDelete);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
+    }
+
+    /**
      * Get a member's attributes based off username
      *
      * @param uid: Username of user to obtain attributes about
@@ -190,6 +209,16 @@ public class GroupingsRestController {
     public ResponseEntity membershipAssignment(Principal principal) {
         logger.info("Entered REST MembershipAssignment...");
         String uri = String.format(API_2_1_BASE + "/members/%s/groupings", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    @RequestMapping(value = "/members/{uid}/groupings",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity membershipAssignment(Principal principal,
+        @PathVariable String uid) {
+        logger.info("Entered REST MembershipAssignment...");
+        String uri = String.format(API_2_1_BASE + "/members/%s/groupings", uid);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
