@@ -75,8 +75,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      *                 {response {data [groupingsServiceResult: class, Boolean: object]}}
      * @return boolean
      */
+
     public boolean checkResultCodeJsonObject(ResponseEntity response) {
         String groupingAssignmentJson = (String) response.getBody();
+
 
         if (null == groupingAssignmentJson)
             return false;
