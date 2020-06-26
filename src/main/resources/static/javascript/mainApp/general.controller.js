@@ -127,7 +127,7 @@
          */
         function setGroupMembers(members) {
             _.remove(members, function (member) {
-                return _.isEmpty(member.name);
+                return _.isEmpty(member.username);
             });
 
             // Unique members only by UUID (assume no two users should have the same uuid)
@@ -144,7 +144,7 @@
         function combineGroupMembers(initialMembers, membersToAdd) {
 
             _.remove(membersToAdd, function (member) {
-                return _.isEmpty(member.name);
+                return _.isEmpty(member.username);
             });
 
             var newMembers = _.concat(initialMembers, membersToAdd);
