@@ -133,7 +133,7 @@
             // Unique members only by UUID (assume no two users should have the same uuid)
             members = _.uniqBy(members, "uhUuid");
 
-            return (members, "name");
+            return _.sortBy(members, "name");
         }
 
         /**
@@ -147,13 +147,13 @@
                 return _.isEmpty(member.name);
             });
 
-            var newMembers = _.concat(initialMembers, membersToAdd);
+            let members = _.concat(initialMembers, membersToAdd);
 
             // Unique members only by UUID (assume no two users should have the same uuid)
-            newMembers = _.uniqBy(newMembers, "uhUuid");
+            members = _.uniqBy(members, "uhUuid");
 
-            return _.sortBy(newMembers, "name");
-        };
+            return _.sortBy(members, "name");
+        }
 
         /**
          * @returns {String[]} list of possible sync destinations
