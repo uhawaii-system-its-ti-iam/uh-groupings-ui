@@ -133,7 +133,7 @@
             // Unique members only by UUID (assume no two users should have the same uuid)
             members = _.uniqBy(members, "uhUuid");
 
-            return _.sortBy(members, "name");
+            return members;
         }
 
         /**
@@ -152,8 +152,8 @@
             // Unique members only by UUID (assume no two users should have the same uuid)
             newMembers = _.uniqBy(newMembers, "uhUuid");
 
-            return _.sortBy(newMembers, "name");
-        };
+            return newMembers;
+        }
 
         /**
          * @returns {String[]} list of possible sync destinations
