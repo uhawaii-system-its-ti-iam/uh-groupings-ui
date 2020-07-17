@@ -121,7 +121,7 @@
             }
         }
 
-        /**
+        /** Remove all nameless members from members and return a sorted object of distinct members.
          * @param {object[]} members - the members of the group
          * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
          */
@@ -136,7 +136,8 @@
             return _.sortBy(members, "name");
         }
 
-        /**
+        /** Remove all nameless members from membersToAdd then create an object of distinct members as a sorted
+         *  concatenation of initialMembers and membersToAdd objects.
          * @param {object[]} initialMembers - initial members in group
          * @param {object[]} membersToAdd - members to add to group
          * @returns {object[]} the members of both groups in one array, sorted by name with blank usernames filtered out
