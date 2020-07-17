@@ -121,13 +121,13 @@
             }
         }
 
-        /**
+        /** Remove all nameless members from members and return a sorted object of distinct members.
          * @param {object[]} members - the members of the group
          * @returns {object[]} the members of the group, sorted by name and with blank usernames filtered out
          */
         function setGroupMembers(members) {
             _.remove(members, function (member) {
-                return _.isEmpty(member.username);
+                return _.isEmpty(member.name);
             });
 
             // Unique members only by UUID (assume no two users should have the same uuid)
@@ -136,7 +136,8 @@
             return _.sortBy(members, "name");
         }
 
-        /**
+        /** Remove all nameless members from membersToAdd then create an object of distinct members as a sorted
+         *  concatenation of initialMembers and membersToAdd objects.
          * @param {object[]} initialMembers - initial members in group
          * @param {object[]} membersToAdd - members to add to group
          * @returns {object[]} the members of both groups in one array, sorted by name with blank usernames filtered out
@@ -144,16 +145,16 @@
         function combineGroupMembers(initialMembers, membersToAdd) {
 
             _.remove(membersToAdd, function (member) {
-                return _.isEmpty(member.username);
+                return _.isEmpty(member.name);
             });
 
-            var newMembers = _.concat(initialMembers, membersToAdd);
+            let members = _.concat(initialMembers, membersToAdd);
 
             // Unique members only by UUID (assume no two users should have the same uuid)
-            newMembers = _.uniqBy(newMembers, "uhUuid");
+            members = _.uniqBy(members, "uhUuid");
 
-            return _.sortBy(newMembers, "name");
-        };
+            return _.sortBy(members, "name");
+        }
 
         /**
          * @returns {String[]} list of possible sync destinations
@@ -879,7 +880,7 @@
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
-                    $scope.createAddErrorModal(userToAdd);
+                $scope.createAddErrorModal(userToAdd);
             });
         };
 
@@ -1086,8 +1087,9 @@
             $scope.getGroupingInformation();
             $scope.syncDestArray = [];
         }
+
         function handleMultiMemberRemove() {
-            for (let i = 0; i < $scope.multiMemberPaths.length; i++){
+            for (let i = 0; i < $scope.multiMemberPaths.length; i++) {
                 $scope.selectedGrouping.path = $scope.multiMemberPaths[i];
                 $scope.getGroupingInformation();
                 $scope.syncDestArray = [];
@@ -1175,7 +1177,7 @@
          */
         $scope.createRemoveFromGroupsModal = function (options) {
             $scope.userToRemove = options.user;
-            $scope.listName =  options.listName.join(", ");
+            $scope.listName = options.listName.join(", ");
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal",
@@ -1188,7 +1190,7 @@
                 $scope.loading = true;
                 let userToRemove = options.user.username;
                 let groupingPath = $scope.selectedGroupings;
-                groupingsService.removeFromGroups(groupingPath,userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
+                groupingsService.removeFromGroups(groupingPath, userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
                 $scope.personToLookup = userToRemove;
             });
         };
