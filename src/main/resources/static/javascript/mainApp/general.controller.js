@@ -508,14 +508,12 @@
 
                     $scope.usersToAdd = [];
                     if (numMembers > $scope.maxImport) {
-                        launchCreateGenericOkModal(
-                            "Out of Bounds Import Warning",
-                            `Importing more than ${$scope.maxImport} users is not allowed.`,
+                        launchCreateGenericOkModal(MODAL.HEADER.OOB_IMP_WARNING
+                                `Importing more than ${$scope.maxImport} users is not allowed.`,
                             8000);
                     } else {
                         if (numMembers > $scope.multiAddThreshold) {
-                            launchCreateGenericOkModal(
-                                "Large Import Warning",
+                            launchCreateGenericOkModal(MODAL.HEADER.LARGE_IMP_WARNING,
                                 `You are attempting to import ${numMembers} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
                              the import results will be sent.`,
@@ -559,11 +557,7 @@
 
             /* Callback: Return a modal which is launched after n seconds, see updateDataWithTimeoutModal() in app.service.js */
             let timeoutModal = function () {
-                return launchCreateGenericOkModal(
-                    "Slow Import Warning",
-                    `This import could take awhile to complete. The process however does not require the browser 
-                    to be open in order to finish.`,
-                    8000);
+                return launchCreateGenericOkModal(MODAL.HEADER.SLOW_IMP_WARNING, MODAL.BODY.SLOW_IMP_WARNING, 8000);
             };
 
             /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
@@ -664,6 +658,7 @@
 
         /**
          * Launch a modal with a title, body message, and an ok button which closes the modal.
+         *
          * @param title - message title to be displayed in modal header
          * @param body - message body to be displayed in modal body
          * @param timeTillClose - Millisecond till modal is modal is automatically closed.
