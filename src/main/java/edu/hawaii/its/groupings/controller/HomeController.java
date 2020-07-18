@@ -196,9 +196,9 @@ public class HomeController {
         return "modal/importErrorModal";
     }
 
-    @RequestMapping(value = "/modal/genericOkModal", method = RequestMethod.GET)
-    public String genericOkModal(Locale locale, Model model) {
-        return "modal/genericOkModal";
+    @RequestMapping(value = "/modal/dynamicModal", method = RequestMethod.GET)
+    public String dynamicModal(Locale locale, Model model) {
+        return "modal/dynamicModal";
     }
 
     @RequestMapping(value = "/modal/multiAddResultModal", method = RequestMethod.GET)

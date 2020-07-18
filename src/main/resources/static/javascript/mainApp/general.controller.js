@@ -508,13 +508,13 @@
 
                     $scope.usersToAdd = [];
                     if (numMembers > $scope.maxImport) {
-                        launchCreateGenericOkModal(
+                        launchDynamicModal(
                             MODAL_MESSAGES.TITLE.OOB_IMP_WARNING,
                             `Importing more than ${$scope.maxImport} users is not allowed.`,
                             8000);
                     } else {
                         if (numMembers > $scope.multiAddThreshold) {
-                            launchCreateGenericOkModal(
+                            launchDynamicModal(
                                 MODAL_MESSAGES.TITLE.LARGE_IMP_WARNING,
                                 `You are attempting to import ${numMembers} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
@@ -559,7 +559,7 @@
 
             /* Callback: Return a modal which is launched after n seconds, see updateDataWithTimeoutModal() in app.service.js */
             let timeoutModal = function () {
-                return launchCreateGenericOkModal(
+                return launchDynamicModal(
                     MODAL_MESSAGES.BODY.SLOW_IMP_WARNING,
                     MODAL_MESSAGES.TITLE.SLOW_IMP_WARNING,
                     MODAL_MESSAGES.BODY.SLOW_IMP_WARNING,
@@ -663,23 +663,27 @@
         };
 
         /**
-         * Launch a modal with a title, body message, and an ok button which closes the modal.
+         * Launch a modal with a title, and body message. The modal will dismiss in the case of pressing the ok button
+         * and/or if the timeTillClose is set and time runs out. The modal will timeout unless the timeTillClose is
+         * set. Unless the title and/or body * string being passed contains arbitrary values determined at runtime then
+         * the string should be stored and * accessed through MODAL_MESSAGES in app.constants.js.
+         *
          * @param title - message title to be displayed in modal header
          * @param body - message body to be displayed in modal body
          * @param timeTillClose - Millisecond till modal is modal is automatically closed.
          */
-        function launchCreateGenericOkModal(title, body, timeTillClose) {
+        function launchDynamicModal(title, body, timeTillClose) {
             $scope.currentModalTitle = title;
             $scope.currentModalBody = body;
 
-            $scope.createGenericOkModal = $uibModal.open({
-                templateUrl: "modal/genericOkModal",
+            $scope.createDynamicModal = $uibModal.open({
+                templateUrl: "modal/dynamicModal",
                 scope: $scope
             });
 
             if (undefined !== timeTillClose) {
                 let closeOnTimeout = function () {
-                    $scope.createGenericOkModal.dismiss();
+                    $scope.createDynamicModal.dismiss();
                 };
                 setTimeout(closeOnTimeout, timeTillClose);
             }
