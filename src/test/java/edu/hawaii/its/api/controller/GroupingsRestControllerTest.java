@@ -27,6 +27,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -87,6 +88,7 @@ public class GroupingsRestControllerTest {
 
         mockMvc.perform(get(uri))
                 .andExpect(status().isOk());
+
     }
 
     @Test
@@ -162,25 +164,36 @@ public class GroupingsRestControllerTest {
     public void postAddMember() throws Exception {
         String uri_include = REST_CONTROLLER_BASE + GROUPING + "/user/addMemberToIncludeGroup";
         String uri_exclude = REST_CONTROLLER_BASE + GROUPING + "/user/addMemberToExcludeGroup";
+        String uri_includes = REST_CONTROLLER_BASE + GROUPING + "/useruser1user2user3user4/addMembersToIncludeGroup";
+        String uri_excludes = REST_CONTROLLER_BASE + GROUPING + "/useruser1user2user3user4/addMembersToExcludeGroup";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(post(uri_exclude)
+                .with(csrf()))
+                .andExpect(status().isOk());
 
         mockMvc.perform(post(uri_include)
                 .with(csrf()))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post(uri_exclude)
+        mockMvc.perform(post(uri_includes)
+                .with(csrf()))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post(uri_excludes)
                 .with(csrf()))
                 .andExpect(status().isOk());
     }
-
 
     @Test
     @WithMockUhUser
     public void getDeleteMember() throws Exception {
         String uri_include = REST_CONTROLLER_BASE + "grouping/user/deleteMemberFromIncludeGroup";
         String uri_exclude = REST_CONTROLLER_BASE + GROUPING + "/user/deleteMemberFromExcludeGroup";
+        String uri_includes = REST_CONTROLLER_BASE + "grouping/user/deleteMembersFromIncludeGroup";
+        String uri_excludes = REST_CONTROLLER_BASE + GROUPING + "/user/deleteMembersFromExcludeGroup";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -190,6 +203,14 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().isOk());
 
         mockMvc.perform(post(uri_exclude)
+                .with(csrf()))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post(uri_includes)
+                .with(csrf()))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post(uri_excludes)
                 .with(csrf()))
                 .andExpect(status().isOk());
     }
@@ -343,8 +364,57 @@ public class GroupingsRestControllerTest {
         given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
-        mockMvc.perform(get(REST_CONTROLLER_BASE + "admins/"))
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "admins"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser
+    public void isOwnerTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "owners"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser
+    public void membershipAssignmentTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "members/0000/groupings"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser
+    public void memberAttributesTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "members/0000"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser
+    public void updateDescriptionTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.PUT)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(put(REST_CONTROLLER_BASE + "groupings/path/description").with(csrf()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser
+    public void getAllSyncDestinationsTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "groupings/path/syncDestinations")).andExpect(status().isOk());
     }
 
 }
