@@ -35,7 +35,9 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest(classes = {SpringBootWebApplication.class})
 public class GroupingsRestControllerTest {
 
-    private static final String GROUPING = "grouping";
+    private static final String GROUPING = "grouping1";
+    private static final String GROUPING2 = "grouping2";
+    private static final String GROUPING3 = "grouping3";
     private static final String USERNAME = "user";
     private static final String REST_CONTROLLER_BASE = "/api/groupings/";
     private static final String ADMIN_USERNAME = "admin";
@@ -133,6 +135,19 @@ public class GroupingsRestControllerTest {
     @WithMockUhUser(username = "admin")
     public void deleteAdminTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + "newAdmin/deleteAdmin";
+
+        given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(post(uri)
+                .with(csrf()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser(username = "admin")
+    public void removeFromGroupsTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + GROUPING2 + GROUPING3 + "/user/removeFromGroups";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
@@ -311,4 +326,25 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(get(REST_CONTROLLER_BASE + "adminLists"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUhUser
+    public void genericTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "generic"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser(username = "admin")
+    public void isAdminTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "admins/"))
+                .andExpect(status().isOk());
+    }
+
 }
