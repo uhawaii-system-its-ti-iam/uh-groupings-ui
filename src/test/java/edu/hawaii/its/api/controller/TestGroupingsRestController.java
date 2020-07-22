@@ -477,6 +477,18 @@ public class TestGroupingsRestController {
         assertNotEquals(safeInput, "<a href='google.com'>Hello</a>");
     }
 
+    @Test
+    @WithMockUhUser(username = "iamtst01")
+    public void genericTest() throws Exception{
+
+        MvcResult result = mockMvc.perform(get(API_BASE + "/generic")
+                .with(user(adminUser))
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn();
+        System.out.println(result);
+    }
+
     ///////////////////////////////////////////////////////////////////////
     // MVC mapping
     //////////////////////////////////////////////////////////////////////
