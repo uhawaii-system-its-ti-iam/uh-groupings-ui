@@ -75,7 +75,7 @@
 
         $scope.groupingCSV = [];
         $scope.groupNameCSV = [];
-
+        
         $scope.resetInclude = [];
         $scope.resetExclude = [];
         $scope.usersToRemove = [];
@@ -513,8 +513,10 @@
          */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
+            $scope.resStatus = 0;
             if (_.isEmpty($scope.usersToAdd)) {
-                $scope.createAddErrorModal($scope.usersToAdd);
+                $scope.user = $scope.usersToAdd;
+                // $scope.createAddErrorModal($scope.usersToAdd);
             } else {
                 let numMembers = ($scope.usersToAdd.split(" ").length - 1);
 
@@ -885,7 +887,9 @@
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
-                $scope.createAddErrorModal(userToAdd);
+                console.log(res.status);
+                $scope.user = userToAdd;
+                $scope.resStatus = res.status;
             });
         };
 
