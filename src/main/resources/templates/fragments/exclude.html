@@ -104,7 +104,8 @@
                         <input class="form-control" placeholder="Members to add" type="text"
                                title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"/>
                         <div>
-                            <button class="btn btn-primary" ng-click="addMembers('Exclude')" style="margin-left: 2px">
+                            <button class="btn btn-primary" ng-init="pristine = true"
+                                    ng-click="addMembers('Exclude'); pristine = false" style="margin-left: 2px">
                                 Add
                             </button>
                             <button class="btn btn-primary"
@@ -118,12 +119,14 @@
                 </form>
             </div>
         </div>
-        <div ng-if="user.length === 0" class="float-md-left mt-3 alert alert-danger fade in">
-            <p th:utext="#{screen.message.modal.add.empty}"></p>
-        </div>
-        <div ng-if="resStatus === 404" class="float-md-left mt-3 alert alert-danger fade in">
-            <p th:text="#{screen.message.modal.add.fail}"></p>
-            <p th:text="#{screen.message.modal.add.ensureValid}"></p>
+        <div ng-show="pristine === false">
+            <div ng-if="user.length === 0" class="float-md-left mt-3 alert alert-danger fade in">
+                <p th:utext="#{screen.message.modal.add.empty}"></p>
+            </div>
+            <div ng-if="resStatus === 404" class="float-md-left mt-3 alert alert-danger fade in">
+                <p th:text="#{screen.message.modal.add.fail}"></p>
+                <p th:text="#{screen.message.modal.add.ensureValid}"></p>
+            </div>
         </div>
         <div class="mt-lg-0 mt-2">
             <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude')"></div>
