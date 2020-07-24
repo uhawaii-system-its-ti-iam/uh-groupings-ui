@@ -715,9 +715,11 @@
                 let inBasis = _.some($scope.groupingBasis, { username: user });
                 if ($scope.existInList(user, list)) {
                     $scope.createCheckModal(user, list, false, inBasis);
-                } else if (res.status === 404) {
-                    $scope.createAddErrorModal($scope.userToAdd);
-                } else if ($scope.isInAnotherList(user, list)) {
+                }
+                // else if (res.status === 404) {
+                //     $scope.createAddErrorModal($scope.userToAdd);
+                // }
+                else if ($scope.isInAnotherList(user, list)) {
                     $scope.createCheckModal(user, list, true, inBasis);
                 } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
                     $scope.createBasisWarningModal(user, list, inBasis);
