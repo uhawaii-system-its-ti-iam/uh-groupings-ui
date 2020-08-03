@@ -10,7 +10,7 @@
      * @param groupingsService - service for creating requests to the groupings API
      */
 
-    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, MODAL_MESSAGES) {
 
         $scope.userToAdd = "";
         $scope.usersToAdd = "";
@@ -508,14 +508,14 @@
 
                     $scope.usersToAdd = [];
                     if (numMembers > $scope.maxImport) {
-                        launchCreateGenericOkModal(
-                            "Out of Bounds Import Warning",
+                        launchDynamicModal(
+                            Messages.Title.IMPORT_OUT_OF_BOUNDS,
                             `Importing more than ${$scope.maxImport} users is not allowed.`,
                             8000);
                     } else {
                         if (numMembers > $scope.multiAddThreshold) {
-                            launchCreateGenericOkModal(
-                                "Large Import Warning",
+                            launchDynamicModal(
+                                Messages.Title.LARGE_IMPORT,
                                 `You are attempting to import ${numMembers} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
                              the import results will be sent.`,
@@ -557,18 +557,15 @@
             let groupingPath = $scope.selectedGrouping.path;
             $scope.removeMultipleUsers(list);
 
-            /* Callback: Return a modal which is launched after n seconds, see updateDataWithTimeoutModal() in app.service.js */
             let timeoutModal = function () {
-                return launchCreateGenericOkModal(
-                    "Slow Import Warning",
-                    `This import could take awhile to complete. The process however does not require the browser 
-                    to be open in order to finish.`,
+                return launchDynamicModal(
+                    Messages.Title.SLOW_IMPORT,
+                    Messages.Body.SLOW_IMPORT,
                     8000);
             };
 
-            /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
             let handleSuccessfulAdd = function (res) {
-                $scope.waitingForImportResponse = false; /* Spinner off */
+                $scope.waitingForImportResponse = false;
                 for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
                     $scope.multiAddResultsGeneric[i] = res[i].person;
@@ -584,17 +581,6 @@
             let fun = "addMembersTo";
             await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
             (groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
-
-
-            /*
-             if (listName === "Include")
-                 await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd,
-                     handleUnsuccessfulRequest, timeoutModal);
-             else if (listName === "Exclude")
-                 await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd,
-                     handleUnsuccessfulRequest, timeoutModal);
-
-             */
         };
 
         /**
@@ -663,23 +649,27 @@
         };
 
         /**
-         * Launch a modal with a title, body message, and an ok button which closes the modal.
+         * Launch a modal with a title, and body message. The modal will dismiss in the case of pressing the ok button
+         * and/or if the timeTillClose is set and time runs out. The modal will timeout unless the timeTillClose is
+         * set. Unless the title and/or body * string being passed contains arbitrary values determined at runtime then
+         * the string should be stored and * accessed through MODAL_MESSAGES in app.constants.js.
+         *
          * @param title - message title to be displayed in modal header
          * @param body - message body to be displayed in modal body
          * @param timeTillClose - Millisecond till modal is modal is automatically closed.
          */
-        function launchCreateGenericOkModal(title, body, timeTillClose) {
+        function launchDynamicModal(title, body, timeTillClose) {
             $scope.currentModalTitle = title;
             $scope.currentModalBody = body;
 
-            $scope.createGenericOkModal = $uibModal.open({
-                templateUrl: "modal/genericOkModal",
+            $scope.createDynamicModal = $uibModal.open({
+                templateUrl: "modal/dynamicModal",
                 scope: $scope
             });
 
             if (undefined !== timeTillClose) {
                 let closeOnTimeout = function () {
-                    $scope.createGenericOkModal.dismiss();
+                    $scope.createDynamicModal.dismiss();
                 };
                 setTimeout(closeOnTimeout, timeTillClose);
             }
