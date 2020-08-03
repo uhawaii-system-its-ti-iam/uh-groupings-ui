@@ -509,13 +509,13 @@
                     $scope.usersToAdd = [];
                     if (numMembers > $scope.maxImport) {
                         launchDynamicModal(
-                            MODAL_MESSAGES.TITLE.OOB_IMP_WARNING,
+                            Messages.Title.IMPORT_OUT_OF_BOUNDS,
                             `Importing more than ${$scope.maxImport} users is not allowed.`,
                             8000);
                     } else {
                         if (numMembers > $scope.multiAddThreshold) {
                             launchDynamicModal(
-                                MODAL_MESSAGES.TITLE.LARGE_IMP_WARNING,
+                                Messages.Title.LARGE_IMPORT,
                                 `You are attempting to import ${numMembers} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
                              the import results will be sent.`,
@@ -557,18 +557,15 @@
             let groupingPath = $scope.selectedGrouping.path;
             $scope.removeMultipleUsers(list);
 
-            /* Callback: Return a modal which is launched after n seconds, see updateDataWithTimeoutModal() in app.service.js */
             let timeoutModal = function () {
                 return launchDynamicModal(
-                    MODAL_MESSAGES.BODY.SLOW_IMP_WARNING,
-                    MODAL_MESSAGES.TITLE.SLOW_IMP_WARNING,
-                    MODAL_MESSAGES.BODY.SLOW_IMP_WARNING,
+                    Messages.Title.SLOW_IMPORT,
+                    Messages.Body.SLOW_IMPORT,
                     8000);
             };
 
-            /* Callback: Receive the HTTP response from the server, use console.log(res) to print response */
             let handleSuccessfulAdd = function (res) {
-                $scope.waitingForImportResponse = false; /* Spinner off */
+                $scope.waitingForImportResponse = false;
                 for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
                     $scope.multiAddResultsGeneric[i] = res[i].person;
@@ -584,17 +581,6 @@
             let fun = "addMembersTo";
             await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
             (groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
-
-
-            /*
-             if (listName === "Include")
-                 await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd,
-                     handleUnsuccessfulRequest, timeoutModal);
-             else if (listName === "Exclude")
-                 await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd,
-                     handleUnsuccessfulRequest, timeoutModal);
-
-             */
         };
 
         /**
