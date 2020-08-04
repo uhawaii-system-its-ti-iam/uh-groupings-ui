@@ -10,7 +10,7 @@
      * @param groupingsService - service for creating requests to the groupings API
      */
 
-    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, MODAL_MESSAGES) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
 
         $scope.userToAdd = "";
         $scope.usersToAdd = "";
@@ -509,13 +509,13 @@
                     $scope.usersToAdd = [];
                     if (numMembers > $scope.maxImport) {
                         launchDynamicModal(
-                            Messages.Title.IMPORT_OUT_OF_BOUNDS,
+                            Message.Title.IMPORT_OUT_OF_BOUNDS,
                             `Importing more than ${$scope.maxImport} users is not allowed.`,
                             8000);
                     } else {
                         if (numMembers > $scope.multiAddThreshold) {
                             launchDynamicModal(
-                                Messages.Title.LARGE_IMPORT,
+                                Message.Title.LARGE_IMPORT,
                                 `You are attempting to import ${numMembers} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
                              the import results will be sent.`,
@@ -559,8 +559,8 @@
 
             let timeoutModal = function () {
                 return launchDynamicModal(
-                    Messages.Title.SLOW_IMPORT,
-                    Messages.Body.SLOW_IMPORT,
+                    Message.Title.SLOW_IMPORT,
+                    Message.Body.SLOW_IMPORT,
                     8000);
             };
 
