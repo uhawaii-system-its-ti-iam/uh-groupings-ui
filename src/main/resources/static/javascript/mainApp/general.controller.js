@@ -365,6 +365,7 @@
             return (String($scope.modelDescription).length > maxLength);
         };
 
+
         /**
          * Enable or disable editing of a Grouping's description, from selected-grouping.html.
          */

@@ -47,7 +47,7 @@
                                            ng-value="descriptionDisplay()"
                                            ng-model="modelDescription"
                                            ng-model-options="{ updateOn: 'blur' }"
-                                           maxlength="{{ maxDescriptionLength }}"
+                                           maxlength="{{ maxDescriptionLength + 1 }}"
                                            ng-trim="false"
                                     />
                                     <span ng-show="descriptionForm" class="grouping-description-form">
