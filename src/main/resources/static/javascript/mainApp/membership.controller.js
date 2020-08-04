@@ -8,7 +8,7 @@
      * @param dataProvider - service that handles redirection to the feedback page upon error
      * @param groupingsService - service for creating requests to the groupings API
      */
-    function MembershipJsController($scope, $window, $controller, groupingsService, dataProvider) {
+    function MembershipJsController($scope, $window, $controller, groupingsService, dataProvider, Message) {
 
         $scope.membershipsList = [];
         $scope.pagedItemsMemberships = [];
