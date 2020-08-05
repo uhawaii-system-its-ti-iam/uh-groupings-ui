@@ -126,6 +126,8 @@
          * Generic handler for unsuccessful requests to the API.
          */
         function handleUnsuccessfulRequest(res) {
+            console.log(`handleUnsuccessfulRequest res: ${res.status}`);
+            $scope.resStatus = res.status;
             if (res.status === 403) {
                 $scope.createOwnerErrorModal();
             } else {
@@ -715,11 +717,9 @@
                 let inBasis = _.some($scope.groupingBasis, { username: user });
                 if ($scope.existInList(user, list)) {
                     $scope.createCheckModal(user, list, false, inBasis);
-                }
-                // else if (res.status === 404) {
-                //     $scope.createAddErrorModal($scope.userToAdd);
-                // }
-                else if ($scope.isInAnotherList(user, list)) {
+                } else if ($scope.resStatus === 404) {
+                    $scope.createAddErrorModal($scope.userToAdd);
+                } else if ($scope.isInAnotherList(user, list)) {
                     $scope.createCheckModal(user, list, true, inBasis);
                 } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
                     $scope.createBasisWarningModal(user, list, inBasis);
@@ -730,6 +730,7 @@
                     });
                 }
             }, function (res) {
+                console.log(`addMember res: ${res.status}`);
                 if (res.status === 403) {
                     $scope.createOwnerErrorModal();
                 }
@@ -889,7 +890,7 @@
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
-                console.log(res.status);
+                console.log(`createConfirmAddModal res: ${res.status}`);
                 $scope.user = userToAdd;
                 $scope.resStatus = res.status;
             });
