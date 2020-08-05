@@ -650,8 +650,8 @@
         /**
          * Launch a modal with a title, and body message. The modal will dismiss in the case of pressing the ok button
          * and/or if the timeTillClose is set and time runs out. The modal will timeout unless the timeTillClose is
-         * set. Unless the title and/or body * string being passed contains arbitrary values determined at runtime then
-         * the string should be stored and * accessed through MODAL_MESSAGES in app.constants.js.
+         * set. Unless the title and/or body string being passed contains arbitrary values determined at runtime then
+         * the string should be stored and accessed through Messages in app.constants.js.
          *
          * @param title - message title to be displayed in modal header
          * @param body - message body to be displayed in modal body
@@ -720,7 +720,32 @@
         };
 
         /**
+<<<<<<< HEAD
          * Perform an API request to add userToAdd to group at list.
+=======
+         * Create a modal display for members added, and calls addMembersToInclude service.
+         * @param usersToAdd
+         * @param list
+         */
+        $scope.updateAddMembers = function (usersToAdd, list) {
+
+            let groupingPath = $scope.selectedGrouping.path;
+
+            let handleSuccessfulAdd = function (res, list, usersToAdd) {
+                $scope.createSuccessfulAddModal({
+                    user: usersToAdd,
+                    listName: list,
+                    response: res
+                });
+            };
+            if (list === "Include") {
+                groupingsService.addMembersToInclude(groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+            }
+        };
+
+        /**
+         * Initiate the adding of a member to a list.
+>>>>>>> Comment code
          * @param {string} userToAdd - user being added
          * @param {string} list - the list the user is being added to
          */
@@ -811,7 +836,30 @@
         };
 
         /**
+<<<<<<< HEAD
          * Check if the user is in the Grouper database
+=======
+         * Create a modal that asks for confirmation when importing multiple users.
+         * @param {object} options - the options object
+         * @param {string} options.usersToAdd - the users to import
+         * @param {string} options.listName - name of the list being added to
+         */
+        $scope.createConfirmAddMembersModal = function (options) {
+            $scope.confirmAddModalInstance = $uibModal.open({
+                templateUrl: "modal/confirmAddModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+            $scope.confirmAddModalInstance.result.then(function () {
+                $scope.updateAddMembers(options.usersToAdd, options.listName);
+            });
+        };
+
+        /**
+         <<<<<<< HEAD
+         * Checks if the user is in the Grouper database
+>>>>>>> Comment code
          * @param {object} user - the user you are checking to see if they are in Grouper
          */
         $scope.existsInGrouper = function (user) {
@@ -825,7 +873,14 @@
         };
 
         /**
+<<<<<<< HEAD
          * Create a modal that asks for confirmation when adding a user.
+=======
+         * Creates a modal that asks for confirmation when adding a user.
+         =======
+         * Create a modal that asks for confirmation when adding a user.
+         >>>>>>> Comment code
+>>>>>>> Comment code
          * @param {object} options - the options object
          * @param {string} options.userToAdd - the user to add
          * @param {string} options.listName - name of the list being added to
@@ -868,7 +923,11 @@
         };
 
         /**
+<<<<<<< HEAD
          * Dismiss the CheckModal and closes it with proceeding with checkModalInstance's result.then function.
+=======
+         * Dismisse the CheckModal and closes it with proceeding with checkModalInstance's result.then function.
+>>>>>>> Comment code
          */
         $scope.closeCheckModal = function () {
             $scope.checkModalInstance.dismiss();
@@ -1161,28 +1220,45 @@
         };
 
         /**
-         * Closes the modal, then proceeds with deleting a user from a grouping.
+         * Close the modal, then proceeds with deleting a user from a grouping.
          */
         $scope.proceedRemoveUser = function () {
             $scope.removeModalInstance.close();
         };
 
         /**
+<<<<<<< HEAD
          * Close the modal, then proceeds with resetting the grouping.
+=======
+         <<<<<<< HEAD
+         * Closes the modal, then proceeds with reseting the grouping.
+>>>>>>> Comment code
          */
         $scope.proceedResetGroup = function () {
             $scope.resetModalInstance.close();
         };
 
         /**
+<<<<<<< HEAD
          * Close the modal for deleting a user. This does not delete the user from the grouping/admin list.
+=======
+         * Closes the modal for deleting a user. This does not delete the user from the grouping/admin list.
+         =======
+         * Close the modal for deleting a user. This does not delete the user from the grouping/admin list.
+         >>>>>>> Comment code
+>>>>>>> Comment code
          */
         $scope.cancelRemoveUser = function () {
             $scope.removeModalInstance.dismiss();
         };
 
         /**
+<<<<<<< HEAD
          * Close the modal for resetting group. This does not reset the grouping.
+=======
+         <<<<<<< HEAD
+         * Closes the modal for reseting group. This does not reset the grouping.
+>>>>>>> Comment code
          */
         $scope.cancelResetGroup = function () {
             $scope.resetModalInstance.dismiss();
@@ -1196,7 +1272,14 @@
         };
 
         /**
+<<<<<<< HEAD
          * Create a modal stating there was an error removing the user from a group.
+=======
+         * Creates a modal stating there was an error removing the user from a group.
+         =======
+         * Create a modal stating there was an error removing the user from a group.
+         >>>>>>> Comment code
+>>>>>>> Comment code
          * @param {string} userType - the type of user being removed (either admin or owner)
          */
         $scope.createRemoveErrorModal = function (userType) {
@@ -1345,7 +1428,11 @@
 
         /**
          * Create a modal with a description of the preference selected.
+<<<<<<< HEAD
          * @param {string} desc - The description of the preference.
+=======
+         * @param {string} desc - the description of the preference
+>>>>>>> Comment code
          */
         $scope.createPreferenceInfoModal = function (desc) {
             $scope.preferenceInfo = desc;
@@ -1386,7 +1473,12 @@
         };
 
         /**
+<<<<<<< HEAD
          * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+=======
+         <<<<<<< HEAD
+         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+>>>>>>> Comment code
          * a request is made to delete the user.
          * @param {object} options - the options object
          * @param {String} options.users - the user being removed
@@ -1487,7 +1579,14 @@
         };
 
         /**
+<<<<<<< HEAD
          * Toggle the grouping preference which allows users to discover the grouping and opt into it.
+=======
+         * Toggles the grouping preference which allows users to discover the grouping and opt into it.
+         =======
+         * Toggle the grouping preference which allows users to discover the grouping and opt into it.
+         >>>>>>> Comment code
+>>>>>>> Comment code
          */
         $scope.updateAllowOptIn = function () {
             const groupingPath = $scope.selectedGrouping.path;
@@ -1497,7 +1596,11 @@
         };
 
         /**
+<<<<<<< HEAD
          * Return true if the sync destination at syncDestName is synced.
+=======
+         * Get the SyncDest value from the array given the name of the sync dest
+>>>>>>> Comment code
          * @param {String} syncDestName Name of the Sync Dest to retrieve
          * @return {Boolean} Sync Dest value at the given name
          */
@@ -1776,7 +1879,12 @@
         };
 
         /**
+<<<<<<< HEAD
          * Determine whether a warning message should be displayed when removing yourself from a list.
+=======
+         <<<<<<< HEAD
+         * Determines whether a warning message should be displayed when removing yourself from a list.
+>>>>>>> Comment code
          * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
          * returns false
          */
@@ -1786,7 +1894,14 @@
         };
 
         /**
+<<<<<<< HEAD
          * Get cookie information
+=======
+         * Gets cookie information
+         =======
+         * Get cookie information
+         >>>>>>> Comment code
+>>>>>>> Comment code
          * @param cname = name of cookie you want to look for.
          * @returns {*}
          */
