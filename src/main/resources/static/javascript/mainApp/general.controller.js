@@ -362,9 +362,8 @@
          * Check the length of the text string entered in the description form box, for error handling of max length
          */
         $scope.descriptionLengthWarning = function () {
-            return (String($scope.modelDescription).length > maxLength);
+            return (String($scope.modelDescription).length > maxLength - 1);
         };
-
 
         /**
          * Enable or disable editing of a Grouping's description, from selected-grouping.html.

@@ -36,9 +36,6 @@
                             </div>
                             <div ng-show="descriptionForm" class="grouping-description-form">
                                 <form class="seamless border border-secondary rounded ng-pristine ng-valid">
-                                    <div ng-show="descriptionLengthWarning()" class="alert alert-warning">
-                                        <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"></p>
-                                    </div>
                                     <input class="form-control"
                                            aria-label="Grouping Description"
                                            style="float: left; border: white"
@@ -46,8 +43,7 @@
                                            th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
                                            ng-value="descriptionDisplay()"
                                            ng-model="modelDescription"
-                                           ng-model-options="{ updateOn: 'blur' }"
-                                           maxlength="{{ maxDescriptionLength + 1 }}"
+                                           maxlength="{{ maxDescriptionLength }}"
                                            ng-trim="false"
                                     />
                                     <span ng-show="descriptionForm" class="grouping-description-form">
@@ -69,6 +65,9 @@
                                         </button>
                                     </span>
                                 </form>
+                                <div ng-show="descriptionLengthWarning()" class="alert alert-warning description-alert" >
+                                    <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
