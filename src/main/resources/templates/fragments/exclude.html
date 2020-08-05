@@ -123,18 +123,7 @@
                 </form>
             </div>
         </div>
-        <div ng-show="errorDismissed === false">
-            <div ng-if="user.length === 0" class="float-md-left mt-3 alert alert-danger fade in">
-                <p th:utext="#{screen.message.modal.add.empty}"></p>
-            </div>
-            <div ng-if="user.length > 0 && (resStatus === 404 || resStatus === 500)"
-                 class="float-md-left mt-3 alert alert-danger fade in">
-                <p th:text="#{screen.message.modal.add.fail}"></p>
-                <p th:text="#{screen.message.modal.add.ensureValid}"></p>
-            </div>
-        </div>
-        <div>resStatus: {{resStatus}}</div>
-        <div>errorDismissed: {{errorDismissed}}</div>
+        <div th:replace="fragments/add-error-messages :: add-error-messages"></div>
         <div class="mt-lg-0 mt-2">
             <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude')"></div>
         </div>
