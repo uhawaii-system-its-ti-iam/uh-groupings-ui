@@ -105,11 +105,12 @@
                 <form>
                     <div class="input-group" style="width: 500px">
                         <input class="form-control" placeholder="Members to add" type="search"
+                               ng-init="errorDismissed = true"
                                title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"
                                ng-blur="errorDismissed = true"
                         />
                         <div>
-                            <button class="btn btn-primary" ng-init="errorDismissed = true"
+                            <button class="btn btn-primary"
                                     ng-blur="errorDismissed = true"
                                     ng-click="addMembers('Include'); errorDismissed = false" style="margin-left: 2px">
                                 Add
@@ -125,15 +126,18 @@
                 </form>
             </div>
         </div>
-        <div ng-show="errorDismissed === false">
-            <div ng-if="user.length === 0" class="float-md-left mt-3 alert alert-danger fade in">
+        <div ng-show="errorDismissed === false && !waitingForImportResponse">
+            <div ng-if="user.length === 0 && resStatus === 0"
+                 class="float-md-left mt-3 alert alert-danger fade in">
                 <p th:utext="#{screen.message.modal.add.empty}"></p>
             </div>
-            <div ng-if="resStatus === 404 || resStatus === 500" class="float-md-left mt-3 alert alert-danger fade in">
+            <div ng-if="user.length > 0 && (resStatus === 404 || resStatus === 500)"
+                 class="float-md-left mt-3 alert alert-danger fade in">
                 <p th:text="#{screen.message.modal.add.fail}"></p>
                 <p th:text="#{screen.message.modal.add.ensureValid}"></p>
             </div>
         </div>
+        <div>resStatus: {{resStatus}}</div>
         <div>errorDismissed: {{errorDismissed}}</div>
         <div class="mt-lg-0 mt-2">
             <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageInclude', pagedItems='pagedItemsInclude')"></div>
