@@ -36,9 +36,8 @@
                             </div>
                             <div ng-show="descriptionForm" class="grouping-description-form">
                                 <form class="seamless border border-secondary rounded ng-pristine ng-valid">
-                                    <input class="form-control"
+                                    <input class="form-control description-input"
                                            aria-label="Grouping Description"
-                                           style="float: left; border: white"
                                            th:title="#{screen.message.admin.selectedGrouping.descriptionFormTitle}"
                                            th:placeholder="#{screen.message.admin.selectedGrouping.descriptionPlaceholder}"
                                            ng-value="descriptionDisplay()"
@@ -48,8 +47,7 @@
                                     />
                                     <span ng-show="descriptionForm" class="grouping-description-form">
                                         <button type="button"
-                                                style="background-color: white; color: #004252; border: white; margin: 5px;"
-                                                class="btn-sm"
+                                                class="btn-sm description-form-button"
                                                 data-toggle="tooltip" data-placement="top" title="Save description"
                                                 ng-click="saveDescription()">
                                         <i class="clickable fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
@@ -57,15 +55,14 @@
                                     </span>
                                     <span ng-show="descriptionForm" class="grouping-description-form">
                                         <button type="button"
-                                                style="background-color: white; color: #004252; border: white; margin: 5px;"
-                                                class="btn-sm"
+                                                class="btn-sm description-form-button"
                                                 data-toggle="tooltip" data-placement="top" title="Cancel changes"
                                                 ng-click="cancelDescriptionEdit()">
                                         <i class="clickable fa fa-times-circle-o fa-2x" aria-hidden="true"></i>
                                         </button>
                                     </span>
                                 </form>
-                                <div ng-show="descriptionLengthWarning()" class="alert alert-warning description-alert" >
+                                <div ng-show="descriptionLengthWarning()" class="alert alert-warning description-alert">
                                     <p th:utext="#{screen.message.admin.selectedGrouping.descriptionWarning}"></p>
                                 </div>
                             </div>

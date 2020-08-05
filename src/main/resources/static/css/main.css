@@ -654,3 +654,15 @@ label input {
     line-height: 30px;
     padding: 0px 15px;
 }
+
+.description-form-button {
+    background-color: white;
+    color: #004252;
+    border: white;
+    margin: 5px;
+}
+
+.description-input {
+    float: left;
+    border: white;
+}
