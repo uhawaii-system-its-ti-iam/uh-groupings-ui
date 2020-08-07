@@ -6,6 +6,7 @@ import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +34,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("localTest")
-@SpringBootTest(classes = {SpringBootWebApplication.class})
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 public class GroupingsRestControllerTest {
 
     private static final String GROUPING = "grouping1";
@@ -64,7 +65,6 @@ public class GroupingsRestControllerTest {
                 .thenReturn(new ResponseEntity(HttpStatus.BAD_REQUEST));
     }
 
-
     @Test
     @WithMockUhUser
     public void rootTest() throws Exception {
@@ -73,9 +73,6 @@ public class GroupingsRestControllerTest {
                 .andExpect(status().isOk());
 
     }
-
-    // TODO: the URLs being called are matching any String, but they should be changed to the specific URL that the API
-    // is using. Maybe this can be done by using the openApiSpecification file.
 
     @Test
     @WithMockUhUser
