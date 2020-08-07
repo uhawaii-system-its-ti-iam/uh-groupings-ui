@@ -398,29 +398,25 @@
         };
 
         /**
-         * Sets a new description for a Grouping.
-         * TODOS:   --> make this function call RestController to change the description in Grouper.
-         *          --> error checking?
+         * Set a new description for a Grouping.
          */
         $scope.saveDescription = function () {
-            if (groupingDescription.localeCompare($scope.modelDescription) !== 0) {
-                groupingDescription = $scope.modelDescription;
-
-                groupingsService.updateDescription($scope.selectedGrouping.path,
-                    function () {
-                        // This is currently empty due to not needing to do anything with a successful response
-                    },
-                    function (res) {
-                        if (res.status === 403) {
-                            $scope.createOwnerErrorModal();
-                        }
-                    },
-                    groupingDescription);
-                $scope.descriptionForm = !($scope.descriptionForm);
-            } else {
-                $scope.cancelDescriptionEdit();
+            if (groupingDescription.localeCompare($scope.modelDescription) === 0) {
+                return $scope.cancelDescriptionEdit();
             }
+            groupingDescription = $scope.modelDescription;
 
+            groupingsService.updateDescription($scope.selectedGrouping.path,
+                function () {
+                    //Do Nothing
+                },
+                function (res) {
+                    if (res.status === 403) {
+                        $scope.createOwnerErrorModal();
+                    }
+                },
+                groupingDescription);
+            $scope.descriptionForm = !($scope.descriptionForm);
         };
 
         /**

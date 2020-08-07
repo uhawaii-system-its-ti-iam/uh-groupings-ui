@@ -543,7 +543,7 @@ public class GroupingsRestController {
      *
      * @param path:        path to the grouping that the description will be updated
      * @param description: String containing the description of the group to be updated
-     * @return information about the descripiton and group being updated
+     * @return information about the description and group being updated
      */
     @PutMapping(value = "/groupings/{path}/description")
     public ResponseEntity updateDescription(Principal principal, @PathVariable String path,
