@@ -493,7 +493,6 @@
          */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
-            $scope.resStatus = 0;
             if (_.isEmpty($scope.usersToAdd)) {
                 $scope.user = $scope.usersToAdd;
                 // $scope.createAddErrorModal($scope.usersToAdd);
@@ -694,9 +693,9 @@
                 let user = $scope.userToAdd;
                 let inBasis = _.some($scope.groupingBasis, { username: user });
                 if ($scope.existInList(user, list)) {
-                    $scope.createCheckModal(user, list, false, inBasis);
-                } else if ($scope.resStatus === 404) {
-                    $scope.createAddErrorModal($scope.userToAdd);
+                    $scope.listName = list;
+                    $scope.swap = false;
+                    // $scope.createCheckModal(user, list, false, inBasis);
                 } else if ($scope.isInAnotherList(user, list)) {
                     $scope.createCheckModal(user, list, true, inBasis);
                 } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
@@ -1463,7 +1462,10 @@
         };
 
         $scope.resetFields = function () {
+            $scope.resStatus = 0;
             $scope.userToAdd = "";
+            $scope.swap = true;
+
         };
 
         /**
