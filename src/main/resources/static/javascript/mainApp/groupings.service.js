@@ -49,7 +49,6 @@
                 }
 
                 endpoint = endpoint + params;
-                // console.log(endpoint);
 
 
                 dataProvider.loadData(onSuccess, onError, endpoint);
@@ -253,7 +252,6 @@
              */
             getMembershipAssignment(onSuccess, onError) {
                 let endpoint = BASE_URL + "members/groupings/";
-                console.log(endpoint);
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 

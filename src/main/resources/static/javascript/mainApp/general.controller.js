@@ -162,9 +162,7 @@
         $scope.getAllSyncDestinations = function () {
             const groupingPath = $scope.selectedGrouping.path;
             groupingsService.getSyncDestList(groupingPath, function (res) {
-                // console.log("This is the response of sync dest" + res);
                 $scope.syncDestMap = res;
-                // console.log("Mapping:"+ $scope.syncDestMap);
             }, function (res) {
                 if (res.statusCode === 403) {
                     $scope.createOwnerErrorModal();
@@ -261,13 +259,11 @@
 
                             //Catches in both fetch and response
                         } catch (error) {
-                            console.log("Getting members from grouping has errored out please reload page to resume. If not please proceed to the feedback page and report the problem you have come across.");
                         }
                         currentPage++;
                     }
-                }, function (res) {
+                }, function () {
                     $scope.loading = false;
-                    console.log("There was an error in Grouper, refresh the page.");
                     $scope.createApiErrorModal();
                 });
                 //Will only decrement threadcount if previous call absolutely finishes
@@ -344,7 +340,6 @@
                         $scope.createOwnerErrorModal();
                     } else {
                         $scope.loading = false;
-                        console.log("There was an error in Grouper, refresh the page.");
                         $scope.createApiErrorModal();
                         // dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
                     }
@@ -1123,11 +1118,7 @@
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
-            console.log(options.user);
-            console.log(options.listName);
-
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
-
 
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal",
@@ -1219,12 +1210,9 @@
 
         $scope.removeMultipleUsers = (list) => {
 
-            groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, list,
-                (res) => {
-                    //console.log(res);
-                }, (res) => {
-                    // console.log(res);
-                });
+            groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, list, function () {
+            }, function () {
+            });
         };
 
         /**
@@ -1374,12 +1362,9 @@
          */
         function handleSuccessfulPreferenceToggle(res) {
             if (!_.isUndefined(res.statusCode)) {
-                console.log("Error, Status Code: " + res.statusCode);
                 $scope.createPreferenceErrorModal();
-            } else if (_.startsWith(res.resultCode, "SUCCESS")) {
-                console.log("Success");
             }
-        };
+        }
 
         /**
          * Toggles the grouping preference which allows users to opt out of a grouping.
