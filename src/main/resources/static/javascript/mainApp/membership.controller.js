@@ -60,14 +60,6 @@
         }
 
         /**
-         * Generic handler for an unsuccessful opt into/out of a grouping.
-         * @param {object} res - the response from the request
-         */
-        function handleUnsuccessfulOpt(res) {
-            console.log("Error opting into grouping: " + res.statusCode);
-        }
-
-        /**
          * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
          * @param {number} currentPage - the current page within the table
          * @param {number} indexClicked - the index of the grouping clicked by the user

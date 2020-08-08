@@ -21,8 +21,6 @@
                         callback(response.data);
                     }, function (response) {
                         callError(response);
-                        console.log("Error in dataProvider; status: ", response);
-
                     });
             },
 
@@ -37,7 +35,6 @@
                         callback(response.data);
                     }, function (response) {
                         callError(response);
-                        console.log("Error in dataProvider; status: ", response.status);
                     });
             },
 
@@ -59,7 +56,6 @@
                     }, function (response) {
                         clearTimeout(timeoutID);
                         callError(response);
-                        console.log("Error in dataProvider; status: ", response.status);
                     });
             },
 
@@ -76,7 +72,6 @@
                         callback(response);
                     }, function (response) {
                         callError(response);
-                        console.log("Error in dataProvider; status: ", response.status);
                     });
             },
 

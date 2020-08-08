@@ -171,8 +171,6 @@
             }
 
             $scope.checkAll = (count === totalCheckBoxCount);
-
-            console.log("Count: " + count + ", Total: " + totalCheckBoxCount);
         };
 
 
