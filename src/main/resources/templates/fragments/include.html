@@ -92,7 +92,9 @@
                         </div>
                     </td>
                     <td class="basis-column text-center p-10">
-                        <i id="inBasis" class="fa fa-{{(i.inBasis === 'Yes') ? 'check' : 'times'}} text-dark"></i>
+                        <i id="inBasis" class="text-dark">
+                            {{(i.inBasis === 'Yes') ? 'Yes' : 'No'}}
+                        </i>
                     </td>
                 </tr>
                 </tbody>

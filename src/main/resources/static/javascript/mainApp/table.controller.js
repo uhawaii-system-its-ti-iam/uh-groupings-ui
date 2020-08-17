@@ -132,6 +132,10 @@
             }
         };
 
+        $scope.inBasis = function (inBasis) {
+            return (inBasis === "Yes") ? "Yes" : "No";
+        };
+
         /**
          * @param {number} currentPage - the current page in the table
          * @returns {boolean} true if the First and Prev buttons in the pagination controls should be disabled,
