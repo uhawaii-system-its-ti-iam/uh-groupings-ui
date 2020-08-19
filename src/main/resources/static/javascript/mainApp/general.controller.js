@@ -1130,7 +1130,7 @@
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
-                let userToRemove = options.user.username;
+                let userToRemove = options.user.uhUuid;
                 let groupingPath = $scope.selectedGrouping.path;
 
                 if ($scope.listName === "Include") {
