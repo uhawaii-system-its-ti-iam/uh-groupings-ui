@@ -35,19 +35,19 @@
     <table style="width: 80%;margin-bottom: 30px;">
         <tr>
             <th th:utext="#{screen.message.modal.remove.name}"></th>
-            <th style="font-weight: normal">{{ userToRemove.name }}</th>
+            <th style="font-weight: normal">{{ memberName }}</th>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.remove.uhUserName}"></th>
-            <th class="font-weight-normal"> {{ userToRemove.username }}</th>
+            <th class="font-weight-normal"> {{ memberUsername }}</th>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.remove.uhUserId}"></th>
-            <th class="font-weight-normal">{{ userToRemove.uhUuid }}</th>
+            <th class="font-weight-normal">{{ memberUhUuid }}</th>
         </tr>
     </table>
     <p> Are you sure you want to remove
-        <span style="font-weight: bold">{{ userToRemove.username }}</span>
+        <span style="font-weight: bold">{{ memberUsername }}</span>
         <span style="color: black"> from the </span>
         <span style="color: black">{{listName}}</span>
         <span style="color: black"> list?</span>

@@ -19,14 +19,16 @@
         <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.include}">
             <a data-toggle="tab" href="#include" class="nav-link rounded-circle"
-               aria-label="Include Members" ng-click="resetFields()">
+               aria-label="Include Members" ng-click="resetFields();
+                addMembersFromPageToCheckboxObject(groupingInclude)">
                 <i class="fas fa-user-plus" aria-hidden="false"></i>
             </a>
         </li>
         <li class="nav-item mx-auto pt-0 pt-2-md" data-toggle="tooltip" data-placement="right"
             th:title="#{screen.message.common.tooltip.nav.exclude}">
             <a data-toggle="tab" href="#exclude" class="nav-link rounded-circle"
-               aria-label="Exclude Members" ng-click="resetFields()">
+               aria-label="Exclude Members" ng-click="resetFields();
+                addMembersFromPageToCheckboxObject(groupingExclude)">
                 <i class="fas fa-user-minus" aria-hidden="true"></i>
             </a>
         </li>

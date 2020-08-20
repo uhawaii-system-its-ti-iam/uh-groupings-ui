@@ -1,0 +1,42 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Removing Multiple Members</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="multiRemovePromptModalCancel()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" id="modal-body">
+    <p>
+        <span style="color: black">The following members will be removed from the </span>
+        <span style="color: black;">{{listName}} list.</span>
+    </p>
+    <div class="container">
+        <table>
+            <thead class="import-table-thead-tbody-tr import-table-thead">
+            <tr class="import-table-thead-tbody-tr" style="white-space: nowrap;width: 80%">
+                <td>UH Number</td>
+                <td>UH Username</td>
+                <td>Full Name</td>
+            </tr>
+            </thead>
+            <tbody class="import-table-tbody">
+            <tr ng-repeat="member in multiRemoveResults" class="import-table-thead-tbody-tr">
+                <td style="font-weight: normal"> {{member.uhUuid}}</td>
+                <td style="font-weight: normal; padding-left: 10px"> {{member.username}}</td>
+                <td style="font-weight: normal; padding-left: 14px"> {{member.name}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p style="padding-top: 10px; color: red"
+       ng-if="containsInvalidMembers">
+        Members with UH username or UH number that do not exist in the {{listName}} group and will not be removed:
+        {{membersNotInList.join(", ")}}
+    </p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="multiRemovePromptModalAccept()">Ok</button>
+    <button class="btn btn-primary" ng-click="multiRemovePromptModalCancel()">Cancel</button>
+</div>
+</html>

@@ -167,11 +167,19 @@
              * @param onError
              */
             removeMemberFromInclude(path, member, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromIncludeGroup";
+                let endpoint = BASE_URL + "groupings/" + path + "/" + "includeMembers/" + member;
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
-            removeMembersFromInclude(path, members, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + members + "/deleteMembersFromIncludeGroup";
+
+            /**
+             * Removes multiple members from the include group of a grouping.
+             * @param path - The path to the grouping.
+             * @param membersToRemove - The comma separated string of members to remove from the group.
+             * @param onSuccess
+             * @param onError
+             */
+            removeMembersFromInclude(path, membersToRemove, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + path + "/" + "includeMembers/" + membersToRemove;
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -183,12 +191,19 @@
              * @param onError
              */
             removeMemberFromExclude(path, member, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromExcludeGroup";
+                let endpoint = BASE_URL + "groupings/" + path + "/" + "excludeMembers/" + member;
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
-            removeMembersFromExclude(path, members, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + members + "/deleteMembersFromExcludeGroup";
+            /**
+             * Removes multiple members from the exclude group of a grouping.
+             * @param path - The path to the grouping.
+             * @param membersToRemove - The comma separated string of members to remove from the group.
+             * @param onSuccess
+             * @param onError
+             */
+            removeMembersFromExclude(path, membersToRemove, onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/" + path + "/" + "excludeMembers/" + membersToRemove;
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -343,18 +358,39 @@
 
             /**
              * Parse a generic response data type.
+             * The Groupings API contains a data type genericServiceResult which contains an arbitrary list of data and
+             * a Map<String, Integer> containing the key of the data type and the index of where that data is located in
+             * the arbitrary list of data. The following method matches the keys to their correct data using the index
+             * the key.
+             *     A genericServiceResult...
+             *     response {
+             *         data [
+             *             true,
+             *             45,
+             *             "zeb"
+             *         ],
+             *         map {
+             *             "myString" : 2,
+             *             "myBoolean" : 0,
+             *             "myNumber" : 1
+             *         }
+             *     }
+             *     After the response passed through the method...
+             *     parseObject {
+             *             "myBoolean" : true,
+             *             "myNumber" : 45,
+             *             "myString" : "zeb
+             *     }
              * @param response
              * @returns {{}}
              */
             parseGenericResponseData(response) {
                 let parsedObject = {};
                 if (!(_.isEqual(["data", "map"], Object.keys(response))))
-                    parsedObject = { "Response Parse Error": "Keys were not set due to response format", ...response };
-                else {
-                    let keys = Object.keys(response.map);
-                    for (let i = 0; i < keys.length; i++)
-                        parsedObject[keys[i]] = response.data[response.map[keys[i]]];
-                }
+                    return response;
+                let keys = Object.keys(response.map);
+                for (let i = 0; i < keys.length; i++)
+                    parsedObject[keys[i]] = this.parseGenericResponseData(response.data[response.map[keys[i]]]);
                 return parsedObject;
             }
         };

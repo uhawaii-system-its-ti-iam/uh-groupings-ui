@@ -274,6 +274,18 @@ h1, h2, h5,.text-left, span {
     border-color: #dae0e5;
 }
 
+.btn-delete {
+    background: darkred;
+    border-color: maroon;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: crimson;
+    border-color: firebrick;
+    color: white;
+}
+
 .border {
     background: white;
 }

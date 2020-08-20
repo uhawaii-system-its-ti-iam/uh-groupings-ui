@@ -286,7 +286,6 @@ public class GroupingsRestController {
      * @param grouping:  path to the Grouping who's include group the new member will be added to
      * @param userToAdd: username of the new member to be added to the include group
      * @return information about the success of the operation
-     */
     @PostMapping(value = "/{grouping}/{userToAdd}/addMemberToIncludeGroup")
     public ResponseEntity addMemberToIncludeGroup(Principal principal,
             @PathVariable String grouping,
@@ -299,6 +298,7 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", safeGrouping, safeUserToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
+     */
 
     /**
      * Uses  the api's includeMultipleMembers utility.
@@ -316,7 +316,7 @@ public class GroupingsRestController {
             @PathVariable String grouping,
             @PathVariable String usersToAdd) {
         logger.info("Entered REST addMembersToIncludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMultipleMembers/%s", grouping, usersToAdd);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", grouping, usersToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -327,7 +327,6 @@ public class GroupingsRestController {
      * @param grouping:  path to the Grouping who's exclude group the new member will be added to
      * @param userToAdd: username of the new member to be added to the exclude group
      * @return information about the success of the operation
-     */
     @PostMapping(value = "/{grouping}/{userToAdd}/addMemberToExcludeGroup")
     public ResponseEntity addMemberToExcludeGroup(Principal principal,
             @PathVariable String grouping,
@@ -340,6 +339,7 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", safeGrouping, safeUserToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
+     */
 
     /**
      * Uses  the api's excludeMultipleMembers utility.
@@ -357,75 +357,77 @@ public class GroupingsRestController {
             @PathVariable String grouping,
             @PathVariable String usersToAdd) {
         logger.info("Entered REST addMembersToExcludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMultipleMembers/%s", grouping, usersToAdd);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", grouping, usersToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
     /**
      * deletes a member in the include group of the Grouping who's path is in 'grouping'
      *
-     * @param grouping:     path to the Grouping who's include group contains the member to be deleted
-     * @param userToDelete: username of the user to be deleted from the include group
+     * @param path: path to the Grouping who's include group contains the member to be deleted
+     * @param uid:  username of the user to be deleted from the include group
      * @return information about the success of the operation
      */
-    @PostMapping(value = "/{grouping}/{userToDelete}/deleteMemberFromIncludeGroup")
+    @PostMapping(value = "/groupings/{path}/includeMembers/{uid}")
     public ResponseEntity deleteMemberFromIncludeGroup(Principal principal,
-            @PathVariable String grouping,
-            @PathVariable String userToDelete) {
-        logger.info("Entered REST deleteMemberFromIncludeGroup...");
-
-        String safeGrouping = policy.sanitize(grouping);
-        String safeUserToDelete = policy.sanitize(userToDelete);
-
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", safeGrouping, safeUserToDelete);
+            @PathVariable String path,
+            @PathVariable String uid) {
+        logger.info("Entered REST removeMembersFromIncludeGroup...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", policy.sanitize(path),
+                policy.sanitize(uid));
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
-    @PostMapping(value = "/{grouping}/{usersToDelete}/deleteMembersFromIncludeGroup")
-    public ResponseEntity deleteMembersFromIncludeGroup(Principal principal,
-            @PathVariable String grouping,
-            @PathVariable String usersToDelete) {
-
-        String safeGrouping = policy.sanitize(grouping);
-        String safeUserToDelete = policy.sanitize(usersToDelete);
-
-        logger.info("Entered REST deleteMembersFromIncludeGroup...");
-        String uri =
-                String.format(API_2_1_BASE + "/groupings/%s/includeMultipleMembers/%s", safeGrouping, safeUserToDelete);
+    /**
+     * Removes multiple members in the exclude group of the Grouping who's path is in 'grouping'
+     *
+     * @param principal
+     * @param path            - Path to the Grouping whose include group contains the members to be deleted.
+     * @param membersToRemove - The list of members to remove.
+     * @return - Information about the success of the operation.
+     */
+    @PostMapping(value = "/groupings/{path}/removeIncludeMembers/{uid}")
+    public ResponseEntity removeMembersFromIncludeGroup(Principal principal,
+            @PathVariable String path,
+            @PathVariable String membersToRemove) {
+        logger.info("Entered REST removeMembersFromIncludeGroup...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", policy.sanitize(path),
+                policy.sanitize(membersToRemove));
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
     /**
      * deletes a member in the exclude group of the Grouping who's path is in 'grouping'
      *
-     * @param grouping:     path to the Grouping who's exclude group contains the member to be deleted
-     * @param userToDelete: username of the user to be deleted from the exclude group
+     * @param path: path to the Grouping who's exclude group contains the member to be deleted
+     * @param uid:  username of the user to be deleted from the exclude group
      * @return information about the success of the operation
      */
-    @PostMapping(value = "/{grouping}/{userToDelete}/deleteMemberFromExcludeGroup")
+    @PostMapping(value = "/groupings/{path}/excludeMembers/{uid}")
     public ResponseEntity deleteMemberFromExcludeGroup(Principal principal,
-            @PathVariable String grouping,
-            @PathVariable String userToDelete) {
-
-        String safeGrouping = policy.sanitize(grouping);
-        String safeUserToDelete = policy.sanitize(userToDelete);
-
-        logger.info("Entered REST deleteMemberFromExcludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", safeGrouping, safeUserToDelete);
+            @PathVariable String path,
+            @PathVariable String uid) {
+        logger.info("Entered REST removeMembersFromExcludeGroup...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", policy.sanitize(path),
+                policy.sanitize(uid));
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
-    @PostMapping(value = "/{grouping}/{usersToDelete}/deleteMembersFromExcludeGroup")
-    public ResponseEntity deleteMembersFromExcludeGroup(Principal principal,
-            @PathVariable String grouping,
-            @PathVariable String usersToDelete) {
-
-        String safeGrouping = policy.sanitize(grouping);
-        String safeUserToDelete = policy.sanitize(usersToDelete);
-
-        logger.info("Entered REST deleteMembersFromExcludeGroup...");
-        String uri =
-                String.format(API_2_1_BASE + "/groupings/%s/excludeMultipleMembers/%s", safeGrouping, safeUserToDelete);
+    /**
+     * Removes multiple members in the exclude group of the Grouping who's path is in 'grouping'
+     *
+     * @param principal
+     * @param path            Path to the Grouping whose include group contains the members to be deleted.
+     * @param membersToRemove - The list of members to remove.
+     * @return - Information about the success of the operation.
+     */
+    @PostMapping(value = "groupings/{path}/removeExcludeMembers/{uid}")
+    public ResponseEntity removeMembersFromExcludeGroup(Principal principal,
+            @PathVariable String path,
+            @PathVariable String membersToRemove) {
+        logger.info("Entered REST removeMembersFromExcludeGroup...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", policy.sanitize(path),
+                policy.sanitize(membersToRemove));
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 

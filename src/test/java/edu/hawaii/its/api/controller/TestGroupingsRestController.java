@@ -2,6 +2,11 @@ package edu.hawaii.its.api.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jasig.cas.client.authentication.SimplePrincipal;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.owasp.html.Sanitizers;
 import edu.hawaii.its.api.type.AdminListsHolder;
 import edu.hawaii.its.api.type.Group;
 import edu.hawaii.its.api.type.Grouping;
@@ -12,12 +17,6 @@ import edu.hawaii.its.groupings.access.Role;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.controller.WithMockUhUser;
-import org.jasig.cas.client.authentication.SimplePrincipal;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.owasp.html.Sanitizers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,14 +32,17 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -149,12 +151,6 @@ public class TestGroupingsRestController {
         groupingsRestController.assignOwnership(adminPrincipal, GROUPING_TRUE_EMPTY, tst[0]);
 
         //put in include
-        groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[0]);
-        groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[1]);
-        groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[2]);
-
-        //add to exclude
-        groupingsRestController.addMemberToExcludeGroup(tst0Principal, GROUPING, tst[3]);
 
         groupingsRestController.deleteMemberFromIncludeGroup(tst0Principal, GROUPING_STORE_EMPTY, tst[0]);
         groupingsRestController.deleteMemberFromIncludeGroup(tst0Principal, GROUPING_TRUE_EMPTY, tst[0]);

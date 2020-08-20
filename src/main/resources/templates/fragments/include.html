@@ -1,5 +1,8 @@
 <th:block th:fragment="include">
-
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
 
     <div id="include-display" class="tab-pane fade show active">
 
@@ -39,6 +42,14 @@
             <table class="table table-striped table-hover" aria-live="assertive">
                 <thead>
                 <tr>
+                    <th scope="col" class="clickable center-checkbox" style="vertical-align: top; margin-left: 5px">
+                        <input class="form-check-input" type="checkbox" id="selectall"
+                               style="margin-left: 0"
+                               ng-model="allSelected"
+                               ng-click="toggleCheckAllSelection()"
+                               value="option1" data-toggle="tooltip" data-placement="top" title="Check all"
+                               aria-label="assertive">
+                    </th>
                     <th scope="col" class="clickable"
                         ng-click="sortBy('groupingInclude', 'pagedItemsInclude', 'name')">
                         Name
@@ -67,17 +78,28 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm">
+                <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm"
+                    ng-click="membersInCheckboxList[i.uhUuid]=!membersInCheckboxList[i.uhUuid]">
+                    <td class="p-10" style="margin-left: 4px">
+                        <input class="form-check-input position-left singlechkbox" type="checkbox"
+                               id="blankCheckbox"
+                               style="margin-left: 0"
+                               ng-model="membersInCheckboxList[i.uhUuid]"
+                               ng-click="$event.stopPropagation()"
+                               aria-label="assertive">
+                    </td>
                     <td class="p-10" tabindex="0">
-                        {{i.name}}
-                        <span class="fa fa-trash-o pull-right clickable pt-1"
-                              data-toggle="tooltip" data-placement="top"
-                              onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                              tabindex="0"
-                              th:title="#{screen.message.common.tooltip.remove.include}"
-                              ng-keypress="$event.keyCode === 13 ? removeMember('Include', currentPageInclude, $index) : null"
-                              ng-click="removeMember('Include', currentPageInclude, $index)">
+                        <div style="margin-left: 4px">
+                            {{i.name}}
+                            <span class="fa fa-trash-o pull-right clickable pt-1"
+                                  data-toggle="tooltip" data-placement="top"
+                                  onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                                  tabindex="0"
+                                  th:title="#{screen.message.common.tooltip.remove.include}"
+                                  ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Include', currentPageInclude, $index) : null"
+                                  ng-click="removeMemberWithTrashcan('Include', currentPageInclude, $index)">
                         </span>
+                        </div>
                     </td>
                     <td class="p-10">{{i.uhUuid}}</td>
                     <td class="p-10">
@@ -103,12 +125,18 @@
         <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
                 <form>
-                    <div class="input-group" style="width: 500px">
-                        <input class="form-control" placeholder="Members to add" type="search"
-                               title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"/>
+                    <div class="input-group" style="width: 600px">
+                        <input class="form-control" placeholder="Members to add/delete" type="search"
+                               title="Enter one or more usernames" ng-model="membersToAddOrRemove"
+                               style="width: 275px"/>
                         <div>
-                            <button class="btn btn-primary" ng-click="addMembers('Include')" style="margin-left: 2px">
+                            <button class="btn btn-primary" ng-click="addMembers('Include')" style="margin-left: 6px">
                                 Add
+                            </button>
+                            <button class="btn btn-delete"
+                                    ng-click="removeMembersWithDeleteButton('Include', pagedItemsInclude[currentPageInclude])"
+                                    style="margin-left: 2px; margin-right: 2px">
+                                Delete
                             </button>
                             <button class="btn btn-primary" ng-click="launchImportModal('Include')">
                                 Import File
