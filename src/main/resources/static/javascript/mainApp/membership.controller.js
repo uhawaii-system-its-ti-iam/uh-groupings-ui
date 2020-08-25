@@ -29,6 +29,7 @@
         $scope.init = function () {
             $scope.loading = true;
 
+
             groupingsService.getMembershipAssignment(function (res) {
                 $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
                 $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, true);
@@ -38,7 +39,7 @@
 
                 $scope.loading = false;
             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
+                console.log(res);
             });
         };
 
@@ -54,9 +55,14 @@
          * @param {object} res - the response from opting into/out of a grouping
          */
         function handleSuccessfulOpt(res) {
+
             if (_.startsWith(res[0].resultCode, "SUCCESS")) {
                 $scope.init();
             }
+        }
+
+        function handleUnsuccessfulOpt(res) {
+            console.log(res);
         }
 
         /**
