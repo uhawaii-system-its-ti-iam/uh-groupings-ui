@@ -30,9 +30,48 @@
             $scope.loading = true;
 
 
+            groupingsService.getMembershipAssignment((res) => {
+                let data = [];
+                _.forEach(res, (membership) => {
+                    data.push(membership);
+                });
+
+                let dups = [];
+                _.forEach(data, (membership) => {
+                    dups.push(data.filter(ms => {
+                        if (ms.name === membership.name) {
+                            return ms;
+                        }
+                    }));
+                });
+                // merge the boolean values of all dups.
+                let result = [];
+                _.forEach(dups, (membership) => {
+                    if (membership.length > 1) {
+                        _.forEach(membership, m => {
+                            membership[0].inInclude |= m.inInclude;
+                            membership[0].inExclude |= m.inExclude;
+                            membership[0].inBasis |= m.inBasis;
+                            membership[0].inOwner |= m.inOwner;
+                        });
+                    }
+                    membership[0].optOutOn = membership[0].inBasis && !membership[0].inExclude;
+                    result.push(membership[0]);
+                });
+                $scope.membershipsList = _.sortBy(_.uniq(result), "name");
+                // Chunk array to pages
+                let i = 0;
+                const pageSize = 20;
+                while (i < $scope.membershipsList.length) {
+                    $scope.pagedItemsMemberships.push($scope.membershipsList.slice(i, pageSize + i));
+                    i += pageSize;
+                }
+                $scope.loading = false;
+                console.log($scope.pagedItemsMemberships);
+            }, (res) => console.log(res));
+            /*
             groupingsService.getMembershipAssignment(function (res) {
                 $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
-                $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, true);
 
                 $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
                 $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
@@ -41,6 +80,7 @@
             }, function (res) {
                 console.log(res);
             });
+             */
         };
 
         $scope.memberFilterReset = function () {
