@@ -293,6 +293,19 @@
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
+            /**
+             * Resets the entire groupings removing all basis,include, and exclude members.
+             * @param basis
+             * @param include
+             * @param exclude
+             * @param onSuccess
+             * @param onError
+             */
+            resetGroup(path, basis, include, exclude, onSuccess, onError) {
+                let endpoint = BASE_URL + path + basis + "/" + include + "/" + exclude + "/resetGroup";
+                dataProvider.updateData(onSuccess, onError, endpoint);
+            },
+
             //todo Might not need this as the syncDests come back in getGrouping already
             /**
              * Get the list of sync destinations

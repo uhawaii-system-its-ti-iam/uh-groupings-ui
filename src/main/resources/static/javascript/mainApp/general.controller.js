@@ -1376,6 +1376,24 @@
             groupingsService.setOptOut(groupingPath, allowOptOut, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
+        $scope.resetGroup = function () {
+            let resetBasis = $scope.groupingBasis;
+            if(resetBasis == null){
+                resetBasis = "";
+            }
+            let resetInclude =  $scope.groupingInclude;
+            if(resetInclude == null){
+                resetInclude = "";
+            }
+            let resetExclude =  $scope.groupingExclude;
+            if(resetExclude == null){
+                resetExclude = "";
+            }
+            const groupingPath = $scope.selectedGrouping.path;
+
+            groupingsService.resetGroup(groupingPath, resetBasis, resetInclude, resetExclude, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+        };
+
         /**
          * Toggles the grouping preference which allows users to discover the grouping and opt into it.
          */

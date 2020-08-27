@@ -32,6 +32,13 @@
                               th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
                               ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'"></span>
                     </div>
+                    <div>
+                        <form ng-submit="resetGroup()">
+                            <div class="input-group">
+                                    <button class="btn btn-primary btn-sm" type="submit">Reset Group</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6 col-12">
