@@ -29,7 +29,6 @@
         $scope.init = function () {
             $scope.loading = true;
 
-
             groupingsService.getMembershipAssignment((res) => {
                 let data = [];
                 _.forEach(res, (membership) => {
@@ -55,7 +54,6 @@
                             membership[0].inOwner |= m.inOwner;
                         });
                     }
-                    membership[0].optOutOn = membership[0].inBasis && !membership[0].inExclude;
                     result.push(membership[0]);
                 });
                 $scope.membershipsList = _.sortBy(_.uniq(result), "name");

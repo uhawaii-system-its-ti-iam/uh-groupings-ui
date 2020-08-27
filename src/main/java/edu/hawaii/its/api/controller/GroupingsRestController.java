@@ -1,10 +1,9 @@
 package edu.hawaii.its.api.controller;
 
-import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.owasp.html.Sanitizers;
+import edu.hawaii.its.api.service.HttpRequestService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 import java.security.Principal;
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -213,10 +211,10 @@ public class GroupingsRestController {
     }
 
     @RequestMapping(value = "/members/{uid}/groupings",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity membershipAssignment(Principal principal,
-        @PathVariable String uid) {
+            @PathVariable String uid) {
         logger.info("Entered REST MembershipAssignment...");
         String uri = String.format(API_2_1_BASE + "/members/%s/groupings", uid);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
