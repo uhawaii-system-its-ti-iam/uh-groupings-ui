@@ -204,8 +204,8 @@ public class GroupingsRestController {
      * Groupings that the user can opt into
      */
     @GetMapping(value = "/members/groupings")
-    public ResponseEntity membershipAssignment(Principal principal) {
-        logger.info("Entered REST MembershipAssignment...");
+    public ResponseEntity membershipResults(Principal principal) {
+        logger.info("Entered REST membershipResults...");
         String uri = String.format(API_2_1_BASE + "/members/%s/groupings", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }

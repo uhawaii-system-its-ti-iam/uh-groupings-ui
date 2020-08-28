@@ -250,13 +250,13 @@
             /**
              * Gets the groupings a user is a part of, the groupings they can opt in to, and the groupings they own.
              */
-            getMembershipAssignment(onSuccess, onError) {
+            getMembershipResults(onSuccess, onError) {
                 let endpoint = BASE_URL + "members/groupings/";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
             getOptInGroups(onSuccess, onError) {
-                let endpoint = BASE_URL + "groupings/optInGroups/" ;
+                let endpoint = BASE_URL + "groupings/optInGroups/";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 

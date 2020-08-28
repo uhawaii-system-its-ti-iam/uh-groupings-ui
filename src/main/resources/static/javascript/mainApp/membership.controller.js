@@ -22,6 +22,36 @@
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
+        function extendDuplicatePaths(memberships) {
+            let dups = [];
+            if (undefined === memberships)
+                return dups;
+            _.forEach(memberships, (membership) => {
+                dups.push(memberships.filter(ms => {
+                    if (ms.name === membership.name) {
+                        return ms;
+                    }
+                }));
+            });
+            return dups;
+        }
+
+        function mergeDuplicateValues(dups) {
+            let result = [];
+            _.forEach(dups, (membership) => {
+                if (membership.length > 1) {
+                    _.forEach(membership, m => {
+                        membership[0].inInclude |= m.inInclude;
+                        membership[0].inExclude |= m.inExclude;
+                        membership[0].inBasis |= m.inBasis;
+                        membership[0].inOwner |= m.inOwner;
+                    });
+                }
+                result.push(membership[0]);
+            });
+            return result;
+        }
+
         /**
          * Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
          * is able to opt out of.
@@ -29,36 +59,15 @@
         $scope.init = function () {
             $scope.loading = true;
 
-            groupingsService.getMembershipAssignment((res) => {
+            groupingsService.getMembershipResults((res) => {
                 let data = [];
                 _.forEach(res, (membership) => {
                     data.push(membership);
                 });
 
-                let dups = [];
-                _.forEach(data, (membership) => {
-                    dups.push(data.filter(ms => {
-                        if (ms.name === membership.name) {
-                            return ms;
-                        }
-                    }));
-                });
-                // merge the boolean values of all dups.
-                let result = [];
-                _.forEach(dups, (membership) => {
-                    if (membership.length > 1) {
-                        _.forEach(membership, m => {
-                            membership[0].inInclude |= m.inInclude;
-                            membership[0].inExclude |= m.inExclude;
-                            membership[0].inBasis |= m.inBasis;
-                            membership[0].inOwner |= m.inOwner;
-                        });
-                    }
-                    if (false === membership[0].optInEnabled) {
-                        membership[0].path = membership[0].path.substring(0, membership[0].path.lastIndexOf(":"));
-                        result.push(membership[0]);
-                    }
-                });
+                let dups = extendDuplicatePaths(data);
+                let result = mergeDuplicateValues(dups);
+
                 $scope.membershipsList = _.sortBy(_.uniq(result), "name");
                 // Chunk array to pages
                 let i = 0;
@@ -80,17 +89,6 @@
                 $scope.optInList = _.sortBy($scope.optInList, "name");
                 $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
             }, (res) => console.log(res));
-            /*
-            groupingsService.getMembershipAssignment(function (res) {
-                $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
-
-                $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
-
-                $scope.loading = false;
-            }, function (res) {
-                console.log(res);
-            });
-             */
         };
 
         $scope.memberFilterReset = function () {
