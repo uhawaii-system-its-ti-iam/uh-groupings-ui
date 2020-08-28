@@ -1377,17 +1377,24 @@
         };
 
         $scope.resetGroup = function () {
+
             let resetBasis = $scope.groupingBasis;
-            if(resetBasis == null){
-                resetBasis = "";
+            if(Object.entries(resetBasis).length === 0){
+                console.log(typeof resetBasis);
+                resetBasis = "empty";
+            }else{
+                let userBasis = null;
+                for(var i = 0; i < resetBasis.size(); i++){
+                    userBasis = resetBasis
+                }
             }
             let resetInclude =  $scope.groupingInclude;
-            if(resetInclude == null){
-                resetInclude = "";
+            if(Object.entries(resetInclude).length === 0){
+                resetInclude = "empty";
             }
             let resetExclude =  $scope.groupingExclude;
-            if(resetExclude == null){
-                resetExclude = "";
+            if(Object.entries(resetExclude).length === 0){
+                resetExclude = "empty";
             }
             const groupingPath = $scope.selectedGrouping.path;
 

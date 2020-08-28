@@ -185,7 +185,7 @@ public class GroupingsRestController {
     public ResponseEntity resetGroup(Principal principal,
             @PathVariable String path, @PathVariable String basis, @PathVariable String include, @PathVariable String exclude) {
         logger.info("Entered REST resetGroup...");
-
+        logger.info("SCATTMAN'S WORLD: " + principal.getName());
         String safePath = policy.sanitize(path);
         String safeBasis = policy.sanitize(basis);
         String safeInclude = policy.sanitize(include);
