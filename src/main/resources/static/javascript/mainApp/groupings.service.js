@@ -84,7 +84,7 @@
              * @param onSuccess
              * @param onError
              */
-             addMemberToInclude(path, userToAdd, onSuccess, onError) {
+            addMemberToInclude(path, userToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -155,7 +155,7 @@
             },
 
             removeFromGroups(groups, member, onSuccess, onError) {
-                let endpoint = BASE_URL + groups + "/" + member +"/removeFromGroups";
+                let endpoint = BASE_URL + groups + "/" + member + "/removeFromGroups";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -255,6 +255,10 @@
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
+            getOptInGroups(onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/optInGroups/" ;
+                dataProvider.loadData(onSuccess, onError, endpoint);
+            },
 
             /*todo:copy code*/
             getMembershipAssignmentForUser: function (onSuccess, onError, username) {

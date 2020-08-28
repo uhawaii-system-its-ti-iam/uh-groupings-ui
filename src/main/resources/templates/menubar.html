@@ -4,10 +4,12 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-light border-bottom pt-2 pb-2" th:fragment="copy">
     <div class="container">
         <a class="navbar-brand align-items-center" th:href="@{/}">
-            <img class="img-fluid" th:src="@{images/uh-groupings-logo.png}" th:srcset="@{images/uh-groupings-logo.png 1x, images/uh-groupings-logo-2x.png 2x}" alt="UH Groupings">
+            <img class="img-fluid" th:src="@{images/uh-groupings-logo.png}"
+                 th:srcset="@{images/uh-groupings-logo.png 1x, images/uh-groupings-logo-2x.png 2x}" alt="UH Groupings">
             <span class="sr-only">UH Groupings</span>
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -29,12 +31,13 @@
                     <a class="nav-link" th:href="@{/feedback}">Feedback</a>
                 </li>
                 <li class="nav-item" sec:authorize="!isAuthenticated()">
-                    <a class="btn btn-primary login" th:href="@{/login}">Login <i class="fa fa-sign-in" aria-hidden="false"></i></a>
+                    <a class="btn btn-primary login" th:href="@{/login}">Login <i class="fa fa-sign-in"
+                                                                                  aria-hidden="false"></i></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <form action="/logout" th:action="@{/logout}" method="post">
                         <button class="btn btn-outline-secondary" type="submit">Logout (<span
-                                 sec:authentication="name" id="name"></span>)
+                                sec:authentication="name" id="name"></span>)
                             <i class="fa fa-sign-out" aria-hidden="true"></i>
                         </button>
                     </form>

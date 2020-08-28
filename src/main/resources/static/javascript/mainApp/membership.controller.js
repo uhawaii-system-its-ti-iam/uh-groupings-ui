@@ -54,7 +54,10 @@
                             membership[0].inOwner |= m.inOwner;
                         });
                     }
-                    result.push(membership[0]);
+                    if (false === membership[0].optInEnabled) {
+                        membership[0].path = membership[0].path.substring(0, membership[0].path.lastIndexOf(":"));
+                        result.push(membership[0]);
+                    }
                 });
                 $scope.membershipsList = _.sortBy(_.uniq(result), "name");
                 // Chunk array to pages
@@ -65,14 +68,23 @@
                     i += pageSize;
                 }
                 $scope.loading = false;
-                console.log($scope.pagedItemsMemberships);
+            }, (res) => console.log(res));
+
+            groupingsService.getOptInGroups((res) => {
+                _.forEach(res, (path) => {
+                    $scope.optInList.push({
+                        "name": path.split(":").pop(),
+                        "path": path
+                    });
+                });
+                $scope.optInList = _.sortBy($scope.optInList, "name");
+                $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
             }, (res) => console.log(res));
             /*
             groupingsService.getMembershipAssignment(function (res) {
                 $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
 
                 $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
-                $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
 
                 $scope.loading = false;
             }, function (res) {

@@ -210,6 +210,13 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
+    @GetMapping(value = "/groupings/optInGroups")
+    public ResponseEntity getOptInGroups(Principal principal) {
+        logger.info("Entered REST optInGroups...");
+        String uri = String.format(API_2_1_BASE + "/groupings/optInGroups/%s", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
     @RequestMapping(value = "/members/{uid}/groupings",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
