@@ -52,6 +52,16 @@
             return result;
         }
 
+        function objToPageArray(obj, size) {
+            let i = 0;
+            let arr = [];
+            while (i < obj.length) {
+                arr.push(obj.slice(i, size + i));
+                i += size;
+            }
+            return arr;
+        }
+
         /**
          * Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
          * is able to opt out of.
@@ -67,16 +77,10 @@
 
                 let dups = extendDuplicatePaths(data);
                 let result = mergeDuplicateValues(dups);
-
                 $scope.membershipsList = _.sortBy(_.uniq(result), "name");
-                // Chunk array to pages
-                let i = 0;
-                const pageSize = 20;
-                while (i < $scope.membershipsList.length) {
-                    $scope.pagedItemsMemberships.push($scope.membershipsList.slice(i, pageSize + i));
-                    i += pageSize;
-                }
+                $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                 $scope.loading = false;
+
             }, (res) => console.log(res));
 
             groupingsService.getOptInGroups((res) => {
