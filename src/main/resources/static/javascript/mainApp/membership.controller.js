@@ -22,10 +22,11 @@
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
-        function extendDuplicatePaths(memberships) {
+        /**
+         * Couple an array of objects into an array of object arrays which contain duplicate paths.
+         */
+        function coupleDuplicatePaths(memberships) {
             let dups = [];
-            if (undefined === memberships)
-                return dups;
             _.forEach(memberships, (membership) => {
                 dups.push(memberships.filter(ms => {
                     if (ms.name === membership.name) {
@@ -36,6 +37,10 @@
             return dups;
         }
 
+        /**
+         * With the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
+         * all values that each duplicate contained.
+         */
         function mergeDuplicateValues(dups) {
             let result = [];
             _.forEach(dups, (membership) => {
@@ -47,11 +52,17 @@
                         membership[0].inOwner |= m.inOwner;
                     });
                 }
+                let path = membership[0].path;
+                membership[0].path = path.substring(0, path.lastIndexOf(":")) + "-" + membership[0].name;
+                console.log(membership[0].path);
                 result.push(membership[0]);
             });
             return result;
         }
 
+        /**
+         * Chunk an array of objects into an array of paged object arrays.
+         */
         function objToPageArray(obj, size) {
             let i = 0;
             let arr = [];
@@ -63,36 +74,51 @@
         }
 
         /**
-         * Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
-         * is able to opt out of.
+         *  Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
+         *  is able to opt out of.
          */
         $scope.init = function () {
             $scope.loading = true;
 
+            // Request a list of membership objects from the API.
             groupingsService.getMembershipResults((res) => {
-                let data = [];
-                _.forEach(res, (membership) => {
-                    data.push(membership);
-                });
+                    let data = [];
 
-                let dups = extendDuplicatePaths(data);
-                let result = mergeDuplicateValues(dups);
-                $scope.membershipsList = _.sortBy(_.uniq(result), "name");
-                $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
-                $scope.loading = false;
-
-            }, (res) => console.log(res));
-
-            groupingsService.getOptInGroups((res) => {
-                _.forEach(res, (path) => {
-                    $scope.optInList.push({
-                        "name": path.split(":").pop(),
-                        "path": path
+                    _.forEach(res, (membership) => {
+                        data.push(membership);
                     });
-                });
-                $scope.optInList = _.sortBy($scope.optInList, "name");
-                $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
-            }, (res) => console.log(res));
+
+                    let dups = coupleDuplicatePaths(data);
+                    let result = mergeDuplicateValues(dups);
+                    $scope.membershipsList = _.sortBy(_.uniq(result), "name");
+                    $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
+                    $scope.loading = false;
+
+                },
+                (res) => {
+                    dataProvider.handleException({
+                        exceptionMessage: JSON.stringify(res, null, 4)
+                    }, "feedback/error", "feedback");
+                }
+            );
+
+            // Request a list of opt-in-able paths from the API.
+            groupingsService.getOptInGroups((res) => {
+                    _.forEach(res, (path) => {
+                        $scope.optInList.push({
+                            "name": path.split(":").pop(),
+                            "path": path
+                        });
+                    });
+                    $scope.optInList = _.sortBy($scope.optInList, "name");
+                    $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
+                },
+                (res) => {
+                    dataProvider.handleException({
+                        exceptionMessage: JSON.stringify(res, null, 4)
+                    }, "feedback/error", "feedback");
+                }
+            );
         };
 
         $scope.memberFilterReset = function () {

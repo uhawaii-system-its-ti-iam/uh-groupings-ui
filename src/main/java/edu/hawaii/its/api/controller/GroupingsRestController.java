@@ -199,9 +199,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * @return a MembershipAssignment Object that contains
-     * Groupings that the user is in
-     * Groupings that the user can opt into
+     * Get a list of memberships that the current user is associated with.
      */
     @GetMapping(value = "/members/groupings")
     public ResponseEntity membershipResults(Principal principal) {
@@ -210,6 +208,9 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
+    /**
+     * Get a list of grouping paths that the current user can opt into.
+     */
     @GetMapping(value = "/groupings/optInGroups")
     public ResponseEntity getOptInGroups(Principal principal) {
         logger.info("Entered REST optInGroups...");
