@@ -721,7 +721,6 @@
                 if ($scope.existInList(user, list)) {
                     $scope.listName = list;
                     $scope.swap = false;
-                    // $scope.createCheckModal(user, list, false, inBasis);
                 } else if ($scope.isInAnotherList(user, list)) {
                     $scope.createCheckModal(user, list, true, inBasis);
                 } else if ((inBasis && list === "Include") || (inGrouper && !inBasis && list === "Exclude")) {
@@ -873,7 +872,6 @@
                 if (attributes.uhUuid > 0) {
                     $scope.inGrouper = true;
                 }
-                console.log($scope.inGrouper);
             }, function (res) {
                 console.log(`existsInGrouper res: ${res.status}`);
                 $scope.inGrouper = false;

@@ -1,18 +1,18 @@
 <th:block th:fragment="add-error-messages">
 
     <div ng-show="!errorDismissed && !waitingForImportResponse">
-        <!--        message for empty input-->
+        <!--message for empty input-->
         <div ng-if="userToAdd.length === 0 && resStatus === 0"
              class="float-md-left mt-3 alert alert-danger fade in">
             <p th:utext="#{screen.message.modal.add.empty}"></p>
         </div>
-        <!--        message for invalid input-->
+        <!--message for invalid input-->
         <div ng-if="userToAdd.length > 0 && (resStatus === 404 || resStatus === 500)"
              class="float-md-left mt-3 alert alert-danger fade in">
             <p th:text="#{screen.message.modal.add.fail}"></p>
             <p th:text="#{screen.message.modal.add.ensureValid}"></p>
         </div>
-        <!--        message for adding a member already in this list -->
+        <!--message for adding a member already in Include or Exclude -->
         <div ng-if="userToAdd.length > 0 && swap === false"
              class="float-md-left mt-3 alert alert-danger fade in">
             <div ng-if="listName === 'Include'">
@@ -23,10 +23,4 @@
             </div>
         </div>
     </div>
-    <!--    <div>userToAdd: {{userToAdd}}</div>-->
-    <!--    <div>resStatus: {{resStatus}}</div>-->
-    <!--    <div>errorDismissed: {{errorDismissed}}</div>-->
-    <!--    <div>listName: {{listName}}</div>-->
-    <!--    <div>swap: {{swap}}</div>-->
-    <!--    <div>inGrouper: {{inGrouper}}</div>-->
 </th:block>
