@@ -84,6 +84,8 @@
         $scope.includeCheck = false;
         $scope.excludeCheck = false;
         $scope.group = "";
+        $scope.resStatus = 0;
+        $scope.inGrouper = false;
 
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
@@ -543,6 +545,7 @@
                     }
                 } else {
                     $scope.userToAdd = $scope.usersToAdd;
+                    $scope.existsInGrouper($scope.userToAdd);
                     $scope.addMember(listName);
                 }
             }
@@ -713,6 +716,7 @@
             let groupingPath = $scope.selectedGrouping.path;
             groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function (res) {
                 let user = $scope.userToAdd;
+                let inGrouper = $scope.inGrouper;
                 let inBasis = _.some($scope.groupingBasis, { username: user });
                 if ($scope.existInList(user, list)) {
                     $scope.listName = list;
@@ -720,7 +724,7 @@
                     // $scope.createCheckModal(user, list, false, inBasis);
                 } else if ($scope.isInAnotherList(user, list)) {
                     $scope.createCheckModal(user, list, true, inBasis);
-                } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
+                } else if ((inBasis && list === "Include") || (inGrouper && !inBasis && list === "Exclude")) {
                     $scope.createBasisWarningModal(user, list, inBasis);
                 } else {
                     $scope.createConfirmAddModal({
@@ -857,6 +861,22 @@
             });
             $scope.confirmAddModalInstance.result.then(function () {
                 $scope.updateAddMembers(options.usersToAdd, options.listName);
+            });
+        };
+
+        /**
+         * Checks if the user is in the Grouper database
+         * @param {object} user - the user you are checking to see if they are in Grouper
+         */
+        $scope.existsInGrouper = function (user) {
+            groupingsService.getMemberAttributes(user, function (attributes) {
+                if (attributes.uhUuid > 0) {
+                    $scope.inGrouper = true;
+                }
+                console.log($scope.inGrouper);
+            }, function (res) {
+                console.log(`existsInGrouper res: ${res.status}`);
+                $scope.inGrouper = false;
             });
         };
 
@@ -1621,6 +1641,7 @@
 >>>>>>> Fixed error messages from lingering after past inputs
             $scope.userToAdd = "";
             $scope.swap = true;
+            $scope.inGrouper = false;
 
         };
 
