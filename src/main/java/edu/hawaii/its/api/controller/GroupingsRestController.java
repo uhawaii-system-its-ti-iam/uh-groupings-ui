@@ -1,10 +1,9 @@
 package edu.hawaii.its.api.controller;
 
-import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.api.type.GroupingsServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.owasp.html.Sanitizers;
+import edu.hawaii.its.api.service.HttpRequestService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 import java.security.Principal;
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -201,22 +199,30 @@ public class GroupingsRestController {
     }
 
     /**
-     * @return a MembershipAssignment Object that contains
-     * Groupings that the user is in
-     * Groupings that the user can opt into
+     * Get a list of memberships that the current user is associated with.
      */
     @GetMapping(value = "/members/groupings")
-    public ResponseEntity membershipAssignment(Principal principal) {
-        logger.info("Entered REST MembershipAssignment...");
+    public ResponseEntity membershipResults(Principal principal) {
+        logger.info("Entered REST membershipResults...");
         String uri = String.format(API_2_1_BASE + "/members/%s/groupings", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
+    /**
+     * Get a list of grouping paths that the current user can opt into.
+     */
+    @GetMapping(value = "/groupings/optInGroups")
+    public ResponseEntity getOptInGroups(Principal principal) {
+        logger.info("Entered REST optInGroups...");
+        String uri = String.format(API_2_1_BASE + "/groupings/optInGroups/%s", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
     @RequestMapping(value = "/members/{uid}/groupings",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity membershipAssignment(Principal principal,
-        @PathVariable String uid) {
+            @PathVariable String uid) {
         logger.info("Entered REST MembershipAssignment...");
         String uri = String.format(API_2_1_BASE + "/members/%s/groupings", uid);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);

@@ -84,7 +84,7 @@
              * @param onSuccess
              * @param onError
              */
-             addMemberToInclude(path, userToAdd, onSuccess, onError) {
+            addMemberToInclude(path, userToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
@@ -155,7 +155,7 @@
             },
 
             removeFromGroups(groups, member, onSuccess, onError) {
-                let endpoint = BASE_URL + groups + "/" + member +"/removeFromGroups";
+                let endpoint = BASE_URL + groups + "/" + member + "/removeFromGroups";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -248,13 +248,20 @@
             },
 
             /**
-             * Gets the groupings a user is a part of, the groupings they can opt in to, and the groupings they own.
+             * Get a list of memberships that the current user is associated with.
              */
-            getMembershipAssignment(onSuccess, onError) {
+            getMembershipResults(onSuccess, onError) {
                 let endpoint = BASE_URL + "members/groupings/";
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
 
+            /**
+             * Get a list of grouping paths that the current user can opt into.
+             */
+            getOptInGroups(onSuccess, onError) {
+                let endpoint = BASE_URL + "groupings/optInGroups/";
+                dataProvider.loadData(onSuccess, onError, endpoint);
+            },
 
             /*todo:copy code*/
             getMembershipAssignmentForUser: function (onSuccess, onError, username) {
