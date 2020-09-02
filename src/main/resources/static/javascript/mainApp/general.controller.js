@@ -1377,24 +1377,35 @@
         };
 
         $scope.resetGroup = function () {
-
             let resetBasis = $scope.groupingBasis;
+            let resetInclude = $scope.groupingInclude;
+            let resetExclude = $scope.groupingExclude;
+
             if(Object.entries(resetBasis).length === 0){
-                console.log(typeof resetBasis);
                 resetBasis = "empty";
             }else{
-                let userBasis = null;
-                for(var i = 0; i < resetBasis.size(); i++){
-                    userBasis = resetBasis
+                resetBasis = null;
+                for (var i = 0; i < $scope.groupingBasis.length; i++) {
+                    resetBasis.push($scope.groupingBasis[i].username);
                 }
             }
-            let resetInclude =  $scope.groupingInclude;
+
             if(Object.entries(resetInclude).length === 0){
                 resetInclude = "empty";
+            }else{
+                resetInclude = [];
+                for (var i = 0; i < $scope.groupingInclude.length; i++) {
+                    resetInclude.push($scope.groupingInclude[i].username);
+                }
             }
-            let resetExclude =  $scope.groupingExclude;
+
             if(Object.entries(resetExclude).length === 0){
                 resetExclude = "empty";
+            }else{
+                resetExclude = [];
+                for (var i = 0; i < $scope.groupingExclude.length; i++) {
+                    resetExclude.push($scope.groupingExclude[i].username);
+                }
             }
             const groupingPath = $scope.selectedGrouping.path;
 
