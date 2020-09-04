@@ -20,6 +20,9 @@
         $scope.multiAddResultsGeneric = [];
         $scope.personProps = [];
         $scope.waitingForImportResponse = false;
+        $scope.resetUser = [];
+        $scope.resetID = [];
+        $scope.resetName = [];
 
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
@@ -72,6 +75,10 @@
         $scope.groupingCSV = [];
         $scope.groupNameCSV = [];
 
+        $scope.resetInclude = [];
+        $scope.resetExclude = [];
+        $scope.usersToRemove = [];
+        $scope.group = "";
 
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
@@ -995,6 +1002,10 @@
             $scope.addErrorModalInstance.close();
         };
 
+        $scope.closeResetNotifModal = function () {
+            $scope.resetNotifModalInstance.close();
+        };
+
         /**
          * Creates a modal telling the user that they do not have access to perform this action and that they
          * will be logged out and redirected to the homepage.
@@ -1077,6 +1088,23 @@
             }
             $scope.searchForUserGroupingInformation();
         }
+
+        function handleGroupingReset() {
+            $scope.getGroupingInformation();
+            $scope.loading = false;
+            $scope.createResetNotifModal($scope.selectedGrouping.path);
+        }
+
+        $scope.createResetNotifModal = function (groupReset) {
+            $scope.group = groupReset;
+
+            $scope.resetNotifModalInstance = $uibModal.open({
+                templateUrl: "modal/resetNotifModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+        };
 
         /**
          * Handler for successfully removing an owner from a grouping.
@@ -1180,10 +1208,24 @@
         };
 
         /**
+         * Closes the modal, then proceeds with reseting the grouping.
+         */
+        $scope.proceedResetGroup = function () {
+            $scope.resetModalInstance.close();
+        };
+
+        /**
          * Closes the modal for deleting a user. This does not delete the user from the grouping/admin list.
          */
         $scope.cancelRemoveUser = function () {
             $scope.removeModalInstance.dismiss();
+        };
+
+        /**
+         * Closes the modal for reseting group. This does not reset the grouping.
+         */
+        $scope.cancelResetGroup = function () {
+            $scope.resetModalInstance.dismiss();
         };
 
         /**
@@ -1376,19 +1418,38 @@
             groupingsService.setOptOut(groupingPath, allowOptOut, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
+        /**
+         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * a request is made to delete the user.
+         * @param {object} options - the options object
+         * @param {String} options.users - the user being removed
+         * @param {string} options.group - groups the user is being removed from
+         */
+        $scope.createResetGroupModal = function (options) {
+            $scope.usersToRemove = options.users;
+            $scope.resetPersons = options.users;
+            $scope.listName = options.group;
+            const windowClass = $scope.showWarningRemovingSelfResetModal() ? "modal-danger" : "";
+
+            $scope.resetModalInstance = $uibModal.open({
+                templateUrl: "modal/resetModal",
+                windowClass: windowClass,
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+            $scope.resetModalInstance.result.then(function () {
+                $scope.loading = true;
+                let resetInclude = $scope.resetInclude;
+                let resetExclude = $scope.resetExclude;
+                let groupingPath = $scope.selectedGrouping.path;
+                groupingsService.resetGroup(groupingPath, resetInclude, resetExclude, handleGroupingReset, handleUnsuccessfulRequest);
+            });
+        };
+
         $scope.resetGroup = function () {
-            let resetBasis = $scope.groupingBasis;
             let resetInclude = $scope.groupingInclude;
             let resetExclude = $scope.groupingExclude;
-
-            if(Object.entries(resetBasis).length === 0){
-                resetBasis = "empty";
-            }else{
-                resetBasis = null;
-                for (var i = 0; i < $scope.groupingBasis.length; i++) {
-                    resetBasis.push($scope.groupingBasis[i].username);
-                }
-            }
 
             if(Object.entries(resetInclude).length === 0){
                 resetInclude = "empty";
@@ -1407,9 +1468,23 @@
                     resetExclude.push($scope.groupingExclude[i].username);
                 }
             }
-            const groupingPath = $scope.selectedGrouping.path;
 
-            groupingsService.resetGroup(groupingPath, resetBasis, resetInclude, resetExclude, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
+            $scope.resetInclude = resetInclude;
+            $scope.resetExclude = resetExclude;
+
+            let resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
+
+            for (let i = 0; i < resetAll.length; i++) {
+                $scope.resetUser[i] = resetAll[i].username;
+                $scope.resetID[i] = resetAll[i].uhUuid;
+                $scope.resetName[i] = resetAll[i].name;
+            }
+
+            $scope.createResetGroupModal({
+                users: resetInclude.concat(resetExclude),
+                group: $scope.selectedGrouping.path
+            });
+
         };
 
         /**
@@ -1685,6 +1760,16 @@
          */
         $scope.showWarningRemovingSelf = function () {
             return $scope.currentUser === $scope.userToRemove.username
+                && ($scope.listName === "owners" || $scope.listName === "admins");
+        };
+
+        /**
+         * Determines whether a warning message should be displayed when removing yourself from a list.
+         * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
+         * returns false
+         */
+        $scope.showWarningRemovingSelfResetModal = function () {
+            return $scope.usersToRemove.includes($scope.currentUser)
                 && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 

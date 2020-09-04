@@ -301,8 +301,8 @@
              * @param onSuccess
              * @param onError
              */
-            resetGroup(path, basis, include, exclude, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + basis + "/" + include + "/" + exclude + "/resetGroup";
+            resetGroup(path, include, exclude, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + include + "/" + exclude + "/resetGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
