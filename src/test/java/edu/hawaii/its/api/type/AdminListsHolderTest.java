@@ -9,6 +9,7 @@ import java.util.List;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class AdminListsHolderTest {
 
@@ -25,6 +26,7 @@ public class AdminListsHolderTest {
         assertThat(adminListHolder.getAllGroupings().toString(), equalTo("[]"));
         assertThat(adminListHolder.getAdminGroup().toString(), equalTo("Group [path=, members=[]]"));
     }
+
     @Test
     public void adminlistsholderTest(){
         List<Grouping> newList = new ArrayList<Grouping>();

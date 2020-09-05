@@ -1,6 +1,7 @@
 package edu.hawaii.its.groupings.access;
 
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.controller.WithMockUhUser;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,113 +31,14 @@ public class UserBuilderTest {
     @Autowired
     private UserBuilder userBuilder;
 
-    // Rebase. Should admin user for code coverage purposes.
-    // Related to ticket-500, used hardcoded values that were deleted.
-    @Ignore
+    @Autowired
+    private UserContextService userContextService;
+
     @Test
+    @WithMockUhUser(username = "admin", roles = { "ROLE_ADMIN" })
     public void testAdminUsers() {
-        Map<String, String> map = new HashMap<>();
-        map.put("uid", "duckart");
-        map.put("uhUuid", "89999999");
-        User user = userBuilder.make(map);
-
-        // Basics.
-        assertThat(user.getUsername(), is("duckart"));
-        assertThat(user.getUid(), is("duckart"));
-        assertThat(user.getUhUuid(), is("89999999"));
-
-        // Granted Authorities.
-        assertTrue(user.getAuthorities().size() > 0);
-        assertTrue(user.hasRole(Role.ANONYMOUS));
-        assertTrue(user.hasRole(Role.UH));
-        assertTrue(user.hasRole(Role.EMPLOYEE));
+        User user = userContextService.getCurrentUser();
         assertTrue(user.hasRole(Role.ADMIN));
-
-        map = new HashMap<>();
-        map.put("uid", "someuser");
-        map.put("uhUuid", "10000001");
-        user = userBuilder.make(map);
-
-        assertThat(user.getUsername(), is("someuser"));
-        assertThat(user.getUid(), is("someuser"));
-        assertThat(user.getUhUuid(), is("10000001"));
-
-        assertTrue(user.getAuthorities().size() > 0);
-        assertTrue(user.hasRole(Role.ANONYMOUS));
-        assertTrue(user.hasRole(Role.UH));
-        assertTrue(user.hasRole(Role.EMPLOYEE));
-        assertTrue(user.hasRole(Role.ADMIN));
-    }
-
-    // Delete, Do not need to test for testEmployees.
-    // Related to ticket-500, used hardcoded values that were deleted.
-    @Ignore
-    @Test
-    public void testEmployees() {
-        Map<String, String> map = new HashMap<>();
-        map.put("uid", "jjcale");
-        map.put("uhUuid", "10000004");
-        User user = userBuilder.make(map);
-
-        // Basics.
-        assertThat(user.getUsername(), is("jjcale"));
-        assertThat(user.getUid(), is("jjcale"));
-        assertThat(user.getUhUuid(), is("10000004"));
-
-        // Granted Authorities.
-        assertThat(user.getAuthorities().size(), is(3));
-        assertTrue(user.hasRole(Role.ANONYMOUS));
-        assertTrue(user.hasRole(Role.UH));
-        assertTrue(user.hasRole(Role.EMPLOYEE));
-
-        assertFalse(user.hasRole(Role.ADMIN));
-    }
-
-    // Delete this. Do not need to test for Employees
-    // Related to ticket-500, used hardcoded values that were deleted.
-    @Ignore
-    @Test
-    public void testEmployeesWithMultivalueUid() {
-        Map<String, Object> map = new HashMap<>();
-        ArrayList<Object> uids = new ArrayList<>();
-        uids.add("aaaaaaa");
-        uids.add("bbbbbbb");
-        map.put("uid", uids);
-        map.put("uhUuid", "10000003");
-        User user = userBuilder.make(map);
-
-        // Basics.
-        assertThat(user.getUsername(), is("aaaaaaa"));
-        assertThat(user.getUid(), is("aaaaaaa"));
-        assertThat(user.getUhUuid(), is("10000003"));
-
-        // Granted Authorities.
-        assertThat(user.getAuthorities().size(), is(2));
-        assertTrue(user.hasRole(Role.ANONYMOUS));
-        assertTrue(user.hasRole(Role.UH));
-        // assertTrue(user.hasRole(Role.EMPLOYEE));
-        // assertTrue(user.hasRole(Role.ADMIN));
-    }
-
-    @Ignore
-    @Test
-    public void testNotAnEmployee() {
-        Map<String, String> map = new HashMap<>();
-        map.put("uid", "nobody");
-        map.put("uhUuid", "10000009");
-        User user = userBuilder.make(map);
-
-        // Basics.
-        assertThat(user.getUsername(), is("nobody"));
-        assertThat(user.getUid(), is("nobody"));
-        assertThat(user.getUhUuid(), is("10000009"));
-
-        // Granted Authorities.
-        assertThat(user.getAuthorities().size(), is(2));
-        assertTrue(user.hasRole(Role.ANONYMOUS));
-        assertTrue(user.hasRole(Role.UH));
-        assertFalse(user.hasRole(Role.EMPLOYEE));
-        assertFalse(user.hasRole(Role.ADMIN));
     }
 
     @Test
