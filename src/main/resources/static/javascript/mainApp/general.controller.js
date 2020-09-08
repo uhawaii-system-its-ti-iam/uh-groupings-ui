@@ -58,6 +58,9 @@
         $scope.allowOptOut = false;
         $scope.listserv = false;
         $scope.ldap = false;
+        $scope.includeCheck = false;
+        $scope.excludeCheck = false;
+
 
         $scope.syncDestMap = [];
         $scope.syncDestArray = [];
@@ -1451,7 +1454,7 @@
             let resetInclude = $scope.groupingInclude;
             let resetExclude = $scope.groupingExclude;
 
-            if(Object.entries(resetInclude).length === 0){
+            if(Object.entries(resetInclude).length === 0 || $scope.includeCheck == false){
                 resetInclude = "empty";
             }else{
                 resetInclude = [];
@@ -1460,7 +1463,7 @@
                 }
             }
 
-            if(Object.entries(resetExclude).length === 0){
+            if(Object.entries(resetExclude).length === 0 || $scope.excludeCheck == false){
                 resetExclude = "empty";
             }else{
                 resetExclude = [];
@@ -1472,8 +1475,20 @@
             $scope.resetInclude = resetInclude;
             $scope.resetExclude = resetExclude;
 
-            let resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
+            let resetAll = null;
+            if($scope.excludeCheck == true && $scope.includeCheck == true){
+                resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
+            }else if($scope.excludeCheck == true && $scope.includeCheck == false){
+                resetAll = $scope.groupingExclude;
+            }else if($scope.excludeCheck == false && $scope.includeCheck == true){
+                resetAll = $scope.groupingInclude;
+            }else{
+                resetAll = "";
+            }
 
+            $scope.resetUser = [];
+            $scope.resetID = [];
+            $scope.resetName = [];
             for (let i = 0; i < resetAll.length; i++) {
                 $scope.resetUser[i] = resetAll[i].username;
                 $scope.resetID[i] = resetAll[i].uhUuid;
@@ -1485,6 +1500,22 @@
                 group: $scope.selectedGrouping.path
             });
 
+        };
+
+        $scope.updateIncludeCheck = function () {
+            if($scope.includeCheck == false){
+                $scope.includeCheck = true;
+            }else{
+                $scope.includeCheck = false;
+            }
+        };
+
+        $scope.updateExcludeCheck = function () {
+            if($scope.excludeCheck == false){
+                $scope.excludeCheck = true;
+            }else{
+                $scope.excludeCheck = false;
+            }
         };
 
         /**
