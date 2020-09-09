@@ -60,6 +60,7 @@
         $scope.ldap = false;
         $scope.includeCheck = false;
         $scope.excludeCheck = false;
+        $scope.disableResetButton = true;
 
 
         $scope.syncDestMap = [];
@@ -1095,7 +1096,7 @@
         function handleGroupingReset() {
             $scope.getGroupingInformation();
             $scope.loading = false;
-            $scope.createResetNotifModal($scope.selectedGrouping.path);
+            $scope.createResetNotifModal($scope.selectedGrouping.name);
         }
 
         $scope.createResetNotifModal = function (groupReset) {
@@ -1429,8 +1430,6 @@
          * @param {string} options.group - groups the user is being removed from
          */
         $scope.createResetGroupModal = function (options) {
-            $scope.usersToRemove = options.users;
-            $scope.resetPersons = options.users;
             $scope.listName = options.group;
             const windowClass = $scope.showWarningRemovingSelfResetModal() ? "modal-danger" : "";
 
@@ -1451,29 +1450,24 @@
         };
 
         $scope.resetGroup = function () {
-            let resetInclude = $scope.groupingInclude;
-            let resetExclude = $scope.groupingExclude;
 
-            if(Object.entries(resetInclude).length === 0 || $scope.includeCheck == false){
-                resetInclude = "empty";
+            if(Object.entries($scope.groupingInclude).length === 0 || $scope.includeCheck == false){
+                $scope.resetInclude = "empty";
             }else{
-                resetInclude = [];
+                $scope.resetInclude = [];
                 for (var i = 0; i < $scope.groupingInclude.length; i++) {
-                    resetInclude.push($scope.groupingInclude[i].username);
+                    $scope.resetInclude.push($scope.groupingInclude[i].username);
                 }
             }
 
-            if(Object.entries(resetExclude).length === 0 || $scope.excludeCheck == false){
-                resetExclude = "empty";
+            if(Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck == false){
+                $scope.resetExclude = "empty";
             }else{
-                resetExclude = [];
+                $scope.resetExclude = [];
                 for (var i = 0; i < $scope.groupingExclude.length; i++) {
-                    resetExclude.push($scope.groupingExclude[i].username);
+                    $scope.resetExclude.push($scope.groupingExclude[i].username);
                 }
             }
-
-            $scope.resetInclude = resetInclude;
-            $scope.resetExclude = resetExclude;
 
             let resetAll = null;
             if($scope.excludeCheck == true && $scope.includeCheck == true){
@@ -1496,8 +1490,7 @@
             }
 
             $scope.createResetGroupModal({
-                users: resetInclude.concat(resetExclude),
-                group: $scope.selectedGrouping.path
+                group: $scope.selectedGrouping.name
             });
 
         };
@@ -1505,16 +1498,25 @@
         $scope.updateIncludeCheck = function () {
             if($scope.includeCheck == false){
                 $scope.includeCheck = true;
+                $scope.disableResetButton = false;
             }else{
                 $scope.includeCheck = false;
+                if($scope.excludeCheck == false && $scope.includeCheck == false){
+                    $scope.disableResetButton = true;
+                }
+
             }
         };
 
         $scope.updateExcludeCheck = function () {
             if($scope.excludeCheck == false){
                 $scope.excludeCheck = true;
+                $scope.disableResetButton = false;
             }else{
                 $scope.excludeCheck = false;
+                if($scope.excludeCheck == false && $scope.includeCheck == false){
+                    $scope.disableResetButton = true;
+                }
             }
         };
 

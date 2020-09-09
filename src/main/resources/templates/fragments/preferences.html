@@ -32,23 +32,31 @@
                               th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\')',
                               ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'"></span>
                     </div>
-                    <div>
-                        <form ng-submit="resetGroup()">
-                            <div class="input-group">
-                                    <button class="btn btn-primary btn-sm" type="submit">Reset Group</button>
-                                <label class="my-auto">Include<input class="check-space" type="checkbox" ng-click="updateIncludeCheck()"
-                                                                    ng-model="includeCheck"></label>
-                                <label class="my-auto">Exclude<input class="check-space" type="checkbox" ng-click="updateExcludeCheck()"
-                                                                     ng-model="excludeCheck"></label>
-                                <span class="fa fa-question-circle clickable" aria-hidden="true"
-                                      data-toggle="tooltip" data-placement="right"
-                                      tabindex="0"
-                                      th:title="#{screen.message.common.tooltip.preference.resetGroup}"
-                                      th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.resetGroup} + '\')',
+                </div>
+                <h3></h3>
+                <h3>Reset Grouping</h3>
+                <div>
+                    <form ng-submit="resetGroup()">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="include" ng-click="updateIncludeCheck()"
+                                                          ng-model="includeCheck">
+                            <label class="form-check-label" for="include">Reset Include</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exclude" ng-click="updateExcludeCheck()"
+                                                          ng-model="excludeCheck">
+                            <label class="form-check-label" for="exclude">Reset Exclude</label>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-sm" type="submit" ng-disabled="disableResetButton==true">Reset Selected</button>
+                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                                  data-toggle="tooltip" data-placement="right"
+                                  tabindex="0"
+                                  th:title="#{screen.message.common.tooltip.preference.resetGroup}"
+                                  th:attr="ng-click='createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.resetGroup} + '\')',
                               ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.resetGroup} + '\') : null'"></span>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="col-md-6 col-12">
