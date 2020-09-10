@@ -106,6 +106,14 @@ td.uh-pre {
     padding: 0;
 }
 
+.nav-tabs .nav-link {
+    border: none;
+}
+
+.nav-link {
+    white-space: nowrap;
+}
+
 .navbar-brand > img {
     background-color: transparent;
 }
@@ -330,10 +338,6 @@ table .p-10 {
     .img-fluid {
         width: 210px;
     }
-}
-
-.nav-link {
-    white-space: nowrap;
 }
 
 #group-pills {
