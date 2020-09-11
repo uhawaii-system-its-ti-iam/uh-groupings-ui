@@ -151,6 +151,11 @@ public class HomeController {
         return "modal/resetNotifModal";
     }
 
+    @RequestMapping(value = "/modal/emptyGroupModal", method = RequestMethod.GET)
+    public String emptyGroupModal(Locale locale, Model model) {
+        return "modal/emptyGroupModal";
+    }
+
     @RequestMapping(value = "/modal/confirmAddModal", method = RequestMethod.GET)
     public String confirmAddModal(Locale locale, Model model) {
         return "modal/confirmAddModal";

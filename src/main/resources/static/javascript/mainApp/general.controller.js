@@ -58,9 +58,6 @@
         $scope.allowOptOut = false;
         $scope.listserv = false;
         $scope.ldap = false;
-        $scope.includeCheck = false;
-        $scope.excludeCheck = false;
-        $scope.disableResetButton = true;
 
 
         $scope.syncDestMap = [];
@@ -82,6 +79,10 @@
         $scope.resetInclude = [];
         $scope.resetExclude = [];
         $scope.usersToRemove = [];
+        $scope.includeDisable = false;
+        $scope.excludeDisable = false;
+        $scope.includeCheck = false;
+        $scope.excludeCheck = false;
         $scope.group = "";
 
         // used with ng-view on selected-grouping.html to toggle description editing.
@@ -1099,6 +1100,15 @@
             $scope.createResetNotifModal($scope.selectedGrouping.name);
         }
 
+        $scope.createEmptyGroupModal = function () {
+            $scope.emptyGroupModalInstance = $uibModal.open({
+                templateUrl: "modal/emptyGroupModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+        };
+
         $scope.createResetNotifModal = function (groupReset) {
             $scope.group = groupReset;
 
@@ -1230,6 +1240,10 @@
          */
         $scope.cancelResetGroup = function () {
             $scope.resetModalInstance.dismiss();
+        };
+
+        $scope.closeEmptyGroupModal = function () {
+            $scope.emptyGroupModalInstance.dismiss();
         };
 
         /**
@@ -1450,7 +1464,6 @@
         };
 
         $scope.resetGroup = function () {
-
             if(Object.entries($scope.groupingInclude).length === 0 || $scope.includeCheck == false){
                 $scope.resetInclude = "empty";
             }else{
@@ -1459,7 +1472,6 @@
                     $scope.resetInclude.push($scope.groupingInclude[i].username);
                 }
             }
-
             if(Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck == false){
                 $scope.resetExclude = "empty";
             }else{
@@ -1468,7 +1480,6 @@
                     $scope.resetExclude.push($scope.groupingExclude[i].username);
                 }
             }
-
             let resetAll = null;
             if($scope.excludeCheck == true && $scope.includeCheck == true){
                 resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
@@ -1479,7 +1490,6 @@
             }else{
                 resetAll = "";
             }
-
             $scope.resetUser = [];
             $scope.resetID = [];
             $scope.resetName = [];
@@ -1492,31 +1502,29 @@
             $scope.createResetGroupModal({
                 group: $scope.selectedGrouping.name
             });
-
         };
 
         $scope.updateIncludeCheck = function () {
-            if($scope.includeCheck == false){
+            if(Object.entries($scope.groupingInclude).length === 0){
+                $scope.createEmptyGroupModal();
+                return;
+            }
+            if($scope.includeCheck === false) {
                 $scope.includeCheck = true;
-                $scope.disableResetButton = false;
             }else{
                 $scope.includeCheck = false;
-                if($scope.excludeCheck == false && $scope.includeCheck == false){
-                    $scope.disableResetButton = true;
-                }
-
             }
         };
 
         $scope.updateExcludeCheck = function () {
-            if($scope.excludeCheck == false){
+            if(Object.entries($scope.groupingExclude).length === 0){
+                $scope.createEmptyGroupModal();
+                return;
+            }
+            if($scope.excludeCheck === false){
                 $scope.excludeCheck = true;
-                $scope.disableResetButton = false;
             }else{
                 $scope.excludeCheck = false;
-                if($scope.excludeCheck == false && $scope.includeCheck == false){
-                    $scope.disableResetButton = true;
-                }
             }
         };
 
