@@ -260,6 +260,18 @@
                     currentPage++;
                     loadMembersList = true;
 
+                    $scope.includeDisable = false;
+                    if(Object.entries($scope.groupingInclude).length === 0){
+                        $scope.includeCheck = false;
+                        $scope.includeDisable = true;
+                    }
+
+                    $scope.excludeDisable = false;
+                    if(Object.entries($scope.groupingExclude).length === 0){
+                        $scope.excludeCheck = false;
+                        $scope.excludeDisable = true;
+                    }
+
                     //While true loop that calls members asynchronously from Grouper based on PAGE_SIZE
                     while (loadMembersList) {
                         /**
@@ -1505,10 +1517,6 @@
         };
 
         $scope.updateIncludeCheck = function () {
-            if(Object.entries($scope.groupingInclude).length === 0){
-                $scope.createEmptyGroupModal();
-                return;
-            }
             if($scope.includeCheck === false) {
                 $scope.includeCheck = true;
             }else{
@@ -1517,10 +1525,6 @@
         };
 
         $scope.updateExcludeCheck = function () {
-            if(Object.entries($scope.groupingExclude).length === 0){
-                $scope.createEmptyGroupModal();
-                return;
-            }
             if($scope.excludeCheck === false){
                 $scope.excludeCheck = true;
             }else{
@@ -1606,6 +1610,7 @@
         };
 
         $scope.resetFields = function () {
+            $scope.getGroupingInformation();
             $scope.userToAdd = "";
         };
 

@@ -39,12 +39,12 @@
                     <form ng-submit="resetGroup()">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="include" ng-click="updateIncludeCheck()"
-                                                          ng-model="includeCheck">
+                                                          ng-model="includeCheck" ng-disabled="includeDisable">
                             <label class="form-check-label" for="include">Reset Include</label>
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="exclude" ng-click="updateExcludeCheck()"
-                                                          ng-model="excludeCheck">
+                                                          ng-model="excludeCheck" ng-disabled="excludeDisable">
                             <label class="form-check-label" for="exclude">Reset Exclude</label>
                         </div>
                         <div>
