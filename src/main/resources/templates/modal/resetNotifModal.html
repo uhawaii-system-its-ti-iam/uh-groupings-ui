@@ -1,0 +1,13 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Grouping Reset Completion</h5>
+</div>
+<div class="modal-body" id="modal-body">
+        <p th:text="#{screen.message.modal.reset.success}"></p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="closeResetNotifModal()">OK</button>
+</div>
+</html>

@@ -181,6 +181,18 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
+    @PostMapping(value = "/{path}/{include}/{exclude}/resetGroup")
+    public ResponseEntity resetGroup(Principal principal,
+            @PathVariable String path, @PathVariable String include, @PathVariable String exclude) {
+        logger.info("Entered REST resetGroup...");
+        String safePath = policy.sanitize(path);
+        String safeInclude = policy.sanitize(include);
+        String safeExclude = policy.sanitize(exclude);
+
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/%s/%s/resetGroup", safePath, safeInclude, safeExclude);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
+    }
+
     /**
      * Get a member's attributes based off username
      *
