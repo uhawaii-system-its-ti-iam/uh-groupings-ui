@@ -2,7 +2,7 @@
 
     <div ng-show="!errorDismissed && !waitingForImportResponse">
         <!--message for empty input-->
-        <div ng-if="userToAdd.length === 0 && resStatus === 0"
+        <div ng-if="(userToAdd.length === 0 || userToAdd === undefined) && resStatus === 0"
              class="float-md-left mt-3 alert alert-danger fade in">
             <p th:utext="#{screen.message.modal.add.empty}"></p>
         </div>

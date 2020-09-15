@@ -128,7 +128,6 @@
          * Generic handler for unsuccessful requests to the API.
          */
         function handleUnsuccessfulRequest(res) {
-            console.log(`handleUnsuccessfulRequest res: ${res.status}`);
             $scope.resStatus = res.status;
             if (res.status === 403) {
                 $scope.createOwnerErrorModal();
@@ -519,7 +518,6 @@
             $scope.listName = listName;
             if (_.isEmpty($scope.usersToAdd)) {
                 $scope.user = $scope.usersToAdd;
-                // $scope.createAddErrorModal($scope.usersToAdd);
             } else {
                 let numMembers = ($scope.usersToAdd.split(" ").length - 1);
 
@@ -732,7 +730,6 @@
                     });
                 }
             }, function (res) {
-                console.log(`addMember res: ${res.status}`);
                 if (res.status === 403) {
                     $scope.createOwnerErrorModal();
                 }
@@ -873,7 +870,6 @@
                     $scope.inGrouper = true;
                 }
             }, function (res) {
-                console.log(`existsInGrouper res: ${res.status}`);
                 $scope.inGrouper = false;
             });
         };
@@ -907,7 +903,7 @@
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
-                console.log(`createConfirmAddModal res: ${res.status}`);
+                console.log(`Error: Status Code ${res.status}`);
                 $scope.user = userToAdd;
                 $scope.resStatus = res.status;
             });
@@ -973,17 +969,29 @@
          * Gives a user ownership of a grouping.
          */
         $scope.addOwner = function () {
-
             const ownerToAdd = $scope.ownerToAdd;
+            $scope.userToAdd = ownerToAdd;
 
             if (_.isEmpty(ownerToAdd)) {
-                $scope.createAddErrorModal(ownerToAdd);
+                $scope.user = ownerToAdd;
             } else {
                 $scope.createConfirmAddModal({
                     userToAdd: ownerToAdd,
                     listName: "owners"
                 });
             }
+        <<<<<<<
+            HEAD
+            === === =
+        }, function (res) {
+            if (res.status === 403) {
+                $scope.createOwnerErrorModal();
+            }
+        >>>>>>>
+            added;
+            error;
+            messages;
+            for adding owners
         };
 
         /**
@@ -1632,11 +1640,7 @@
         };
 
         $scope.resetFields = function () {
-<<<<<<< HEAD
-            $scope.getGroupingInformation();
-=======
             $scope.resStatus = 0;
->>>>>>> Fixed error messages from lingering after past inputs
             $scope.userToAdd = "";
             $scope.swap = true;
             $scope.inGrouper = false;
