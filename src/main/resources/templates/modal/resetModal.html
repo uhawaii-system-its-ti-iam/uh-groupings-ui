@@ -30,7 +30,8 @@
     </div>
     <p>
         <span style="color: black" th:text="#{screen.message.modal.reset.confirmation}"></span>
-        <span style="color: black">{{listName}} group.</span>
+        <span style="color: black">{{listNames}} in the</span>
+        <span style="color: black">{{groupReset}} group.</span>
     </p>
     <div class="container">
         <table>
@@ -53,7 +54,8 @@
         </table>
     </div>
     <p> Are you sure you want to reset the
-        <span style="color: black">{{listName}}</span>
+        <span style="color: black">{{listNames}} from the</span>
+        <span style="color: black">{{groupReset}}</span>
         <span style="color: black"> group?</span>
     </p>
 </div>

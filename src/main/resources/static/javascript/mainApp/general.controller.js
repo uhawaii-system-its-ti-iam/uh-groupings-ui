@@ -261,13 +261,13 @@
                     loadMembersList = true;
 
                     $scope.includeDisable = false;
-                    if(Object.entries($scope.groupingInclude).length === 0){
+                    if (Object.entries($scope.groupingInclude).length === 0) {
                         $scope.includeCheck = false;
                         $scope.includeDisable = true;
                     }
 
                     $scope.excludeDisable = false;
-                    if(Object.entries($scope.groupingExclude).length === 0){
+                    if (Object.entries($scope.groupingExclude).length === 0) {
                         $scope.excludeCheck = false;
                         $scope.excludeDisable = true;
                     }
@@ -1456,7 +1456,8 @@
          * @param {string} options.group - groups the user is being removed from
          */
         $scope.createResetGroupModal = function (options) {
-            $scope.listName = options.group;
+            $scope.groupReset = options.group;
+            $scope.listNames = options.listNames;
             const windowClass = $scope.showWarningRemovingSelfResetModal() ? "modal-danger" : "";
 
             $scope.resetModalInstance = $uibModal.open({
@@ -1476,30 +1477,44 @@
         };
 
         $scope.resetGroup = function () {
-            if(Object.entries($scope.groupingInclude).length === 0 || $scope.includeCheck == false){
+            let listNames = "";
+            let exBool = false;
+            let inBool = false;
+            if (Object.entries($scope.groupingInclude).length === 0 || $scope.includeCheck == false) {
                 $scope.resetInclude = "empty";
-            }else{
+            } else {
+                inBool = true;
                 $scope.resetInclude = [];
                 for (var i = 0; i < $scope.groupingInclude.length; i++) {
                     $scope.resetInclude.push($scope.groupingInclude[i].username);
                 }
             }
-            if(Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck == false){
+            if (Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck == false) {
                 $scope.resetExclude = "empty";
-            }else{
+            } else {
+                exBool = true;
                 $scope.resetExclude = [];
                 for (var i = 0; i < $scope.groupingExclude.length; i++) {
                     $scope.resetExclude.push($scope.groupingExclude[i].username);
                 }
             }
+
+            if (inBool && exBool) {
+                listNames = "Exclude and Include lists";
+            } else if (inBool) {
+                listNames = "Include list";
+            } else if (exBool) {
+                listNames = "Exclude list";
+            }
+
             let resetAll = null;
-            if($scope.excludeCheck == true && $scope.includeCheck == true){
+            if ($scope.excludeCheck == true && $scope.includeCheck == true) {
                 resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
-            }else if($scope.excludeCheck == true && $scope.includeCheck == false){
+            } else if ($scope.excludeCheck == true && $scope.includeCheck == false) {
                 resetAll = $scope.groupingExclude;
-            }else if($scope.excludeCheck == false && $scope.includeCheck == true){
+            } else if ($scope.excludeCheck == false && $scope.includeCheck == true) {
                 resetAll = $scope.groupingInclude;
-            }else{
+            } else {
                 resetAll = "";
             }
             $scope.resetUser = [];
@@ -1512,22 +1527,23 @@
             }
 
             $scope.createResetGroupModal({
-                group: $scope.selectedGrouping.name
+                group: $scope.selectedGrouping.name,
+                listNames: listNames
             });
         };
 
         $scope.updateIncludeCheck = function () {
-            if($scope.includeCheck === false) {
+            if ($scope.includeCheck === false) {
                 $scope.includeCheck = true;
-            }else{
+            } else {
                 $scope.includeCheck = false;
             }
         };
 
         $scope.updateExcludeCheck = function () {
-            if($scope.excludeCheck === false){
+            if ($scope.excludeCheck === false) {
                 $scope.excludeCheck = true;
-            }else{
+            } else {
                 $scope.excludeCheck = false;
             }
         };
