@@ -53,7 +53,11 @@
                     });
                 }
                 let path = membership[0].path.substring(0, membership[0].path.lastIndexOf(":"));
-                result.push({ "name": membership[0].name, "path": path, "optOutEnabled": membership[0].optOutEnabled });
+                result.push({
+                    "name": membership[0].name,
+                    "path": path,
+                    "optOutEnabled": membership[0].optOutEnabled
+                });
             });
             return result;
         }
@@ -89,7 +93,7 @@
 
                     let dups = coupleDuplicatePaths(data);
                     let result = mergeDuplicateValues(dups);
-                    $scope.membershipsList  = _.sortBy(_.uniqBy(result, "name"), "name");
+                    $scope.membershipsList = _.sortBy(_.uniqBy(result, "name"), "name");
                     $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
                 },
