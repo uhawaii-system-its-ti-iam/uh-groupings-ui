@@ -52,10 +52,12 @@
                         membership[0].inOwner |= m.inOwner;
                     });
                 }
-                let path = membership[0].path;
-                membership[0].path = path.substring(0, path.lastIndexOf(":")) + "-" + membership[0].name;
-                console.log(membership[0].path);
-                result.push(membership[0]);
+                let path = membership[0].path.substring(0, membership[0].path.lastIndexOf(":"));
+                result.push({
+                    "name": membership[0].name,
+                    "path": path,
+                    "optOutEnabled": membership[0].optOutEnabled
+                });
             });
             return result;
         }
@@ -82,6 +84,7 @@
 
             // Request a list of membership objects from the API.
             groupingsService.getMembershipResults((res) => {
+
                     let data = [];
 
                     _.forEach(res, (membership) => {
@@ -90,10 +93,9 @@
 
                     let dups = coupleDuplicatePaths(data);
                     let result = mergeDuplicateValues(dups);
-                    $scope.membershipsList = _.sortBy(_.uniq(result), "name");
+                    $scope.membershipsList = _.sortBy(_.uniqBy(result, "name"), "name");
                     $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
-
                 },
                 (res) => {
                     dataProvider.handleException({
