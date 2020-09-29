@@ -980,18 +980,10 @@
                     listName: "owners"
                 });
             }
-        <<<<<<<
-            HEAD
-            === === =
         }, function (res) {
             if (res.status === 403) {
                 $scope.createOwnerErrorModal();
             }
-        >>>>>>>
-            added;
-            error;
-            messages;
-            for adding owners
         };
 
         /**
