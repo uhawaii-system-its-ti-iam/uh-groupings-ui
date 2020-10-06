@@ -60,7 +60,7 @@
 
         $scope.searchForUserGroupingInformation = function () {
             $scope.loading = true;
-            groupingsService. getMembershipAssignmentForUser(function (res) {
+            groupingsService.getMembershipAssignmentForUser(function (res) {
 
                 $scope.personList = _.sortBy(res.combinedGroupings, "name");
                 $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
@@ -101,25 +101,25 @@
             $scope.selectedGroupingsNames = [];
             let i = 0;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
-                if(grouping.isSelected) {
+                if (grouping.isSelected) {
                     if (i == 0) {
                         let temp = grouping.path;
                         $scope.selectedGrouping.path = temp;
                         $scope.multiMemberPaths[i] = temp;
 
-                    }else{
+                    } else {
                         let temp = grouping.path;
                         $scope.selectedGrouping.path = $scope.selectedGrouping.path + temp;
                         $scope.multiMemberPaths[i] = temp;
                     }
-                    if(grouping.inOwner){
+                    if (grouping.inOwner) {
                         $scope.selectedGroupings.push(grouping.path + ":owners");
                         let temp = grouping.path;
                         temp = temp.split(":").pop();
                         $scope.selectedGroupingsNames.push(temp);
                     }
-                    if(grouping.inInclude){
-                        $scope.selectedGroupings.push(grouping.path + ":include")
+                    if (grouping.inInclude) {
+                        $scope.selectedGroupings.push(grouping.path + ":include");
                         let temp = grouping.path;
                         temp = temp.split(":").pop();
                         $scope.selectedGroupingsNames.push(temp);
@@ -128,7 +128,7 @@
                 i++;
             });
 
-            if($scope.personToLookup != null) {
+            if ($scope.personToLookup != null) {
                 groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
                     let userToRemove = {
                         username: attributes.uid,
@@ -149,22 +149,22 @@
         };
 
         $scope.updateCheckBoxes = function () {
-          $scope.checkAll = !$scope.checkAll;
+            $scope.checkAll = !$scope.checkAll;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
                 if (grouping.inInclude || grouping.inOwner) {
                     grouping.isSelected = $scope.checkAll;
                 }
             });
-            if($scope.checkAll) {
+            if ($scope.checkAll) {
                 count = totalCheckBoxCount;
             } else {
                 count = 0;
             }
         };
 
-        $scope.updateCheckAll = function(grouping) {
+        $scope.updateCheckAll = function (grouping) {
 
-            if(grouping.isSelected){
+            if (grouping.isSelected) {
                 count = count + 1;
             } else {
                 count = count - 1;
