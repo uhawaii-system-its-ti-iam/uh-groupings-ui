@@ -960,10 +960,6 @@
                     listName: "owners"
                 });
             }
-        }, function (res) {
-            if (res.statusCode === 403) {
-                $scope.createOwnerErrorModal();
-            }
         };
 
         /**
@@ -1058,10 +1054,6 @@
                 listName: listName,
                 scope: $scope
             });
-        }, function (res) {
-            if (res.statusCode === 403) {
-                $scope.createOwnerErrorModal();
-            }
         };
 
 
@@ -1081,11 +1073,6 @@
             } else {
                 const userType = "owner";
                 $scope.createRemoveErrorModal(userType);
-            }
-
-        } , function (res) {
-            if (res.statusCode === 403) {
-                $scope.createOwnerErrorModal();
             }
         };
 

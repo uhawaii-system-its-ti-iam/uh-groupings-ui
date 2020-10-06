@@ -121,8 +121,8 @@ public class GroupingsRestController {
     /**
      * True if principal is an admin.
      *
-     * @param principal - uid in question.
-     * @return - GenericServiceResult {groupingsServiceResult: GroupingsServiceResult, isAdmin: bool }.
+     * @param principal uid in question.
+     * @return GenericServiceResult {groupingsServiceResult: GroupingsServiceResult, isAdmin: bool }.
      */
     @GetMapping(value = "/admins")
     public ResponseEntity isAdmin(Principal principal) {
@@ -132,9 +132,9 @@ public class GroupingsRestController {
     }
 
     /**
-     * adds a member to the admin group
+     * adds a member to the admin group.
      *
-     * @param adminToAdd: username of the new admin to add
+     * @param adminToAdd username of the new admin to add
      * @return information about the success of the operation
      */
     @PostMapping(value = "/{adminToAdd}/addAdmin")
@@ -146,9 +146,9 @@ public class GroupingsRestController {
     }
 
     /**
-     * deletes a member from the admin group
+     * deletes a member from the admin group.
      *
-     * @param adminToDelete: username of the admin to be deleted
+     * @param adminToDelete username of the admin to be deleted
      * @return information about the success of the operation
      */
     @PostMapping(value = "/{adminToDelete}/deleteAdmin")
@@ -163,9 +163,9 @@ public class GroupingsRestController {
     }
 
     /**
-     * deletes a member from the multiple groups
+     * Delete a member from the multiple groups.
      *
-     * @param groupings: username of the admin to be deleted
+     * @param groupings username of the admin to be deleted
      * @return information about the success of the operation
      */
     @PostMapping(value = "/{groupings}/{userToDelete}/removeFromGroups")
@@ -196,7 +196,7 @@ public class GroupingsRestController {
     /**
      * Get a member's attributes based off username
      *
-     * @param uid: Username of user to obtain attributes about
+     * @param uid of user to obtain attributes about
      * @return Map of user attributes
      */
     @GetMapping(value = "/members/{uid}")
@@ -241,11 +241,10 @@ public class GroupingsRestController {
     }
 
     /**
-     * if the user is allowed to opt into the grouping
-     * this will add them to the include group of that grouping
+     * If the user is allowed to opt into the grouping this will add them to the include group of that grouping
      * if the user is in the exclude group, they will be removed from it
      *
-     * @param grouping : the path to the grouping where the user will be opting in
+     * @param grouping where the user will be opting in
      * @return information about the success of opting in
      */
     @PostMapping(value = "/{grouping}/optIn")
@@ -261,11 +260,10 @@ public class GroupingsRestController {
     }
 
     /**
-     * if the user is allowed to opt out of the grouping
-     * this will add them to the exclude group of that grouping
+     * If the user is allowed to opt out of the grouping this will add them to the exclude group of that grouping
      * if the user is in the include group of that Grouping, they will be removed from it
      *
-     * @param grouping : the path to the grouping where the user will be opting out
+     * @param grouping where the user will be opting out
      * @return information about the success of opting out
      */
     @PostMapping(value = "/{grouping}/optOut")
@@ -283,8 +281,8 @@ public class GroupingsRestController {
      * adds a member to the include group of the Grouping who's path is in 'grouping'
      * if that member is in the exclude group, they will be removed from it
      *
-     * @param grouping:  path to the Grouping who's include group the new member will be added to
-     * @param userToAdd: username of the new member to be added to the include group
+     * @param grouping  who's include group the new member will be added to
+     * @param userToAdd username of the new member to be added to the include group
      * @return information about the success of the operation
      */
     @PostMapping(value = "/{grouping}/{userToAdd}/addMemberToIncludeGroup")
@@ -301,15 +299,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * Uses  the api's includeMultipleMembers utility.
-     * adds multiple members to the include group of the Grouping who's path is in 'grouping'
-     * if the members are in the exclude group, they will be removed from it
-     * SEE:   addMembers():        general.controller.js
-     * updateAddMembers():  general.controller.js
-     *
-     * @param grouping:   path to the Grouping who's include group the new member will be added to
-     * @param usersToAdd: usernames of the new members to be added to the include group
-     * @return information about the success of the operation
+     * Add a list of usersToAdd to include group of grouping.
      */
     @PostMapping(value = "/{grouping}/{usersToAdd}/addMembersToIncludeGroup")
     public ResponseEntity addMembersToIncludeGroup(Principal principal,
@@ -321,12 +311,8 @@ public class GroupingsRestController {
     }
 
     /**
-     * adds a member to the exclude group of the Grouping who's path is in 'grouping'
-     * if that member is in the include group, they will be removed from it
-     *
-     * @param grouping:  path to the Grouping who's exclude group the new member will be added to
-     * @param userToAdd: username of the new member to be added to the exclude group
-     * @return information about the success of the operation
+     * Add a member to the exclude group of the Grouping who's path is in 'grouping'  if that member is in the include
+     * group, they will be removed from it.
      */
     @PostMapping(value = "/{grouping}/{userToAdd}/addMemberToExcludeGroup")
     public ResponseEntity addMemberToExcludeGroup(Principal principal,
@@ -342,15 +328,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * Uses  the api's excludeMultipleMembers utility.
-     * adds multiple members to the exclude group of the Grouping who's path is in 'grouping'
-     * if the members are in the exclude group, they will be removed from it
-     * SEE:   addMembers():        general.controller.js
-     * updateAddMembers():  general.controller.js
-     *
-     * @param grouping:   path to the Grouping who's exclude group the new member will be added to
-     * @param usersToAdd: usernames of the new members to be added to the exclude group
-     * @return information about the success of the operation
+     * Add list of usersToAdd at exclude group of grouping.
      */
     @PostMapping(value = "/{grouping}/{usersToAdd}/addMembersToExcludeGroup")
     public ResponseEntity addMembersToExcludeGroup(Principal principal,
@@ -362,11 +340,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * deletes a member in the include group of the Grouping who's path is in 'grouping'
-     *
-     * @param grouping:     path to the Grouping who's include group contains the member to be deleted
-     * @param userToDelete: username of the user to be deleted from the include group
-     * @return information about the success of the operation
+     * Remove a userToDelete from the exclude group of grouping.
      */
     @PostMapping(value = "/{grouping}/{userToDelete}/deleteMemberFromIncludeGroup")
     public ResponseEntity deleteMemberFromIncludeGroup(Principal principal,
@@ -395,13 +369,6 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
-    /**
-     * deletes a member in the exclude group of the Grouping who's path is in 'grouping'
-     *
-     * @param grouping:     path to the Grouping who's exclude group contains the member to be deleted
-     * @param userToDelete: username of the user to be deleted from the exclude group
-     * @return information about the success of the operation
-     */
     @PostMapping(value = "/{grouping}/{userToDelete}/deleteMemberFromExcludeGroup")
     public ResponseEntity deleteMemberFromExcludeGroup(Principal principal,
             @PathVariable String grouping,
@@ -441,9 +408,6 @@ public class GroupingsRestController {
 
     /**
      * True if principal is an owner of any grouping.
-     *
-     * @param principal - uid in question.
-     * @return - GenericServiceResult {groupingsServiceResult: GroupingsServiceResult, isOwner: bool }.
      */
     @GetMapping(value = "/owners")
     public ResponseEntity isOwner(Principal principal) {
@@ -465,14 +429,9 @@ public class GroupingsRestController {
     }
 
     /**
-     * gives the user read, update and view privileges for the Grouping
-     * the user should already have view privilege, but the view privilege is added just in case
-     * read privilege allows the user to see the members and owners of a Grouping
-     * update privilege allows the user to add/delete the members and owners of a Grouping
-     *
-     * @param grouping: path to the grouping that the newOwner will get privileges for
-     * @param newOwner: String containing the username of the Person to become the new owner
-     * @return information about the privileges being added to new owner and the success of these privilege assignments
+     * Gives the user read, update and view privileges for the Grouping the user should already have view privilege,
+     * but the view privilege is added just in case read privilege allows the user to see the members and owners of a
+     * Grouping update privilege allows the user to add/delete the members and owners of a Grouping.
      */
     @PostMapping(value = "/{grouping}/{newOwner}/assignOwnership")
     public ResponseEntity assignOwnership(Principal principal, @PathVariable String grouping,
@@ -486,15 +445,9 @@ public class GroupingsRestController {
     }
 
     /**
-     * removes read, and update privileges from the user for the designated Grouping
-     * read privilege allows the user to see the members and owners of a Grouping
-     * update privilege allows the user to add/delete the members and owners of a Grouping
-     * the user should keep the view privilege
-     *
-     * @param grouping:      path to the grouping that the owner to be removed will get privileges revoked from
-     * @param ownerToRemove: String containing the username of the Person whos owner privileges are to be revoked
-     * @return information about the privileges being removed from the owner and the success of these privilege
-     * assignments
+     * Removes read, and update privileges from the user for the designated Grouping read privilege allows the user to
+     * see the members and owners of a Grouping update privilege allows the user to add/delete the members and owners
+     * of a Grouping the user should keep the view privilege.
      */
     @PostMapping(value = "/{grouping}/{ownerToRemove}/removeOwnership")
     public ResponseEntity removeOwnership(Principal principal, @PathVariable String grouping,
@@ -509,16 +462,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * finds and returns the specified Grouping
-     *
-     * @param path : String containing the path of the Grouping to be searched for
-     * @return the Grouping that was searched for
-     * the Grouping will contain information about
-     * members of each Group in the grouping
-     * owners of the Grouping
-     * name of the Grouping
-     * path of the Grouping
-     * whether or not the Grouping has a list serve associated with it
+     * Fetch the specified Grouping.
      */
     //todo Consolidate getGrouping and getPaginatedGrouping into one call
     @GetMapping(value = "/groupings/{path:.+}")
@@ -557,10 +501,10 @@ public class GroupingsRestController {
     }
 
     /**
-     * Updates the description of a grouping to the new one
+     * Update the description of a grouping to the new one.
      *
-     * @param path:        path to the grouping that the description will be updated
-     * @param description: String containing the description of the group to be updated
+     * @param path        path to the grouping that the description will be updated
+     * @param description String containing the description of the group to be updated
      * @return information about the description and group being updated
      */
     @PutMapping(value = "/groupings/{path}/description")
@@ -575,10 +519,10 @@ public class GroupingsRestController {
     }
 
     /**
-     * This allows an owner of a Grouping to enable that a Grouping connected to a given sync destination
+     * Allow an owner of a Grouping to enable that a Grouping connected to a given sync destination.
      *
-     * @param path:       the path to the Grouping
-     * @param syncDestId: id of the syncDest to be enabled
+     * @param path       the path to the Grouping
+     * @param syncDestId id of the syncDest to be enabled
      * @return information about the success of the operation
      */
     @PostMapping(value = "/groupings/{path}/syncDests/{syncDestId}/enable")
@@ -594,10 +538,10 @@ public class GroupingsRestController {
     }
 
     /**
-     * This allows an owner of a Grouping to disable that a Grouping connected to a given sync destination
+     * This allows an owner of a Grouping to disable that a Grouping connected to a given sync destination.
      *
-     * @param path:       the path to the Grouping
-     * @param syncDestId: id of the syncDest to be disabled
+     * @param path       the path to the Grouping
+     * @param syncDestId id of the syncDest to be disabled
      * @return information about the success of the operation
      */
     @PostMapping(value = "/groupings/{path}/syncDests/{syncDestId}/disable")
@@ -613,11 +557,11 @@ public class GroupingsRestController {
     }
 
     /**
-     * This allows an owner of a Grouping to change whether or not a Grouping's members can opt in
+     * This allows an owner of a Grouping to change whether or not a Grouping's members can opt in.
      *
-     * @param grouping: the path to the Grouping
-     * @param optInOn:  true if the members should be able to opt in, false if not
-     * @return iformation about the success of the operation
+     * @param grouping the path to the Grouping
+     * @param optInOn  true if the members should be able to opt in, false if not
+     * @return information about the success of the operation
      */
     @PostMapping(value = "/{grouping}/{optInOn}/setOptIn")
     public ResponseEntity setOptIn(Principal principal,
@@ -631,10 +575,10 @@ public class GroupingsRestController {
     }
 
     /**
-     * This allows an owner of a Grouping to change whether or not a Grouping's members can opt out
+     * This allows an owner of a Grouping to change whether or not a Grouping's members can opt out.
      *
-     * @param grouping: the path to the Grouping
-     * @param optOutOn: true if the members should be able to opt out, false if not
+     * @param grouping the path to the Grouping
+     * @param optOutOn true if the members should be able to opt out, false if not
      * @return information about the success of the operation
      */
     @PostMapping(value = "/{grouping}/{optOutOn}/setOptOut")
@@ -688,10 +632,8 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
     }
 
-    /*
-     *
+    /**
      * Helper function for checking overrides file.
-     *
      * Makes an HTTP request to the API, specifically getting the list of admins and all groupings.
      * Should return a 403 Forbidden since CREDENTIAL_CHECK_USER should never exist.
      */
@@ -702,10 +644,8 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(CREDENTIAL_CHECK_USER, uri, HttpMethod.GET);
     }
 
-    /*
-     *
+    /**
      * Helper function for checking if API is running.
-     *
      * Makes an HTTP request to the API, specifically getting the landing page.
      * Should return a 200 OK.
      */
