@@ -1194,7 +1194,7 @@
                 } else if ($scope.listName === "owners") {
                     groupingsService.removeOwner(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
-                    groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
+                    groupingsService.removeAdmin(options.user.username, handleAdminRemove, handleUnsuccessfulRequest);
                 }
             });
         };
