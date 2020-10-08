@@ -61,24 +61,47 @@
         $scope.searchForUserGroupingInformation = function () {
             $scope.loading = true;
             groupingsService.getMembershipAssignmentForUser(function (res) {
-
-                $scope.personList = _.sortBy(res.combinedGroupings, "name");
+                $scope.personList = _.sortBy(res, "name");
+                console.log($scope.personList);
+                $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
+                console.log($scope.personList);
                 $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-                _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (group) {
-                    group["inOwner"] = res.inOwner[group.path];
-                    group["inBasis"] = res.inBasis[group.path];
-                    group["inInclude"] = res.inInclude[group.path];
-                    group["inExclude"] = res.inExclude[group.path];
-                    if (group.inInclude || group.inOwner) {
-                        group["isSelected"] = false;
-                        totalCheckBoxCount = totalCheckBoxCount + 1;
-                    }
-                });
                 $scope.loading = false;
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
             }, $scope.personToLookup);
         };
+
+        /**
+         * With the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
+         * all values that each duplicate contained. (Changed return values to meet Manager Person tab needs)
+         */
+        function mergeManagePersonDuplicateValues(dups) {
+            let result = [];
+            _.forEach(dups, (membership) => {
+                if (dups.length > 1) {
+                    _.forEach(membership, m => {
+                        membership.inInclude |= m.inInclude;
+                        membership.inExclude |= m.inExclude;
+                        membership.inBasis |= m.inBasis;
+                        membership.inOwner |= m.inOwner;
+                        membership.inBasisAndInclude |= m.inBasisAndInclude;
+                    });
+                }
+                let path = membership.path.substring(0, membership.path.lastIndexOf(":"));
+                result.push({
+                    "name": membership.name,
+                    "path": path,
+                    "inInclude": membership.inInclude,
+                    "inExclude": membership.inExclude,
+                    "inBasis": membership.inBasis,
+                    "inOwner": membership.inOwner,
+                    "inBasisAndInclude": membership.inBasisAndInclude,
+
+                });
+            });
+            return result;
+        }
 
         $scope.displayAdmins = function () {
             $scope.resetGroupingInformation();

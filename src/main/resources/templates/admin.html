@@ -210,20 +210,20 @@
                                     </div>
                                 </td>
                                 <td class="p-10" tabindex="0">
-                                    <div ng-if="l.inBasis">
+                                    <div ng-if="l.inBasis || l.inBasisAndInclude">
                                         <i class="fa fa-check text-dark"></i>
                                     </div>
-                                    <div ng-if="!l.inBasis">
+                                    <div ng-if="!l.inBasis && !l.inBasisAndInclude">
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
                                 <td class="p-10" tabindex="0">
-                                    <div ng-if="l.inInclude">
+                                    <div ng-if="l.inInclude || l.inBasisAndInclude">
                                         <i class="fa fa-check text-dark"></i>
                                         <label><input type="checkbox"
                                                       ng-model="l.isSelected" ng-change="updateCheckAll(l)"></label>
                                     </div>
-                                    <div ng-if="!l.inInclude">
+                                    <div ng-if="!l.inInclude && !l.inBasisAndInclude">
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
