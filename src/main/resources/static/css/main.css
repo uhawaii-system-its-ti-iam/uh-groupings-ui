@@ -619,3 +619,13 @@ label input {
 .check-space{
     margin-right: 10px;
 }
+
+.nav-item.mx-auto .nav-link.rounded-circle .side-nav {
+    align-items: center;
+}
+
+@media (max-width: 991.98px) {
+    .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
+        align-items: center;
+    }
+}
