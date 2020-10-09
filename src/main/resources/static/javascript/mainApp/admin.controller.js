@@ -16,8 +16,7 @@
         $scope.personList = [];
         $scope.pagedItemsPerson = [];
         $scope.currentPagePerson = 0;
-        $scope.selectedGroupingsNames = [];
-        $scope.multiMemberPaths = [];
+        $scope.selectedGroupingsPaths = [];
 
         let totalCheckBoxCount = 0;
         let count = 0;
@@ -62,9 +61,7 @@
             $scope.loading = true;
             groupingsService.getMembershipAssignmentForUser(function (res) {
                 $scope.personList = _.sortBy(res, "name");
-                console.log($scope.personList);
                 $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
-                console.log($scope.personList);
                 $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
                 $scope.loading = false;
             }, function (res) {
@@ -78,20 +75,21 @@
          */
         function mergeManagePersonDuplicateValues(dups) {
             let result = [];
-            _.forEach(dups, (membership) => {
-                if (dups.length > 1) {
-                    _.forEach(membership, m => {
+            dups.forEach((membership, index) => {
+                dups.forEach((m, index2) => {
+                    if (membership.name == m.name && index != index2) {
                         membership.inInclude |= m.inInclude;
                         membership.inExclude |= m.inExclude;
                         membership.inBasis |= m.inBasis;
                         membership.inOwner |= m.inOwner;
                         membership.inBasisAndInclude |= m.inBasisAndInclude;
-                    });
-                }
-                let path = membership.path.substring(0, membership.path.lastIndexOf(":"));
+                        dups.splice(index2,1);
+                    }
+                });
+
                 result.push({
                     "name": membership.name,
-                    "path": path,
+                    "path": membership.path,
                     "inInclude": membership.inInclude,
                     "inExclude": membership.inExclude,
                     "inBasis": membership.inBasis,
@@ -120,32 +118,23 @@
         };
 
         $scope.removeFromGroups = function () {
-            $scope.selectedGroupings = [];
             $scope.selectedGroupingsNames = [];
+            $scope.selectedGroupingsPaths = [];
             let i = 0;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
                 if (grouping.isSelected) {
-                    if (i == 0) {
-                        let temp = grouping.path;
-                        $scope.selectedGrouping.path = temp;
-                        $scope.multiMemberPaths[i] = temp;
-
-                    } else {
-                        let temp = grouping.path;
-                        $scope.selectedGrouping.path = $scope.selectedGrouping.path + temp;
-                        $scope.multiMemberPaths[i] = temp;
-                    }
+                    let basePath = grouping.path.substring(0, grouping.path.lastIndexOf(":") + 1);
+                    basePath = basePath.slice(0, -1);
+                    let groupName = basePath;
+                    groupName = groupName.split(":").pop();
+                    $scope.selectedGroupingsNames.push(groupName);
                     if (grouping.inOwner) {
-                        $scope.selectedGroupings.push(grouping.path + ":owners");
-                        let temp = grouping.path;
-                        temp = temp.split(":").pop();
-                        $scope.selectedGroupingsNames.push(temp);
+                        let temp = basePath + ":owners";
+                        $scope.selectedGroupingsPaths.push(temp);
                     }
                     if (grouping.inInclude) {
-                        $scope.selectedGroupings.push(grouping.path + ":include");
-                        let temp = grouping.path;
-                        temp = temp.split(":").pop();
-                        $scope.selectedGroupingsNames.push(temp);
+                        let temp = basePath + ":include";
+                        $scope.selectedGroupingsPaths.push(temp);
                     }
                 }
                 i++;
@@ -155,11 +144,11 @@
                 groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
                     let userToRemove = {
                         username: attributes.uid,
-                        name: attributes.cn,
+                        name: attributes.name,
                         uhUuid: attributes.uhUuid
                     };
-                    if (_.isEmpty($scope.selectedGroupings)) {
-                        $scope.createOwnerErrorModal($scope.selectedGroupings);
+                    if (_.isEmpty($scope.selectedGroupingsNames)) {
+                        $scope.createOwnerErrorModal($scope.selectedGroupingsNames);
                     } else {
                         $scope.createRemoveFromGroupsModal({
                             user: userToRemove,
