@@ -210,7 +210,17 @@ table .p-5 {
 
 table .p-10 {
     white-space: nowrap;
-    padding: 5px 10px !important
+    padding: 5px 20px !important
+}
+
+table .p-11 {
+    white-space: nowrap;
+    padding: 5px 25px !important
+}
+
+table .p-12 {
+    white-space: nowrap;
+    padding: 5px 30px !important
 }
 
 .pagination .page-item.disabled {

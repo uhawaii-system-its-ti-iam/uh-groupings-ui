@@ -19,7 +19,7 @@
         $scope.selectedGroupingsPaths = [];
 
         let totalCheckBoxCount = 0;
-        let count = 0;
+        let currentCheckBoxCount = 0;
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
@@ -86,7 +86,6 @@
                         dups.splice(index2,1);
                     }
                 });
-
                 result.push({
                     "name": membership.name,
                     "path": membership.path,
@@ -136,6 +135,10 @@
                         let temp = basePath + ":include";
                         $scope.selectedGroupingsPaths.push(temp);
                     }
+                    if (grouping.inExclude) {
+                        let temp = basePath + ":exclude";
+                        $scope.selectedGroupingsPaths.push(temp);
+                    }
                 }
                 i++;
             });
@@ -144,7 +147,7 @@
                 groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
                     let userToRemove = {
                         username: attributes.uid,
-                        name: attributes.name,
+                        name: attributes.cn,
                         uhUuid: attributes.uhUuid
                     };
                     if (_.isEmpty($scope.selectedGroupingsNames)) {
@@ -168,21 +171,21 @@
                 }
             });
             if ($scope.checkAll) {
-                count = totalCheckBoxCount;
+                currentCheckBoxCount = totalCheckBoxCount;
             } else {
-                count = 0;
+                currentCheckBoxCount = 0;
             }
         };
 
         $scope.updateCheckAll = function (grouping) {
+            totalCheckBoxCount = $scope.personList.length;
 
             if (grouping.isSelected) {
-                count = count + 1;
+                currentCheckBoxCount = currentCheckBoxCount + 1;
             } else {
-                count = count - 1;
+                currentCheckBoxCount = currentCheckBoxCount - 1;
             }
-
-            $scope.checkAll = (count === totalCheckBoxCount);
+            $scope.checkAll = (currentCheckBoxCount === totalCheckBoxCount);
         };
 
 
