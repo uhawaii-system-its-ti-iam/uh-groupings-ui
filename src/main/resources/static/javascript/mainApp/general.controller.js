@@ -1085,11 +1085,6 @@
         }
 
         function handleMultiMemberRemove() {
-            for (let i = 0; i < $scope.multiMemberPaths.length; i++) {
-                $scope.selectedGrouping.path = $scope.multiMemberPaths[i];
-                $scope.getGroupingInformation();
-                $scope.syncDestArray = [];
-            }
             $scope.searchForUserGroupingInformation();
         }
 
@@ -1207,7 +1202,7 @@
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
                 let userToRemove = options.user.username;
-                let groupingPath = $scope.selectedGroupings;
+                let groupingPath = $scope.selectedGroupingsPaths;
                 groupingsService.removeFromGroups(groupingPath, userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
                 $scope.personToLookup = userToRemove;
             });

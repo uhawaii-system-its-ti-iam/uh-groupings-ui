@@ -16,11 +16,10 @@
         $scope.personList = [];
         $scope.pagedItemsPerson = [];
         $scope.currentPagePerson = 0;
-        $scope.selectedGroupingsNames = [];
-        $scope.multiMemberPaths = [];
+        $scope.selectedGroupingsPaths = [];
 
         let totalCheckBoxCount = 0;
-        let count = 0;
+        let currentCheckBoxCount = 0;
 
         // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
@@ -61,24 +60,45 @@
         $scope.searchForUserGroupingInformation = function () {
             $scope.loading = true;
             groupingsService.getMembershipAssignmentForUser(function (res) {
-
-                $scope.personList = _.sortBy(res.combinedGroupings, "name");
+                $scope.personList = _.sortBy(res, "name");
+                $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
                 $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-                _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (group) {
-                    group["inOwner"] = res.inOwner[group.path];
-                    group["inBasis"] = res.inBasis[group.path];
-                    group["inInclude"] = res.inInclude[group.path];
-                    group["inExclude"] = res.inExclude[group.path];
-                    if (group.inInclude || group.inOwner) {
-                        group["isSelected"] = false;
-                        totalCheckBoxCount = totalCheckBoxCount + 1;
-                    }
-                });
                 $scope.loading = false;
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
             }, $scope.personToLookup);
         };
+
+        /**
+         * With the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
+         * all values that each duplicate contained. (Changed return values to meet Manager Person tab needs)
+         */
+        function mergeManagePersonDuplicateValues(dups) {
+            let result = [];
+            dups.forEach((membership, index) => {
+                dups.forEach((m, index2) => {
+                    if (membership.name == m.name && index != index2) {
+                        membership.inInclude |= m.inInclude;
+                        membership.inExclude |= m.inExclude;
+                        membership.inBasis |= m.inBasis;
+                        membership.inOwner |= m.inOwner;
+                        membership.inBasisAndInclude |= m.inBasisAndInclude;
+                        dups.splice(index2,1);
+                    }
+                });
+                result.push({
+                    "name": membership.name,
+                    "path": membership.path,
+                    "inInclude": membership.inInclude,
+                    "inExclude": membership.inExclude,
+                    "inBasis": membership.inBasis,
+                    "inOwner": membership.inOwner,
+                    "inBasisAndInclude": membership.inBasisAndInclude,
+
+                });
+            });
+            return result;
+        }
 
         $scope.displayAdmins = function () {
             $scope.resetGroupingInformation();
@@ -97,32 +117,27 @@
         };
 
         $scope.removeFromGroups = function () {
-            $scope.selectedGroupings = [];
             $scope.selectedGroupingsNames = [];
+            $scope.selectedGroupingsPaths = [];
             let i = 0;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
                 if (grouping.isSelected) {
-                    if (i == 0) {
-                        let temp = grouping.path;
-                        $scope.selectedGrouping.path = temp;
-                        $scope.multiMemberPaths[i] = temp;
-
-                    } else {
-                        let temp = grouping.path;
-                        $scope.selectedGrouping.path = $scope.selectedGrouping.path + temp;
-                        $scope.multiMemberPaths[i] = temp;
-                    }
+                    let basePath = grouping.path.substring(0, grouping.path.lastIndexOf(":") + 1);
+                    basePath = basePath.slice(0, -1);
+                    let groupName = basePath;
+                    groupName = groupName.split(":").pop();
+                    $scope.selectedGroupingsNames.push(groupName);
                     if (grouping.inOwner) {
-                        $scope.selectedGroupings.push(grouping.path + ":owners");
-                        let temp = grouping.path;
-                        temp = temp.split(":").pop();
-                        $scope.selectedGroupingsNames.push(temp);
+                        let temp = basePath + ":owners";
+                        $scope.selectedGroupingsPaths.push(temp);
                     }
                     if (grouping.inInclude) {
-                        $scope.selectedGroupings.push(grouping.path + ":include");
-                        let temp = grouping.path;
-                        temp = temp.split(":").pop();
-                        $scope.selectedGroupingsNames.push(temp);
+                        let temp = basePath + ":include";
+                        $scope.selectedGroupingsPaths.push(temp);
+                    }
+                    if (grouping.inExclude) {
+                        let temp = basePath + ":exclude";
+                        $scope.selectedGroupingsPaths.push(temp);
                     }
                 }
                 i++;
@@ -135,8 +150,8 @@
                         name: attributes.cn,
                         uhUuid: attributes.uhUuid
                     };
-                    if (_.isEmpty($scope.selectedGroupings)) {
-                        $scope.createOwnerErrorModal($scope.selectedGroupings);
+                    if (_.isEmpty($scope.selectedGroupingsNames)) {
+                        $scope.createOwnerErrorModal($scope.selectedGroupingsNames);
                     } else {
                         $scope.createRemoveFromGroupsModal({
                             user: userToRemove,
@@ -156,21 +171,21 @@
                 }
             });
             if ($scope.checkAll) {
-                count = totalCheckBoxCount;
+                currentCheckBoxCount = totalCheckBoxCount;
             } else {
-                count = 0;
+                currentCheckBoxCount = 0;
             }
         };
 
         $scope.updateCheckAll = function (grouping) {
+            totalCheckBoxCount = $scope.personList.length;
 
             if (grouping.isSelected) {
-                count = count + 1;
+                currentCheckBoxCount = currentCheckBoxCount + 1;
             } else {
-                count = count - 1;
+                currentCheckBoxCount = currentCheckBoxCount - 1;
             }
-
-            $scope.checkAll = (count === totalCheckBoxCount);
+            $scope.checkAll = (currentCheckBoxCount === totalCheckBoxCount);
         };
 
 

@@ -105,6 +105,7 @@
             );
 
             // Request a list of opt-in-able paths from the API.
+            $scope.optInList = [];
             groupingsService.getOptInGroups((res) => {
                     _.forEach(res, (path) => {
                         $scope.optInList.push({
