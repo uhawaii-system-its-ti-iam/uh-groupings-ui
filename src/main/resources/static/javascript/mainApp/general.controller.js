@@ -517,7 +517,7 @@
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
             if (_.isEmpty($scope.usersToAdd)) {
-                $scope.user = $scope.usersToAdd;
+                $scope.emptyInput = true;
             } else {
                 let numMembers = ($scope.usersToAdd.split(" ").length - 1);
 
@@ -584,7 +584,6 @@
             };
 
             let handleSuccessfulAdd = function (res) {
-                $scope.waitingForImportResponse = false;
                 for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
                     $scope.multiAddResultsGeneric[i] = res[i].person;
@@ -712,10 +711,12 @@
          */
         $scope.addMember = function (list) {
             let groupingPath = $scope.selectedGrouping.path;
+            $scope.waitingForImportResponse = true;
             groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function (res) {
                 let user = $scope.userToAdd;
                 let inGrouper = $scope.inGrouper;
-                let inBasis = _.some($scope.groupingBasis, { username: user });
+                let inBasis = _.some($scope.groupingBasis, { username: user }) ||
+                    _.some($scope.groupingBasis, { uhUuid: user });
                 if ($scope.existInList(user, list)) {
                     $scope.listName = list;
                     $scope.swap = false;
@@ -729,6 +730,7 @@
                         listName: list
                     });
                 }
+                $scope.waitingForImportResponse = false;
             }, function (res) {
                 if (res.status === 403) {
                     $scope.createOwnerErrorModal();
@@ -812,9 +814,11 @@
          */
         $scope.existInList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingInclude, { username: user });
+                return _.some($scope.groupingInclude, { username: user }) ||
+                    _.some($scope.groupingInclude, { uhUuid: user });
             } else if (list === "Exclude") {
-                return _.some($scope.groupingExclude, { username: user });
+                return _.some($scope.groupingExclude, { username: user }) ||
+                    _.some($scope.groupingExclude, { uhUuid: user });
             }
             return false;
         };
@@ -883,6 +887,8 @@
         $scope.createConfirmAddModal = function (options) {
             const userToAdd = options.userToAdd;
 
+            $scope.waitingForImportResponse = false;
+
             groupingsService.getMemberAttributes(userToAdd, function (attributes) {
                 $scope.fullNameToAdd = attributes.cn;
                 $scope.givenNameToAdd = attributes.givenName;
@@ -903,7 +909,6 @@
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
-                console.log(`Error: Status Code ${res.status}`);
                 $scope.user = userToAdd;
                 $scope.resStatus = res.status;
             });
@@ -1632,8 +1637,13 @@
         };
 
         $scope.resetFields = function () {
-            $scope.resStatus = 0;
+            $scope.getGroupingInformation();
             $scope.userToAdd = "";
+        };
+
+        $scope.resetErrors = function () {
+            $scope.resStatus = 0;
+            $scope.emptyInput = false;
             $scope.swap = true;
             $scope.inGrouper = false;
 

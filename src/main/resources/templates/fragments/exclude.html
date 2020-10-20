@@ -101,15 +101,15 @@
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
                 <form>
                     <div class="input-group" style="width: 500px">
-                        <input class="form-control" placeholder="Members to add" type="text"
-                               ng-init="errorDismissed = true; resetFields()"
-                               ng-blur="errorDismissed = true; resetFields()"
+                        <input class="form-control" placeholder="Members to add" type="search"
+                               ng-init="errorDismissed = true; resetErrors()"
+                               ng-blur="errorDismissed = true; resetErrors()"
                                title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"
                         />
                         <div>
                             <button class="btn btn-primary"
-                                    ng-blur="errorDismissed = true; resetFields()"
-                                    ng-click="resetFields(); addMembers('Exclude'); errorDismissed = false"
+                                    ng-blur="errorDismissed = true; resetErrors()"
+                                    ng-click="resetErrors(); addMembers('Exclude'); errorDismissed = false"
                                     style="margin-left: 2px">
                                 Add
                             </button>
