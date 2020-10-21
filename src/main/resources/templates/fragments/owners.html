@@ -74,21 +74,29 @@
         </div>
         <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
-                <form ng-submit="addOwner()">
+                <form>
                     <div class="input-group">
-                        <input class="form-control" type="text" placeholder="UH Username"
-                               title="Enter UH username for ownership"
+                        <input class="form-control" placeholder="Members to add" type="search"
+                               ng-init="errorDismissed = true; resetErrors()"
+                               ng-blur="errorDismissed = true; resetErrors()"
+                               title="Enter one or more UH members"
                                ng-model="ownerToAdd"
                                id="owner-input"/>
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">Add</button>
+                        <div>
+                            <button class="btn btn-primary"
+                                    ng-blur="errorDismissed = true; resetErrors()"
+                                    ng-click="resetErrors(); addOwner(); errorDismissed = false"
+                                    style="margin-left: 2px">
+                                Add
+                            </button>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="mt-lg-0 mt-2">
-                <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageOwners', pagedItems='pagedItemsOwners')"></div>
-            </div>
+        </div>
+        <div th:replace="fragments/add-error-messages :: add-error-messages"></div>
+        <div class="mt-lg-0 mt-2">
+            <div th:replace="fragments/pagination :: pagination (currentPage = 'currentPageOwners', pagedItems='pagedItemsOwners')"></div>
         </div>
     </div>
 </th:block>

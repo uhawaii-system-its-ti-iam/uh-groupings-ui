@@ -105,9 +105,15 @@
                 <form>
                     <div class="input-group" style="width: 500px">
                         <input class="form-control" placeholder="Members to add" type="search"
-                               title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"/>
+                               ng-init="errorDismissed = true; resetErrors()"
+                               ng-blur="errorDismissed = true; resetErrors()"
+                               title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"
+                        />
                         <div>
-                            <button class="btn btn-primary" ng-click="addMembers('Include')" style="margin-left: 2px">
+                            <button class="btn btn-primary"
+                                    ng-blur="errorDismissed = true; resetErrors()"
+                                    ng-click="resetErrors(); addMembers('Include'); errorDismissed = false"
+                                    style="margin-left: 2px">
                                 Add
                             </button>
                             <button class="btn btn-primary" ng-click="launchImportModal('Include')">
@@ -121,6 +127,7 @@
                 </form>
             </div>
         </div>
+        <div th:replace="fragments/add-error-messages :: add-error-messages"></div>
         <div class="mt-lg-0 mt-2">
             <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageInclude', pagedItems='pagedItemsInclude')"></div>
         </div>
