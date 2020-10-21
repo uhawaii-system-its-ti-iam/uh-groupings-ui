@@ -9,13 +9,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Map;
 
-public class UserDetailsServiceImpl extends AbstractCasAssertionUserDetailsService {
+public class CasUserDetailsServiceImplj extends AbstractCasAssertionUserDetailsService {
 
-    private static final Log logger = LogFactory.getLog(UserDetailsServiceImpl.class);
+    private static final Log logger = LogFactory.getLog(CasUserDetailsServiceImplj.class);
 
     private UserBuilder userBuilder;
 
-    public UserDetailsServiceImpl(UserBuilder userBuilder) {
+    public CasUserDetailsServiceImplj(UserBuilder userBuilder) {
         super();
         this.userBuilder = userBuilder;
     }

@@ -1,7 +1,7 @@
 package edu.hawaii.its.groupings.configuration;
 
 import edu.hawaii.its.groupings.access.UserBuilder;
-import edu.hawaii.its.groupings.access.UserDetailsServiceImpl;
+import edu.hawaii.its.groupings.access.CasUserDetailsServiceImplj;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jasig.cas.client.proxy.ProxyGrantingTicketStorage;
@@ -126,7 +126,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationUserDetailsService<CasAssertionAuthenticationToken> authenticationUserDetailsService() {
-        return new UserDetailsServiceImpl(userBuilder);
+        return new CasUserDetailsServiceImplj(userBuilder);
     }
 
     @Bean
