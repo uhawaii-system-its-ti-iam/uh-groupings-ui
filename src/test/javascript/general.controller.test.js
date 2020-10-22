@@ -267,11 +267,12 @@ describe("GeneralController", function () {
         describe("user tries to add 'user4', who is currently in the Basis list, to the Include list", function () {
             beforeEach(function () {
                 scope.userToAdd = "user4";
+                let inBasis = true;
             });
 
             it("should create a modal asking if the user wants to add 'user4', who is in Basis, in the Include list", function () {
                 spyOn(scope, "createBasisWarningModal").and.callThrough();
-                scope.addMember("Exclude");
+                scope.addMember("Include");
 
                 expect(scope.createBasisWarningModal).toHaveBeenCalled();
             });
@@ -288,20 +289,32 @@ describe("GeneralController", function () {
                 scope.addMember("Exclude");
 
                 expect(scope.isInAnotherList).toHaveBeenCalled();
-                //expect(scope.isInAnotherList("user1", "Exclude")).toBe(true);
+                expect(scope.isInAnotherList("user1", "Exclude")).toBe(true);
             });
         });
         describe("user tries to add 'user5', who is currently in the Exclude list, to the Include list", function () {
-            it("should return true since 'user5' is currently in the Include list", function () {
+            it("should return true since 'user5' is currently in the Exclude list", function () {
+                spyOn(scope, "isInAnotherList").and.callThrough();
+                scope.addMember("Include");
+
+                expect(scope.isInAnotherList).toHaveBeenCalled();
                 expect(scope.isInAnotherList("user5", "Include")).toBe(true);
             });
         });
         describe("user tries to add 'user8', who is not in any list", function () {
             it("should return false if the user tries to add 'user8' to the Include list", function () {
+                spyOn(scope, "isInAnotherList").and.callThrough();
+                scope.addMember("Include");
+
+                expect(scope.isInAnotherList).toHaveBeenCalled();
                 expect(scope.isInAnotherList("user8", "Include")).toBe(false);
             });
 
             it("should return false if the user tries to add 'user8' to the Exclude list", function () {
+                spyOn(scope, "isInAnotherList").and.callThrough();
+                scope.addMember("Exclude");
+
+                expect(scope.isInAnotherList).toHaveBeenCalled();
                 expect(scope.isInAnotherList("user8", "Exclude")).toBe(false);
             });
 
