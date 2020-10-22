@@ -550,8 +550,7 @@
                     }
                 } else {
                     $scope.userToAdd = $scope.usersToAdd;
-                    $scope.existsInGrouper($scope.userToAdd);
-                    $scope.addMember(listName);
+                    $scope.existsInGrouper($scope.userToAdd, listName);
                 }
             }
         };
@@ -717,32 +716,24 @@
          * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
-            let groupingPath = $scope.selectedGrouping.path;
             $scope.waitingForImportResponse = true;
-            groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function (res) {
-                let user = $scope.userToAdd;
-                let inGrouper = $scope.inGrouper;
-                let inBasis = _.some($scope.groupingBasis, { username: user }) ||
-                    _.some($scope.groupingBasis, { uhUuid: user });
-                if ($scope.existInList(user, list)) {
-                    $scope.listName = list;
-                    $scope.swap = false;
-                } else if ($scope.isInAnotherList(user, list)) {
-                    $scope.createCheckModal(user, list, true, inBasis);
-                } else if ((inBasis && list === "Include") || (inGrouper && !inBasis && list === "Exclude")) {
-                    $scope.createBasisWarningModal(user, list, inBasis);
-                } else {
-                    $scope.createConfirmAddModal({
-                        userToAdd: user,
-                        listName: list
-                    });
-                }
-                $scope.waitingForImportResponse = false;
-            }, function (res) {
-                if (res.status === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            });
+            let user = $scope.userToAdd;
+            let inBasis = _.some($scope.groupingBasis, { username: user }) ||
+                _.some($scope.groupingBasis, { uhUuid: user });
+            if ($scope.existInList(user, list)) {
+                $scope.listName = list;
+                $scope.swap = false;
+            } else if ($scope.isInAnotherList(user, list)) {
+                $scope.createCheckModal(user, list, true, inBasis);
+            } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
+                $scope.createBasisWarningModal(user, list, inBasis);
+            } else {
+                $scope.createConfirmAddModal({
+                    userToAdd: user,
+                    listName: list
+                });
+            }
+            $scope.waitingForImportResponse = false;
         };
 
         /**
@@ -875,16 +866,17 @@
         };
 
         /**
-         * Checks if the user is in the Grouper database
+         * Checks if the user is in the Grouper database before adding into any lists
          * @param {object} user - the user you are checking to see if they are in Grouper
          */
-        $scope.existsInGrouper = function (user) {
+        $scope.existsInGrouper = function (user, list) {
             groupingsService.getMemberAttributes(user, function (attributes) {
                 if (attributes.uhUuid > 0) {
-                    $scope.inGrouper = true;
+                    $scope.addMember(list);
                 }
             }, function (res) {
-                $scope.inGrouper = false;
+                $scope.user = user;
+                $scope.resStatus = res.status;
             });
         };
 
@@ -1657,8 +1649,6 @@
             $scope.resStatus = 0;
             $scope.emptyInput = false;
             $scope.swap = true;
-            $scope.inGrouper = false;
-
         };
 
         /**
