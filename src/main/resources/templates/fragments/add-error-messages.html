@@ -12,7 +12,7 @@
             <p th:text="#{screen.message.modal.add.fail}"></p>
             <p th:text="#{screen.message.modal.add.ensureValid}"></p>
         </div>
-        <!--message for adding a member already in Include or Exclude -->
+        <!--message for adding a member already in Include or Exclude or Owner -->
         <div ng-if="userToAdd.length > 0 && swap === false"
              class="float-md-left mt-3 alert alert-danger fade in">
             <div ng-if="listName === 'Include'">
@@ -20,6 +20,9 @@
             </div>
             <div ng-if="listName === 'Exclude'">
                 <p>{{userToAdd}} is already in Exclude</p>
+            </div>
+            <div ng-if="listName === 'owners'">
+                <p>{{userToAdd}} is already in Owner</p>
             </div>
         </div>
     </div>

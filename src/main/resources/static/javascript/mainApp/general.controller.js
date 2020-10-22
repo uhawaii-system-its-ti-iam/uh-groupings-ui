@@ -819,6 +819,9 @@
             } else if (list === "Exclude") {
                 return _.some($scope.groupingExclude, { username: user }) ||
                     _.some($scope.groupingExclude, { uhUuid: user });
+            } else if (list === "owners") {
+                return _.some($scope.groupingOwners, { username: user }) ||
+                    _.some($scope.groupingOwners, { uhUuid: user });
             }
             return false;
         };
@@ -974,15 +977,20 @@
          * Gives a user ownership of a grouping.
          */
         $scope.addOwner = function () {
-            const ownerToAdd = $scope.ownerToAdd;
-            $scope.userToAdd = ownerToAdd;
 
-            if (_.isEmpty(ownerToAdd)) {
-                $scope.user = ownerToAdd;
-            } else {
+          const ownerToAdd = $scope.ownerToAdd;
+          $scope.userToAdd = ownerToAdd;
+          const list = "owners";
+
+          if (_.isEmpty(ownerToAdd)) {
+            $scope.user = ownerToAdd;
+          } else if ($scope.existInList(ownerToAdd,list)) {
+            $scope.listName = list;
+            $scope.swap = false;
+          } else {
                 $scope.createConfirmAddModal({
                     userToAdd: ownerToAdd,
-                    listName: "owners"
+                    listName: list
                 });
             }
         }, function (res) {
