@@ -549,7 +549,6 @@
                 } else {
                     $scope.userToAdd = $scope.usersToAdd;
                     $scope.existsInGrouper($scope.userToAdd);
-                    $scope.addMember(listName);
                 }
             }
         };
@@ -715,32 +714,24 @@
          * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
-            let groupingPath = $scope.selectedGrouping.path;
             $scope.waitingForImportResponse = true;
-            groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function (res) {
-                let user = $scope.userToAdd;
-                let inGrouper = $scope.inGrouper;
-                let inBasis = _.some($scope.groupingBasis, { username: user }) ||
-                    _.some($scope.groupingBasis, { uhUuid: user });
-                if ($scope.existInList(user, list)) {
-                    $scope.listName = list;
-                    $scope.swap = false;
-                } else if ($scope.isInAnotherList(user, list)) {
-                    $scope.createCheckModal(user, list, true, inBasis);
-                } else if ((inBasis && list === "Include") || (inGrouper && !inBasis && list === "Exclude")) {
-                    $scope.createBasisWarningModal(user, list, inBasis);
-                } else {
-                    $scope.createConfirmAddModal({
-                        userToAdd: user,
-                        listName: list
-                    });
-                }
-                $scope.waitingForImportResponse = false;
-            }, function (res) {
-                if (res.status === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            });
+            let user = $scope.userToAdd;
+            let inBasis = _.some($scope.groupingBasis, { username: user }) ||
+                _.some($scope.groupingBasis, { uhUuid: user });
+            if ($scope.existInList(user, list)) {
+                $scope.listName = list;
+                $scope.swap = false;
+            } else if ($scope.isInAnotherList(user, list)) {
+                $scope.createCheckModal(user, list, true, inBasis);
+            } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
+                $scope.createBasisWarningModal(user, list, inBasis);
+            } else {
+                $scope.createConfirmAddModal({
+                    userToAdd: user,
+                    listName: list
+                });
+            }
+            $scope.waitingForImportResponse = false;
         };
 
         /**
@@ -873,25 +864,22 @@
         };
 
         /**
-         <<<<<<< HEAD
          * Checks if the user is in the Grouper database
          * @param {object} user - the user you are checking to see if they are in Grouper
          */
-        $scope.existsInGrouper = function (user) {
+        $scope.existsInGrouper = function (user, list) {
             groupingsService.getMemberAttributes(user, function (attributes) {
                 if (attributes.uhUuid > 0) {
-                    $scope.inGrouper = true;
+                    $scope.addMember(list);
                 }
             }, function (res) {
-                $scope.inGrouper = false;
+                $scope.user = user;
+                $scope.resStatus = res.status;
             });
         };
 
         /**
          * Creates a modal that asks for confirmation when adding a user.
-         =======
-         * Create a modal that asks for confirmation when adding a user.
-         >>>>>>> Comment code
          * @param {object} options - the options object
          * @param {string} options.userToAdd - the user to add
          * @param {string} options.listName - name of the list being added to
@@ -1230,7 +1218,6 @@
         };
 
         /**
-         <<<<<<< HEAD
          * Closes the modal, then proceeds with reseting the grouping.
          */
         $scope.proceedResetGroup = function () {
@@ -1239,16 +1226,12 @@
 
         /**
          * Closes the modal for deleting a user. This does not delete the user from the grouping/admin list.
-         =======
-         * Close the modal for deleting a user. This does not delete the user from the grouping/admin list.
-         >>>>>>> Comment code
          */
         $scope.cancelRemoveUser = function () {
             $scope.removeModalInstance.dismiss();
         };
 
         /**
-         <<<<<<< HEAD
          * Closes the modal for reseting group. This does not reset the grouping.
          */
         $scope.cancelResetGroup = function () {
@@ -1261,9 +1244,6 @@
 
         /**
          * Creates a modal stating there was an error removing the user from a group.
-         =======
-         * Create a modal stating there was an error removing the user from a group.
-         >>>>>>> Comment code
          * @param {string} userType - the type of user being removed (either admin or owner)
          */
         $scope.createRemoveErrorModal = function (userType) {
@@ -1453,7 +1433,6 @@
         };
 
         /**
-         <<<<<<< HEAD
          * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {object} options - the options object
@@ -1555,9 +1534,6 @@
 
         /**
          * Toggles the grouping preference which allows users to discover the grouping and opt into it.
-         =======
-         * Toggle the grouping preference which allows users to discover the grouping and opt into it.
-         >>>>>>> Comment code
          */
         $scope.updateAllowOptIn = function () {
             const groupingPath = $scope.selectedGrouping.path;
@@ -1841,9 +1817,7 @@
                 && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 
-        /**
-         <<<<<<< HEAD
-         * Determines whether a warning message should be displayed when removing yourself from a list.
+        /*** Determines whether a warning message should be displayed when removing yourself from a list.
          * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
          * returns false
          */
@@ -1854,9 +1828,6 @@
 
         /**
          * Gets cookie information
-         =======
-         * Get cookie information
-         >>>>>>> Comment code
          * @param cname = name of cookie you want to look for.
          * @returns {*}
          */
