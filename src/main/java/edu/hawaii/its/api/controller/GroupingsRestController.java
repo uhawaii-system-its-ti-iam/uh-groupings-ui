@@ -181,7 +181,6 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
-    
     @PostMapping(value = "/{path}/{include}/{exclude}/resetGroup")
     public ResponseEntity<String> resetGroup(Principal principal,
             @PathVariable String path, @PathVariable String include, @PathVariable String exclude) {
