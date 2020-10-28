@@ -20,6 +20,7 @@ public class HttpRequestServiceImpl implements HttpRequestService {
     /*
      * Make an http request to the API with path variables.
      */
+    @SuppressWarnings("lgtm[java/xss]")
     @Override
     public ResponseEntity<String> makeApiRequest(String currentUser, String uri, HttpMethod method) {
 
@@ -35,6 +36,7 @@ public class HttpRequestServiceImpl implements HttpRequestService {
     /*
      * Make an http request to the API with path variables and description in the body.
      */
+    @SuppressWarnings("lgtm[java/xss]")
     @Override
     public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, String data,
             HttpMethod method) {
