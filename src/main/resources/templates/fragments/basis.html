@@ -20,11 +20,10 @@
                        ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery, true)"/>
                 <!-- Export to CSV button -->
                 <div class="float-right"
-                     tooltip-enable="!paginatingComplete"
                      style="display:inline-block">
                     <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
                             ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
-                            uib-tooltip="Export will be available once all members are loaded"
+                            uib-tooltip="{{ getCSVToolTipMessage() }}"
                             ng-disabled="!paginatingComplete">
                         <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
                         Export to CSV

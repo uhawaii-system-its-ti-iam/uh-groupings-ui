@@ -11,6 +11,6 @@ UHGroupingsApp.constant("Message", {
     },
     Csv: {
         GROUP_NOT_LOADED: "Export will be available once all members are loaded.",
-        GROUP_LOADED: "Export entire list to CSV."
+        GROUP_LOADED: "Export entire member list to CSV."
     }
 });
