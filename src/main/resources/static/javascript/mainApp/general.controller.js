@@ -75,7 +75,7 @@
 
         $scope.groupingCSV = [];
         $scope.groupNameCSV = [];
-        
+
         $scope.resetInclude = [];
         $scope.resetExclude = [];
         $scope.usersToRemove = [];
@@ -973,29 +973,25 @@
         $scope.cancelConfirmAddUser = function () {
             $scope.confirmAddModalInstance.dismiss();
         };
+
         /**
          * Gives a user ownership of a grouping.
          */
         $scope.addOwner = function () {
+            const ownerToAdd = $scope.ownerToAdd;
+            $scope.userToAdd = ownerToAdd;
+            const list = "owners";
 
-          const ownerToAdd = $scope.ownerToAdd;
-          $scope.userToAdd = ownerToAdd;
-          const list = "owners";
-
-          if (_.isEmpty(ownerToAdd)) {
-            $scope.user = ownerToAdd;
-          } else if ($scope.existInList(ownerToAdd,list)) {
-            $scope.listName = list;
-            $scope.swap = false;
-          } else {
+            if (_.isEmpty(ownerToAdd)) {
+                $scope.user = ownerToAdd;
+            } else if ($scope.existInList(ownerToAdd, list)) {
+                $scope.listName = list;
+                $scope.swap = false;
+            } else {
                 $scope.createConfirmAddModal({
                     userToAdd: ownerToAdd,
                     listName: list
                 });
-            }
-        }, function (res) {
-            if (res.status === 403) {
-                $scope.createOwnerErrorModal();
             }
         };
 
