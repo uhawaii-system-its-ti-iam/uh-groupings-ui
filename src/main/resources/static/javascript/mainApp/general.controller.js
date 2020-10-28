@@ -788,6 +788,7 @@
             } else if (list === "owners") {
                 groupingsService.assignOwnership(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "admins") {
+                console.log("Passing uhUuid into remove admin.");
                 groupingsService.addAdmin(userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
             // $scope.init();
@@ -909,6 +910,7 @@
                 });
 
                 $scope.confirmAddModalInstance.result.then(function () {
+                    console.log(userToAdd);
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
@@ -1213,7 +1215,12 @@
                 } else if ($scope.listName === "owners") {
                     groupingsService.removeOwner(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
-                    groupingsService.removeAdmin(options.user.username, handleAdminRemove, handleUnsuccessfulRequest);
+                    if(options.user.username == "") {
+                        console.log("Passing uhUuid into remove admin.");
+                        groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
+                    }else{
+                        groupingsService.removeAdmin(options.user.username, handleAdminRemove, handleUnsuccessfulRequest);
+                    }
                 }
             });
         };
