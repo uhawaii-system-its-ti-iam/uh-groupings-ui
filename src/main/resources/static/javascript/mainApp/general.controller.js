@@ -405,6 +405,13 @@
         };
 
         /**
+         * If the grouping hasn't been fetched, return csv group loaded message, otherwise return csv group not loaded message.
+         */
+        $scope.getCSVToolTipMessage = () => {
+            return ($scope.paginatingComplete) ? Message.Csv.GROUP_LOADED : Message.Csv.GROUP_NOT_LOADED;
+        };
+
+        /**
          * Used for placeholder text for a grouping's description in the form box.
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
