@@ -250,7 +250,10 @@ public class GroupingsRestController {
     @PostMapping(value = "/{grouping}/optIn")
     public ResponseEntity<String> optIn(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optIn...");
-
+        logger.info("PRINCIPAL NAME");
+        logger.info(principal.getName());
+        logger.info("GROUPING");
+        logger.info(grouping);
         String safeGrouping = policy.sanitize(grouping);
 
         String uri =
