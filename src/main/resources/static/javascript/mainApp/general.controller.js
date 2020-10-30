@@ -991,6 +991,7 @@
 
             if (_.isEmpty(ownerToAdd)) {
                 $scope.user = ownerToAdd;
+                $scope.emptyInput = true;
             } else if ($scope.existInList(ownerToAdd, list)) {
                 $scope.listName = list;
                 $scope.swap = false;
