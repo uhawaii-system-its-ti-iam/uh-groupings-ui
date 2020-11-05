@@ -828,7 +828,7 @@
 
         /**
          * Creates a modal that asks whether or not they want to add a person that is already in another list.
-         * @param user - Username of the user theypo are trying to add.
+         * @param user - Username of the user they are trying to add.
          * @param listName - name of the list they are adding to (either Include or Exclude)
          */
         $scope.createCheckModal = function (user, listName, swap, inBasis) {
