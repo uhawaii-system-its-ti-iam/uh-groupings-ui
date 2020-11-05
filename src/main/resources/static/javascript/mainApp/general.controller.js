@@ -796,9 +796,11 @@
          */
         $scope.isInAnotherList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingExclude, { username: user });
+                return _.some($scope.groupingExclude, { username: user }) ||
+                    _.some($scope.groupingExclude, { uhUuid: user });
             } else if (list === "Exclude") {
-                return _.some($scope.groupingInclude, { username: user });
+                return _.some($scope.groupingInclude, { username: user }) ||
+                    _.some($scope.groupingInclude, { uhUuid: user });
             }
             return false;
         };
@@ -870,6 +872,10 @@
         $scope.existsInGrouper = function (user, list) {
             groupingsService.getMemberAttributes(user, function (attributes) {
                 if (attributes.uhUuid > 0) {
+                    $scope.fullNameToAdd = attributes.cn;
+                    $scope.givenNameToAdd = attributes.givenName;
+                    $scope.uhUuidToAdd = attributes.uhUuid;
+                    $scope.uidToAdd = attributes.uid;
                     $scope.addMember(list);
                 }
             }, function (res) {
@@ -886,31 +892,18 @@
          */
         $scope.createConfirmAddModal = function (options) {
             const userToAdd = options.userToAdd;
+            $scope.listName = options.listName;
 
-            $scope.waitingForImportResponse = false;
+            // Ask for confirmation from the user to add the member
+            $scope.confirmAddModalInstance = $uibModal.open({
+                templateUrl: "modal/confirmAddModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
 
-            groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                $scope.fullNameToAdd = attributes.cn;
-                $scope.givenNameToAdd = attributes.givenName;
-                $scope.uhUuidToAdd = attributes.uhUuid;
-                $scope.uidToAdd = attributes.uid;
-
-                $scope.listName = options.listName;
-
-                // Ask for confirmation from the user to add the member
-                $scope.confirmAddModalInstance = $uibModal.open({
-                    templateUrl: "modal/confirmAddModal",
-                    scope: $scope,
-                    backdrop: "static",
-                    keyboard: false
-                });
-
-                $scope.confirmAddModalInstance.result.then(function () {
-                    $scope.updateAddMember(userToAdd, options.listName);
-                });
-            }, function (res) {
-                $scope.user = userToAdd;
-                $scope.resStatus = res.status;
+            $scope.confirmAddModalInstance.result.then(function () {
+                $scope.updateAddMember(userToAdd, options.listName);
             });
         };
 
