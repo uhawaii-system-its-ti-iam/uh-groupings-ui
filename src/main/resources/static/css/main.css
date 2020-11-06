@@ -647,6 +647,13 @@ label input {
     }
 }
 
+.form-alert {
+    margin-top: 2px;
+    height: 45px;
+    line-height: 42px;
+    padding: 0px 15px;
+}
+
 .description-alert {
     width: 592px;
     margin-top: 2px;
