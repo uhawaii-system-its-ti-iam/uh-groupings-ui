@@ -1499,6 +1499,9 @@
             });
         };
 
+        /**
+         * Remove all include and exclude members from a group.
+         */
         $scope.resetGroup = function () {
             let listNames = "";
             let exBool = false;
@@ -1572,7 +1575,7 @@
         };
 
         /**
-         * Toggles the grouping preference which allows users to discover the grouping and opt into it.
+         * Toggle the grouping preference which allows users to discover the grouping and opt into it.
          */
         $scope.updateAllowOptIn = function () {
             const groupingPath = $scope.selectedGrouping.path;
@@ -1582,7 +1585,7 @@
         };
 
         /**
-         * Gets the SyncDest value from the array given the name of the sync dest
+         * Return true if the sync destination at syncDestName is synced.
          * @param {String} syncDestName Name of the Sync Dest to retrieve
          * @return {Boolean} Sync Dest value at the given name
          */
@@ -1590,12 +1593,11 @@
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name;
             }).indexOf(syncDestName);
-            const syncDestOn = $scope.syncDestArray[indexOfSyncDest].isSynced;
-            return syncDestOn;
+            return $scope.syncDestArray[indexOfSyncDest].isSynced;
         };
 
         /**
-         * Gets the entire syncDest object given its name
+         * Get the entire syncDest object given its name
          * @param {String} syncDestName Name of the Sync Dest to retrieve
          * @return {Object} The entire syncDest object with the given name
          */
@@ -1607,7 +1609,7 @@
         };
 
         /**
-         * Sets a given sync dest to a given value
+         * Set a given sync dest to a given value
          * @param {String} syncDestName Name of the Sync Dest to set
          * @param {Boolean} syncDestvalue The value to set the Sync Dest to
          */
@@ -1619,7 +1621,7 @@
         };
 
         /**
-         * Toggles the grouping sync destinations according to a given syncDest
+         * Toggle the grouping sync destinations according to a given syncDest
          * @param {String} syncDestName Name of the Sync Dest to toggle
          */
         $scope.updateSingleSyncDest = function (syncDestName) {
@@ -1630,7 +1632,7 @@
         };
 
         /**
-         * Creates a modal indicating an error in saving the grouping's preferences.
+         * Create a modal indicating an error in saving the grouping's preferences.
          */
         $scope.createPreferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
@@ -1642,23 +1644,28 @@
         };
 
         /**
-         * Closes the preference error modal.
+         * Close the preference error modal.
          */
         $scope.closePreferenceError = function () {
             $scope.preferenceErrorModalInstance.close();
         };
 
+        /**
+         * Reload grouping and clear user to add. This is called numerous times from the HTML.
+         */
         $scope.resetFields = function () {
             $scope.getGroupingInformation();
             $scope.userToAdd = "";
         };
 
+        /**
+         * Reset the error controls.
+         */
         $scope.resetErrors = function () {
             $scope.resStatus = 0;
             $scope.emptyInput = false;
             $scope.swap = true;
             $scope.inGrouper = false;
-
         };
 
         /**
@@ -1688,7 +1695,7 @@
         };
 
         /**
-         * Creates warning modal if user is in being added to include and is a basis member or if
+         * Create warning modal if user is in being added to include and is a basis member or if
          * a user is being added to exclude and is not a basis member
          * @param user - user being added
          * @param listName - grouping list (i.e. include or exclude)
@@ -1718,14 +1725,14 @@
         };
 
         /**
-         * Proceeds with the syncDest confirmation
+         * Proceed with the syncDest confirmation
          */
         $scope.proceedSyncDestModal = function () {
             $scope.syncDestInstance.close();
         };
 
         /**
-         * Closes the syncDest confirmation modal
+         * Close the syncDest confirmation modal
          */
         $scope.closeSyncDestModal = function () {
             $scope.syncDestInstance.dismiss();
@@ -1747,7 +1754,7 @@
         };
 
         /**
-         * Exports data in a table to a CSV file
+         * Export data in a table to a CSV file
          * @param {object[]} table - the table to export
          * @param grouping - grouping name that you are exporting from
          * @param list - grouping list (i.e. include or exclude)
@@ -1775,7 +1782,7 @@
         };
 
         /**
-         * Converts the data in the table into comma-separated values.
+         * Convert the data in the table into comma-separated values.
          * @param {object[]} table - the table to convert
          * @returns string table in CSV format
          */
@@ -1794,7 +1801,7 @@
         };
 
         /**
-         * Exports generic data in a table to a CSV file
+         * Export generic data in a table to a CSV file
          * @param {object[]} table - the table to export
          * @param grouping - grouping name that you are exporting from
          * @param list - grouping list (i.e. include or exclude)
@@ -1824,7 +1831,7 @@
         };
 
         /**
-         * Converts the generic data in the table into comma-separated values.
+         * Convert the generic data in the table into comma-separated values.
          * @param {object[]} table - the table to convert
          * @returns the table in CSV format
          */
@@ -1847,7 +1854,7 @@
 
 
         /**
-         * Determines whether a warning message should be displayed when removing yourself from a list.
+         * Determine whether a warning message should be displayed when removing yourself from a list.
          * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
          * returns false
          */
@@ -1857,7 +1864,7 @@
         };
 
         /**
-         * Determines whether a warning message should be displayed when removing yourself from a list.
+         * Determine whether a warning message should be displayed when removing yourself from a list.
          * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
          * returns false
          */
@@ -1867,7 +1874,7 @@
         };
 
         /**
-         * Gets cookie information
+         * Get cookie information
          * @param cname = name of cookie you want to look for.
          * @returns {*}
          */
@@ -1887,7 +1894,7 @@
         };
 
         /**
-         * Logs out a user and redirects them to the homepage.
+         * Log out a user and redirects them to the homepage.
          */
         $scope.proceedLogoutUser = function () {
             $scope.RoleErrorModalInstance.close();
@@ -1899,7 +1906,7 @@
         };
 
         /**
-         * redirects the user to the groupings page.
+         * Redirect the user to the groupings page.
          */
         $scope.proceedRedirect = function () {
             $scope.OwnerErrorModalInstance.close();
@@ -1910,4 +1917,3 @@
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
 }());
-//})();
