@@ -1430,7 +1430,7 @@
 
 
         /**
-         * Creates a modal with a description of the preference selected.
+         * Create a modal with a description of the preference selected.
          * @param {string} desc - the description of the preference
          */
         $scope.createPreferenceInfoModal = function (desc) {
@@ -1445,7 +1445,7 @@
         };
 
         /**
-         * Closes the preference information modal.
+         * Close the preference information modal.
          */
         $scope.closePreferenceInfo = function () {
             $scope.infoModalInstance.close();
@@ -1462,7 +1462,7 @@
         }
 
         /**
-         * Toggles the grouping preference which allows users to opt out of a grouping.
+         * Toggle the grouping preference which allows users to opt out of a grouping.
          */
         $scope.updateAllowOptOut = function () {
             const groupingPath = $scope.selectedGrouping.path;
@@ -1472,7 +1472,7 @@
         };
 
         /**
-         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {object} options - the options object
          * @param {String} options.users - the user being removed
@@ -1531,11 +1531,11 @@
             }
 
             let resetAll = null;
-            if ($scope.excludeCheck == true && $scope.includeCheck == true) {
+            if ($scope.excludeCheck === true && $scope.includeCheck === true) {
                 resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
-            } else if ($scope.excludeCheck == true && $scope.includeCheck == false) {
+            } else if ($scope.excludeCheck === true && $scope.includeCheck === false) {
                 resetAll = $scope.groupingExclude;
-            } else if ($scope.excludeCheck == false && $scope.includeCheck == true) {
+            } else if ($scope.excludeCheck === false && $scope.includeCheck === true) {
                 resetAll = $scope.groupingInclude;
             } else {
                 resetAll = "";
