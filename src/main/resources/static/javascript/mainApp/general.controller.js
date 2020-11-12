@@ -205,16 +205,6 @@
             if (asyncThreadCount === 1) {
                 let currentPage = 1;
                 const groupingPath = $scope.selectedGrouping.path;
-                /**
-                 * Function to get pages of a grouping asynchronously
-                 * @param {String} groupingPath - Path to the grouping to retrieve data from
-                 * @param {Integer} currentPage - Page of grouping to retrieve (increments after each async/await call)
-                 * @param {Integer} PAGE_SIZE - Size of page to retrieve (Located in app.constants)
-                 * @param {String} sortString - Parameter to sort the grouping database by before retrieving
-                 *     information
-                 * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for
-                 *     descending (Z-A)
-                 */
 
                 groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async function (res) {
 
@@ -435,7 +425,7 @@
             }
             groupingDescription = $scope.modelDescription;
 
-            groupingsService.updateDescription($scope.selectedGrouping.path,
+            groupingsService.updateDescription(groupingDescription, $scope.selectedGrouping.path,
                 function () {
                     //Do Nothing
                 },
@@ -443,8 +433,8 @@
                     if (res.status === 403) {
                         $scope.createOwnerErrorModal();
                     }
-                },
-                groupingDescription);
+                }
+            );
             $scope.descriptionForm = !($scope.descriptionForm);
         };
 

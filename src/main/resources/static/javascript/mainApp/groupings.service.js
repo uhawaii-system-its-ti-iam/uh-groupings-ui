@@ -8,17 +8,17 @@
      */
     UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL) {
         return {
-            /**
-             * Get page of a grouping
-             * @param {String} path - the path to the grouping
-             * @param {String} page - the page to retrieve
-             * @param {String} size - the size of each page
-             * @param sortString
-             * @param isAscending
-             * @param onSuccess
-             * @param onError
-             */
 
+            /**
+             * GET page of a grouping.
+             * @param {String} path - The path to the grouping.
+             * @param {Number} page - The number to fetch.
+             * @param {Number} size - The size data chunk to be fetched.
+             * @param {String} sortString - String to base sort off of.
+             * @param isAscending - On true the data returns in ascending order.
+             * @param onSuccess - Function to be called if HTTP request returns as a success.
+             * @param onError - Function to be called if HTTP request returns an error.
+             */
             getGrouping(path, page, size, sortString, isAscending, onSuccess, onError) {
 
                 let endpoint = BASE_URL + "groupings/" + path + "?";
@@ -47,30 +47,24 @@
                     }
                     params = params + "isAscending=" + isAscending;
                 }
-
                 endpoint = endpoint + params;
-
-
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
-            generic(onSuccess, onError) {
-                dataProvider.loadData(onSuccess, onError, BASE_URL + "generic/");
-            },
-            /**
-             * Gets information about a grouping.
-             * @param {string} path - the path to the grouping
-             * @param onSuccess
-             * @param onError
-             * @param {string} data - description to be updated
-             */
 
-            updateDescription(path, onSuccess, onError, data) {
+            /**
+             * Update the description of grouping at path.
+             * @param {string} data - description to be updated
+             * @param {string} path - the path to the grouping
+             * @param {function} onSuccess
+             * @param {function} onError
+             */
+            updateDescription(data, path, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/description";
                 dataProvider.updateDataWithBody(onSuccess, onError, endpoint, data);
             },
 
             /**
-             * Gets the list of admins and groupings.
+             * GET a list of all admins and groupings.
              */
             getAdminLists(onSuccess, onError) {
                 let endpoint = BASE_URL + "adminLists";
@@ -78,7 +72,7 @@
             },
 
             /**
-             * Adds a member to the include group of a grouping.
+             * Add a member to the include group of a grouping.
              * @param {string} path - the path to the grouping
              * @param {string} userToAdd - the username of the member to add
              * @param onSuccess

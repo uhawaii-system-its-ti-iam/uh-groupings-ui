@@ -34,12 +34,13 @@
         };
 
         /**
-         * Initializes the page, displaying the list of groupings to administer and the list of admins to manage.
+         * Complete initialization by fetching a list of admins and list of all groupings.
          */
         $scope.init = function () {
             // Adds the loading spinner.
             $scope.loading = true;
             groupingsService.getAdminLists(function (res) {
+                console.log(res);
                 $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
                 $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
 
@@ -64,7 +65,6 @@
                 $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
                 $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
                 $scope.loading = false;
-                console.log(res);
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
                     "feedback/error", "feedback");
@@ -256,6 +256,6 @@
             document.execCommand("copy");
         };
     }
-   
+
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
 }());
