@@ -6,7 +6,9 @@ import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
 
-// Ignore errors that would normally be thrown by HTTP response codes of 4xx or 5xx
+/**
+ * Ignore errors that would normally be thrown by HTTP response codes of 4xx or 5xx
+ */
 @Component
 public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
     @Override

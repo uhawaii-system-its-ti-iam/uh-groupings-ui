@@ -540,9 +540,7 @@ public class GroupingsRestController {
     // Helper Functions
     //////////////////////////////////////////////////////////////////////
 
-    // Helper method to change preferenes
     private ResponseEntity<String> changePreference(String grouping, String username, String preference, Boolean isOn) {
-
         String ending = "disable";
         if (isOn) {
             ending = "enable";
@@ -552,7 +550,6 @@ public class GroupingsRestController {
     }
 
     private ResponseEntity<String> changeSyncDest(String grouping, String username, String syncDest, Boolean isOn) {
-
         String ending = "disable";
         if (isOn) {
             ending = "enable";
@@ -561,26 +558,13 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
     }
 
-    /**
-     * Helper function for checking overrides file.
-     * Makes an HTTP request to the API, specifically getting the list of admins and all groupings.
-     * Should return a 403 Forbidden since CREDENTIAL_CHECK_USER should never exist.
-     */
     private ResponseEntity<String> credentialCheck() {
-
         String uri = API_2_1_BASE + "/adminsGroupings";
-
         return httpRequestService.makeApiRequest(CREDENTIAL_CHECK_USER, uri, HttpMethod.GET);
     }
 
-    /**
-     * Helper function for checking if API is running.
-     * Makes an HTTP request to the API, specifically getting the landing page.
-     * Should return a 200 OK.
-     */
     private ResponseEntity<String> isBackendUp() {
         String uri = API_2_1_BASE + "/";
-
         return httpRequestService.makeApiRequest(CREDENTIAL_CHECK_USER, uri, HttpMethod.GET);
     }
 }

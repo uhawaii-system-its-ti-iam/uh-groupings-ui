@@ -21,9 +21,7 @@
         let totalCheckBoxCount = 0;
         let currentCheckBoxCount = 0;
 
-        // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
-
 
         $scope.createRoleErrorModal = function () {
             $scope.loading = false;
@@ -34,7 +32,6 @@
                 keyboard: false
             });
         };
-
 
         /**
          * Initializes the page, displaying the list of groupings to administer and the list of admins to manage.
@@ -57,6 +54,9 @@
             });
         };
 
+        /**
+         * Fetch a list of memberships pertaining to $scope.personToLookUp.
+         */
         $scope.searchForUserGroupingInformation = function () {
             $scope.loading = true;
             groupingsService.getMembershipAssignmentForUser(function (res) {
@@ -64,8 +64,10 @@
                 $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
                 $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
                 $scope.loading = false;
+                console.log(res);
             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
+                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
+                    "feedback/error", "feedback");
             }, $scope.personToLookup);
         };
 
@@ -83,7 +85,7 @@
                         membership.inBasis |= m.inBasis;
                         membership.inOwner |= m.inOwner;
                         membership.inBasisAndInclude |= m.inBasisAndInclude;
-                        dups.splice(index2,1);
+                        dups.splice(index2, 1);
                     }
                 });
                 result.push({
@@ -93,13 +95,16 @@
                     "inExclude": membership.inExclude,
                     "inBasis": membership.inBasis,
                     "inOwner": membership.inOwner,
-                    "inBasisAndInclude": membership.inBasisAndInclude,
+                    "inBasisAndInclude": membership.inBasisAndInclude
 
                 });
             });
             return result;
         }
 
+        /**
+         * Separate the list of Admins into pages.
+         */
         $scope.displayAdmins = function () {
             $scope.resetGroupingInformation();
             $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
@@ -107,7 +112,10 @@
             $scope.showGrouping = false;
         };
 
-        /*todo:people copy*/
+
+        /**
+         * Separate the list of persons into pages.
+         */
         $scope.displayPerson = function () {
             $scope.resetGroupingInformation();
             $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
@@ -116,6 +124,9 @@
             $scope.personToLookup = "";
         };
 
+        /**
+         *
+         */
         $scope.removeFromGroups = function () {
             $scope.selectedGroupingsNames = [];
             $scope.selectedGroupingsPaths = [];
@@ -160,7 +171,6 @@
                     }
                 });
             }
-
         };
 
         $scope.updateCheckBoxes = function () {
@@ -212,7 +222,7 @@
         };
 
         /**
-         * Removes an admin from the admin list. There must be at least one admin remaining.
+         * Remove an admin from the admin list. There must be at least one admin remaining.
          * @param {number} currentPage - the current page in the admins list
          * @param {number} index - the index of the admin to delete, with the current page and items per page taken into
          * account
@@ -238,15 +248,14 @@
         };
 
         /**
-         * Copies grouping path to clipboard.
+         * Copy grouping path to clipboard.
          */
         $scope.copyPath = function (grouping) {
-            var copyText = document.getElementById(grouping.path);
+            let copyText = document.getElementById(grouping.path);
             copyText.select();
             document.execCommand("copy");
         };
     }
-
+   
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
-
 }());

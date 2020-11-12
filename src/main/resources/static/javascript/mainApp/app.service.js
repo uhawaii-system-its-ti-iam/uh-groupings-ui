@@ -5,7 +5,6 @@
      */
     UHGroupingsApp.factory("dataProvider", function ($http, $window) {
 
-        //Global time limit variable for time out modal.
         var timeLimit = 20000;
 
         return {
