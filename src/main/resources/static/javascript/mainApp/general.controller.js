@@ -1492,10 +1492,16 @@
             });
         };
 
+        /**
+         * Toggle includeCheck boolean.
+         */
         $scope.updateIncludeCheck = function () {
             $scope.includeCheck = !($scope.includeCheck);
         };
 
+        /**
+         * Toggle excludeCheck boolean.
+         */
         $scope.updateExcludeCheck = function () {
             $scope.excludeCheck = !($scope.excludeCheck);
         };
