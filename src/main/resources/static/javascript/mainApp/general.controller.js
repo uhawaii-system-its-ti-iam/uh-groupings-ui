@@ -576,10 +576,10 @@
             };
             $scope.waitingForImportResponse = true;
             if (listName === "Include") {
-                await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToInclude(list, groupingPath, timeoutModal, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
             if (listName === "Exclude") {
-                await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToExclude(list, groupingPath, timeoutModal, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
         };
 

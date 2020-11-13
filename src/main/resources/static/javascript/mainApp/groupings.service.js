@@ -4,13 +4,13 @@
      * Service for requesting data from the groupings API.
      * @name groupingsService
      * NOTE: All API requests defined here require at least two parameters, namely onSuccess and onError, which are
-     * controller handlers for manipulating data on a successful or unsuccessful request.
+     * controller handlers(callback functions) for manipulating data on a successful or unsuccessful request.
      */
     UHGroupingsApp.factory("groupingsService", function (dataProvider, BASE_URL) {
         return {
 
             /**
-             * GET page of a grouping.
+             * Get page of a grouping.
              * @param {String} path - The path to the grouping.
              * @param {Number} page - The number to fetch.
              * @param {Number} size - The size data chunk to be fetched.
@@ -53,10 +53,6 @@
 
             /**
              * Update the description of grouping at path.
-             * @param {string} data - description to be updated
-             * @param {string} path - the path to the grouping
-             * @param {function} onSuccess
-             * @param {function} onError
              */
             updateDescription(data, path, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/description";
@@ -64,7 +60,7 @@
             },
 
             /**
-             * GET a list of all admins and groupings.
+             * Get a list of all admins and groupings.
              */
             getAdminLists(onSuccess, onError) {
                 let endpoint = BASE_URL + "adminLists";
@@ -73,10 +69,6 @@
 
             /**
              * Add a member to the include group of a grouping.
-             * @param {string} path - the path to the grouping
-             * @param {string} userToAdd - the username of the member to add
-             * @param onSuccess
-             * @param onError
              */
             addMemberToInclude(path, userToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToIncludeGroup";
@@ -84,14 +76,10 @@
             },
 
             /**
-             * Adds a members to the include group of a grouping.
-             * @param {string} path - the path to the grouping
-             * @param usersToAdd
-             * @param onSuccess
-             * @param onError
-             * @param modal
+             * Add a members to the include group of a grouping. A modal is passed in an launched after a certain amount
+             * of time has elapsed.
              */
-            addMembersToInclude(path, usersToAdd, onSuccess, onError, modal) {
+            addMembersToInclude(usersToAdd, path, modal, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
                 return new Promise(resolve => {
                     dataProvider.updateDataWithTimeoutModal(onSuccess, onError, endpoint, modal);
@@ -99,11 +87,7 @@
             },
 
             /**
-             * Adds a member to the exclude group of a grouping.
-             * @param {string} path - the path to the grouping
-             * @param {string} userToAdd - the username of the member to add
-             * @param onSuccess
-             * @param onError
+             * Add a member to the exclude group of a grouping.
              */
             addMemberToExclude(path, userToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToExcludeGroup";
@@ -111,14 +95,10 @@
             },
 
             /**
-             * Adds a members to the exclude group of a grouping.
-             * @param {string} path - the path to the grouping
-             * @param {string} usersToAdd - the usernames of the members to add
-             * @param onSuccess
-             * @param onError
-             * @param modal
+             * Add a members to the exclude group of a grouping. A modal is passed in an launched after a certain amount
+             * of time has elapsed.
              */
-            addMembersToExclude(path, usersToAdd, onSuccess, onError, modal) {
+            addMembersToExclude(usersToAdd, path, modal, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
                 return new Promise(resolve => {
                     dataProvider.updateDataWithTimeoutModal(onSuccess, onError, endpoint, modal);
@@ -126,11 +106,7 @@
             },
 
             /**
-             * Adds a member to the exclude group of a grouping.
-             * @param {string} path - the path to the grouping
-             * @param {string} newOwner - the new owner to add to the grouping
-             * @param onSuccess
-             * @param onError
+             * Add a member to the exclude group of a grouping.
              */
             assignOwnership(path, newOwner, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + newOwner + "/assignOwnership";
@@ -138,60 +114,54 @@
             },
 
             /**
-             * Adds a user to the list of admins
-             * @param {string} adminToAdd - the username of the admin to add
-             * @param onSuccess
-             * @param onError
+             * Add a user to the list of admins.
              */
             addAdmin(adminToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + adminToAdd + "/addAdmin";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
-
+            /**
+             * Remove a member from multiple groups.
+             */
             removeFromGroups(groups, member, onSuccess, onError) {
                 let endpoint = BASE_URL + groups + "/" + member + "/removeFromGroups";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
             /**
-             * Removes a member from the include group of a grouping.
-             * @param {string} path - the path to the grouping
-             * @param {string} member - the member to remove
-             * @param onSuccess
-             * @param onError
+             * Remove a member from the include group of a grouping.
              */
             removeMemberFromInclude(path, member, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
+
+            /**
+             * Remove members from include group of grouping.
+             */
             removeMembersFromInclude(path, members, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + members + "/deleteMembersFromIncludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
             /**
-             * Removes a member from the exclude group of a grouping.
-             * @param {string} path - the path to the grouping
-             * @param {string} member - the member to remove
-             * @param onSuccess
-             * @param onError
+             * Remove a member from the exclude group of a grouping.
              */
             removeMemberFromExclude(path, member, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromExcludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
+            /**
+             * Remove members from exclude group of grouping.
+             */
             removeMembersFromExclude(path, members, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + members + "/deleteMembersFromExcludeGroup";
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
             /**
-             * Removes a member from the owners group of a grouping.
-             * @param {string} path - the path to the grouping
-             * @param ownerToRemove
-             * @param onSuccess
-             * @param onError
+             * Remove a member from the owners group of a grouping.
              */
             removeOwner(path, ownerToRemove, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + ownerToRemove + "/removeOwnership";
@@ -199,10 +169,7 @@
             },
 
             /**
-             * Removes a member from the list of admins.
-             * @param adminToRemove
-             * @param onSuccess
-             * @param onError
+             * Remove a member from the list of admins.
              */
             removeAdmin(adminToRemove, onSuccess, onError) {
                 let endpoint = BASE_URL + adminToRemove + "/deleteAdmin";
@@ -210,20 +177,14 @@
             },
 
             /**
-             * Gets the attributes of a user, which includes their name, uid, and uuid.
-             * @param {string} member - the UH username of the member
-             * @param onSuccess
-             * @param onError
+             * Get the attributes of a user, which includes their uid, uhUuid, givenName, cn, and sn.
              */
             getMemberAttributes(member, onSuccess, onError) {
                 let endpoint = BASE_URL + "members/" + member;
                 dataProvider.loadData(onSuccess, onError, endpoint);
             },
             /**
-             * Opts a member out of a grouping.
-             * @param {string} path - the path of the grouping to opt out of
-             * @param onSuccess
-             * @param onError
+             * Opt member out of a grouping.
              */
             optOut(path, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/optOut";
@@ -231,10 +192,7 @@
             },
 
             /**
-             * Opts a user into a grouping.
-             * @param {string} path - the path of the grouping to opt in to
-             * @param onSuccess
-             * @param onError
+             * Opt a user into a grouping.
              */
             optIn(path, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/optIn";
@@ -310,20 +268,11 @@
             },
 
             /**
-             * Toggles the given sync destination.
-             * @param {string} path - the path of the grouping to update
-             * @param syncDestId
-             * @param turnOn
-             * @param onSuccess
-             * @param onError
+             * Toggle the given sync destination.
              */
             setSyncDest(path, syncDestId, turnOn, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/syncDests/" + syncDestId;
-                if (turnOn) {
-                    endpoint = endpoint.concat("/enable");
-                } else {
-                    endpoint = endpoint.concat("/disable");
-                }
+                endpoint = (turnOn) ? endpoint.concat("/enable") : endpoint.concat("/disable");
                 dataProvider.updateData(onSuccess, onError, endpoint);
             },
 
@@ -337,8 +286,6 @@
 
             /**
              * Parse a generic response data type.
-             * @param response
-             * @returns {{}}
              */
             parseGenericResponseData(response) {
                 let parsedObject = {};

@@ -177,7 +177,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get a member's attributes based off username
+     * Get a member's attributes based off username.
      *
      * @return Map of user attributes
      */
