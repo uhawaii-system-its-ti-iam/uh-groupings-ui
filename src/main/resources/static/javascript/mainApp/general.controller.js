@@ -472,7 +472,7 @@
 
 
         /**
-         * Checks what lists a member in a grouping are in.
+         * Check what lists a member in a grouping are in.
          * @param {object[]} compositeGroup - the composite / all members group
          */
         $scope.addWhereListed = function (compositeGroup) {
@@ -507,41 +507,38 @@
         };
 
         /**
-         * Take $scope.usersToAdd count the number of words it contains and split it into a comma separated string, then
-         * decide whether to a multi add or a single add is necessary.
+         * Add new members to the group called listName. This works for single or multiple members;
          * @param listName
          */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
             if (_.isEmpty($scope.usersToAdd)) {
                 $scope.emptyInput = true;
+            }
+            let numMembers = ($scope.usersToAdd.split(" ").length - 1);
+            if (numMembers === 0) {
+                $scope.userToAdd = $scope.usersToAdd;
+                $scope.existsInGrouper($scope.userToAdd);
+                $scope.addMember(listName);
             } else {
-                let numMembers = ($scope.usersToAdd.split(" ").length - 1);
+                let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
 
-                if (numMembers > 0) {
-                    let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
-
-                    $scope.usersToAdd = [];
-                    if (numMembers > $scope.maxImport) {
+                $scope.usersToAdd = [];
+                if (numMembers > $scope.maxImport) {
+                    launchDynamicModal(
+                        Message.Title.IMPORT_OUT_OF_BOUNDS,
+                        `Importing more than ${$scope.maxImport} users is not allowed.`,
+                        8000);
+                } else {
+                    if (numMembers > $scope.multiAddThreshold) {
                         launchDynamicModal(
-                            Message.Title.IMPORT_OUT_OF_BOUNDS,
-                            `Importing more than ${$scope.maxImport} users is not allowed.`,
-                            8000);
-                    } else {
-                        if (numMembers > $scope.multiAddThreshold) {
-                            launchDynamicModal(
-                                Message.Title.LARGE_IMPORT,
-                                `You are attempting to import ${numMembers} new users to the ${listName} list.
+                            Message.Title.LARGE_IMPORT,
+                            `You are attempting to import ${numMembers} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
                              the import results will be sent.`,
-                                8000);
-                        }
-                        $scope.addMultipleMembers(users, listName);
+                            8000);
                     }
-                } else {
-                    $scope.userToAdd = $scope.usersToAdd;
-                    $scope.existsInGrouper($scope.userToAdd);
-                    $scope.addMember(listName);
+                    $scope.addMultipleMembers(users, listName);
                 }
             }
         };
@@ -565,9 +562,6 @@
 
         /**
          * Send the list of users to be added to the server as an HTTP POST request.
-         * @param list - comma separated string of user names to be added
-         * @param listName - current list being added to
-         * @returns {Promise<void>}
          */
         $scope.addMultipleMembers = async function (list, listName) {
             let groupingPath = $scope.selectedGrouping.path;
@@ -601,7 +595,6 @@
 
         /**
          * Launch a modal containing a table of the results(user info) received from the the server's response message.
-         * @param listName - current list being added to
          */
         $scope.launchMultiAddResultModal = function (listName) {
             $scope.multiAddResultModalInstance = $uibModal.open({
