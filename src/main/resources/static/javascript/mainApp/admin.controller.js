@@ -79,7 +79,7 @@
             let result = [];
             dups.forEach((membership, index) => {
                 dups.forEach((m, index2) => {
-                    if (membership.name == m.name && index != index2) {
+                    if (membership.name === m.name && index !== index2) {
                         membership.inInclude |= m.inInclude;
                         membership.inExclude |= m.inExclude;
                         membership.inBasis |= m.inBasis;
