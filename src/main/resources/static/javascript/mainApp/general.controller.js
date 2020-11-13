@@ -119,8 +119,6 @@
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
             $scope.getGroupingInformation();
-
-
             $scope.showGrouping = true;
         };
 
@@ -144,10 +142,7 @@
             _.remove(members, function (member) {
                 return _.isEmpty(member.name);
             });
-
-            // Unique members only by UUID (assume no two users should have the same uuid)
             members = _.uniqBy(members, "uhUuid");
-
             return _.sortBy(members, "name");
         }
 
@@ -162,12 +157,8 @@
             _.remove(membersToAdd, function (member) {
                 return _.isEmpty(member.name);
             });
-
             let members = _.concat(initialMembers, membersToAdd);
-
-            // Unique members only by UUID (assume no two users should have the same uuid)
             members = _.uniqBy(members, "uhUuid");
-
             return _.sortBy(members, "name");
         }
 
@@ -293,11 +284,11 @@
 
         /**
          * Function to get pages of a grouping asynchronously
-         * @param {String} groupingPath - Path to the grouping to retrieve data from
-         * @param {Integer} page - Page of grouping to retrieve (Paging starts from 1)
-         * @param {Integer} size - Size of page to retrieve
-         * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
-         * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending
+         * @param {string} groupingPath - Path to the grouping to retrieve data from
+         * @param {number} page - Page of grouping to retrieve (Paging starts from 1)
+         * @param {number} size - Size of page to retrieve
+         * @param {string} sortString - Parameter to sort the grouping database by before retrieving information
+         * @param {boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending
          *     (Z-A)
          */
         $scope.getPages = function (groupingPath, page, size, sortString, isAscending) {
@@ -391,7 +382,6 @@
             if ($scope.descriptionForm) {
                 $scope.descriptionForm = !($scope.descriptionForm);
             }
-
         };
 
         /**
@@ -410,7 +400,6 @@
                 $scope.modelDescription = groupingDescription;
                 displayTracker = 0;
             }
-
             return (groupingDescription.length > 0)
                 ? groupingDescription
                 : noDescriptionMessage;
@@ -439,7 +428,7 @@
         };
 
         /**
-         * Creates a modal for errors in loading data from the API.
+         * Create a modal for errors in loading data from the API.
          */
         $scope.createApiErrorModal = function () {
             $scope.apiErrorModalInstance = $uibModal.open({
@@ -451,14 +440,14 @@
         };
 
         /**
-         * Closes the API error modal.
+         * Close the API error modal.
          */
         $scope.closeApiError = function () {
             $scope.apiErrorModalInstance.close();
         };
 
         /**
-         * Checks if the members in the group are in the basis group.
+         * Check if the members in the group are in the basis group.
          * @param {object[]} group - the group to check
          */
         $scope.addInBasis = function (group) {
@@ -1504,19 +1493,11 @@
         };
 
         $scope.updateIncludeCheck = function () {
-            if ($scope.includeCheck === false) {
-                $scope.includeCheck = true;
-            } else {
-                $scope.includeCheck = false;
-            }
+            $scope.includeCheck = !($scope.includeCheck);
         };
 
         $scope.updateExcludeCheck = function () {
-            if ($scope.excludeCheck === false) {
-                $scope.excludeCheck = true;
-            } else {
-                $scope.excludeCheck = false;
-            }
+            $scope.excludeCheck = !($scope.excludeCheck);
         };
 
         /**
