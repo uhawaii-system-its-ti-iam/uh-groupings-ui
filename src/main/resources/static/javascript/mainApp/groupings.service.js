@@ -48,7 +48,7 @@
                     params = params + "isAscending=" + isAscending;
                 }
                 endpoint = endpoint + params;
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -56,7 +56,7 @@
              */
             updateDescription(data, path, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/description";
-                dataProvider.updateDataWithBody(onSuccess, onError, endpoint, data);
+                dataProvider.updateDataWithBody(endpoint, data, onSuccess, onError);
             },
 
             /**
@@ -64,7 +64,7 @@
              */
             getAdminLists(onSuccess, onError) {
                 let endpoint = BASE_URL + "adminLists";
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -72,7 +72,7 @@
              */
             addMemberToInclude(path, userToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToIncludeGroup";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -82,7 +82,7 @@
             addMembersToInclude(usersToAdd, path, modal, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
                 return new Promise(resolve => {
-                    dataProvider.updateDataWithTimeoutModal(onSuccess, onError, endpoint, modal);
+                    dataProvider.updateDataWithTimeoutModal(endpoint, modal, onSuccess, onError);
                 });
             },
 
@@ -91,7 +91,7 @@
              */
             addMemberToExclude(path, userToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + userToAdd + "/addMemberToExcludeGroup";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -101,7 +101,7 @@
             addMembersToExclude(usersToAdd, path, modal, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
                 return new Promise(resolve => {
-                    dataProvider.updateDataWithTimeoutModal(onSuccess, onError, endpoint, modal);
+                    dataProvider.updateDataWithTimeoutModal(endpoint, modal, onSuccess, onError);
                 });
             },
 
@@ -110,7 +110,7 @@
              */
             assignOwnership(path, newOwner, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + newOwner + "/assignOwnership";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -118,14 +118,14 @@
              */
             addAdmin(adminToAdd, onSuccess, onError) {
                 let endpoint = BASE_URL + adminToAdd + "/addAdmin";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
             /**
              * Remove a member from multiple groups.
              */
             removeFromGroups(groups, member, onSuccess, onError) {
                 let endpoint = BASE_URL + groups + "/" + member + "/removeFromGroups";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -133,7 +133,7 @@
              */
             removeMemberFromInclude(path, member, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromIncludeGroup";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -141,7 +141,7 @@
              */
             removeMembersFromInclude(path, members, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + members + "/deleteMembersFromIncludeGroup";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -149,7 +149,7 @@
              */
             removeMemberFromExclude(path, member, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + member + "/deleteMemberFromExcludeGroup";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -157,7 +157,7 @@
              */
             removeMembersFromExclude(path, members, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + members + "/deleteMembersFromExcludeGroup";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -165,7 +165,7 @@
              */
             removeOwner(path, ownerToRemove, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + ownerToRemove + "/removeOwnership";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -173,7 +173,7 @@
              */
             removeAdmin(adminToRemove, onSuccess, onError) {
                 let endpoint = BASE_URL + adminToRemove + "/deleteAdmin";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -181,14 +181,14 @@
              */
             getMemberAttributes(member, onSuccess, onError) {
                 let endpoint = BASE_URL + "members/" + member;
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.loadData(endpoint, onSuccess, onError);
             },
             /**
              * Opt member out of a grouping.
              */
             optOut(path, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/optOut";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -196,7 +196,7 @@
              */
             optIn(path, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/optIn";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -204,7 +204,7 @@
              */
             getMembershipResults(onSuccess, onError) {
                 let endpoint = BASE_URL + "members/groupings/";
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -212,50 +212,37 @@
              */
             getOptInGroups(onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/optInGroups/";
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
             /*todo:copy code*/
             getMembershipAssignmentForUser: function (onSuccess, onError, username) {
                 let endpoint = BASE_URL + "members/" + username + "/groupings/";
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
             /**
-             * Toggles the preference option to allow users to opt into a grouping.
-             * @param {string} path - the path of the grouping to update
-             * @param {boolean} optInOn - true if users should be allowed to opt into the grouping, otherwise false
-             * @param onSuccess
-             * @param onError
+             * Toggle the preference option to allow users to opt into a grouping.
              */
             setOptIn(path, optInOn, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + optInOn + "/setOptIn";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
-             * Toggles the preference option to allow users to opt out of a grouping.
-             * @param {string} path - the path of the grouping to update
-             * @param optOutOn
-             * @param onSuccess
-             * @param onError
+             * Toggle the preference option to allow users to opt out of a grouping.
              */
             setOptOut(path, optOutOn, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + optOutOn + "/setOptOut";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
-             * Resets the entire groupings removing all basis,include, and exclude members.
-             * @param basis
-             * @param include
-             * @param exclude
-             * @param onSuccess
-             * @param onError
+             * Reset the entire groupings removing all basis,include, and exclude members.
              */
             resetGroup(path, include, exclude, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + include + "/" + exclude + "/resetGroup";
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             //todo Might not need this as the syncDests come back in getGrouping already
@@ -264,7 +251,7 @@
              */
             getSyncDestList(path, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/syncDestinations";
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
             /**
@@ -273,15 +260,15 @@
             setSyncDest(path, syncDestId, turnOn, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/syncDests/" + syncDestId;
                 endpoint = (turnOn) ? endpoint.concat("/enable") : endpoint.concat("/disable");
-                dataProvider.updateData(onSuccess, onError, endpoint);
+                dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
             /**
-             * Gets the groupings a member owns.
+             * Get the groupings a member owns.
              */
             getGroupingsOwned(onSuccess, onError) {
                 let endpoint = BASE_URL + "owners/groupings";
-                dataProvider.loadData(onSuccess, onError, endpoint);
+                dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
             /**
