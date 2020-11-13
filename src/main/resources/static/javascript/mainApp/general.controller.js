@@ -579,7 +579,6 @@
                     Message.Body.SLOW_IMPORT,
                     8000);
             };
-
             let handleSuccessfulAdd = function (res) {
                 for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
@@ -591,11 +590,13 @@
                 }
                 $scope.launchMultiAddResultModal(listName);
             };
-            $scope.waitingForImportResponse = true; /* Spinner on */
-
-            let fun = "addMembersTo";
-            await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
-            (groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+            $scope.waitingForImportResponse = true;
+            if (listName === "Include") {
+                await groupingsService.addMembersToInclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+            }
+            if (listName === "Exclude") {
+                await groupingsService.addMembersToExclude(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+            }
         };
 
         /**
@@ -736,27 +737,6 @@
         };
 
         /**
-         * Creates a modal display for members added, and calls addMembersToInclude service.
-         * @param usersToAdd
-         * @param list
-         */
-        $scope.updateAddMembers = function (usersToAdd, list) {
-
-            let groupingPath = $scope.selectedGrouping.path;
-
-            let handleSuccessfulAdd = function (res, list, usersToAdd) {
-                $scope.createSuccessfulAddModal({
-                    user: usersToAdd,
-                    listName: list,
-                    response: res
-                });
-            };
-            if (list === "Include") {
-                groupingsService.addMembersToInclude(groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            }
-        };
-
-        /**
          * Initiates the adding of a member to a list.
          * @param {string} userToAdd - user being added
          * @param {string} list - the list the user is being added to
@@ -843,24 +823,6 @@
 
             $scope.checkModalInstance.result.then(function () {
                 $scope.updateAddMember(user, listName);
-            });
-        };
-
-        /**
-         * Creates a modal that asks for confirmation when importing multiple users.
-         * @param {object} options - the options object
-         * @param {string} options.usersToAdd - the users to import
-         * @param {string} options.listName - name of the list being added to
-         */
-        $scope.createConfirmAddMembersModal = function (options) {
-            $scope.confirmAddModalInstance = $uibModal.open({
-                templateUrl: "modal/confirmAddModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
-            $scope.confirmAddModalInstance.result.then(function () {
-                $scope.updateAddMembers(options.usersToAdd, options.listName);
             });
         };
 
