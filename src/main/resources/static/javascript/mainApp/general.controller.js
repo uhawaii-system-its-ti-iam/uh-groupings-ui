@@ -385,14 +385,15 @@
         };
 
         /**
-         * If the grouping hasn't been fetched, return csv group loaded message, otherwise return csv group not loaded message.
+         * Return the proper tooltip message for the export to csv button. If the grouping data hasn't been fetched,
+         * return csv group loaded message, otherwise return csv group not loaded message.
          */
         $scope.getCSVToolTipMessage = () => {
             return ($scope.paginatingComplete) ? Message.Csv.GROUP_LOADED : Message.Csv.GROUP_NOT_LOADED;
         };
 
         /**
-         * Used for placeholder text for a grouping's description in the form box.
+         * Toggle description or description placeholder.
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function () {
@@ -686,7 +687,7 @@
         };
 
         /**
-         * Adds a user to a group.
+         * Add a single member to group at list.
          * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
@@ -719,7 +720,7 @@
         };
 
         /**
-         * Initiates the adding of a member to a list.
+         * Perform an API request to add userToAdd to group at list.
          * @param {string} userToAdd - user being added
          * @param {string} list - the list the user is being added to
          */
@@ -749,10 +750,10 @@
             } else if (list === "admins") {
                 groupingsService.addAdmin(userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
-            // $scope.init();
         };
 
         /**
+         * Check if user is a member of another list. (Include <==> Exclude)
          * @param {string} user - the user you are checking to see if they are in another list.
          * @param {string} list - the list the user is currently being added to
          * @returns {boolean} - true if the person is already in another list, else false.
@@ -767,6 +768,7 @@
         };
 
         /**
+         * Check if user is a member of group named list.
          * @param {string} user - the user you are checking to see if they are already in the list being added to
          * @param {string} list - the list the user is currently being added to
          * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
@@ -786,7 +788,7 @@
         };
 
         /**
-         * Creates a modal that asks whether or not they want to add a person that is already in another list.
+         * Create a modal that asks whether or not they want to add a person that is already in another list.
          * @param user - Username of the user they are trying to add.
          * @param listName - name of the list they are adding to (either Include or Exclude)
          */
@@ -809,7 +811,7 @@
         };
 
         /**
-         * Checks if the user is in the Grouper database
+         * Check if the user is in the Grouper database
          * @param {object} user - the user you are checking to see if they are in Grouper
          */
         $scope.existsInGrouper = function (user) {
@@ -823,7 +825,7 @@
         };
 
         /**
-         * Creates a modal that asks for confirmation when adding a user.
+         * Create a modal that asks for confirmation when adding a user.
          * @param {object} options - the options object
          * @param {string} options.userToAdd - the user to add
          * @param {string} options.listName - name of the list being added to
@@ -858,44 +860,15 @@
             });
         };
 
-        /*$scope.createConfirmUserRemoveModal = function (options) {
-            const userToRemove = options.userToRemove;
-
-            groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                $scope.fullNameToAdd = attributes.cn;
-                $scope.givenNameToAdd = attributes.givenName;
-                $scope.uhUuidToAdd = attributes.uhUuid;
-                $scope.uidToAdd = attributes.uid;
-
-                $scope.listName = options.listName;
-
-                // Ask for confirmation from the user to add the member
-                $scope.confirmAddModalInstance = $uibModal.open({
-                    templateUrl: "modal/confirmAddModal",
-                    scope: $scope,
-                    backdrop: "static",
-                    keyboard: false
-                });
-
-                $scope.confirmAddModalInstance.result.then(function () {
-                    $scope.updateAddMember(userToAdd, options.listName);
-                });
-            }, function (res) {
-                if (res.statusCode === 404) {
-                    $scope.createAddErrorModal(userToAdd);
-                }
-            });
-        };*/
-
         /**
-         * Closes CheckModal and proceeds with the checkModalInstance result.then function
+         * Close CheckModal and proceeds with the checkModalInstance result.then function
          */
         $scope.proceedCheckModal = function () {
             $scope.checkModalInstance.close();
         };
 
         /**
-         * Dismisses the CheckModal and closes it with proceeding with checkModalInstance's result.then function.
+         * Dismiss the CheckModal and closes it with proceeding with checkModalInstance's result.then function.
          */
         $scope.closeCheckModal = function () {
             $scope.checkModalInstance.dismiss();
@@ -916,7 +889,7 @@
         };
 
         /**
-         * Gives a user ownership of a grouping.
+         * Give a user ownership of a grouping.
          */
         $scope.addOwner = function () {
             const ownerToAdd = $scope.ownerToAdd;
@@ -938,7 +911,7 @@
         };
 
         /**
-         * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
+         * Create a modal telling the user whether or not the user was successfully added into the grouping/admin list.
          * @param {object} options - the options object
          * @param {string} options.userToAdd - the user being added
          * @param {string?} options.response - the response from adding a member
@@ -969,7 +942,7 @@
         };
 
         /**
-         * Closes the add user modal.
+         * Close the add user modal.
          */
         $scope.closeSuccessfulAddModal = function () {
             $scope.addModalInstance.close();
@@ -995,7 +968,7 @@
         };
 
         /**
-         * Creates a modal telling the user that they do not have access to perform this action and that they
+         * Create a modal telling the user that they do not have access to perform this action and that they
          * will be logged out and redirected to the homepage.
          */
         $scope.createRoleErrorModal = function () {
@@ -1008,7 +981,7 @@
             });
         };
         /**
-         * Removes a user from the include or exclude group.
+         * Remove a user from the include or exclude group.
          * @param {string} listName - the list to remove the user from (either Include or Exclude)
          * @param {number} currentPage - the current page in the table
          * @param {number} index - the index of the user clicked by the user
@@ -1033,7 +1006,7 @@
 
 
         /**
-         * Removes a grouping owner. There must be at least one grouping owner remaining.
+         * Remove a grouping owner. There must be at least one grouping owner remaining.
          * @param {number} currentPage - the current page in the owners table
          * @param {number} index - the index of the owner clicked by the user
          */
@@ -1119,7 +1092,7 @@
         }
 
         /**
-         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {object} options - the options object
          * @param {object} options.user - the user being removed
@@ -1157,7 +1130,7 @@
         };
 
         /**
-         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {object} options - the options object
          * @param {object} options.user - the user being removed
@@ -1191,32 +1164,35 @@
         };
 
         /**
-         * Closes the modal, then proceeds with reseting the grouping.
+         * Close the modal, then proceeds with resetting the grouping.
          */
         $scope.proceedResetGroup = function () {
             $scope.resetModalInstance.close();
         };
 
         /**
-         * Closes the modal for deleting a user. This does not delete the user from the grouping/admin list.
+         * Close the modal for deleting a user. This does not delete the user from the grouping/admin list.
          */
         $scope.cancelRemoveUser = function () {
             $scope.removeModalInstance.dismiss();
         };
 
         /**
-         * Closes the modal for reseting group. This does not reset the grouping.
+         * Close the modal for resetting group. This does not reset the grouping.
          */
         $scope.cancelResetGroup = function () {
             $scope.resetModalInstance.dismiss();
         };
 
+        /**
+         * Close empty group warning modal.
+         */
         $scope.closeEmptyGroupModal = function () {
             $scope.emptyGroupModalInstance.dismiss();
         };
 
         /**
-         * Creates a modal stating there was an error removing the user from a group.
+         * Create a modal stating there was an error removing the user from a group.
          * @param {string} userType - the type of user being removed (either admin or owner)
          */
         $scope.createRemoveErrorModal = function (userType) {
@@ -1231,7 +1207,7 @@
         };
 
         /**
-         * Closes the remove error modal.
+         * Close the remove error modal.
          */
         $scope.closeRemoveErrorModal = function () {
             $scope.removeErrorModalInstance.close();
@@ -1245,7 +1221,7 @@
         };
 
         /**
-         * Resets the grouping members and page numbers.
+         * Reset the grouping members and page numbers.
          */
         function resetGroupingMembers() {
             $scope.groupingMembers = [];
@@ -1271,7 +1247,7 @@
         }
 
         /**
-         * Resets the selected group in the side navbar to the list of all members.
+         * Reset the selected group in the side navbar to the list of all members.
          */
         function resetPillsToAllMembers() {
             const pills = $("#group-pills")[0].children;
@@ -1301,7 +1277,7 @@
         }
 
         /**
-         * Clears the user input for adding a member to a list.
+         * Clear the user input for adding a member to a list.
          * @param {string?} listName - the name of the list the member is being added to
          */
         function clearAddMemberInput(listName) {
@@ -1336,7 +1312,7 @@
         }
 
         /**
-         * Returns to the list of groupings available for management/administration.
+         * Return to the list of groupings available for management/administration.
          */
         $scope.returnToGroupingsList = function () {
             $scope.resetGroupingInformation();
@@ -1350,7 +1326,7 @@
         };
 
         /**
-         * Resets the grouping members, page numbers, filters, and columns to sort by.
+         * Reset the grouping members, page numbers, filters, and columns to sort by.
          */
         $scope.resetGroupingInformation = function () {
             resetGroupingMembers();
@@ -1365,7 +1341,7 @@
 
         /**
          * Create a modal with a description of the preference selected.
-         * @param {string} desc - the description of the preference
+         * @param {string} desc - The description of the preference.
          */
         $scope.createPreferenceInfoModal = function (desc) {
             $scope.preferenceInfo = desc;
