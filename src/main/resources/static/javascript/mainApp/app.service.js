@@ -5,17 +5,16 @@
      */
     UHGroupingsApp.factory("dataProvider", function ($http, $window) {
 
-        //Global time limit variable for time out modal.
         var timeLimit = 20000;
 
         return {
             /**
              * Perform a GET request to the specified URL.
-             * @param {function} callback - the function to perform on a successful request (200)
-             * @param callError
              * @param {string} url - the URL to perform the request on
+             * @param {function} callback - the function to perform on a successful request (200)
+             * @param {function} callError - Execute if response returns as an error.
              */
-            loadData(callback, callError, url) {
+            loadData(url, callback, callError) {
                 $http.get(encodeURI(url))
                     .then(function (response) {
                         callback(response.data);
@@ -26,10 +25,11 @@
 
             /**
              * Perform a POST request to the specified URL.
-             * @param {function} callback - the function to perform on a successful request (200)
              * @param {string} url - the URL to perform the request on
+             * @param {function} callback - the function to perform on a successful request (200)
+             * @param {function} callError - Execute if response returns as an error.
              */
-            updateData(callback, callError, url) {
+            updateData(url, callback, callError) {
                 $http.post(encodeURI(url))
                     .then(function (response) {
                         callback(response.data);
@@ -38,16 +38,15 @@
                     });
             },
 
-
             /**
              * POST data to the server, if the response is OK then call the callBack function, if the response is an
              * error then call the callError function. If the response is not received in n seconds, launch a modal.
-             * @param {function} callback - Execute if response returns OK
-             * @param {function} callError - Execute if response returns as an error.
              * @param {string} url - Path to which data is being posted too.
              * @param {function} modal - Launch a modal using a call back function.
+             * @param {function} callback - Execute if response returns OK
+             * @param {function} callError - Execute if response returns as an error.
              */
-            updateDataWithTimeoutModal(callback, callError, url, modal) {
+            updateDataWithTimeoutModal(url, modal, callback, callError) {
                 let timeoutID = setTimeout(modal, timeLimit);
                 $http.post(encodeURI(url))
                     .then(function (response) {
@@ -61,12 +60,12 @@
 
             /**
              * Perform a PUT request to the specified URL.
-             * @param {function} callback - the function to perform on a successful request (200)
-             * @param {function} callError - the function to perform on a unsuccessful request
              * @param {string} url - the URL to perform the request on
              * @param {string} data - data to be updated
+             * @param {function} callback - the function to perform on a successful request (200)
+             * @param {function} callError - the function to perform on a unsuccessful request
              */
-            updateDataWithBody(callback, callError, url, data) {
+            updateDataWithBody(url, data, callback, callError) {
                 $http.put(encodeURI(url), data)
                     .then(function (response) {
                         callback(response);

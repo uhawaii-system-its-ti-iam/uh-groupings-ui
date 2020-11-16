@@ -38,7 +38,7 @@
         }
 
         /**
-         * With the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
+         * Take the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
          * all values that each duplicate contained.
          */
         function mergeDuplicateValues(dups) {
@@ -76,7 +76,7 @@
         }
 
         /**
-         *  Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
+         *  Load the groups a user is a member in, the groups the user is able to opt in to, and the groups the user
          *  is able to opt out of.
          */
         $scope.init = function () {
@@ -84,7 +84,6 @@
 
             // Request a list of membership objects from the API.
             groupingsService.getMembershipResults((res) => {
-
                     let data = [];
 
                     _.forEach(res, (membership) => {
@@ -93,6 +92,7 @@
 
                     let dups = coupleDuplicatePaths(data);
                     let result = mergeDuplicateValues(dups);
+
                     $scope.membershipsList = _.sortBy(_.uniqBy(result, "name"), "name");
                     $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
@@ -124,6 +124,10 @@
             );
         };
 
+
+        /**
+         * Filter member list with respect to membersQuery.
+         */
         $scope.memberFilterReset = function () {
             $scope.membersQuery = "";
             $scope.optInQuery = "";
@@ -132,8 +136,7 @@
         };
 
         /**
-         * Handles responses for opting into or out of a grouping.
-         * @param {object} res - the response from opting into/out of a grouping
+         * Handle responses for opting into or out of a grouping.
          */
         function handleSuccessfulOpt(res) {
 
@@ -147,7 +150,7 @@
         }
 
         /**
-         * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
+         * Add the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
          * @param {number} currentPage - the current page within the table
          * @param {number} indexClicked - the index of the grouping clicked by the user
          */
@@ -158,7 +161,7 @@
         };
 
         /**
-         * Adds the user to the include group of the grouping selected.
+         * Add the user to the include group of the grouping selected.
          * @param {number} currentPage - the current page within the table
          * @param {number} indexClicked - the index of the grouping clicked by the user
          */
@@ -169,10 +172,10 @@
         };
 
         /**
-         * Copies grouping path to clipboard.
+         * Copy grouping path to clipboard.
          */
         $scope.copyPath = function (grouping) {
-            var copyText = document.getElementById(grouping.path);
+            let copyText = document.getElementById(grouping.path);
             copyText.select();
             document.execCommand("copy");
         };

@@ -17,9 +17,7 @@ public final class Dates {
     public static final String DATE_FORMAT = "MMMM dd, yyyy";
     public static final String DATE_SORT_FORMAT = "yyyy-MM-dd";
 
-    // Private constructor; prevent instantiation.
     private Dates() {
-        // Emtpy.
     }
 
     public static LocalDate newLocalDate(int year, Month month, int day) {
@@ -134,7 +132,6 @@ public final class Dates {
         return date != null ? date.atStartOfDay() : null;
     }
 
-    // Not sure we really need this method.
     public static String formatDate(LocalDate date) {
         return formatDate(date, "MM/dd/yyyy");
     }
