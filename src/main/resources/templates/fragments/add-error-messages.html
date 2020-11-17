@@ -2,8 +2,8 @@
 
     <div ng-show="!errorDismissed && !waitingForImportResponse">
         <!--message for empty input-->
-        <div ng-if="emptyInput && resStatus === 0"
-             class="float-md-left alert alert-danger form-alert fade show">
+        <div ng-if="emptyInput"
+             class="float-md-left mt-3 alert alert-danger fade show">
             <p th:utext="#{screen.message.modal.add.empty}"></p>
         </div>
         <!--message for invalid input-->
@@ -16,13 +16,13 @@
         <div ng-if="userToAdd.length > 0 && swap === false"
              class="float-md-left alert alert-danger form-alert fade in">
             <div ng-if="listName === 'Include'">
-                <p>{{userToAdd}} is already in Include</p>
+                <p>{{user}} is already in Include</p>
             </div>
             <div ng-if="listName === 'Exclude'">
-                <p>{{userToAdd}} is already in Exclude</p>
+                <p>{{user}} is already in Exclude</p>
             </div>
             <div ng-if="listName === 'owners'">
-                <p>{{userToAdd}} is already in Owner</p>
+                <p>{{user}} is already in Owner</p>
             </div>
         </div>
     </div>
