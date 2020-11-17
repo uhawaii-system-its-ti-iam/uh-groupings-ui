@@ -786,7 +786,7 @@
          * @param listName - name of the list they are adding to (either Include or Exclude)
          */
         $scope.createCheckModal = function (user, listName, swap, inBasis) {
-            $scope.user = user;
+            // $scope.user = user;
             $scope.listName = listName;
             $scope.swap = swap;
             $scope.inBasis = inBasis;
@@ -799,6 +799,7 @@
             });
 
             $scope.checkModalInstance.result.then(function () {
+                $scope.waitingForImportResponse = true;
                 $scope.updateAddMember(user, listName);
             });
         };
@@ -814,6 +815,21 @@
                     $scope.givenNameToAdd = attributes.givenName;
                     $scope.uhUuidToAdd = attributes.uhUuid;
                     $scope.uidToAdd = attributes.uid;
+
+                    // if ($scope.fullNameToAdd.length > 0) {
+                    //     $scope.user = $scope.fullNameToAdd;
+                    // } else if ($scope.uidToAdd.length > 0) {
+                    //     $scope.user = $scope.uidToAdd;
+                    // } else {
+                    //     $scope.user = $scope.uhUuidToAdd;
+                    // }
+                    $scope.user = $scope.fullNameToAdd;
+                    if ($scope.fullNameToAdd.length <= 0) {
+                        $scope.user = $scope.uidToAdd;
+                    }
+                    if ($scope.uidToAdd.length <= 0) {
+                        $scope.user = $scope.uhUuidToAdd;
+                    }
                     $scope.addMember(list);
                 }
             }, function (res) {
@@ -831,17 +847,34 @@
         $scope.createConfirmAddModal = function (options) {
             const userToAdd = options.userToAdd;
             $scope.listName = options.listName;
+            groupingsService.getMemberAttributes(userToAdd, function (attributes) {
+                $scope.fullNameToAdd = attributes.cn;
+                $scope.givenNameToAdd = attributes.givenName;
+                $scope.uhUuidToAdd = attributes.uhUuid;
+                $scope.uidToAdd = attributes.uid;
 
-            // Ask for confirmation from the user to add the member
-            $scope.confirmAddModalInstance = $uibModal.open({
-                templateUrl: "modal/confirmAddModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
+                $scope.user = $scope.fullNameToAdd;
+                if ($scope.fullNameToAdd.length <= 0) {
+                    $scope.user = $scope.uidToAdd;
+                }
+                if ($scope.uidToAdd.length <= 0) {
+                    $scope.user = $scope.uhUuidToAdd;
+                }
+                // Ask for confirmation from the user to add the member
+                $scope.confirmAddModalInstance = $uibModal.open({
+                    templateUrl: "modal/confirmAddModal",
+                    scope: $scope,
+                    backdrop: "static",
+                    keyboard: false
+                });
 
-            $scope.confirmAddModalInstance.result.then(function () {
-                $scope.updateAddMember(userToAdd, options.listName);
+                $scope.confirmAddModalInstance.result.then(function () {
+                    $scope.waitingForImportResponse = true;
+                    $scope.updateAddMember(userToAdd, options.listName);
+                });
+            }, function (res) {
+                $scope.user = userToAdd;
+                $scope.resStatus = res.status;
             });
         };
 
@@ -882,9 +915,9 @@
             const list = "owners";
 
             if (_.isEmpty(ownerToAdd)) {
-                $scope.user = ownerToAdd;
                 $scope.emptyInput = true;
             } else if ($scope.existInList(ownerToAdd, list)) {
+                $scope.user = ownerToAdd;
                 $scope.listName = list;
                 $scope.swap = false;
             } else {
@@ -903,7 +936,7 @@
          * @param {string?} options.listName - the list where the user was being added to
          */
         $scope.createSuccessfulAddModal = function (options) {
-            $scope.user = options.user;
+//            $scope.user = options.user;
             $scope.listName = options.listName;
 
             $scope.addModalInstance = $uibModal.open({
@@ -934,7 +967,7 @@
         };
 
         $scope.createAddErrorModal = function (userAdded) {
-            $scope.user = userAdded;
+            // $scope.user = userAdded;
 
             $scope.addErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/addErrorModal",
@@ -1598,7 +1631,7 @@
          * @param inBasis - boolean if user is in basis or not
          */
         $scope.createBasisWarningModal = function (user, listName, inBasis) {
-            $scope.user = user;
+            // $scope.user = user;
             $scope.listName = listName;
             $scope.inBasis = inBasis;
 
@@ -1608,6 +1641,7 @@
             });
 
             $scope.basisWarningModalInstance.result.then(function () {
+                $scope.waitingForImportResponse = true;
                 $scope.updateAddMember(user, listName);
             });
         };

@@ -403,7 +403,6 @@ describe("GeneralController", function () {
             spyOn(scope, "filter").and.callThrough();
             scope.returnToGroupingsList();
 
-            expect(scope.groupingsQuery).toEqual("");
             expect(scope.filter).toHaveBeenCalled();
         });
 
@@ -447,7 +446,10 @@ describe("GeneralController", function () {
             expect(scope.excludeQuery).toEqual("");
             expect(scope.includeQuery).toEqual("");
             expect(scope.membersQuery).toEqual("");
-            expect(scope.groupingsQuery).toEqual("");
+            expect(scope.adminsQuery).toEqual("");
+            expect(scope.optInQuery).toEqual("");
+            expect(scope.ownersQuery).toEqual("");
+            expect(scope.personQuery).toEqual("");
         });
     });
 
