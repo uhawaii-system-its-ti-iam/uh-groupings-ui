@@ -312,6 +312,12 @@ table .p-12 {
     opacity: .5;
 }
 
+
+.modal-names {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .modal-dialog {
     display: -ms-flexbox;
     display: flex;

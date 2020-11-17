@@ -12,17 +12,14 @@ public class Group implements Comparable<Group> {
         // Empty.
     }
 
-    // Constructor.
     public Group(List<Person> members) {
         setMembers(members);
     }
 
-    // Constructor.
     public Group(String path) {
         setPath(path);
     }
 
-    // Constructor.
     public Group(String path, List<Person> members) {
         this(members);
         setPath(path);
