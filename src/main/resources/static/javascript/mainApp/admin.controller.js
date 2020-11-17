@@ -34,7 +34,7 @@
         };
 
         /**
-         * Complete initialization by fetching a list of admins and list of all groupings.
+         * Complete initialization by fetching a list of admins and a list of all the groupings.
          */
         $scope.init = function () {
             // Adds the loading spinner.
