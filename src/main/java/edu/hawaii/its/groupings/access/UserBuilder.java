@@ -34,13 +34,10 @@ public final class UserBuilder {
         String username = attributes.getUid();
         RoleHolder roleHolder = authorizationService.fetchRoles(uhUuid, username);
 
-        /*logger.info("Adding roles. uid: " + uid + "; roles: " + roleHolder.getAuthorities());
+        logger.info("Adding roles. uid: " + uid + "; roles: " + roleHolder.getAuthorities());
         User user = new User(uid, roleHolder.getAuthorities());
-        logger.debug("Done adding roles; uid: " + uid);*/
+        logger.debug("Done adding roles; uid: " + uid);
 
-        logger.info("Adding roles. uhUuid: " + uhUuid + "; roles: " + roleHolder.getAuthorities());
-        User user = new User(uhUuid, roleHolder.getAuthorities());
-        logger.debug("Done adding roles; uhUuid: " + uhUuid);
 
         // Convert the uhUuid to a Long and record it.
         // Don't move this statement above the exists call
