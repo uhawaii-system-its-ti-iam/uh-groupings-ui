@@ -1,5 +1,4 @@
 (function () {
-
     /**
      * This controller contains functions specific to the admin page.
      * @param $scope - binding between controller and HTML page
@@ -124,7 +123,7 @@
         };
 
         /**
-         *
+         * Check for checked check boxes.
          */
         $scope.removeFromGroups = function () {
             $scope.selectedGroupingsNames = [];
