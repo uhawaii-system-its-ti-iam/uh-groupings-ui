@@ -31,7 +31,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public RoleHolder fetchRoles(String uhUuid, String username) {
         RoleHolder roleHolder = new RoleHolder();
-        Principal principal = new SimplePrincipal(username);
+        Principal principal = new SimplePrincipal(uhUuid);
         roleHolder.add(Role.ANONYMOUS);
         roleHolder.add(Role.UH);
 
