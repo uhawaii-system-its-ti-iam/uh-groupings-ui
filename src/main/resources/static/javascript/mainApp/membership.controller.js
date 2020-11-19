@@ -8,7 +8,7 @@
      * @param dataProvider - service that handles redirection to the feedback page upon error
      * @param groupingsService - service for creating requests to the groupings API
      */
-    function MembershipJsController($scope, $window, $controller, groupingsService, dataProvider, Message) {
+    function MembershipJsController($scope, $uibModal, $window, $controller, groupingsService, dataProvider, Message) {
 
         $scope.membershipsList = [];
         $scope.pagedItemsMemberships = [];
@@ -17,6 +17,7 @@
         $scope.optInList = [];
         $scope.pagedItemsOptInList = [];
         $scope.currentPageOptIn = 0;
+        $scope.resStatus = 0;
 
         $scope.loading = false;
 
@@ -139,15 +140,41 @@
          * Handle responses for opting into or out of a grouping.
          */
         function handleSuccessfulOpt(res) {
-
             if (_.startsWith(res[0].resultCode, "SUCCESS")) {
                 $scope.init();
             }
         }
 
         function handleUnsuccessfulOpt(res) {
-            console.log(res);
+            $scope.resStatus = res.status;
+            if (res.status) {
+                $scope.createOptErrorModal(res.status);
+            } else {
+                return `Error: Status Code${res.statusCode}`;
+            }
         }
+
+        $scope.createOptErrorModal = function (resStatus) {
+            $scope.loading = false;
+            $scope.optErrorModalInstance = $uibModal.open({
+                templateUrl: "modal/optErrorModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+        };
+
+        $scope.closeOptErrorModal = function () {
+            $scope.optErrorModalInstance.close();
+        };
+
+        /**
+         * Redirect the user to the groupings page.
+         */
+        $scope.proceedRedirect = function () {
+            $scope.optErrorModalInstance.close();
+            $window.location.href = "/uhgroupings/feedback";
+        };
 
         /**
          * Add the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
