@@ -32,7 +32,7 @@ h4 {
 
 main {
     flex: 1; /* IMPORTANT FOR STICKY FOOTER. */
-             /* Intializes the length which containers will expand or shrink. */
+    /* Intializes the length which containers will expand or shrink. */
 }
 
 .loader {
@@ -595,7 +595,7 @@ form.seamless button {
  */
 @media screen and (max-width: 735px) {
     #selectedGroupHeader {
-        display:table; /* The row is now a table */
+        display: table; /* The row is now a table */
         /* Centering */
         margin: auto;
         width: 100%;
@@ -625,14 +625,15 @@ form.seamless button {
     }
 
     #returnToGroup {
-         display: inline-block; /* displays 'return to groupings button' inline */
+        display: inline-block; /* displays 'return to groupings button' inline */
     }
 }
+
 label input {
-    margin-left:10px;
+    margin-left: 10px;
 }
 
-.check-space{
+.check-space {
     margin-right: 10px;
 }
 
@@ -644,4 +645,31 @@ label input {
     .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
         align-items: center;
     }
+}
+
+.form-alert {
+    margin-top: 2px;
+    height: 45px;
+    line-height: 42px;
+    padding: 0px 15px;
+}
+
+.description-alert {
+    width: 592px;
+    margin-top: 2px;
+    height: 35px;
+    line-height: 30px;
+    padding: 0px 15px;
+}
+
+.description-form-button {
+    background-color: white;
+    color: #004252;
+    border: white;
+    margin: 5px;
+}
+
+.description-input {
+    float: left;
+    border: white;
 }
