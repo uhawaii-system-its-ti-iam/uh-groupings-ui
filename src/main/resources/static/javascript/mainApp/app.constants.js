@@ -1,5 +1,6 @@
 UHGroupingsApp.constant("BASE_URL", "api/groupings/");
 UHGroupingsApp.constant("PAGE_SIZE", 700);
+UHGroupingsApp.constant("DESCRIPTION_MAX_LENGTH", 98);
 UHGroupingsApp.constant("Message", {
     Title: {
         IMPORT_OUT_OF_BOUNDS: "Out of Bounds Import Warning",

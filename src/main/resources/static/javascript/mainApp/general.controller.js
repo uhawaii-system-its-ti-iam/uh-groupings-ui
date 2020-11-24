@@ -10,7 +10,7 @@
      * @param groupingsService - service for creating requests to the groupings API
      */
 
-    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message,DESCRIPTION_MAX_LENGTH) {
 
         $scope.userToAdd = "";
         $scope.usersToAdd = "";
@@ -90,8 +90,7 @@
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
 
-        //The max length usable when getting input
-        $scope.maxDescriptionLength = 100;
+        $scope.maxDescriptionLength = DESCRIPTION_MAX_LENGTH;
 
         //The user input
         $scope.modelDescription = "";
@@ -106,7 +105,6 @@
         //Keeps track of async calls made throughout this js controller
         let asyncThreadCount = 0;
 
-        let maxLength = 100;
         let noDescriptionMessage = "No description given for this Grouping.";
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
@@ -362,7 +360,7 @@
          * Check the length of the text string entered in the description form box, for error handling of max length
          */
         $scope.descriptionLengthWarning = function () {
-            return (String($scope.modelDescription).length > maxLength - 1);
+            return (String($scope.modelDescription).length > DESCRIPTION_MAX_LENGTH - 1);
         };
 
         /**
