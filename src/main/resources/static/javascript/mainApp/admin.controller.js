@@ -197,28 +197,44 @@
             $scope.checkAll = (currentCheckBoxCount === totalCheckBoxCount);
         };
 
+        /**
+         * Checks if the user is already an admin
+         * @param {string} user - the user you are checking to see if they are already in the list being added to
+         * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
+         */
+        $scope.existInList = function (user) {
+            return _.some($scope.adminsList, { username: user }) ||
+                _.some($scope.adminsList, { uhUuid: user });
+        };
 
         /**
          * Adds a user to the admin list.
          */
         $scope.addAdmin = function () {
+            $scope.waitingForImportResponse = true;
             groupingsService.getAdminLists(function () {
                 const adminToAdd = $scope.adminToAdd;
 
                 if (_.isEmpty(adminToAdd)) {
-                    //$scope.createAddErrorModal(adminToAdd);
                     $scope.emptyInput = true;
                 } else {
-                    $scope.createConfirmAddModal({
-                        userToAdd: adminToAdd,
-                        listName: "admins"
-                    });
+                    if ($scope.existInList(adminToAdd)) {
+                        $scope.user = adminToAdd;
+                        $scope.listName = "admins";
+                        $scope.swap = false;
+                    } else {
+                        $scope.createConfirmAddModal({
+                            userToAdd: adminToAdd,
+                            listName: "admins"
+                        });
+                    }
                 }
             }, function (res) {
                 if (res.statusCode === 403) {
                     $scope.createRoleErrorModal();
                 }
             });
+            $scope.waitingForImportResponse = false;
         };
 
         /**

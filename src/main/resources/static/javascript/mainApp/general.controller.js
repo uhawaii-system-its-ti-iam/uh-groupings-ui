@@ -10,7 +10,7 @@
      * @param groupingsService - service for creating requests to the groupings API
      */
 
-    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message,DESCRIPTION_MAX_LENGTH) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
 
         $scope.userToAdd = "";
         $scope.usersToAdd = "";
@@ -548,7 +548,7 @@
                     }
                 } else {
                     $scope.userToAdd = $scope.usersToAdd;
-                    $scope.existsInGrouper($scope.userToAdd);
+                    $scope.existsInGrouper($scope.userToAdd, listName);
                 }
             }
         };
@@ -761,7 +761,6 @@
          * @param {string} list - the list the user is being added to
          */
         $scope.updateAddMember = function (userToAdd, list) {
-
             // only initialize groupingPath is listName is not "admins"
             let groupingPath;
 
@@ -848,7 +847,6 @@
         };
 
         /**
-         <<<<<<< HEAD
          * Create a modal that asks for confirmation when importing multiple users.
          * @param {object} options - the options object
          * @param {string} options.usersToAdd - the users to import
@@ -887,7 +885,7 @@
         };
 
         /**
-         * Check if the user is in the Grouper database
+         * Checks if the user is in the Grouper database
          * @param {object} user - the user you are checking to see if they are in Grouper
          * @param {object} list - the the list the user is being added to
          */
@@ -917,6 +915,7 @@
                 if (attributes.uhUuid > 0) {
                     $scope.initMemberDisplayName(attributes);
                 }
+                console.log("hi");
                 // Ask for confirmation from the user to add the member
                 $scope.confirmAddModalInstance = $uibModal.open({
                     templateUrl: "modal/confirmAddModal",

@@ -137,6 +137,9 @@
                                                 ng-blur="errorDismissed = true; resetErrors()"
                                                 ng-click="resetErrors(); errorDismissed = false">Add
                                         </button>
+                                        <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse"
+                                             style="display:inline-block">
+                                        </div>
                                     </div>
                                 </div>
                             </form>
