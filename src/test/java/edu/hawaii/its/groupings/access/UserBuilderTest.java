@@ -34,10 +34,22 @@ public class UserBuilderTest {
     @Autowired
     private UserContextService userContextService;
 
+    /**
+     *         Map<String, String> map = new HashMap<>();
+     *         map.put("uid", "duckart");
+     *         map.put("uhUuid", "89999999");
+     *         User user = userBuilder.make(map);
+     */
+
+
     @Test
     @WithMockUhUser(username = "admin", roles = { "ROLE_ADMIN" })
     public void testAdminUsers() {
+        Map<String, String> map = new HashMap<>();
         User user = userContextService.getCurrentUser();
+        map.put("uid","admin");
+        map.put("uhUuid", user.getUhUuid().toString());
+
         assertTrue(user.hasRole(Role.ADMIN));
     }
 
