@@ -128,13 +128,19 @@
                             <form ng-submit="addAdmin()">
                                 <div class="input-group">
                                     <input name="Add Admin" class="form-control" type="text"
+                                           ng-init="errorDismissed = true; resetErrors()"
+                                           ng-blur="errorDismissed = true; resetErrors()"
                                            title="Enter UH Username"
                                            placeholder="UH Username" ng-model="adminToAdd"/>
                                     <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit">Add</button>
+                                        <button class="btn btn-primary" type="submit"
+                                                ng-blur="errorDismissed = true; resetErrors()"
+                                                ng-click="resetErrors(); errorDismissed = false">Add
+                                        </button>
                                     </div>
                                 </div>
                             </form>
+                            <div th:replace="fragments/add-error-messages :: add-error-messages"></div>
                         </div>
                         <div class="col-lg-5">
                             <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>

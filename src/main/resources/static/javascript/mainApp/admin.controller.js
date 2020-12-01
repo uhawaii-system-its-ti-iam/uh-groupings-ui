@@ -206,7 +206,8 @@
                 const adminToAdd = $scope.adminToAdd;
 
                 if (_.isEmpty(adminToAdd)) {
-                    $scope.createAddErrorModal(adminToAdd);
+                    //$scope.createAddErrorModal(adminToAdd);
+                    $scope.emptyInput = true;
                 } else {
                     $scope.createConfirmAddModal({
                         userToAdd: adminToAdd,

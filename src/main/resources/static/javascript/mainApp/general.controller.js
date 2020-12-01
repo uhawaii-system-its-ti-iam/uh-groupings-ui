@@ -912,8 +912,11 @@
         $scope.createConfirmAddModal = function (options) {
             const userToAdd = options.userToAdd;
             $scope.listName = options.listName;
+
             groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                $scope.initMemberDisplayName(attributes);
+                if (attributes.uhUuid > 0) {
+                    $scope.initMemberDisplayName(attributes);
+                }
                 // Ask for confirmation from the user to add the member
                 $scope.confirmAddModalInstance = $uibModal.open({
                     templateUrl: "modal/confirmAddModal",
@@ -965,20 +968,21 @@
          */
         $scope.addOwner = function () {
             const ownerToAdd = $scope.ownerToAdd;
-            $scope.userToAdd = ownerToAdd;
             const list = "owners";
-
+            $scope.userToAdd = ownerToAdd;
             if (_.isEmpty(ownerToAdd)) {
                 $scope.emptyInput = true;
-            } else if ($scope.existInList(ownerToAdd, list)) {
-                $scope.user = ownerToAdd;
-                $scope.listName = list;
-                $scope.swap = false;
             } else {
-                $scope.createConfirmAddModal({
-                    userToAdd: ownerToAdd,
-                    listName: list
-                });
+                if ($scope.existInList(ownerToAdd, list)) {
+                    $scope.user = ownerToAdd;
+                    $scope.listName = list;
+                    $scope.swap = false;
+                } else {
+                    $scope.createConfirmAddModal({
+                        userToAdd: ownerToAdd,
+                        listName: list
+                    });
+                }
             }
         };
 
@@ -1368,6 +1372,7 @@
                     break;
                 case "owners":
                     $scope.ownerToAdd = "";
+                    $scope.waitingForImportResponse = false;
                     break;
                 case "admins":
                     $scope.adminToAdd = "";
