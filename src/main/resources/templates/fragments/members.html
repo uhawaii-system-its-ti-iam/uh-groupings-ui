@@ -21,11 +21,10 @@
                        ng-change="filter(groupingMembers, 'pagedItemsMembers', 'currentPageMembers', membersQuery, true)"/>
                 <!-- Export to CSV button -->
                 <div class="float-right"
-                     uib-tooltip="Export will be available once all members are loaded"
-                     tooltip-enable="!paginatingComplete"
                      style="display:inline-block">
                     <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
                             ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
+                            uib-tooltip="{{ getCSVToolTipMessage() }}"
                             ng-disabled="!paginatingComplete">
                         <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
                         Export to CSV
@@ -45,7 +44,8 @@
                            ng-show="columnSort.groupingMembers.property === 'name' || !columnSort.groupingMembers"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>
                     </th>
-                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uhUuid')" class="clickable">
+                    <th scope="col" ng-click="sortBy('groupingMembers', 'pagedItemsMembers', 'uhUuid')"
+                        class="clickable">
                         UH Number
                         <i class="fa sort-icon" ng-show="columnSort.groupingMembers.property === 'uhUuid'"
                            ng-class="{ reverse: columnSort.groupingMembers.reverse }"></i>

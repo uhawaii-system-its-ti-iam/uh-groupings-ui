@@ -141,6 +141,21 @@ public class HomeController {
         return "modal/removeModal";
     }
 
+    @RequestMapping(value = "/modal/resetModal", method = RequestMethod.GET)
+    public String resetModal(Locale locale, Model model) {
+        return "modal/resetModal";
+    }
+
+    @RequestMapping(value = "/modal/resetNotifModal", method = RequestMethod.GET)
+    public String resetNotifModal(Locale locale, Model model) {
+        return "modal/resetNotifModal";
+    }
+
+    @RequestMapping(value = "/modal/emptyGroupModal", method = RequestMethod.GET)
+    public String emptyGroupModal(Locale locale, Model model) {
+        return "modal/emptyGroupModal";
+    }
+
     @RequestMapping(value = "/modal/confirmAddModal", method = RequestMethod.GET)
     public String confirmAddModal(Locale locale, Model model) {
         return "modal/confirmAddModal";
@@ -179,6 +194,11 @@ public class HomeController {
     @RequestMapping(value = "/modal/ownerErrorModal", method = RequestMethod.GET)
     public String ownerErrorModal(Locale locale, Model model) {
         return "modal/ownerErrorModal";
+    }
+
+    @RequestMapping(value = "/modal/optErrorModal", method = RequestMethod.GET)
+    public String optErrorModal(Locale locale, Model model) {
+        return "modal/optErrorModal";
     }
 
     @RequestMapping(value = "/modal/basisWarningModal", method = RequestMethod.GET)

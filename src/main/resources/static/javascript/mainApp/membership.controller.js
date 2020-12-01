@@ -8,7 +8,7 @@
      * @param dataProvider - service that handles redirection to the feedback page upon error
      * @param groupingsService - service for creating requests to the groupings API
      */
-    function MembershipJsController($scope, $window, $controller, groupingsService, dataProvider, Message) {
+    function MembershipJsController($scope, $uibModal, $window, $controller, groupingsService, dataProvider, Message) {
 
         $scope.membershipsList = [];
         $scope.pagedItemsMemberships = [];
@@ -17,6 +17,7 @@
         $scope.optInList = [];
         $scope.pagedItemsOptInList = [];
         $scope.currentPageOptIn = 0;
+        $scope.resStatus = 0;
 
         $scope.loading = false;
 
@@ -38,7 +39,7 @@
         }
 
         /**
-         * With the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
+         * Take the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
          * all values that each duplicate contained.
          */
         function mergeDuplicateValues(dups) {
@@ -52,10 +53,12 @@
                         membership[0].inOwner |= m.inOwner;
                     });
                 }
-                let path = membership[0].path;
-                membership[0].path = path.substring(0, path.lastIndexOf(":")) + "-" + membership[0].name;
-                console.log(membership[0].path);
-                result.push(membership[0]);
+                let path = membership[0].path.substring(0, membership[0].path.lastIndexOf(":"));
+                result.push({
+                    "name": membership[0].name,
+                    "path": path,
+                    "optOutEnabled": membership[0].optOutEnabled
+                });
             });
             return result;
         }
@@ -74,7 +77,7 @@
         }
 
         /**
-         *  Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
+         *  Load the groups a user is a member in, the groups the user is able to opt in to, and the groups the user
          *  is able to opt out of.
          */
         $scope.init = function () {
@@ -90,10 +93,10 @@
 
                     let dups = coupleDuplicatePaths(data);
                     let result = mergeDuplicateValues(dups);
-                    $scope.membershipsList = _.sortBy(_.uniq(result), "name");
+
+                    $scope.membershipsList = _.sortBy(_.uniqBy(result, "name"), "name");
                     $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
-
                 },
                 (res) => {
                     dataProvider.handleException({
@@ -103,6 +106,7 @@
             );
 
             // Request a list of opt-in-able paths from the API.
+            $scope.optInList = [];
             groupingsService.getOptInGroups((res) => {
                     _.forEach(res, (path) => {
                         $scope.optInList.push({
@@ -121,6 +125,10 @@
             );
         };
 
+
+        /**
+         * Filter member list with respect to membersQuery.
+         */
         $scope.memberFilterReset = function () {
             $scope.membersQuery = "";
             $scope.optInQuery = "";
@@ -129,22 +137,47 @@
         };
 
         /**
-         * Handles responses for opting into or out of a grouping.
-         * @param {object} res - the response from opting into/out of a grouping
+         * Handle responses for opting into or out of a grouping.
          */
         function handleSuccessfulOpt(res) {
-
             if (_.startsWith(res[0].resultCode, "SUCCESS")) {
                 $scope.init();
             }
         }
 
         function handleUnsuccessfulOpt(res) {
-            console.log(res);
+            $scope.resStatus = res.status;
+            if (res.status) {
+                $scope.createOptErrorModal(res.status);
+            } else {
+                return `Error: Status Code${res.statusCode}`;
+            }
         }
 
+        $scope.createOptErrorModal = function (resStatus) {
+            $scope.loading = false;
+            $scope.optErrorModalInstance = $uibModal.open({
+                templateUrl: "modal/optErrorModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+        };
+
+        $scope.closeOptErrorModal = function () {
+            $scope.optErrorModalInstance.close();
+        };
+
         /**
-         * Adds the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
+         * Redirect the user to the groupings page.
+         */
+        $scope.proceedRedirect = function () {
+            $scope.optErrorModalInstance.close();
+            $window.location.href = "/uhgroupings/feedback";
+        };
+
+        /**
+         * Add the user to the exclude group of the grouping selected. Sends back an alert saying if it failed.
          * @param {number} currentPage - the current page within the table
          * @param {number} indexClicked - the index of the grouping clicked by the user
          */
@@ -155,7 +188,7 @@
         };
 
         /**
-         * Adds the user to the include group of the grouping selected.
+         * Add the user to the include group of the grouping selected.
          * @param {number} currentPage - the current page within the table
          * @param {number} indexClicked - the index of the grouping clicked by the user
          */
@@ -166,10 +199,10 @@
         };
 
         /**
-         * Copies grouping path to clipboard.
+         * Copy grouping path to clipboard.
          */
         $scope.copyPath = function (grouping) {
-            var copyText = document.getElementById(grouping.path);
+            let copyText = document.getElementById(grouping.path);
             copyText.select();
             document.execCommand("copy");
         };

@@ -1,0 +1,67 @@
+<!---
+    - resetModal.html
+    - A modal that confirms with user whether or not they want to continue reset the entireGroup. (Does not remove a modal :) )
+--->
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Reset Grouping</h5>
+</div>
+<div class="modal-body" id="modal-body">
+    <!--Warning message if users try to delete themselves from the admins or owners list -->
+    <div class="modal-danger-message" ng-if="showWarningRemovingSelfResetModal()">
+        <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
+        <div ng-switch="listName">
+            <div ng-switch-when="owners">
+                <!-- Warning message that tells the user what will happen if they remove themselves -->
+                <p th:text="#{screen.message.modal.remove.message}"></p>
+                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1"
+                   th:text="#{screen.message.modal.remove.redirect.home}"></p>
+                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1"
+                   th:text="#{screen.message.modal.remove.redirect.groupings}"></p>
+            </div>
+            <div ng-switch-when="admins">
+                <p th:text="#{screen.message.modal.remove.admin}"></p>
+                <p th:text="#{screen.message.modal.remove.redirect.home}"></p>
+            </div>
+        </div>
+    </div>
+    <p>
+        <span style="color: black" th:text="#{screen.message.modal.reset.confirmation}"></span>
+        <span style="color: black">{{listNames}} in the</span>
+        <span style="color: black">{{groupReset}} group.</span>
+    </p>
+    <div class="container">
+        <table>
+            <thead class="import-table-thead-tbody-tr import-table-thead">
+            <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
+                <!-- Display table headings -->
+                <th scope="col">Username</th>
+                <th scope="col">UhUuid</th>
+                <th scope="col">Name</th>
+            </tr>
+            </thead>
+            <tbody class="import-table-tbody">
+            <tr class="import-table-thead-tbody-tr" ng-repeat="user in resetUser">
+                <!-- Display table data -->
+                <td>{{user}}</td>
+                <td>{{resetID[$index]}}</td>
+                <td>{{resetName[$index]}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p> Are you sure you want to reset the
+        <span style="color: black">{{listNames}} from the</span>
+        <span style="color: black">{{groupReset}}</span>
+        <span style="color: black"> group?</span>
+    </p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="proceedResetGroup()">Yes</button>
+    <button class="btn btn-light" ng-click="cancelResetGroup()" data-dismiss="modal">Cancel</button>
+</div>
+
+</html>

@@ -16,15 +16,12 @@
         $scope.personList = [];
         $scope.pagedItemsPerson = [];
         $scope.currentPagePerson = 0;
-        $scope.selectedGroupingsNames = [];
-        $scope.multiMemberPaths = [];
+        $scope.selectedGroupingsPaths = [];
 
         let totalCheckBoxCount = 0;
-        let count = 0;
+        let currentCheckBoxCount = 0;
 
-        // Allow this controller to use functions from the General Controller
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
-
 
         $scope.createRoleErrorModal = function () {
             $scope.loading = false;
@@ -36,9 +33,8 @@
             });
         };
 
-
         /**
-         * Initializes the page, displaying the list of groupings to administer and the list of admins to manage.
+         * Complete initialization by fetching a list of admins and list of all groupings.
          */
         $scope.init = function () {
             // Adds the loading spinner.
@@ -58,28 +54,56 @@
             });
         };
 
+        /**
+         * Fetch a list of memberships pertaining to $scope.personToLookUp.
+         */
         $scope.searchForUserGroupingInformation = function () {
             $scope.loading = true;
-            groupingsService. getMembershipAssignmentForUser(function (res) {
-
-                $scope.personList = _.sortBy(res.combinedGroupings, "name");
+            groupingsService.getMembershipAssignmentForUser(function (res) {
+                $scope.personList = _.sortBy(res, "name");
+                $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
                 $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-                _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (group) {
-                    group["inOwner"] = res.inOwner[group.path];
-                    group["inBasis"] = res.inBasis[group.path];
-                    group["inInclude"] = res.inInclude[group.path];
-                    group["inExclude"] = res.inExclude[group.path];
-                    if (group.inInclude || group.inOwner) {
-                        group["isSelected"] = false;
-                        totalCheckBoxCount = totalCheckBoxCount + 1;
-                    }
-                });
                 $scope.loading = false;
             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
+                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
+                    "feedback/error", "feedback");
             }, $scope.personToLookup);
         };
 
+        /**
+         * With the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
+         * all values that each duplicate contained. (Changed return values to meet Manager Person tab needs)
+         */
+        function mergeManagePersonDuplicateValues(dups) {
+            let result = [];
+            dups.forEach((membership, index) => {
+                dups.forEach((m, index2) => {
+                    if (membership.name === m.name && index !== index2) {
+                        membership.inInclude |= m.inInclude;
+                        membership.inExclude |= m.inExclude;
+                        membership.inBasis |= m.inBasis;
+                        membership.inOwner |= m.inOwner;
+                        membership.inBasisAndInclude |= m.inBasisAndInclude;
+                        dups.splice(index2, 1);
+                    }
+                });
+                result.push({
+                    "name": membership.name,
+                    "path": membership.path,
+                    "inInclude": membership.inInclude,
+                    "inExclude": membership.inExclude,
+                    "inBasis": membership.inBasis,
+                    "inOwner": membership.inOwner,
+                    "inBasisAndInclude": membership.inBasisAndInclude
+
+                });
+            });
+            return result;
+        }
+
+        /**
+         * Separate the list of Admins into pages.
+         */
         $scope.displayAdmins = function () {
             $scope.resetGroupingInformation();
             $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
@@ -87,7 +111,10 @@
             $scope.showGrouping = false;
         };
 
-        /*todo:people copy*/
+
+        /**
+         * Separate the list of persons into pages.
+         */
         $scope.displayPerson = function () {
             $scope.resetGroupingInformation();
             $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
@@ -96,47 +123,45 @@
             $scope.personToLookup = "";
         };
 
+        /**
+         *
+         */
         $scope.removeFromGroups = function () {
-            $scope.selectedGroupings = [];
             $scope.selectedGroupingsNames = [];
+            $scope.selectedGroupingsPaths = [];
             let i = 0;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
-                if(grouping.isSelected) {
-                    if (i == 0) {
-                        let temp = grouping.path;
-                        $scope.selectedGrouping.path = temp;
-                        $scope.multiMemberPaths[i] = temp;
-
-                    }else{
-                        let temp = grouping.path;
-                        $scope.selectedGrouping.path = $scope.selectedGrouping.path + temp;
-                        $scope.multiMemberPaths[i] = temp;
+                if (grouping.isSelected) {
+                    let basePath = grouping.path.substring(0, grouping.path.lastIndexOf(":") + 1);
+                    basePath = basePath.slice(0, -1);
+                    let groupName = basePath;
+                    groupName = groupName.split(":").pop();
+                    $scope.selectedGroupingsNames.push(groupName);
+                    if (grouping.inOwner) {
+                        let temp = basePath + ":owners";
+                        $scope.selectedGroupingsPaths.push(temp);
                     }
-                    if(grouping.inOwner){
-                        $scope.selectedGroupings.push(grouping.path + ":owners");
-                        let temp = grouping.path;
-                        temp = temp.split(":").pop();
-                        $scope.selectedGroupingsNames.push(temp);
+                    if (grouping.inInclude) {
+                        let temp = basePath + ":include";
+                        $scope.selectedGroupingsPaths.push(temp);
                     }
-                    if(grouping.inInclude){
-                        $scope.selectedGroupings.push(grouping.path + ":include")
-                        let temp = grouping.path;
-                        temp = temp.split(":").pop();
-                        $scope.selectedGroupingsNames.push(temp);
+                    if (grouping.inExclude) {
+                        let temp = basePath + ":exclude";
+                        $scope.selectedGroupingsPaths.push(temp);
                     }
                 }
                 i++;
             });
 
-            if($scope.personToLookup != null) {
+            if ($scope.personToLookup != null) {
                 groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
                     let userToRemove = {
                         username: attributes.uid,
                         name: attributes.cn,
                         uhUuid: attributes.uhUuid
                     };
-                    if (_.isEmpty($scope.selectedGroupings)) {
-                        $scope.createOwnerErrorModal($scope.selectedGroupings);
+                    if (_.isEmpty($scope.selectedGroupingsNames)) {
+                        $scope.createOwnerErrorModal($scope.selectedGroupingsNames);
                     } else {
                         $scope.createRemoveFromGroupsModal({
                             user: userToRemove,
@@ -145,32 +170,31 @@
                     }
                 });
             }
-
         };
 
         $scope.updateCheckBoxes = function () {
-          $scope.checkAll = !$scope.checkAll;
+            $scope.checkAll = !$scope.checkAll;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
                 if (grouping.inInclude || grouping.inOwner) {
                     grouping.isSelected = $scope.checkAll;
                 }
             });
-            if($scope.checkAll) {
-                count = totalCheckBoxCount;
+            if ($scope.checkAll) {
+                currentCheckBoxCount = totalCheckBoxCount;
             } else {
-                count = 0;
+                currentCheckBoxCount = 0;
             }
         };
 
-        $scope.updateCheckAll = function(grouping) {
+        $scope.updateCheckAll = function (grouping) {
+            totalCheckBoxCount = $scope.personList.length;
 
-            if(grouping.isSelected){
-                count = count + 1;
+            if (grouping.isSelected) {
+                currentCheckBoxCount = currentCheckBoxCount + 1;
             } else {
-                count = count - 1;
+                currentCheckBoxCount = currentCheckBoxCount - 1;
             }
-
-            $scope.checkAll = (count === totalCheckBoxCount);
+            $scope.checkAll = (currentCheckBoxCount === totalCheckBoxCount);
         };
 
 
@@ -197,7 +221,7 @@
         };
 
         /**
-         * Removes an admin from the admin list. There must be at least one admin remaining.
+         * Remove an admin from the admin list. There must be at least one admin remaining.
          * @param {number} currentPage - the current page in the admins list
          * @param {number} index - the index of the admin to delete, with the current page and items per page taken into
          * account
@@ -223,15 +247,14 @@
         };
 
         /**
-         * Copies grouping path to clipboard.
+         * Copy grouping path to clipboard.
          */
         $scope.copyPath = function (grouping) {
-            var copyText = document.getElementById(grouping.path);
+            let copyText = document.getElementById(grouping.path);
             copyText.select();
             document.execCommand("copy");
         };
     }
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
-
 }());

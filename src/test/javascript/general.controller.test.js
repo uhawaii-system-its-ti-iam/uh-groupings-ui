@@ -199,17 +199,17 @@ describe("GeneralController", function () {
             expect(scope.groupingMembers[2].whereListed).toEqual("Include");
         });
 
-        it("should have a value of 'Basis / Include' for the 'whereListed' key if the member is in both the basis and include group", function () {
+        it("should have a value of 'Basis & Include' for the 'whereListed' key if the member is in both the basis and include group", function () {
             scope.addWhereListed(scope.groupingMembers);
 
-            expect(scope.groupingMembers[0].whereListed).toEqual("Basis / Include");
+            expect(scope.groupingMembers[0].whereListed).toEqual("Basis & Include");
         });
     });
 
     describe("addMember", function () {
         describe("user adds 'user8', who is not in any list, to the Include list", function () {
             beforeEach(function () {
-                scope.userToAdd = "user8";
+                scope.userToAdd = "user7";
             });
 
             it("should create a confirmation modal to add the user", function () {
@@ -234,7 +234,7 @@ describe("GeneralController", function () {
 
             it("should create a modal asking if the user wants to remove 'user1' from the Exclude list", function () {
                 spyOn(scope, "createCheckModal").and.callThrough();
-                scope.addMember("Exclude");
+                scope.addMembers("Exclude");
 
                 expect(scope.createCheckModal).toHaveBeenCalled();
             });
@@ -245,11 +245,10 @@ describe("GeneralController", function () {
                 scope.userToAdd = "";
             });
 
-            it("should create a modal saying to enter a username", function () {
-                spyOn(scope, "createAddErrorModal").and.callThrough();
-                scope.addMember("Include");
+            it("should create an error message saying to enter a username", function () {
+                scope.addMembers("Include");
 
-                expect(scope.createAddErrorModal).toHaveBeenCalled();
+                expect(scope.emptyInput).toBe(true);
             });
         });
 
@@ -259,18 +258,37 @@ describe("GeneralController", function () {
             });
 
             it("should create a modal saying the user already exists in the list", function () {
-                spyOn(scope, "createCheckModal").and.callThrough();
+                spyOn(scope, "existInList").and.callThrough();
+
+                expect(scope.existInList("user5", "Exclude")).toBe(true);
+            });
+        });
+
+        describe("user tries to add 'user4', who is currently in the Basis list, to the Include list", function () {
+            beforeEach(function () {
+                scope.userToAdd = "user4";
+            });
+
+            it("should create a modal asking if the user wants to add 'user4', who is in Basis, in the Include list", function () {
+                spyOn(scope, "createBasisWarningModal").and.callThrough();
                 scope.addMember("Exclude");
 
-                expect(scope.createCheckModal).toHaveBeenCalled();
+                expect(scope.createBasisWarningModal).toHaveBeenCalled();
             });
         });
     });
 
     describe("isInAnotherList", function () {
         describe("user tries to add 'user1', who is currently in the Include list, to the Exclude list", function () {
+            beforeEach(function () {
+                scope.userToAdd = "user1";
+            });
             it("should return true since 'user1' is currently in the Include list", function () {
-                expect(scope.isInAnotherList("user1", "Exclude")).toBe(true);
+                spyOn(scope, "isInAnotherList").and.callThrough();
+                scope.addMember("Exclude");
+
+                expect(scope.isInAnotherList).toHaveBeenCalled();
+                //expect(scope.isInAnotherList("user1", "Exclude")).toBe(true);
             });
         });
         describe("user tries to add 'user5', who is currently in the Exclude list, to the Include list", function () {

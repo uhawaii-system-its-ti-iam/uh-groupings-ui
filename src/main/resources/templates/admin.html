@@ -100,6 +100,14 @@
                                 </td>
                                 <td class="p-10" tabindex="0">
                                     {{l.username}}
+                                    <div ng-if="l.username === ''">
+                                        <span>N/A</span>
+                                        <i class="fa fa-question-circle clickable" aria-hidden="true"
+                                           data-toggle="tooltip" data-placement="right"
+                                           onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
+                                           th:title="#{screen.message.common.tooltip.username.notApplicable}">
+                                        </i>
+                                    </div>
                                 </td>
                                 <td>
                                     <i class="fa fa-trash-o pull-right clickable pt-1"
@@ -199,52 +207,40 @@
                                 <td class="p-10" tabindex="0">
                                     {{l.name}}
                                 </td>
-                                <td class="p-10" tabindex="0">
+                                <td class="p-11" tabindex="0">
                                     <div ng-if="l.inOwner">
                                         <i class="fa fa-check text-dark"></i>
-                                        <label><input type="checkbox"
-                                                      ng-model="l.isSelected" ng-change="updateCheckAll(l)"></label>
                                     </div>
                                     <div ng-if="!l.inOwner">
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
-                                <td class="p-10" tabindex="0">
-                                    <div ng-if="l.inBasis">
+                                <td class="p-11" tabindex="0">
+                                    <div ng-if="l.inBasis || l.inBasisAndInclude">
                                         <i class="fa fa-check text-dark"></i>
                                     </div>
-                                    <div ng-if="!l.inBasis">
+                                    <div ng-if="!l.inBasis && !l.inBasisAndInclude">
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
-                                <td class="p-10" tabindex="0">
-                                    <div ng-if="l.inInclude">
+                                <td class="p-12" tabindex="0">
+                                    <div ng-if="l.inInclude || l.inBasisAndInclude">
                                         <i class="fa fa-check text-dark"></i>
-                                        <label><input type="checkbox"
-                                                      ng-model="l.isSelected" ng-change="updateCheckAll(l)"></label>
                                     </div>
-                                    <div ng-if="!l.inInclude">
+                                    <div ng-if="!l.inInclude && !l.inBasisAndInclude">
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="p-12" tabindex="0">
                                     <div ng-if="l.inExclude">
                                         <i class="fa fa-check text-dark"></i>
                                     </div>
                                     <div ng-if="!l.inExclude">
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
-                                    <!--                                    <i class="fa fa-trash-o pull-right clickable pt-1"-->
-                                    <!--                                       data-toggle="tooltip" data-placement="top"-->
-                                    <!--                                       tabindex="0">-->
-                                    <!--                                       onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"-->
-                                    <!--                                       th:title="#{screen.message.admin.tooltip.nav.delete.admin}"-->
-                                    <!--                                       ng-click="removeAdmin(currentPageAdmins, $index)"-->
-                                    <!--                                       ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">-->
-                                    <!--                                    </i>-->
                                 </td>
-                                <td>
-                                    <div ng-if="l.inOwner || l.inInclude">
+                                <td class="p-10" tabindex="0">
+                                    <div ng-if="l.inOwner || l.inInclude || l.inExclude || l.inBasis || l.inBasisAndInclude">
                                         <label><input type="checkbox"
                                                       ng-model="l.isSelected" ng-change="updateCheckAll(l)"></label>
                                     </div>

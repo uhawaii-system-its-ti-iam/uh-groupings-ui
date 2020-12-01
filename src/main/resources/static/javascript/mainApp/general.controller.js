@@ -10,7 +10,7 @@
      * @param groupingsService - service for creating requests to the groupings API
      */
 
-    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
+    function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message,DESCRIPTION_MAX_LENGTH) {
 
         $scope.userToAdd = "";
         $scope.usersToAdd = "";
@@ -20,6 +20,9 @@
         $scope.multiAddResultsGeneric = [];
         $scope.personProps = [];
         $scope.waitingForImportResponse = false;
+        $scope.resetUser = [];
+        $scope.resetID = [];
+        $scope.resetName = [];
 
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
@@ -56,6 +59,7 @@
         $scope.listserv = false;
         $scope.ldap = false;
 
+
         $scope.syncDestMap = [];
         $scope.syncDestArray = [];
         $scope.selectedSyncDest = "Hello";
@@ -72,12 +76,21 @@
         $scope.groupingCSV = [];
         $scope.groupNameCSV = [];
 
+        $scope.resetInclude = [];
+        $scope.resetExclude = [];
+        $scope.usersToRemove = [];
+        $scope.includeDisable = false;
+        $scope.excludeDisable = false;
+        $scope.includeCheck = false;
+        $scope.excludeCheck = false;
+        $scope.group = "";
+        $scope.resStatus = 0;
+        $scope.inGrouper = false;
 
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
 
-        //The max length usable when getting input
-        $scope.maxDescriptionLength = 100;
+        $scope.maxDescriptionLength = 98;
 
         //The user input
         $scope.modelDescription = "";
@@ -92,7 +105,6 @@
         //Keeps track of async calls made throughout this js controller
         let asyncThreadCount = 0;
 
-        let maxLength = 100;
         let noDescriptionMessage = "No description given for this Grouping.";
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
@@ -114,6 +126,7 @@
          * Generic handler for unsuccessful requests to the API.
          */
         function handleUnsuccessfulRequest(res) {
+            $scope.resStatus = res.status;
             if (res.status === 403) {
                 $scope.createOwnerErrorModal();
             } else {
@@ -248,6 +261,18 @@
                     currentPage++;
                     loadMembersList = true;
 
+                    $scope.includeDisable = false;
+                    if (Object.entries($scope.groupingInclude).length === 0) {
+                        $scope.includeCheck = false;
+                        $scope.includeDisable = true;
+                    }
+
+                    $scope.excludeDisable = false;
+                    if (Object.entries($scope.groupingExclude).length === 0) {
+                        $scope.excludeCheck = false;
+                        $scope.excludeDisable = true;
+                    }
+
                     //While true loop that calls members asynchronously from Grouper based on PAGE_SIZE
                     while (loadMembersList) {
                         /**
@@ -354,7 +379,7 @@
          * Check the length of the text string entered in the description form box, for error handling of max length
          */
         $scope.descriptionLengthWarning = function () {
-            return (String($scope.modelDescription).length > maxLength);
+            return (String($scope.modelDescription).length > $scope.maxDescriptionLength - 1);
         };
 
         /**
@@ -375,6 +400,13 @@
                 $scope.descriptionForm = !($scope.descriptionForm);
             }
 
+        };
+
+        /**
+         * If the grouping hasn't been fetched, return csv group loaded message, otherwise return csv group not loaded message.
+         */
+        $scope.getCSVToolTipMessage = () => {
+            return ($scope.paginatingComplete) ? Message.Csv.GROUP_LOADED : Message.Csv.GROUP_NOT_LOADED;
         };
 
         /**
@@ -415,7 +447,7 @@
         };
 
         /**
-         * Creates a modal for errors in loading data from the API.
+         * Create a modal for errors in loading data from the API.
          */
         $scope.createApiErrorModal = function () {
             $scope.apiErrorModalInstance = $uibModal.open({
@@ -427,14 +459,14 @@
         };
 
         /**
-         * Closes the API error modal.
+         * Close the API error modal.
          */
         $scope.closeApiError = function () {
             $scope.apiErrorModalInstance.close();
         };
 
         /**
-         * Checks if the members in the group are in the basis group.
+         * Check if the members in the group are in the basis group.
          * @param {object[]} group - the group to check
          */
         $scope.addInBasis = function (group) {
@@ -448,7 +480,7 @@
 
 
         /**
-         * Checks what lists a member in a grouping are in.
+         * Check what lists a member in a grouping are in.
          * @param {object[]} compositeGroup - the composite / all members group
          */
         $scope.addWhereListed = function (compositeGroup) {
@@ -490,7 +522,7 @@
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
             if (_.isEmpty($scope.usersToAdd)) {
-                $scope.createAddErrorModal($scope.usersToAdd);
+                $scope.emptyInput = true;
             } else {
                 let numMembers = ($scope.usersToAdd.split(" ").length - 1);
 
@@ -516,6 +548,7 @@
                     }
                 } else {
                     $scope.userToAdd = $scope.usersToAdd;
+                    $scope.existsInGrouper($scope.userToAdd);
                     $scope.addMember(listName);
                 }
             }
@@ -556,7 +589,6 @@
             };
 
             let handleSuccessfulAdd = function (res) {
-                $scope.waitingForImportResponse = false;
                 for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
                     $scope.multiAddResultsGeneric[i] = res[i].person;
@@ -642,8 +674,8 @@
         /**
          * Launch a modal with a title, and body message. The modal will dismiss in the case of pressing the ok button
          * and/or if the timeTillClose is set and time runs out. The modal will timeout unless the timeTillClose is
-         * set. Unless the title and/or body * string being passed contains arbitrary values determined at runtime then
-         * the string should be stored and * accessed through MODAL_MESSAGES in app.constants.js.
+         * set. Unless the title and/or body string being passed contains arbitrary values determined at runtime then
+         * the string should be stored and accessed through Messages in app.constants.js.
          *
          * @param title - message title to be displayed in modal header
          * @param body - message body to be displayed in modal body
@@ -679,21 +711,23 @@
         };
 
         /**
-         * Adds a user to a group.
+         * Add a user to a group.
          * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
             let groupingPath = $scope.selectedGrouping.path;
+            $scope.waitingForImportResponse = true;
             groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function (res) {
                 let user = $scope.userToAdd;
-                let inBasis = _.some($scope.groupingBasis, { username: user });
+                let inGrouper = $scope.inGrouper;
+                let inBasis = _.some($scope.groupingBasis, { username: user }) ||
+                    _.some($scope.groupingBasis, { uhUuid: user });
                 if ($scope.existInList(user, list)) {
-                    $scope.createCheckModal(user, list, false, inBasis);
-                } else if (res.status === 404) {
-                    $scope.createAddErrorModal($scope.userToAdd);
+                    $scope.listName = list;
+                    $scope.swap = false;
                 } else if ($scope.isInAnotherList(user, list)) {
                     $scope.createCheckModal(user, list, true, inBasis);
-                } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
+                } else if ((inBasis && list === "Include") || (inGrouper && !inBasis && list === "Exclude")) {
                     $scope.createBasisWarningModal(user, list, inBasis);
                 } else {
                     $scope.createConfirmAddModal({
@@ -701,6 +735,7 @@
                         listName: list
                     });
                 }
+                $scope.waitingForImportResponse = false;
             }, function (res) {
                 if (res.status === 403) {
                     $scope.createOwnerErrorModal();
@@ -709,7 +744,7 @@
         };
 
         /**
-         * Creates a modal display for members added, and calls addMembersToInclude service.
+         * Create a modal display for members added, and calls addMembersToInclude service.
          * @param usersToAdd
          * @param list
          */
@@ -730,7 +765,7 @@
         };
 
         /**
-         * Initiates the adding of a member to a list.
+         * Initiate the adding of a member to a list.
          * @param {string} userToAdd - user being added
          * @param {string} list - the list the user is being added to
          */
@@ -784,15 +819,20 @@
          */
         $scope.existInList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingInclude, { username: user });
+                return _.some($scope.groupingInclude, { username: user }) ||
+                    _.some($scope.groupingInclude, { uhUuid: user });
             } else if (list === "Exclude") {
-                return _.some($scope.groupingExclude, { username: user });
+                return _.some($scope.groupingExclude, { username: user }) ||
+                    _.some($scope.groupingExclude, { uhUuid: user });
+            } else if (list === "owners") {
+                return _.some($scope.groupingOwners, { username: user }) ||
+                    _.some($scope.groupingOwners, { uhUuid: user });
             }
             return false;
         };
 
         /**
-         * Creates a modal that asks whether or not they want to add a person that is already in another list.
+         * Create a modal that asks whether or not they want to add a person that is already in another list.
          * @param user - Username of the user they are trying to add.
          * @param listName - name of the list they are adding to (either Include or Exclude)
          */
@@ -815,7 +855,7 @@
         };
 
         /**
-         * Creates a modal that asks for confirmation when importing multiple users.
+         * Create a modal that asks for confirmation when importing multiple users.
          * @param {object} options - the options object
          * @param {string} options.usersToAdd - the users to import
          * @param {string} options.listName - name of the list being added to
@@ -833,7 +873,25 @@
         };
 
         /**
+         <<<<<<< HEAD
+         * Checks if the user is in the Grouper database
+         * @param {object} user - the user you are checking to see if they are in Grouper
+         */
+        $scope.existsInGrouper = function (user) {
+            groupingsService.getMemberAttributes(user, function (attributes) {
+                if (attributes.uhUuid > 0) {
+                    $scope.inGrouper = true;
+                }
+            }, function (res) {
+                $scope.inGrouper = false;
+            });
+        };
+
+        /**
          * Creates a modal that asks for confirmation when adding a user.
+         =======
+         * Create a modal that asks for confirmation when adding a user.
+         >>>>>>> Comment code
          * @param {object} options - the options object
          * @param {string} options.userToAdd - the user to add
          * @param {string} options.listName - name of the list being added to
@@ -841,6 +899,8 @@
         $scope.createConfirmAddModal = function (options) {
             const userToAdd = options.userToAdd;
 
+            $scope.waitingForImportResponse = false;
+
             groupingsService.getMemberAttributes(userToAdd, function (attributes) {
                 $scope.fullNameToAdd = attributes.cn;
                 $scope.givenNameToAdd = attributes.givenName;
@@ -861,48 +921,20 @@
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
-                $scope.createAddErrorModal(userToAdd);
+                $scope.user = userToAdd;
+                $scope.resStatus = res.status;
             });
         };
 
-        /*$scope.createConfirmUserRemoveModal = function (options) {
-            const userToRemove = options.userToRemove;
-
-            groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                $scope.fullNameToAdd = attributes.cn;
-                $scope.givenNameToAdd = attributes.givenName;
-                $scope.uhUuidToAdd = attributes.uhUuid;
-                $scope.uidToAdd = attributes.uid;
-
-                $scope.listName = options.listName;
-
-                // Ask for confirmation from the user to add the member
-                $scope.confirmAddModalInstance = $uibModal.open({
-                    templateUrl: "modal/confirmAddModal",
-                    scope: $scope,
-                    backdrop: "static",
-                    keyboard: false
-                });
-
-                $scope.confirmAddModalInstance.result.then(function () {
-                    $scope.updateAddMember(userToAdd, options.listName);
-                });
-            }, function (res) {
-                if (res.statusCode === 404) {
-                    $scope.createAddErrorModal(userToAdd);
-                }
-            });
-        };*/
-
         /**
-         * Closes CheckModal and proceeds with the checkModalInstance result.then function
+         * Close CheckModal and proceeds with the checkModalInstance result.then function
          */
         $scope.proceedCheckModal = function () {
             $scope.checkModalInstance.close();
         };
 
         /**
-         * Dismisses the CheckModal and closes it with proceeding with checkModalInstance's result.then function.
+         * Dismisse the CheckModal and closes it with proceeding with checkModalInstance's result.then function.
          */
         $scope.closeCheckModal = function () {
             $scope.checkModalInstance.dismiss();
@@ -921,29 +953,31 @@
         $scope.cancelConfirmAddUser = function () {
             $scope.confirmAddModalInstance.dismiss();
         };
+
         /**
-         * Gives a user ownership of a grouping.
+         * Give a user ownership of a grouping.
          */
         $scope.addOwner = function () {
-
             const ownerToAdd = $scope.ownerToAdd;
+            $scope.userToAdd = ownerToAdd;
+            const list = "owners";
 
             if (_.isEmpty(ownerToAdd)) {
-                $scope.createAddErrorModal(ownerToAdd);
+                $scope.user = ownerToAdd;
+                $scope.emptyInput = true;
+            } else if ($scope.existInList(ownerToAdd, list)) {
+                $scope.listName = list;
+                $scope.swap = false;
             } else {
                 $scope.createConfirmAddModal({
                     userToAdd: ownerToAdd,
-                    listName: "owners"
+                    listName: list
                 });
-            }
-        }, function (res) {
-            if (res.statusCode === 403) {
-                $scope.createOwnerErrorModal();
             }
         };
 
         /**
-         * Creates a modal telling the user whether or not the user was successfully added into the grouping/admin list.
+         * Create a modal telling the user whether or not the user was successfully added into the grouping/admin list.
          * @param {object} options - the options object
          * @param {string} options.userToAdd - the user being added
          * @param {string?} options.response - the response from adding a member
@@ -974,7 +1008,7 @@
         };
 
         /**
-         * Closes the add user modal.
+         * Close the add user modal.
          */
         $scope.closeSuccessfulAddModal = function () {
             $scope.addModalInstance.close();
@@ -995,8 +1029,12 @@
             $scope.addErrorModalInstance.close();
         };
 
+        $scope.closeResetNotifModal = function () {
+            $scope.resetNotifModalInstance.close();
+        };
+
         /**
-         * Creates a modal telling the user that they do not have access to perform this action and that they
+         * Create a modal telling the user that they do not have access to perform this action and that they
          * will be logged out and redirected to the homepage.
          */
         $scope.createRoleErrorModal = function () {
@@ -1009,7 +1047,7 @@
             });
         };
         /**
-         * Removes a user from the include or exclude group.
+         * Remove a user from the include or exclude group.
          * @param {string} listName - the list to remove the user from (either Include or Exclude)
          * @param {number} currentPage - the current page in the table
          * @param {number} index - the index of the user clicked by the user
@@ -1030,15 +1068,11 @@
                 listName: listName,
                 scope: $scope
             });
-        }, function (res) {
-            if (res.statusCode === 403) {
-                $scope.createOwnerErrorModal();
-            }
         };
 
 
         /**
-         * Removes a grouping owner. There must be at least one grouping owner remaining.
+         * Remove a grouping owner. There must be at least one grouping owner remaining.
          * @param {number} currentPage - the current page in the owners table
          * @param {number} index - the index of the owner clicked by the user
          */
@@ -1054,11 +1088,6 @@
                 const userType = "owner";
                 $scope.createRemoveErrorModal(userType);
             }
-
-        } , function (res) {
-            if (res.statusCode === 403) {
-                $scope.createOwnerErrorModal();
-            }
         };
 
         /**
@@ -1070,13 +1099,34 @@
         }
 
         function handleMultiMemberRemove() {
-            for (let i = 0; i < $scope.multiMemberPaths.length; i++) {
-                $scope.selectedGrouping.path = $scope.multiMemberPaths[i];
-                $scope.getGroupingInformation();
-                $scope.syncDestArray = [];
-            }
             $scope.searchForUserGroupingInformation();
         }
+
+        function handleGroupingReset() {
+            $scope.getGroupingInformation();
+            $scope.loading = false;
+            $scope.createResetNotifModal($scope.selectedGrouping.name);
+        }
+
+        $scope.createEmptyGroupModal = function () {
+            $scope.emptyGroupModalInstance = $uibModal.open({
+                templateUrl: "modal/emptyGroupModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+        };
+
+        $scope.createResetNotifModal = function (groupReset) {
+            $scope.group = groupReset;
+
+            $scope.resetNotifModalInstance = $uibModal.open({
+                templateUrl: "modal/resetNotifModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+        };
 
         /**
          * Handler for successfully removing an owner from a grouping.
@@ -1108,7 +1158,7 @@
         }
 
         /**
-         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {object} options - the options object
          * @param {object} options.user - the user being removed
@@ -1140,13 +1190,13 @@
                 } else if ($scope.listName === "owners") {
                     groupingsService.removeOwner(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
-                    groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
+                    groupingsService.removeAdmin(options.user.username, handleAdminRemove, handleUnsuccessfulRequest);
                 }
             });
         };
 
         /**
-         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {object} options - the options object
          * @param {object} options.user - the user being removed
@@ -1166,28 +1216,54 @@
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
                 let userToRemove = options.user.username;
-                let groupingPath = $scope.selectedGroupings;
+                let groupingPath = $scope.selectedGroupingsPaths;
                 groupingsService.removeFromGroups(groupingPath, userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
                 $scope.personToLookup = userToRemove;
             });
         };
 
         /**
-         * Closes the modal, then proceeds with deleting a user from a grouping.
+         * Close the modal, then proceeds with deleting a user from a grouping.
          */
         $scope.proceedRemoveUser = function () {
             $scope.removeModalInstance.close();
         };
 
         /**
+         <<<<<<< HEAD
+         * Closes the modal, then proceeds with reseting the grouping.
+         */
+        $scope.proceedResetGroup = function () {
+            $scope.resetModalInstance.close();
+        };
+
+        /**
          * Closes the modal for deleting a user. This does not delete the user from the grouping/admin list.
+         =======
+         * Close the modal for deleting a user. This does not delete the user from the grouping/admin list.
+         >>>>>>> Comment code
          */
         $scope.cancelRemoveUser = function () {
             $scope.removeModalInstance.dismiss();
         };
 
         /**
+         <<<<<<< HEAD
+         * Closes the modal for reseting group. This does not reset the grouping.
+         */
+        $scope.cancelResetGroup = function () {
+            $scope.resetModalInstance.dismiss();
+        };
+
+        $scope.closeEmptyGroupModal = function () {
+            $scope.emptyGroupModalInstance.dismiss();
+        };
+
+        /**
          * Creates a modal stating there was an error removing the user from a group.
+         =======
+         * Create a modal stating there was an error removing the user from a group.
+         >>>>>>> Comment code
          * @param {string} userType - the type of user being removed (either admin or owner)
          */
         $scope.createRemoveErrorModal = function (userType) {
@@ -1202,7 +1278,7 @@
         };
 
         /**
-         * Closes the remove error modal.
+         * Close the remove error modal.
          */
         $scope.closeRemoveErrorModal = function () {
             $scope.removeErrorModalInstance.close();
@@ -1216,7 +1292,7 @@
         };
 
         /**
-         * Resets the grouping members and page numbers.
+         * Reset the grouping members and page numbers.
          */
         function resetGroupingMembers() {
             $scope.groupingMembers = [];
@@ -1242,7 +1318,7 @@
         }
 
         /**
-         * Resets the selected group in the side navbar to the list of all members.
+         * Reset the selected group in the side navbar to the list of all members.
          */
         function resetPillsToAllMembers() {
             const pills = $("#group-pills")[0].children;
@@ -1272,7 +1348,7 @@
         }
 
         /**
-         * Clears the user input for adding a member to a list.
+         * Clear the user input for adding a member to a list.
          * @param {string?} listName - the name of the list the member is being added to
          */
         function clearAddMemberInput(listName) {
@@ -1307,7 +1383,7 @@
         }
 
         /**
-         * Returns to the list of groupings available for management/administration.
+         * Return to the list of groupings available for management/administration.
          */
         $scope.returnToGroupingsList = function () {
             $scope.resetGroupingInformation();
@@ -1321,7 +1397,7 @@
         };
 
         /**
-         * Resets the grouping members, page numbers, filters, and columns to sort by.
+         * Reset the grouping members, page numbers, filters, and columns to sort by.
          */
         $scope.resetGroupingInformation = function () {
             resetGroupingMembers();
@@ -1335,7 +1411,7 @@
 
 
         /**
-         * Creates a modal with a description of the preference selected.
+         * Create a modal with a description of the preference selected.
          * @param {string} desc - the description of the preference
          */
         $scope.createPreferenceInfoModal = function (desc) {
@@ -1367,7 +1443,7 @@
         }
 
         /**
-         * Toggles the grouping preference which allows users to opt out of a grouping.
+         * Toggle the grouping preference which allows users to opt out of a grouping.
          */
         $scope.updateAllowOptOut = function () {
             const groupingPath = $scope.selectedGrouping.path;
@@ -1377,7 +1453,111 @@
         };
 
         /**
+         <<<<<<< HEAD
+         * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * a request is made to delete the user.
+         * @param {object} options - the options object
+         * @param {String} options.users - the user being removed
+         * @param {string} options.group - groups the user is being removed from
+         */
+        $scope.createResetGroupModal = function (options) {
+            $scope.groupReset = options.group;
+            $scope.listNames = options.listNames;
+            const windowClass = $scope.showWarningRemovingSelfResetModal() ? "modal-danger" : "";
+
+            $scope.resetModalInstance = $uibModal.open({
+                templateUrl: "modal/resetModal",
+                windowClass: windowClass,
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+            $scope.resetModalInstance.result.then(function () {
+                $scope.loading = true;
+                let resetInclude = $scope.resetInclude;
+                let resetExclude = $scope.resetExclude;
+                let groupingPath = $scope.selectedGrouping.path;
+                groupingsService.resetGroup(groupingPath, resetInclude, resetExclude, handleGroupingReset, handleUnsuccessfulRequest);
+            });
+        };
+
+        $scope.resetGroup = function () {
+            let listNames = "";
+            let exBool = false;
+            let inBool = false;
+            if (Object.entries($scope.groupingInclude).length === 0 || $scope.includeCheck == false) {
+                $scope.resetInclude = "empty";
+            } else {
+                inBool = true;
+                $scope.resetInclude = [];
+                for (var i = 0; i < $scope.groupingInclude.length; i++) {
+                    $scope.resetInclude.push($scope.groupingInclude[i].username);
+                }
+            }
+            if (Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck == false) {
+                $scope.resetExclude = "empty";
+            } else {
+                exBool = true;
+                $scope.resetExclude = [];
+                for (var i = 0; i < $scope.groupingExclude.length; i++) {
+                    $scope.resetExclude.push($scope.groupingExclude[i].username);
+                }
+            }
+
+            if (inBool && exBool) {
+                listNames = "Exclude and Include lists";
+            } else if (inBool) {
+                listNames = "Include list";
+            } else if (exBool) {
+                listNames = "Exclude list";
+            }
+
+            let resetAll = null;
+            if ($scope.excludeCheck == true && $scope.includeCheck == true) {
+                resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
+            } else if ($scope.excludeCheck == true && $scope.includeCheck == false) {
+                resetAll = $scope.groupingExclude;
+            } else if ($scope.excludeCheck == false && $scope.includeCheck == true) {
+                resetAll = $scope.groupingInclude;
+            } else {
+                resetAll = "";
+            }
+            $scope.resetUser = [];
+            $scope.resetID = [];
+            $scope.resetName = [];
+            for (let i = 0; i < resetAll.length; i++) {
+                $scope.resetUser[i] = resetAll[i].username;
+                $scope.resetID[i] = resetAll[i].uhUuid;
+                $scope.resetName[i] = resetAll[i].name;
+            }
+
+            $scope.createResetGroupModal({
+                group: $scope.selectedGrouping.name,
+                listNames: listNames
+            });
+        };
+
+        $scope.updateIncludeCheck = function () {
+            if ($scope.includeCheck === false) {
+                $scope.includeCheck = true;
+            } else {
+                $scope.includeCheck = false;
+            }
+        };
+
+        $scope.updateExcludeCheck = function () {
+            if ($scope.excludeCheck === false) {
+                $scope.excludeCheck = true;
+            } else {
+                $scope.excludeCheck = false;
+            }
+        };
+
+        /**
          * Toggles the grouping preference which allows users to discover the grouping and opt into it.
+         =======
+         * Toggle the grouping preference which allows users to discover the grouping and opt into it.
+         >>>>>>> Comment code
          */
         $scope.updateAllowOptIn = function () {
             const groupingPath = $scope.selectedGrouping.path;
@@ -1387,7 +1567,7 @@
         };
 
         /**
-         * Gets the SyncDest value from the array given the name of the sync dest
+         * Get the SyncDest value from the array given the name of the sync dest
          * @param {String} syncDestName Name of the Sync Dest to retrieve
          * @return {Boolean} Sync Dest value at the given name
          */
@@ -1400,7 +1580,7 @@
         };
 
         /**
-         * Gets the entire syncDest object given its name
+         * Get the entire syncDest object given its name
          * @param {String} syncDestName Name of the Sync Dest to retrieve
          * @return {Object} The entire syncDest object with the given name
          */
@@ -1412,7 +1592,7 @@
         };
 
         /**
-         * Sets a given sync dest to a given value
+         * Set a given sync dest to a given value
          * @param {String} syncDestName Name of the Sync Dest to set
          * @param {Boolean} syncDestvalue The value to set the Sync Dest to
          */
@@ -1424,7 +1604,7 @@
         };
 
         /**
-         * Toggles the grouping sync destinations according to a given syncDest
+         * Toggle the grouping sync destinations according to a given syncDest
          * @param {String} syncDestName Name of the Sync Dest to toggle
          */
         $scope.updateSingleSyncDest = function (syncDestName) {
@@ -1435,7 +1615,7 @@
         };
 
         /**
-         * Creates a modal indicating an error in saving the grouping's preferences.
+         * Create a modal indicating an error in saving the grouping's preferences.
          */
         $scope.createPreferenceErrorModal = function () {
             $scope.preferenceErrorModalInstance = $uibModal.open({
@@ -1447,14 +1627,23 @@
         };
 
         /**
-         * Closes the preference error modal.
+         * Close the preference error modal.
          */
         $scope.closePreferenceError = function () {
             $scope.preferenceErrorModalInstance.close();
         };
 
         $scope.resetFields = function () {
+            $scope.getGroupingInformation();
             $scope.userToAdd = "";
+        };
+
+        $scope.resetErrors = function () {
+            $scope.resStatus = 0;
+            $scope.emptyInput = false;
+            $scope.swap = true;
+            $scope.inGrouper = false;
+
         };
 
         /**
@@ -1484,7 +1673,7 @@
         };
 
         /**
-         * Creates warning modal if user is in being added to include and is a basis member or if
+         * Create warning modal if user is in being added to include and is a basis member or if
          * a user is being added to exclude and is not a basis member
          * @param user - user being added
          * @param listName - grouping list (i.e. include or exclude)
@@ -1514,14 +1703,14 @@
         };
 
         /**
-         * Proceeds with the syncDest confirmation
+         * Proceed with the syncDest confirmation
          */
         $scope.proceedSyncDestModal = function () {
             $scope.syncDestInstance.close();
         };
 
         /**
-         * Closes the syncDest confirmation modal
+         * Close the syncDest confirmation modal
          */
         $scope.closeSyncDestModal = function () {
             $scope.syncDestInstance.dismiss();
@@ -1543,7 +1732,7 @@
         };
 
         /**
-         * Exports data in a table to a CSV file
+         * Export data in a table to a CSV file
          * @param {object[]} table - the table to export
          * @param grouping - grouping name that you are exporting from
          * @param list - grouping list (i.e. include or exclude)
@@ -1590,7 +1779,7 @@
         };
 
         /**
-         * Exports generic data in a table to a CSV file
+         * Export generic data in a table to a CSV file
          * @param {object[]} table - the table to export
          * @param grouping - grouping name that you are exporting from
          * @param list - grouping list (i.e. include or exclude)
@@ -1620,7 +1809,7 @@
         };
 
         /**
-         * Converts the generic data in the table into comma-separated values.
+         * Convert the generic data in the table into comma-separated values.
          * @param {object[]} table - the table to convert
          * @returns the table in CSV format
          */
@@ -1643,7 +1832,7 @@
 
 
         /**
-         * Determines whether a warning message should be displayed when removing yourself from a list.
+         * Determine whether a warning message should be displayed when removing yourself from a list.
          * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
          * returns false
          */
@@ -1653,7 +1842,21 @@
         };
 
         /**
+         <<<<<<< HEAD
+         * Determines whether a warning message should be displayed when removing yourself from a list.
+         * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
+         * returns false
+         */
+        $scope.showWarningRemovingSelfResetModal = function () {
+            return $scope.usersToRemove.includes($scope.currentUser)
+                && ($scope.listName === "owners" || $scope.listName === "admins");
+        };
+
+        /**
          * Gets cookie information
+         =======
+         * Get cookie information
+         >>>>>>> Comment code
          * @param cname = name of cookie you want to look for.
          * @returns {*}
          */
@@ -1673,7 +1876,7 @@
         };
 
         /**
-         * Logs out a user and redirects them to the homepage.
+         * Log out a user and redirects them to the homepage.
          */
         $scope.proceedLogoutUser = function () {
             $scope.RoleErrorModalInstance.close();
@@ -1685,7 +1888,7 @@
         };
 
         /**
-         * redirects the user to the groupings page.
+         * Redirect the user to the groupings page.
          */
         $scope.proceedRedirect = function () {
             $scope.OwnerErrorModalInstance.close();
@@ -1696,4 +1899,3 @@
 
     UHGroupingsApp.controller("GeneralJsController", GeneralJsController);
 }());
-//})();

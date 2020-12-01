@@ -8,5 +8,9 @@ UHGroupingsApp.constant("Message", {
     },
     Body: {
         SLOW_IMPORT: "Feel free to exit your browser, an email will be sent of the add results."
+    },
+    Csv: {
+        GROUP_NOT_LOADED: "Export will be available once all members are loaded.",
+        GROUP_LOADED: "Export entire member list to CSV."
     }
 });

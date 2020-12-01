@@ -1,7 +1,7 @@
 package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.controller.RestTemplateResponseErrorHandler;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -17,43 +17,36 @@ public class HttpRequestServiceImpl implements HttpRequestService {
     @Value("${groupings.api.current_user}")
     private String CURRENT_USER;
 
-    private RestTemplate restTemplate;
-
-    @Autowired
-    public HttpRequestServiceImpl(RestTemplateBuilder restTemplateBuilder) {
-        //todo should this not be declaring a new variable named restTemplate?
-        restTemplate = restTemplateBuilder
-                .errorHandler(new RestTemplateResponseErrorHandler())
-                .build();
-    }
-
     /*
-    Make an http request to the API with path variables
+     * Make an http request to the API with path variables.
      */
-
+    @SuppressWarnings("lgtm[java/xss]")
     @Override
-    public ResponseEntity makeApiRequest(String currentUser, String uri, HttpMethod method) {
+    public ResponseEntity<String> makeApiRequest(String currentUser, String uri, HttpMethod method) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(CURRENT_USER, currentUser);
-        HttpEntity httpEntity = new HttpEntity(httpHeaders);
+        HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
 
-        //todo why do we need the class fromm the body of the rest template rather than RestTemplate.class?
+        RestTemplate restTemplate =
+                new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
         return restTemplate.exchange(uri, method, httpEntity, String.class);
     }
 
     /*
-    Make an hhtp request to the API with path variables and description in the body
+     * Make an http request to the API with path variables and description in the body.
      */
-
+    @SuppressWarnings("lgtm[java/xss]")
     @Override
-    public ResponseEntity makeApiRequestWithBody(String currentUser, String uri, String data, HttpMethod method) {
+    public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, String data,
+            HttpMethod method) {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(CURRENT_USER, currentUser);
-        HttpEntity httpEntity = new HttpEntity(data, httpHeaders);
+        HttpEntity<String> httpEntity = new HttpEntity<>(data, httpHeaders);
 
-        //todo why do we need the class fromm the body of the rest template rather than RestTemplate.class?
+        RestTemplate restTemplate =
+                new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
         return restTemplate.exchange(uri, method, httpEntity, String.class);
     }
 }

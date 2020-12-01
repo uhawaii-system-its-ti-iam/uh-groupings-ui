@@ -45,7 +45,7 @@ public class UserDetailsServiceTest {
     @Test
     public void loadUserDetailsExceptionOne() {
         Assertion assertion = new AssertionDummy();
-        UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl(userBuilder);
+        CasUserDetailsServiceImplj userDetailsService = new CasUserDetailsServiceImplj(userBuilder);
         try {
             userDetailsService.loadUserDetails(assertion);
             fail("Should not have reached here.");

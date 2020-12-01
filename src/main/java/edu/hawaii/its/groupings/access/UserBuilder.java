@@ -38,6 +38,7 @@ public final class UserBuilder {
         User user = new User(uid, roleHolder.getAuthorities());
         logger.debug("Done adding roles; uid: " + uid);
 
+
         // Convert the uhUuid to a Long and record it.
         // Don't move this statement above the exists call
         // above because exists implicitly checks that the

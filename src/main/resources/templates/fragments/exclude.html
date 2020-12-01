@@ -19,11 +19,10 @@
                        ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', excludeQuery, true)"/>
                 <!-- Export to CSV button -->
                 <div class="float-right"
-                     uib-tooltip="Export will be available once all members are loaded"
-                     tooltip-enable="!paginatingComplete"
                      style="display:inline-block">
                     <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
                             ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
+                            uib-tooltip="{{ getCSVToolTipMessage() }}"
                             ng-disabled="!paginatingComplete">
                         <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
                         Export to CSV
@@ -101,10 +100,16 @@
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
                 <form>
                     <div class="input-group" style="width: 500px">
-                        <input class="form-control" placeholder="Members to add" type="text"
-                               title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"/>
+                        <input class="form-control" placeholder="Members to add" type="search"
+                               ng-init="errorDismissed = true; resetErrors()"
+                               ng-blur="errorDismissed = true; resetErrors()"
+                               title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"
+                        />
                         <div>
-                            <button class="btn btn-primary" ng-click="addMembers('Exclude')" style="margin-left: 2px">
+                            <button class="btn btn-primary"
+                                    ng-blur="errorDismissed = true; resetErrors()"
+                                    ng-click="resetErrors(); addMembers('Exclude'); errorDismissed = false"
+                                    style="margin-left: 2px">
                                 Add
                             </button>
                             <button class="btn btn-primary"
@@ -118,6 +123,7 @@
                 </form>
             </div>
         </div>
+        <div th:replace="fragments/add-error-messages :: add-error-messages"></div>
         <div class="mt-lg-0 mt-2">
             <div th:replace="fragments/pagination :: pagination(currentPage ='currentPageExclude', pagedItems='pagedItemsExclude')"></div>
         </div>

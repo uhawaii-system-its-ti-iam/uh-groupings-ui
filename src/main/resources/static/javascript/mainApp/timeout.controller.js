@@ -56,7 +56,9 @@
             });
         });
 
-        /* When DOM is destroyed, clear timeouts and intervals */
+        /**
+         * Clear timeouts and intervals when DOM is destroyed.
+         */
         $scope.$on("$destroy", function (event) {
             if (angular.isDefined(createTimeoutModalPromise)) {
                 $timeout.cancel(createTimeoutModalPromise);
@@ -69,7 +71,7 @@
         });
 
         /**
-         * Creates a countdown timer.
+         * Create a countdown timer.
          */
         function timer() {
             $scope.timeRemaining = secondsToMinutes($scope.secondsRemaining);
@@ -81,7 +83,7 @@
         }
 
         /**
-         * Helper function to convert an amount of seconds to minutes in a formatted string
+         * Convert seconds to minutes and return as a formatted string.
          */
         function secondsToMinutes(seconds) {
             let minutes = Math.round((seconds - 30) / 60);
@@ -93,7 +95,7 @@
         }
 
         /**
-         * Restart createTimeoutModalPromise
+         * Restart createTimeoutModalPromise.
          */
         function restartTimeouts() {
             if (angular.isDefined(createTimeoutModalPromise)) {
@@ -112,7 +114,7 @@
         }
 
         /**
-         * Creates timeout modal.
+         * Create timeout modal.
          */
         $scope.createTimeoutModal = function () {
             $scope.timeoutModalInstance = $uibModal.open({
@@ -121,20 +123,20 @@
                 backdrop: "static",
                 keyboard: false
             });
-            /* Callback when timeout modal is opened */
+            // Callback when timeout modal is opened.
             $scope.timeoutModalInstance.opened.then(() => {
                 countdownTimerPromise = $interval(timer, 1000); // Start 5 minute countdown
                 isModalOpen = true;
             });
-            /* Callback when timeout modal is closed */
+            // Callback when timeout modal is closed.
+            // Execute when user clicks "Stay logged in" button.
             $scope.timeoutModalInstance.result.then(function () {
-                // Executes when user clicks "Stay logged in" button
                 restartTimeouts();
                 restartCountdown();
                 $scope.pingServer();
                 isModalOpen = false;
             }, function () {
-                // Error catching if modal is not closed properly
+                // Error catching if modal is not closed properly.
                 restartTimeouts();
                 restartCountdown();
                 $scope.pingServer();
@@ -143,14 +145,14 @@
         };
 
         /**
-         * Closes modal
+         * Close timeout modal.
          */
         $scope.closeTimeoutModal = function () {
             $scope.timeoutModalInstance.close();
         };
 
         /**
-         * Pings tomcat server with a GET request to retrieve user info.
+         * Ping tomcat server with a GET request to retrieve user info.
          */
         $scope.pingServer = function () {
             const endpoint = BASE_URL + "members/aaronvil";
@@ -160,6 +162,9 @@
         };
 
 
+        /**
+         * Restart timer countdown.
+         */
         function restartCountdown() {
             $interval.cancel(countdownTimerPromise);
             countdownTimerPromise = {};
@@ -167,18 +172,17 @@
             $scope.timeRemaining = secondsToMinutes(TIME_TO_LOGOUT);
         }
 
-        /*
-            Logout method used only when user is idle for too long.
-            The other logout method is implemented in the html.
-        */
+        /**
+         * Logout method used only when user is idle for too long. The other logout method is implemented in the html.
+         */
         $scope.logoutOnIdle = () => {
             let request = new XMLHttpRequest();
             request.open("POST", "/uhgroupings/logout", true);
             request.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
-            // Attach event handler when POST request is successful
+            // Attach event handler when POST request is successful.
             request.onreadystatechange = () => {
                 if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-                    // Redirect user to URL in location header in HTTP reponse, should be home page
+                    // Redirect user to URL in location header in HTTP response, should be home page.
                     $window.location.href = request.responseURL;
                 }
             };

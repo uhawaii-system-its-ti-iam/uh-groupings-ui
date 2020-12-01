@@ -16,15 +16,15 @@
         const DEFAULT_COLUMN_NAME = "name";
 
         /**
-         * Paginates a list of items.
-         * @param {object[]} list - the unpaginated list
-         * @returns {object[]} a paginated list, an array of arrays of objects with each sub array having a maximum of $scope.itemsPerPage objects
+         * Paginate a list of items.
+         * @param {object} list The un-paginated list.
+         * @returns {array} A paginated list, an array of arrays of objects with each sub array having a maximum of $scope.itemsperpage objects.
          */
         $scope.groupToPages = function (list) {
             if (!_.isArray(list) || $scope.itemsPerPage < 1) {
                 return [];
             }
-            var pagedList = [];
+            let pagedList = [];
             for (let i = 0; i < list.length; i++) {
                 if (i % $scope.itemsPerPage === 0) {
                     pagedList[Math.floor(i / $scope.itemsPerPage)] = [list[i]];
@@ -45,7 +45,7 @@
         }
 
         /**
-         * Checks if a string contains a substring (case insensitive).
+         * Check if a string contains a substring (case insensitive).
          * @param {string} str - the string to check
          * @param {string} substr - the substring to find
          * @returns {boolean} true if the string contains the substring. Otherwise returns false.
@@ -58,16 +58,15 @@
         }
 
         /**
-         * Filters through a list given a user's query.
+         * Filter through a list given a user's query.
          * If query is empty, then this is the same as $scope.pagedListVar = $scope.groupToPages(list)
          * @param {object[]} list - the list to filter
          * @param {string} pagedListVar - the name of the variable containing the paginated list
          * @param {string} pageVar - the name of the variable containing the current page of the list
          * @param {string} query - the user's search query
+         * @param resetPage
          */
         $scope.filter = function (list, pagedListVar, pageVar, query, resetPage) {
-            // Filters for items that match the user's query
-
             let filteredItems = $filter("filter")(list, function (item) {
                 for (let key in item) {
                     if (_.has(item, key)
@@ -101,7 +100,7 @@
         };
 
         /**
-         * Changes the current page for a paginated table.
+         * Change the current page for a paginated table.
          * @param {string} action - the action to take to change the page
          * @param {string} pageVar - the name of the variable containing the current page number
          * @param {string} pagedListVar - the name of the variable contaning the paginated list
@@ -152,7 +151,7 @@
         };
 
         /**
-         * Sorts a table by a given property.
+         * Sort a table by a given property.
          * @param {string} tableName - the variable name of the table to sort
          * @param {string} pagedTableName - the variable name of the paginated table
          * @param {string} propertyName - the property to sort by
