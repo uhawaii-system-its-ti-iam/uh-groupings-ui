@@ -915,7 +915,6 @@
                 if (attributes.uhUuid > 0) {
                     $scope.initMemberDisplayName(attributes);
                 }
-                console.log("hi");
                 // Ask for confirmation from the user to add the member
                 $scope.confirmAddModalInstance = $uibModal.open({
                     templateUrl: "modal/confirmAddModal",
@@ -1023,8 +1022,6 @@
         };
 
         $scope.createAddErrorModal = function (userAdded) {
-            // $scope.user = userAdded;
-
             $scope.addErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/addErrorModal",
                 scope: $scope,
