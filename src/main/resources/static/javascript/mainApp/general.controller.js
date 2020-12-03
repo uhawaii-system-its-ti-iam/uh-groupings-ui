@@ -548,8 +548,7 @@
                     }
                 } else {
                     $scope.userToAdd = $scope.usersToAdd;
-                    $scope.existsInGrouper($scope.userToAdd);
-                    $scope.addMember(listName);
+                    $scope.existsInGrouper($scope.userToAdd, listName);
                 }
             }
         };
@@ -715,32 +714,24 @@
          * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
-            let groupingPath = $scope.selectedGrouping.path;
             $scope.waitingForImportResponse = true;
-            groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function (res) {
-                let user = $scope.userToAdd;
-                let inGrouper = $scope.inGrouper;
-                let inBasis = _.some($scope.groupingBasis, { username: user }) ||
-                    _.some($scope.groupingBasis, { uhUuid: user });
-                if ($scope.existInList(user, list)) {
-                    $scope.listName = list;
-                    $scope.swap = false;
-                } else if ($scope.isInAnotherList(user, list)) {
-                    $scope.createCheckModal(user, list, true, inBasis);
-                } else if ((inBasis && list === "Include") || (inGrouper && !inBasis && list === "Exclude")) {
-                    $scope.createBasisWarningModal(user, list, inBasis);
-                } else {
-                    $scope.createConfirmAddModal({
-                        userToAdd: user,
-                        listName: list
-                    });
-                }
-                $scope.waitingForImportResponse = false;
-            }, function (res) {
-                if (res.status === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            });
+            let user = $scope.userToAdd;
+            let inBasis = _.some($scope.groupingBasis, { username: user }) ||
+                _.some($scope.groupingBasis, { uhUuid: user });
+            if ($scope.existInList(user, list)) {
+                $scope.listName = list;
+                $scope.swap = false;
+            } else if ($scope.isInAnotherList(user, list)) {
+                $scope.createCheckModal(user, list, true, inBasis);
+            } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
+                $scope.createBasisWarningModal(user, list, inBasis);
+            } else {
+                $scope.createConfirmAddModal({
+                    userToAdd: user,
+                    listName: list
+                });
+            }
+            $scope.waitingForImportResponse = false;
         };
 
         /**
@@ -770,7 +761,6 @@
          * @param {string} list - the list the user is being added to
          */
         $scope.updateAddMember = function (userToAdd, list) {
-
             // only initialize groupingPath is listName is not "admins"
             let groupingPath;
 
@@ -805,9 +795,11 @@
          */
         $scope.isInAnotherList = function (user, list) {
             if (list === "Include") {
-                return _.some($scope.groupingExclude, { username: user });
+                return _.some($scope.groupingExclude, { username: user }) ||
+                    _.some($scope.groupingExclude, { uhUuid: user });
             } else if (list === "Exclude") {
-                return _.some($scope.groupingInclude, { username: user });
+                return _.some($scope.groupingInclude, { username: user }) ||
+                    _.some($scope.groupingInclude, { uhUuid: user });
             }
             return false;
         };
@@ -837,7 +829,6 @@
          * @param listName - name of the list they are adding to (either Include or Exclude)
          */
         $scope.createCheckModal = function (user, listName, swap, inBasis) {
-            $scope.user = user;
             $scope.listName = listName;
             $scope.swap = swap;
             $scope.inBasis = inBasis;
@@ -850,6 +841,7 @@
             });
 
             $scope.checkModalInstance.result.then(function () {
+                $scope.waitingForImportResponse = true;
                 $scope.updateAddMember(user, listName);
             });
         };
@@ -873,42 +865,56 @@
         };
 
         /**
-         <<<<<<< HEAD
+         * Checks if the user is in the Grouper database
+         * Initializes the name of the member to display on modals
+         * @param {object} attributes - the user's attributes
+         */
+        $scope.initMemberDisplayName = function (attributes) {
+            $scope.fullNameToAdd = attributes.cn;
+            $scope.givenNameToAdd = attributes.givenName;
+            $scope.uhUuidToAdd = attributes.uhUuid;
+            $scope.uidToAdd = attributes.uid;
+
+            if ($scope.fullNameToAdd.length > 0) {
+                $scope.user = $scope.fullNameToAdd;
+            } else if ($scope.uidToAdd.length > 0) {
+                $scope.user = $scope.uidToAdd;
+            } else {
+                $scope.user = $scope.uhUuidToAdd;
+            }
+        };
+
+        /**
          * Checks if the user is in the Grouper database
          * @param {object} user - the user you are checking to see if they are in Grouper
+         * @param {object} list - the the list the user is being added to
          */
-        $scope.existsInGrouper = function (user) {
+        $scope.existsInGrouper = function (user, list) {
             groupingsService.getMemberAttributes(user, function (attributes) {
                 if (attributes.uhUuid > 0) {
-                    $scope.inGrouper = true;
+                    $scope.initMemberDisplayName(attributes);
+                    $scope.addMember(list);
                 }
             }, function (res) {
-                $scope.inGrouper = false;
+                $scope.user = user;
+                $scope.resStatus = res.status;
             });
         };
 
         /**
          * Creates a modal that asks for confirmation when adding a user.
-         =======
-         * Create a modal that asks for confirmation when adding a user.
-         >>>>>>> Comment code
          * @param {object} options - the options object
          * @param {string} options.userToAdd - the user to add
          * @param {string} options.listName - name of the list being added to
          */
         $scope.createConfirmAddModal = function (options) {
             const userToAdd = options.userToAdd;
-
-            $scope.waitingForImportResponse = false;
+            $scope.listName = options.listName;
 
             groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                $scope.fullNameToAdd = attributes.cn;
-                $scope.givenNameToAdd = attributes.givenName;
-                $scope.uhUuidToAdd = attributes.uhUuid;
-                $scope.uidToAdd = attributes.uid;
-
-                $scope.listName = options.listName;
-
+                if (attributes.uhUuid > 0) {
+                    $scope.initMemberDisplayName(attributes);
+                }
                 // Ask for confirmation from the user to add the member
                 $scope.confirmAddModalInstance = $uibModal.open({
                     templateUrl: "modal/confirmAddModal",
@@ -918,6 +924,7 @@
                 });
 
                 $scope.confirmAddModalInstance.result.then(function () {
+                    $scope.waitingForImportResponse = true;
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
@@ -959,20 +966,21 @@
          */
         $scope.addOwner = function () {
             const ownerToAdd = $scope.ownerToAdd;
-            $scope.userToAdd = ownerToAdd;
             const list = "owners";
-
+            $scope.userToAdd = ownerToAdd;
             if (_.isEmpty(ownerToAdd)) {
-                $scope.user = ownerToAdd;
                 $scope.emptyInput = true;
-            } else if ($scope.existInList(ownerToAdd, list)) {
-                $scope.listName = list;
-                $scope.swap = false;
             } else {
-                $scope.createConfirmAddModal({
-                    userToAdd: ownerToAdd,
-                    listName: list
-                });
+                if ($scope.existInList(ownerToAdd, list)) {
+                    $scope.user = ownerToAdd;
+                    $scope.listName = list;
+                    $scope.swap = false;
+                } else {
+                    $scope.createConfirmAddModal({
+                        userToAdd: ownerToAdd,
+                        listName: list
+                    });
+                }
             }
         };
 
@@ -984,7 +992,6 @@
          * @param {string?} options.listName - the list where the user was being added to
          */
         $scope.createSuccessfulAddModal = function (options) {
-            $scope.user = options.user;
             $scope.listName = options.listName;
 
             $scope.addModalInstance = $uibModal.open({
@@ -1015,8 +1022,6 @@
         };
 
         $scope.createAddErrorModal = function (userAdded) {
-            $scope.user = userAdded;
-
             $scope.addErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/addErrorModal",
                 scope: $scope,
@@ -1230,7 +1235,6 @@
         };
 
         /**
-         <<<<<<< HEAD
          * Closes the modal, then proceeds with reseting the grouping.
          */
         $scope.proceedResetGroup = function () {
@@ -1239,16 +1243,12 @@
 
         /**
          * Closes the modal for deleting a user. This does not delete the user from the grouping/admin list.
-         =======
-         * Close the modal for deleting a user. This does not delete the user from the grouping/admin list.
-         >>>>>>> Comment code
          */
         $scope.cancelRemoveUser = function () {
             $scope.removeModalInstance.dismiss();
         };
 
         /**
-         <<<<<<< HEAD
          * Closes the modal for reseting group. This does not reset the grouping.
          */
         $scope.cancelResetGroup = function () {
@@ -1261,9 +1261,6 @@
 
         /**
          * Creates a modal stating there was an error removing the user from a group.
-         =======
-         * Create a modal stating there was an error removing the user from a group.
-         >>>>>>> Comment code
          * @param {string} userType - the type of user being removed (either admin or owner)
          */
         $scope.createRemoveErrorModal = function (userType) {
@@ -1371,6 +1368,7 @@
                     break;
                 case "owners":
                     $scope.ownerToAdd = "";
+                    $scope.waitingForImportResponse = false;
                     break;
                 case "admins":
                     $scope.adminToAdd = "";
@@ -1453,7 +1451,6 @@
         };
 
         /**
-         <<<<<<< HEAD
          * Creates a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
          * a request is made to delete the user.
          * @param {object} options - the options object
@@ -1555,9 +1552,6 @@
 
         /**
          * Toggles the grouping preference which allows users to discover the grouping and opt into it.
-         =======
-         * Toggle the grouping preference which allows users to discover the grouping and opt into it.
-         >>>>>>> Comment code
          */
         $scope.updateAllowOptIn = function () {
             const groupingPath = $scope.selectedGrouping.path;
@@ -1680,7 +1674,6 @@
          * @param inBasis - boolean if user is in basis or not
          */
         $scope.createBasisWarningModal = function (user, listName, inBasis) {
-            $scope.user = user;
             $scope.listName = listName;
             $scope.inBasis = inBasis;
 
@@ -1690,6 +1683,7 @@
             });
 
             $scope.basisWarningModalInstance.result.then(function () {
+                $scope.waitingForImportResponse = true;
                 $scope.updateAddMember(user, listName);
             });
         };
@@ -1841,9 +1835,7 @@
                 && ($scope.listName === "owners" || $scope.listName === "admins");
         };
 
-        /**
-         <<<<<<< HEAD
-         * Determines whether a warning message should be displayed when removing yourself from a list.
+        /*** Determines whether a warning message should be displayed when removing yourself from a list.
          * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
          * returns false
          */
@@ -1854,9 +1846,6 @@
 
         /**
          * Gets cookie information
-         =======
-         * Get cookie information
-         >>>>>>> Comment code
          * @param cname = name of cookie you want to look for.
          * @returns {*}
          */
