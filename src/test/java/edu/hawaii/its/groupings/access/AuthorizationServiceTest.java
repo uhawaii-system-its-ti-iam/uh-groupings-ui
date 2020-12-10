@@ -62,7 +62,9 @@ public class AuthorizationServiceTest {
         // Setup for the mocking.
         User user = userContextService.getCurrentUser();
         String uhUuid = user.getUhUuid();
+
         Principal principal = new SimplePrincipal(uhUuid);
+
         given(groupingsRestController.isOwner(principal))
                 .willReturn(new ResponseEntity<>(null, HttpStatus.OK));
         given(groupingsRestController.isAdmin(principal))
@@ -77,6 +79,62 @@ public class AuthorizationServiceTest {
         assertTrue(roleHolder.contains(Role.UH));
         assertFalse(roleHolder.contains(Role.EMPLOYEE));
         assertFalse(roleHolder.contains(Role.ADMIN));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void fetchTwo() {
+        // Setup for the mocking.
+        User user = userContextService.getCurrentUser();
+        String uhUuid = user.getUhUuid();
+
+        String json = "{'data': [{resultCode: SUCCESS}, true]}";
+
+        Principal principal = new SimplePrincipal(uhUuid);
+
+        given(groupingsRestController.isOwner(principal))
+                .willReturn(new ResponseEntity<>(json, HttpStatus.OK));
+        given(groupingsRestController.isAdmin(principal))
+                .willReturn(new ResponseEntity<>(null, HttpStatus.OK));
+
+        // What we are testing.
+        RoleHolder roleHolder = authorizationService.fetchRoles(uhUuid, "test");
+
+        // Check results.
+        assertThat(roleHolder.size(), equalTo(3));
+        assertTrue(roleHolder.contains(Role.ANONYMOUS));
+        assertTrue(roleHolder.contains(Role.UH));
+        assertTrue(roleHolder.contains(Role.OWNER));
+        assertFalse(roleHolder.contains(Role.EMPLOYEE));
+        assertFalse(roleHolder.contains(Role.ADMIN));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void fetchThree() {
+        // Setup for the mocking.
+        User user = userContextService.getCurrentUser();
+        String uhUuid = user.getUhUuid();
+
+        String json = "{'data': [{resultCode: SUCCESS}, true]}";
+
+        Principal principal = new SimplePrincipal(uhUuid);
+
+        given(groupingsRestController.isOwner(principal))
+                .willReturn(new ResponseEntity<>(null, HttpStatus.OK));
+        given(groupingsRestController.isAdmin(principal))
+                .willReturn(new ResponseEntity<>(json, HttpStatus.OK));
+
+        // What we are testing.
+        RoleHolder roleHolder = authorizationService.fetchRoles(uhUuid, "test");
+
+        // Check results.
+        assertThat(roleHolder.size(), equalTo(3));
+        assertTrue(roleHolder.contains(Role.ANONYMOUS));
+        assertTrue(roleHolder.contains(Role.UH));
+        assertTrue(roleHolder.contains(Role.ADMIN));
+        assertFalse(roleHolder.contains(Role.EMPLOYEE));
+        assertFalse(roleHolder.contains(Role.OWNER));
     }
 
     @Ignore
