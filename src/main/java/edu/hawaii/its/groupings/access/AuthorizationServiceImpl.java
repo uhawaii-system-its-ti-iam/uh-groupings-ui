@@ -43,7 +43,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     /**
-     * Return a boolean if based on parsed response.
+     * Return a boolean based on parsed response.
      */
     private boolean checkResult(ResponseEntity response) {
         String groupingAssignmentJson = (String) response.getBody();
