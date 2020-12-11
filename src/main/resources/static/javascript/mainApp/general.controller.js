@@ -1156,7 +1156,7 @@
          */
         function handleAdminRemove() {
             if ($scope.currentUser === $scope.userToRemove.username) {
-              $scope.reDirect();
+                $window.location.href = "home";
             } else {
                 $scope.init();
             }
@@ -1198,18 +1198,6 @@
                     groupingsService.removeAdmin(options.user.username, handleAdminRemove, handleUnsuccessfulRequest);
                 }
             });
-        };
-
-
-        /**
-        * Log out user and redirect them to Homepage
-        */
-        $scope.reDirect = function () {
-          let r = new XMLHttpRequest();
-          r.open("POST", "/uhgroupings/logout");
-          r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
-          r.send();
-          $window.location.href = "/uhgroupings/";
         };
 
         /**
