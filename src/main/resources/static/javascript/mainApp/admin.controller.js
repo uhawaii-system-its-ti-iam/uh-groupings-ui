@@ -43,7 +43,7 @@
                 $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
                 $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
 
-                $scope.groupingsList = _.sortBy(res.allGroupings, "name");
+                $scope.groupingsList = _.sortBy(res.allGroupingPaths, "name");
                 $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
                 $scope.loading = false;
 
