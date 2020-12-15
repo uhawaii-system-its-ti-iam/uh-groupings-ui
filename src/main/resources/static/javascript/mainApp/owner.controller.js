@@ -18,6 +18,7 @@
             $scope.loading = true;
 
             groupingsService.getGroupingsOwned(function (res) {
+                console.log(res);
                 $scope.groupingsList = _.sortBy(res, "name");
                 $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
 
