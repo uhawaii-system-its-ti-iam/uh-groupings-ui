@@ -223,12 +223,12 @@ public class GroupingsRestController {
     /**
      * Add yourself to the include group of grouping at path.
      */
-    @PostMapping(value = "/{path}/optIn")
-    public ResponseEntity<String> optIn(Principal principal, @PathVariable String path) {
+    @PostMapping(value = "/{grouping}/optIn")
+    public ResponseEntity<String> optIn(Principal principal, @PathVariable String grouping) {
         logger.info("Entered REST optIn...");
-        String safeGrouping = policy.sanitize(path);
+        String safeGrouping = policy.sanitize(grouping);
         String uri =
-                String.format(API_2_1_BASE + "/paths/%s/includeMembers/%s/self", safeGrouping, principal.getName());
+                String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s/self", safeGrouping, principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
