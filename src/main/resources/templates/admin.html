@@ -130,8 +130,8 @@
                                     <input name="Add Admin" class="form-control" type="text"
                                            ng-init="errorDismissed = true; resetErrors()"
                                            ng-blur="errorDismissed = true; resetErrors()"
-                                           title="Enter UH Username"
-                                           placeholder="UH Username" ng-model="adminToAdd"/>
+                                           title="Enter Members to add"
+                                           placeholder="Members to add" ng-model="adminToAdd"/>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit"
                                                 ng-blur="errorDismissed = true; resetErrors()"
@@ -160,8 +160,8 @@
                             <form ng-submit="searchForUserGroupingInformation()">
                                 <div class="input-group">
                                     <input name="Search Person" class="form-control" type="text"
-                                           title="Enter UH Username"
-                                           placeholder="UH Username" ng-model="personToLookup"/>
+                                           title="Members to add"
+                                           placeholder="Members to add" ng-model="personToLookup"/>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">Search</button>
                                     </div>
