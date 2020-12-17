@@ -58,21 +58,6 @@ public class AuthorizationServiceTest {
 
     @Test
     @WithMockUhUser
-    public void fetchNullTest() {
-        // Setup for the mocking.
-        User user = userContextService.getCurrentUser();
-        String uhUuid = user.getUhUuid();
-
-        Principal principal = new SimplePrincipal(uhUuid);
-
-        given(groupingsRestController.isOwner(principal))
-                .willReturn(new ResponseEntity<>("checkCatch", HttpStatus.OK));
-
-        assertFalse(authorizationService.checkResultCodeJsonObject(groupingsRestController.isOwner(principal)));
-    }
-
-    @Test
-    @WithMockUhUser
     public void fetchDefaultTest() {
         // Setup for the mocking.
         User user = userContextService.getCurrentUser();
@@ -104,25 +89,22 @@ public class AuthorizationServiceTest {
         User user = userContextService.getCurrentUser();
         String uhUuid = user.getUhUuid();
 
-        String json = "{'data': [{resultCode: SUCCESS}, true]}";
-
         Principal principal = new SimplePrincipal(uhUuid);
 
         given(groupingsRestController.isOwner(principal))
-                .willReturn(new ResponseEntity<>(json, HttpStatus.OK));
+                .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
         given(groupingsRestController.isAdmin(principal))
-                .willReturn(new ResponseEntity<>(json, HttpStatus.OK));
+                .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
 
         // What we are testing.
         RoleHolder roleHolder = authorizationService.fetchRoles(uhUuid, "test");
 
         // Check results.
-        assertThat(roleHolder.size(), equalTo(3));
+        assertThat(roleHolder.size(), equalTo(4));
         assertTrue(roleHolder.contains(Role.ANONYMOUS));
         assertTrue(roleHolder.contains(Role.UH));
         assertTrue(roleHolder.contains(Role.OWNER));
-        assertFalse(roleHolder.contains(Role.EMPLOYEE));
-        assertFalse(roleHolder.contains(Role.ADMIN));
+        assertTrue(roleHolder.contains(Role.ADMIN));
     }
 
     @Ignore

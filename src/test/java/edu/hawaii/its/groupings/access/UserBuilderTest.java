@@ -79,20 +79,20 @@ public class UserBuilderTest {
         map.put("uid", userContextService.getCurrentUser().getUid());
         map.put("uhUuid", userContextService.getCurrentUhUuid());
 
-        String json = "{'data': [{resultCode: SUCCESS}, true]}";
 
         given(groupingsRestController.isOwner(principal))
-                .willReturn(new ResponseEntity<>(null, HttpStatus.OK));
+                .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
         given(groupingsRestController.isAdmin(principal))
-                .willReturn(new ResponseEntity<>(json, HttpStatus.OK));
+                .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
 
         User user = userBuilder.make(map);
 
         // Check results.
-        assertEquals(3, user.getAuthorities().size());
+        assertEquals(4, user.getAuthorities().size());
         assertTrue(user.hasRole(Role.ANONYMOUS));
         assertTrue(user.hasRole(Role.UH));
         assertTrue(user.hasRole(Role.ADMIN));
+        assertTrue(user.hasRole(Role.OWNER));
     }
 
     @Test
