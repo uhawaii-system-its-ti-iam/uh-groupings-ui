@@ -117,8 +117,6 @@
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
             $scope.getGroupingInformation();
-
-
             $scope.showGrouping = true;
         };
 
@@ -206,8 +204,8 @@
                 /**
                  * Function to get pages of a grouping asynchronously
                  * @param {String} groupingPath - Path to the grouping to retrieve data from
-                 * @param {Integer} currentPage - Page of grouping to retrieve (increments after each async/await call)
-                 * @param {Integer} PAGE_SIZE - Size of page to retrieve (Located in app.constants)
+                 * @param {Number} currentPage - Page of grouping to retrieve (increments after each async/await call)
+                 * @param {Number} PAGE_SIZE - Size of page to retrieve (Located in app.constants)
                  * @param {String} sortString - Parameter to sort the grouping database by before retrieving
                  *     information
                  * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for
@@ -1201,14 +1199,14 @@
         };
 
         /**
-        * Log out user and redirect them to Homepage
-        */
+         * Log out user and redirect them to Homepage
+         */
         $scope.reDirect = function () {
-          let r = new XMLHttpRequest();
-          r.open("POST", "/uhgroupings/logout");
-          r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
-          r.send();
-          $window.location.href = "/uhgroupings/";
+            let r = new XMLHttpRequest();
+            r.open("POST", "/uhgroupings/logout");
+            r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
+            r.send();
+            $window.location.href = "/uhgroupings/";
         };
 
         /**
