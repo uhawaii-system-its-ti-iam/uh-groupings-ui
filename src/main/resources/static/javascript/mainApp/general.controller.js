@@ -117,8 +117,6 @@
         $scope.displayGrouping = function (currentPage, index) {
             $scope.selectedGrouping = $scope.pagedItemsGroupings[currentPage][index];
             $scope.getGroupingInformation();
-
-
             $scope.showGrouping = true;
         };
 
