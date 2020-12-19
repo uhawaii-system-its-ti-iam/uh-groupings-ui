@@ -20,7 +20,7 @@
         <maven-war-plugin.version>2.4</maven-war-plugin.version>
         <java.version>1.8</java.version>
         <junit.version>4.12</junit.version>
-        <org.jasig.cas.client-version>3.6.1</org.jasig.cas.client-version>
+        <org.jasig.cas.client-version>3.6.2</org.jasig.cas.client-version>
 
         <jquery-version>3.5.0</jquery-version>
         <angular-mocks-version>1.7.9</angular-mocks-version>
