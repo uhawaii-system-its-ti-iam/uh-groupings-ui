@@ -99,6 +99,7 @@
         let groupingDescription = "";
 
         let displayTracker = 1;
+        $scope.descriptionLoaded = false;
 
         //Flag used for getGroupingInformation function to end async call
         let loadMembersList = false;
@@ -214,6 +215,15 @@
 
                 groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async function (res) {
 
+                    // Gets the description go the group
+                    if (res.description === null) {
+                        groupingDescription = "";
+                    } else {
+                        groupingDescription = res.description;
+                        displayTracker = 1;
+                    }
+                    $scope.descriptionLoaded = true;
+
                     // Gets members in the basis group
                     $scope.groupingBasis = setGroupMembers(res.basis.members);
                     $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
@@ -237,14 +247,6 @@
                     $scope.groupingOwners = setGroupMembers(res.owners.members);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
-
-                    // Gets the description go the group
-                    if (res.description === null) {
-                        groupingDescription = "";
-                    } else {
-                        groupingDescription = res.description;
-                        displayTracker = 1;
-                    }
 
                     $scope.allowOptIn = res.optInOn;
                     $scope.allowOptOut = res.optOutOn;
@@ -300,8 +302,8 @@
         /**
          * Function to get pages of a grouping asynchronously
          * @param {String} groupingPath - Path to the grouping to retrieve data from
-         * @param {Integer} page - Page of grouping to retrieve (Paging starts from 1)
-         * @param {Integer} size - Size of page to retrieve
+         * @param {Number} page - Page of grouping to retrieve (Paging starts from 1)
+         * @param {Number} size - Size of page to retrieve
          * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
          * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending
          *     (Z-A)
@@ -412,14 +414,14 @@
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function () {
+            if (!$scope.descriptionLoaded) {
+                return "";
+            }
             if ($scope.showGrouping === true && displayTracker === 1) {
                 $scope.modelDescription = groupingDescription;
                 displayTracker = 0;
             }
-
-            return (groupingDescription.length > 0)
-                ? groupingDescription
-                : noDescriptionMessage;
+            return (groupingDescription.length > 0) ? groupingDescription : noDescriptionMessage;
         };
 
         /**
@@ -430,18 +432,13 @@
                 return $scope.cancelDescriptionEdit();
             }
             groupingDescription = $scope.modelDescription;
-
-            groupingsService.updateDescription($scope.selectedGrouping.path,
-                function () {
-                    //Do Nothing
-                },
-                function (res) {
-                    if (res.status === 403) {
-                        $scope.createOwnerErrorModal();
-                    }
-                },
-                groupingDescription);
-            $scope.descriptionForm = !($scope.descriptionForm);
+            groupingsService.updateDescription(groupingDescription, $scope.selectedGrouping.path,
+                () => {
+                }, // Do nothing.
+                (res) => {
+                    dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
+                        "feedback/error", "feedback");
+                });
         };
 
         /**
