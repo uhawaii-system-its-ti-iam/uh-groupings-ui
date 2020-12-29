@@ -431,10 +431,12 @@
             }
             groupingDescription = $scope.modelDescription;
 
-            groupingsService.updateDescription(groupingDescription, groupingDescription, (res) => console.log(res), (res) => {
-                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
-                    "feedback/error", "feedback");
-            });
+            groupingsService.updateDescription(groupingDescription, groupingDescription,
+                () => { // Do nothing.
+                }, (res) => {
+                    dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
+                        "feedback/error", "feedback");
+                });
             $scope.descriptionForm = !($scope.descriptionForm);
         };
 
