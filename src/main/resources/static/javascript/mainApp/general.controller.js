@@ -99,6 +99,7 @@
         let groupingDescription = "";
 
         let displayTracker = 1;
+        let descriptionLoaded = false;
 
         //Flag used for getGroupingInformation function to end async call
         let loadMembersList = false;
@@ -245,6 +246,7 @@
                         groupingDescription = res.description;
                         displayTracker = 1;
                     }
+                    descriptionLoaded = true;
 
                     $scope.allowOptIn = res.optInOn;
                     $scope.allowOptOut = res.optOutOn;
@@ -412,14 +414,14 @@
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function () {
+            if (!descriptionLoaded) {
+                return "";
+            }
             if ($scope.showGrouping === true && displayTracker === 1) {
                 $scope.modelDescription = groupingDescription;
                 displayTracker = 0;
             }
-
-            return (groupingDescription.length > 0)
-                ? groupingDescription
-                : noDescriptionMessage;
+            return (groupingDescription.length > 0) ? groupingDescription : noDescriptionMessage;
         };
 
         /**
@@ -430,14 +432,13 @@
                 return $scope.cancelDescriptionEdit();
             }
             groupingDescription = $scope.modelDescription;
-
-            groupingsService.updateDescription(groupingDescription, groupingDescription,
-                () => { // Do nothing.
-                }, (res) => {
+            groupingsService.updateDescription(groupingDescription, $scope.selectedGrouping.path,
+                () => {
+                }, // Do nothing.
+                (res) => {
                     dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
                         "feedback/error", "feedback");
                 });
-            $scope.descriptionForm = !($scope.descriptionForm);
         };
 
         /**
