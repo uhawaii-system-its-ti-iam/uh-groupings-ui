@@ -99,7 +99,7 @@
         let groupingDescription = "";
 
         let displayTracker = 1;
-        let descriptionLoaded = false;
+        $scope.descriptionLoaded = false;
 
         //Flag used for getGroupingInformation function to end async call
         let loadMembersList = false;
@@ -215,6 +215,15 @@
 
                 groupingsService.getGrouping(groupingPath, currentPage, PAGE_SIZE, "name", true, async function (res) {
 
+                    // Gets the description go the group
+                    if (res.description === null) {
+                        groupingDescription = "";
+                    } else {
+                        groupingDescription = res.description;
+                        displayTracker = 1;
+                    }
+                    $scope.descriptionLoaded = true;
+
                     // Gets members in the basis group
                     $scope.groupingBasis = setGroupMembers(res.basis.members);
                     $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
@@ -238,15 +247,6 @@
                     $scope.groupingOwners = setGroupMembers(res.owners.members);
                     $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
                     $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
-
-                    // Gets the description go the group
-                    if (res.description === null) {
-                        groupingDescription = "";
-                    } else {
-                        groupingDescription = res.description;
-                        displayTracker = 1;
-                    }
-                    descriptionLoaded = true;
 
                     $scope.allowOptIn = res.optInOn;
                     $scope.allowOptOut = res.optOutOn;
@@ -414,7 +414,7 @@
          * @returns {string} either the description of the grouping, or, placeholder text if the description is empty.
          */
         $scope.descriptionDisplay = function () {
-            if (!descriptionLoaded) {
+            if (!$scope.descriptionLoaded) {
                 return "";
             }
             if ($scope.showGrouping === true && displayTracker === 1) {
