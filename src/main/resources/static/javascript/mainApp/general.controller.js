@@ -431,16 +431,11 @@
             }
             groupingDescription = $scope.modelDescription;
 
-            groupingsService.updateDescription($scope.selectedGrouping.path,
-                function () {
-                    //Do Nothing
-                },
-                function (res) {
-                    if (res.status === 403) {
-                        $scope.createOwnerErrorModal();
-                    }
-                },
-                groupingDescription);
+            groupingsService.updateDescription(groupingDescription, $scope.selectedGrouping.path, (res) => console.log(res), (res) => {
+                if (res.status === 403) {
+                    $scope.createOwnerErrorModal();
+                }
+            });
             $scope.descriptionForm = !($scope.descriptionForm);
         };
 

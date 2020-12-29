@@ -53,6 +53,10 @@
 
             /**
              * Update the description of grouping at path.
+             * @param data {String}
+             * @param path {String}
+             * @param onSuccess {Function}
+             * @param onError {Function}
              */
             updateDescription(data, path, onSuccess, onError) {
                 let endpoint = BASE_URL + "groupings/" + path + "/description";
