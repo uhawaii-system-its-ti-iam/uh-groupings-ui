@@ -300,8 +300,8 @@
         /**
          * Function to get pages of a grouping asynchronously
          * @param {String} groupingPath - Path to the grouping to retrieve data from
-         * @param {Integer} page - Page of grouping to retrieve (Paging starts from 1)
-         * @param {Integer} size - Size of page to retrieve
+         * @param {Number} page - Page of grouping to retrieve (Paging starts from 1)
+         * @param {Number} size - Size of page to retrieve
          * @param {String} sortString - Parameter to sort the grouping database by before retrieving information
          * @param {Boolean} isAscending - If true, grouping database is sorted ascending (A-Z), false for descending
          *     (Z-A)
@@ -431,10 +431,9 @@
             }
             groupingDescription = $scope.modelDescription;
 
-            groupingsService.updateDescription(groupingDescription, $scope.selectedGrouping.path, (res) => console.log(res), (res) => {
-                if (res.status === 403) {
-                    $scope.createOwnerErrorModal();
-                }
+            groupingsService.updateDescription(groupingDescription, groupingDescription, (res) => console.log(res), (res) => {
+                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
+                    "feedback/error", "feedback");
             });
             $scope.descriptionForm = !($scope.descriptionForm);
         };
