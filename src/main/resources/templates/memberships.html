@@ -75,11 +75,12 @@
                                         <input aria-label="Grouping Path" type="text" class="form-control form-control-sm border-0 input-sm"
                                                value={{l.path}}
                                                id={{l.path}}>
-                                        <button class="btn btn-sm" ng-click=copyPath(l)>
                                             <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
                                     </form>
                                 </td>
-                                <td class="w-20 align-middle text-center">
+                                <button class="btn btn-sm" ng-click=copyPath(l)>
+
+                                    <td class="w-20 align-middle text-center">
                                     <span ng-if="!l.optOutEnabled">
                                         Required
                                     </span>
