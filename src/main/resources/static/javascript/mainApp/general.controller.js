@@ -582,6 +582,7 @@
             let handleSuccessfulAdd = function (res) {
                 $scope.launchMultiAddResultModal(listName);
                 for (let i = 0; i < res.length; i++) {
+                    console.log(res[i].person);
                     $scope.multiAddResults[i] = res[i].person;
                     $scope.multiAddResultsGeneric[i] = res[i].person;
                 }
