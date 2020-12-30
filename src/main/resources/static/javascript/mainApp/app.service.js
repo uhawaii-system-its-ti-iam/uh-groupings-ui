@@ -46,7 +46,7 @@
              * @param {function} callback - Execute if response returns OK
              * @param {function} callError - Execute if response returns as an error.
              */
-            updateDataWithTimeoutModal(url, modal, callback, callError) {
+            updateDataWithTimeoutModal(url, callback, callError, modal) {
                 let timeoutID = setTimeout(modal, timeLimit);
                 $http.post(encodeURI(url))
                     .then(function (response) {
