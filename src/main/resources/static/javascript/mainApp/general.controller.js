@@ -520,10 +520,8 @@
                 $scope.emptyInput = true;
             } else {
                 let numMembers = ($scope.usersToAdd.split(" ").length - 1);
-
                 if (numMembers > 0) {
                     let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
-
                     $scope.usersToAdd = [];
                     if (numMembers > $scope.maxImport) {
                         launchDynamicModal(
@@ -573,7 +571,6 @@
          */
         $scope.addMultipleMembers = async function (list, listName) {
             let groupingPath = $scope.selectedGrouping.path;
-            $scope.removeMultipleUsers(list);
 
             let timeoutModal = function () {
                 return launchDynamicModal(
@@ -581,8 +578,8 @@
                     Message.Body.SLOW_IMPORT,
                     8000);
             };
-
             let handleSuccessfulAdd = function (res) {
+                $scope.launchMultiAddResultModal(listName);
                 for (let i = 0; i < res.length; i++) {
                     $scope.multiAddResults[i] = res[i].person;
                     $scope.multiAddResultsGeneric[i] = res[i].person;
@@ -591,13 +588,14 @@
                     $scope.personProps = Object.keys(res[0].person);
                     $scope.personProps.shift();
                 }
-                $scope.launchMultiAddResultModal(listName);
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
-
-            let fun = "addMembersTo";
-            await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
-            (groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+            if(listName === "Include"){
+                await groupingsService.addMembersToInclude(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+            }
+            else if(listName === "Exclude") {
+                await groupingsService.addMembersToExclude(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+            }
         };
 
         /**

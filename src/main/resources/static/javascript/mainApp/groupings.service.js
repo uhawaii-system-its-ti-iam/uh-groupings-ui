@@ -83,10 +83,10 @@
              * Add a members to the include group of a grouping. A modal is passed in an launched after a certain amount
              * of time has elapsed.
              */
-            addMembersToInclude(usersToAdd, path, modal, onSuccess, onError) {
+            addMembersToInclude(usersToAdd, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
                 return new Promise(resolve => {
-                    dataProvider.updateDataWithTimeoutModal(endpoint, modal, onSuccess, onError);
+                    dataProvider.updateDataWithTimeoutModal(endpoint, onSuccess, onError, modal);
                 });
             },
 
