@@ -68,7 +68,7 @@
             updateDataWithBody(url, data, callback, callError) {
                 $http.put(encodeURI(url), data)
                     .then(function (response) {
-                        callback(response);
+                        callback(response.data);
                     }, function (response) {
                         callError(response);
                     });

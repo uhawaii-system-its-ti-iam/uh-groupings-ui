@@ -403,6 +403,24 @@
         };
 
         /**
+        * Set a new description for a Grouping.
+        */
+        $scope.saveDescription = function () {
+          if (groupingDescription.localeCompare($scope.modelDescription) === 0) {
+            return $scope.cancelDescriptionEdit();
+        }
+          groupingDescription = $scope.modelDescription;
+          groupingsService.updateDescription(groupingDescription, $scope.selectedGrouping.path,
+            () => {
+              $scope.descriptionForm = !($scope.descriptionForm);
+            }, // close description form when done.
+            (res) => {
+              dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
+                  "feedback/error", "feedback");
+            }); // send user to feedback page if fail
+        };
+
+        /**
          * If the grouping hasn't been fetched, return csv group loaded message, otherwise return csv group not loaded message.
          */
         $scope.getCSVToolTipMessage = () => {
@@ -422,23 +440,6 @@
                 displayTracker = 0;
             }
             return (groupingDescription.length > 0) ? groupingDescription : noDescriptionMessage;
-        };
-
-        /**
-         * Set a new description for a Grouping.
-         */
-        $scope.saveDescription = function () {
-            if (groupingDescription.localeCompare($scope.modelDescription) === 0) {
-                return $scope.cancelDescriptionEdit();
-            }
-            groupingDescription = $scope.modelDescription;
-            groupingsService.updateDescription(groupingDescription, $scope.selectedGrouping.path,
-                () => {
-                }, // Do nothing.
-                (res) => {
-                    dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
-                        "feedback/error", "feedback");
-                });
         };
 
         /**
