@@ -558,7 +558,7 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.usersToAdd = (str.split(/[\n]+/).join(" ")).slice(0, -1);
+                $scope.usersToAdd = (str.split(/[\n]+/).join(" ")).slice();
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
@@ -582,7 +582,6 @@
             let handleSuccessfulAdd = function (res) {
                 $scope.launchMultiAddResultModal(listName);
                 for (let i = 0; i < res.length; i++) {
-                    console.log(res[i].person);
                     $scope.multiAddResults[i] = res[i].person;
                     $scope.multiAddResultsGeneric[i] = res[i].person;
                 }
@@ -1016,19 +1015,9 @@
             $scope.addModalInstance.close();
         };
 
-        $scope.createAddErrorModal = function (userAdded) {
-            $scope.addErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/addErrorModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
-        };
-
-        $scope.closeAddErrorModal = function () {
-            $scope.addErrorModalInstance.close();
-        };
-
+        /**
+         * Close the reset notif modal.
+         */
         $scope.closeResetNotifModal = function () {
             $scope.resetNotifModalInstance.close();
         };
@@ -1494,7 +1483,7 @@
                 inBool = true;
                 $scope.resetInclude = [];
                 for (var i = 0; i < $scope.groupingInclude.length; i++) {
-                    $scope.resetInclude.push($scope.groupingInclude[i].username);
+                    $scope.resetInclude.push($scope.groupingInclude[i].uhUuid);
                 }
             }
             if (Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck == false) {
@@ -1503,7 +1492,7 @@
                 exBool = true;
                 $scope.resetExclude = [];
                 for (var i = 0; i < $scope.groupingExclude.length; i++) {
-                    $scope.resetExclude.push($scope.groupingExclude[i].username);
+                    $scope.resetExclude.push($scope.groupingExclude[i].uhUuid);
                 }
             }
 
@@ -1528,6 +1517,7 @@
             $scope.resetUser = [];
             $scope.resetID = [];
             $scope.resetName = [];
+            console.log(resetAll);
             for (let i = 0; i < resetAll.length; i++) {
                 $scope.resetUser[i] = resetAll[i].username;
                 $scope.resetID[i] = resetAll[i].uhUuid;
