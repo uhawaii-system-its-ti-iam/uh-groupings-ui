@@ -181,11 +181,6 @@ public class HomeController {
         return "modal/timeoutModal";
     }
 
-    @RequestMapping(value = "/modal/addErrorModal", method = RequestMethod.GET)
-    public String addErrorModal(Locale locale, Model model) {
-        return "modal/addErrorModal";
-    }
-
     @RequestMapping(value = "/modal/roleErrorModal", method = RequestMethod.GET)
     public String roleErrorModal(Locale locale, Model model) {
         return "modal/roleErrorModal";
