@@ -587,7 +587,8 @@
                 }
                 if (undefined !== res[0].person) {
                     $scope.personProps = Object.keys(res[0].person);
-                    $scope.personProps.shift();
+                    $scope.personProps.splice(2, 2); /* Removes firstname and lastname from personProps array */
+                    $scope.personProps.reverse(); /* Corrects the personProps order to "username, uhUuid, name" */
                 }
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
@@ -1517,7 +1518,6 @@
             $scope.resetUser = [];
             $scope.resetID = [];
             $scope.resetName = [];
-            console.log(resetAll);
             for (let i = 0; i < resetAll.length; i++) {
                 $scope.resetUser[i] = resetAll[i].username;
                 $scope.resetID[i] = resetAll[i].uhUuid;
