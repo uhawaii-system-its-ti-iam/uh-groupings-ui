@@ -587,8 +587,11 @@
                 }
                 if (undefined !== res[0].person) {
                     $scope.personProps = Object.keys(res[0].person);
-                    $scope.personProps.splice(2, 2); /* Removes firstname and lastname from personProps array */
-                    $scope.personProps.reverse(); /* Corrects the personProps order to "username, uhUuid, name" */
+                    /* Removes firstName and lastName from personProps array */
+                    $scope.personProps.splice($scope.personProps.indexOf("firstName"), 1);
+                    $scope.personProps.splice($scope.personProps.indexOf("lastName"), 1);
+                    /* Corrects the personProps order to "username, uhUuid, name" */
+                    $scope.personProps.reverse();
                 }
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
