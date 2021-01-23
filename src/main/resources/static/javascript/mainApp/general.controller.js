@@ -19,6 +19,7 @@
         $scope.multiAddResults = [];
         $scope.multiAddResultsGeneric = [];
         $scope.personProps = [];
+        $scope.resetResults = [];
         $scope.waitingForImportResponse = false;
         $scope.resetUser = [];
         $scope.resetID = [];
@@ -1403,7 +1404,8 @@
             clearAddMemberInput();
             $scope.columnSort = {};
             $scope.syncDestArray = [];
-
+            $scope.resetResults = [];
+            $scope.personProps = [];
         };
 
 
@@ -1523,21 +1525,11 @@
 
             if (undefined !== $scope.resetResults[0]) {
                 $scope.personProps = Object.keys($scope.resetResults[0]);
-                console.log($scope.personProps);
                 /* Removes firstName and lastName from personProps array */
                 $scope.personProps.splice(3, 4);
                 /* Corrects the personProps order to "username, uhUuid, name" */
                 $scope.personProps.reverse();
             }
-
-            // $scope.resetUser = [];
-            // $scope.resetID = [];
-            // $scope.resetName = [];
-            // for (let i = 0; i < resetAll.length; i++) {
-            //     $scope.resetUser[i] = resetAll[i].username;
-            //     $scope.resetID[i] = resetAll[i].uhUuid;
-            //     $scope.resetName[i] = resetAll[i].name;
-            // }
 
             $scope.createResetGroupModal({
                 group: $scope.selectedGrouping.name,
