@@ -573,7 +573,15 @@ form.seamless button {
     width: 75%;
     table-layout: fixed;
     white-space: nowrap;
+}
 
+@media (max-width: 992px) {
+    .import-table-thead-tbody-tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        white-space: nowrap;
+    }
 }
 
 .import-table-thead {
