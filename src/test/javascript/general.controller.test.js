@@ -453,6 +453,25 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("getPersonProps", function () {
+        beforeEach(function () {
+            scope.personProps = "";
+        });
+        describe("get and modify person props", function () {
+            it("should return all the user's attributes", function () {
+                let propsArray = Object.keys(scope.groupingBasis[0]);
+                expect(propsArray).toEqual(["name", "username", "uhUuid", "firstName", "lastName"]);
+            });
+            it("should return a list with only the user's username, uhUuid, and name", function () {
+                spyOn(scope, "getPersonProps").and.callThrough();
+                let propsArray = Object.keys(scope.groupingBasis[0]);
+                scope.getPersonProps(propsArray);
+                expect(propsArray).not.toEqual(["name", "username", "uhUuid", "firstName", "lastName"]);
+                expect(scope.personProps).toEqual([["username"], ["uhUuid"], ["name"]]);
+            });
+        });
+    });
+
     describe("convertListToCsv", function () {
         describe("user exports a list with members", function () {
             it("should start with the correct column headers", function () {

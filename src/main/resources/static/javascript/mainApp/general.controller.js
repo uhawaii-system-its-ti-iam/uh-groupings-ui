@@ -566,6 +566,18 @@
         };
 
         /**
+         * Get the Person properties from members and puts them in a list
+         * @param {List} attributes - list of attributes for a UH member
+         */
+        $scope.getPersonProps = function (attributes) {
+            $scope.personProps = [];
+
+            $scope.personProps.push(attributes.splice(attributes.indexOf("username"), 1));
+            $scope.personProps.push(attributes.splice(attributes.indexOf("uhUuid"), 1));
+            $scope.personProps.push(attributes.splice(attributes.indexOf("name"), 1));
+        };
+
+        /**
          * Send the list of users to be added to the server as an HTTP POST request.
          * @param list - comma separated string of user names to be added
          * @param listName - current list being added to
@@ -587,12 +599,7 @@
                     $scope.multiAddResultsGeneric[i] = res[i].person;
                 }
                 if (undefined !== res[0].person) {
-                    $scope.personProps = Object.keys(res[0].person);
-                    /* Removes firstName and lastName from personProps array */
-                    $scope.personProps.splice($scope.personProps.indexOf("firstName"), 1);
-                    $scope.personProps.splice($scope.personProps.indexOf("lastName"), 1);
-                    /* Corrects the personProps order to "username, uhUuid, name" */
-                    $scope.personProps.reverse();
+                    $scope.getPersonProps(Object.keys(res[0].person));
                 }
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
@@ -1524,11 +1531,7 @@
             $scope.resetResults = resetAll;
 
             if (undefined !== $scope.resetResults[0]) {
-                $scope.personProps = Object.keys($scope.resetResults[0]);
-                /* Removes firstName and lastName from personProps array */
-                $scope.personProps.splice(3, 4);
-                /* Corrects the personProps order to "username, uhUuid, name" */
-                $scope.personProps.reverse();
+                $scope.getPersonProps(Object.keys($scope.resetResults[0]));
             }
 
             $scope.createResetGroupModal({
