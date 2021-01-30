@@ -1124,6 +1124,7 @@
         };
 
         /**
+         * Helper function - Batch remove
          * Extracts all keys in the checkbox object that have
          * the value of true (members that are selected with the checkbox)
          * @param objectName - The name of the object that is extracted from.
