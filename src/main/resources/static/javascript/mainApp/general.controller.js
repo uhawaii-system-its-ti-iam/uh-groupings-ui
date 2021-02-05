@@ -1073,7 +1073,7 @@
          * @param {number} index - the index of the user clicked by the user
          * account
          */
-        $scope.removeSingleMemberWithTrashcan = function (listName, currentPage, index) {
+        $scope.removeMemberWithTrashcan = function (listName, currentPage, index) {
             let userToRemove;
             $scope.modalType = "remove";
             if (listName === "Include") {
