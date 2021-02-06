@@ -19,6 +19,7 @@
         $scope.multiAddResults = [];
         $scope.multiAddResultsGeneric = [];
         $scope.personProps = [];
+        $scope.resetResults = [];
         $scope.waitingForImportResponse = false;
         $scope.resetUser = [];
         $scope.resetID = [];
@@ -558,10 +559,22 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.usersToAdd = (str.split(/[\n]+/).join(" ")).slice(0, -1);
+                $scope.usersToAdd = (str.split(/[\n]+/).join(" ")).slice();
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
+        };
+
+        /**
+         * Get the Person properties from members and puts them in a list
+         * @param {List} attributes - list of attributes for a UH member
+         */
+        $scope.getPersonProps = function (attributes) {
+            $scope.personProps = [];
+
+            $scope.personProps.push(attributes.splice(attributes.indexOf("username"), 1));
+            $scope.personProps.push(attributes.splice(attributes.indexOf("uhUuid"), 1));
+            $scope.personProps.push(attributes.splice(attributes.indexOf("name"), 1));
         };
 
         /**
@@ -586,8 +599,7 @@
                     $scope.multiAddResultsGeneric[i] = res[i].person;
                 }
                 if (undefined !== res[0].person) {
-                    $scope.personProps = Object.keys(res[0].person);
-                    $scope.personProps.shift();
+                    $scope.getPersonProps(Object.keys(res[0].person));
                 }
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
@@ -1015,19 +1027,9 @@
             $scope.addModalInstance.close();
         };
 
-        $scope.createAddErrorModal = function (userAdded) {
-            $scope.addErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/addErrorModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
-        };
-
-        $scope.closeAddErrorModal = function () {
-            $scope.addErrorModalInstance.close();
-        };
-
+        /**
+         * Close the reset notif modal.
+         */
         $scope.closeResetNotifModal = function () {
             $scope.resetNotifModalInstance.close();
         };
@@ -1409,7 +1411,8 @@
             clearAddMemberInput();
             $scope.columnSort = {};
             $scope.syncDestArray = [];
-
+            $scope.resetResults = [];
+            $scope.personProps = [];
         };
 
 
@@ -1493,7 +1496,7 @@
                 inBool = true;
                 $scope.resetInclude = [];
                 for (var i = 0; i < $scope.groupingInclude.length; i++) {
-                    $scope.resetInclude.push($scope.groupingInclude[i].username);
+                    $scope.resetInclude.push($scope.groupingInclude[i].uhUuid);
                 }
             }
             if (Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck == false) {
@@ -1502,7 +1505,7 @@
                 exBool = true;
                 $scope.resetExclude = [];
                 for (var i = 0; i < $scope.groupingExclude.length; i++) {
-                    $scope.resetExclude.push($scope.groupingExclude[i].username);
+                    $scope.resetExclude.push($scope.groupingExclude[i].uhUuid);
                 }
             }
 
@@ -1524,13 +1527,11 @@
             } else {
                 resetAll = "";
             }
-            $scope.resetUser = [];
-            $scope.resetID = [];
-            $scope.resetName = [];
-            for (let i = 0; i < resetAll.length; i++) {
-                $scope.resetUser[i] = resetAll[i].username;
-                $scope.resetID[i] = resetAll[i].uhUuid;
-                $scope.resetName[i] = resetAll[i].name;
+
+            $scope.resetResults = resetAll;
+
+            if (undefined !== $scope.resetResults[0]) {
+                $scope.getPersonProps(Object.keys($scope.resetResults[0]));
             }
 
             $scope.createResetGroupModal({

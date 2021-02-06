@@ -36,19 +36,19 @@
     <div class="container">
         <table>
             <thead class="import-table-thead-tbody-tr import-table-thead">
-            <tr class="import-table-thead-tbody-tr" style="white-space: nowrap">
+            <tr class="import-table-thead-tbody-tr">
                 <!-- Display table headings -->
                 <th scope="col">Username</th>
-                <th scope="col">UhUuid</th>
+                <th scope="col">Uh Number</th>
                 <th scope="col">Name</th>
             </tr>
             </thead>
             <tbody class="import-table-tbody">
-            <tr class="import-table-thead-tbody-tr" ng-repeat="user in resetUser">
+            <tr class="import-table-thead-tbody-tr" ng-repeat="person in resetResults">
                 <!-- Display table data -->
-                <td>{{user}}</td>
-                <td>{{resetID[$index]}}</td>
-                <td>{{resetName[$index]}}</td>
+                <td class="modal-names" ng-repeat="prop in personProps">
+                    {{ person[prop] }}
+                </td>
             </tr>
             </tbody>
         </table>
@@ -61,7 +61,7 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="proceedResetGroup()">Yes</button>
-    <button class="btn btn-light" ng-click="cancelResetGroup()" data-dismiss="modal">Cancel</button>
+    <button class="btn btn-default" ng-click="cancelResetGroup()" data-dismiss="modal">Cancel</button>
 </div>
 
 </html>

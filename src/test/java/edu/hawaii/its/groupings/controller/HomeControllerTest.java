@@ -330,14 +330,6 @@ public class HomeControllerTest {
 
     @Test
     @WithMockUhUser(username = "uh")
-    public void requestAddErrorModal() throws Exception {
-        mockMvc.perform(get("/modal/addErrorModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/addErrorModal"));
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
     public void requestTimeoutModal() throws Exception {
         mockMvc.perform(get("/modal/timeoutModal"))
                 .andExpect(status().isOk())
