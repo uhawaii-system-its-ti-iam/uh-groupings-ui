@@ -73,7 +73,7 @@
                 <tbody>
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm"
                     ng-click="membersInCheckboxList[e.uhUuid]=!membersInCheckboxList[e.uhUuid]">
-                    <td class="p-10" style="margin-left: 4px">
+                    <td style="margin-left: 4px">
                         <input class="form-check-input singlechkbox" type="checkbox"
                                id="blankCheckbox"
                                style="margin-left: 0"
@@ -116,11 +116,11 @@
         <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
                 <form>
-                    <div class="input-group" style="width: 500px">
-                        <input class="form-control" placeholder="Members to add" type="search"
+                    <div class="input-group" style="width: 600px">
+                        <input class="form-control" placeholder="Members to add or remove" type="search"
                                ng-init="errorDismissed = true; resetErrors()"
                                ng-blur="errorDismissed = true; resetErrors()"
-                               title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"
+                               title="Enter one or more UH members" ng-model="membersToAddOrRemove" style="width: 275px"
                         />
                         <div>
                             <button class="btn btn-primary"
@@ -129,6 +129,9 @@
                                     style="margin-left: 2px">
                                 Add
                             </button>
+                            <button class="btn btn-delete"
+                                    ng-click="prepBatchRemove('Exclude', pagedItemsExclude[currentPageExclude])"
+                                    style="margin-left: 2px; margin-right: 2px">Remove</button>
                             <button class="btn btn-primary"
                                     ng-click="launchImportModal('Exclude')">Import File
                             </button>
