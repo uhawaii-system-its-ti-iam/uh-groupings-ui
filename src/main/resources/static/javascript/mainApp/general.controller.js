@@ -998,6 +998,7 @@
             $scope.addModalInstance.result.finally(function () {
                 clearAddMemberInput(options.listName);
                 $scope.loading = true;
+                $scope.waitingForImportResponse = false;
                 if ($scope.listName === "admins") {
                     // Refreshes the groupings list and the admins list
                     $scope.init();

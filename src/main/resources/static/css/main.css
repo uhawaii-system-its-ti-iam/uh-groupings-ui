@@ -51,9 +51,10 @@ main {
 
 .small-loader {
     float: right;
-    border: 2px solid white; /* Black */
-    border-top: 2px solid black; /* Blue */
+    border: 2px solid red; /* Black */
+    border-top: 2px solid red; /* Blue */
     border-radius: 50%;
+    padding-top: 2em;
     width: 20px;
     height: 20px;
     animation: spin 1s linear infinite;
