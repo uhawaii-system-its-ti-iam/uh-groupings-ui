@@ -111,7 +111,6 @@
             $scope.showGrouping = false;
         };
 
-
         /**
          * Separate the list of persons into pages.
          */
