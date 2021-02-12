@@ -14,7 +14,7 @@
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-sm-7 d-inline-flex align-items-center">
-                <div>
+                <div class="pb-2">
                     <h1 class="sr-only">UH Groupings</h1>
                     <img class="img-fluid align-self-center" src="" th:src="@{images/uh-groupings-text.png}"
                          th:srcset="@{images/uh-groupings-text.png 1x, images/uh-groupings-text-2x.png 2x}"
@@ -29,17 +29,15 @@
                     </div>
                     <div sec:authorize="isAuthenticated()">
                         <div class="container">
-                            <div class="row row-cols-1">
-                                <div class="dashboard-item-icon col-sm-3 col-md-2 mb-3 mb-sm-0">
+                            <div class="row pt-2 pb-4">
+                                <div class="dashboard-item-icon col-sm-auto col-md-auto mb-3 mb-sm-0">
                                     <div class="user-icon text-center rounded-circle bg-light p-3 mx-auto ml-md-0 mr-md-0">
                                         <i class="fa fa-user fa-4x" aria-hidden="true"></i>
                                         <i class="user-role rounded-circle blue-bg text-light fa fa-key fa-sm p-2"
                                            aria-hidden="true"></i>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row row-cols-1">
-                                <div class="dashboard-item-content col-sm-9 col-md-10 mb-2">
+                                <div class="dashboard-item-content col-sm-auto col-md-auto mb-2">
                                     <h1 class="h3 text-center text-md-left">Welcome, <span sec:authentication="name"></span>!</h1>
                                     <div>
                                         <h1 class="h3 text-center text-md-left">Role:
@@ -116,8 +114,8 @@
 
 
     <div sec:authorize="isAuthenticated()">
-        <div class="seafoam-bg pt-5 pb-5 mb-n5">
-            <div class="container">
+        <div class="seafoam-bg pt-5 pb-5 mb-n4">
+            <div class="container pb-5">
                 <div class="row">
                     <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_ADMIN')">
                         <div class="dashboard-item-icon text-primary mb-3">
