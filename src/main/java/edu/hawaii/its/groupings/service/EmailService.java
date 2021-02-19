@@ -60,7 +60,7 @@ public class EmailService {
         }
     }
 
-    public void sendWithStack(Feedback feedback, Exception e, String exceptionType) {
+    public void sendWithStack(Exception e, String exceptionType) {
         logger.info("Feedback Error email has been triggered.");
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
