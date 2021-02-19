@@ -10,13 +10,16 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 @Service
 public class EmailService {
 
     @Value("${email.send.to}")
     private String to;
 
-    @Value("${app.mail.from:no-reply}")
+    @Value("${email.send.from}")
     private String from;
 
     @Value("${email.is.enabled}")
@@ -47,6 +50,31 @@ public class EmailService {
             if (!feedback.getExceptionMessage().isEmpty()) {
                 text += "Stack Trace: " + feedback.getExceptionMessage();
             }
+            msg.setText(text);
+            msg.setSubject(header);
+            try {
+                javaMailSender.send(msg);
+            } catch (MailException ex) {
+                logger.error("Error", ex);
+            }
+        }
+    }
+
+    public void sendWithStack(Exception e, String exceptionType) {
+        logger.info("Feedback Error email has been triggered.");
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        String exceptionAsString = sw.toString();
+        if (isEnabled) {
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setTo(to);
+            msg.setFrom(from);
+            String text = "";
+            String header = "UH Groupings Error Response";
+            text += "Cause of Response: The API threw an exception that has triggered the ErrorControllerAdvice on the UI.\n\n";
+            text += "Exception Thrown: ErrorControllerAdvice threw the " + exceptionType + ".\n\n";
+            text += "----------------------------------------------------" + "\n\n";
+            text += "Stack Trace: \n\n" + exceptionAsString;
             msg.setText(text);
             msg.setSubject(header);
             try {
