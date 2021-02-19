@@ -115,10 +115,6 @@ btn.dark-teal-bg {
 
 .btn.btn-primary,
 .btn.btn-lg {
-    /* background: var(--dark-teal);
-     background-image: linear-gradient(to right, var(--dark-teal) 0%, var(--teal) 50%, var(--dark-teal) 100%);
-     border-color: transparent;
-     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
     color: #ffffff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: #6fa9be;
@@ -140,6 +136,19 @@ btn.dark-teal-bg {
 .btn.btn-lg:active {
     background: #004e59;
     background-position: right center;
+}
+
+.btn.btn-remove {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #b64d49;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#c4907d), to(#b4725a));
+}
+
+.btn.btn-remove:hover,
+.btn.btn-remove:focus,
+.btn.btn-primary:active {
+    background: darkred;
 }
 
 .btn.btn-sm:hover {

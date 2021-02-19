@@ -1872,6 +1872,8 @@
         $scope.resetFields = function () {
             $scope.getGroupingInformation();
             $scope.userToAdd = "";
+            $scope.membersInCheckboxList = {};
+            $scope.allSelected = false;
         };
 
         $scope.resetErrors = function () {
