@@ -5,7 +5,6 @@ import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
-import edu.hawaii.its.groupings.type.Feedback;
 
 import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import org.apache.commons.logging.Log;
