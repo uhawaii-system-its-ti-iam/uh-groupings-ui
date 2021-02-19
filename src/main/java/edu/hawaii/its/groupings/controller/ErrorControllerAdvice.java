@@ -97,7 +97,6 @@ public class ErrorControllerAdvice {
         GroupingsHTTPException httpException = new GroupingsHTTPException(message, cause, status);
 
         logger.error("username: " + username + "; Exception: ", httpException.getCause());
-        Feedback errorFeedback = new Feedback();
         return ResponseEntity.status(status).body(httpException);
     }
 }
