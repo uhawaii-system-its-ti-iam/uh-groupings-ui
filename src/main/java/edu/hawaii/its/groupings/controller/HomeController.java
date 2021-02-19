@@ -220,4 +220,7 @@ public class HomeController {
     public String multiAddResultModal(Locale locale, Model model) {
         return "modal/multiAddResultModal";
     }
+
+    @RequestMapping(value = "/modal/multiRemovePromptModal", method = RequestMethod.GET)
+    public String multiRemovePromptModal(Locale locale, Model model) { return "modal/multiRemovePromptModal"; }
 }

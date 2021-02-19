@@ -1247,8 +1247,8 @@
          * @param response - An object that contains the result code.
          */
         $scope.batchRemoveResponseHandler = function (response) {
-            if (response.groupingsServiceResult.resultCode === "SUCCESS") {
-                $scope.launchBatchRemoveConfirmationModal($scope.listName);
+            if (response.resultCode === "SUCCESS") {
+                $scope.batchRemoveConfirmationModal($scope.listName);
             }
             groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, list, function () {
             }, function () {
