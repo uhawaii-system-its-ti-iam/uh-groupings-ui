@@ -223,4 +223,7 @@ public class HomeController {
 
     @RequestMapping(value = "/modal/multiRemovePromptModal", method = RequestMethod.GET)
     public String multiRemovePromptModal(Locale locale, Model model) { return "modal/multiRemovePromptModal"; }
+
+    @RequestMapping(value = "/modal/multiRemoveConfirmationModal", method = RequestMethod.GET)
+    public String multiRemoveConfirmationModal(Locale locale, Model model) { return "modal/multiRemoveConfirmationModal"; }
 }

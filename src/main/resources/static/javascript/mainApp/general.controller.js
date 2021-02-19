@@ -1247,12 +1247,15 @@
          * @param response - An object that contains the result code.
          */
         $scope.batchRemoveResponseHandler = function (response) {
-            if (response.resultCode === "SUCCESS") {
+            let success = true;
+            for (let person of response) {
+                if (person.result !== "SUCCESS") {
+                    success = false;
+                }
+            }
+            if (success) {
                 $scope.batchRemoveConfirmationModal($scope.listName);
             }
-            groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, list, function () {
-            }, function () {
-            });
         };
 
         /**
