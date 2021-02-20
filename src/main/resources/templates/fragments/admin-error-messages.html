@@ -1,0 +1,18 @@
+<th:block th:fragment="admin-error-messages">
+
+    <div ng-show="!errorDismissed && !loading">
+        <!--message for empty input-->
+        <div ng-if="emptyInput"
+             class="alert alert-danger form-alert fade show"
+             role="alert">
+            <p th:utext="#{screen.message.modal.search.empty}"></p>
+        </div>
+        <!--message for invalid input-->
+        <div ng-if="user.length > 0 && (resStatus === 404 || resStatus === 500)"
+             class="alert alert-danger fade show">
+            <p th:text="#{screen.message.modal.search.fail}"></p>
+            <p th:text="#{screen.message.modal.search.ensureValid}"></p>
+        </div>
+
+    </div>
+</th:block>
