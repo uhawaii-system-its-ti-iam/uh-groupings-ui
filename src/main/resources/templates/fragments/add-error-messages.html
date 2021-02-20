@@ -3,7 +3,7 @@
     <div ng-show="!errorDismissed && !waitingForImportResponse">
         <!--message for empty input-->
         <div ng-if="emptyInput"
-             class="float-md-left mt-3 alert alert-danger fade show">
+             class="float-md-left mt-3 form-alert alert alert-danger fade show">
             <p th:utext="#{screen.message.modal.add.empty}"></p>
         </div>
         <!--message for invalid input-->
@@ -14,7 +14,7 @@
         </div>
         <!--message for adding a member already in Include or Exclude or Owner -->
         <div ng-if="user.length > 0 && swap === false"
-             class="float-md-left mt-3 alert alert-danger fade show">
+             class="float-md-left mt-3 form-alert alert alert-danger fade show">
             <div ng-if="listName === 'Include'">
                 <p>{{user}} is already in Include</p>
             </div>

@@ -681,3 +681,7 @@ label input {
     float: left;
     border: white;
 }
+
+.check-remove {
+    margin-left: auto;
+}
