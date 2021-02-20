@@ -1,9 +1,6 @@
 
 package edu.hawaii.its.groupings.service;
 
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -12,11 +9,15 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.stereotype.Service;
+
 @Service
 public class CheckForPattern {
 
     @PostConstruct
-    private void Check() throws IOException {
+    private void check() throws IOException {
         boolean detected = false;
         File dir = new File("src/main/resources");
         File[] fileResources = dir.listFiles(new FilenameFilter() {
@@ -34,7 +35,7 @@ public class CheckForPattern {
         for (File fr : fileResources) {
             int lineId = 0;
             Scanner fileScanner = new Scanner(fr);
-            while(fileScanner.hasNextLine()) {
+            while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
                 lineId++;
 
@@ -45,7 +46,7 @@ public class CheckForPattern {
                 }
             }
 
-            if(!lineNumbers.isEmpty()) {
+            if (!lineNumbers.isEmpty()) {
                 detected = true;
 
                 System.out.print("\n------------------------------------------------------\n\n");
