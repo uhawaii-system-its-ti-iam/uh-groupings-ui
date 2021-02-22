@@ -32,19 +32,19 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(GroupingsServiceResultException.class)
     public ResponseEntity<GroupingsHTTPException> handleGroupingsServiceResultException(GroupingsServiceResultException gsre) {
-        emailService.sendWithStack(gsre, "GroupingsServiceResultException");
+        emailService.sendWithStack(gsre, "Groupings Service Result Exception");
       return exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
     }
 
     @ExceptionHandler (GcWebServiceError.class)
     public ResponseEntity<GroupingsHTTPException> handleGcWebServiceError(GcWebServiceError gce) {
-        emailService.sendWithStack(gce, "GcWebServiceError");
+        emailService.sendWithStack(gce, "Gc Web Service Error");
         return exceptionResponse(gce.getMessage(), gce, 404);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<GroupingsHTTPException> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
-        emailService.sendWithStack(iae, "IllegalArgumentException");
+        emailService.sendWithStack(iae, "Illegal Argument Exception");
         return exceptionResponse("Resource not available", iae, 404);
     }
 
@@ -57,19 +57,19 @@ public class ErrorControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<GroupingsHTTPException> handleRuntimeException(Exception exception) {
-        emailService.sendWithStack(exception, "RuntimeException");
+        emailService.sendWithStack(exception, "Runtime Exception");
       return exceptionResponse("Runtime Exception", exception, 500);
     }
 
     @ExceptionHandler({MessagingException.class, IOException.class})
     public ResponseEntity<GroupingsHTTPException> handleMessagingException(Exception e) {
-        emailService.sendWithStack(e, "MessagingException");
+        emailService.sendWithStack(e, "Messaging Exception");
       return exceptionResponse("Mail service exception", e, 500);
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
     public ResponseEntity<GroupingsHTTPException> handleUnsupportedOperationException(UnsupportedOperationException nie) {
-        emailService.sendWithStack(nie, "UnsupportedOperationException");
+        emailService.sendWithStack(nie, "Unsupported Operation Exception");
       return exceptionResponse("Method not implemented", nie, 501);
     }
 
