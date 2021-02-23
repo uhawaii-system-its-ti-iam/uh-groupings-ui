@@ -1,64 +1,67 @@
 
 package edu.hawaii.its.groupings.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import edu.hawaii.its.groupings.controller.ErrorRestController;
+
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.stereotype.Service;
 
 @Service
 public class CheckForPattern {
 
-    @PostConstruct
-    private void check() throws IOException {
-        boolean detected = false;
-        File dir = new File("src/main/resources");
-        File[] fileResources = dir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".properties");
-            }
-        });
+    private static final Log logger = LogFactory.getLog(ErrorRestController.class);
+
+    public ArrayList<String> checkPattern(String fileConvention, String folderLocation, String pattern) throws IOException {
 
         ArrayList<Integer> lineNumbers = new ArrayList<>();
+        ArrayList<String> patternLocation = new ArrayList<>();
 
-        Pattern pattern = Pattern.compile("grouperClient.webService.password");
+        File dir = new File(folderLocation);
+        File[] fileResources = dir.listFiles((dir1, name) -> name.endsWith(fileConvention));
+
+        Pattern pat = Pattern.compile(pattern);
         Matcher matcher;
 
         for (File fr : fileResources) {
             int lineId = 0;
-            Scanner fileScanner = new Scanner(fr);
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                lineId++;
 
-                matcher = pattern.matcher(line);
+            try (Scanner fileScanner = new Scanner(fr)) {
+                while (fileScanner.hasNextLine()) { String line = fileScanner.nextLine();
+                    lineId++;
 
-                if (matcher.find()) {
-                    lineNumbers.add(lineId);
-                }
-            }
+                    matcher = pat.matcher(line);
 
-            if (!lineNumbers.isEmpty()) {
-                detected = true;
-
-                System.out.print("\n------------------------------------------------------\n\n");
-                System.out.println("Pattern detected in file: " + fr + " in lines:");
-
-                for (int li : lineNumbers) {
-                    System.out.println("Line" + li);
+                    if (matcher.find()) {
+                        lineNumbers.add(lineId);
+                    }
                 }
 
-                System.out.print("\n------------------------------------------------------\n\n");
+                if (!lineNumbers.isEmpty()) {
+
+                    logger.info("\n------------------------------------------------------\n\n");
+                    System.out.println("Pattern detected in file: " + fr + " in lines:");
+
+                    for (int li : lineNumbers) {
+                        logger.info("Line" + li);
+                        patternLocation.add(fr.toString() + " on line: " + li);
+                    }
+
+                    logger.info("\n------------------------------------------------------\n\n");
+                }
+
+
+                lineNumbers.removeAll(lineNumbers);
             }
-            lineNumbers.removeAll(lineNumbers);
         }
+
+        return patternLocation;
     }
 }
