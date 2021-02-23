@@ -70,11 +70,11 @@ public class EmailService {
             msg.setTo(to);
             msg.setFrom(from);
             String text = "";
-            String header = "UH Groupings Error Response";
-            text += "Cause of Response: The API threw an exception that has triggered the ErrorControllerAdvice on the UI.\n\n";
+            String header = "UH Groupings UI Error Response";
+            text += "Cause of Response: The UI threw an exception that has triggered the ErrorControllerAdvice. \n\n";
             text += "Exception Thrown: ErrorControllerAdvice threw the " + exceptionType + ".\n\n";
             text += "----------------------------------------------------" + "\n\n";
-            text += "Stack Trace: \n\n" + exceptionAsString;
+            text += "UI Stack Trace: \n\n" + exceptionAsString;
             msg.setText(text);
             msg.setSubject(header);
             try {
