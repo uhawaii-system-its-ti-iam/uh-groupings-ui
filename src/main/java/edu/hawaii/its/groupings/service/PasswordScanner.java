@@ -1,5 +1,6 @@
 package edu.hawaii.its.groupings.service;
 
+import exceptions.PasswordFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import edu.hawaii.its.groupings.controller.ErrorRestController;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PasswordScanner {
@@ -18,12 +19,20 @@ public class PasswordScanner {
     private static final Log logger = LogFactory.getLog(ErrorRestController.class);
 
     @PostConstruct
-    public void dummyScan() throws IOException {
+    public void init() throws PasswordFoundException, IOException {
 
-        ArrayList<String> result;
+        List<String> result = checkForPattern.checkPattern(".properties", "src/main/resources", "hello");
+        String patternResult = "";
 
-        result = checkForPattern.checkPattern(".properties", "src/main/resources", "hello");
+        logger.info("PasswordScanner init");
 
-        logger.info(result);
+        if(!result.isEmpty()) {
+
+            for(String list: result) {
+                patternResult += "\n" + list;
+            }
+
+            throw new PasswordFoundException(patternResult);
+        }
     }
 }

@@ -8,6 +8,7 @@ import edu.hawaii.its.groupings.controller.ErrorRestController;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,10 +20,17 @@ public class CheckForPattern {
 
     private static final Log logger = LogFactory.getLog(ErrorRestController.class);
 
-    public ArrayList<String> checkPattern(String fileConvention, String folderLocation, String pattern) throws IOException {
+    /**
+     * checkPattern: checks a file(s) and given file naming convention(.properties, .java, .pom) for a pattern.
+     *
+     * @param fileConvention The file type(.java, .properties, .pom, etc).
+     * @param folderLocation The folder location(/src/main/resources).
+     * @param pattern The string pattern to look for in the source code.
+     */
+    public List<String> checkPattern(String fileConvention, String folderLocation, String pattern) throws IOException {
 
-        ArrayList<Integer> lineNumbers = new ArrayList<>();
-        ArrayList<String> patternLocation = new ArrayList<>();
+        List<Integer> lineNumbers = new ArrayList<>();
+        List<String> patternLocation = new ArrayList<>();
 
         File dir = new File(folderLocation);
         File[] fileResources = dir.listFiles((dir1, name) -> name.endsWith(fileConvention));
@@ -45,18 +53,10 @@ public class CheckForPattern {
                 }
 
                 if (!lineNumbers.isEmpty()) {
-
-                    logger.info("\n------------------------------------------------------\n\n");
-                    System.out.println("Pattern detected in file: " + fr + " in lines:");
-
                     for (int li : lineNumbers) {
-                        logger.info("Line" + li);
                         patternLocation.add(fr.toString() + " on line: " + li);
                     }
-
-                    logger.info("\n------------------------------------------------------\n\n");
                 }
-
 
                 lineNumbers.removeAll(lineNumbers);
             }
