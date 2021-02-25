@@ -175,15 +175,8 @@
         $scope.updateCheckBoxes = function () {
             $scope.checkAll = !$scope.checkAll;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
-                if (grouping.inInclude || grouping.inOwner) {
-                    grouping.isSelected = $scope.checkAll;
-                }
+                grouping.isSelected = $scope.checkAll;
             });
-            if ($scope.checkAll) {
-                currentCheckBoxCount = totalCheckBoxCount;
-            } else {
-                currentCheckBoxCount = 0;
-            }
         };
 
         $scope.updateCheckAll = function (grouping) {
