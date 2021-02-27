@@ -1,6 +1,6 @@
 package edu.hawaii.its.groupings.service;
 
-import exceptions.PasswordFoundException;
+import edu.hawaii.its.exceptions.PasswordFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import edu.hawaii.its.groupings.controller.ErrorRestController;
@@ -14,21 +14,22 @@ import java.util.List;
 @Service
 public class PasswordScanner {
 
-    CheckForPattern checkForPattern = new CheckForPattern();
-
     private static final Log logger = LogFactory.getLog(ErrorRestController.class);
 
     @PostConstruct
-    public void init() throws PasswordFoundException, IOException {
+    public void init() throws IOException, PasswordFoundException {
 
-        List<String> result = checkForPattern.checkPattern(".properties", "src/main/resources", "hello");
+        CheckForPattern checkForPattern = new CheckForPattern();
+
+        List<String> result = checkForPattern.fileLocations(".properties", "src/main/resources", "hello");
+
         String patternResult = "";
 
         logger.info("PasswordScanner init");
 
-        if(!result.isEmpty()) {
+        if (!result.isEmpty()) {
 
-            for(String list: result) {
+            for (String list: result) {
                 patternResult += "\n" + list;
             }
 

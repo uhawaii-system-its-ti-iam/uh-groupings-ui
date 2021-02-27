@@ -1,0 +1,2 @@
+org.springframework.boot.diagnostics.FailureAnalyzer=\
+    edu.hawaii.its.exceptions.PasswordFoundAnalyzer
