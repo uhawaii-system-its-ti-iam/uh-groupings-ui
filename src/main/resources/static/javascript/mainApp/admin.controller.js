@@ -58,8 +58,7 @@
          * Fetch a list of memberships pertaining to $scope.personToLookUp.
          */
         $scope.searchForUserGroupingInformation = function () {
-            const personToLookup = $scope.personToLookup;
-            if (_.isEmpty(personToLookup)) {
+            if ($scope.personToLookup.length === 0) {
                 $scope.emptyInput = true;
             } else {
                 $scope.loading = true;
@@ -67,7 +66,7 @@
                     $scope.personList = _.sortBy(res, "name");
                     $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
                     $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-                    $scope.user = personToLookup;
+                    $scope.user = $scope.personToLookup;
                     $scope.loading = false;
                 }, function (res) {
                     $scope.loading = false;
