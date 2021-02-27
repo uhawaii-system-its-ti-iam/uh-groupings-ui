@@ -66,6 +66,7 @@
                     $scope.personList = _.sortBy(res, "name");
                     $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
                     $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+                    $scope.user = $scope.personToLookup;
                     $scope.loading = false;
                 }, function (res) {
                     $scope.loading = false;
