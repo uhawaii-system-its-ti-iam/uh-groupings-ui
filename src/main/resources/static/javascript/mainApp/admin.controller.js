@@ -58,16 +58,22 @@
          * Fetch a list of memberships pertaining to $scope.personToLookUp.
          */
         $scope.searchForUserGroupingInformation = function () {
-            $scope.loading = true;
-            groupingsService.getMembershipAssignmentForUser(function (res) {
-                $scope.personList = _.sortBy(res, "name");
-                $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
-                $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-                $scope.loading = false;
-            }, function (res) {
-                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
-                    "feedback/error", "feedback");
-            }, $scope.personToLookup);
+            if ($scope.personToLookup.length === 0) {
+                $scope.emptyInput = true;
+            } else {
+                $scope.loading = true;
+                groupingsService.getMembershipAssignmentForUser(function (res) {
+                    $scope.personList = _.sortBy(res, "name");
+                    $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
+                    $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+                    $scope.user = $scope.personToLookup;
+                    $scope.loading = false;
+                }, function (res) {
+                    $scope.loading = false;
+                    $scope.resStatus = res.status;
+                    $scope.user = $scope.personToLookup;
+                }, $scope.personToLookup);
+            }
         };
 
         /**
