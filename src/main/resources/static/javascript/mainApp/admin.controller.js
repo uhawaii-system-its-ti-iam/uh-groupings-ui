@@ -58,7 +58,7 @@
          * Fetch a list of memberships pertaining to $scope.personToLookUp.
          */
         $scope.searchForUserGroupingInformation = function () {
-            if ($scope.personToLookup.length === 0) {
+            if (_.isEmpty($scope.personToLookup)) {
                 $scope.emptyInput = true;
             } else {
                 $scope.loading = true;
