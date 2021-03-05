@@ -110,6 +110,13 @@ describe("GeneralController", function () {
                 uhUuid: "00000005",
                 firstName: "User",
                 lastName: "Five"
+            },
+            {
+                name: "User Nine",
+                username: "",
+                uhUuid: "00000009",
+                firstName: "User",
+                lastName: "Nine"
             }
         ];
         scope.pagedItemsExclude = scope.groupToPages(scope.groupingExclude);
@@ -144,7 +151,7 @@ describe("GeneralController", function () {
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven
     // Include: User One, User Two, User Three
-    // Exclude: User Four, User Five
+    // Exclude: User Four, User Five, User Nine
     // Owners: User Six
     describe("addInBasis", function () {
         it("should add a key called 'inBasis' for all members in the group passed", function () {
@@ -327,7 +334,7 @@ describe("GeneralController", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Include");
 
-                expect(scope.isInAnotherList).toHaveBeenCalled();
+                expect(scope.isInAnotherList).not.toHaveBeenCalled();
                 expect(scope.isInAnotherList("user8", "Include")).toBe(false);
             });
 
@@ -335,7 +342,7 @@ describe("GeneralController", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Exclude");
 
-                expect(scope.isInAnotherList).toHaveBeenCalled();
+                expect(scope.isInAnotherList).not.toHaveBeenCalled();
                 expect(scope.isInAnotherList("user8", "Exclude")).toBe(false);
             });
 
@@ -477,14 +484,15 @@ describe("GeneralController", function () {
             it("should start with the correct column headers", function () {
                 const csv = scope.convertListToCsv(scope.groupingExclude);
 
-                expect(csv.indexOf("Last,First,Username,Email\r\n")).toEqual(0);
+                expect(csv.indexOf("Last,First,Username,UH Number,Email\r\n")).toEqual(0);
             });
 
             it("should contain the information of every member in the list", function () {
                 const csv = scope.convertListToCsv(scope.groupingExclude);
 
-                expect(csv).toContain("Four,User,user4,user4@hawaii.edu,\r\n");
-                expect(csv).toContain("Five,User,user5,user5@hawaii.edu,\r\n");
+                expect(csv).toContain("Four,User,user4,00000004,user4@hawaii.edu,\r\n");
+                expect(csv).toContain("Five,User,user5,00000005,user5@hawaii.edu,\r\n");
+                expect(csv).toContain("Five,User,,00000009,,\r\n");
             });
         });
 
