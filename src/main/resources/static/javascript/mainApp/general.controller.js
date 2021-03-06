@@ -1778,7 +1778,6 @@
                 line += table[i].firstName + ",";
                 line += table[i].username + ",";
                 line += table[i].uhUuid + ",";
-//                line += table[i].username + "@hawaii.edu,";
                 (table[i].username === "") ? (line += "") : (line += table[i].username + "@hawaii.edu,");
                 str += line + "\r\n";
             }
