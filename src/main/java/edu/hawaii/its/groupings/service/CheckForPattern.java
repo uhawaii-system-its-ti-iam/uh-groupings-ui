@@ -37,7 +37,8 @@ public class CheckForPattern {
             int lineId = 0;
 
             try (Scanner fileScanner = new Scanner(fr)) {
-                while (fileScanner.hasNextLine()) { String line = fileScanner.nextLine();
+                while (fileScanner.hasNextLine()) {
+                    String line = fileScanner.nextLine();
                     lineId++;
 
                     matcher = pat.matcher(line);

@@ -38,6 +38,8 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -172,6 +174,33 @@ public class TestGroupingsRestController {
         groupingsRestController.setOptIn(tst0Principal, GROUPING, true);
         groupingsRestController.enableSyncDest(tst0Principal, GROUPING, UH_RELEASED_GROUPING);
         groupingsRestController.enableSyncDest(tst0Principal, GROUPING, LISTSERV);
+    }
+
+    @Test
+    public void testMe() {
+        String regex = "^.*password.*\\=(?!\\s*$).+";
+        Pattern pattern = Pattern.compile(regex);
+        // Empty string, okay.
+        Matcher matcher = pattern.matcher("some.property.password=");
+        assertFalse(matcher.find());
+        // Blank string, okay, I guess. Not sure.
+        matcher = pattern.matcher("some.property.password= ");
+        assertFalse(matcher.find());
+        // Password is set; we do not want that to happen.
+        matcher = pattern.matcher("some.property.password=abc");
+        assertTrue(matcher.find());
+        // Password is set; we do not want that to happen.
+        matcher = pattern.matcher("some.property.password= def");
+        assertTrue(matcher.find());
+        // Password is set; we do not want that to happen.
+        matcher = pattern.matcher("some.property.password=fhi ");
+        assertTrue(matcher.find());
+        // Password is set; we do not want that to happen.
+        matcher = pattern.matcher("some.property.password= jkl ");
+        assertTrue(matcher.find());
+        // Password is set; we do not want that to happen.
+        matcher = pattern.matcher("some.property.password=   mno  ");
+        assertTrue(matcher.find());
     }
 
     @Test
