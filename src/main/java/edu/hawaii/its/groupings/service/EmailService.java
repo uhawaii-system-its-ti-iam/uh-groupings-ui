@@ -10,13 +10,18 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 @Service
 public class EmailService {
 
     @Value("${email.send.to}")
     private String to;
 
-    @Value("${app.mail.from:no-reply}")
+    @Value("${email.send.from}")
     private String from;
 
     @Value("${email.is.enabled}")
@@ -47,6 +52,43 @@ public class EmailService {
             if (!feedback.getExceptionMessage().isEmpty()) {
                 text += "Stack Trace: " + feedback.getExceptionMessage();
             }
+            msg.setText(text);
+            msg.setSubject(header);
+            try {
+                javaMailSender.send(msg);
+            } catch (MailException ex) {
+                logger.error("Error", ex);
+            }
+        }
+    }
+
+    public void sendWithStack(Exception e, String exceptionType) {
+        logger.info("Feedback Error email has been triggered.");
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        String exceptionAsString = sw.toString();
+
+        InetAddress ip;
+        String hostname = "Unknown Host";
+
+        try {
+            ip = InetAddress.getLocalHost();
+            hostname = ip.getHostName();
+        } catch (UnknownHostException f) {
+            f.printStackTrace();
+        }
+
+        if (isEnabled) {
+            SimpleMailMessage msg = new SimpleMailMessage();
+            msg.setTo(to);
+            msg.setFrom(from);
+            String text = "";
+            String header = "UH Groupings UI Error Response";
+            text += "Cause of Response: The UI threw an exception that has triggered the ErrorControllerAdvice. \n\n";
+            text += "Exception Thrown: ErrorControllerAdvice threw the " + exceptionType + ".\n\n";
+            text += "Host Name: " + hostname + ".\n";
+            text += "----------------------------------------------------" + "\n\n";
+            text += "UI Stack Trace: \n\n" + exceptionAsString;
             msg.setText(text);
             msg.setSubject(header);
             try {

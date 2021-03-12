@@ -143,7 +143,6 @@
                                     </div>
                                 </div>
                             </form>
-                            <div th:replace="fragments/add-error-messages :: add-error-messages"></div>
                         </div>
                         <div class="col-lg-5">
                             <div th:replace="fragments/pagination :: pagination(currentPage='currentPageAdmins', pagedItems='pagedItemsAdmins')"></div>
@@ -157,30 +156,38 @@
                             <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Person</h2>
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
-                            <form ng-submit="searchForUserGroupingInformation()">
+                            <form ng-submit="searchForUserGroupingInformation(); errorDismissed = false;">
                                 <div class="input-group">
                                     <input name="Search Person" class="form-control" type="text"
                                            title="Enter UH Username"
-                                           placeholder="UH Username" ng-model="personToLookup"/>
+                                           placeholder="UH Username" ng-model="personToLookup"
+                                           ng-init="errorDismissed = true; resetErrors()"
+                                           ng-blur="errorDismissed = true; resetErrors()"
+                                    />
                                     <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit">Search</button>
+                                        <button class="btn btn-primary"
+                                                ng-click="errorDismissed = false; resetErrors()"
+                                                ng-blur="errorDismissed = true; resetErrors()"
+                                                type="submit">Search
+                                        </button>
                                     </div>
                                 </div>
                             </form>
                         </div>
-
                         <div class="col-auto mr-auto col-lg-3 col-md-4 col-12 p-0">
-                            <input class="form-control" placeholder="Filter Admins..." type="search"
-                                   title="Filter Admins"
+                            <input class="form-control" placeholder="Filter Groupings..." type="search"
+                                   title="Filter Groupings"
                                    ng-model="personQuery"
                                    ng-change="filter(personList, 'pagedItemsPerson', 'currentPagePerson', personQuery, true)"/>
                         </div>
                         <div>
                             <form ng-submit="removeFromGroups()">
+                                <div th:replace="fragments/admin-error-messages :: admin-error-messages"></div>
                                 <div class="input-group">
-                                    <div class="input-group-append">
-                                        <label class="my-auto">Check All<input class="check-space" type="checkbox" ng-click="updateCheckBoxes()"
-                                                                    ng-model="checkAll"></label>
+                                    <div class="input-group-append check-remove">
+                                        <label class="my-auto">Check All<input class="check-space" type="checkbox"
+                                                                               ng-click="updateCheckBoxes()"
+                                                                               ng-model="checkAll"></label>
                                         <button class="btn btn-danger pull-right" type="submit">Remove</button>
                                     </div>
                                 </div>
@@ -251,7 +258,7 @@
                                 <td class="p-10" tabindex="0">
                                     <div ng-if="l.inOwner || l.inInclude || l.inExclude || l.inBasis || l.inBasisAndInclude">
                                         <label><input type="checkbox"
-                                                      ng-model="l.isSelected" ng-change="updateCheckAll(l)"></label>
+                                                      ng-model="l.isSelected" ng-change="update(l)"></label>
                                     </div>
                                 </td>
                             </tr>

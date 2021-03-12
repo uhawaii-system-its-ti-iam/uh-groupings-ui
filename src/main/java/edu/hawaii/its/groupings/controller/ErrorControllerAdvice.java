@@ -4,6 +4,8 @@ import edu.hawaii.its.api.type.GroupingsHTTPException;
 import edu.hawaii.its.api.type.GroupingsServiceResultException;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
+import edu.hawaii.its.groupings.service.EmailService;
+
 import edu.internet2.middleware.grouperClient.ws.GcWebServiceError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,39 +27,49 @@ public class ErrorControllerAdvice {
     @Autowired
     private UserContextService userContextService;
 
+    @Autowired
+    private EmailService emailService;
+
     @ExceptionHandler(GroupingsServiceResultException.class)
     public ResponseEntity<GroupingsHTTPException> handleGroupingsServiceResultException(GroupingsServiceResultException gsre) {
+        emailService.sendWithStack(gsre, "Groupings Service Result Exception");
       return exceptionResponse("Groupings Service resulted in FAILURE", gsre, 400);
     }
 
     @ExceptionHandler (GcWebServiceError.class)
     public ResponseEntity<GroupingsHTTPException> handleGcWebServiceError(GcWebServiceError gce) {
+        emailService.sendWithStack(gce, "Gc Web Service Error");
         return exceptionResponse(gce.getMessage(), gce, 404);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<GroupingsHTTPException> handleIllegalArgumentException(IllegalArgumentException iae, WebRequest request) {
+        emailService.sendWithStack(iae, "Illegal Argument Exception");
         return exceptionResponse("Resource not available", iae, 404);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GroupingsHTTPException> handleException(Exception exception) {
+        emailService.sendWithStack(exception, "Exception");
         return exceptionResponse("Exception", exception, 500);
     }
 
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<GroupingsHTTPException> handleRuntimeException(Exception exception) {
+        emailService.sendWithStack(exception, "Runtime Exception");
       return exceptionResponse("Runtime Exception", exception, 500);
     }
 
     @ExceptionHandler({MessagingException.class, IOException.class})
     public ResponseEntity<GroupingsHTTPException> handleMessagingException(Exception e) {
+        emailService.sendWithStack(e, "Messaging Exception");
       return exceptionResponse("Mail service exception", e, 500);
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
     public ResponseEntity<GroupingsHTTPException> handleUnsupportedOperationException(UnsupportedOperationException nie) {
+        emailService.sendWithStack(nie, "Unsupported Operation Exception");
       return exceptionResponse("Method not implemented", nie, 501);
     }
 
@@ -70,7 +82,7 @@ public class ErrorControllerAdvice {
             username = user.getUsername();
         }
         logger.error("username: " + username + "; Exception: ", ex);
-
+        emailService.sendWithStack(ex, "TypeMismatchException");
         return "redirect:/error";
     }
 
@@ -84,7 +96,6 @@ public class ErrorControllerAdvice {
         GroupingsHTTPException httpException = new GroupingsHTTPException(message, cause, status);
 
         logger.error("username: " + username + "; Exception: ", httpException.getCause());
-
         return ResponseEntity.status(status).body(httpException);
     }
 }
