@@ -88,7 +88,9 @@
                     let data = [];
 
                     _.forEach(res, (membership) => {
-                        data.push(membership);
+                        if(membership.inInclude) {
+                            data.push(membership);
+                        }
                     });
 
                     let dups = coupleDuplicatePaths(data);
