@@ -211,28 +211,21 @@
          */
         $scope.addAdmin = function () {
             $scope.waitingForImportResponse = true;
-            groupingsService.getAdminLists(function () {
-                const adminToAdd = $scope.adminToAdd;
-
-                if (_.isEmpty(adminToAdd)) {
-                    $scope.emptyInput = true;
+            const adminToAdd = $scope.adminToAdd;
+            if (_.isEmpty(adminToAdd)) {
+                $scope.emptyInput = true;
+            } else {
+                if ($scope.inAdminList(adminToAdd)) {
+                    $scope.user = adminToAdd;
+                    $scope.listName = "admins";
+                    $scope.swap = false;
                 } else {
-                    if ($scope.inAdminList(adminToAdd)) {
-                        $scope.user = adminToAdd;
-                        $scope.listName = "admins";
-                        $scope.swap = false;
-                    } else {
-                        $scope.createConfirmAddModal({
-                            userToAdd: adminToAdd,
-                            listName: "admins"
-                        });
-                    }
+                    $scope.createConfirmAddModal({
+                        userToAdd: adminToAdd,
+                        listName: "admins"
+                    });
                 }
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createRoleErrorModal();
-                }
-            });
+            }
             $scope.waitingForImportResponse = false;
         };
 
