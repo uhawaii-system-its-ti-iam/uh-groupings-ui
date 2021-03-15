@@ -161,6 +161,9 @@
 
             if ($scope.personToLookup != null) {
                 groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
+                    if (attributes === "") {
+                        return;
+                    }
                     let userToRemove = {
                         username: attributes.uid,
                         name: attributes.cn,
@@ -213,9 +216,11 @@
             $scope.waitingForImportResponse = true;
             const adminToAdd = $scope.adminToAdd;
             if (_.isEmpty(adminToAdd)) {
+                // Todo : Error message pop up needs implementation.
                 $scope.emptyInput = true;
             } else {
                 if (inAdminList(adminToAdd)) {
+                    // Todo : Error message pop up needs implementation.
                     $scope.user = adminToAdd;
                     $scope.listName = "admins";
                     $scope.swap = false;
