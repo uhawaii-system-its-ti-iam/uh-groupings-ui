@@ -241,23 +241,17 @@
          * account
          */
         $scope.removeAdmin = function (currentPage, index) {
-            groupingsService.getAdminLists(function () {
-                const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+            const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
 
-                if ($scope.adminsList.length > 1) {
-                    $scope.createRemoveModal({
-                        user: adminToRemove,
-                        listName: "admins"
-                    });
-                } else {
-                    const userType = "admin";
-                    $scope.createRemoveErrorModal(userType);
-                }
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createRoleErrorModal();
-                }
-            });
+            if ($scope.adminsList.length > 1) {
+                $scope.createRemoveModal({
+                    user: adminToRemove,
+                    listName: "admins"
+                });
+            } else {
+                const userType = "admin";
+                $scope.createRemoveErrorModal(userType);
+            }
         };
 
         /**
