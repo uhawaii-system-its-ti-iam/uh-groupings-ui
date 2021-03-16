@@ -161,6 +161,9 @@
 
             if ($scope.personToLookup != null) {
                 groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
+                    if (attributes === "") {
+                        return;
+                    }
                     let userToRemove = {
                         username: attributes.uid,
                         name: attributes.cn,
@@ -201,7 +204,7 @@
          * @param {string} user - the user you are checking to see if they are already in the list being added to
          * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
          */
-        $scope.inAdminList = function (user) {
+        function inAdminList(user) {
             return _.some($scope.adminsList, { username: user }) ||
                 _.some($scope.adminsList, { uhUuid: user });
         };
@@ -211,28 +214,23 @@
          */
         $scope.addAdmin = function () {
             $scope.waitingForImportResponse = true;
-            groupingsService.getAdminLists(function () {
-                const adminToAdd = $scope.adminToAdd;
-
-                if (_.isEmpty(adminToAdd)) {
-                    $scope.emptyInput = true;
+            const adminToAdd = $scope.adminToAdd;
+            if (_.isEmpty(adminToAdd)) {
+                // Todo : Error message pop up needs implementation.
+                $scope.emptyInput = true;
+            } else {
+                if (inAdminList(adminToAdd)) {
+                    // Todo : Error message pop up needs implementation.
+                    $scope.user = adminToAdd;
+                    $scope.listName = "admins";
+                    $scope.swap = false;
                 } else {
-                    if ($scope.inAdminList(adminToAdd)) {
-                        $scope.user = adminToAdd;
-                        $scope.listName = "admins";
-                        $scope.swap = false;
-                    } else {
-                        $scope.createConfirmAddModal({
-                            userToAdd: adminToAdd,
-                            listName: "admins"
-                        });
-                    }
+                    $scope.createConfirmAddModal({
+                        userToAdd: adminToAdd,
+                        listName: "admins"
+                    });
                 }
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createRoleErrorModal();
-                }
-            });
+            }
             $scope.waitingForImportResponse = false;
         };
 
@@ -243,23 +241,17 @@
          * account
          */
         $scope.removeAdmin = function (currentPage, index) {
-            groupingsService.getAdminLists(function () {
-                const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
+            const adminToRemove = $scope.pagedItemsAdmins[currentPage][index];
 
-                if ($scope.adminsList.length > 1) {
-                    $scope.createRemoveModal({
-                        user: adminToRemove,
-                        listName: "admins"
-                    });
-                } else {
-                    const userType = "admin";
-                    $scope.createRemoveErrorModal(userType);
-                }
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createRoleErrorModal();
-                }
-            });
+            if ($scope.adminsList.length > 1) {
+                $scope.createRemoveModal({
+                    user: adminToRemove,
+                    listName: "admins"
+                });
+            } else {
+                const userType = "admin";
+                $scope.createRemoveErrorModal(userType);
+            }
         };
 
         /**
