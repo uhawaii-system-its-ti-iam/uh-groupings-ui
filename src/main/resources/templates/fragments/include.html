@@ -81,8 +81,8 @@
                                id="blankCheckbox"
                                style="margin-left: 0"
                                ng-model="membersInCheckboxList[i.uhUuid]"
-                               ng-click="$event.stopPropagation()"
-                               aria-label="assertive">
+                               ng-click="$event.stopPropagation()
+                               membersInCheckboxList[i.uhUuid]=!membersInCheckboxList[i.uhUuid]">
                     </td>
                     <td class="p-10" tabindex="0">
                         {{i.name}}
@@ -91,8 +91,8 @@
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                               tabindex="0"
                               th:title="#{screen.message.common.tooltip.remove.include}"
-                              ng-keypress="$event.keyCode === 13 ? removeMember('Include', currentPageInclude, $index) : null"
-                              ng-click="removeMember('Include', currentPageInclude, $index)">
+                              ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Include', currentPageInclude, $index) : null"
+                              ng-click="removeMemberWithTrashcan('Include', currentPageInclude, $index)">
                         </span>
                     </td>
                     <td class="p-10">{{i.uhUuid}}</td>
@@ -120,7 +120,7 @@
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
                 <form>
                     <div class="input-group" style="width: 600px">
-                        <input class="form-control" placeholder="Members to add" type="search"
+                        <input class="form-control" placeholder="Members to add or remove" type="search"
                                ng-init="errorDismissed = true; resetErrors()"
                                ng-blur="errorDismissed = true; resetErrors()"
                                title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"

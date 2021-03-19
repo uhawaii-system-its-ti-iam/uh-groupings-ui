@@ -141,7 +141,7 @@ btn.dark-teal-bg {
 .btn.btn-remove {
     color: #ffffff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    background-color: #b64d49;
+    background-color: crimson;
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#c4907d), to(#b4725a));
 }
 

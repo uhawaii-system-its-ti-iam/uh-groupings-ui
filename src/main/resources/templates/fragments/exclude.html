@@ -71,15 +71,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm"
-                    ng-click="membersInCheckboxList[e.uhUuid]=!membersInCheckboxList[e.uhUuid]">
-                    <td style="margin-left: 4px">
+                <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
+                    <td class="p-10" style="margin-left: 4px">
                         <input class="form-check-input singlechkbox" type="checkbox"
                                id="blankCheckbox"
                                style="margin-left: 0"
                                ng-model="membersInCheckboxList[e.uhUuid]"
-                               ng-click="$event.stopPropagation()"
-                               aria-label="assertive"/>
+                               ng-click= "membersInCheckboxList[e.uhUuid]=!membersInCheckboxList[e.uhUuid]
+                                $event.stopPropagation()"/>
                     </td>
                     <td class="p-10" tabindex="0">
                         {{e.name}}
@@ -130,7 +129,7 @@
                                 Add
                             </button>
                             <button class="btn btn-remove"
-                                    ng-click="prepBatchRemove('Exclude', pagedItemsExclude[currentPageExclude])"
+                                    ng-click="resetErrors(); prepBatchRemove('Exclude', pagedItemsExclude[currentPageExclude]); errorDismissed = false"
                                     style="margin-left: 2px; margin-right: 2px">Remove</button>
                             <button class="btn btn-primary"
                                     ng-click="launchImportModal('Exclude')">Import File
