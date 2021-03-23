@@ -1142,9 +1142,10 @@
                 $scope.getGroupingInformation();
                 $scope.syncDestArray = [];
             } else if ($scope.currentUser === $scope.userToRemove.username) {
-                // Removing self from last grouping owned -> redirect to home page
+                // Removing self from last grouping owned -> redirect to home page and then logout
                 if ($scope.groupingsList.length === 1) {
-                    $window.location.href = "home";
+                    $window.location.href = "/uhgroupings/";
+                    $scope.reDirect();
                 } else {
                     $window.location.href = "groupings";
                 }
@@ -1155,7 +1156,9 @@
          * Handler for successfully removing an admin from a grouping.
          */
         function handleAdminRemove() {
+            // Removing self as admin -> redirect to home page and then logout
             if ($scope.currentUser === $scope.userToRemove.username) {
+                $window.location.href = "/uhgroupings/";
                 $scope.reDirect();
             } else {
                 $scope.init();
@@ -1205,10 +1208,9 @@
          */
         $scope.reDirect = function () {
             let r = new XMLHttpRequest();
-            r.open("POST", "/uhgroupings/logout");
+            r.open("POST", "/uhgroupings/logout", true);
             r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
             r.send();
-            $window.location.href = "/uhgroupings/";
         };
 
         /**
