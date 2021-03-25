@@ -35,6 +35,7 @@
                 <div class="row m-auto pt-2 pb-2">
                     <div class="col-lg-9 col-md-8 col-12 p-0">
                         <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Memberships</h2>
+                        <a href="#" data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Toggle popover</a>
                         <p class="card-title-text"
                            th:utext="#{screen.message.memberships.page.currentMembershipsInfo}"></p>
                     </div>
@@ -75,10 +76,11 @@
                                         <input aria-label="Grouping Path" type="text" class="form-control form-control-sm border-0 input-sm"
                                                value={{l.path}}
                                                id={{l.path}}>
-                                            <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                                        <span data-toggle="popover" data-placement="top" data-trigger="hover" data-content="copy"><span data-toggle="popover" data-placement="top" data-trigger="click" data-content="copied!"><button class="btn btn-sm" aria-label="Copy Path Button" ng-click=copyPath(l) tabindex="-1" ng-mouseover=hoverCopy()>
+                                            <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i>
+                                        </button></span></span>
                                     </form>
                                 </td>
-                                <button class="btn btn-sm" ng-click=copyPath(l)>
 
                                     <td class="w-20 align-middle text-center">
                                     <span ng-if="!l.optOutEnabled">
@@ -186,5 +188,8 @@
 </main>
 <!-- / Content container. -->
 <div th:replace="footer"></div>
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </body>
 </html>
