@@ -32,11 +32,11 @@
          * @param {Object} grouping - the current selected grouping
          */
         $scope.copyPath = function (grouping) {
-            $('[data-content="copy"]').popover('hide');
+            $("[data-content='copy']").popover("hide");
 
-            $('[data-content="copied!"]').popover();
+            $("[data-content='copied!']").popover();
             setTimeout(function () {
-                $('[data-content="copied!"]').popover('hide');
+                $("[data-content='copied!']").popover("hide");
             }, 1000);
 
             let copyText = document.getElementById(grouping.path);
@@ -48,7 +48,7 @@
          * Toggle 'copy' popover when clipboard is being hovered.
          */
         $scope.hoverCopy = function () {
-            $('[data-content="copy"]').popover();
+            $("[data-content='copy']").popover();
         };
     }
 
