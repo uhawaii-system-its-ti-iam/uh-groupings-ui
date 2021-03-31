@@ -321,6 +321,9 @@ describe("GeneralController", function () {
             });
         });
         describe("user tries to add 'user5', who is currently in the Exclude list, to the Include list", function () {
+            beforeEach(function () {
+                scope.userToAdd = "user5";
+            });
             it("should return true since 'user5' is currently in the Exclude list", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Include");
@@ -330,6 +333,9 @@ describe("GeneralController", function () {
             });
         });
         describe("user tries to add 'user8', who is not in any list", function () {
+            beforeEach(function () {
+                scope.userToAdd = "user8";
+            });
             it("should return false if the user tries to add 'user8' to the Include list", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Include");
@@ -337,7 +343,6 @@ describe("GeneralController", function () {
                 expect(scope.isInAnotherList).not.toHaveBeenCalled();
                 expect(scope.isInAnotherList("user8", "Include")).toBe(false);
             });
-
             it("should return false if the user tries to add 'user8' to the Exclude list", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Exclude");
@@ -492,7 +497,7 @@ describe("GeneralController", function () {
 
                 expect(csv).toContain("Four,User,user4,00000004,user4@hawaii.edu,\r\n");
                 expect(csv).toContain("Five,User,user5,00000005,user5@hawaii.edu,\r\n");
-                expect(csv).toContain("Five,User,,00000009,,\r\n");
+                expect(csv).toContain("Nine,User,,00000009,\r\n");
             });
         });
 
