@@ -143,7 +143,7 @@ describe("AdminController", function () {
                         let index1 = dups.findIndex((e) => {
                             return e.name === membership.name;
                         });
-                        if (index1 == index) {
+                        if (index1 === index) {
                             // Push the merged result from the duplicates
                             result.push({
                                 "name": membership.name,
