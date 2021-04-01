@@ -64,10 +64,8 @@
                 $scope.loading = true;
                 groupingsService.getMembershipAssignmentForUser(function (res) {
                     $scope.personList = _.sortBy(res, "name");
-                    console.log($scope.personList);
                     $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
                     $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-                    console.log($scope.personList);
                     $scope.user = $scope.personToLookup;
                     $scope.loading = false;
                 }, function (res) {
@@ -96,10 +94,10 @@
                 });
             });
             dups.forEach((membership, index) => {
-                let index1 = dups.findIndex(e => {
-                    return e.name == membership.name;
+                let index1 = dups.findIndex((e) => {
+                    return e.name === membership.name;
                 });
-                if (index1 == index) {
+                if (index1 === index) {
                     // Push the merged result from the duplicates
                     result.push({
                         "name": membership.name,

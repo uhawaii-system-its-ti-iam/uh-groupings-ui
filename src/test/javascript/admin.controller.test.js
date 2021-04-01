@@ -125,7 +125,7 @@ describe("AdminController", function () {
             ];
         });
         it("should merge the grouping values into each unique Grouping", function () {
-            mergeManagePersonDuplicateValues = jasmine.createSpy()
+            let mergeManagePersonDuplicateValues = jasmine.createSpy()
                 .and.callFake(function (dups) {
                     let result = [];
                     dups.forEach((membership, index) => {
@@ -140,8 +140,8 @@ describe("AdminController", function () {
                         });
                     });
                     dups.forEach((membership, index) => {
-                        let index1 = dups.findIndex(e => {
-                            return e.name == membership.name;
+                        let index1 = dups.findIndex((e) => {
+                            return e.name === membership.name;
                         });
                         if (index1 == index) {
                             // Push the merged result from the duplicates
