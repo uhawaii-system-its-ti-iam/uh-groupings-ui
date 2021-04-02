@@ -90,19 +90,25 @@
                         membership.inBasis |= m.inBasis;
                         membership.inOwner |= m.inOwner;
                         membership.inBasisAndInclude |= m.inBasisAndInclude;
-                        dups.splice(index2, 1);
                     }
                 });
-                result.push({
-                    "name": membership.name,
-                    "path": membership.path,
-                    "inInclude": membership.inInclude,
-                    "inExclude": membership.inExclude,
-                    "inBasis": membership.inBasis,
-                    "inOwner": membership.inOwner,
-                    "inBasisAndInclude": membership.inBasisAndInclude
-
+            });
+            dups.forEach((membership, index) => {
+                let index1 = dups.findIndex((e) => {
+                    return e.name === membership.name;
                 });
+                if (index1 === index) {
+                    // Push the merged result from the duplicates
+                    result.push({
+                        "name": membership.name,
+                        "path": membership.path,
+                        "inInclude": membership.inInclude,
+                        "inExclude": membership.inExclude,
+                        "inBasis": membership.inBasis,
+                        "inOwner": membership.inOwner,
+                        "inBasisAndInclude": membership.inBasisAndInclude
+                    });
+                }
             });
             return result;
         }

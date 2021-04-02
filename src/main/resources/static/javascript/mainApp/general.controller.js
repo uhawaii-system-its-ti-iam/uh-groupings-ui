@@ -1771,14 +1771,18 @@
          * @returns string table in CSV format
          */
         $scope.convertListToCsv = function (table) {
-            let str = "Last,First,Username,uhNumber,Email\r\n";
+            let str = "Last,First,Username,UH Number,Email\r\n";
             for (let i = 0; i < table.length; i++) {
                 let line = "";
                 line += table[i].lastName + ",";
                 line += table[i].firstName + ",";
                 line += table[i].username + ",";
                 line += table[i].uhUuid + ",";
-                line += table[i].username + "@hawaii.edu,";
+                if (table[i].username === "") {
+                    line += "";
+                } else {
+                    line += table[i].username + "@hawaii.edu,";
+                }
                 str += line + "\r\n";
             }
             return str;

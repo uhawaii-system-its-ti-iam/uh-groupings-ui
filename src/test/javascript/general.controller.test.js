@@ -110,6 +110,13 @@ describe("GeneralController", function () {
                 uhUuid: "00000005",
                 firstName: "User",
                 lastName: "Five"
+            },
+            {
+                name: "User Nine",
+                username: "",
+                uhUuid: "00000009",
+                firstName: "User",
+                lastName: "Nine"
             }
         ];
         scope.pagedItemsExclude = scope.groupToPages(scope.groupingExclude);
@@ -144,7 +151,7 @@ describe("GeneralController", function () {
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven
     // Include: User One, User Two, User Three
-    // Exclude: User Four, User Five
+    // Exclude: User Four, User Five, User Nine
     // Owners: User Six
     describe("addInBasis", function () {
         it("should add a key called 'inBasis' for all members in the group passed", function () {
@@ -314,6 +321,9 @@ describe("GeneralController", function () {
             });
         });
         describe("user tries to add 'user5', who is currently in the Exclude list, to the Include list", function () {
+            beforeEach(function () {
+                scope.userToAdd = "user5";
+            });
             it("should return true since 'user5' is currently in the Exclude list", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Include");
@@ -323,19 +333,21 @@ describe("GeneralController", function () {
             });
         });
         describe("user tries to add 'user8', who is not in any list", function () {
+            beforeEach(function () {
+                scope.userToAdd = "user8";
+            });
             it("should return false if the user tries to add 'user8' to the Include list", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Include");
 
-                expect(scope.isInAnotherList).toHaveBeenCalled();
+                expect(scope.isInAnotherList).not.toHaveBeenCalled();
                 expect(scope.isInAnotherList("user8", "Include")).toBe(false);
             });
-
             it("should return false if the user tries to add 'user8' to the Exclude list", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Exclude");
 
-                expect(scope.isInAnotherList).toHaveBeenCalled();
+                expect(scope.isInAnotherList).not.toHaveBeenCalled();
                 expect(scope.isInAnotherList("user8", "Exclude")).toBe(false);
             });
 
@@ -477,14 +489,15 @@ describe("GeneralController", function () {
             it("should start with the correct column headers", function () {
                 const csv = scope.convertListToCsv(scope.groupingExclude);
 
-                expect(csv.indexOf("Last,First,Username,Email\r\n")).toEqual(0);
+                expect(csv.indexOf("Last,First,Username,UH Number,Email\r\n")).toEqual(0);
             });
 
             it("should contain the information of every member in the list", function () {
                 const csv = scope.convertListToCsv(scope.groupingExclude);
 
-                expect(csv).toContain("Four,User,user4,user4@hawaii.edu,\r\n");
-                expect(csv).toContain("Five,User,user5,user5@hawaii.edu,\r\n");
+                expect(csv).toContain("Four,User,user4,00000004,user4@hawaii.edu,\r\n");
+                expect(csv).toContain("Five,User,user5,00000005,user5@hawaii.edu,\r\n");
+                expect(csv).toContain("Nine,User,,00000009,\r\n");
             });
         });
 
