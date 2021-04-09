@@ -13,11 +13,11 @@
         <p class="lead text-center text-md-left" th:utext="#{screen.message.memberships.page.description}"></p>
         <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist">
             <li role="presentation" class="nav-item" ng-click="memberFilterReset()">
-                <a href="#current-memberships" data-toggle="tab" class="nav-link active" role="tab">
+                <a href="#current-memberships" data-toggle="tab" class="nav-link active" style="color: var(--uh-black)" role="tab">
                     Current Memberships
                 </a>
             <li class="nav-item" role="presentation" ng-click="memberFilterReset()">
-                <a href="#membership-opportunities" data-toggle="tab" class="nav-link" role="tab">
+                <a href="#membership-opportunities" data-toggle="tab" class="nav-link" style="color: var(--uh-black)" role="tab">
                     Membership Opportunities
                 </a>
             </li>
@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-lg-3 col-md-4 col-12 p-0 pt-3">
                         <input placeholder="Filter Groupings..." type="search"
-                               title="Filter Groupings"
+                               title="Filter Groupings" aria-label="Filter Groupings..."
                                ng-model="membersQuery" class="form-control"
                                ng-change="filter(membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', membersQuery, true)"/>
                     </div>
@@ -123,7 +123,7 @@
                     </div>
                     <div class="col-lg-3 col-md-4 col-12 p-0 pt-3">
                         <input placeholder="Filter Groupings..." type="search"
-                               title="Filter Groupings"
+                               title="Filter Groupings" aria-label="Filter Groupings..."
                                ng-model="optInQuery" class="form-control"
                                ng-change="filter(optInList, 'pagedItemsOptInList', 'currentPageOptIn', optInQuery, true)"
                                id="optIn"/>
