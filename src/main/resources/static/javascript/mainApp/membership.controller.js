@@ -221,8 +221,20 @@
         $scope.hoverCopy = function () {
             $("[data-content='copy']").popover();
         };
-
     }
+    /**
+     * Saves the current tab on refresh.
+     */
+    jQuery.noConflict();
+    $(document).ready(function(){
+        $("[data-toggle='tab']").on("show.bs.tab", function(e) {
+            localStorage.setItem("activeTab", $(e.target).attr("href"));
+        });
+        var activeTab = localStorage.getItem("activeTab");
+        if(activeTab){
+            $("#memberTab a[href='" + activeTab + "']").tab("show");
+        }
+    });
 
     UHGroupingsApp.controller("MembershipJsController", MembershipJsController);
 
