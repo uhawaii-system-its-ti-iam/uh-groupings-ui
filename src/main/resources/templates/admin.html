@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <head th:replace="header :: copy(headingTitle='UH Groupings Admin')"></head>
 <body ng-app="UHGroupingsApp" ng-controller="AdminJsController" data-ng-init="init()">
 <nav th:replace="menubar :: copy"></nav>
@@ -11,7 +14,7 @@
     <div class="container">
         <h1 class="text-center text-md-left">UH Groupings Administration</h1>
         <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
-        <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist">
+        <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="adminTab">
             <li role="presentation" class="nav-item">
                 <a href="#manage-groupings" data-toggle="tab" class="nav-link active" role="tab">
                     Manage Groupings
@@ -282,8 +285,5 @@
 </main>
 <!-- / Content container. -->
 <div th:replace="footer"></div>
-<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </body>
 </html>
