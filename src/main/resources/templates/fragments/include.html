@@ -18,7 +18,7 @@
             </div>
             <div class="col-md-4 pt-2">
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="includeQuery" class="form-control"
+                       ng-model="includeQuery" class="form-control" aria-label="Filter Members..."
                        ng-change="filter(groupingInclude, 'pagedItemsInclude', 'currentPageInclude', includeQuery, true)"/>
                 <!-- Export to CSV button -->
                 <div class="float-right"
@@ -67,12 +67,12 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm">
-                    <td class="p-10" tabindex="0">
+                    <td class="p-10" aria-label="{{i.name}}">
                         {{i.name}}
-                        <span class="fa fa-trash-o pull-right clickable pt-1"
+                        <span class="fa fa-trash-o pull-right clickable pt-1" role="button"
                               data-toggle="tooltip" data-placement="top"
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                              tabindex="0"
+                              tabindex="0" aria-label="Remove {{i.name}} from the Include members list"
                               th:title="#{screen.message.common.tooltip.remove.include}"
                               ng-keypress="$event.keyCode === 13 ? removeMember('Include', currentPageInclude, $index) : null"
                               ng-click="removeMember('Include', currentPageInclude, $index)">
@@ -104,9 +104,10 @@
                 <form>
                     <div class="input-group" style="width: 500px">
                         <input class="form-control" placeholder="Members to add" type="search"
-                               ng-init="errorDismissed = true; resetErrors()"
+                               ng-init="errorDismissed = true; resetErrors()" aria-required="true"
                                ng-blur="errorDismissed = true; resetErrors()"
                                title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"
+                               aria-label="Enter one or more UH members to add to the Include list"
                         />
                         <div>
                             <button class="btn btn-primary"

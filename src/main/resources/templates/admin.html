@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
                             <input class="form-control" placeholder="Filter Groupings..." type="search"
-                                   title="Filter Groupings"
+                                   title="Filter Groupings" aria-label="Filter Groupings..."
                                    ng-model="groupingsQuery"
                                    ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
                         </div>
@@ -61,7 +61,7 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
                             <input class="form-control" placeholder="Filter Admins..." type="search"
-                                   title="Filter Admins"
+                                   title="Filter Admins" aria-label="Filter Admins..."
                                    ng-model="adminsQuery"
                                    ng-change="filter(adminsList, 'pagedItemsAdmins', 'currentPageAdmins', adminsQuery, true)"/>
                         </div>
@@ -92,17 +92,17 @@
                             </thead>
                             <tbody class="table table-borderless">
                             <tr ng-repeat="l in pagedItemsAdmins[currentPageAdmins]" class="table table-sm">
-                                <td class="p-10" tabindex="0">
+                                <td class="p-10">
                                     {{l.name}}
                                 </td>
-                                <td class="p-10" tabindex="0">
+                                <td class="p-10">
                                     {{l.uhUuid}}
                                 </td>
-                                <td class="p-10" tabindex="0">
+                                <td class="p-10">
                                     {{l.username}}
                                     <div ng-if="l.username === ''">
                                         <span>N/A</span>
-                                        <i class="fa fa-question-circle clickable" aria-hidden="true"
+                                        <i class="fa fa-question-circle clickable"
                                            data-toggle="tooltip" data-placement="right"
                                            onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                                            th:title="#{screen.message.common.tooltip.username.notApplicable}">
@@ -110,12 +110,12 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <i class="fa fa-trash-o pull-right clickable pt-1"
+                                    <i class="fa fa-trash-o pull-right clickable pt-1" role="button"
                                        data-toggle="tooltip" data-placement="top"
-                                       tabindex="0"
+                                       tabindex="0" aria-label="Remove {{l.name}} as admin. There must be at least one admin remaining."
                                        onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                                        th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
-                                       ng-click="removeAdmin(currentPageAdmins, $index)"
+                                       ng-click="removeAdmin(currentPageAdmins, $index)" aria-hidden="false"
                                        ng-keypress="$event.keyCode === 13 ? removeAdmin(currentPageAdmins, $index) : null">
                                     </i>
                                 </td>
@@ -130,7 +130,7 @@
                                     <input name="Add Admin" class="form-control" type="text"
                                            ng-init="errorDismissed = true; resetErrors()"
                                            ng-blur="errorDismissed = true; resetErrors()"
-                                           title="Enter UH Username"
+                                           title="Enter UH Username" aria-label="Enter a UH Username to add as admin."
                                            placeholder="UH Username" ng-model="adminToAdd"/>
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit"
@@ -158,8 +158,8 @@
                         <div class="col-lg-3 col-md-4 col-12 p-0">
                             <form ng-submit="searchForUserGroupingInformation(); errorDismissed = false;">
                                 <div class="input-group">
-                                    <input name="Search Person" class="form-control" type="text"
-                                           title="Enter UH Username"
+                                    <input name="Search Person" class="form-control" type="text" aria-required="true"
+                                           title="Enter UH Username" aria-label="Enter UH Username to manage the person"
                                            placeholder="UH Username" ng-model="personToLookup"
                                            ng-init="errorDismissed = true; resetErrors()"
                                            ng-blur="errorDismissed = true; resetErrors()"
@@ -176,7 +176,7 @@
                         </div>
                         <div class="col-auto mr-auto col-lg-3 col-md-4 col-12 p-0">
                             <input class="form-control" placeholder="Filter Groupings..." type="search"
-                                   title="Filter Groupings"
+                                   title="Filter Groupings" aria-label="Filter Groupings for this person"
                                    ng-model="personQuery"
                                    ng-change="filter(personList, 'pagedItemsPerson', 'currentPagePerson', personQuery, true)"/>
                         </div>
@@ -220,10 +220,10 @@
                             </thead>
                             <tbody class="table table-borderless">
                             <tr ng-repeat="l in pagedItemsPerson[currentPagePerson]" class="table table-sm">
-                                <td class="p-10" tabindex="0">
+                                <td class="p-10">
                                     {{l.name}}
                                 </td>
-                                <td class="p-11" tabindex="0">
+                                <td class="p-11">
                                     <div ng-if="l.inOwner">
                                         <i class="fa fa-check text-dark"></i>
                                     </div>
@@ -231,7 +231,7 @@
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
-                                <td class="p-11" tabindex="0">
+                                <td class="p-11">
                                     <div ng-if="l.inBasis || l.inBasisAndInclude">
                                         <i class="fa fa-check text-dark"></i>
                                     </div>
@@ -239,7 +239,7 @@
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
-                                <td class="p-12" tabindex="0">
+                                <td class="p-12">
                                     <div ng-if="l.inInclude || l.inBasisAndInclude">
                                         <i class="fa fa-check text-dark"></i>
                                     </div>
@@ -247,7 +247,7 @@
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
-                                <td class="p-12" tabindex="0">
+                                <td class="p-12">
                                     <div ng-if="l.inExclude">
                                         <i class="fa fa-check text-dark"></i>
                                     </div>
@@ -255,9 +255,9 @@
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
-                                <td class="p-10" tabindex="0">
+                                <td class="p-10">
                                     <div ng-if="l.inOwner || l.inInclude || l.inExclude || l.inBasis || l.inBasisAndInclude">
-                                        <label><input type="checkbox"
+                                        <label><input type="checkbox" aria-label="Check box to remove {{l.name}} from this person's groupings list."
                                                       ng-model="l.isSelected" ng-change="update(l)"></label>
                                     </div>
                                 </td>

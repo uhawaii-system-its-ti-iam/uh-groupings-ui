@@ -1,5 +1,10 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
 <div class="modal-header">
     <h5 class="modal-title" id="modal-title">Preference Information</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="closePreferenceInfo()">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-body" id="modal-body">
     <p>{{ preferenceInfo }}</p>
@@ -7,3 +12,4 @@
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="closePreferenceInfo()">OK</button>
 </div>
+</html>
