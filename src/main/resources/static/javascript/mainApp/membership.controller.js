@@ -227,12 +227,12 @@
      */
     jQuery.noConflict();
     $(document).ready(function(){
-        $('[data-toggle="tab"]').on('show.bs.tab', function(e) {
-            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        $("[data-toggle='tab']").on("show.bs.tab", function(e) {
+            localStorage.setItem("activeTab", $(e.target).attr("href"));
         });
-        var activeTab = localStorage.getItem('activeTab');
+        var activeTab = localStorage.getItem("activeTab");
         if(activeTab){
-            $('#memberTab a[href="' + activeTab + '"]').tab('show');
+            $("#memberTab a[href='" + activeTab + "']").tab("show");
         }
     });
 
