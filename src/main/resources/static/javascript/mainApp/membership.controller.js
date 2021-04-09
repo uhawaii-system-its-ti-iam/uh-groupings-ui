@@ -132,7 +132,6 @@
          * Filter member list with respect to membersQuery.
          */
         $scope.memberFilterReset = function () {
-            console.log("Called");
             $scope.membersQuery = "";
             $scope.optInQuery = "";
             $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, true);
