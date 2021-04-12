@@ -142,7 +142,11 @@ btn.dark-teal-bg {
     color: #ffffff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     background-color: crimson;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#c4907d), to(#b4725a));
+    background: -moz-linear-gradient(top,  #c4907d 100%, #b4725a 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c4907d), color-stop(100%,#b4725a)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #c4907d 0%,#b4725a 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #c4907d 0%,#b4725a 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #c4907d 0%,#b4725a 100%); /* IE10+ */
 }
 
 .btn.btn-remove:hover,
