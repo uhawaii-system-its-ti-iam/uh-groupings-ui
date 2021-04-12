@@ -534,7 +534,7 @@
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
             if (_.isEmpty($scope.usersToAdd)) {
-                $scope.emptyInputAdd = true;
+                $scope.emptyInput = true;
             } else {
                 let numMembers = ($scope.usersToAdd.split(" ").length - 1);
                 if (numMembers > 0) {
@@ -1149,18 +1149,6 @@
         }
 
         /**
-         * Helper function that checks if there are no checkboxes selected for error checking.
-         */
-        function emptyCheckboxes() {
-            let empty = true;
-            for (let member of $scope.membersInCheckboxList) {
-                if ($scope.membersInCheckboxList[member] === true) {
-                    empty = false;
-                }
-            }
-        }
-
-        /**
          * Prepares the data gathered from helper functions for the batch delete.
          *
          * Creates a string of UH numbers to provide to the batch removal endpoint.
@@ -1170,12 +1158,12 @@
          * @param currentPage - The page that you are currently on.
          */
         $scope.prepBatchRemove = function (listName, currentPage) {
-            if (!emptyCheckboxes()){
+            $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+            if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
             } else {
                 $scope.listName = listName;
                 $scope.currentPage = currentPage;
-                $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
                 let membersToRemove = $scope.membersToModify.join();
                 let numMembersToRemove = (($scope.membersToModify.length) + ($scope.membersToAddOrRemove.split(/[[a-z0-9]+/).length - 1));
                 if (numMembersToRemove > 1) {
@@ -1190,7 +1178,6 @@
                 } else {
                     (membersToRemove === "") ? ($scope.memberToRemove = $scope.membersToAddOrRemove) : ($scope.memberToRemove = membersToRemove);
                     $scope.memberToRemove = returnMemberObjectFromUserIdentifier($scope.memberToRemove, currentPage);
-                    console.log($scope.memberToRemove);
                     $scope.createRemoveModal({
                         user: $scope.memberToRemove,
                         listName: listName,
@@ -1627,6 +1614,7 @@
                     $scope.memberName = "";
                     $scope.memberUhUuid = "";
                     $scope.membersNotInList = [];
+                    $scope.membersInCheckboxList = {};
                     resetCheckboxes();
                     break;
                 case "owners":
