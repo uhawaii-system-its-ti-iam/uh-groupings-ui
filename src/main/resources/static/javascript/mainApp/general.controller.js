@@ -565,11 +565,13 @@
 
         /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
-         * separated by newline characters.
-         * @param $event - FileReader event sent from Include.html or Exclude.html
+         * separated by newline characters. This function is called implicitly from include.html and exclude.html.
+         * In some cases if the html is update the node index of input.files will change. If this happens then
+         * $event.currentTarget.parentNode.childNodes should be passed into a console.log and inspected to determine
+         * which index of childNodes is housing input.
          */
         $scope.readTextFile = function ($event) {
-            let input = $event.currentTarget.parentNode.childNodes[1];
+            let input = $event.currentTarget.parentNode.childNodes[3];
             let file = input.files[0];
             let reader = new FileReader();
             reader.onload = function (e) {
