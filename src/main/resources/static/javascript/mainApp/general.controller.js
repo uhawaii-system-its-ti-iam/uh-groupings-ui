@@ -1176,7 +1176,11 @@
                     membersToRemove = membersToRemove.concat($scope.membersToAddOrRemove.split(/[ ,]+/).join(","));
                     removeMembers(membersToRemove, listName, currentPage);
                 } else {
-                    (membersToRemove === "") ? ($scope.memberToRemove = $scope.membersToAddOrRemove) : ($scope.memberToRemove = membersToRemove);
+                    if (membersToRemove === "") {
+                        $scope.memberToRemove = $scope.membersToAddOrRemove;
+                    } else {
+                        $scope.memberToRemove = membersToRemove;
+                    }
                     $scope.memberToRemove = returnMemberObjectFromUserIdentifier($scope.memberToRemove, currentPage);
                     $scope.createRemoveModal({
                         user: $scope.memberToRemove,
