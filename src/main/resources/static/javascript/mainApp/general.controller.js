@@ -619,9 +619,9 @@
             };
             $scope.waitingForImportResponse = true; /* Spinner on */
             if (listName === "Include") {
-                await groupingsService.addMembersToInclude(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToExcludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
             } else if (listName === "Exclude") {
-                await groupingsService.addMembersToExclude(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToExcludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
             }
         };
 
@@ -798,9 +798,9 @@
             };
 
             if (list === "Include") {
-                groupingsService.addMemberToInclude(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addMembersToInclude(userToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "Exclude") {
-                groupingsService.addMemberToExclude(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addMembersToExclude(userToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "owners") {
                 groupingsService.assignOwnership(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "admins") {
@@ -1096,8 +1096,8 @@
          * that holds true/false value for triggering checkboxes.
          * @param currentPage - Current page that contains members.
          */
-        $scope.transferMembersFromPageToCheckboxObject = function(currentPage) {
-            currentPage.forEach((member) => $scope.membersInCheckboxList[member.uhUuid] = false)
+        $scope.transferMembersFromPageToCheckboxObject = function (currentPage) {
+            currentPage.forEach((member) => $scope.membersInCheckboxList[member.uhUuid] = false);
         };
 
         /**
@@ -1113,10 +1113,10 @@
             $scope.allSelected = !$scope.allSelected;
             let pageItems;
             let pageNumber;
-            if (group === 'Exclude') {
+            if (group === "Exclude") {
                 pageItems = $scope.pagedItemsExclude;
                 pageNumber = $scope.currentPageExclude;
-            } else if (group === 'Include') {
+            } else if (group === "Include") {
                 pageItems = $scope.pagedItemsInclude;
                 pageNumber = $scope.currentPageInclude;
             }

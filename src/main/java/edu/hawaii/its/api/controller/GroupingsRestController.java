@@ -268,7 +268,7 @@ public class GroupingsRestController {
         logger.info("Entered REST addMembersToIncludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUsersToAdd = policy.sanitize(usersToAdd);
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMultipleMembers/%s", safeGroupingPath,
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/addIncludeMembers/%s", safeGroupingPath,
                 safeUsersToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
@@ -297,7 +297,7 @@ public class GroupingsRestController {
         logger.info("Entered REST addMembersToExcludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUsersToAdd = policy.sanitize(usersToAdd);
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMultipleMembers/%s", safeGroupingPath,
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/addExcludeMembers/%s", safeGroupingPath,
                 safeUsersToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }

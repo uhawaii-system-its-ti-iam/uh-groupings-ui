@@ -85,11 +85,19 @@
              */
             addMembersToInclude(usersToAdd, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Add a members to the include group of a grouping. A modal is passed in an launched after a certain amount
+             * of time has elapsed.
+             */
+            addMembersToIncludeAsync(usersToAdd, path, onSuccess, onError, modal) {
+                let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToIncludeGroup";
                 return new Promise(resolve => {
                     dataProvider.updateDataWithTimeoutModal(endpoint, onSuccess, onError, modal);
                 });
             },
-
             /**
              * Add a member to the exclude group of a grouping.
              */
@@ -103,6 +111,14 @@
              * of time has elapsed.
              */
             addMembersToExclude(usersToAdd, path, modal, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
+                dataProvider.updateData(endpoint, onSuccess, onError);
+            },
+            /**
+             * Add a members to the exclude group of a grouping. A modal is passed in an launched after a certain amount
+             * of time has elapsed.
+             */
+            addMembersToExcludeAsync(usersToAdd, path, modal, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
                 return new Promise(resolve => {
                     dataProvider.updateDataWithTimeoutModal(endpoint, modal, onSuccess, onError);
