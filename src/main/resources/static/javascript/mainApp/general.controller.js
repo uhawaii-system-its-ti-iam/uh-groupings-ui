@@ -566,7 +566,7 @@
         /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
          * separated by newline characters. This function is called implicitly from include.html and exclude.html.
-         * In some cases if the html is update the node index of input.files will change. If this happens then
+         * In some cases if the html is updated the node index of input.files will change. If this happens then
          * $event.currentTarget.parentNode.childNodes should be passed into a console.log and inspected to determine
          * which index of childNodes is housing input.
          */
@@ -610,18 +610,27 @@
                     8000);
             };
             let handleSuccessfulAdd = function (res) {
+                $scope.waitingForImportResponse = false; /* Small spinner off. */
                 $scope.launchMultiAddResultModal(listName);
                 for (let i = 0; i < res.length; i++) {
-                    $scope.multiAddResults[i] = res[i].person;
-                    $scope.multiAddResultsGeneric[i] = res[i].person;
+                    if ("FAILURE" === res[i].result)
+                        continue;
+                    let person = {
+                        "uid": res[i].uid,
+                        "uhUuid": res[i].uhUuid,
+                        "name": res[i].name
+                    };
+                    $scope.multiAddResults.push(person);
+                    $scope.multiAddResultsGeneric.push(person);
                 }
-                if (undefined !== res[0].person) {
-                    $scope.getPersonProps(Object.keys(res[0].person));
+                if (undefined !== $scope.multiAddResults[0]) {
+                    $scope.personProps = Object.keys($scope.multiAddResults[0]);
                 }
             };
-            $scope.waitingForImportResponse = true; /* Spinner on */
+
+            $scope.waitingForImportResponse = true; /* Small spinner on. */
             if (listName === "Include") {
-                await groupingsService.addMembersToExcludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToIncludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
             } else if (listName === "Exclude") {
                 await groupingsService.addMembersToExcludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
             }
@@ -639,6 +648,7 @@
             $scope.loading = false;
             $scope.multiAddResultModalInstance.result.finally(function () {
                 clearMemberInput(listName);
+                //clearAddMemberInput(listName);
                 $scope.loading = true;
                 $scope.waitingForImportResponse = false;
                 if ($scope.listName === "admins") {
