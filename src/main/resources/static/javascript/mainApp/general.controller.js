@@ -613,7 +613,8 @@
                 $scope.waitingForImportResponse = false; /* Small spinner off. */
                 $scope.launchMultiAddResultModal(listName);
                 for (let i = 0; i < res.length; i++) {
-                    if ("FAILURE" === res[i].result) {
+                    let result = res[i].result;
+                    if ("FAILURE" === result) {
                         continue;
                     }
                     let person = {
