@@ -614,17 +614,19 @@
                 $scope.launchMultiAddResultModal(listName);
                 let data = res;
                 for (let i = 0; i < res.length; i++) {
-                    data[parseInt(i, 10)] = res[parseInt(i, 10)];
+                    i = parseInt(i, 10);
+                    data[i] = res[i];
                 }
                 for (let i = 0; i < data.length; i++) {
-                    let result = data[parseInt(i, 10)].result;
+                    i = parseInt(i, 10);
+                    let result = data[i].result;
                     if ("FAILURE" === result) {
                         continue;
                     }
                     let person = {
-                        "uid": data[parseInt(i, 10)].uid,
-                        "uhUuid": data[parseInt(i, 10)].uhUuid,
-                        "name": data[parseInt(i, 10)].name
+                        "uid": data[i].uid,
+                        "uhUuid": data[i].uhUuid,
+                        "name": data[i].name
                     };
                     $scope.multiAddResults.push(person);
                     $scope.multiAddResultsGeneric.push(person);
@@ -654,7 +656,6 @@
             $scope.loading = false;
             $scope.multiAddResultModalInstance.result.finally(function () {
                 clearMemberInput(listName);
-                //clearAddMemberInput(listName);
                 $scope.loading = true;
                 $scope.waitingForImportResponse = false;
                 if ($scope.listName === "admins") {
