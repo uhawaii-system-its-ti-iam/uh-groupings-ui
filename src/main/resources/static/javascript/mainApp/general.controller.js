@@ -612,15 +612,19 @@
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Small spinner off. */
                 $scope.launchMultiAddResultModal(listName);
+                let data = res;
                 for (let i = 0; i < res.length; i++) {
-                    let result = res[i].result;
+                    data[i] = res[i];
+                }
+                for (let i = 0; i < data.length; i++) {
+                    let result = data[i].result;
                     if ("FAILURE" === result) {
                         continue;
                     }
                     let person = {
-                        "uid": res[i].uid,
-                        "uhUuid": res[i].uhUuid,
-                        "name": res[i].name
+                        "uid": data[i].uid,
+                        "uhUuid": data[i].uhUuid,
+                        "name": data[i].name
                     };
                     $scope.multiAddResults.push(person);
                     $scope.multiAddResultsGeneric.push(person);
