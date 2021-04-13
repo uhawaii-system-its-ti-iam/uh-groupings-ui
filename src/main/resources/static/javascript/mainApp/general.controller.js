@@ -614,17 +614,17 @@
                 $scope.launchMultiAddResultModal(listName);
                 let data = res;
                 for (let i = 0; i < res.length; i++) {
-                    data[i] = res[i];
+                    data[parseInt(i)] = res[parseInt(i)];
                 }
                 for (let i = 0; i < data.length; i++) {
-                    let result = data[i].result;
+                    let result = data[parseInt(i)].result;
                     if ("FAILURE" === result) {
                         continue;
                     }
                     let person = {
-                        "uid": data[i].uid,
-                        "uhUuid": data[i].uhUuid,
-                        "name": data[i].name
+                        "uid": data[parseInt(i)].uid,
+                        "uhUuid": data[parseInt(i)].uhUuid,
+                        "name": data[parseInt(i)].name
                     };
                     $scope.multiAddResults.push(person);
                     $scope.multiAddResultsGeneric.push(person);
