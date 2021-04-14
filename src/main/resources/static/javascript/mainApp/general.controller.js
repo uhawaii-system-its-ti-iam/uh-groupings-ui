@@ -614,7 +614,6 @@
                 $scope.launchMultiAddResultModal(listName);
                 let data = res;
                 for (let i = 0; i < res.length; i++) {
-                    i = parseInt(i, 10);
                     data[parseInt(i, 10)] = res[parseInt(i, 10)];
                 }
                 for (let i = 0; i < data.length; i++) {
@@ -1448,9 +1447,9 @@
                 let groupingPath = $scope.selectedGrouping.path;
 
                 if ($scope.listName === "Include") {
-                    groupingsService.removeMemberFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                    groupingsService.removeMembersFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "Exclude") {
-                    groupingsService.removeMemberFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                    groupingsService.removeMembersFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "owners") {
                     groupingsService.removeOwner(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
