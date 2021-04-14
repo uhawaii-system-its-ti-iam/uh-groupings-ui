@@ -629,7 +629,7 @@
                     $scope.multiAddResults.push(person);
                     $scope.multiAddResultsGeneric.push(person);
                 }
-                if (undefined !== $scope.multiAddResults[0]) {
+                if ($scope.multiAddResults.length > 0) {
                     $scope.personProps = Object.keys($scope.multiAddResults[0]);
                 }
             };
