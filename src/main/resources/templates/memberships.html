@@ -153,7 +153,7 @@
                             <tbody class="table table-borderless">
                             <tr ng-repeat="o in pagedItemsOptInList[currentPageOptIn]">
                                 <td class="p-10 w-30">{{ o.name }}</td>
-                                <td class="p-10" id="groupingOptInPath">
+                                <td class="p-10" id="groupingOptInPath-{{o.name}}">
                                     <form class="seamless border border-secondary rounded">
                                         <input aria-label="Grouping Path" type="text" class="form-control form-control-sm border-0"
                                                value={{o.path}}
