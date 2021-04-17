@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-4 pt-2">
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
-                       ng-model="excludeQuery" class="form-control"
+                       ng-model="excludeQuery" class="form-control" aria-label="Filter Members..."
                        ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', excludeQuery, true)"/>
                 <!-- Export to CSV button -->
                 <div class="float-right"
@@ -82,10 +82,10 @@
                     </td>
                     <td class="p-10" tabindex="0">
                         {{e.name}}
-                        <span class="fa fa-trash-o pull-right clickable pt-1"
+                        <span class="fa fa-trash-o pull-right clickable pt-1"  role="button"
                               data-toggle="tooltip" data-placement="top"
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
-                              tabindex="0"
+                              tabindex="0" aria-label="Remove {{e.name}} from the Exclude members list"
                               th:title="#{screen.message.common.tooltip.remove.exclude}"
                               ng-keypress="$event.keyCode === 13 ? removeMemberWithTrashcan('Exclude', currentPageExclude, $index) : null"
                               ng-click="removeMemberWithTrashcan('Exclude', currentPageExclude, $index)">
@@ -104,8 +104,8 @@
                         </div>
                     </td>
                     <td class="basis-column text-center p-10">
-                        <i id="inBasis" class="text-dark">
-                            {{(i.inBasis === 'Yes') ? 'Yes' : 'No'}}
+                        <i id="inBasis-{{e.username}}" class="text-dark">
+                            {{(e.inBasis === 'Yes') ? 'Yes' : 'No'}}
                         </i>
                     </td>
                 </tr>

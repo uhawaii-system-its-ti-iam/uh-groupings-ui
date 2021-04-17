@@ -1419,7 +1419,7 @@
                 windowClass: windowClass,
                 scope: $scope,
                 backdrop: "static",
-                keyboard: false
+                //keyboard: false
             });
 
             $scope.removeModalInstance.result.then(function () {
@@ -1674,7 +1674,7 @@
                 templateUrl: "modal/infoModal",
                 scope: $scope,
                 backdrop: "static",
-                keyboard: false
+                //keyboard: false
             });
         };
 

@@ -12,7 +12,7 @@
                         <label class="form-check-label" for="allowOptIn">
                             Allow people to add themselves to this group
                         </label>
-                        <span class="fa fa-question-circle clickable" aria-hidden="true"
+                        <span class="fa fa-question-circle clickable"
                               data-toggle="tooltip" data-placement="right"
                               tabindex="0"
                               th:title="#{screen.message.common.tooltip.preference.allowOptIn}"
@@ -25,7 +25,7 @@
                         <label class="form-check-label" for="allowOptOut">
                             Allow people to remove themselves from this group
                         </label>
-                        <span class="fa fa-question-circle clickable" aria-hidden="true"
+                        <span class="fa fa-question-circle clickable"
                               data-toggle="tooltip" data-placement="right"
                               tabindex="0"
                               th:title="#{screen.message.common.tooltip.preference.allowOptOut}"
@@ -33,23 +33,22 @@
                               ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(\'' + #{screen.message.common.tooltip.preference.allowOptOut} + '\') : null'"></span>
                     </div>
                 </div>
-                <h3></h3>
                 <h3>Reset Grouping</h3>
                 <div>
                     <form ng-submit="resetGroup()">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="include" ng-click="updateIncludeCheck()"
+                            <input type="checkbox" class="form-check-input" id="resetIncludeCheck" ng-click="updateIncludeCheck()"
                                                           ng-model="includeCheck" ng-disabled="includeDisable">
-                            <label class="form-check-label" for="include">Reset Include</label>
+                            <label class="form-check-label" for="resetIncludeCheck">Reset Include</label>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="exclude" ng-click="updateExcludeCheck()"
+                            <input type="checkbox" class="form-check-input" id="resetExcludeCheck" ng-click="updateExcludeCheck()"
                                                           ng-model="excludeCheck" ng-disabled="excludeDisable">
-                            <label class="form-check-label" for="exclude">Reset Exclude</label>
+                            <label class="form-check-label" for="resetExcludeCheck">Reset Exclude</label>
                         </div>
                         <div>
                             <button class="btn btn-primary btn-sm" type="submit" ng-disabled="excludeCheck == false && includeCheck == false">Reset Selected</button>
-                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                            <span class="fa fa-question-circle clickable"
                                   data-toggle="tooltip" data-placement="right"
                                   tabindex="0"
                                   th:title="#{screen.message.common.tooltip.preference.resetGroup}"
@@ -64,13 +63,13 @@
                 <div>
                     <div>
                         <div class="form-check" ng-repeat="syncDest in syncDestArray">
-                            <input class="form-check-input" type="checkbox" id="syncDest.isSynced"
+                            <input class="form-check-input" type="checkbox" id="syncDest.isSynced-{{syncDest.name}}"
                                    ng-model="syncDest.isSynced"
                                    ng-change="createSyncDestModal(syncDest.name)"/>
-                            <label class="form-check-label" for="syncDest.isSynced">
+                            <label class="form-check-label" for="syncDest.isSynced-{{syncDest.name}}">
                                 {{ syncDest.description }}
                             </label>
-                            <span class="fa fa-question-circle clickable" aria-hidden="true"
+                            <span class="fa fa-question-circle clickable"
                                   data-toggle="tooltip" data-placement="right"
                                   tabindex="0"
                                   title="{{syncDest.tooltip}}"
