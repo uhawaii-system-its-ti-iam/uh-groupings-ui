@@ -25,6 +25,19 @@
         $scope.resetID = [];
         $scope.resetName = [];
 
+        // Batch delete
+        $scope.memberToRemove = "";
+        $scope.membersToRemove = "";
+        $scope.multiRemoveThreshold = 100;
+        $scope.multiRemoveResults = [];
+        $scope.multiRemoveResultsGeneric = [];
+
+        // Variables for batch delete helper functions
+        $scope.membersToAddOrRemove = "";
+        $scope.membersToModify = [];
+        $scope.membersNotInList = [];
+        $scope.containsInvalidMembers = false;
+
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
 
@@ -95,6 +108,8 @@
 
         //The user input
         $scope.modelDescription = "";
+
+        $scope.membersInCheckboxList = {};
 
         //Variable for holding description
         let groupingDescription = "";
@@ -1052,14 +1067,13 @@
             });
         };
         /**
-         * Remove a user from the include or exclude group.
+         * Remove a single member from include/exclude by using the "trashcan" UI implementation.
          * @param {string} listName - the list to remove the user from (either Include or Exclude)
          * @param {number} currentPage - the current page in the table
          * @param {number} index - the index of the user clicked by the user
          * account
          */
-        $scope.removeMember = function (listName, currentPage, index) {
-
+        $scope.removeMemberWithTrashcan = function (listName, currentPage, index) {
             let userToRemove;
             $scope.modalType = "remove";
             if (listName === "Include") {
@@ -1074,6 +1088,228 @@
                 scope: $scope
             });
         };
+
+        /**
+         * Copies the members in the current page to an object by UH number
+         * that holds true/false value for triggering checkboxes.
+         * @param currentPage - Current page that contains members.
+         */
+        $scope.transferMembersFromPageToCheckboxObject = function(currentPage) {
+            currentPage.forEach((member) => $scope.membersInCheckboxList[member.uhUuid] = false)
+        };
+
+        /**
+         * Toggles the "check-all" checkbox that selects or
+         * de-selects all the members on the page.
+         *
+         * exclude.html and include.html uses $scope.allSelected for ng-model which dictates if all
+         * members in the list are selected or not.
+         *
+         * @param group - Group (include or exclude) that the members are currently in.
+         */
+        $scope.toggleCheckAllSelection = function (group) {
+            $scope.allSelected = !$scope.allSelected;
+            let pageItems;
+            let pageNumber;
+            if (group === 'Exclude') {
+                pageItems = $scope.pagedItemsExclude;
+                pageNumber = $scope.currentPageExclude;
+            } else if (group === 'Include') {
+                pageItems = $scope.pagedItemsInclude;
+                pageNumber = $scope.currentPageInclude;
+            }
+            for (let i = 0; i < pageItems[pageNumber].length; i++) {
+                $scope.membersInCheckboxList[((pageItems[pageNumber][i]).uhUuid)] = $scope.allSelected;
+            }
+        };
+
+        /**
+         * Helper function - Batch remove
+         * Extracts all keys in the checkbox object that have
+         * the value of true (members that are selected with the checkbox)
+         * @param objectName - The name of the object that is extracted from.
+         */
+        $scope.extractSelectedUsersFromCheckboxes = function (objectName) {
+            $scope.membersToModify = _.keys(_.pickBy(objectName));
+        };
+
+        /**
+         * Returns the member object that contains either the provided username or UH number.
+         * @param memberIdentifier - The username or UH ID number of the member object to return.
+         * @param currentPage - An array that contains member objects on the current page.
+         */
+        function returnMemberObjectFromUserIdentifier(memberIdentifier, currentPage) {
+            let memberToReturn;
+            if (/[0-9]{8}/.test(memberIdentifier)) {
+                memberToReturn = _.find(currentPage, (member) => member.uhUuid === memberIdentifier);
+            } else {
+                memberToReturn = _.find(currentPage, (member) => member.username === memberIdentifier);
+            }
+            return memberToReturn;
+        }
+
+        /**
+         * Prepares the data gathered from helper functions for the batch delete.
+         *
+         * Creates a string of UH numbers to provide to the batch removal endpoint.
+         * If there is only a single member provided, then the single remove will execute.
+         *
+         * @param listName - Name of the list that the user(s) will be deleted from.
+         * @param currentPage - The page that you are currently on.
+         */
+        $scope.prepBatchRemove = function (listName, currentPage) {
+            $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+            if (_.isEmpty($scope.membersToModify)) {
+                $scope.emptyInput = true;
+            } else {
+                $scope.listName = listName;
+                $scope.currentPage = currentPage;
+                let membersToRemove = $scope.membersToModify.join();
+                let numMembersToRemove = (($scope.membersToModify.length) + ($scope.membersToAddOrRemove.split(/[[a-z0-9]+/).length - 1));
+                if (numMembersToRemove > 1) {
+                    if ($scope.membersToModify.length !== 0) {
+                        membersToRemove = membersToRemove.concat(",");
+                        if ($scope.membersToAddOrRemove === "") {
+                            membersToRemove = membersToRemove.slice(0, -1);
+                        }
+                    }
+                    membersToRemove = membersToRemove.concat($scope.membersToAddOrRemove.split(/[ ,]+/).join(","));
+                    removeMembers(membersToRemove, listName, currentPage);
+                } else {
+                    if (membersToRemove === "") {
+                        $scope.memberToRemove = $scope.membersToAddOrRemove;
+                    } else {
+                        $scope.memberToRemove = membersToRemove;
+                    }
+                    $scope.memberToRemove = returnMemberObjectFromUserIdentifier($scope.memberToRemove, currentPage);
+                    $scope.createRemoveModal({
+                        user: $scope.memberToRemove,
+                        listName: listName,
+                        scope: $scope
+                    });
+                }
+            }
+        };
+
+        /**
+         * Utility function that searches an array of member objects, and
+         * creates an new array of member objects from a string of member identifiers.
+         *
+         * If a member does not exist, it creates a string of their identifiers.
+         *
+         * @param members - A comma separated string of members.
+         */
+        function fetchMemberProperties(members) {
+            let listToSearch;
+            switch ($scope.listName) {
+                case "Exclude":
+                    listToSearch = $scope.groupingExclude;
+                    break;
+                case "Include":
+                    listToSearch = $scope.groupingInclude;
+                    break;
+                default:
+                    break;
+            }
+            let arrayOfMembers = members.split(",");
+            for (let member of arrayOfMembers) {
+                let currentMember = returnMemberObjectFromUserIdentifier(member, listToSearch);
+                if (currentMember === undefined) {
+                    $scope.membersNotInList.push(member);
+                } else {
+                    $scope.multiRemoveResults.push(currentMember);
+                }
+            }
+        }
+
+        /**
+         * Takes the string of member UH numbers created from 'prepMultiRemove' and provides it
+         * to the endpoint to perform the batch removal.
+         * @param membersToRemove - Comma separated string of members to remove from the list.
+         * @param listName - Name of list to remove the members from.
+         */
+        function removeMembers(membersToRemove, listName) {
+            fetchMemberProperties(membersToRemove);
+            $scope.multiRemovePromptModalInstance = $uibModal.open({
+                templateUrl: "modal/multiRemovePromptModal",
+                backdrop: "static",
+                scope: $scope,
+                keyboard: false
+            });
+            $scope.loading = false;
+            $scope.multiRemovePromptModalInstance.result.then(async function () {
+                $scope.loading = true;
+                let fun = "removeMembersFrom";
+                await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
+                ($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+            }, function (reason) {
+                if (reason === "cancel") {
+                    clearMemberInput(listName);
+                }
+            });
+        }
+
+        /**
+         * Handles the response from calling the multi-remove function from the API.
+         * @param response - An object that contains the result code.
+         */
+        $scope.batchRemoveResponseHandler = function (response) {
+            let success = true;
+            for (let person of response) {
+                if (person.result !== "SUCCESS") {
+                    success = false;
+                }
+            }
+            if (success) {
+                $scope.batchRemoveConfirmationModal($scope.listName);
+            }
+        };
+
+        /**
+         * Runs when the OK button in the multi-remove prompt modal is clicked.
+         * Returns a result which performs the multi-delete in removeMultipleMembers.
+         */
+        $scope.batchRemovePromptModalAccept = function () {
+            $scope.multiRemovePromptModalInstance.close();
+        };
+
+        /**
+         * Runs when the Cancel button in the multi-remove prompt modal is clicked.
+         * Returns a reason which clears all member inputs to sanitize data fields.
+         */
+        $scope.batchRemovePromptModalCancel = function () {
+            $scope.multiRemovePromptModalInstance.dismiss("cancel");
+        };
+
+        $scope.batchRemoveConfirmationModal = function (listName) {
+            $scope.loading = false;
+            $scope.multiRemoveConfirmationModalInstance = $uibModal.open({
+                templateUrl: "modal/multiRemoveConfirmationModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+            $scope.multiRemoveConfirmationModalInstance.result.finally(function () {
+                clearMemberInput(listName);
+                $scope.loading = true;
+                if ($scope.listName === "admins") {
+                    $scope.init();
+                } else {
+                    $scope.getGroupingInformation();
+                }
+            });
+        };
+
+        $scope.closeBatchRemoveConfirmationModalInstance = function () {
+            $scope.multiRemoveConfirmationModalInstance.close();
+        };
+
+        // Small function that resets the checkboxes on the page
+        function resetCheckboxes() {
+            for (let member in $scope.membersInCheckboxList) {
+                member = false;
+            }
+        }
 
 
         /**
@@ -1358,19 +1594,12 @@
         }
 
         /**
-         * Clear the user input for adding a member to a list.
-         * @param {string?} listName - the name of the list the member is being added to
+         * Clears the user input for adding/deleting a member to/from a list.
+         * @param {string?} listName - Name of the list that the user is being added to or removed from.
          */
-        function clearAddMemberInput(listName) {
+        function clearMemberInput(listName) {
             switch (listName) {
                 case "Include":
-                    $scope.userToAdd = "";
-                    $scope.usersToAdd = "";
-                    $scope.userNameList = [];
-                    $scope.multiAddResults = [];
-                    $scope.waitingForImportResponse = false;
-                    $scope.personProps = [];
-                    break;
                 case "Exclude":
                     $scope.userToAdd = "";
                     $scope.usersToAdd = "";
@@ -1378,10 +1607,22 @@
                     $scope.multiAddResults = [];
                     $scope.waitingForImportResponse = false;
                     $scope.personProps = [];
+                    $scope.memberToRemove = "";
+                    $scope.membersToRemove = [];
+                    $scope.multiRemoveThreshold = 100;
+                    $scope.multiRemoveResults = [];
+                    $scope.multiRemoveResultsGeneric = [];
+                    $scope.membersToModify = [];
+                    $scope.membersToAddOrRemove = "";
+                    $scope.membersNotInList = [];
+                    $scope.memberName = "";
+                    $scope.memberUhUuid = "";
+                    $scope.membersNotInList = [];
+                    $scope.membersInCheckboxList = {};
+                    resetCheckboxes();
                     break;
                 case "owners":
                     $scope.ownerToAdd = "";
-                    $scope.waitingForImportResponse = false;
                     break;
                 case "admins":
                     $scope.adminToAdd = "";
@@ -1414,7 +1655,7 @@
             resetGroupingMembers();
             resetPillsToAllMembers();
             resetFilterQueries();
-            clearAddMemberInput();
+            clearMemberInput();
             $scope.columnSort = {};
             $scope.syncDestArray = [];
             $scope.resetResults = [];
@@ -1642,6 +1883,8 @@
         $scope.resetFields = function () {
             $scope.getGroupingInformation();
             $scope.userToAdd = "";
+            $scope.membersInCheckboxList = {};
+            $scope.allSelected = false;
         };
 
         $scope.resetErrors = function () {
@@ -1649,7 +1892,6 @@
             $scope.emptyInput = false;
             $scope.swap = true;
             $scope.inGrouper = false;
-
         };
 
         /**

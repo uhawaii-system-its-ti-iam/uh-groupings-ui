@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <head th:replace="header :: copy(headingTitle='UH Groupings Membership')"></head>
 <body ng-app="UHGroupingsApp" ng-controller="MembershipJsController">
 <nav th:replace="menubar :: copy"></nav>
@@ -11,7 +14,7 @@
     <div class="container">
         <h1 class="text-center text-md-left">Manage My Memberships</h1>
         <p class="lead text-center text-md-left" th:utext="#{screen.message.memberships.page.description}"></p>
-        <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist">
+        <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="memberTab">
             <li role="presentation" class="nav-item" ng-click="memberFilterReset()">
                 <a href="#current-memberships" data-toggle="tab" class="nav-link active" style="color: var(--uh-black)" role="tab">
                     Current Memberships
@@ -195,8 +198,5 @@
 </main>
 <!-- / Content container. -->
 <div th:replace="footer"></div>
-<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </body>
 </html>

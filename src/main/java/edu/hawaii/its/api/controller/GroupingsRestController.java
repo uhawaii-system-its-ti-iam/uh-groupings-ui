@@ -328,7 +328,7 @@ public class GroupingsRestController {
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUserToDelete = policy.sanitize(usersToDelete);
         String uri =
-                String.format(API_2_1_BASE + "/groupings/%s/includeMultipleMembers/%s", safeGroupingPath,
+                String.format(API_2_1_BASE + "/groupings/%s/removeIncludeMembers/%s", safeGroupingPath,
                         safeUserToDelete);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
@@ -361,7 +361,7 @@ public class GroupingsRestController {
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUserToDelete = policy.sanitize(usersToDelete);
         String uri =
-                String.format(API_2_1_BASE + "/groupings/%s/excludeMultipleMembers/%s", safeGroupingPath,
+                String.format(API_2_1_BASE + "/groupings/%s/removeExcludeMembers/%s", safeGroupingPath,
                         safeUserToDelete);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
