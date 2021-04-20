@@ -568,7 +568,7 @@
          * separated by newline characters. This function is called implicitly from include.html and exclude.html.
          * In some cases if the html is updated the node index of input.files will change. If this happens then
          * $event.currentTarget.parentNode.childNodes should be passed into a console.log and inspected to determine
-         * which index of childNodes is housing input.
+         * which index of childNodes is housing the input.
          */
         $scope.readTextFile = function ($event) {
             let input = $event.currentTarget.parentNode.childNodes[3];
@@ -1843,6 +1843,7 @@
          * @return {Boolean} Sync Dest value at the given name
          */
         $scope.getSyncDestValueInArray = function (syncDestName) {
+
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name;
             }).indexOf(syncDestName);

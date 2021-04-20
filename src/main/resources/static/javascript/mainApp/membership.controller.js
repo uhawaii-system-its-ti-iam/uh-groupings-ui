@@ -88,7 +88,7 @@
                     let data = [];
 
                     _.forEach(res, (membership) => {
-                        if(membership.inInclude) {
+                        if (membership.inInclude) {
                             data.push(membership);
                         }
                     });
@@ -142,18 +142,14 @@
          * Handle responses for opting into or out of a grouping.
          */
         function handleSuccessfulOpt(res) {
-            if (_.startsWith(res[0].resultCode, "SUCCESS")) {
+            if (res[0].result === "SUCCESS")
                 $scope.init();
-            }
+            else
+                $scope.createOptErrorModal(res.status);
         }
 
         function handleUnsuccessfulOpt(res) {
-            $scope.resStatus = res.status;
-            if (res.status) {
-                $scope.createOptErrorModal(res.status);
-            } else {
-                return `Error: Status Code${res.statusCode}`;
-            }
+            $scope.createOptErrorModal(res);
         }
 
         $scope.createOptErrorModal = function (resStatus) {
@@ -222,16 +218,17 @@
             $("[data-content='copy']").popover();
         };
     }
+
     /**
      * Saves the current tab on refresh.
      */
     jQuery.noConflict();
-    $(document).ready(function(){
-        $("[data-toggle='tab']").on("show.bs.tab", function(e) {
+    $(document).ready(function () {
+        $("[data-toggle='tab']").on("show.bs.tab", function (e) {
             localStorage.setItem("activeTab", $(e.target).attr("href"));
         });
         var activeTab = localStorage.getItem("activeTab");
-        if(activeTab){
+        if (activeTab) {
             $("#memberTab a[href='" + activeTab + "']").tab("show");
         }
     });
