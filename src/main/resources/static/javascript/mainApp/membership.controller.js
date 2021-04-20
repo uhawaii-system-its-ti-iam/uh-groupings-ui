@@ -142,10 +142,11 @@
          * Handle responses for opting into or out of a grouping.
          */
         function handleSuccessfulOpt(res) {
-            if (res[0].result === "SUCCESS")
+            if (res[0].result === "SUCCESS") {
                 $scope.init();
-            else
+            } else {
                 $scope.createOptErrorModal(res.status);
+            }
         }
 
         function handleUnsuccessfulOpt(res) {
