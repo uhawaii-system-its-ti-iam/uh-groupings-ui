@@ -636,8 +636,9 @@
             });
             $scope.loading = false;
             $scope.multiAddResultModalInstance.result.finally(function () {
-                clearAddMemberInput(listName);
+                clearMemberInput(listName);
                 $scope.loading = true;
+                $scope.waitingForImportResponse = false;
                 if ($scope.listName === "admins") {
                     // Refreshes the groupings list and the admins list
                     $scope.init();
@@ -672,14 +673,14 @@
          * Clear all data from the add member(s) instance. Close the modal.
          */
         $scope.closeMultiAddResultInstance = function () {
-            clearAddMemberInput($scope.listName);
+            clearMemberInput($scope.listName);
             $scope.multiAddResultModalInstance.dismiss();
         };
         /**
          * Cancel the import Modal instance
          */
         $scope.cancelImportModalInstance = function () {
-            clearAddMemberInput($scope.listName);
+            clearMemberInput($scope.listName);
             $scope.confirmImportInstance.dismiss();
         };
 
@@ -911,12 +912,13 @@
          */
         $scope.existsInGrouper = function (user, list) {
             groupingsService.getMemberAttributes(user, function (attributes) {
-                if (attributes === "") {
+                if (attributes.uhUuid > 0) {
+                    $scope.initMemberDisplayName(attributes);
+                    $scope.addMember(list);
+                } else {
+                    $scope.user = user;
                     $scope.resStatus = 404;
-                    return;
                 }
-                $scope.initMemberDisplayName(attributes);
-                $scope.addMember(list);
             }, function (res) {
                 $scope.user = user;
                 $scope.resStatus = res.status;
@@ -1026,7 +1028,7 @@
             });
 
             $scope.addModalInstance.result.finally(function () {
-                clearAddMemberInput(options.listName);
+                clearMemberInput(options.listName);
                 $scope.loading = true;
                 $scope.waitingForImportResponse = false;
                 if ($scope.listName === "admins") {
