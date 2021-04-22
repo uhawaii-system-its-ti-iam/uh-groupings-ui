@@ -243,11 +243,11 @@
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
-                                <td class="p-12">
-                                    <div ng-if="l.inInclude || l.inBasisAndInclude">
+                                <td class="p-12" tabindex="0">
+                                    <div ng-if="l.inInclude">
                                         <i class="fa fa-check text-dark"></i>
                                     </div>
-                                    <div ng-if="!l.inInclude && !l.inBasisAndInclude">
+                                    <div ng-if="!l.inInclude">
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
@@ -259,10 +259,13 @@
                                         <i class="fa fa-times text-dark"></i>
                                     </div>
                                 </td>
-                                <td class="p-10">
-                                    <div ng-if="l.inOwner || l.inInclude || l.inExclude || l.inBasis || l.inBasisAndInclude">
-                                        <label><input type="checkbox" aria-label="Check box to remove {{l.name}} from this person's groupings list."
-                                                      ng-model="l.isSelected" ng-change="update(l)"></label>
+                                <td class="p-10" tabindex="0">
+                                    <div ng-if="l.inOwner || l.inInclude || l.inExclude">
+                                        <label><input type="checkbox" ng-model="l.isSelected" ng-change="update(l)"></label>
+                                    </div>
+                                    <div ng-if="!l.inOwner && !l.inInclude && !l.inExclude">
+                                        <label><input type="checkbox"
+                                                      ng-model="l.isSelected" ng-change="update(l)" disabled></label>
                                     </div>
                                 </td>
                             </tr>

@@ -136,11 +136,14 @@
         };
 
         /**
-         *
+         * Removes selected user from a list of groupings.
          */
         $scope.removeFromGroups = function () {
+            // Array of names to be displayed in the modal.
             $scope.selectedGroupingsNames = [];
+            // Array of grouping paths that will be passed to the API for deletion.
             $scope.selectedGroupingsPaths = [];
+
             let i = 0;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
                 if (grouping.isSelected) {
@@ -180,6 +183,7 @@
                     } else {
                         $scope.createRemoveFromGroupsModal({
                             user: userToRemove,
+                            groupPaths: $scope.selectedGroupingsPaths,
                             listName: $scope.selectedGroupingsNames
                         });
                     }
