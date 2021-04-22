@@ -1463,7 +1463,9 @@
             $scope.userToRemove = options.user;
             $scope.groupPaths = options.groupPaths.join(", ");
             $scope.listName = options.listName.join(", ");
+
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal",
                 windowClass: windowClass,
@@ -1471,6 +1473,7 @@
                 backdrop: "static",
                 keyboard: false
             });
+
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
                 let userToRemove = options.user.username;
