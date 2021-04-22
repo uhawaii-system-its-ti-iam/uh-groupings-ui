@@ -144,7 +144,6 @@
             let i = 0;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
                 if (grouping.isSelected) {
-                    console.log(grouping);
                     let basePath = grouping.path.substring(0, grouping.path.lastIndexOf(":") + 1);
                     basePath = basePath.slice(0, -1);
                     let groupName = basePath;
@@ -179,9 +178,6 @@
                     if (_.isEmpty($scope.selectedGroupingsNames)) {
                         $scope.createOwnerErrorModal($scope.selectedGroupingsNames);
                     } else {
-                        console.log("NAMES AND PATHS");
-                        console.log($scope.selectedGroupingsNames);
-                        console.log($scope.selectedGroupingsPaths);
                         $scope.createRemoveFromGroupsModal({
                             user: userToRemove,
                             groupPaths: $scope.selectedGroupingsPaths,

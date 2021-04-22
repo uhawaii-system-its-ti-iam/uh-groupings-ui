@@ -128,13 +128,7 @@
              * Remove a member from multiple groups.
              */
             removeFromGroups(groups, member, onSuccess, onError) {
-                console.log("Service reached.");
-                console.log(groups);
-                console.log(member);
-                console.log(onSuccess);
-                console.log(onError);
                 let endpoint = BASE_URL + groups + "/" + member + "/removeFromGroups";
-                console.log(endpoint);
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
