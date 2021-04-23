@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.owasp.html.Sanitizers;
 import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.configuration.Realm;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,10 +72,13 @@ public class GroupingsRestController {
     private String CREDENTIAL_CHECK_USER;
 
     @Autowired
+    private Realm realm;
+
+    @Autowired
     private Environment env;
 
     @Autowired
-    HttpRequestService httpRequestService;
+    private HttpRequestService httpRequestService;
 
     /*
      * Checks to make sure that the API is running and that there are no issues with the overrides file.
@@ -87,8 +91,7 @@ public class GroupingsRestController {
 
         policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
-        if (!Arrays.asList(env.getActiveProfiles()).contains("localTest")) {
-
+        if (!realm.isProfileActive("localTest")) {
             // Stops the application from running if the API is not up and displays error message to console.
             Assert.isTrue(isBackendUp().getStatusCode().is2xxSuccessful(),
                     "Please start the UH Groupings API first.");
