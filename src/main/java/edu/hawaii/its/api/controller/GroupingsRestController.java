@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.owasp.html.Sanitizers;
 import edu.hawaii.its.api.service.HttpRequestService;
 import edu.hawaii.its.groupings.configuration.Realm;
+import edu.hawaii.its.groupings.exceptions.CredentialInitializationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.security.Principal;
-import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -85,20 +85,18 @@ public class GroupingsRestController {
      * Gets the active profiles and only runs the tests the active profile relies on the API.
      */
     @PostConstruct
-    public void init() {
+    public void init() throws CredentialInitializationException {
         Assert.hasLength(uuid, "Property 'app.groupings.controller.uuid' is required.");
         logger.info("GroupingsRestController started.");
-
         policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-
         if (!realm.isProfileActive("localTest")) {
             // Stops the application from running if the API is not up and displays error message to console.
-            Assert.isTrue(isBackendUp().getStatusCode().is2xxSuccessful(),
-                    "Please start the UH Groupings API first.");
-            // Stops the application from running if there is issue with overrides file.
-            Assert.isTrue(credentialCheck().getStatusCode().toString().startsWith("403"),
-                    "Possible credential error. Please check the overrides file.");
+            if (!isBackendUp().getStatusCode().is2xxSuccessful()) {
+                System.out.println("WE THROWING");
+                throw new CredentialInitializationException("Please start the UH Groupings API first.");
+            }
         }
+        logger.info("GroupingsRestController started.");
     }
 
     @GetMapping(value = "/")
