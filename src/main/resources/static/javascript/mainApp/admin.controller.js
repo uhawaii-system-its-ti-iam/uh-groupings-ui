@@ -48,9 +48,9 @@
                 $scope.loading = false;
 
             }, function (res) {
-                if (res.status === 403) {
-                    $scope.createRoleErrorModal();
-                }
+                dataProvider.handleException({
+                    exceptionMessage: JSON.stringify(res, null, 4)
+                }, "feedback/error", "feedback");
             });
         };
 

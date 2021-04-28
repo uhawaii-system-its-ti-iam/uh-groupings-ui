@@ -141,11 +141,14 @@
          * Generic handler for unsuccessful requests to the API.
          */
         function handleUnsuccessfulRequest(res) {
+            $scope.loading = false;
+            $scope.waitingForImportResponse = false;
             $scope.resStatus = res.status;
             if (res.status === 403) {
                 $scope.createOwnerErrorModal();
             } else {
-                return `Error: Status Code${res.statusCode}`;
+                $scope.createApiErrorModal();
+                // return `Error: Status Code${res.statusCode}`;
             }
         }
 
@@ -303,7 +306,8 @@
                         }
                         currentPage++;
                     }
-                }, function () {
+                }, function (res) {
+                    $scope.resStatus = res.status;
                     $scope.loading = false;
                     $scope.createApiErrorModal();
                 });
@@ -373,6 +377,7 @@
                     //Completes the promise and returns
                     resolve();
                 }, function (res) {
+                    $scope.resStatus = res.status;
                     if (res === null) {
                         $scope.largeGrouping = true;
                         $scope.paginatingComplete = false;
@@ -380,9 +385,7 @@
                     } else if (res.statusCode === 403) {
                         $scope.createOwnerErrorModal();
                     } else {
-                        $scope.loading = false;
                         $scope.createApiErrorModal();
-                        // dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
                     }
                     //stops while loop and completes promise then returns
                     loadMembersList = false;
