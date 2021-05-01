@@ -1,8 +1,15 @@
 <th:block th:fragment="selected-grouping" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 
+    <div class="mt-4">
+        <button class="btn btn-primary" type="submit"
+                ng-click="returnToGroupingsList(); cancelDescriptionEdit()">
+            <i class="fas fa-arrow-left mr-1"></i> Return to Groupings List
+        </button>
+    </div>
+
     <div class="container" id="sel" style="display: none"
          th:classappend="${tabContent ? 'card-tab-content' : ''}">
-        <div class="card mb-5 mt-5"
+        <div class="card mb-5 mt-0"
              ng-init="changeStyleAttribute('sel', 'display', 'unset')">
             <section>
                 <div class="card-header teal-bg">
@@ -10,13 +17,6 @@
                         <div class="col-md-8" id="groupNameCol">
                             <h2 class="card-title text-light mb-0"> {{
                                 selectedGrouping.name }}</h2>
-                        </div>
-                        <div class="col-md-4" id="returnToGroup">
-                            <div class="float-right">
-                                <button class="btn btn-primary btn-sm" type="submit"
-                                        ng-click="returnToGroupingsList(); cancelDescriptionEdit()">Return to Groupings
-                                </button>
-                            </div>
                         </div>
                     </div>
                     <div class="row">
