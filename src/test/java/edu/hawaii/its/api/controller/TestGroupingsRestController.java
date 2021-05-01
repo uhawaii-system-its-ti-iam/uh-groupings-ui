@@ -149,19 +149,19 @@ public class TestGroupingsRestController {
         groupingsRestController.assignOwnership(adminPrincipal, GROUPING_TRUE_EMPTY, tst[0]);
 
         //put in include
-        groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[0]);
-        groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[1]);
-        groupingsRestController.addMemberToIncludeGroup(tst0Principal, GROUPING, tst[2]);
+        groupingsRestController.addMembersToIncludeGroup(tst0Principal, GROUPING, tst[0]);
+        groupingsRestController.addMembersToIncludeGroup(tst0Principal, GROUPING, tst[1]);
+        groupingsRestController.addMembersToIncludeGroup(tst0Principal, GROUPING, tst[2]);
 
         //add to exclude
-        groupingsRestController.addMemberToExcludeGroup(tst0Principal, GROUPING, tst[3]);
+        groupingsRestController.addMembersToExcludeGroup(tst0Principal, GROUPING, tst[3]);
 
-        groupingsRestController.deleteMemberFromIncludeGroup(tst0Principal, GROUPING_STORE_EMPTY, tst[0]);
-        groupingsRestController.deleteMemberFromIncludeGroup(tst0Principal, GROUPING_TRUE_EMPTY, tst[0]);
+        groupingsRestController.removeMembersFromIncludeGroup(tst0Principal, GROUPING_STORE_EMPTY, tst[0]);
+        groupingsRestController.removeMembersFromIncludeGroup(tst0Principal, GROUPING_TRUE_EMPTY, tst[0]);
 
         //remove from exclude
-        groupingsRestController.deleteMemberFromExcludeGroup(tst0Principal, GROUPING, tst[4]);
-        groupingsRestController.deleteMemberFromExcludeGroup(tst0Principal, GROUPING, tst[5]);
+        groupingsRestController.removeMembersFromExcludeGroup(tst0Principal, GROUPING, tst[4]);
+        groupingsRestController.removeMembersFromExcludeGroup(tst0Principal, GROUPING, tst[5]);
 
         //remove from owners
         groupingsRestController.removeOwnership(tst0Principal, GROUPING, tst[1]);

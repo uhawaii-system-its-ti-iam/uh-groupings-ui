@@ -789,7 +789,7 @@
                 });
             };
             if (list === "Include") {
-                groupingsService.addMembersToInclude(groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addMembersToInclude(usersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
         };
 
