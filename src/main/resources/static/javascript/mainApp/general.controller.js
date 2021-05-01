@@ -773,27 +773,6 @@
         };
 
         /**
-         * Create a modal display for members added, and calls addMembersToInclude service.
-         * @param usersToAdd
-         * @param list
-         */
-        $scope.updateAddMembers = function (usersToAdd, list) {
-
-            let groupingPath = $scope.selectedGrouping.path;
-
-            let handleSuccessfulAdd = function (res, list, usersToAdd) {
-                $scope.createSuccessfulAddModal({
-                    user: usersToAdd,
-                    listName: list,
-                    response: res
-                });
-            };
-            if (list === "Include") {
-                groupingsService.addMembersToInclude(usersToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            }
-        };
-
-        /**
          * Initiate the adding of a member to a list.
          * @param {string} userToAdd - user being added
          * @param {string} list - the list the user is being added to
