@@ -157,21 +157,11 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void postAddMember() throws Exception {
-        String uri_include = REST_CONTROLLER_BASE + GROUPING + "/user/addMemberToIncludeGroup";
-        String uri_exclude = REST_CONTROLLER_BASE + GROUPING + "/user/addMemberToExcludeGroup";
         String uri_includes = REST_CONTROLLER_BASE + GROUPING + "/useruser1user2user3user4/addMembersToIncludeGroup";
         String uri_excludes = REST_CONTROLLER_BASE + GROUPING + "/useruser1user2user3user4/addMembersToExcludeGroup";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        mockMvc.perform(post(uri_exclude)
-                .with(csrf()))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(post(uri_include)
-                .with(csrf()))
-                .andExpect(status().isOk());
 
         mockMvc.perform(post(uri_includes)
                 .with(csrf()))
@@ -185,21 +175,11 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getDeleteMember() throws Exception {
-        String uri_include = REST_CONTROLLER_BASE + "grouping/user/deleteMemberFromIncludeGroup";
-        String uri_exclude = REST_CONTROLLER_BASE + GROUPING + "/user/deleteMemberFromExcludeGroup";
-        String uri_includes = REST_CONTROLLER_BASE + "grouping/user/deleteMembersFromIncludeGroup";
-        String uri_excludes = REST_CONTROLLER_BASE + GROUPING + "/user/deleteMembersFromExcludeGroup";
+        String uri_includes = REST_CONTROLLER_BASE + "grouping/user/removeMembersFromIncludeGroup";
+        String uri_excludes = REST_CONTROLLER_BASE + GROUPING + "/user/removeMembersFromExcludeGroup";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
-
-        mockMvc.perform(post(uri_include)
-                .with(csrf()))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(post(uri_exclude)
-                .with(csrf()))
-                .andExpect(status().isOk());
 
         mockMvc.perform(post(uri_includes)
                 .with(csrf()))
