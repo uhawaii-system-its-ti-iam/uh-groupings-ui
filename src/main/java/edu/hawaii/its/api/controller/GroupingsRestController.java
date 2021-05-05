@@ -93,8 +93,9 @@ public class GroupingsRestController {
             Assert.isTrue(isBackendUp().getStatusCode().is2xxSuccessful(),
                     "Please start the UH Groupings API first.");
             // Stops the application from running if there is issue with overrides file.
-            //Assert.isTrue(credentialCheck().getStatusCode().toString().startsWith("403"),
-                    //"Possible credential error. Please check the overrides file.");
+            // For testing purposes, returned true regardless of condition.
+            // Broken condition: Assert.isTrue(credentialCheck().getStatusCode().toString().startsWith("403")
+            Assert.isTrue(true, "Possible credential error. Please check the overrides file.");
         }
     }
 
