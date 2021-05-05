@@ -1,61 +1,78 @@
 package edu.hawaii.its.groupings.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.stereotype.Service;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-@Service
 public class CheckForPattern {
 
+    private static final Log logger = LogFactory.getLog(CheckForPattern.class);
+
     /**
-     * checkPattern: checks a file(s) and given file naming convention(.properties, .java, .pom) for a pattern.
+     * checkPattern: checks a file(s) and given file naming convention(.properties, .java, .pom)
+     * for a pattern.
      *
-     * @param fileExtension The file type(.java, .properties, .pom, etc).
-     * @param folderLocation The folder location(/src/main/resources).
-     * @param pattern The string pattern to look for in the source code.
+     * @param fileExtension
+     *            The file type(.java, .properties, .pom, etc).
+     * @param folderLocation
+     *            The folder location(/src/main/resources).
+     * @param pattern
+     *            The string pattern to look for in the source code.
      *
      * @return A list of strings containing locations of the found patterns.
      */
-    public List<String> fileLocations(String fileExtension, String folderLocation, String pattern) throws IOException {
+    public List<String> fileLocations(String fileExtension, String folderLocation, String pattern) {
 
-        List<Integer> lineNumbers = new ArrayList<>();
+        logger.info("fileLocations;  fileExtension: " + fileExtension);
+        logger.info("fileLocations; folderLocation: " + folderLocation);
+        logger.info("fileLocations;        pattern: " + pattern);
+
         List<String> patternLocation = new ArrayList<>();
 
-        File dir = new File(folderLocation);
-        File[] fileResources = dir.listFiles((dir1, name) -> name.endsWith(fileExtension));
+        try {
+            File dir = new File(folderLocation);
+            if (dir != null) {
 
-        Pattern pat = Pattern.compile(pattern);
-        Matcher matcher;
+                File[] fileResources = dir.listFiles((dir1, name) -> name.endsWith(fileExtension));
+                if (fileResources != null) {
+                    Pattern pat = Pattern.compile(pattern);
+                    Matcher matcher;
 
-        for (File fr : fileResources) {
-            int lineId = 0;
+                    for (File fr : fileResources) {
+                        logger.info("fileLocations; scan file: " + fr);
 
-            try (Scanner fileScanner = new Scanner(fr)) {
-                while (fileScanner.hasNextLine()) {
-                    String line = fileScanner.nextLine();
-                    lineId++;
+                        int lineId = 0;
+                        List<Integer> lineNumbers = new ArrayList<>();
 
-                    matcher = pat.matcher(line);
+                        try (Scanner fileScanner = new Scanner(fr)) {
+                            while (fileScanner.hasNextLine()) {
+                                String line = fileScanner.nextLine();
+                                lineId++;
 
-                    if (matcher.find()) {
-                        lineNumbers.add(lineId);
+                                matcher = pat.matcher(line);
+
+                                if (matcher.find()) {
+                                    lineNumbers.add(lineId);
+                                }
+                            }
+
+                            if (!lineNumbers.isEmpty()) {
+                                for (int li : lineNumbers) {
+                                    patternLocation.add(fr.toString() + " on line: " + li);
+                                }
+                            }
+                        }
                     }
                 }
-
-                if (!lineNumbers.isEmpty()) {
-                    for (int li : lineNumbers) {
-                        patternLocation.add(fr.toString() + " on line: " + li);
-                    }
-                }
-
-                lineNumbers.removeAll(lineNumbers);
             }
+        } catch (Exception e) {
+            logger.error("Error: ", e);
         }
 
         return patternLocation;
