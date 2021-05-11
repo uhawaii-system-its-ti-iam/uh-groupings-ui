@@ -148,7 +148,6 @@
                 $scope.createOwnerErrorModal();
             } else {
                 $scope.createApiErrorModal();
-                // return `Error: Status Code${res.statusCode}`;
             }
         }
 
@@ -308,7 +307,6 @@
                     }
                 }, function (res) {
                     $scope.resStatus = res.status;
-                    $scope.loading = false;
                     $scope.createApiErrorModal();
                 });
                 //Will only decrement threadcount if previous call absolutely finishes
@@ -434,9 +432,9 @@
                     $scope.descriptionForm = !($scope.descriptionForm);
                 }, // close description form when done.
                 (res) => {
-                    dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
-                        "feedback/error", "feedback");
-                }); // send user to feedback page if fail
+                    $scope.resStatus = res.status;
+                    $scope.createApiErrorModal();
+                });
         };
 
         /**
@@ -465,6 +463,7 @@
          * Create a modal for errors in loading data from the API.
          */
         $scope.createApiErrorModal = function () {
+            $scope.loading = false;
             $scope.apiErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/apiError",
                 scope: $scope,
@@ -576,6 +575,9 @@
         $scope.readTextFile = function ($event) {
             let input = $event.currentTarget.parentNode.childNodes[3];
             let file = input.files[0];
+            if (file == undefined) {
+                console.log("undef");
+            }
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
@@ -919,8 +921,11 @@
                     $scope.resStatus = 404;
                 }
             }, function (res) {
-                $scope.user = user;
                 $scope.resStatus = res.status;
+                $scope.user = user;
+                if (res.status == -1) {
+                    $scope.createApiErrorModal();
+                }
             });
         };
 
@@ -2139,6 +2144,14 @@
             r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
             r.send();
             $window.location.href = "/uhgroupings/";
+        };
+
+        /**
+         * Redirect the user to the feedback page.
+         */
+        $scope.proceedRedirectApiError = function () {
+            $scope.apiErrorModalInstance.close();
+            $window.location.href = "/uhgroupings/feedback";
         };
 
         /**

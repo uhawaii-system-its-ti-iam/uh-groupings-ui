@@ -101,9 +101,7 @@
                     $scope.loading = false;
                 },
                 (res) => {
-                    dataProvider.handleException({
-                        exceptionMessage: JSON.stringify(res, null, 4)
-                    }, "feedback/error", "feedback");
+                    $scope.createApiErrorModal();
                 }
             );
 
@@ -120,9 +118,7 @@
                     $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
                 },
                 (res) => {
-                    dataProvider.handleException({
-                        exceptionMessage: JSON.stringify(res, null, 4)
-                    }, "feedback/error", "feedback");
+                    $scope.createApiErrorModal();
                 }
             );
         };

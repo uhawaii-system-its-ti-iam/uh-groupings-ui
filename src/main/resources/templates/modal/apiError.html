@@ -7,9 +7,8 @@
 <div class="modal-body" id="modal-body">
     <p th:text="#{screen.message.modal.access.api.error}"></p>
     <p th:utext="#{screen.message.modal.access.opt.feedback}"></p>
-    <span style="color: black;">Result status was a {{resStatus}} error.</span>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="closeApiError()">OK</button>
-    <button class="btn btn-secondary" ng-click="proceedRedirect()">Feedback</button>
+    <button class="btn btn-secondary" ng-click="proceedRedirectApiError()">Feedback</button>
 </div>
