@@ -192,10 +192,22 @@
                                         <label class="my-auto">Check All<input class="check-space" type="checkbox"
                                                                                ng-click="updateCheckBoxes()"
                                                                                ng-model="checkAll"></label>
-                                        <button class="btn btn-danger pull-right" type="submit">Remove</button>
+                                        <button class="btn btn-danger pull-right"
+                                                ng-click="errorDismissed2 = false; resetErrors()"
+                                                ng-blur="errorDismissed2 = true; resetErrors()"
+                                                type="submit">
+                                            Remove
+                                        </button>
                                     </div>
                                 </div>
                             </form>
+                            <!--message for no groupings selected-->
+                            <div ng-show="!errorDismissed2 && !loading">
+                                <div ng-if="selectEmpty" class="alert alert-danger form-alert fade show"
+                                 role="alert">
+                                    <p th:text="#{screen.message.modal.search.noChecks}"></p>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

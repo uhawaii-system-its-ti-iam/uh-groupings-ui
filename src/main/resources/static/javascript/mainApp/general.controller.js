@@ -1894,6 +1894,7 @@
         $scope.resetErrors = function () {
             $scope.resStatus = 0;
             $scope.emptyInput = false;
+            $scope.emptySelect = false;
             $scope.swap = true;
             $scope.inGrouper = false;
         };
