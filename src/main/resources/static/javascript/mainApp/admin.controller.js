@@ -17,6 +17,7 @@
         $scope.pagedItemsPerson = [];
         $scope.currentPagePerson = 0;
         $scope.selectedGroupingsPaths = [];
+        $scope.selectEmpty = false;
 
         let totalCheckBoxCount = 0;
         let currentCheckBoxCount = 0;
@@ -178,8 +179,8 @@
                         name: attributes.cn,
                         uhUuid: attributes.uhUuid
                     };
-                    if (_.isEmpty($scope.selectedGroupingsNames)) {
-                        $scope.createOwnerErrorModal($scope.selectedGroupingsNames);
+                    if (_.isEmpty($scope.selectedGroupingsPaths)) {
+                        $scope.selectEmpty = true;
                     } else {
                         $scope.createRemoveFromGroupsModal({
                             user: userToRemove,
@@ -194,7 +195,9 @@
         $scope.updateCheckBoxes = function () {
             $scope.checkAll = !$scope.checkAll;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
-                grouping.isSelected = $scope.checkAll;
+                if (grouping.inOwner || grouping.inInclude || grouping.inExclude) {
+                    grouping.isSelected = $scope.checkAll;
+                }
             });
         };
 
