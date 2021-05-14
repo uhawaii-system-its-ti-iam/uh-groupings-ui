@@ -20,6 +20,7 @@
         $scope.resStatus = 0;
 
         $scope.loading = false;
+        $scope.membersLoaded = false;
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
@@ -125,6 +126,7 @@
                     }, "feedback/error", "feedback");
                 }
             );
+            $scope.membersLoaded = true;
         };
 
 
