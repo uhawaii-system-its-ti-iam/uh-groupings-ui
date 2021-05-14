@@ -1,9 +1,14 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      lang="en">
 <div class="modal-header">
     <h5 class="modal-title" id="modal-title">Error</h5>
 </div>
 <div class="modal-body" id="modal-body">
-    <p>There was unexpected problem with Grouper. Please refresh the page.</p>
+    <p th:text="#{screen.message.modal.access.api.error}"></p>
+    <p th:utext="#{screen.message.modal.access.opt.feedback}"></p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="closeApiError()">OK</button>
+    <button class="btn btn-secondary" ng-click="proceedRedirectApiError()">Feedback</button>
 </div>

@@ -49,9 +49,7 @@
                 $scope.loading = false;
 
             }, function (res) {
-                if (res.status === 403) {
-                    $scope.createRoleErrorModal();
-                }
+                $scope.createApiErrorModal();
             });
         };
 
