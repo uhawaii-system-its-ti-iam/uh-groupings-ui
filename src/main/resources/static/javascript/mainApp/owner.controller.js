@@ -10,7 +10,6 @@
     function OwnerJsController($scope, $controller, groupingsService, dataProvider) {
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
-        $scope.groupsLoaded = false;
         /**
          * Initialize function that retrieves the groupings you own.
          */
@@ -25,7 +24,6 @@
             }, function (res) {
                 dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
             });
-            $scope.groupsLoaded = true;
         };
 
         /**
