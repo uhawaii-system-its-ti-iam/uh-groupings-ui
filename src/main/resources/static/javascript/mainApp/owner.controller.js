@@ -10,7 +10,6 @@
     function OwnerJsController($scope, $controller, groupingsService, dataProvider) {
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
-
         /**
          * Initialize function that retrieves the groupings you own.
          */
