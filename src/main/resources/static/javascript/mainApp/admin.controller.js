@@ -17,7 +17,7 @@
         $scope.pagedItemsPerson = [];
         $scope.currentPagePerson = 0;
         $scope.selectedGroupingsPaths = [];
-        $scope.selectEmpty = false;
+        $scope.emptySelect = false;
 
         let totalCheckBoxCount = 0;
         let currentCheckBoxCount = 0;
@@ -178,7 +178,7 @@
                         uhUuid: attributes.uhUuid
                     };
                     if (_.isEmpty($scope.selectedGroupingsPaths)) {
-                        $scope.selectEmpty = true;
+                        $scope.emptySelect = true;
                     } else {
                         $scope.createRemoveFromGroupsModal({
                             user: userToRemove,
