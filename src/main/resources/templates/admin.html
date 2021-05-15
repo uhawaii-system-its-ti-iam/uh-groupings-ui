@@ -202,12 +202,12 @@
                                 </div>
                             </form>
                             <!--message for no groupings selected-->
-                            <div ng-show="!errorDismissed2 && !loading">
-                                <div ng-if="selectEmpty" class="alert alert-danger form-alert fade show"
+
+                                <div ng-show="!errorDismissed2 && !loading && emptySelect" class="alert alert-danger form-alert fade show"
                                  role="alert">
                                     <p th:text="#{screen.message.modal.search.noChecks}"></p>
                                 </div>
-                            </div>
+
                         </div>
 
                     </div>
