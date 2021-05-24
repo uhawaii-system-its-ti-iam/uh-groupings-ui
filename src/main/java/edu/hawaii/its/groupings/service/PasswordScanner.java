@@ -14,7 +14,7 @@ import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 @Service
 public class PasswordScanner {
 
-    private static final Log logger = LogFactory.getLog(ErrorRestController.class);
+    private static final Log logger = LogFactory.getLog(PasswordScanner.class);
 
     @PostConstruct
     public void init() throws PasswordFoundException {
