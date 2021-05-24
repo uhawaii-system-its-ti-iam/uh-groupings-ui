@@ -1,49 +1,53 @@
 package edu.hawaii.its.groupings.service;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assert.fail;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-
+import org.junit.Before;
+import org.junit.Test;
+import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 
 public class PasswordScannerTest {
-
-    File file1;
     File dirname = new File("src/main/resources");
-
     @Before
     public void setUp() {
-        try {
-            file1 = File.createTempFile("temp", ".properties", dirname);
-            FileWriter fw1 = new FileWriter(file1);
-            BufferedWriter bw1 = new BufferedWriter(fw1);
-            bw1.write("password=hello");
-            bw1.close();
-            fw1.close();
-        }
-        catch(IOException ioe) {
-            System.err.println( "error creating file");
-        }
+        assertTrue("Resource directory does not exist.", dirname.exists());
     }
-
+    private File createFile(File path, String pwdValue) throws Exception {
+        File file = File.createTempFile("temp", ".properties", path);
+        FileWriter fw1 = new FileWriter(file);
+        BufferedWriter bw1 = new BufferedWriter(fw1);
+        bw1.write("password=" + pwdValue);
+        bw1.close();
+        fw1.close();
+        return file;
+    }
     @Test
-    public void testCheckForPassWords() {
+    public void testCheckForPassWordsFound() throws Exception {
         PasswordScanner passwordScanner = new PasswordScanner();
-        assertTrue(file1.exists());
+        File file = createFile(dirname, "hello");
+        assertTrue(file.exists());
         try {
             passwordScanner.init();
-            //not working. need to find way to delete temp file
-//            file1.delete();
+            fail("Should not reach here.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(PasswordFoundException.class));
         }
-        catch(Exception e) {
-            System.err.println("error finding password locations");
+        file.delete();
+    }
+    @Test
+    public void testCheckForPassWordsNotFound() throws Exception {
+        PasswordScanner passwordScanner = new PasswordScanner();
+        File file = createFile(dirname, "");
+        assertTrue(file.exists());
+        try {
+            passwordScanner.init();
+        } catch (Exception e) {
+            fail("Error: " + e.getMessage());
         }
-
+        file.delete();
     }
 }
