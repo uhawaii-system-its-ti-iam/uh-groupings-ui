@@ -1,21 +1,22 @@
 package edu.hawaii.its.groupings.service;
+
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import java.io.StringWriter;
-import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileWriter;
+
 import org.junit.Before;
 import org.junit.Test;
-import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 
-import org.springframework.security.core.parameters.P;
+import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 
 public class PasswordScannerTest {
     File dirname = new File("src/main/resources");
+
     @Before
     public void setUp() {
         assertTrue("Resource directory does not exist.", dirname.exists());
@@ -36,16 +37,14 @@ public class PasswordScannerTest {
         assertTrue(file.exists());
         try {
             passwordScanner.init();
-            //passwordScanner should have found password in temp file
-            fail("Should not reach here.");
+            fail("Should have found password in temp file.");
         } catch (Exception e) {
             assertThat(e, instanceOf(PasswordFoundException.class));
-//            String exceptionAsString = e.toString();
-//            System.out.print(exceptionAsString);
-//            System.out.print("DONE");
-            assertEquals("edu.hawaii.its.groupings.exceptions.PasswordFoundException:\n" + file + "on line: 1", e.toString());
+            assertThat(e.toString(),
+                    containsString(file.getPath() + " on line: 1"));
+        } finally {
+            file.delete();
         }
-        file.delete();
     }
 
     @Test
@@ -57,8 +56,9 @@ public class PasswordScannerTest {
             passwordScanner.init();
         } catch (Exception e) {
             fail("Error: " + e.getMessage());
+        } finally {
+            file.delete();
         }
-        file.delete();
     }
 
     @Test
@@ -70,13 +70,13 @@ public class PasswordScannerTest {
         assertTrue(file2.exists());
         try {
             passwordScanner.init();
-            //passwordScanner should have found password in temp file
-            fail("Should not reach here.");
+            fail("Should have found password in temp file.");
         } catch (Exception e) {
             assertThat(e, instanceOf(PasswordFoundException.class));
             e.getMessage();
+        } finally {
+            file1.delete();
+            file2.delete();
         }
-        file1.delete();
-        file2.delete();
     }
 }
