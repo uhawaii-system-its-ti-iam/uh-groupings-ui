@@ -40,11 +40,10 @@ public class PasswordScannerTest {
             fail("Should not reach here.");
         } catch (Exception e) {
             assertThat(e, instanceOf(PasswordFoundException.class));
-            StringWriter sw = new StringWriter();
-            String exceptionAsString = e.toString();
+//            String exceptionAsString = e.toString();
 //            System.out.print(exceptionAsString);
 //            System.out.print("DONE");
-            assertEquals("edu.hawaii.its.groupings.exceptions.PasswordFoundException:\n" + file + "on line: 1", e.getMessage());
+            assertEquals("edu.hawaii.its.groupings.exceptions.PasswordFoundException:\n" + file + "on line: 1", e.toString());
         }
         file.delete();
     }
