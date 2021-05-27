@@ -15,15 +15,16 @@ import org.junit.Test;
 import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 
 public class PasswordScannerTest {
-    File dirname = new File("src/main/resources");
+    File resourcesPath = new File("src/main/resources");
 
     @Before
     public void setUp() {
-        assertTrue("Resource directory does not exist.", dirname.exists());
+        assertTrue("Resource directory does not exist.", resourcesPath.exists());
     }
 
-    private File createFile(File path, String pwdValue) throws Exception {
-        File file = File.createTempFile("temp", ".properties", path);
+    private File createFile(String pwdValue) throws Exception {
+        File file = File.createTempFile("temp", ".properties");
+        file.deleteOnExit();
         try (FileWriter w = new FileWriter(file)) {
             w.write("password=" + pwdValue);
         }
@@ -32,9 +33,12 @@ public class PasswordScannerTest {
 
     @Test
     public void testCheckForPassWordsFound() throws Exception {
-        PasswordScanner passwordScanner = new PasswordScanner();
-        File file = createFile(dirname, "hello");
+        // Create a file that has a password-like expression in it.
+        File file = createFile("hello");
         assertTrue(file.exists());
+
+        PasswordScanner passwordScanner = new PasswordScanner();
+        passwordScanner.setDirname(file.getParent());
         try {
             passwordScanner.init();
             fail("Should have found password in temp file.");
@@ -49,9 +53,10 @@ public class PasswordScannerTest {
 
     @Test
     public void testCheckForPassWordsNotFound() throws Exception {
-        PasswordScanner passwordScanner = new PasswordScanner();
-        File file = createFile(dirname, "");
+        File file = createFile("");
         assertTrue(file.exists());
+        PasswordScanner passwordScanner = new PasswordScanner();
+        passwordScanner.setDirname(file.getParent());
         try {
             passwordScanner.init();
         } catch (Exception e) {
@@ -63,11 +68,12 @@ public class PasswordScannerTest {
 
     @Test
     public void testCheckForPassWordsMultipleFilesFound() throws Exception {
-        PasswordScanner passwordScanner = new PasswordScanner();
-        File file1 = createFile(dirname, "pwd1");
-        File file2 = createFile(dirname, "pwd2");
+        File file1 = createFile("pwd1");
+        File file2 = createFile("pwd2");
         assertTrue(file1.exists());
         assertTrue(file2.exists());
+        PasswordScanner passwordScanner = new PasswordScanner();
+        passwordScanner.setDirname(file1.getParent());
         try {
             passwordScanner.init();
             fail("Should have found password in temp file.");

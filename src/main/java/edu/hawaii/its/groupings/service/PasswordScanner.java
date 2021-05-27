@@ -8,13 +8,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
-import edu.hawaii.its.groupings.controller.ErrorRestController;
 import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 
 @Service
 public class PasswordScanner {
 
     private static final Log logger = LogFactory.getLog(PasswordScanner.class);
+    private String dirname = "src/main/resources";
 
     @PostConstruct
     public void init() throws PasswordFoundException {
@@ -29,8 +29,7 @@ public class PasswordScanner {
 
         String patternResult = "";
         String pattern = "^.*password.*\\=(?!\\s*$).+";
-        String dirname = "src/main/resources";
-        List<String> fileLocations = checkForPattern.fileLocations(".properties", dirname, pattern);
+        List<String> fileLocations = checkForPattern.fileLocations(".properties", getDirname(), pattern);
         if (fileLocations != null && !fileLocations.isEmpty()) {
             for (String list : fileLocations) {
                 patternResult += "\n" + list;
@@ -41,4 +40,13 @@ public class PasswordScanner {
             throw new PasswordFoundException(patternResult);
         }
     }
+
+    public String getDirname() {
+        return dirname;
+    }
+
+    public void setDirname(String dirname) {
+        this.dirname = dirname;
+    }
+
 }
