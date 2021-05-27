@@ -1,6 +1,7 @@
 package edu.hawaii.its.groupings.service;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -22,6 +23,12 @@ public class PasswordScannerTest {
         assertTrue("Resource directory does not exist.", resourcesPath.exists());
     }
 
+    @Test
+    public void scanForPasswords() throws PasswordFoundException {
+        PasswordScanner passwordScanner = new PasswordScanner();
+        passwordScanner.init();
+    }
+
     private File createFile(String pwdValue) throws Exception {
         File file = File.createTempFile("temp", ".properties");
         file.deleteOnExit();
@@ -38,7 +45,7 @@ public class PasswordScannerTest {
         assertTrue(file.exists());
 
         PasswordScanner passwordScanner = new PasswordScanner();
-        passwordScanner.setDirname(file.getParent());
+        passwordScanner.addLocation(file.getParent());
         try {
             passwordScanner.init();
             fail("Should have found password in temp file.");
@@ -56,7 +63,7 @@ public class PasswordScannerTest {
         File file = createFile("");
         assertTrue(file.exists());
         PasswordScanner passwordScanner = new PasswordScanner();
-        passwordScanner.setDirname(file.getParent());
+        passwordScanner.addLocation(file.getParent());
         try {
             passwordScanner.init();
         } catch (Exception e) {
@@ -72,8 +79,9 @@ public class PasswordScannerTest {
         File file2 = createFile("pwd2");
         assertTrue(file1.exists());
         assertTrue(file2.exists());
+        assertThat(file1.getParent(), equalTo(file2.getParent()));
         PasswordScanner passwordScanner = new PasswordScanner();
-        passwordScanner.setDirname(file1.getParent());
+        passwordScanner.addLocation(file1.getParent());
         try {
             passwordScanner.init();
             fail("Should have found password in temp file.");
