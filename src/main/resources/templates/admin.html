@@ -160,6 +160,12 @@
                             <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Person</h2>
                         </div>
                         <div class="col-lg-3 col-md-4 col-12 p-0">
+                            <input class="form-control" placeholder="Filter Groupings..." type="search"
+                                   title="Filter Groupings" aria-label="Filter Groupings for this person"
+                                   ng-model="personQuery"
+                                   ng-change="filter(personList, 'pagedItemsPerson', 'currentPagePerson', personQuery, true)"/>
+                        </div>
+                        <div class="col-auto mr-auto col-lg-3 col-md-4 col-12 p-0">
                             <form ng-submit="searchForUserGroupingInformation(); errorDismissed = false;">
                                 <div class="input-group">
                                     <input name="Search Person" class="form-control" type="text" aria-required="true"
@@ -177,12 +183,6 @@
                                     </div>
                                 </div>
                             </form>
-                        </div>
-                        <div class="col-auto mr-auto col-lg-3 col-md-4 col-12 p-0">
-                            <input class="form-control" placeholder="Filter Groupings..." type="search"
-                                   title="Filter Groupings" aria-label="Filter Groupings for this person"
-                                   ng-model="personQuery"
-                                   ng-change="filter(personList, 'pagedItemsPerson', 'currentPagePerson', personQuery, true)"/>
                         </div>
                         <div>
                             <form ng-submit="removeFromGroups()">
@@ -203,10 +203,10 @@
                             </form>
                             <!--message for no groupings selected-->
 
-                                <div ng-show="!errorDismissed2 && !loading && emptySelect" class="alert alert-danger form-alert fade show"
+                            <div ng-show="!errorDismissed2 && !loading && emptySelect" class="alert alert-danger form-alert fade show"
                                  role="alert">
-                                    <p th:text="#{screen.message.modal.search.noChecks}"></p>
-                                </div>
+                                <p th:text="#{screen.message.modal.search.noChecks}"></p>
+                            </div>
 
                         </div>
 
