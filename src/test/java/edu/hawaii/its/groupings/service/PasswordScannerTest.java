@@ -7,6 +7,10 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.io.File;
 import java.io.FileWriter;
 
@@ -19,8 +23,16 @@ public class PasswordScannerTest {
     File resourcesPath = new File("src/main/resources");
 
     @Before
-    public void setUp() {
-        assertTrue("Resource directory does not exist.", resourcesPath.exists());
+    public void setUp() { assertTrue("Resource directory does not exist.", resourcesPath.exists());
+    }
+    @Test
+    public void testGetLocation() throws Exception {
+        PasswordScanner passwordScanner = new PasswordScanner();
+        List<String> locations = new ArrayList<String>();
+        locations.add("src/main/resources");
+        locations.add("testDirectory");
+        passwordScanner.addLocation("testDirectory");
+        assertTrue(locations.equals(passwordScanner.getLocations()));
     }
 
     @Test

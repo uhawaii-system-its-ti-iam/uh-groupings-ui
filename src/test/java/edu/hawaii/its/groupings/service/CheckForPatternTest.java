@@ -2,16 +2,21 @@ package edu.hawaii.its.groupings.service;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
+import edu.hawaii.its.groupings.exceptions.PatternFoundException;
 
+import javax.validation.constraints.Null;
 
 public class CheckForPatternTest {
     File resourcesPath = new File("src/main/resources");
@@ -77,5 +82,17 @@ public class CheckForPatternTest {
         }
         file1.delete();
         file2.delete();
+    }
+
+    @Test
+    public void testExceptionThrown() throws Exception {
+        CheckForPattern checkForPattern = new CheckForPattern();
+        String pattern = "^.*password.*\\=(?!\\s*$).+";
+        try {
+            List<String> fileLocations = checkForPattern.fileLocations(".properties", null, pattern);
+        }
+        catch (Exception e) {
+            assertThat(e, instanceOf(NullPointerException.class));
+        }
     }
 }
