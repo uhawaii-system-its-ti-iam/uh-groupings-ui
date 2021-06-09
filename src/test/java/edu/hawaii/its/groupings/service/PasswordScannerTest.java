@@ -105,4 +105,22 @@ public class PasswordScannerTest {
             file2.delete();
         }
     }
+
+    @Test
+    public void testSetLocations() throws Exception {
+        PasswordScanner passwordScanner = new PasswordScanner();
+        List<String> locations = new ArrayList<String>();
+
+        passwordScanner.setLocations(null);
+        assertThat(passwordScanner.getLocations(), equalTo(locations));
+
+        passwordScanner.addLocation(null);
+        assertThat(passwordScanner.getLocations(), equalTo(locations));
+
+        locations.add("src/main/resources");
+        locations.add("testDirectory");
+        passwordScanner.setLocations(locations);
+        assertThat(passwordScanner.getLocations(), equalTo(locations));
+
+    }
 }

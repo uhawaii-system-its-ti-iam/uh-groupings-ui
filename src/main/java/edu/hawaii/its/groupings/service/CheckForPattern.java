@@ -37,35 +37,33 @@ public class CheckForPattern {
 
         try {
             File dir = new File(folderLocation);
-            if (dir != null) {
 
-                File[] fileResources = dir.listFiles((dir1, name) -> name.endsWith(fileExtension));
-                if (fileResources != null) {
-                    Pattern pat = Pattern.compile(pattern);
-                    Matcher matcher;
+            File[] fileResources = dir.listFiles((dir1, name) -> name.endsWith(fileExtension));
+            if (fileResources != null) {
+                Pattern pat = Pattern.compile(pattern);
+                Matcher matcher;
 
-                    for (File fr : fileResources) {
-                        logger.info("fileLocations; scan file: " + fr);
+                for (File fr : fileResources) {
+                    logger.info("fileLocations; scan file: " + fr);
 
-                        int lineId = 0;
-                        List<Integer> lineNumbers = new ArrayList<>();
+                    int lineId = 0;
+                    List<Integer> lineNumbers = new ArrayList<>();
 
-                        try (Scanner fileScanner = new Scanner(fr)) {
-                            while (fileScanner.hasNextLine()) {
-                                String line = fileScanner.nextLine();
-                                lineId++;
+                    try (Scanner fileScanner = new Scanner(fr)) {
+                        while (fileScanner.hasNextLine()) {
+                            String line = fileScanner.nextLine();
+                            lineId++;
 
-                                matcher = pat.matcher(line);
+                            matcher = pat.matcher(line);
 
-                                if (matcher.find()) {
-                                    lineNumbers.add(lineId);
-                                }
+                            if (matcher.find()) {
+                                lineNumbers.add(lineId);
                             }
+                        }
 
-                            if (!lineNumbers.isEmpty()) {
-                                for (int li : lineNumbers) {
-                                    patternLocation.add(fr.toString() + " on line: " + li);
-                                }
+                        if (!lineNumbers.isEmpty()) {
+                            for (int li : lineNumbers) {
+                                patternLocation.add(fr.toString() + " on line: " + li);
                             }
                         }
                     }

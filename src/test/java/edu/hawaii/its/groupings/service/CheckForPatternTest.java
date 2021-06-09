@@ -95,4 +95,16 @@ public class CheckForPatternTest {
             assertThat(e, instanceOf(NullPointerException.class));
         }
     }
+
+    @Test
+    public void testExceptionThrown2() throws Exception {
+        CheckForPattern checkForPattern = new CheckForPattern();
+        String pattern = "^.*password.*\\=(?!\\s*$).+";
+        try {
+            List<String> fileLocations = checkForPattern.fileLocations(".properties", "madeUpDirectory", pattern);
+        }
+        catch (Exception e) {
+            assertThat(e, instanceOf(NullPointerException.class));
+        }
+    }
 }

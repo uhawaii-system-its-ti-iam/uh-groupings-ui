@@ -29,10 +29,6 @@ public class PasswordScanner {
             logger.info("init; started.");
         } catch (PasswordFoundException pfe) {
             throw pfe;
-        } catch (Exception e) {
-            String message = "init; skipping over scanning "
-                    + "since it failed unexpectedly. Error: " + e;
-            logger.warn(message);
         }
     }
 
@@ -42,10 +38,8 @@ public class PasswordScanner {
         String patternResult = "";
         for (String location : locations) {
             List<String> fileLocations = checkForPattern.fileLocations(".properties", location, pattern);
-            if (fileLocations != null && !fileLocations.isEmpty()) {
-                for (String list : fileLocations) {
-                    patternResult += "\n" + list;
-                }
+            for (String list : fileLocations) {
+                patternResult += "\n" + list;
             }
         }
 
