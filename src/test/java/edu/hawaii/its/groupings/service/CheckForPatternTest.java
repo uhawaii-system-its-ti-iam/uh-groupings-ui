@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -100,8 +101,10 @@ public class CheckForPatternTest {
     public void testExceptionThrown2() throws Exception {
         CheckForPattern checkForPattern = new CheckForPattern();
         String pattern = "^.*password.*\\=(?!\\s*$).+";
+        List<String> dummy = new ArrayList<>();
         try {
             List<String> fileLocations = checkForPattern.fileLocations(".properties", "madeUpDirectory", pattern);
+            assertThat(fileLocations, equalTo(dummy));
         }
         catch (Exception e) {
             assertThat(e, instanceOf(NullPointerException.class));
