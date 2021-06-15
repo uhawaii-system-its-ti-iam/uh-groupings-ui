@@ -17,7 +17,6 @@ import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 public class PasswordScanner {
 
     private static final Log logger = LogFactory.getLog(PasswordScanner.class);
-    private List<String> locations = new ArrayList<>(Arrays.asList("src/main/resources"));
     String path = "src/main/resources";
     private List<String> locations = new ArrayList<>(Arrays.asList(path));
     private final String pattern = "^.*password.*\\=(?!\\s*$).+";
