@@ -25,36 +25,6 @@ public class SpringBootWebApplication extends SpringBootServletInitializer {
         SpringApplication.run(SpringBootWebApplication.class, args);
     }
 
-    /**
-     * Post Construct runs the method only once after bean initialization, these will run if there
-     * are no beans to initialize. This should run before the actual application runs.
-     */
-    @PostConstruct
-    private void checkForPwd() throws IOException {
-        // Access the file regardless of the environment using Spring ClassPathResource.
-        // The file name should be unique to the project.
-        File resource = new ClassPathResource("custom.properties").getFile();
-        Scanner fileScanner = new Scanner(resource);
-        // Tracker for the line the pattern is found on.
-        int lineID = 0;
-        ArrayList<Integer> lineNumbers = new ArrayList<>();
-        // Uses a string to make a pattern to compare to.
-        Pattern pattern = Pattern.compile("grouperClient.webService.password");
-        Matcher matcher = null;
-        while (fileScanner.hasNextLine()) {
-            String line = fileScanner.nextLine();
-            lineID++;
-            // Creates a matcher object to look through the line given.
-            matcher = pattern.matcher(line);
-            if (matcher.find()) {
-                lineNumbers.add(lineID);
-            }
-        }
-
-        // If lineNumbers is not empty, spits out the error message to the terminal.
-        Assert.isTrue(lineNumbers.isEmpty(), "Please remove the password from the custom.properties file.");
-    }
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return configureApplication(builder);

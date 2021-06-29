@@ -2,46 +2,45 @@ package edu.hawaii.its.groupings.service;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.io.File;
 import java.io.FileWriter;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
 import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@ActiveProfiles("localTest")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = { SpringBootWebApplication.class })
 public class PasswordScannerTest {
     File resourcesPath = new File("src/main/resources");
 
+    //    @Autowired
+    private PasswordScanner passwordScanner;
+
     @Before
-    public void setUp() { assertTrue("Resource directory does not exist.", resourcesPath.exists());
-    }
-    @Test
-    public void testGetLocation() throws Exception {
-        PasswordScanner passwordScanner = new PasswordScanner();
-        List<String> locations = new ArrayList<String>();
-        locations.add("src/main/resources");
-        locations.add("testDirectory");
-        passwordScanner.addLocation("testDirectory");
-        assertTrue(locations.equals(passwordScanner.getLocations()));
+    public void setUp() {
+        assertTrue("Resource directory does not exist.", resourcesPath.exists());
+        passwordScanner = new PasswordScanner();
     }
 
-    @Test
-    public void scanForPasswords() throws PasswordFoundException {
-        PasswordScanner passwordScanner = new PasswordScanner();
-        passwordScanner.init();
-    }
-
-    private File createFile(String pwdValue) throws Exception {
+    public File createFile(String pwdValue) throws Exception {
         File file = File.createTempFile("temp", ".properties");
         file.deleteOnExit();
         try (FileWriter w = new FileWriter(file)) {
@@ -51,30 +50,32 @@ public class PasswordScannerTest {
     }
 
     @Test
-    public void testCheckForPassWordsFound() throws Exception {
-        // Create a file that has a password-like expression in it.
+    public void testMe() throws Exception {
+        assertThat(passwordScanner, not(equalTo(null)));
+    }
+
+    @Test
+    public void testCheckForPasswordsFound() throws Exception {
         File file = createFile("hello");
         assertTrue(file.exists());
-
-        PasswordScanner passwordScanner = new PasswordScanner();
         passwordScanner.addLocation(file.getParent());
         try {
             passwordScanner.init();
             fail("Should have found password in temp file.");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             assertThat(e, instanceOf(PasswordFoundException.class));
             assertThat(e.toString(),
                     containsString(file.getPath() + " on line: 1"));
-        } finally {
-            file.delete();
+            e.getMessage();
         }
+        file.delete();
     }
 
     @Test
-    public void testCheckForPassWordsNotFound() throws Exception {
+    public void testCheckForPasswordsNotFound() throws Exception {
         File file = createFile("");
         assertTrue(file.exists());
-        PasswordScanner passwordScanner = new PasswordScanner();
         passwordScanner.addLocation(file.getParent());
         try {
             passwordScanner.init();
@@ -92,7 +93,6 @@ public class PasswordScannerTest {
         assertTrue(file1.exists());
         assertTrue(file2.exists());
         assertThat(file1.getParent(), equalTo(file2.getParent()));
-        PasswordScanner passwordScanner = new PasswordScanner();
         passwordScanner.addLocation(file1.getParent());
         try {
             passwordScanner.init();
@@ -108,7 +108,6 @@ public class PasswordScannerTest {
 
     @Test
     public void testSetLocations() throws Exception {
-        PasswordScanner passwordScanner = new PasswordScanner();
         List<String> locations = new ArrayList<String>();
 
         passwordScanner.setLocations(null);

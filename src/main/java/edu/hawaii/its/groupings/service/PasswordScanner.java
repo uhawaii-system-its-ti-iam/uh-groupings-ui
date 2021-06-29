@@ -1,7 +1,6 @@
 package edu.hawaii.its.groupings.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.io.File;
@@ -10,6 +9,8 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
@@ -18,15 +19,28 @@ import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 public class PasswordScanner {
 
     private static final Log logger = LogFactory.getLog(PasswordScanner.class);
-    String path = "src/main/resources";
-    private List<String> locations = new ArrayList<>(Arrays.asList(path));
-    private final String pattern = "^.*password.*\\=(?!\\s*$).+";
+    private final String pattern = "^.*password.*\\=(?!\\s*$).+"; //might put in custom.properties
+
+//    @Value("#{'${pwd.scanner.locations}'.split(',')}")
+    private List<String> locations = new ArrayList<>();
+
+    //For some reason, this Boolean enabled is being changed to null when running the test, so I manually set this to true for now.
+//    @Value("${pwd.scanner.enabled}")
+    private Boolean enabled = true;
 
     @PostConstruct
     public void init() throws PasswordFoundException {
         logger.info("init; starting...");
         try {
-            checkForPasswords();
+            String path = "src/main/resources";
+            File file = new File(path);
+            String absolutePath = file.getAbsolutePath();
+            locations.add(absolutePath);
+            System.out.println("---------------------------------------");
+            System.out.println("LOCATION: " + locations);
+            if (enabled) {
+                checkForPasswords();
+            }
             logger.info("init; check for passwords finished.");
             logger.info("init; started.");
         } catch (PasswordFoundException pfe) {
@@ -35,6 +49,7 @@ public class PasswordScanner {
     }
 
     private void checkForPasswords() throws PasswordFoundException {
+
         CheckForPattern checkForPattern = new CheckForPattern();
 
         String patternResult = "";
