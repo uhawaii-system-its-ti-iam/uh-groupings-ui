@@ -3,11 +3,13 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <head th:replace="header :: copy(headingTitle='UH Groupings Home')">
 
 
 </head>
-<body ng-app="UHGroupingsApp">
+<body ng-app="UHGroupingsApp" onload="loaded();">
 <nav th:replace="menubar :: copy"></nav>
 <!--  Content container -->
 
@@ -134,7 +136,7 @@
                      ng-controller="MembershipJsController" data-ng-init="init()">
                     <div class="dashboard-item-icon text-primary mb-3">
                         <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
-                        <span class="h1" ng-show="membershipsList.length">{{membershipsList.length}}</span>
+                        <span id="memberCount" class="h1" hidden>{{membershipsList.length}}</span>
                     </div>
                     <div class="dashboard-item-content">
                         <h2 class="h4">Memberships</h2>
@@ -146,7 +148,7 @@
                      ng-controller="OwnerJsController" data-ng-init="init()">
                     <div class="dashboard-item-icon text-primary mb-3">
                         <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
-                        <span class="h1" ng-show="groupingsList.length">{{groupingsList.length}}</span>
+                        <span id="groupCount" class="h1" hidden>{{groupingsList.length}}</span>
                     </div>
                     <div class="dashboard-item-content">
                         <h2 class="h4">Groupings</h2>
@@ -161,8 +163,13 @@
 </main>
 
 <!-- / Content container. -->
-
-
 <div th:replace="footer"></div>
 </body>
 </html>
+<script>
+    function loaded() {
+        document.getElementById("memberCount").hidden = false;
+        document.getElementById("groupCount").hidden = false;
+    }
+</script>
+

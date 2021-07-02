@@ -10,7 +10,6 @@
     function OwnerJsController($scope, $controller, groupingsService, dataProvider) {
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
-
         /**
          * Initialize function that retrieves the groupings you own.
          */
@@ -23,7 +22,8 @@
 
                 $scope.loading = false;
             }, function (res) {
-                dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
+                $scope.createApiErrorModal();
+                // dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
             });
         };
 

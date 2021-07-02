@@ -141,11 +141,13 @@
          * Generic handler for unsuccessful requests to the API.
          */
         function handleUnsuccessfulRequest(res) {
+            $scope.loading = false;
+            $scope.waitingForImportResponse = false;
             $scope.resStatus = res.status;
             if (res.status === 403) {
                 $scope.createOwnerErrorModal();
             } else {
-                return `Error: Status Code${res.statusCode}`;
+                $scope.createApiErrorModal();
             }
         }
 
@@ -335,8 +337,8 @@
                         }
                         currentPage++;
                     }
-                }, function () {
-                    $scope.loading = false;
+                }, function (res) {
+                    $scope.resStatus = res.status;
                     $scope.createApiErrorModal();
                 });
                 //Will only decrement threadcount if previous call absolutely finishes
@@ -405,6 +407,7 @@
                     //Completes the promise and returns
                     resolve();
                 }, function (res) {
+                    $scope.resStatus = res.status;
                     if (res === null) {
                         $scope.largeGrouping = true;
                         $scope.paginatingComplete = false;
@@ -412,9 +415,7 @@
                     } else if (res.statusCode === 403) {
                         $scope.createOwnerErrorModal();
                     } else {
-                        $scope.loading = false;
                         $scope.createApiErrorModal();
-                        // dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
                     }
                     //stops while loop and completes promise then returns
                     loadMembersList = false;
@@ -463,9 +464,9 @@
                     $scope.descriptionForm = !($scope.descriptionForm);
                 }, // close description form when done.
                 (res) => {
-                    dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) },
-                        "feedback/error", "feedback");
-                }); // send user to feedback page if fail
+                    $scope.resStatus = res.status;
+                    $scope.createApiErrorModal();
+                });
         };
 
         /**
@@ -494,6 +495,7 @@
          * Create a modal for errors in loading data from the API.
          */
         $scope.createApiErrorModal = function () {
+            $scope.loading = false;
             $scope.apiErrorModalInstance = $uibModal.open({
                 templateUrl: "modal/apiError",
                 scope: $scope,
@@ -597,12 +599,17 @@
 
         /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
-         * separated by newline characters.
-         * @param $event - FileReader event sent from Include.html or Exclude.html
+         * separated by newline characters. This function is called implicitly from include.html and exclude.html.
+         * In some cases if the html is updated the node index of input.files will change. If this happens then
+         * $event.currentTarget.parentNode.childNodes should be passed into a console.log and inspected to determine
+         * which index of childNodes is housing the input.
          */
         $scope.readTextFile = function ($event) {
-            let input = $event.currentTarget.parentNode.childNodes[1];
+            let input = $event.currentTarget.parentNode.childNodes[3];
             let file = input.files[0];
+            if (file == undefined) {
+                console.log("undef");
+            }
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
@@ -640,20 +647,35 @@
                     8000);
             };
             let handleSuccessfulAdd = function (res) {
+                $scope.waitingForImportResponse = false; /* Small spinner off. */
                 $scope.launchMultiAddResultModal(listName);
+                let data = res;
                 for (let i = 0; i < res.length; i++) {
-                    $scope.multiAddResults[i] = res[i].person;
-                    $scope.multiAddResultsGeneric[i] = res[i].person;
+                    data[parseInt(i, 10)] = res[parseInt(i, 10)];
                 }
-                if (undefined !== res[0].person) {
-                    $scope.getPersonProps(Object.keys(res[0].person));
+                for (let i = 0; i < data.length; i++) {
+                    let result = data[parseInt(i, 10)].result;
+                    if ("FAILURE" === result) {
+                        continue;
+                    }
+                    let person = {
+                        "uid": data[parseInt(i, 10)].uid,
+                        "uhUuid": data[parseInt(i, 10)].uhUuid,
+                        "name": data[parseInt(i, 10)].name
+                    };
+                    $scope.multiAddResults.push(person);
+                    $scope.multiAddResultsGeneric.push(person);
+                }
+                if ($scope.multiAddResults.length > 0) {
+                    $scope.personProps = Object.keys($scope.multiAddResults[0]);
                 }
             };
-            $scope.waitingForImportResponse = true; /* Spinner on */
+
+            $scope.waitingForImportResponse = true; /* Small spinner on. */
             if (listName === "Include") {
-                await groupingsService.addMembersToInclude(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToIncludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
             } else if (listName === "Exclude") {
-                await groupingsService.addMembersToExclude(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+                await groupingsService.addMembersToExcludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
             }
         };
 
@@ -788,27 +810,6 @@
         };
 
         /**
-         * Create a modal display for members added, and calls addMembersToInclude service.
-         * @param usersToAdd
-         * @param list
-         */
-        $scope.updateAddMembers = function (usersToAdd, list) {
-
-            let groupingPath = $scope.selectedGrouping.path;
-
-            let handleSuccessfulAdd = function (res, list, usersToAdd) {
-                $scope.createSuccessfulAddModal({
-                    user: usersToAdd,
-                    listName: list,
-                    response: res
-                });
-            };
-            if (list === "Include") {
-                groupingsService.addMembersToInclude(groupingPath, usersToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
-            }
-        };
-
-        /**
          * Initiate the adding of a member to a list.
          * @param {string} userToAdd - user being added
          * @param {string} list - the list the user is being added to
@@ -830,9 +831,9 @@
             };
 
             if (list === "Include") {
-                groupingsService.addMemberToInclude(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addMembersToInclude(userToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "Exclude") {
-                groupingsService.addMemberToExclude(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addMembersToExclude(userToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "owners") {
                 groupingsService.assignOwnership(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "admins") {
@@ -952,8 +953,11 @@
                     $scope.resStatus = 404;
                 }
             }, function (res) {
-                $scope.user = user;
                 $scope.resStatus = res.status;
+                $scope.user = user;
+                if (res.status == -1) {
+                    $scope.createApiErrorModal();
+                }
             });
         };
 
@@ -1128,8 +1132,8 @@
          * that holds true/false value for triggering checkboxes.
          * @param currentPage - Current page that contains members.
          */
-        $scope.transferMembersFromPageToCheckboxObject = function(currentPage) {
-            currentPage.forEach((member) => $scope.membersInCheckboxList[member.uhUuid] = false)
+        $scope.transferMembersFromPageToCheckboxObject = function (currentPage) {
+            currentPage.forEach((member) => $scope.membersInCheckboxList[member.uhUuid] = false);
         };
 
         /**
@@ -1145,10 +1149,10 @@
             $scope.allSelected = !$scope.allSelected;
             let pageItems;
             let pageNumber;
-            if (group === 'Exclude') {
+            if (group === "Exclude") {
                 pageItems = $scope.pagedItemsExclude;
                 pageNumber = $scope.currentPageExclude;
-            } else if (group === 'Include') {
+            } else if (group === "Include") {
                 pageItems = $scope.pagedItemsInclude;
                 pageNumber = $scope.currentPageInclude;
             }
@@ -1462,9 +1466,9 @@
                 let groupingPath = $scope.selectedGrouping.path;
 
                 if ($scope.listName === "Include") {
-                    groupingsService.removeMemberFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                    groupingsService.removeMembersFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "Exclude") {
-                    groupingsService.removeMemberFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                    groupingsService.removeMembersFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "owners") {
                     groupingsService.removeOwner(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                 } else if ($scope.listName === "admins") {
@@ -1858,6 +1862,7 @@
          * @return {Boolean} Sync Dest value at the given name
          */
         $scope.getSyncDestValueInArray = function (syncDestName) {
+
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name;
             }).indexOf(syncDestName);
@@ -1929,6 +1934,7 @@
         $scope.resetErrors = function () {
             $scope.resStatus = 0;
             $scope.emptyInput = false;
+            $scope.emptySelect = false;
             $scope.swap = true;
             $scope.inGrouper = false;
         };
@@ -2171,6 +2177,14 @@
             r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
             r.send();
             $window.location.href = "/uhgroupings/";
+        };
+
+        /**
+         * Redirect the user to the feedback page.
+         */
+        $scope.proceedRedirectApiError = function () {
+            $scope.apiErrorModalInstance.close();
+            $window.location.href = "/uhgroupings/feedback";
         };
 
         /**

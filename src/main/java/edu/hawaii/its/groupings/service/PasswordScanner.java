@@ -1,15 +1,15 @@
 package edu.hawaii.its.groupings.service;
 
-import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import edu.hawaii.its.groupings.controller.ErrorRestController;
+import java.util.List;
 
-import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 
-import java.io.IOException;
-import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+
+import edu.hawaii.its.groupings.controller.ErrorRestController;
+import edu.hawaii.its.groupings.exceptions.PasswordFoundException;
 
 @Service
 public class PasswordScanner {
@@ -17,22 +17,27 @@ public class PasswordScanner {
     private static final Log logger = LogFactory.getLog(ErrorRestController.class);
 
     @PostConstruct
-    public void init() throws IOException, PasswordFoundException {
+    public void init() throws PasswordFoundException {
+        logger.info("init; starting...");
+        checkForPasswords();
+        logger.info("init; check for passwords finished.");
+        logger.info("init; started.");
+    }
 
+    private void checkForPasswords() throws PasswordFoundException {
         CheckForPattern checkForPattern = new CheckForPattern();
 
-        List<String> result = checkForPattern.fileLocations(".properties", "src/main/resources", "^.*password.*\\=(?!\\s*$).+");
-
         String patternResult = "";
-
-        logger.info("PasswordScanner init");
-
-        if (!result.isEmpty()) {
-
-            for (String list: result) {
+        String pattern = "^.*password.*\\=(?!\\s*$).+";
+        String dirname = "src/main/resources";
+        List<String> fileLocations = checkForPattern.fileLocations(".properties", dirname, pattern);
+        if (fileLocations != null && !fileLocations.isEmpty()) {
+            for (String list : fileLocations) {
                 patternResult += "\n" + list;
             }
+        }
 
+        if (patternResult.length() > 0) {
             throw new PasswordFoundException(patternResult);
         }
     }
