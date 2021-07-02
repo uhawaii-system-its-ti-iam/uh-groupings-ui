@@ -205,7 +205,6 @@
         $scope.getGroupingInformation = function (type) {
             //Increments due to being called again
             asyncThreadCount++;
-            console.log(type);
             /**
              * Makes sure only one asyncThreadCount is running to call another grouping
              * Else it will return a false boolean repeatedly till asyncThreadCount has
@@ -307,7 +306,7 @@
                     $scope.paginatingProgress = false;
 
                     //increments page to load and allows members to iteratively be loaded
-                    currentPage++;
+                    currentPage++;c
                     loadMembersList = true;
 
                     $scope.includeDisable = false;
