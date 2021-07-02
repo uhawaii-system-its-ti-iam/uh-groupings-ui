@@ -127,8 +127,7 @@
                         <a class="btn dark-teal-bg btn-bottom" th:href="@{/admin}">Admin</a>
                     </div>
                 </div>
-                <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')"
-                     ng-controller="MembershipJsController" data-ng-init="init()">
+                <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')">
                     <div class="dashboard-item-icon text-primary mb-3">
                         <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
                         <span class="h1" ng-hide="!membershipsList.length">{{membershipsList.length}}</span>
@@ -139,11 +138,9 @@
                         <a class="btn dark-teal-bg btn-bottom" th:href="@{/memberships}">Memberships</a>
                     </div>
                 </div>
-                <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"
-                     ng-controller="OwnerJsController" data-ng-init="init()">
+                <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
                     <div class="dashboard-item-icon text-primary mb-3">
                         <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
-                        <span class="h1" ng-hide="!groupingsList.length">{{groupingsList.length}}</span>
                     </div>
                     <div class="dashboard-item-content">
                         <h2 class="h4">Groupings</h2>
