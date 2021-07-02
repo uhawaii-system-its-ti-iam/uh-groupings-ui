@@ -117,10 +117,10 @@ public class GroupingsRestController {
     /**
      * Check if principle is an administrator.
      */
-    @GetMapping(value = "/admin")
+    @GetMapping(value = "/admins")
     public ResponseEntity<String> hasAdminPrivs(Principal principal) {
         logger.info("Entered REST isAdmin...");
-        String uri = String.format(API_2_1_BASE + "/admin", principal.getName());
+        String uri = String.format(API_2_1_BASE + "/admins", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -354,10 +354,10 @@ public class GroupingsRestController {
     /**
      * Check if principle is an owner, of any grouping.
      */
-    @GetMapping(value = "/owner")
+    @GetMapping(value = "/owners")
     public ResponseEntity<String> hasOwnerPrivs(Principal principal) {
         logger.info("Entered REST isOwner...");
-        String uri = String.format(API_2_1_BASE + "/owner", principal.getName());
+        String uri = String.format(API_2_1_BASE + "/owners", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
