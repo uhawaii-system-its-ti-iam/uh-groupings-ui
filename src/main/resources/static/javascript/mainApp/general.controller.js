@@ -303,7 +303,7 @@
                     $scope.allowOptOut = res.optOutOn;
 
                     $scope.syncDestArray = res.syncDestinations;
-
+                    $scope.loading = false;
                     $scope.paginatingProgress = false;
 
                     //increments page to load and allows members to iteratively be loaded
