@@ -197,6 +197,14 @@
             },
 
             /**
+             * Get a list of memberships that username is associated with.
+             */
+            getMembershipAssignmentForUser: function (onSuccess, onError, username) {
+                let endpoint = BASE_URL + "members/" + username + "/groupings/";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * Get a list of grouping paths that the current user can opt into.
              */
             getOptInGroups(onSuccess, onError) {
@@ -204,11 +212,6 @@
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
-            /*todo:copy code*/
-            getMembershipAssignmentForUser: function (onSuccess, onError, username) {
-                let endpoint = BASE_URL + "members/" + username + "/groupings/";
-                dataProvider.loadData(endpoint, onSuccess, onError);
-            },
 
             /**
              * Toggle the preference option to allow users to opt into a grouping.
