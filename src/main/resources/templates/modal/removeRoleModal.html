@@ -1,0 +1,30 @@
+<!---
+    - removeRoleModal.html
+    - A modal that confirms with user whether or not they want to continue removing themselves as a owner as this will change their role to a member. (Does not remove a modal :) )
+--->
+<html   xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+        lang="en">
+<div class="modal-header">
+    <!-- title to change? -->
+    <h5 class="modal-title" id="modal-title">Remove Role</h5>
+</div>
+<div class="modal-body" id="modal-body">
+    <div class="modal-danger-message">
+        <p>Warning!</p>
+        <!--- Warning message that a user will be demoted from a owner to a membership role -->
+        <!--ng-switch-when="owners" appropriate?-->
+        <div ng-switch-when="owners">
+            <p>You are about to remove yourself from your last owned grouping this will log you out and change your role
+                to a member.</p>
+        </div>
+        <p>Are you really sure?</p>
+    </div>
+</div>
+<div class="modal-footer">
+    <!--ng-click fnc? -->
+    <button class="btn btn-primary" ng-click="removeOwner()">Yes</button>
+    <button class="btn btn-light" ng-click="closeRemoveRoleModal()" data-dismiss="modal">Cancel</button>
+</div>
+
+</html>
