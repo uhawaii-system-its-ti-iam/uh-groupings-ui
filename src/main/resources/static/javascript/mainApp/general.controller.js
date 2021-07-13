@@ -1325,15 +1325,19 @@
          */
         $scope.removeOwner = function (currentPage, index) {
             const ownerToRemove = $scope.pagedItemsOwners[currentPage][index];
+            let messageShown = false;
 
-            if ($scope.groupingOwners.length > 1) {
+            if ($scope.groupingsList.length === 1 && messageShown) {
+                console.log("this works");
+            } else if ($scope.groupingOwners.length > 1) {
                 $scope.createRemoveModal({
                     user: ownerToRemove,
                     listName: "owners"
                 });
+                messageShown = true;
             } else {
                 const userType = "owner";
-                $scope.createRemoveErrorModal(userType);
+                $scope.createRemoveRoleModal();
             }
         };
 
@@ -1428,6 +1432,13 @@
                 //keyboard: false
             });
 
+            $scope.removeRoleModalInstance = $uibModal({
+                templateUrl: "modal/removeModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
                 let userToRemove = options.user.uhUuid;
@@ -1485,6 +1496,26 @@
                 groupingsService.removeFromGroups(groupingPath, userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
                 $scope.personToLookup = userToRemove;
             });
+        };
+
+        /**
+         * Create a modal that warns the user that this is they're removing themself as the last grouping owner
+         */
+        $scope.createRemoveRoleModal = function () {
+
+            $scope.removeRoleModalInstance = $uibModal.open({
+                templateUrl: "modal/removeRoleModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+        };
+
+        /**
+         * Closes the modal, this does not remove the user as a owner
+         */
+        $scope.closeRemoveRoleModal = function () {
+            $scope.removeRoleModalInstance.close();
         };
 
         /**
