@@ -308,7 +308,7 @@
                     $scope.paginatingProgress = false;
 
                     //increments page to load and allows members to iteratively be loaded
-                    currentPage++;c
+                    currentPage++;
                     loadMembersList = true;
 
                     $scope.includeDisable = false;
