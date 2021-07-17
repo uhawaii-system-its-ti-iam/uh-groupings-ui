@@ -1322,22 +1322,24 @@
          * Remove a grouping owner. There must be at least one grouping owner remaining.
          * @param {number} currentPage - the current page in the owners table
          * @param {number} index - the index of the owner clicked by the user
+         * @param {object} options - the object
          */
-        $scope.removeOwner = function (currentPage, index) {
+        $scope.removeOwner = function (currentPage, index, options) {
+            //TODO: rn the $scope.currentUser != $scope.userToRemove still shows the message when trying to remove another user
             const ownerToRemove = $scope.pagedItemsOwners[currentPage][index];
-            let messageShown = false;
-
-            if ($scope.groupingsList.length === 1 && messageShown) {
-                console.log("this works");
+            //$scope.userToRemove = options.user;
+            //shows a warning message when you are the owner of only 1 grouping and you are removing yourself
+            $scope.userToRemove = ownerToRemove;
+            if ($scope.groupingsList.length === 1 && $scope.currentUser === $scope.userToRemove.username) {
+                $scope.createSpecialRemoveMessageModal();
             } else if ($scope.groupingOwners.length > 1) {
                 $scope.createRemoveModal({
                     user: ownerToRemove,
                     listName: "owners"
                 });
-                messageShown = true;
             } else {
                 const userType = "owner";
-                $scope.createRemoveRoleModal();
+                $scope.createRemoveErrorModal(userType);
             }
         };
 
@@ -1422,22 +1424,18 @@
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
+
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
             $scope.removeModalInstance = $uibModal.open({
                 templateUrl: "modal/removeModal",
                 windowClass: windowClass,
                 scope: $scope,
-                backdrop: "static",
+                backdrop: "static"
                 //keyboard: false
             });
 
-            $scope.removeRoleModalInstance = $uibModal({
-                templateUrl: "modal/removeModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
+            console.log($scope.userToRemove);
 
             $scope.removeModalInstance.result.then(function () {
                 $scope.loading = true;
@@ -1501,10 +1499,10 @@
         /**
          * Create a modal that warns the user that this is they're removing themself as the last grouping owner
          */
-        $scope.createRemoveRoleModal = function () {
+        $scope.createSpecialRemoveMessageModal = function () {
 
-            $scope.removeRoleModalInstance = $uibModal.open({
-                templateUrl: "modal/removeRoleModal",
+            $scope.specialRemoveMessageModalInstance = $uibModal.open({
+                templateUrl: "modal/specialRemoveMessageModal",
                 scope: $scope,
                 backdrop: "static",
                 keyboard: false
@@ -1514,8 +1512,23 @@
         /**
          * Closes the modal, this does not remove the user as a owner
          */
-        $scope.closeRemoveRoleModal = function () {
-            $scope.removeRoleModalInstance.close();
+        $scope.closeSpecialRemoveMessageModalInstance = function () {
+            $scope.specialRemoveMessageModalInstance.close();
+        };
+
+        /**
+         * Loads the remove modal
+         */
+        $scope.loadRemoveModal = function () {
+            //TODO: possibly remove and just call createRemoveModal()
+
+            $scope.createRemoveModal({
+                templateUrl: "modal/removeModal",
+                user: $scope,
+                scope: $scope,
+                backdrop: "static"
+                //keyboard: false
+            });
         };
 
         /**
@@ -1715,7 +1728,7 @@
             $scope.infoModalInstance = $uibModal.open({
                 templateUrl: "modal/infoModal",
                 scope: $scope,
-                backdrop: "static",
+                backdrop: "static"
                 //keyboard: false
             });
         };
