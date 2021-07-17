@@ -85,20 +85,10 @@
 
             // Request a list of membership objects from the API.
             groupingsService.getMembershipResults((res) => {
-                    let data = [];
-
-                    _.forEach(res, (membership) => {
-                        if (membership.inInclude) {
-                            data.push(membership);
-                        }
-                    });
-
-                    let dups = coupleDuplicatePaths(data);
-                    let result = mergeDuplicateValues(dups);
-
-                    $scope.membershipsList = _.sortBy(_.uniqBy(result, "name"), "name");
+                    $scope.membershipsList = _.sortBy(_.uniqBy(res, "name"), "name");
                     $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
+                    console.log($scope.membershipsList);
                 },
                 (res) => {
                     $scope.createApiErrorModal();
