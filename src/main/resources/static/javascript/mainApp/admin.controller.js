@@ -75,43 +75,6 @@
         };
 
         /**
-         * With the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
-         * all values that each duplicate contained. (Changed return values to meet Manager Person tab needs)
-         */
-        function mergeManagePersonDuplicateValues(dups) {
-            let result = [];
-            dups.forEach((membership, index) => {
-                dups.forEach((m, index2) => {
-                    if (membership.name === m.name && index !== index2) {
-                        membership.inInclude |= m.inInclude;
-                        membership.inExclude |= m.inExclude;
-                        membership.inBasis |= m.inBasis;
-                        membership.inOwner |= m.inOwner;
-                        membership.inBasisAndInclude |= m.inBasisAndInclude;
-                    }
-                });
-            });
-            dups.forEach((membership, index) => {
-                let index1 = dups.findIndex((e) => {
-                    return e.name === membership.name;
-                });
-                if (index1 === index) {
-                    // Push the merged result from the duplicates
-                    result.push({
-                        "name": membership.name,
-                        "path": membership.path,
-                        "inInclude": membership.inInclude,
-                        "inExclude": membership.inExclude,
-                        "inBasis": membership.inBasis,
-                        "inOwner": membership.inOwner,
-                        "inBasisAndInclude": membership.inBasisAndInclude
-                    });
-                }
-            });
-            return result;
-        }
-
-        /**
          * Separate the list of Admins into pages.
          */
         $scope.displayAdmins = function () {
@@ -120,7 +83,6 @@
             $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
             $scope.showGrouping = false;
         };
-
 
         /**
          * Separate the list of persons into pages.
