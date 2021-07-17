@@ -88,7 +88,6 @@
                     $scope.membershipsList = _.sortBy(_.uniqBy(res, "name"), "name");
                     $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
-                    console.log($scope.membershipsList);
                 },
                 (res) => {
                     $scope.createApiErrorModal();
