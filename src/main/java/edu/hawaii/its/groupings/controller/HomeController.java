@@ -111,10 +111,6 @@ public class HomeController {
     /**
      * Modal Pages
      */
-    @GetMapping("/modal/specialRemoveMessageModal")
-    public String specialRemoveMessageModal() {
-        return "modal/specialRemoveMessageModal";
-    }
 
     @RequestMapping(value = "/modal/infoModal", method = RequestMethod.GET)
     public String infoModal(Locale locale, Model model) {
