@@ -211,8 +211,7 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
-    @RequestMapping(value = "/members/{uid}/groupings",
-            method = RequestMethod.GET,
+    @GetMapping(value = "/members/{uid}/groupings",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> membershipAssignment(Principal principal,
             @PathVariable String uid) {
