@@ -33,39 +33,39 @@ public class HomeController {
     private UserContextService userContextService;
 
     // Mapping to home.
-    @RequestMapping(value = { "/", "/home" }, method = { RequestMethod.GET })
+    @GetMapping(value = { "/", "/home" })
     public String home(Map<String, Object> model, Locale locale) {
         logger.info("User at home. The client locale is " + locale);
         return "home";
     }
 
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    @GetMapping(value = "/info")
     public String info(Locale locale, Model model) {
         logger.info("User at info.");
         return "info";
     }
 
-    @RequestMapping(value = "/404", method = RequestMethod.GET)
+    @GetMapping(value = "/404")
     public String invalid() {
         return "redirect:/";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    @GetMapping(value = "/admin")
     public String admin(Locale locale, Model model) {
         logger.info("User at admin.");
         return "admin";
     }
 
     @PreAuthorize("hasRole('UH')")
-    @RequestMapping(value = "/memberships", method = RequestMethod.GET)
+    @GetMapping(value = "/memberships")
     public String memberships(Locale locale, Model model) {
         logger.info("User at memberships.");
         return "memberships";
     }
 
     //@PreAuthorize("hasRole('ADMIN') || hasRole('OWNER')")
-    @RequestMapping(value = "/groupings", method = RequestMethod.GET)
+    @GetMapping(value = "/groupings")
     public String groupings(Locale locale, Model model) {
         logger.info("User at groupings.");
         return "groupings";
@@ -112,119 +112,119 @@ public class HomeController {
      * Modal Pages
      */
 
-    @RequestMapping(value = "/modal/infoModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/infoModal")
     public String infoModal(Locale locale, Model model) {
         return "modal/infoModal";
     }
 
-    @RequestMapping(value = "/modal/checkModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/checkModal")
     public String checkModal(Locale locale, Model model) {
         return "modal/checkModal";
     }
 
-    @RequestMapping(value = "/modal/apiError", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/apiError")
     public String apiError(Locale locale, Model model) {
         return "modal/apiError";
     }
 
-    @RequestMapping(value = "/modal/preferenceErrorModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/preferenceErrorModal")
     public String preferenceErrorModal(Locale locale, Model model) {
         return "modal/preferenceErrorModal";
     }
 
-    @RequestMapping(value = "/modal/addModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/addModal")
     public String addModal(Locale locale, Model model) {
         return "modal/addModal";
     }
 
-    @RequestMapping(value = "/modal/removeModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/removeModal")
     public String removeModal(Locale locale, Model model) {
         return "modal/removeModal";
     }
 
-    @RequestMapping(value = "/modal/resetModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/resetModal")
     public String resetModal(Locale locale, Model model) {
         return "modal/resetModal";
     }
 
-    @RequestMapping(value = "/modal/resetNotifModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/resetNotifModal")
     public String resetNotifModal(Locale locale, Model model) {
         return "modal/resetNotifModal";
     }
 
-    @RequestMapping(value = "/modal/emptyGroupModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/emptyGroupModal")
     public String emptyGroupModal(Locale locale, Model model) {
         return "modal/emptyGroupModal";
     }
 
-    @RequestMapping(value = "/modal/confirmAddModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/confirmAddModal")
     public String confirmAddModal(Locale locale, Model model) {
         return "modal/confirmAddModal";
     }
 
-    @RequestMapping(value = "/modal/syncDestModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/syncDestModal")
     public String syncDestModal(Locale locale, Model model) {
         return "modal/syncDestModal";
     }
 
-    @RequestMapping(value = "/modal/emailListModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/emailListModal")
     public String emailListModal(Locale locale, Model model) {
         return "modal/emailListModal";
     }
 
-    @RequestMapping(value = "/modal/removeErrorModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/removeErrorModal")
     public String removeErrorModal(Locale locale, Model model) {
         return "modal/removeErrorModal";
     }
 
-    @RequestMapping(value = "/modal/timeoutModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/timeoutModal")
     public String timeoutModal(Locale locale, Model model) {
         return "modal/timeoutModal";
     }
 
-    @RequestMapping(value = "/modal/roleErrorModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/roleErrorModal")
     public String roleErrorModal(Locale locale, Model model) {
         return "modal/roleErrorModal";
     }
 
-    @RequestMapping(value = "/modal/ownerErrorModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/ownerErrorModal")
     public String ownerErrorModal(Locale locale, Model model) {
         return "modal/ownerErrorModal";
     }
 
-    @RequestMapping(value = "/modal/optErrorModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/optErrorModal")
     public String optErrorModal(Locale locale, Model model) {
         return "modal/optErrorModal";
     }
 
-    @RequestMapping(value = "/modal/basisWarningModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/basisWarningModal")
     public String basisWarningModal(Locale locale, Model model) {
         return "modal/basisWarningModal";
     }
 
-    @RequestMapping(value = "/modal/importModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/importModal")
     public String importModal(Locale locale, Model model) {
         return "modal/importModal";
     }
 
-    @RequestMapping(value = "modal/importErrorModal", method = RequestMethod.GET)
+    @GetMapping(value = "modal/importErrorModal")
     public String importErrorModal(Locale locale, Model model) {
         return "modal/importErrorModal";
     }
 
-    @RequestMapping(value = "/modal/dynamicModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/dynamicModal")
     public String dynamicModal(Locale locale, Model model) {
         return "modal/dynamicModal";
     }
 
-    @RequestMapping(value = "/modal/multiAddResultModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/multiAddResultModal")
     public String multiAddResultModal(Locale locale, Model model) {
         return "modal/multiAddResultModal";
     }
 
-    @RequestMapping(value = "/modal/multiRemovePromptModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/multiRemovePromptModal")
     public String multiRemovePromptModal(Locale locale, Model model) { return "modal/multiRemovePromptModal"; }
 
-    @RequestMapping(value = "/modal/multiRemoveConfirmationModal", method = RequestMethod.GET)
+    @GetMapping(value = "/modal/multiRemoveConfirmationModal")
     public String multiRemoveConfirmationModal(Locale locale, Model model) { return "modal/multiRemoveConfirmationModal"; }
 }
