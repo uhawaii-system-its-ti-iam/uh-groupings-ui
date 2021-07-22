@@ -74,15 +74,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm"
-                    ng-click="membersInCheckboxList[i.uhUuid]=!membersInCheckboxList[i.uhUuid]">
+                <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm">
                     <td>
                         <input class="form-check-input position-left singlechkbox" type="checkbox"
                                id="blankCheckbox"
                                style="margin-left: 0"
                                ng-model="membersInCheckboxList[i.uhUuid]"
-                               ng-click="$event.stopPropagation()
-                               membersInCheckboxList[i.uhUuid]=!membersInCheckboxList[i.uhUuid]">
+                               ng-click="$event.stopPropagation()">
                     </td>
                     <td class="p-10" tabindex="0">
                         {{i.name}}
