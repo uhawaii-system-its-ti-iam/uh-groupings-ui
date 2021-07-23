@@ -245,7 +245,6 @@ public class GroupingsRestController {
     }
 
     /**
-     * <<<<<<< HEAD
      * Add a user to include group of grouping at path.
      */
     @PostMapping(value = "/{groupingPath}/{userToAdd}/addMemberToIncludeGroup")
@@ -260,8 +259,6 @@ public class GroupingsRestController {
     }
 
     /**
-     * =======
-     * >>>>>>> c87bb5fd... Refactor endpoints.
      * Add a list of usersToAdd to include group of grouping at path.
      */
     @PostMapping(value = "/{groupingPath}/{usersToAdd}/addMembersToIncludeGroup")
@@ -277,7 +274,6 @@ public class GroupingsRestController {
     }
 
     /**
-     * <<<<<<< HEAD
      * Add a user to exclude group of grouping at path.
      */
     @PostMapping(value = "/{groupingPath}/{userToAdd}/addMemberToExcludeGroup")
@@ -292,8 +288,6 @@ public class GroupingsRestController {
     }
 
     /**
-     * =======
-     * >>>>>>> c87bb5fd... Refactor endpoints.
      * Add a list of usersToAdd to exclude group of grouping at path.
      */
     @PostMapping(value = "/{groupingPath}/{usersToAdd}/addMembersToExcludeGroup")
