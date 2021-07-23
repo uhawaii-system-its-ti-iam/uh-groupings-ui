@@ -34,13 +34,13 @@ public class HomeController {
 
     // Mapping to home.
     @GetMapping(value = { "/", "/home" })
-    public String home(Map<String, Object> model, Locale locale) {
+    public String home(Map<String, Locale> locale) {
         logger.info("User at home. The client locale is " + locale);
         return "home";
     }
 
     @GetMapping(value = "/info")
-    public String info(Locale locale, Model model) {
+    public String info() {
         logger.info("User at info.");
         return "info";
     }
@@ -52,21 +52,21 @@ public class HomeController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/admin")
-    public String admin(Locale locale, Model model) {
+    public String admin() {
         logger.info("User at admin.");
         return "admin";
     }
 
     @PreAuthorize("hasRole('UH')")
     @GetMapping(value = "/memberships")
-    public String memberships(Locale locale, Model model) {
+    public String memberships() {
         logger.info("User at memberships.");
         return "memberships";
     }
 
     //@PreAuthorize("hasRole('ADMIN') || hasRole('OWNER')")
     @GetMapping(value = "/groupings")
-    public String groupings(Locale locale, Model model) {
+    public String groupings() {
         logger.info("User at groupings.");
         return "groupings";
     }
@@ -113,118 +113,122 @@ public class HomeController {
      */
 
     @GetMapping(value = "/modal/infoModal")
-    public String infoModal(Locale locale, Model model) {
+    public String infoModal() {
         return "modal/infoModal";
     }
 
     @GetMapping(value = "/modal/checkModal")
-    public String checkModal(Locale locale, Model model) {
+    public String checkModal() {
         return "modal/checkModal";
     }
 
     @GetMapping(value = "/modal/apiError")
-    public String apiError(Locale locale, Model model) {
+    public String apiError() {
         return "modal/apiError";
     }
 
     @GetMapping(value = "/modal/preferenceErrorModal")
-    public String preferenceErrorModal(Locale locale, Model model) {
+    public String preferenceErrorModal() {
         return "modal/preferenceErrorModal";
     }
 
     @GetMapping(value = "/modal/addModal")
-    public String addModal(Locale locale, Model model) {
+    public String addModal() {
         return "modal/addModal";
     }
 
     @GetMapping(value = "/modal/removeModal")
-    public String removeModal(Locale locale, Model model) {
+    public String removeModal() {
         return "modal/removeModal";
     }
 
     @GetMapping(value = "/modal/resetModal")
-    public String resetModal(Locale locale, Model model) {
+    public String resetModal() {
         return "modal/resetModal";
     }
 
     @GetMapping(value = "/modal/resetNotifModal")
-    public String resetNotifModal(Locale locale, Model model) {
+    public String resetNotifModal() {
         return "modal/resetNotifModal";
     }
 
     @GetMapping(value = "/modal/emptyGroupModal")
-    public String emptyGroupModal(Locale locale, Model model) {
+    public String emptyGroupModal() {
         return "modal/emptyGroupModal";
     }
 
     @GetMapping(value = "/modal/confirmAddModal")
-    public String confirmAddModal(Locale locale, Model model) {
+    public String confirmAddModal() {
         return "modal/confirmAddModal";
     }
 
     @GetMapping(value = "/modal/syncDestModal")
-    public String syncDestModal(Locale locale, Model model) {
+    public String syncDestModal() {
         return "modal/syncDestModal";
     }
 
     @GetMapping(value = "/modal/emailListModal")
-    public String emailListModal(Locale locale, Model model) {
+    public String emailListModal() {
         return "modal/emailListModal";
     }
 
     @GetMapping(value = "/modal/removeErrorModal")
-    public String removeErrorModal(Locale locale, Model model) {
+    public String removeErrorModal() {
         return "modal/removeErrorModal";
     }
 
     @GetMapping(value = "/modal/timeoutModal")
-    public String timeoutModal(Locale locale, Model model) {
+    public String timeoutModal() {
         return "modal/timeoutModal";
     }
 
     @GetMapping(value = "/modal/roleErrorModal")
-    public String roleErrorModal(Locale locale, Model model) {
+    public String roleErrorModal() {
         return "modal/roleErrorModal";
     }
 
     @GetMapping(value = "/modal/ownerErrorModal")
-    public String ownerErrorModal(Locale locale, Model model) {
+    public String ownerErrorModal() {
         return "modal/ownerErrorModal";
     }
 
     @GetMapping(value = "/modal/optErrorModal")
-    public String optErrorModal(Locale locale, Model model) {
+    public String optErrorModal() {
         return "modal/optErrorModal";
     }
 
     @GetMapping(value = "/modal/basisWarningModal")
-    public String basisWarningModal(Locale locale, Model model) {
+    public String basisWarningModal() {
         return "modal/basisWarningModal";
     }
 
     @GetMapping(value = "/modal/importModal")
-    public String importModal(Locale locale, Model model) {
+    public String importModal() {
         return "modal/importModal";
     }
 
     @GetMapping(value = "modal/importErrorModal")
-    public String importErrorModal(Locale locale, Model model) {
+    public String importErrorModal() {
         return "modal/importErrorModal";
     }
 
     @GetMapping(value = "/modal/dynamicModal")
-    public String dynamicModal(Locale locale, Model model) {
+    public String dynamicModal() {
         return "modal/dynamicModal";
     }
 
     @GetMapping(value = "/modal/multiAddResultModal")
-    public String multiAddResultModal(Locale locale, Model model) {
+    public String multiAddResultModal() {
         return "modal/multiAddResultModal";
     }
 
     @GetMapping(value = "/modal/multiRemovePromptModal")
-    public String multiRemovePromptModal(Locale locale, Model model) { return "modal/multiRemovePromptModal"; }
+    public String multiRemovePromptModal() {
+        return "modal/multiRemovePromptModal";
+    }
 
     @GetMapping(value = "/modal/multiRemoveConfirmationModal")
-    public String multiRemoveConfirmationModal(Locale locale, Model model) { return "modal/multiRemoveConfirmationModal"; }
+    public String multiRemoveConfirmationModal() {
+        return "modal/multiRemoveConfirmationModal";
+    }
 }
