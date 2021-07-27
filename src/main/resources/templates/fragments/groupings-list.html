@@ -23,7 +23,7 @@
                 <td class="p-10 clickable align-middle" tabindex="0" aria-label="Click to Manage {{l.name}}"
                     ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
                     ng-click="displayGrouping(currentPageGroupings, $index)">
-                    <i class="fa fa-pencil-square-o" style="color: #004e59;" aria-hidden="true"></i>
+                    <i class="far fa-pencil-square-o" style="color: #004e59;" aria-hidden="true"></i>
                     {{l.name}}
                 </td>
 
@@ -36,7 +36,7 @@
                             <div style="font-size:0;" data-toggle="popover" data-placement="top" data-trigger="click" data-content="copied!">
                                 <button class="btn btn-sm" aria-label="Copy Path Button" tabindex="-1"
                                     ng-click=copyPath(l) ng-mouseover=hoverCopy()>
-                                <i class="fa fa-fw fa-clipboard" aria-hidden="true"></i></button>
+                                <i class="far fa-fw fa-clipboard" aria-hidden="true"></i></button>
                             </div>
                         </div>
                     </form>
