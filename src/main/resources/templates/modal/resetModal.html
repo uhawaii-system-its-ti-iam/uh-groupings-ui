@@ -17,9 +17,9 @@
             <div ng-switch-when="owners">
                 <!-- Warning message that tells the user what will happen if they remove themselves -->
                 <p th:text="#{screen.message.modal.remove.message}"></p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length === 1"
+                <p ng-if="adminsList === undefined && groupingsList.length === 1"
                    th:text="#{screen.message.modal.remove.redirect.home}"></p>
-                <p ng-if="adminsList === undefined &amp;&amp; groupingsList.length > 1"
+                <p ng-if="adminsList === undefined && groupingsList.length > 1"
                    th:text="#{screen.message.modal.remove.redirect.groupings}"></p>
             </div>
             <div ng-switch-when="admins">
