@@ -77,8 +77,8 @@
                                id="blankCheckbox"
                                style="margin-left: 0"
                                ng-model="membersInCheckboxList[e.uhUuid]"
-                               ng-click= "membersInCheckboxList[e.uhUuid]=!membersInCheckboxList[e.uhUuid]
-                                $event.stopPropagation()"/>
+                               ng-click="$event.stopPropagation()
+                               ">
                     </td>
                     <td class="p-10" tabindex="0">
                         {{e.name}}
