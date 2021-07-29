@@ -1354,8 +1354,9 @@
          * Remove a grouping owner. There must be at least one grouping owner remaining.
          * @param {number} currentPage - the current page in the owners table
          * @param {number} index - the index of the owner clicked by the user
+         * @param {object} options - the object
          */
-        $scope.removeOwner = function (currentPage, index) {
+        $scope.removeOwner = function (currentPage, index, options) {
             const ownerToRemove = $scope.pagedItemsOwners[currentPage][index];
 
             if ($scope.groupingOwners.length > 1) {
@@ -1456,8 +1457,7 @@
                 templateUrl: "modal/removeModal",
                 windowClass: windowClass,
                 scope: $scope,
-                backdrop: "static",
-                //keyboard: false
+                backdrop: "static"
             });
 
             $scope.removeModalInstance.result.then(function () {
@@ -1716,8 +1716,7 @@
             $scope.infoModalInstance = $uibModal.open({
                 templateUrl: "modal/infoModal",
                 scope: $scope,
-                backdrop: "static",
-                //keyboard: false
+                backdrop: "static"
             });
         };
 
