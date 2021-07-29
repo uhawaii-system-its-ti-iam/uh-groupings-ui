@@ -38,7 +38,6 @@
          * Complete initialization by fetching a list of admins and list of all groupings.
          */
         $scope.init = function () {
-            // Adds the loading spinner.
             $scope.loading = true;
             groupingsService.getAdminLists(function (res) {
                 $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
@@ -48,7 +47,7 @@
                 $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
                 $scope.loading = false;
 
-            }, function (res) {
+            }, function () {
                 $scope.createApiErrorModal();
             });
         };
@@ -254,12 +253,12 @@
      * Saves the current tab on refresh.
      */
     jQuery.noConflict();
-    $(document).ready(function(){
-        $("[data-toggle='tab']").on("show.bs.tab", function(e) {
+    $(document).ready(function () {
+        $("[data-toggle='tab']").on("show.bs.tab", function (e) {
             localStorage.setItem("activeTab", $(e.target).attr("href"));
         });
-        var activeTab = localStorage.getItem("activeTab");
-        if(activeTab){
+        let activeTab = localStorage.getItem("activeTab");
+        if (activeTab) {
             $("#adminTab a[href='" + activeTab + "']").tab("show");
         }
     });
