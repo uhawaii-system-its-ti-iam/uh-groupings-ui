@@ -25,6 +25,10 @@
                 $scope.createApiErrorModal();
                 // dataProvider.handleException({ exceptionMessage: JSON.stringify(res, null, 4) }, "feedback/error", "feedback");
             });
+
+            groupingsService.getAdminLists(function (res) {
+                $scope.adminsList = _.sortBy(res, "name");
+            });
         };
 
         /**
