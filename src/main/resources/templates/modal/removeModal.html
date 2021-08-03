@@ -32,8 +32,7 @@
         </div>
     </div>
     <p>
-        <span style="color: black" th:text="#{screen.message.modal.remove.confirmation}"></span>
-        <span style="color: black">{{listName}} list.</span>
+        <span style="color: black">You are about to remove the following member from the {{ listName }} list.</span>
     </p>
     <table style="width: 80%;margin-bottom: 30px;">
         <tr>
@@ -49,11 +48,10 @@
             <th class="font-weight-normal">{{ userToRemove.uhUuid }}</th>
         </tr>
     </table>
-    <p> Are you sure you want to remove
-        <span style="font-weight: bold">{{ userToRemove.name }}</span>
-        <span style="color: black"> from the </span>
-        <span style="color: black">{{listName}}</span>
-        <span style="color: black"> list?</span>
+    <p>
+        <span style="color: black">Are you sure you want to remove</span>
+        <span style="font-weight: bold"> {{ userToRemove.name }}</span>
+        <span style="color: black"> from the {{listName}} list?</span>
     </p>
 </div>
 <div class="modal-footer">
