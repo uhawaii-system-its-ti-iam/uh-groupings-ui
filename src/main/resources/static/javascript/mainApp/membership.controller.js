@@ -45,7 +45,8 @@
 
             // Request a list of membership objects from the API.
             groupingsService.getMembershipResults((res) => {
-                    $scope.membershipsList = _.sortBy(_.uniqBy(res, "name"), "name");
+                    let tempList = _.uniqBy(res, "name");
+                    $scope.membershipsList = _.sortBy(tempList, "name");
                     $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
                 },
