@@ -484,7 +484,7 @@ form.seamless button {
     pointer-events: none;
 }
 
-.fa.fa-trash-o {
+.far.fa-trash-alt {
     margin-right: .75rem;
 }
 
@@ -516,7 +516,7 @@ form.seamless button {
     flex: 1;
 }
 
-.fa.fa-fw.fa-pencil-square-o {
+.far.fa-fw.fa-pencil-square-o {
     color: #007bff;
 }
 

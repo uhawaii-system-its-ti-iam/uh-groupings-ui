@@ -74,19 +74,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm"
-                    ng-click="membersInCheckboxList[i.uhUuid]=!membersInCheckboxList[i.uhUuid]">
+                <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm">
                     <td>
                         <input class="form-check-input position-left singlechkbox" type="checkbox"
                                id="blankCheckbox"
                                style="margin-left: 0"
                                ng-model="membersInCheckboxList[i.uhUuid]"
-                               ng-click="$event.stopPropagation()
-                               membersInCheckboxList[i.uhUuid]=!membersInCheckboxList[i.uhUuid]">
+                               ng-click="$event.stopPropagation()">
                     </td>
                     <td class="p-10" tabindex="0">
                         {{i.name}}
-                        <span class="fa fa-trash-o pull-right clickable pt-1" role="button"
+                        <span class="far fa-trash-alt pull-right clickable pt-1" role="button"
                               data-toggle="tooltip" data-placement="top"
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                               tabindex="0" aria-label="Remove {{i.name}} from the Include members list"

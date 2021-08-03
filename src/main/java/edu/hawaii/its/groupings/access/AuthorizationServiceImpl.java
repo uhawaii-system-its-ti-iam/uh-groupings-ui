@@ -30,12 +30,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         roleHolder.add(Role.UH);
 
         //Determine if user is an owner.
-        if (checkResult(groupingsRestController.isOwner(principal))) {
+        if (checkResult(groupingsRestController.hasOwnerPrivs(principal))) {
             roleHolder.add(Role.OWNER);
         }
 
         //Determine if a user is an admin.
-        if (checkResult(groupingsRestController.isAdmin(principal))) {
+        if (checkResult(groupingsRestController.hasAdminPrivs(principal))) {
             roleHolder.add(Role.ADMIN);
         }
         logger.info("fetchRoles: username: " + username + " " + roleHolder.getAuthorities() + ";");
