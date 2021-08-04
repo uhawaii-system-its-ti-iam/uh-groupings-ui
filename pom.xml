@@ -24,7 +24,7 @@
 
         <jquery-version>3.5.0</jquery-version>
         <angular-mocks-version>1.7.9</angular-mocks-version>
-        <angular-ui-bootstrap-version>2.5.0</angular-ui-bootstrap-version>
+        <angular-ui-bootstrap-version>2.2.0</angular-ui-bootstrap-version>
 
         <angularjs-version>1.7.8</angularjs-version>
         <bootstrap-version>4.5.0</bootstrap-version>
@@ -178,7 +178,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angular-ui-bootstrap</artifactId>
-            <version>2.2.0</version>
+            <version>${angular-ui-bootstrap-version}</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.pmd</groupId>
@@ -267,8 +267,8 @@
                         <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js"></source>
                         <source>classpath/META-INF/resources/webjars/jquery/${jquery-version}/jquery.min.js</source>
                         <source>classpath/META-INF/resources/webjars/bootstrap/${bootstrap-version}/js/bootstrap.min.js</source>
-                        <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/2.2.0/ui-bootstrap.min.js</source>
-                        <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js</source>
+                        <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap.min.js</source>
+                        <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls.min.js</source>
                         <source>classpath/META-INF/resources/webjars/angular-mocks/${angular-mocks-version}/angular-mocks.js</source>
                         <source>classpath/META-INF/resources/webjars/lodash/${lodash-version}/lodash.min.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.js</source>
