@@ -80,9 +80,9 @@ public class UserBuilderTest {
         map.put("uhUuid", userContextService.getCurrentUhUuid());
 
 
-        given(groupingsRestController.isOwner(principal))
+        given(groupingsRestController.hasOwnerPrivs(principal))
                 .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
-        given(groupingsRestController.isAdmin(principal))
+        given(groupingsRestController.hasAdminPrivs(principal))
                 .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
 
         User user = userBuilder.make(map);

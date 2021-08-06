@@ -24,46 +24,6 @@
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
         /**
-         * Couple an array of objects into an array of object arrays which contain duplicate paths.
-         */
-        function coupleDuplicatePaths(memberships) {
-            let dups = [];
-            _.forEach(memberships, (membership) => {
-                dups.push(memberships.filter(ms => {
-                    if (ms.name === membership.name) {
-                        return ms;
-                    }
-                }));
-            });
-            return dups;
-        }
-
-        /**
-         * Take the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
-         * all values that each duplicate contained.
-         */
-        function mergeDuplicateValues(dups) {
-            let result = [];
-            _.forEach(dups, (membership) => {
-                if (membership.length > 1) {
-                    _.forEach(membership, m => {
-                        membership[0].inInclude |= m.inInclude;
-                        membership[0].inExclude |= m.inExclude;
-                        membership[0].inBasis |= m.inBasis;
-                        membership[0].inOwner |= m.inOwner;
-                    });
-                }
-                let path = membership[0].path.substring(0, membership[0].path.lastIndexOf(":"));
-                result.push({
-                    "name": membership[0].name,
-                    "path": path,
-                    "optOutEnabled": membership[0].optOutEnabled
-                });
-            });
-            return result;
-        }
-
-        /**
          * Chunk an array of objects into an array of paged object arrays.
          */
         function objToPageArray(obj, size) {
@@ -85,18 +45,8 @@
 
             // Request a list of membership objects from the API.
             groupingsService.getMembershipResults((res) => {
-                    let data = [];
-
-                    _.forEach(res, (membership) => {
-                        if (membership.inInclude) {
-                            data.push(membership);
-                        }
-                    });
-
-                    let dups = coupleDuplicatePaths(data);
-                    let result = mergeDuplicateValues(dups);
-
-                    $scope.membershipsList = _.sortBy(_.uniqBy(result, "name"), "name");
+                    // Codacy throws an error regarding the '_' in the uniqBy function. This error will be ignored until a solution is found.
+                    $scope.membershipsList = _.sortBy(_.uniqBy(res, "name"), "name");
                     $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
                 },

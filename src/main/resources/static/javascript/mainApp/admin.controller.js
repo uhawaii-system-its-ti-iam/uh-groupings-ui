@@ -38,7 +38,6 @@
          * Complete initialization by fetching a list of admins and list of all groupings.
          */
         $scope.init = function () {
-            // Adds the loading spinner.
             $scope.loading = true;
             groupingsService.getAdminLists(function (res) {
                 $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
@@ -48,7 +47,7 @@
                 $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
                 $scope.loading = false;
 
-            }, function (res) {
+            }, function () {
                 $scope.createApiErrorModal();
             });
         };
@@ -63,7 +62,6 @@
                 $scope.loading = true;
                 groupingsService.getMembershipAssignmentForUser(function (res) {
                     $scope.personList = _.sortBy(res, "name");
-                    $scope.personList = mergeManagePersonDuplicateValues($scope.personList);
                     $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
                     $scope.user = $scope.personToLookup;
                     $scope.loading = false;
@@ -76,43 +74,6 @@
         };
 
         /**
-         * With the coupled array created from coupleDuplicatePaths, merge all duplicates into one object and preserve
-         * all values that each duplicate contained. (Changed return values to meet Manager Person tab needs)
-         */
-        function mergeManagePersonDuplicateValues(dups) {
-            let result = [];
-            dups.forEach((membership, index) => {
-                dups.forEach((m, index2) => {
-                    if (membership.name === m.name && index !== index2) {
-                        membership.inInclude |= m.inInclude;
-                        membership.inExclude |= m.inExclude;
-                        membership.inBasis |= m.inBasis;
-                        membership.inOwner |= m.inOwner;
-                        membership.inBasisAndInclude |= m.inBasisAndInclude;
-                    }
-                });
-            });
-            dups.forEach((membership, index) => {
-                let index1 = dups.findIndex((e) => {
-                    return e.name === membership.name;
-                });
-                if (index1 === index) {
-                    // Push the merged result from the duplicates
-                    result.push({
-                        "name": membership.name,
-                        "path": membership.path,
-                        "inInclude": membership.inInclude,
-                        "inExclude": membership.inExclude,
-                        "inBasis": membership.inBasis,
-                        "inOwner": membership.inOwner,
-                        "inBasisAndInclude": membership.inBasisAndInclude
-                    });
-                }
-            });
-            return result;
-        }
-
-        /**
          * Separate the list of Admins into pages.
          */
         $scope.displayAdmins = function () {
@@ -121,7 +82,6 @@
             $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
             $scope.showGrouping = false;
         };
-
 
         /**
          * Separate the list of persons into pages.
@@ -293,12 +253,12 @@
      * Saves the current tab on refresh.
      */
     jQuery.noConflict();
-    $(document).ready(function(){
-        $("[data-toggle='tab']").on("show.bs.tab", function(e) {
+    $(document).ready(function () {
+        $("[data-toggle='tab']").on("show.bs.tab", function (e) {
             localStorage.setItem("activeTab", $(e.target).attr("href"));
         });
-        var activeTab = localStorage.getItem("activeTab");
-        if(activeTab){
+        let activeTab = localStorage.getItem("activeTab");
+        if (activeTab) {
             $("#adminTab a[href='" + activeTab + "']").tab("show");
         }
     });
