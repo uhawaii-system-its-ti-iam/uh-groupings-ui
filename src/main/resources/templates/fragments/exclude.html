@@ -77,12 +77,12 @@
                                id="blankCheckbox"
                                style="margin-left: 0"
                                ng-model="membersInCheckboxList[e.uhUuid]"
-                               ng-click= "membersInCheckboxList[e.uhUuid]=!membersInCheckboxList[e.uhUuid]
-                                $event.stopPropagation()"/>
+                               ng-click="$event.stopPropagation()
+                               ">
                     </td>
                     <td class="p-10" tabindex="0">
                         {{e.name}}
-                        <span class="fa fa-trash-o pull-right clickable pt-1"  role="button"
+                        <span class="far fa-trash-alt pull-right clickable pt-1"  role="button"
                               data-toggle="tooltip" data-placement="top"
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                               tabindex="0" aria-label="Remove {{e.name}} from the Exclude members list"

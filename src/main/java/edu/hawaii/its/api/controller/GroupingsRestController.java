@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -117,9 +116,9 @@ public class GroupingsRestController {
      * Check if principle is an administrator.
      */
     @GetMapping(value = "/admins")
-    public ResponseEntity<String> isAdmin(Principal principal) {
+    public ResponseEntity<String> hasAdminPrivs(Principal principal) {
         logger.info("Entered REST isAdmin...");
-        String uri = String.format(API_2_1_BASE + "/admins/%s/", principal.getName());
+        String uri = String.format(API_2_1_BASE + "/admins", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -210,8 +209,7 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
-    @RequestMapping(value = "/members/{uid}/groupings",
-            method = RequestMethod.GET,
+    @GetMapping(value = "/members/{uid}/groupings",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> membershipAssignment(Principal principal,
                                                        @PathVariable String uid) {
@@ -245,7 +243,6 @@ public class GroupingsRestController {
     }
 
     /**
-<<<<<<< HEAD
      * Add a user to include group of grouping at path.
      */
     @PostMapping(value = "/{groupingPath}/{userToAdd}/addMemberToIncludeGroup")
@@ -260,8 +257,6 @@ public class GroupingsRestController {
     }
 
     /**
-=======
->>>>>>> c87bb5fd... Refactor endpoints.
      * Add a list of usersToAdd to include group of grouping at path.
      */
     @PostMapping(value = "/{groupingPath}/{usersToAdd}/addMembersToIncludeGroup")
@@ -277,7 +272,6 @@ public class GroupingsRestController {
     }
 
     /**
-<<<<<<< HEAD
      * Add a user to exclude group of grouping at path.
      */
     @PostMapping(value = "/{groupingPath}/{userToAdd}/addMemberToExcludeGroup")
@@ -292,8 +286,6 @@ public class GroupingsRestController {
     }
 
     /**
-=======
->>>>>>> c87bb5fd... Refactor endpoints.
      * Add a list of usersToAdd to exclude group of grouping at path.
      */
     @PostMapping(value = "/{groupingPath}/{usersToAdd}/addMembersToExcludeGroup")
@@ -313,8 +305,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{usersToDelete}/removeMembersFromIncludeGroup")
     public ResponseEntity<String> removeMembersFromIncludeGroup(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String usersToDelete) {
+                                                                @PathVariable String groupingPath,
+                                                                @PathVariable String usersToDelete) {
         logger.info("Entered REST deleteMembersFromIncludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUserToDelete = policy.sanitize(usersToDelete);
@@ -329,8 +321,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{usersToDelete}/removeMembersFromExcludeGroup")
     public ResponseEntity<String> removeMembersFromExcludeGroup(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String usersToDelete) {
+                                                                @PathVariable String groupingPath,
+                                                                @PathVariable String usersToDelete) {
         logger.info("Entered REST deleteMembersFromExcludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUserToDelete = policy.sanitize(usersToDelete);
@@ -354,9 +346,9 @@ public class GroupingsRestController {
      * Check if principle is an owner, of any grouping.
      */
     @GetMapping(value = "/owners")
-    public ResponseEntity<String> isOwner(Principal principal) {
+    public ResponseEntity<String> hasOwnerPrivs(Principal principal) {
         logger.info("Entered REST isOwner...");
-        String uri = String.format(API_2_1_BASE + "/owners/%s/", principal.getName());
+        String uri = String.format(API_2_1_BASE + "/owners", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
