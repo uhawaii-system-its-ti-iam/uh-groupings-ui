@@ -27,8 +27,7 @@
             });
 
             //Get rid of Codacy '_' is undefined error
-            /*eslint no-undef: "error"*/
-            /*eslint-env browser*/
+            /*global _*/
             groupingsService.getAdminLists(function (res) {
                 $scope.adminsList = _.sortBy(res, "name");
             });
