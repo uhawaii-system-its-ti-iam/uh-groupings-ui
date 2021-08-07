@@ -30,7 +30,6 @@ import edu.hawaii.its.api.service.HttpRequestService;
 @RestController
 @RequestMapping("/api/groupings")
 public class GroupingsRestController {
-
     
     private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
 
