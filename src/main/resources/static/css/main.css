@@ -36,8 +36,6 @@ main {
 }
 
 .loader {
-    border: 16px solid white; /* Black */
-    border-top: 16px solid black; /* Blue */
     border-radius: 50%;
     width: 150px;
     height: 150px;
@@ -51,8 +49,6 @@ main {
 
 .small-loader {
     float: right;
-    border: 2px solid white; /* Black */
-    border-top: 2px solid black; /* Blue */
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -92,14 +88,8 @@ td.uh-pre {
 }
 
 .navbar {
-    background-color: white;
     padding-top: 0;
     padding-bottom: 0;
-}
-
-.fixed-top .navbar-nav {
-    /*padding: 2.5rem 0 0 0;
-    font-size: .9375rem;*/
 }
 
 .fixed-top .navbar-brand {
@@ -123,26 +113,10 @@ td.uh-pre {
     padding-right: .3125rem;
 }
 
-.navbar .navbar-nav .nav-link {
-    color: var(--uh-dark-gray);
-}
-
-.navbar .navbar-nav .nav-link:hover,
-.navbar .navbar-nav .nav-link:focus,
-.navbar .navbar-nav .nav-link:active {
-    color: var(--teal);
-}
-
 .navbar .navbar-logout {
     padding: .5rem .5625rem;
-    /*font-size: .9375rem;*/
-    color: #212529;
     border: 0;
     text-decoration: none;
-}
-
-.navbar .navbar-logout:hover {
-    color: rgba(0, 0, 0, .7);
 }
 
 .user-icon {
@@ -159,10 +133,6 @@ td.uh-pre {
 
 .spacer {
     margin-top: 2.5rem;
-}
-
-.required-asterisk {
-    color: red;
 }
 
 .card.card-with-table {
@@ -235,30 +205,6 @@ table .p-12 {
     border-bottom: none;
 }
 
-@media (min-width: 992px) {
-    body {
-        /*padding-top: 7.1875rem; Required padding for .navbar-fixed-top. Change if height of navigation changes. */
-        /*padding-bottom: 3.125rem;*/
-    }
-
-    .navbar {
-        background-color: white;
-    }
-
-    .navbar .nav {
-        padding: 2.5rem 1.25rem 0 0;
-        background-color: white;
-    }
-
-    .navbar .navbar-brand {
-        padding: 0;
-    }
-
-    .navbar .navbar-brand > img {
-        background-color: transparent;
-    }
-}
-
 @media (max-width: 991px) {
     .navbar .navbar-logout {
         padding-left: 0;
@@ -279,23 +225,6 @@ table .p-12 {
 
 .sort-icon.reverse:after {
     content: '\f106';
-}
-
-.modal-danger, .modal-danger .modal-title {
-    color: #721c24;
-}
-
-.modal-danger .modal-header {
-    background-color: #f8d7da;
-    border-bottom-color: #f8d7da;
-}
-
-.modal-danger .modal-body {
-    background-color: #ffeaece6;
-}
-
-.modal-danger .modal-footer {
-    border-top-color: #ffeaece6;
 }
 
 .fade.in {
@@ -339,14 +268,6 @@ table .p-12 {
 
     .modal-dialog::before {
         height: calc(100vh - (1.75rem * 2));
-    }
-}
-
-@media (max-width: 575.98px) {
-    .nav.nav-tabs.flex-column > .nav-item > .nav-link {
-        border: none;
-        background-color: #e3f2ef;
-        padding: 0px 0px 2px 0px;
     }
 }
 
@@ -516,10 +437,13 @@ form.seamless button {
     flex: 1;
 }
 
+<<<<<<< HEAD
 .far.fa-fw.fa-edit {
     color: #007bff;
 }
 
+=======
+>>>>>>> fe7b32e0 (Move all colors from main.css to colors.css)
 .btn-bottom {
     position: absolute;
     bottom: 0;
@@ -532,15 +456,6 @@ form.seamless button {
 
 #footer-top {
     margin-top: 3rem;
-}
-
-.selected {
-    background-color: #004e59;
-    color: white;
-}
-
-.animate-if {
-    color: black;
 }
 
 .animate-if.ng-enter, .animate-if.ng-leave {
@@ -591,7 +506,6 @@ form.seamless button {
 }
 
 .blu-bold {
-    color: #212529;
     font-weight: bold;
 }
 
@@ -671,15 +585,11 @@ label input {
 }
 
 .description-form-button {
-    background-color: white;
-    color: #004252;
-    border: white;
     margin: 5px;
 }
 
 .description-input {
     float: left;
-    border: white;
 }
 
 .check-remove {
