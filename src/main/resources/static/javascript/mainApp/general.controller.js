@@ -1419,8 +1419,7 @@
             } else if ($scope.currentUser === $scope.userToRemove.username) {
                 // Removing self from last grouping owned -> redirect to home page and then logout
                 if ($scope.groupingsList.length === 1) {
-                    $window.location.href = "/uhgroupings/";
-                    $scope.reDirect();
+                    $window.location.href = "/uhgroupings/login";
                 } else {
                     $window.location.href = "groupings";
                 }
@@ -1433,8 +1432,7 @@
         function handleAdminRemove() {
             // Removing self as admin -> redirect to home page and then logout
             if ($scope.currentUser === $scope.userToRemove.username) {
-                $window.location.href = "/uhgroupings/";
-                $scope.reDirect();
+                $scope.returnHome();
             } else {
                 $scope.init();
             }
@@ -1480,7 +1478,8 @@
         /**
          * Log out user and redirect them to Homepage
          */
-        $scope.reDirect = function () {
+        $scope.returnHome = function () {
+            $window.location.href = "/uhgroupings/";
             let r = new XMLHttpRequest();
             r.open("POST", "/uhgroupings/logout", true);
             r.setRequestHeader("X-XSRF-TOKEN", $scope.getCookie("XSRF-TOKEN"));
