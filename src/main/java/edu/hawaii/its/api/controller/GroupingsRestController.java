@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,6 +97,15 @@ public class GroupingsRestController {
         String safeInput = policy.sanitize(uid);
 
         String uri = String.format(API_2_1_BASE + "/members/%s", safeInput);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+    /**
+     * Get a list of grouping paths that the current user can opt into.
+     */
+    @GetMapping(value = "/groupings/optInGroups")
+    public ResponseEntity<String> getOptInGroups(Principal principal) {
+        logger.info("Entered REST optInGroups...");
+        String uri = String.format(API_2_1_BASE + "/groupings/optInGroups/%s", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 

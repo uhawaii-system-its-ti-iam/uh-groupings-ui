@@ -23,30 +23,61 @@
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
         /**
+         * Chunk an array of objects into an array of paged object arrays.
+         */
+        function objToPageArray(obj, size) {
+            let i = 0;
+            let arr = [];
+            while (i < obj.length) {
+                arr.push(obj.slice(i, size + i));
+                i += size;
+            }
+            return arr;
+        }
+
+        /**
          * Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
          * is able to opt out of.
          */
         $scope.init = function () {
             $scope.loading = true;
 
-            groupingsService.getMembershipAssignment(function (res) {
-                $scope.membershipsList = _.sortBy(res.groupingsIn, "name");
-                $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, true);
+            // Request a list of membership objects from the API.
+            groupingsService.getMembershipAssignment((res) => {
+                    console.log(res);
+                    // Codacy throws an error regarding the '_' in the uniqBy function. This error will be ignored until a solution is found.
+                    $scope.membershipsList = _.sortBy(_.uniqBy(res, "name"), "name");
+                    $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
+                    $scope.loading = false;
+                },
+                (res) => {
+                    $scope.createApiErrorModal();
+                }
+            );
 
-                $scope.optInList = _.sortBy(res.groupingsToOptInTo, "name");
-                $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
-
-                $scope.loading = false;
-            }, function (res) {
-                dataProvider.handleException({exceptionMessage: JSON.stringify(res, null, 4)}, "feedback/error", "feedback");
-            });
+            // Request a list of opt-in-able paths from the API.
+            $scope.optInList = [];
+            groupingsService.getOptInGroups((res) => {
+                    _.forEach(res, (path) => {
+                        $scope.optInList.push({
+                            "name": path.split(":").pop(),
+                            "path": path
+                        });
+                    });
+                    $scope.optInList = _.sortBy($scope.optInList, "name");
+                    $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
+                },
+                (res) => {
+                    $scope.createApiErrorModal();
+                }
+            );
         };
 
         $scope.memberFilterReset = function () {
             $scope.membersQuery = "";
             $scope.optInQuery = "";
-            $scope.filter($scope.membershipsList, 'pagedItemsMemberships', 'currentPageMemberships', $scope.membersQuery, true);
-            $scope.filter($scope.optInList, 'pagedItemsOptInList', 'currentPageOptIn', $scope.optInQuery, true);
+            $scope.filter($scope.membershipsList, "pagedItemsMemberships", "currentPageMemberships", $scope.membersQuery, true);
+            $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
         };
 
         /**
