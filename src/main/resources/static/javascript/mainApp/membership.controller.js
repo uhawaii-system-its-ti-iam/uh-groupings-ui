@@ -36,7 +36,7 @@
         }
 
         /**
-         * Loads the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
+         * Load the groups the user is a member in, the groups the user is able to opt in to, and the groups the user
          * is able to opt out of.
          */
         $scope.init = function () {
@@ -45,12 +45,11 @@
             // Request a list of membership objects from the API.
             groupingsService.getMembershipAssignment((res) => {
                     console.log(res);
-                    // Codacy throws an error regarding the '_' in the uniqBy function. This error will be ignored until a solution is found.
                     $scope.membershipsList = _.sortBy(_.uniqBy(res, "name"), "name");
                     $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
                 },
-                (res) => {
+                () => {
                     $scope.createApiErrorModal();
                 }
             );
@@ -67,7 +66,7 @@
                     $scope.optInList = _.sortBy($scope.optInList, "name");
                     $scope.filter($scope.optInList, "pagedItemsOptInList", "currentPageOptIn", $scope.optInQuery, true);
                 },
-                (res) => {
+                () => {
                     $scope.createApiErrorModal();
                 }
             );
