@@ -237,6 +237,7 @@
                     }
                     $scope.descriptionLoaded = true;
                     $scope.paginatingProgress = true;
+                    $scope.paginatingComplete = false;
 
                     switch (type) {
                       case "All": {
