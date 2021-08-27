@@ -462,14 +462,13 @@
 
                 const memberUuid = member.uuid;
                 if (_.some($scope.groupingBasis, { uuid: memberUuid })) {
-
                     member.whereListed = "Basis";
+                    if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
+                        member.whereListed = "Basis, Include";
+                    }
                 }
-
-                if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
-                    member.whereListed = _.isUndefined(member.whereListed)
-                        ? "Include"
-                        : "Basis & Include";
+                else if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
+                    member.whereListed = "Include";
                 }
             });
         };
