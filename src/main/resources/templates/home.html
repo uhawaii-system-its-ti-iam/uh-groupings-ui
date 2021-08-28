@@ -132,9 +132,9 @@
                         <a class="btn dark-teal-bg btn-bottom" th:href="@{/admin}">Admin</a>
                     </div>
                 </div>
-                <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')">
+                <div class="col-md-4 mb-5 mb-md-0" sec:authorize="hasRole('ROLE_UH')"
+                     ng-controller="MembershipJsController" data-ng-init="init()">
                     <div class="dashboard-item-icon text-primary mb-3">
-                        <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
                         <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
                         <span id="memberCount" class="h1" hidden>{{membershipsList.length}}</span>
                     </div>
@@ -144,9 +144,9 @@
                         <a class="btn dark-teal-bg btn-bottom" th:href="@{/memberships}">Memberships</a>
                     </div>
                 </div>
-                <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')">
+                <div class="col-md-4" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_OWNER')"
+                     ng-controller="OwnerJsController" data-ng-init="init()">
                     <div class="dashboard-item-icon text-primary mb-3">
-                        <i class="fa fa-id-card fa-3x mr-4" aria-hidden="true"></i>
                         <i class="fa fa-wrench fa-3x mr-3" aria-hidden="true"></i>
                         <span id="groupCount" class="h1" hidden>{{groupingsList.length}}</span>
                     </div>
@@ -166,3 +166,9 @@
 <div th:replace="footer"></div>
 </body>
 </html>
+<script>
+    function loaded() {
+        document.getElementById("memberCount").hidden = false;
+        document.getElementById("groupCount").hidden = false;
+    }
+</script>
