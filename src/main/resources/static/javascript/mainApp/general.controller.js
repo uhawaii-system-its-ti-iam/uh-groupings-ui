@@ -205,6 +205,9 @@
          * Retrieves information asynchronously page by page
          */
         $scope.getGroupingInformation = function (type) {
+
+            $scope.loading = true;
+            
             //Increments due to being called again
             asyncThreadCount++;
             /**
