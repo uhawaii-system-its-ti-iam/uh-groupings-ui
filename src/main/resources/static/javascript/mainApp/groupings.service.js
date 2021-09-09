@@ -106,7 +106,7 @@
             addMembersToExcludeAsync(usersToAdd, path, onSuccess, onError, modal) {
                 let endpoint = BASE_URL + path + "/" + usersToAdd + "/addMembersToExcludeGroup";
                 return new Promise(resolve => {
-                    dataProvider.updateDataWithTimeoutModal(endpoint, modal, onSuccess, onError);
+                    dataProvider.updateDataWithTimeoutModal(endpoint, onSuccess, onError, modal);
                 });
             },
 
