@@ -70,7 +70,8 @@
                     <div class="col-md-4">
                         <div class="text-center">
                             <img th:src="@{images/id-email.png}"
-                                 th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x}" alt="cogs" role="presentation">
+                                 th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x}" alt="cogs"
+                                 role="presentation">
                         </div>
                         <p class="text-center" th:utext="#{screen.message.home.page.listServ}"></p>
                     </div>
@@ -161,14 +162,7 @@
         </div>
     </div>
 </main>
-
 <!-- / Content container. -->
 <div th:replace="footer"></div>
 </body>
 </html>
-<script>
-    function loaded() {
-        document.getElementById("memberCount").hidden = false;
-        document.getElementById("groupCount").hidden = false;
-    }
-</script>
