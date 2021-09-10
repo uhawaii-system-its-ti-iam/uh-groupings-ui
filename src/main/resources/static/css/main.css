@@ -437,13 +437,10 @@ form.seamless button {
     flex: 1;
 }
 
-<<<<<<< HEAD
 .far.fa-fw.fa-edit {
     color: #007bff;
 }
 
-=======
->>>>>>> fe7b32e0 (Move all colors from main.css to colors.css)
 .btn-bottom {
     position: absolute;
     bottom: 0;
