@@ -454,3 +454,12 @@ h3{
 .navbar .navbar-nav .nav-link {
     color: var(--uh-dark-gray);
 }
+
+.new-color-bold { 
+    color: #1c6070; 
+    font-weight: bold;
+}
+
+.font-weight-normal { 
+    font-weight: normal;
+}

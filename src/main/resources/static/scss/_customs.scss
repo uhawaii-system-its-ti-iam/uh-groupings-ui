@@ -1,0 +1,46 @@
+//COLORS
+
+/* Use existing colors where available. */
+/* Prefix uh colors with uh- */
+$deep-blue: #424895; 
+$green-blue: #004e59;
+$uh-blue1: #00a6b2; 
+$uh-blue2: #007bff;
+$uh-blue3: #0050AD;
+$uh-blue4: #4c90a8;
+
+$uh-teal: #0d7078;
+$light-teal: #52c4b5; 
+$teal-tint: #c7e7e0;
+$dark-teal: #004252; 
+$seafoam: #e3f2ef;
+$text-color: #1c6070; 
+
+$uh-black: #212121; 
+$uh-dark-gray: #454545; 
+$uh-white: #efefef; 
+
+$uh-red: #d21515; 
+$uh-red1: #721c24; 
+$uh-red2: #f8d7da; 
+$uh-red3: #ffeaece6;
+
+//bootstrap overrides 
+.text-primary {
+  color: $dark-teal !important;
+}
+
+.text-muted {
+  color: $uh-teal !important;
+}
+
+.text-info {
+  color: $uh-blue1 !important;
+}
+
+//this is to create the fade background for danger modal
+.fade:not(.show) { 
+  opacity: 1;
+}
+
+//import bootstrap

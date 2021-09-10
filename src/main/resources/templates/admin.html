@@ -16,15 +16,15 @@
         <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
         <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="adminTab">
             <li role="presentation" class="nav-item">
-                <a href="#manage-groupings" data-toggle="tab" class="nav-link active" style="color: var(--uh-black)" role="tab">
+                <a href="#manage-groupings" data-toggle="tab" class="nav-link active tab-color" role="tab">
                     Manage Groupings
                 </a>
             <li class="nav-item" role="presentation" ng-click="displayAdmins()">
-                <a href="#manage-admins" data-toggle="tab" class="nav-link" style="color: var(--uh-black)"  role="tab">
+                <a href="#manage-admins" data-toggle="tab" class="nav-link tab-color" role="tab">
                     Manage Admins
                 </a>
             <li class="nav-item" role="presentation" ng-click="displayPerson()">
-                <a href="#manage-person" data-toggle="tab" class="nav-link" style="color: var(--uh-black)"  role="tab">
+                <a href="#manage-person" data-toggle="tab" class="nav-link tab-color" role="tab">
                     Manage Person
                 </a>
             </li>
@@ -34,10 +34,10 @@
 
 <main>
     <div class="container">
-        <div id="overlay" ng-show="loading">
+        <div id="overlay" class="ng-hide" ng-show="loading">
             <div class="loader" ng-show="loading"></div>
         </div>
-        <div ng-show="!showGrouping" id="adminContainer" style="display: none">
+        <div ng-show="!showGrouping" id="adminContainer" class="hide-content">
             <div class="tab-content" role="tablist"
                  ng-init="changeStyleAttribute('adminContainer', 'display', 'unset')">
                 <!-- Manage Groupings -->
@@ -140,9 +140,7 @@
                                                 ng-blur="errorDismissed = true; resetErrors()"
                                                 ng-click="resetErrors(); errorDismissed = false">Add
                                         </button>
-                                        <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse"
-                                             style="display:inline-block; margin-top: .75em;">
-                                        </div>
+                                        <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse"></div>
                                     </div>
                                 </div>
                                 <div th:replace="fragments/add-error-messages :: add-error-messages"></div>

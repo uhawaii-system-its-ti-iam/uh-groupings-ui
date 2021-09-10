@@ -1,0 +1,89 @@
+.navbar { 
+    background-color: white;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    & .navbar-nav { 
+        & .nav-link { 
+            color: $uh-dark-gray;
+            &:hover, :focus, :active { 
+                color: $uh-teal
+            }
+        }
+        & .nav-item { 
+            padding-left: .3125rem; 
+            padding-right: .3125rem;
+        }
+    }
+
+
+}
+
+.fixed-top .navbar-brand { 
+    padding: 0;
+}
+
+.nav-tabs {
+    & .nav-link { 
+        border: none; 
+    }
+    & .nav-item { 
+        margin-top: 1rem;
+    }
+}
+
+.nav-link { 
+    white-space: nowrap;
+}
+
+//CONTENT CONTAINER FOR ADMIN.HTML AND MEMBERSHIPS.HTML
+.nav.nav-tabs { 
+    border-bottom: none;
+}
+
+//SIDE NAV FOR CARD
+//hover over side bar icons
+.tooltip {
+    pointer-events: none;
+}
+
+//makes the side nav bar circle centered
+#group-pills > .nav-item {
+    width: 2.75rem;
+    height: 2.75rem;
+
+    // Makes the side nav bar icons centered
+    > .nav-link { 
+        padding-left: .75rem;
+    }
+}
+
+.nav-item.mx-auto .nav-link.rounded-circle .side-nav {
+    align-items: center;
+}
+
+//side bar for card
+.nav-pills .show > .nav-link {
+    background: white;
+    color: $dark-teal;
+}
+
+.nav-pills {
+    //sidebar set's the icon color and the height of the circle 
+    & .nav-link { 
+        color: $dark-teal;
+        height: 44px;
+        //side bar for card
+        &.active { 
+            position: relative;
+            background-color: white;
+            background: white;
+            color: $dark-teal;
+             /**can be deleted creates what happens after you click on side nav icons*/
+            &::after { 
+                right: -30px;
+            }
+        }
+    }
+}
+

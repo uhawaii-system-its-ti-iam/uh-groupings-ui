@@ -28,6 +28,7 @@ form.seamless button {
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 .btn.dark-teal-bg:active, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:hover {
   color: #efefef;
   background: #004e59;
@@ -42,6 +43,8 @@ form.seamless button {
   color: #e3f2ef;
 }
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 .btn-bottom {
@@ -142,13 +145,19 @@ form.seamless button {
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 .btn:hover #name,
 .btn:focus #name,
 .btn:active #name {
   color: #e3f2ef;
 }
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .btn-light:hover {
   color: white;
@@ -170,7 +179,10 @@ form.seamless button {
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 .btn.dark-teal-bg:hover, .btn.dark-teal-bg :focus, .btn.dark-teal-bg :active {
   color: #efefef;
   background: #004e59;
@@ -181,6 +193,9 @@ form.seamless button {
   margin-right: 2px;
 }
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 .fa.fa-fw.fa-edit {
   color: #004252;

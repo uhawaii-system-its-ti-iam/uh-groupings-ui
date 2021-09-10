@@ -1,0 +1,94 @@
+// Groupings card
+.card { 
+    overflow: hidden;
+    margin-top: 1rem;
+
+    &.card-tab-content { 
+        & .card-header { 
+            border-top-left-radius: 0px;
+            margin-top: 0rem;
+        }
+    }
+}
+
+/*Might consider moving this so tables.scss*/
+// In admin, memberships, and groupings.
+.manage-groupings { 
+    & td:first-child { 
+        & i { 
+            flex-basis: 20px; 
+            margin-right: 8px;
+        }
+        & span { 
+            flex: 1;
+        }
+    }
+    & td:last-child {
+        max-width: 220px;
+    }
+    & td { 
+        & span { 
+            &.path { 
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: calc(100% - 40px);
+                white-space: nowrap;
+            }
+        }
+        &:last-child { 
+            max-width: 220px;
+        }
+    }
+    & tr { 
+        & td { 
+            padding: 0px;
+        }
+    }
+}
+
+//grouping path
+.form-control-sm {
+    height: 25px !important;
+}
+
+#selectall { 
+    margin-left: 0;
+}
+
+//selected grouping 
+.description-input {
+    float: left;
+}
+
+//displays nothign when page is loading
+#groupingsContainer { 
+    display: none;
+}
+
+//basis 
+
+//Export to CSV button and loading getting members 
+.inlineblocking { 
+    display: inline-block;
+}
+
+//Exclude tab 
+
+//Members to remove section (RECENTLY ADDED) 
+.input-group { 
+    width: 100%;
+}
+
+.basis-column { 
+    width: 3%;
+}
+
+//add's margin to the buttons
+.add-margin { 
+    margin-left: 2px;
+}
+
+.inline-block { 
+    display: inline-block;
+}

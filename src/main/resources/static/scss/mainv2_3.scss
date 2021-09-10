@@ -1,0 +1,22 @@
+@import 'customs';
+
+//import the componenets
+@import 'components/buttons';
+@import 'components/media'; 
+@import 'components/mixins';
+@import 'components/backgrounds';
+@import 'components/typography';
+
+//IMPORT THE SECTIONS 
+@import 'sections/admins';  
+@import 'sections/footer'; 
+@import 'sections/feedback';
+@import 'sections/groupings'; 
+@import 'sections/home'; 
+@import 'sections/info'; 
+@import 'sections/memberships';
+@import 'sections/navbar'; 
+@import 'sections/error';
+@import 'sections/modals';
+@import 'sections/tables';
+ 

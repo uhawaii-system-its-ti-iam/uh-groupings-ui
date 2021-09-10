@@ -1,0 +1,54 @@
+h1, h2, h3, h5, .text-left, span { 
+    color: $text-color;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 2rem;
+    padding: 0px;
+}
+
+h3 {
+    font-size: 1.17rem;
+}
+
+h4 {
+    font-size: 1rem;
+}
+
+/* For html span code */
+.modal-black-text {
+    color: black
+}
+
+// Tabs on admin.html 
+.tab-color { 
+    color: $uh-black;
+
+    &:hover, :focus, :active {
+        color: $uh-black;
+    }
+}
+
+/* For html span code */
+.font-weight-bold {
+    font-weight: bold;
+}
+
+// Normal font weight for th and td
+.font-weight-normal  {
+    font-weight: normal;
+}
+
+//when you hover over the clipboard text
+.hover-text { 
+    font-size: 0px;
+}
+
+//align no memberships available text 
+.no-memberships-text { 
+    text-align: center;
+}

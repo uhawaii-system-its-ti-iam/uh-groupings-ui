@@ -1,0 +1,227 @@
+@media (max-width: 991px) { 
+    .navbar .navbar-logout { 
+        padding-left: 0;
+    }
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        min-height: calc(100% - (1.75rem * 2));
+    }
+
+    .modal-dialog::before {
+        height: calc(100vh - (1.75rem * 2));
+    }
+}
+
+@media (max-width: 575.98px) {
+    .img-fluid {
+        width: 210px;
+    }
+}
+
+@media (min-width: 992px) {
+    th.grouping-name {
+        min-width: 10rem;
+    }
+}
+
+@media (max-width: 789px) {
+    .card-title {
+        text-align: center;
+    }
+}
+
+@media (max-width: 789px) {
+    .card-title-text {
+        text-align: center;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .tooltip {
+        display: none;
+    }
+}
+
+@media (max-width: 992px) {
+    .import-table-thead-tbody-tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 991px) {
+    .navbar .navbar-logout {
+      padding-left: 0;
+    }
+  }
+  
+  @media (min-width: 576px) {
+    .modal-dialog {
+      min-height: calc(100% - (1.75rem * 2));
+    }
+    .modal-dialog::before {
+      height: calc(100vh - (1.75rem * 2));
+    }
+  }
+  
+  @media (max-width: 575.98px) {
+    .img-fluid {
+      width: 210px;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    th.grouping-name {
+      min-width: 10rem;
+    }
+  }
+  
+  @media (max-width: 789px) {
+    .card-title {
+      text-align: center;
+    }
+  }
+  
+  @media (max-width: 789px) {
+    .card-title-text {
+      text-align: center;
+    }
+  }
+  
+  @media (max-width: 991.98px) {
+    .tooltip {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .import-table-thead-tbody-tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+      white-space: nowrap;
+    }
+  }
+
+  @media screen and (max-width: 767.9px) {
+    .nav-pills .nav-link.active:after {
+        border-width: 0 10px 10px 10px;
+        border-color: transparent transparent #fff transparent;
+        bottom: -16px;
+        left: 33%;
+    }
+}
+@media screen and (max-width: 767.9px) {
+    .nav-pills .nav-link.active:after {
+        border-color: transparent transparent #fff transparent;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .nav-pills .nav-link.active:after {
+        border-width: 10px 10px 10px 0;
+        border-color: transparent #fff transparent transparent;
+        top: 25%;
+        right: -35px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .nav.nav-tabs.flex-column > .nav-item > .nav-link {
+        border: none;
+        background-color: #e3f2ef;
+        padding: 0px 0px 2px 0px;
+    }
+}
+
+@media (min-width: 992px) {
+
+    .navbar {
+        background-color: white;
+    }
+
+    .navbar .nav {
+        padding: 2.5rem 1.25rem 0 0;
+        background-color: white;
+    }
+
+    .navbar .navbar-brand {
+        padding: 0;
+    }
+
+    .navbar .navbar-brand > img {
+        background-color: transparent;
+    }
+}
+
+@media (min-width: 992px) {
+
+    .navbar {
+        background-color: white;
+    }
+
+    .navbar .nav {
+        padding: 2.5rem 1.25rem 0 0;
+        background-color: white;
+    }
+
+    .navbar .navbar-brand {
+        padding: 0;
+    }
+
+    .navbar .navbar-brand > img {
+        background-color: transparent;
+    }
+}
+
+/**
+ * Styling for selected grouping header.
+ * Styles the grouping name and 'Return to Groupings'
+ * button, so on mobile, the button sits on top of the
+ * grouping name, eliminating whitespace.
+ */
+ @media screen and (max-width: 735px) {
+    #selectedGroupHeader {
+        display: table; /* The row is now a table */
+        /* Centering */
+        margin: auto;
+        width: 100%;
+        padding: 0px;
+    }
+
+    #groupNameCol {
+        display: table-footer-group; /* Makes the grouping name the footer of table */
+    }
+
+    #returnToGroup {
+        display: table-header-group; /* Makes the button the header of table */
+
+    }
+
+}
+
+/**
+ * Styling for selected grouping header.
+ * Styles the grouping name and 'Return to Groupings'
+ * button, when browser size decreases, the button sits
+ * on top of the grouping name, elimitaing whitespace.
+ */
+ @media screen and (min-width: 3000px) {
+    #groupNameCol {
+        display: inline-block; /* displays group name inline */
+    }
+
+    #returnToGroup {
+        display: inline-block; /* displays 'return to groupings button' inline */
+    }
+}
+
+@media (max-width: 991.98px) {
+    .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
+        align-items: center;
+    }
+}

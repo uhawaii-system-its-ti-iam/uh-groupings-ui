@@ -3,9 +3,9 @@
         <div class="row">
             <div class="col-md-8">
                 <h1 class="font-weight-bold text-dark pt-2 mb-0">Exclude ({{groupingExclude.length}})</h1>
-                <p class=" mb-1" style="display:inline-block" ng-show="paginatingProgress"
+                <p class=" mb-1 inline-block" ng-show="paginatingProgress"
                    th:text="#{screen.message.common.loading.gettingmembers}"></p>
-                <div class="spinner-border spinner-border-sm" style="display:inline-block"
+                <div class="spinner-border spinner-border-sm inline-block"
                      ng-hide="!paginatingProgress"
                      role="status">
                     <span class="sr-only">Loading...</span>
@@ -18,8 +18,7 @@
                        ng-model="excludeQuery" class="form-control" aria-label="Filter Members..."
                        ng-change="filter(groupingExclude, 'pagedItemsExclude', 'currentPageExclude', excludeQuery, true)"/>
                 <!-- Export to CSV button -->
-                <div class="float-right"
-                     style="display:inline-block">
+                <div class="float-right inline-block">
                     <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
                             ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
                             uib-tooltip="{{ getCSVToolTipMessage() }}"
@@ -35,9 +34,8 @@
             <table class="table table-striped table-hover" aria-live="assertive">
                 <thead>
                 <tr>
-                    <th scope="col" class="clickable center-checkbox" style="vertical-align: top; margin-left: 5px">
+                    <th scope="col" class="clickable center-checkbox">
                         <input class="form-check-input" type="checkbox" id="selectall"
-                               style="margin-left: 0"
                                ng-model="allSelected"
                                ng-click="toggleCheckAllSelection('Exclude')"
                                value="option1" data-toggle="tooltip" data-placement="top" title="Check all"
@@ -72,10 +70,9 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
-                    <td class="p-10" style="margin-left: 4px">
+                    <td>
                         <input class="form-check-input singlechkbox" type="checkbox"
                                id="blankCheckbox"
-                               style="margin-left: 0"
                                ng-model="membersInCheckboxList[e.uhUuid]"
                                ng-click="$event.stopPropagation()
                                ">
@@ -115,27 +112,26 @@
         <div class="d-lg-flex d-block justify-content-lg-between justify-content-start">
             <div class="col-lg-4 pl-0 pr-0 mt-lg-0 mt-2">
                 <form>
-                    <div class="input-group" style="width: 600px">
-                        <input class="form-control" placeholder="Members to add or remove" type="search"
+                    <div class="input-group">
+                        <input class="form-control input-text" placeholder="Members to add or remove" type="search"
                                ng-init="errorDismissed = true; resetErrors()"
                                ng-blur="errorDismissed = true; resetErrors()"
-                               title="Enter one or more UH members" ng-model="usersToAdd" style="width: 275px"
+                               title="Enter one or more UH members" ng-model="usersToAdd"
                         />
                         <div>
-                            <button class="btn btn-primary"
+                            <button class="btn btn-primary add-margin"
                                     ng-blur="errorDismissed = true; resetErrors()"
                                     ng-click="resetErrors(); addMembers('Exclude'); errorDismissed = false"
-                                    style="margin-left: 2px">
+                                    >
                                 Add
                             </button>
                             <button class="btn btn-remove"
                                     ng-click="resetErrors(); prepBatchRemove('Exclude', pagedItemsExclude[currentPageExclude]); errorDismissed = false"
-                                    style="margin-left: 2px; margin-right: 2px">Remove</button>
+                                    >Remove</button>
                             <button class="btn btn-primary"
                                     ng-click="launchImportModal('Exclude')">Import File
                             </button>
-                            <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse"
-                                 style="display:inline-block">
+                            <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse">
                             </div>
                         </div>
                     </div>

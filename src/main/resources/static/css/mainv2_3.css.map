@@ -1,0 +1,22 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../../../../../target/classes/static/scss/damain.scss",
+        "../../../../../target/classes/static/scss/_custom.scss",
+        "../../../../../target/classes/static/scss/components/_buttons.sass",
+        "../../../../../target/classes/static/scss/components/_media.sass",
+        "../../../../../target/classes/static/scss/components/_mixins.scss",
+        "../../../../../target/classes/static/scss/sections/_admins.scss",
+        "../../../../../target/classes/static/scss/sections/_feedback.scss",
+        "../../../../../target/classes/static/scss/sections/_footer.scss",
+        "../../../../../target/classes/static/scss/sections/_groupings.scss",
+        "../../../../../target/classes/static/scss/sections/_home.scss",
+        "../../../../../target/classes/static/scss/sections/_info.scss",
+        "../../../../../target/classes/static/scss/sections/_memberships.scss",
+        "../../../../../target/classes/static/scss/sections/_navbar.sass",
+        "../../../../../target/classes/static/scss/sections/_error.scss"
+    ],
+    "names": [],
+    "file": "mainv2_3.css"
+}
