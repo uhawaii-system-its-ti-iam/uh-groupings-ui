@@ -12,8 +12,6 @@ form.seamless button {
     color: $uh-red;
 }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 .btn { 
     //hover over the logout button w/o name
     &.dark-teal-bg { 
@@ -35,10 +33,6 @@ form.seamless button {
     }
 }
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 //BUTTONS DOWN IN HOME.HTML
 .btn-bottom {
     position: absolute;
@@ -112,22 +106,6 @@ form.seamless button {
     @include gradient; 
 }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-// This is to make your name seafoam when you hover over logout.
-.btn:hover #name,
-.btn:focus #name,
-.btn:active #name {
-    color: $seafoam;
-}
-
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 // Makes text color and background color when hover over cancel btn
 .btn-light:hover {
     color: white;
@@ -149,30 +127,6 @@ form.seamless button {
     border: white;
 }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-//hover over the logout button w/o name
-.btn.dark-teal-bg { 
-    &:hover, :focus, :active { 
-        color: $uh-white;
-        background: $green-blue;
-    }
-}
-
-.btn { 
-    &.btn-remove { 
-        margin-left: 2px; 
-        margin-right: 2px;
-    }
-}
-
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 // admin-groupings-list.html  
 .fa.fa-fw.fa-edit {
     color: $dark-teal;
