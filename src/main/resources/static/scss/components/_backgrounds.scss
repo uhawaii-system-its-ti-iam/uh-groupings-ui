@@ -7,15 +7,6 @@
     }
 }
 
-.btn { 
-    &.dark-teal-bg { 
-        &:active, &:focus, &:hover { 
-            color: $uh-white;
-            background: $green-blue; 
-        }
-    }
-}
-
 .deep-blue-bg { 
     background-color: $deep-blue; 
     color: white;
