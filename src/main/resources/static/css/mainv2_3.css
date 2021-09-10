@@ -27,6 +27,20 @@ form.seamless button {
   color: #d21515;
 }
 
+.btn.dark-teal-bg:active, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:hover {
+  color: #efefef;
+  background: #004e59;
+}
+
+.btn.btn-remove {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+.btn:hover #name, .btn:focus #name, .btn:active #name {
+  color: #e3f2ef;
+}
+
 .btn-bottom {
   position: absolute;
   bottom: 0;
@@ -34,11 +48,26 @@ form.seamless button {
 }
 
 .btn-sm {
+  padding: 0px 5px;
+}
+
+.btn-sm.btn-sm-clipboard {
   padding: 3px 5px 2px;
 }
 
 .btn.btn-primary,
 .btn.btn-lg {
+  color: #ffffff;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  text-shadow: 0px 1px 1px #444;
+  /*fix vendor prefixes from line 23 - 26*/
+  background-image: linear-gradient(to bottom, #7db1c4, #5a9cb4);
+  background-repeat: repeat-x;
+  background-color: #5a9cb4;
+}
+
+.btn.btn-primary, .btn.btn.btn-lg {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
@@ -109,12 +138,6 @@ form.seamless button {
   background-color: #5a9cb4;
 }
 
-.btn:hover #name,
-.btn:focus #name,
-.btn:active #name {
-  color: #e3f2ef;
-}
-
 .btn-light:hover {
   color: white;
   background-color: #4c90a8;
@@ -134,14 +157,14 @@ form.seamless button {
   border: white;
 }
 
-.btn.dark-teal-bg:hover, .btn.dark-teal-bg :focus, .btn.dark-teal-bg :active {
-  color: #efefef;
-  background: #004e59;
+.fa.fa-fw.fa-edit {
+  color: #004252;
 }
 
-.btn.btn-remove {
-  margin-left: 2px;
-  margin-right: 2px;
+.fa.fa-fw.fa-edit.white-style {
+  border: none;
+  color: white;
+  font-weight: 400;
 }
 
 @media (max-width: 991px) {
@@ -468,12 +491,57 @@ h4 {
   text-align: center;
 }
 
-.input-text {
-  width: 275px;
+/* comment */
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 400;
+  src: url("../fonts/SourceSansPro-Regular.ttf");
 }
 
-.inBasis-text {
-  text-align: start;
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 400;
+  font-style: italic;
+  src: url("../fonts/SourceSansPro-Italic.ttf");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 600;
+  src: url("../fonts/SourceSansPro-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 600;
+  font-style: italic;
+  src: url("../fonts/SourceSansPro-SemiBoldItalic.ttf");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 700;
+  src: url("../fonts/SourceSansPro-Bold.ttf");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 700;
+  font-style: italic;
+  src: url("../fonts/SourceSansPro-BoldItalic.ttf");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 900;
+  src: url("../fonts/SourceSansPro-Black.ttf");
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-weight: 900;
+  font-style: italic;
+  src: url("../fonts/SourceSansPro-BlackItalic.ttf");
 }
 
 .manage-admins td:first-child {
@@ -589,7 +657,7 @@ label input {
 }
 
 .input-group {
-  width: 600px;
+  width: 100%;
 }
 
 .basis-column {
@@ -871,6 +939,15 @@ table {
   width: 80%;
 }
 
+table .p-10 {
+  white-space: nowrap;
+  padding: 5px 20px !important;
+}
+
+table .w-20 {
+  width: 20%;
+}
+
 .modal-tables {
   margin-bottom: 30px;
 }
@@ -890,11 +967,6 @@ table {
 .clickable.center-checkbox {
   vertical-align: top;
   margin-left: 5px;
-}
-
-table .p-10 {
-  white-space: nowrap;
-  padding: 5px 20px !important;
 }
 
 form.seamless {
