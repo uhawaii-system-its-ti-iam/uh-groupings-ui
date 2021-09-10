@@ -157,11 +157,11 @@ form.seamless button {
   border: white;
 }
 
-.far.fa-edit {
+.fa.fa-fw.fa-edit {
   color: #004252;
 }
 
-.far.fa-edit.white-style {
+.fa.fa-fw.fa-edit.white-style {
   border: none;
   color: white;
   font-weight: 400;
@@ -396,6 +396,11 @@ form.seamless button {
   color: lightgrey;
 }
 
+.btn.dark-teal-bg:active, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:hover {
+  color: #efefef;
+  background: #004e59;
+}
+
 .deep-blue-bg {
   background-color: #424895;
   color: white;
@@ -565,6 +570,10 @@ label input {
 
 .check-remove {
   margin-left: auto;
+}
+
+.fa.fa-fw.fa-pencil-square-o {
+  color: #004252;
 }
 
 .hide-content {
