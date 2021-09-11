@@ -205,6 +205,9 @@
          * Retrieves information asynchronously page by page
          */
         $scope.getGroupingInformation = function (type) {
+
+            $scope.loading = true;
+
             //Increments due to being called again
             asyncThreadCount++;
             /**
@@ -237,6 +240,7 @@
                     }
                     $scope.descriptionLoaded = true;
                     $scope.paginatingProgress = true;
+                    $scope.paginatingComplete = false;
 
                     switch (type) {
                       case "All": {
@@ -613,7 +617,7 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.usersToAdd = (str.split(/[\n]+/).join(" ")).slice();
+                $scope.usersToAdd = (str.split(/[\r\n]+/).join(" ")).slice();
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
@@ -764,12 +768,16 @@
                 scope: $scope
             });
 
-            if (undefined !== timeTillClose) {
-                let closeOnTimeout = function () {
+            $scope.dismissDynamicModal = function () {
+                if (undefined !== timeTillClose) {
+                    let closeOnTimeout = function () {
+                        $scope.createDynamicModal.dismiss();
+                    };
+                    setTimeout(closeOnTimeout, timeTillClose);
+                } else {
                     $scope.createDynamicModal.dismiss();
-                };
-                setTimeout(closeOnTimeout, timeTillClose);
-            }
+                }
+            };
         }
 
         /**
@@ -1927,6 +1935,7 @@
             $scope.userToAdd = "";
             $scope.membersInCheckboxList = {};
             $scope.allSelected = false;
+            $scope.waitingForImportResponse = false;
         };
 
         $scope.resetErrors = function () {
