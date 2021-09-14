@@ -7,23 +7,12 @@ form.seamless button {
 }
 
 //TRASH CAN BUTTON 
-.fa.fa-trash-o {
+.far.fa-trash-alt {
     margin-right: .75rem;
     color: $uh-red;
 }
 
 .btn { 
-    //hover over the logout button w/o name
-    &.dark-teal-bg { 
-        &:active, &:focus, &:hover { 
-            color: $uh-white;
-            background: $green-blue; 
-        }
-    }
-    &.btn-remove { 
-        margin-left: 2px; 
-        margin-right: 2px;
-    }
 
     // This is to make your name seafoam when you hover over logout.
     &:hover, &:focus, &:active { 
@@ -31,90 +20,87 @@ form.seamless button {
             color:$seafoam;
         }
     }
-}
 
-//BUTTONS DOWN IN HOME.HTML
-.btn-bottom {
-    position: absolute;
-    bottom: 0;
-    margin: -39px auto;
-}
-
-//BUTTON FOR COPYING A PATH
-.btn-sm {
-    padding: 0px 5px;
-    
-    &.btn-sm-clipboard { 
-        padding: 3px 5px 2px;
+    //hover over the logout button w/o name
+    &.dark-teal-bg { 
+        &:active, &:focus, &:hover { 
+            color: $uh-white;
+            background: $green-blue; 
+        }
     }
-}
 
-// Add button colors w/o hover.
-.btn.btn-primary,
-.btn.btn-lg {
-    @include gradient; 
-}
+    //remove button w/o hover 
+    &.btn-remove { 
+        margin-left: 2px; 
+        margin-right: 2px;
+        @include btn-rmv; 
+        
+        //dark red when you hover over remove btn
+        &:hover, &:focus, &:active { 
+            background: darkred;
+        }
+    }
 
-.btn {
-    &.btn-primary, &.btn.btn-lg { 
+    // Add button colors w/o hover.
+    // Light green when you hover over a button.
+    &.btn-primary, &.btn-lg { 
+        @include gradient;
+        
+        // Light green when you hover over a button.
+        &:hover, &:focus, &:active { 
+            background: $green-blue right center;
+        }
+    }
+
+    // Buttons for membership, admin, owner in home page
+    &.btn-bottom { 
         @include gradient;
     }
-}
 
-// Light green when you hover over a button.
-.btn.btn-primary:hover,
-.btn.btn-primary:focus,
-.btn.btn-primary:active,
-.btn.btn-lg:hover,
-.btn.btn-lg:focus,
-.btn.btn-lg:active {
-    background: $green-blue right center;
-}
+    //Default button
+    &-default { 
+        @include gradient; 
+    }
 
-//remove button w/o hover 
-.btn.btn-remove {
-    @include btn-rmv;
-}
+    // Changes the logout color when you hover.
+    &-outline-secondary { 
+        &:hover, &:focus, &:active { 
+            background-color: $green-blue;
+            border-color: $green-blue;
+        }
+    }
 
-//with hover
-.btn.btn-remove:hover,
-.btn.btn-remove:focus,
-.btn.btn-primary:active {
-    background: darkred;
-}
+    //BUTTONS DOWN IN HOME.HTML
+    &-bottom { 
+        position: absolute;
+        bottom: 0;
+        margin: -39px auto;
+    }
 
-//clipboard and export to csv buttons whne you hover
-.btn.btn-sm:hover {
-    background: $green-blue;
-}
+    //BUTTON FOR COPYING A PATH
+    &-sm { 
+        padding: 0px 5px;
 
-// Changes the logout color when you hover.
-.btn-outline-secondary:hover,
-.btn-outline-secondary:focus,
-.btn-outline-secondary:active {
-    background-color: $green-blue;
-    border-color: $green-blue;
-}
+        //clipboard and export to csv buttons whne you hover
+        &:hover { 
+            background: $green-blue;
+        }
 
-// Buttons for membership, admin, owner in home page
-.btn.btn-bottom { 
-    @include gradient; 
-}
+        &.btn-clipboard { 
+            padding: 3px 5px 2px;
+        }
+    }
 
-//Default button
-.btn-default { 
-    @include gradient; 
-}
-
-// Makes text color and background color when hover over cancel btn
-.btn-light:hover {
-    color: white;
-    background-color: $uh-blue4;
+    // Makes text color and background color when hover over cancel btn
+    &-light:hover { 
+        color: white;
+        background-color: $uh-blue4;
+    }
 }
 
 //Change description for cards. 
 .description-form-button {
-    color: #004252;
+    color: $dark-teal;
     border: none;
     height: 2.356rem;
     background-color: white; 
@@ -128,7 +114,7 @@ form.seamless button {
 }
 
 // admin-groupings-list.html  
-.far.fa-edit {
+.far.fa-fw.fa-edit {
     color: $dark-teal;
     //button the pencil square in the groupings card
     &.white-style { 
