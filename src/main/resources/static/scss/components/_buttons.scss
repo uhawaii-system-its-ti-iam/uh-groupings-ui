@@ -6,12 +6,6 @@ form.seamless button {
     flex-basis: 40px;
 }
 
-//TRASH CAN BUTTON 
-.far.fa-trash-alt {
-    margin-right: .75rem;
-    color: $uh-red;
-}
-
 .btn { 
 
     // This is to make your name seafoam when you hover over logout.
@@ -111,6 +105,12 @@ form.seamless button {
 
 .description-input {
     border: white;
+}
+
+//TRASH CAN BUTTON 
+.far.fa-trash-alt {
+    margin-right: .75rem;
+    color: $uh-red;
 }
 
 // admin-groupings-list.html  
