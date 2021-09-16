@@ -392,4 +392,22 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(get(REST_CONTROLLER_BASE + "groupings/path/syncDestinations")).andExpect(status().isOk());
     }
 
+    @Test
+    @WithMockUhUser
+    public void numberOfMembershipsTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "/members/memberships")).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser
+    public void numberOfGroupingsTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "/owners/grouping")).andExpect(status().isOk());
+    }
+
 }
