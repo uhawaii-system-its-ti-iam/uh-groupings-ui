@@ -25,12 +25,22 @@ background: {
   background: -ms-linear-gradient(top,  #c4907d 0%,#b4725a 100%); /* IE10+ */
 }
 
+@mixin breakpoints($breakpoints) { 
+  $conditions: (); 
+  @each $breakpoint in $breakpoints { 
+    //If key exits in map 
+    $conditions: append (
+      $conditions, 
+      #{inspect(map-get($media-queries, $breakpoint))},
+      comma
+    );
+  }
 
+  @media #{$conditions} { 
+    @content;
+  }
+}
 
-/// Mixin to prefix several properties at once
-/// @author Kitty Giraudel
-/// @param {Map} $declarations - Declarations to prefix
-/// @param {List} $prefixes (()) - List of prefixes to print
 @mixin prefix($declarations, $prefixes: ()) {
   @each $property, $value in $declarations {
     @each $prefix in $prefixes {
