@@ -196,6 +196,15 @@
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 
+
+            /**
+             * Get the number of memberships that the current user is associated with.
+             */
+            getNumberOfMemberships(onSuccess, onError) {
+                let endpoint = BASE_URL + "members/memberships/"
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
             /**
              * Get a list of memberships that username is associated with.
              */
@@ -260,6 +269,14 @@
              */
             getGroupingsOwned(onSuccess, onError) {
                 let endpoint = BASE_URL + "owners/groupings";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Get the number of groupings a member owns.
+             */
+            getNumberOfGroupings(onSuccess, onError) {
+                let endpoint = BASE_URL + "owners/grouping/"
                 dataProvider.loadData(endpoint, onSuccess, onError);
             },
 

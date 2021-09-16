@@ -127,6 +127,22 @@
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
         /**
+         * Get the number of memberships that the current user is associated with.
+         */
+        groupingsService.getNumberOfMemberships((res) => {
+                $scope.numberOfMemberships = res;
+            }
+        );
+
+        /**
+         * Get the number of groupings that the current user is associated with.
+         */
+        groupingsService.getNumberOfGroupings((res) => {
+                $scope.numberOfGroupings = res;
+            }
+        );
+
+        /**
          * Initiates the retrieval of information about the grouping clicked by the user.
          * @param {number} currentPage - the current page number in the groupings list
          * @param {number} index - the index of the grouping clicked by the user
