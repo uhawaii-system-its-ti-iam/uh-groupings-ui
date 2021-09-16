@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.BDDMockito.given;
@@ -398,7 +399,9 @@ public class GroupingsRestControllerTest {
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
-        mockMvc.perform(get(REST_CONTROLLER_BASE + "/members/memberships")).andExpect(status().isOk());
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "/members/memberships"))
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
     @Test
@@ -407,7 +410,9 @@ public class GroupingsRestControllerTest {
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
-        mockMvc.perform(get(REST_CONTROLLER_BASE + "/owners/grouping")).andExpect(status().isOk());
+        mockMvc.perform(get(REST_CONTROLLER_BASE + "/owners/grouping"))
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
 }
