@@ -30,6 +30,16 @@
         height: calc(100vh - (0.5rem * 10));
         content: "";
     }
+
+    @include media-breakpoint(mobile) {
+        .modal-dialog {
+            min-height: calc(100% - (1.75rem * 2));
+        }
+    
+        .modal-dialog::before {
+            height: calc(100vh - (1.75rem * 2));
+        }
+    }
 }
 
 //MODAL text 

@@ -25,14 +25,12 @@ background: {
   background: -ms-linear-gradient(top,  #c4907d 0%,#b4725a 100%); /* IE10+ */
 }
 
-@mixin breakpoints($breakpoints) { 
+@mixin media-breakpoint($breakpoints) { 
   $conditions: (); 
   @each $breakpoint in $breakpoints { 
     //If key exits in map 
-    $conditions: append (
-      $conditions, 
+    $conditions: ( 
       #{inspect(map-get($media-queries, $breakpoint))},
-      comma
     );
   }
 

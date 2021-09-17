@@ -45,6 +45,12 @@
 //hover over side bar icons
 .tooltip {
     pointer-events: none;
+
+    @include media-breakpoint(tablet1) { 
+        .tooltip {
+            display: none;
+        }
+    }
 }
 
 //makes the side nav bar circle centered

@@ -143,33 +143,6 @@ form.seamless button {
   font-weight: 400;
 }
 
-@media (max-width: 991px) {
-  .navbar .navbar-logout {
-    padding-left: 0;
-  }
-}
-
-@media (min-width: 576px) {
-  .modal-dialog {
-    min-height: calc(100% - (1.75rem * 2));
-  }
-  .modal-dialog::before {
-    height: calc(100vh - (1.75rem * 2));
-  }
-}
-
-@media (max-width: 575.98px) {
-  .img-fluid {
-    width: 210px;
-  }
-}
-
-@media (min-width: 992px) {
-  th.grouping-name {
-    min-width: 10rem;
-  }
-}
-
 @media (max-width: 789px) {
   .card-title {
     text-align: center;
@@ -182,87 +155,9 @@ form.seamless button {
   }
 }
 
-@media (max-width: 991.98px) {
-  .tooltip {
-    display: none;
-  }
-}
-
-@media (max-width: 992px) {
-  .import-table-thead-tbody-tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 991px) {
-  .navbar .navbar-logout {
-    padding-left: 0;
-  }
-}
-
-@media (min-width: 576px) {
-  .modal-dialog {
-    min-height: calc(100% - (1.75rem * 2));
-  }
-  .modal-dialog::before {
-    height: calc(100vh - (1.75rem * 2));
-  }
-}
-
-@media (max-width: 575.98px) {
-  .img-fluid {
-    width: 210px;
-  }
-}
-
 @media (min-width: 992px) {
   th.grouping-name {
     min-width: 10rem;
-  }
-}
-
-@media (max-width: 789px) {
-  .card-title {
-    text-align: center;
-  }
-}
-
-@media (max-width: 789px) {
-  .card-title-text {
-    text-align: center;
-  }
-}
-
-@media (max-width: 991.98px) {
-  .tooltip {
-    display: none;
-  }
-}
-
-@media (max-width: 992px) {
-  .import-table-thead-tbody-tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-    white-space: nowrap;
-  }
-}
-
-@media screen and (max-width: 767.9px) {
-  .nav-pills .nav-link.active:after {
-    border-width: 0 10px 10px 10px;
-    border-color: transparent transparent #fff transparent;
-    bottom: -16px;
-    left: 33%;
-  }
-}
-
-@media screen and (max-width: 767.9px) {
-  .nav-pills .nav-link.active:after {
-    border-color: transparent transparent #fff transparent;
   }
 }
 
@@ -564,6 +459,12 @@ label input {
   color: lightgrey;
 }
 
+@media (max-width: 575.98px) {
+  .img-fluid {
+    width: 210px;
+  }
+}
+
 .required-asterisk {
   color: red;
 }
@@ -785,6 +686,12 @@ td.uh-pre {
   pointer-events: none;
 }
 
+@media (max-width: 991.98px) {
+  .tooltip .tooltip {
+    display: none;
+  }
+}
+
 #group-pills > .nav-item {
   width: 2.75rem;
   height: 2.75rem;
@@ -864,6 +771,15 @@ td.uh-pre {
   display: block;
   height: calc(100vh - (0.5rem * 10));
   content: "";
+}
+
+@media (min-width: 576px) {
+  .modal-dialog .modal-dialog {
+    min-height: calc(100% - (1.75rem * 2));
+  }
+  .modal-dialog .modal-dialog::before {
+    height: calc(100vh - (1.75rem * 2));
+  }
 }
 
 .import-table-tbody {

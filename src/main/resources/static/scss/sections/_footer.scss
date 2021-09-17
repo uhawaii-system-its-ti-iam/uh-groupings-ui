@@ -8,3 +8,9 @@
         color: lightgrey; 
     }
 }
+
+@include media-breakpoint(portraitPhone) { 
+    .img-fluid {
+        width: 210px;
+    }
+}
