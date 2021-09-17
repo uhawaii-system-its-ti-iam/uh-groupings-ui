@@ -17,8 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -390,6 +393,30 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(get(REST_CONTROLLER_BASE + "groupings/path/syncDestinations")).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUhUser
+    public void numberOfMembershipsTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        MvcResult result = mockMvc.perform(get(REST_CONTROLLER_BASE + "/members/memberships"))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertThat(result, equalTo(result));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void numberOfGroupingsTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        MvcResult result = mockMvc.perform(get(REST_CONTROLLER_BASE + "/owners/grouping"))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertThat(result, equalTo(result));
     }
 
 }
