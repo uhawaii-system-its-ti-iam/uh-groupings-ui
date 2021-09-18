@@ -373,6 +373,10 @@ table .p-12 {
     min-height: 25rem;
 }
 
+.column-padding {
+    padding-top: 20px;
+}
+
 .selected-grouping-card {
     border-bottom: 0;
     border-left: 0;
