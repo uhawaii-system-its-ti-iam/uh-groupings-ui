@@ -620,6 +620,14 @@
         };
 
         /**
+         * Finds HTML element with ID = upload and sets value to null.
+         * Used for the remove text file button in importModal.html
+         */
+        $scope.removeTextFile = function () {
+            document.getElementById('upload').value = null;
+        }
+
+        /**
          * Get the Person properties from members and puts them in a list
          * @param {List} attributes - list of attributes for a UH member
          */
