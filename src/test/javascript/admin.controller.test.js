@@ -1,10 +1,6 @@
 describe("AdminController", function () {
 
     // Set up mock element for setting the current user
-    const mockElement = document.createElement("div");
-    mockElement.innerHTML = "jdoe";
-    document.getElementById = jasmine.createSpy("name").and.returnValue(mockElement);
-
     beforeEach(module("UHGroupingsApp"));
     beforeEach(module("ngMockE2E"));
 
@@ -26,10 +22,6 @@ describe("AdminController", function () {
 
     it("should define the admin controller", function () {
         expect(controller).toBeDefined();
-    });
-
-    it("should correctly set the currentUser", function () {
-        expect(scope.currentUser).toEqual("jdoe");
     });
 
     describe("displayAdmins", function () {
@@ -157,8 +149,7 @@ describe("AdminController", function () {
                     });
                     return result;
                 });
-            let arr = [];
-            arr = mergeManagePersonDuplicateValues(scope.personList);
+            let arr = mergeManagePersonDuplicateValues(scope.personList);
             expect(mergeManagePersonDuplicateValues).toHaveBeenCalledWith(scope.personList);
             expect(arr).not.toEqual(scope.personList);
             expect(arr).toContain({
