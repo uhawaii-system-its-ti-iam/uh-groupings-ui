@@ -24,6 +24,19 @@
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
+        /**
+         * Chunk an array of objects into an array of paged object arrays.
+         */
+        function objToPageArray(obj, size) {
+            let i = 0;
+            let arr = [];
+            while (i < obj.length) {
+                arr.push(obj.slice(i, size + i));
+                i += size;
+            }
+            return arr;
+        }
+
         $scope.createRoleErrorModal = function () {
             $scope.loading = false;
             $scope.RoleErrorModalInstance = $uibModal.open({
@@ -77,9 +90,8 @@
          * Separate the list of Admins into pages.
          */
         $scope.displayAdmins = function () {
-            $scope.resetGroupingInformation();
             $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
-            $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+            $scope.pagedItemsGroupings = objToPageArray($scope.groupingsList);
             $scope.showGrouping = false;
         };
 
@@ -87,9 +99,8 @@
          * Separate the list of persons into pages.
          */
         $scope.displayPerson = function () {
-            $scope.resetGroupingInformation();
             $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-            $scope.pagedItemsPerson = $scope.groupToPages($scope.personList);
+            $scope.pagedItemsPerson = objToPageArray($scope.personList);
             $scope.showGrouping = false;
             $scope.personToLookup = "";
         };
