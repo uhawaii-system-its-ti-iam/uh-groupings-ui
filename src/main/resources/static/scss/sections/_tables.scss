@@ -88,3 +88,8 @@ form.seamless {
 #blankCheckbox{ 
     margin-left: 1rem;
 }
+
+//makes check boxes not fixed on < desktop
+.form-check-input { 
+    position: relative;
+}
