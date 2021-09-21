@@ -9,6 +9,15 @@
             margin-top: 0rem;
         }
     }
+
+    @include media-breakpoint(landscapePhone) { 
+        &-title {
+            text-align: center; 
+            &-text { 
+                text-align: center;
+            }
+        }
+    }
 }
 
 /*Might consider moving this so tables.scss*/
@@ -91,4 +100,28 @@
 
 .inline-block { 
     display: inline-block;
+}
+
+/**
+ * Styling for selected grouping header.
+ * Styles the grouping name and 'Return to Groupings'
+ * button, so on mobile, the button sits on top of the
+ * grouping name, eliminating whitespace.
+ */
+ @include media-breakpoint(landscapePhone){ 
+    #selectedGroupHeader {
+        display: table; /* The row is now a table */
+        /* Centering */
+        margin: auto;
+        width: 100%;
+        padding: 0px;
+    }
+
+    #groupNameCol {
+        display: table-footer-group; /* Makes the grouping name the footer of table */
+    }
+
+    #returnToGroup {
+        display: table-header-group; /* Makes the button the header of table */
+    }
 }

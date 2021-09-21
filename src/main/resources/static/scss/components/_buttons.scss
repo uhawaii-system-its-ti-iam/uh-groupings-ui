@@ -7,7 +7,6 @@ form.seamless button {
 }
 
 .btn { 
-
     // This is to make your name seafoam when you hover over logout.
     &:hover, &:focus, &:active { 
         & #name { 
@@ -120,6 +119,5 @@ form.seamless button {
     &.white-style { 
         border: none;
         color:white;
-        font-weight: 400;
     }
 }

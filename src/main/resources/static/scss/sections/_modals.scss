@@ -42,27 +42,6 @@
     }
 }
 
-//MODAL text 
-.import-table-tbody {
-    display: block;
-    height: 175px;
-    overflow: auto;
-}
-
-//for multi add,remove, and reset modal
-.import-table-thead {
-    font-weight: bold;
-    white-space: nowrap;
-
-    &-tbody-tr { 
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-        white-space: nowrap;
-    }
-}
-
-
 // Set's the modal text color.
 .modal-danger { 
     color: $uh-red1; 
@@ -81,4 +60,21 @@
         border-top-color: $uh-red3;
     }
 }
+
+.import-table { 
+    //MODAL text 
+    &-tbody { 
+        display: block;
+        height: 175px;
+        overflow: auto;
+    }
+    //for multi add,remove, and reset modal
+    &-thead-tbody-tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        white-space: nowrap;
+    }
+}
+
 

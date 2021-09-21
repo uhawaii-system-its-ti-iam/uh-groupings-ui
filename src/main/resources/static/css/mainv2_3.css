@@ -140,122 +140,6 @@ form.seamless button {
 .far.fa-fw.fa-edit.white-style {
   border: none;
   color: white;
-  font-weight: 400;
-}
-
-@media (max-width: 789px) {
-  .card-title {
-    text-align: center;
-  }
-}
-
-@media (max-width: 789px) {
-  .card-title-text {
-    text-align: center;
-  }
-}
-
-@media (min-width: 992px) {
-  th.grouping-name {
-    min-width: 10rem;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .nav-pills .nav-link.active:after {
-    border-width: 10px 10px 10px 0;
-    border-color: transparent #fff transparent transparent;
-    top: 25%;
-    right: -35px;
-  }
-}
-
-@media (max-width: 575.98px) {
-  .nav.nav-tabs.flex-column > .nav-item > .nav-link {
-    border: none;
-    background-color: #e3f2ef;
-    padding: 0px 0px 2px 0px;
-  }
-}
-
-@media (min-width: 992px) {
-  .navbar {
-    background-color: white;
-  }
-  .navbar .nav {
-    padding: 2.5rem 1.25rem 0 0;
-    background-color: white;
-  }
-  .navbar .navbar-brand {
-    padding: 0;
-  }
-  .navbar .navbar-brand > img {
-    background-color: transparent;
-  }
-}
-
-@media (min-width: 992px) {
-  .navbar {
-    background-color: white;
-  }
-  .navbar .nav {
-    padding: 2.5rem 1.25rem 0 0;
-    background-color: white;
-  }
-  .navbar .navbar-brand {
-    padding: 0;
-  }
-  .navbar .navbar-brand > img {
-    background-color: transparent;
-  }
-}
-
-/**
- * Styling for selected grouping header.
- * Styles the grouping name and 'Return to Groupings'
- * button, so on mobile, the button sits on top of the
- * grouping name, eliminating whitespace.
- */
-@media screen and (max-width: 735px) {
-  #selectedGroupHeader {
-    display: table;
-    /* The row is now a table */
-    /* Centering */
-    margin: auto;
-    width: 100%;
-    padding: 0px;
-  }
-  #groupNameCol {
-    display: table-footer-group;
-    /* Makes the grouping name the footer of table */
-  }
-  #returnToGroup {
-    display: table-header-group;
-    /* Makes the button the header of table */
-  }
-}
-
-/**
- * Styling for selected grouping header.
- * Styles the grouping name and 'Return to Groupings'
- * button, when browser size decreases, the button sits
- * on top of the grouping name, elimitaing whitespace.
- */
-@media screen and (min-width: 3000px) {
-  #groupNameCol {
-    display: inline-block;
-    /* displays group name inline */
-  }
-  #returnToGroup {
-    display: inline-block;
-    /* displays 'return to groupings button' inline */
-  }
-}
-
-@media (max-width: 991.98px) {
-  .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
-    align-items: center;
-  }
 }
 
 .dark-teal-bg a, .black-bg a {
@@ -483,6 +367,15 @@ label input {
   margin-top: 0rem;
 }
 
+@media (max-width: 767.98px) {
+  .card-title {
+    text-align: center;
+  }
+  .card-title-text {
+    text-align: center;
+  }
+}
+
 /*Might consider moving this so tables.scss*/
 .manage-groupings td:first-child i {
   flex-basis: 20px;
@@ -547,6 +440,31 @@ label input {
 
 .inline-block {
   display: inline-block;
+}
+
+/**
+ * Styling for selected grouping header.
+ * Styles the grouping name and 'Return to Groupings'
+ * button, so on mobile, the button sits on top of the
+ * grouping name, eliminating whitespace.
+ */
+@media (max-width: 767.98px) {
+  #selectedGroupHeader {
+    display: table;
+    /* The row is now a table */
+    /* Centering */
+    margin: auto;
+    width: 100%;
+    padding: 0px;
+  }
+  #groupNameCol {
+    display: table-footer-group;
+    /* Makes the grouping name the footer of table */
+  }
+  #returnToGroup {
+    display: table-header-group;
+    /* Makes the button the header of table */
+  }
 }
 
 html {
@@ -662,6 +580,19 @@ td.uh-pre {
   padding-right: .3125rem;
 }
 
+@media (min-width: 992px) {
+  .navbar .nav {
+    padding: 2.5rem 1.25rem 0 0;
+    background-color: white;
+  }
+  .navbar .navbar-brand {
+    padding: 0;
+  }
+  .navbar .navbar-brand > img {
+    background-color: transparent;
+  }
+}
+
 .fixed-top .navbar-brand {
   padding: 0;
 }
@@ -705,6 +636,14 @@ td.uh-pre {
   align-items: center;
 }
 
+@media (max-width: 575.98px) {
+  .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
+    border: none;
+    background-color: #e3f2ef;
+    padding: 0px 0px 2px 0px;
+  }
+}
+
 .nav-pills .show > .nav-link {
   background: white;
   color: #004252;
@@ -723,8 +662,17 @@ td.uh-pre {
   /**can be deleted creates what happens after you click on side nav icons*/
 }
 
-.nav-pills .nav-link.active::after {
-  right: -30px;
+.nav-pills .nav-link.active:after {
+  right: -35px;
+}
+
+@media (min-width: 768px) {
+  .nav-pills .nav-link.active:after {
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #fff transparent transparent;
+    top: 25%;
+    right: -35px;
+  }
 }
 
 .form-alert {
@@ -782,24 +730,6 @@ td.uh-pre {
   }
 }
 
-.import-table-tbody {
-  display: block;
-  height: 175px;
-  overflow: auto;
-}
-
-.import-table-thead {
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-.import-table-thead-tbody-tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-  white-space: nowrap;
-}
-
 .modal-danger {
   color: #721c24;
 }
@@ -819,6 +749,19 @@ td.uh-pre {
 
 .modal-danger .modal-footer {
   border-top-color: #ffeaece6;
+}
+
+.import-table-tbody {
+  display: block;
+  height: 175px;
+  overflow: auto;
+}
+
+.import-table-thead-tbody-tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  white-space: nowrap;
 }
 
 th {
@@ -892,4 +835,8 @@ form.seamless input {
 
 #blankCheckbox {
   margin-left: 1rem;
+}
+
+.form-check-input {
+  position: relative;
 }

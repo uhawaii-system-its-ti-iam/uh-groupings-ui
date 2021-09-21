@@ -16,7 +16,18 @@
         }
     }
 
-
+    @include media-breakpoint(desktop) { 
+        & .nav{ 
+            padding: 2.5rem 1.25rem 0 0;
+            background-color: white;
+        }
+        & .navbar-brand { 
+            padding: 0;
+            & > img { 
+                background-color: transparent;
+            }
+        }
+    }
 }
 
 .fixed-top .navbar-brand { 
@@ -66,6 +77,12 @@
 
 .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
     align-items: center;
+
+    @include media-breakpoint(portraitPhone) { 
+            border: none;
+            background-color: #e3f2ef;
+            padding: 0px 0px 2px 0px;   
+    }
 }
 
 //side bar for card
@@ -86,8 +103,14 @@
             background: white;
             color: $dark-teal;
              /**can be deleted creates what happens after you click on side nav icons*/
-            &::after { 
-                right: -30px;
+            &:after { 
+                right: -35px;
+                @include media-breakpoint(tablet) { 
+                    border-width: 10px 10px 10px 0;
+                    border-color: transparent #fff transparent transparent;
+                    top: 25%;
+                    right: -35px;
+                }
             }
         }
     }
