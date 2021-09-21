@@ -91,7 +91,7 @@
          */
         $scope.displayAdmins = function () {
             $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
-            $scope.pagedItemsGroupings = objToPageArray($scope.groupingsList);
+            $scope.pagedItemsGroupings = objToPageArray($scope.groupingsList, 20);
             $scope.showGrouping = false;
         };
 
@@ -100,7 +100,7 @@
          */
         $scope.displayPerson = function () {
             $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-            $scope.pagedItemsPerson = objToPageArray($scope.personList);
+            $scope.pagedItemsPerson = objToPageArray($scope.personList, 20);
             $scope.showGrouping = false;
             $scope.personToLookup = "";
         };
