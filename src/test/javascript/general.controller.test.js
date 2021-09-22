@@ -410,14 +410,6 @@ describe("GeneralController", function () {
 
             expect(scope.showGrouping).toBe(false);
         });
-
-        it("should reset the filter on the groupings list view", function () {
-            spyOn(scope, "filter").and.callThrough();
-            scope.returnToGroupingsList();
-
-            expect(scope.filter).toHaveBeenCalled();
-        });
-
     });
 
     describe("resetGroupingInformation", function () {
