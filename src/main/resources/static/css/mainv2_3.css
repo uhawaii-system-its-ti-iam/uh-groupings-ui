@@ -52,7 +52,6 @@ form.seamless button {
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   text-shadow: 0px 1px 1px #444;
-  /*fix vendor prefixes from line 23 - 26*/
   background-image: linear-gradient(to bottom, #7db1c4, #5a9cb4);
   background-repeat: repeat-x;
   background-color: #5a9cb4;
@@ -67,7 +66,6 @@ form.seamless button {
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   text-shadow: 0px 1px 1px #444;
-  /*fix vendor prefixes from line 23 - 26*/
   background-image: linear-gradient(to bottom, #7db1c4, #5a9cb4);
   background-repeat: repeat-x;
   background-color: #5a9cb4;
@@ -78,7 +76,6 @@ form.seamless button {
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   text-shadow: 0px 1px 1px #444;
-  /*fix vendor prefixes from line 23 - 26*/
   background-image: linear-gradient(to bottom, #7db1c4, #5a9cb4);
   background-repeat: repeat-x;
   background-color: #5a9cb4;
@@ -214,7 +211,6 @@ h4 {
   font-size: 1rem;
 }
 
-/* For html span code */
 .modal-black-text {
   color: black;
 }
@@ -227,7 +223,6 @@ h4 {
   color: #212121;
 }
 
-/* For html span code */
 .font-weight-bold {
   font-weight: bold;
 }
@@ -242,6 +237,10 @@ h4 {
 
 .no-memberships-text {
   text-align: center;
+}
+
+.link {
+  color: #007bff;
 }
 
 /* comment */
@@ -323,10 +322,6 @@ label input {
 
 .check-remove {
   margin-left: auto;
-}
-
-.fa.fa-fw.fa-pencil-square-o {
-  color: #004252;
 }
 
 .hide-content {
@@ -420,12 +415,8 @@ label input {
   display: none;
 }
 
-.inlineblocking {
-  display: inline-block;
-}
-
 .input-group {
-  width: 100%;
+  width: 35em;
 }
 
 .basis-column {
@@ -474,8 +465,7 @@ html {
 body {
   font-family: 'Source Sans Pro', 'Helvetica', Arial, sans-serif;
   padding-top: 3.5rem;
-  /*Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-  /*padding-bottom: 3.125rem;*/
+  /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
   display: flex;
   /* Creates flexboxes. */
   min-height: 100vh;
@@ -521,7 +511,6 @@ td.uh-pre {
   word-break: break-all;
 }
 
-/*the loading circle*/
 .loader {
   border: 16px solid white;
   border-top: 16px solid black;
@@ -553,10 +542,6 @@ td.uh-pre {
   100% {
     transform: rotate(360deg);
   }
-}
-
-.link {
-  color: #007bff;
 }
 
 .navbar {
@@ -657,11 +642,6 @@ td.uh-pre {
   background-color: white;
   background: white;
   color: #004252;
-  /**can be deleted creates what happens after you click on side nav icons*/
-}
-
-.nav-pills .nav-link.active:after {
-  right: -35px;
 }
 
 @media (min-width: 768px) {
@@ -669,7 +649,6 @@ td.uh-pre {
     border-width: 10px 10px 10px 0;
     border-color: transparent #fff transparent transparent;
     top: 25%;
-    right: -35px;
   }
 }
 
