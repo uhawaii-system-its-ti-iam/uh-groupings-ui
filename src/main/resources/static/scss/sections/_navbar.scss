@@ -47,13 +47,10 @@
     white-space: nowrap;
 }
 
-//CONTENT CONTAINER FOR ADMIN.HTML AND MEMBERSHIPS.HTML
 .nav.nav-tabs { 
     border-bottom: none;
 }
 
-//SIDE NAV FOR CARD
-//hover over side bar icons
 .tooltip {
     pointer-events: none;
 
@@ -64,12 +61,12 @@
     }
 }
 
-//makes the side nav bar circle centered
+// Centers side navbar
 #group-pills > .nav-item {
     width: 2.75rem;
     height: 2.75rem;
 
-    // Makes the side nav bar icons centered
+    // Centers elements in side navbar
     > .nav-link { 
         padding-left: .75rem;
     }
@@ -85,34 +82,30 @@
     }
 }
 
-//side bar for card
 .nav-pills .show > .nav-link {
     background: white;
     color: $dark-teal;
 }
 
 .nav-pills {
-    //sidebar set's the icon color and the height of the circle 
+    // Set icon styling for nav-bar icons.
     & .nav-link { 
         color: $dark-teal;
         height: 44px;
-        //side bar for card
+
         &.active { 
             position: relative;
             background-color: white;
             background: white;
             color: $dark-teal;
-             /**can be deleted creates what happens after you click on side nav icons*/
+
             &:after { 
-                right: -35px;
                 @include media-breakpoint(tablet) { 
                     border-width: 10px 10px 10px 0;
                     border-color: transparent #fff transparent transparent;
                     top: 25%;
-                    right: -35px;
                 }
             }
         }
     }
 }
-

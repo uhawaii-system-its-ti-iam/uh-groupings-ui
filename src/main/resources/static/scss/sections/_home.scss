@@ -6,8 +6,7 @@ html {
 
 body {
     font-family: 'Source Sans Pro', 'Helvetica', Arial, sans-serif;
-    padding-top: 3.5rem; /*Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-    /*padding-bottom: 3.125rem;*/
+    padding-top: 3.5rem; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
     display: flex; /* Creates flexboxes. */
     min-height: 100vh;
     flex-direction: column; /* Makes the body display vertical. */
@@ -19,7 +18,7 @@ body {
     }
 }
 
-// Holds name and description. In Admin, Memberships, Feedback, Groupings,info,menubar,eror message
+// Holds name and description.
 main, .container { 
     flex: 1;
 }
@@ -36,7 +35,6 @@ main, .container {
     }
 }
 
-//FOR ADMINISTRATION DESCRPTION ICONS AT THE BOTTOM
 .dashboard-item-icon .fa-wrench {
     transform: rotate(-90deg);
 }
@@ -52,7 +50,7 @@ td.uh-pre {
     word-break: break-all;
 }
 
-/*the loading circle*/
+// The loading circle
 .loader {
     border: 16px solid white; 
     border-top: 16px solid black; 

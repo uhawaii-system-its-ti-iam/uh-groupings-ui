@@ -1,5 +1,3 @@
-/* Use existing colors where available. */
-/* Prefix uh colors with uh- */
 .text-primary {
   color: #004252 !important;
 }
@@ -246,6 +244,10 @@ h4 {
   text-align: center;
 }
 
+.link {
+  color: #007bff;
+}
+
 /* comment */
 @font-face {
   font-family: 'Source Sans Pro';
@@ -422,12 +424,8 @@ label input {
   display: none;
 }
 
-.inlineblocking {
-  display: inline-block;
-}
-
 .input-group {
-  width: 100%;
+  width: 35em;
 }
 
 .basis-column {
@@ -476,8 +474,7 @@ html {
 body {
   font-family: 'Source Sans Pro', 'Helvetica', Arial, sans-serif;
   padding-top: 3.5rem;
-  /*Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-  /*padding-bottom: 3.125rem;*/
+  /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
   display: flex;
   /* Creates flexboxes. */
   min-height: 100vh;
@@ -523,7 +520,6 @@ td.uh-pre {
   word-break: break-all;
 }
 
-/*the loading circle*/
 .loader {
   border: 16px solid white;
   border-top: 16px solid black;
@@ -555,10 +551,6 @@ td.uh-pre {
   100% {
     transform: rotate(360deg);
   }
-}
-
-.link {
-  color: #007bff;
 }
 
 .navbar {
@@ -659,11 +651,6 @@ td.uh-pre {
   background-color: white;
   background: white;
   color: #004252;
-  /**can be deleted creates what happens after you click on side nav icons*/
-}
-
-.nav-pills .nav-link.active:after {
-  right: -35px;
 }
 
 @media (min-width: 768px) {
@@ -671,7 +658,6 @@ td.uh-pre {
     border-width: 10px 10px 10px 0;
     border-color: transparent #fff transparent transparent;
     top: 25%;
-    right: -35px;
   }
 }
 
