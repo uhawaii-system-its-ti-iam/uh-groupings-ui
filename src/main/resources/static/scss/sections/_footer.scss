@@ -8,7 +8,7 @@
     }
 }
 
-@include media-breakpoint(portraitPhone) { 
+@include media-breakpoint(max-portrait-phone) { 
     .img-fluid {
         width: 210px;
     }

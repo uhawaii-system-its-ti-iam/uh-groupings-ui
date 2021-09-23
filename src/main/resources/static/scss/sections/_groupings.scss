@@ -10,7 +10,7 @@
         }
     }
 
-    @include media-breakpoint(landscapePhone) { 
+    @include media-breakpoint(max-landscape-phone) { 
         &-title {
             text-align: center; 
             &-text { 
@@ -99,7 +99,7 @@
  * button, so on mobile, the button sits on top of the
  * grouping name, eliminating whitespace.
  */
- @include media-breakpoint(landscapePhone){ 
+ @include media-breakpoint(max-landscape-phone){ 
     #selectedGroupHeader {
         display: table; /* The row is now a table */
         /* Centering */

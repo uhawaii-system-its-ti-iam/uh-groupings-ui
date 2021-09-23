@@ -16,7 +16,7 @@
         }
     }
 
-    @include media-breakpoint(desktop) { 
+    @include media-breakpoint(min-desktop) { 
         & .nav{ 
             padding: 2.5rem 1.25rem 0 0;
             background-color: white;
@@ -54,7 +54,7 @@
 .tooltip {
     pointer-events: none;
 
-    @include media-breakpoint(tablet1) { 
+    @include media-breakpoint(max-tablet) { 
         .tooltip {
             display: none;
         }
@@ -75,7 +75,7 @@
 .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
     align-items: center;
 
-    @include media-breakpoint(portraitPhone) { 
+    @include media-breakpoint(max-portrait-phone) { 
             border: none;
             background-color: #e3f2ef;
             padding: 0px 0px 2px 0px;   
@@ -100,7 +100,7 @@
             color: $dark-teal;
 
             &:after { 
-                @include media-breakpoint(tablet) { 
+                @include media-breakpoint(min-tablet) { 
                     border-width: 10px 10px 10px 0;
                     border-color: transparent #fff transparent transparent;
                     top: 25%;

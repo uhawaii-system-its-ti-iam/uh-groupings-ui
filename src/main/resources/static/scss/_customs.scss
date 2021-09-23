@@ -25,14 +25,14 @@ $uh-red3: #ffeaece6;
 
 // Media queries 
 $media_queries: (
-  'mobile' : screen and (min-width: 576px),
-  'portraitPhone' : screen and (max-width: 575.98px), 
-  'landscapePhone' : screen and (max-width: 767.98px),
-  'tablet1' : screen and (max-width: 991.98px),
-  'desktop1' : screen and (max-width: 1199.98px),
-  'tablet' : screen and (min-width: 768px),
-  'desktop' : screen and (min-width: 992px),
-  'largeDesktop' : screen and (min-width: 1200px)
+  'min-mobile' : screen and (min-width: 576px),
+  'min-tablet' : screen and (min-width: 768px),
+  'min-desktop' : screen and (min-width: 992px),
+  'min-large-desktop' : screen and (min-width: 1200px),
+  'max-portrait-phone' : screen and (max-width: 575.98px), 
+  'max-landscape-phone' : screen and (max-width: 767.98px),
+  'max-tablet' : screen and (max-width: 991.98px),
+  'max-desktop' : screen and (max-width: 1199.98px),
 );
 
 // Bootstrap overrides 

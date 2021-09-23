@@ -30,7 +30,7 @@
         content: "";
     }
 
-    @include media-breakpoint(mobile) {
+    @include media-breakpoint(min-mobile) {
         .modal-dialog {
             min-height: calc(100% - (1.75rem * 2));
         }
