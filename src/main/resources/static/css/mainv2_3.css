@@ -71,6 +71,12 @@ form.seamless button {
   background-color: #5a9cb4;
 }
 
+.btn-bottom {
+  position: absolute;
+  bottom: 0;
+  margin: -39px auto;
+}
+
 .btn-default {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
@@ -84,12 +90,6 @@ form.seamless button {
 .btn-outline-secondary:hover, .btn-outline-secondary:focus, .btn-outline-secondary:active {
   background-color: #004e59;
   border-color: #004e59;
-}
-
-.btn-bottom {
-  position: absolute;
-  bottom: 0;
-  margin: -39px auto;
 }
 
 .btn-sm {
