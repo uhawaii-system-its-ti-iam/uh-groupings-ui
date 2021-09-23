@@ -7,14 +7,14 @@ form.seamless button {
 }
 
 .btn { 
-    // This is to make your name seafoam when you hover over logout.
+
+    // Logout button.
     &:hover, &:focus, &:active { 
         & #name { 
             color:$seafoam;
         }
     }
 
-    //hover over the logout button w/o name
     &.dark-teal-bg { 
         &:active, &:focus, &:hover { 
             color: $uh-white;
@@ -22,24 +22,20 @@ form.seamless button {
         }
     }
 
-    //remove button w/o hover 
+    // Remove button.
     &.btn-remove { 
         margin-left: 2px; 
         margin-right: 2px;
         @include btn-rmv; 
         
-        //dark red when you hover over remove btn
         &:hover, &:focus, &:active { 
             background: darkred;
         }
     }
 
-    // Add button colors w/o hover.
-    // Light green when you hover over a button.
     &.btn-primary, &.btn-lg { 
         @include gradient;
         
-        // Light green when you hover over a button.
         &:hover, &:focus, &:active { 
             background: $green-blue right center;
         }
@@ -50,7 +46,13 @@ form.seamless button {
         @include gradient;
     }
 
-    //Default button
+    &-bottom { 
+        position: absolute;
+        bottom: 0;
+        margin: -39px auto;
+    }
+
+    // Default button
     &-default { 
         @include gradient; 
     }
@@ -63,18 +65,10 @@ form.seamless button {
         }
     }
 
-    //BUTTONS DOWN IN HOME.HTML
-    &-bottom { 
-        position: absolute;
-        bottom: 0;
-        margin: -39px auto;
-    }
-
-    //BUTTON FOR COPYING A PATH
+    // Button for copying path, clipboard, and CSV
     &-sm { 
         padding: 0px 5px;
 
-        //clipboard and export to csv buttons whne you hover
         &:hover { 
             background: $green-blue;
         }
@@ -84,14 +78,13 @@ form.seamless button {
         }
     }
 
-    // Makes text color and background color when hover over cancel btn
     &-light:hover { 
         color: white;
         background-color: $uh-blue4;
     }
 }
 
-//Change description for cards. 
+// Change description for cards. 
 .description-form-button {
     color: $dark-teal;
     border: none;
@@ -105,17 +98,15 @@ form.seamless button {
 .description-input {
     border: white;
 }
-
-//TRASH CAN BUTTON 
+ 
 .far.fa-trash-alt {
     margin-right: .75rem;
     color: $uh-red;
 }
 
-// admin-groupings-list.html  
 .far.fa-fw.fa-edit {
     color: $dark-teal;
-    //button the pencil square in the groupings card
+
     &.white-style { 
         border: none;
         color:white;
