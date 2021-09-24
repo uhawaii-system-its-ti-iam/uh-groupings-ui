@@ -121,7 +121,6 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/admins", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
-
     /**
      * Add a member to the admin group.
      */
@@ -132,7 +131,6 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/admins/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.POST);
     }
-
     /**
      * Delete a member from the admin group.
      */
