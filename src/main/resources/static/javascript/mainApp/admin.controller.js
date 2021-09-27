@@ -26,8 +26,10 @@
 
         /**
          * Chunk an array of objects into an array of paged object arrays.
+         * [{},{},{},{}] into [[{},{}],[{},{}]]
          */
         function objToPageArray(obj, size) {
+
             let i = 0;
             let arr = [];
             while (i < obj.length) {
@@ -259,20 +261,6 @@
             $("[data-content='copy']").popover();
         };
     }
-
-    /**
-     * Saves the current tab on refresh.
-     */
-    jQuery.noConflict();
-    $(document).ready(function () {
-        $("[data-toggle='tab']").on("show.bs.tab", function (e) {
-            localStorage.setItem("activeTab", $(e.target).attr("href"));
-        });
-        let activeTab = localStorage.getItem("activeTab");
-        if (activeTab) {
-            $("#adminTab a[href='" + activeTab + "']").tab("show");
-        }
-    });
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
 }());

@@ -168,7 +168,6 @@
 
     /**
      * Saves the current tab on refresh.
-     */
     jQuery.noConflict();
     $(document).ready(function () {
         $("[data-toggle='tab']").on("show.bs.tab", function (e) {
@@ -179,6 +178,7 @@
             $("#memberTab a[href='" + activeTab + "']").tab("show");
         }
     });
+     */
 
     UHGroupingsApp.controller("MembershipJsController", MembershipJsController);
 
