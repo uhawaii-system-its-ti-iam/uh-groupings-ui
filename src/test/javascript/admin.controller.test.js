@@ -5,16 +5,26 @@ describe("AdminController", function () {
 
     let scope;
     let controller;
+    let gs;
 
-    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_) {
+    beforeEach(inject(function ($rootScope, $controller, groupingsService) {
         scope = $rootScope.$new();
         controller = $controller("AdminJsController", {
-            $scope: scope,
+            $scope: scope
         });
+        gs = groupingsService;
     }));
 
     it("should define the admin controller", function () {
         expect(controller).toBeDefined();
+    });
+
+    describe("init", function () {
+        it("should call groupingsService.getAdminLists", function () {
+            spyOn(gs, "getAdminLists");
+            scope.init();
+            expect(gs.getAdminLists).toHaveBeenCalled();
+        });
     });
 
     describe("searchForUserGroupingInformation", function () {

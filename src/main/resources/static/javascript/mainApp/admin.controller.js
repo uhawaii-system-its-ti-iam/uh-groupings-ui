@@ -37,21 +37,23 @@
         };
 
         /**
+         * Callback which takes the admin tab data and moves it into adminList and groupingsList, each of these objects
+         * is then paginated.
+         */
+        $scope.getAdminListsCallbackOnSuccess = function (res) {
+            $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
+            $scope.pagedItemsAdmins = $scope.objToPageArray($scope.adminsList, PAGE_SIZE);
+
+            $scope.groupingsList = _.sortBy(res.allGroupingPaths, "name");
+            $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, PAGE_SIZE);
+            $scope.loading = false;
+        };
+        /**
          * Complete initialization by fetching a list of admins and list of all groupings.
          */
         $scope.init = function () {
             $scope.loading = true;
-            groupingsService.getAdminLists(function (res) {
-                $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
-                $scope.pagedItemsAdmins = $scope.objToPageArray($scope.adminsList, PAGE_SIZE);
-
-                $scope.groupingsList = _.sortBy(res.allGroupingPaths, "name");
-                $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, PAGE_SIZE);
-                $scope.loading = false;
-
-            }, function () {
-                $scope.createApiErrorModal();
-            });
+            groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.createApiErrorModal);
         };
 
         /**
