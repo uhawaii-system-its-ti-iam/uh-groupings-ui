@@ -21,23 +21,10 @@
 
         let totalCheckBoxCount = 0;
         let currentCheckBoxCount = 0;
+        let PAGE_SIZE = 20;
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
-        /**
-         * Chunk an array of objects into an array of paged object arrays.
-         * [{},{},{},{}] into [[{},{}],[{},{}]]
-         */
-        function objToPageArray(obj, size) {
-
-            let i = 0;
-            let arr = [];
-            while (i < obj.length) {
-                arr.push(obj.slice(i, size + i));
-                i += size;
-            }
-            return arr;
-        }
 
         $scope.createRoleErrorModal = function () {
             $scope.loading = false;
@@ -56,10 +43,10 @@
             $scope.loading = true;
             groupingsService.getAdminLists(function (res) {
                 $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
-                $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
+                $scope.pagedItemsAdmins = $scope.objToPageArray($scope.adminsList, PAGE_SIZE);
 
                 $scope.groupingsList = _.sortBy(res.allGroupingPaths, "name");
-                $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
+                $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, PAGE_SIZE);
                 $scope.loading = false;
 
             }, function () {
@@ -93,16 +80,15 @@
          */
         $scope.displayAdmins = function () {
             $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
-            $scope.pagedItemsGroupings = objToPageArray($scope.groupingsList, 20);
-            $scope.showGrouping = false;
+            $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, 20);
         };
 
         /**
          * Separate the list of persons into pages.
          */
         $scope.displayPerson = function () {
-            $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-            $scope.pagedItemsPerson = objToPageArray($scope.personList, 20);
+            $scope.pagedItemsPerson = $scope.objToPageArray($scope.personList, 20);
+            console.log($scope.pagedItemsPerson);
             $scope.showGrouping = false;
             $scope.personToLookup = "";
         };
