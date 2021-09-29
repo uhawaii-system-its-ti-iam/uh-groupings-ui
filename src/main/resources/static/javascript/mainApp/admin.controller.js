@@ -76,24 +76,6 @@
         };
 
         /**
-         * Separate the list of Admins into pages.
-         */
-        $scope.displayAdmins = function () {
-            $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
-            $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, 20);
-        };
-
-        /**
-         * Separate the list of persons into pages.
-         */
-        $scope.displayPerson = function () {
-            $scope.pagedItemsPerson = $scope.objToPageArray($scope.personList, 20);
-            console.log($scope.pagedItemsPerson);
-            $scope.showGrouping = false;
-            $scope.personToLookup = "";
-        };
-
-        /**
          * Removes selected user from a list of groupings.
          */
         $scope.removeFromGroups = function () {

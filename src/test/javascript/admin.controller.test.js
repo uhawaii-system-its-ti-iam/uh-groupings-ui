@@ -24,10 +24,6 @@ describe("AdminController", function () {
         expect(controller).toBeDefined();
     });
 
-    describe("displayAdmins", function () {
-        // todo: Needs coverage.
-    });
-
     describe("searchForUserGroupingInformation", function () {
         beforeEach(function () {
             scope.personToLookup = "test";
