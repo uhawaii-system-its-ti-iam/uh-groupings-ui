@@ -26,6 +26,58 @@ describe("AdminController", function () {
             expect(gs.getAdminLists).toHaveBeenCalled();
         });
     });
+    describe("getAdminListsCallbackOnSuccess", function () {
+        let res = {};
+        beforeEach(function () {
+            res = {
+                "allGroupingPaths": [
+                    {
+                        "path": "path",
+                        "name": "name"
+                    },
+                    {
+                        "path": "path",
+                        "name": "name"
+                    }
+                ],
+                "adminGroup": {
+                    "members": [
+                        {
+                            "username": "username",
+                            "uhUuid": "uhUuid",
+                            "firstName": "firstName",
+                            "lastName": "lastName",
+                            "name": "name"
+                        },
+                        {
+                            "username": "username",
+                            "uhUuid": "uhUuid",
+                            "firstName": "firstName",
+                            "lastName": "lastName",
+                            "name": "name"
+                        }
+                    ]
+                }
+            };
+        });
+        it("should call objToPageArray", function () {
+            spyOn(scope, "objToPageArray");
+            scope.getAdminListsCallbackOnSuccess(res);
+            expect(scope.objToPageArray).toHaveBeenCalled();
+        });
+        it("should instantiate scope.pagedItemsAdmins", function () {
+            scope.getAdminListsCallbackOnSuccess(res);
+            expect(scope.pagedItemsAdmins).toBeDefined();
+        });
+        it("should instantiate scope.groupingsList", function () {
+            scope.getAdminListsCallbackOnSuccess(res);
+            expect(scope.groupingsList).toBeDefined();
+        });
+        it("should set scope.loading to false", function () {
+            scope.getAdminListsCallbackOnSuccess(res);
+            expect(scope.loading).toBeFalse();
+        });
+    });
 
     describe("searchForUserGroupingInformation", function () {
         beforeEach(function () {
