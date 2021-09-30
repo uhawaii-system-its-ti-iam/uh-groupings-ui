@@ -21,7 +21,7 @@ $uh-red: #d21515;
 $remove-button-red: #b05b54; 
 $uh-red1: #721c24; 
 $uh-red2: #f8d7da; 
-$uh-red3: #ffeaece6;
+$uh-red3: #ffe6e8;
 
 // Media queries 
 $media_queries: (
@@ -33,7 +33,7 @@ $media_queries: (
   'max-landscape-phone' : screen and (max-width: 767.98px),
   'max-tablet' : screen and (max-width: 991.98px),
   'max-desktop' : screen and (max-width: 1199.98px),
-);
+); 
 
 // Bootstrap overrides 
 .text-primary {
