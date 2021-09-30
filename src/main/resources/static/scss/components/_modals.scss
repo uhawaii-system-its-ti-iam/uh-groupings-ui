@@ -1,0 +1,63 @@
+.modal-open .modal { 
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.modal.in .modal-dialog {
+    -webkit-transform: none;
+    transform: none;
+}
+
+.modal-backdrop.in {
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
+
+.modal-names {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.modal-dialog {
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: calc(100% - (0.5rem * 2));
+
+    &::before { 
+        display: block;
+        height: calc(100vh - (0.5rem * 10));
+        content: "";
+    }
+
+    @include media-breakpoint(min-mobile) {
+        .modal-dialog {
+            min-height: calc(100% - (1.75rem * 2));
+        }
+    
+        .modal-dialog::before {
+            height: calc(100vh - (1.75rem * 2));
+        }
+    }
+}
+
+// Set's the modal text color.
+.modal-danger { 
+    color: $uh-red1; 
+
+    .modal-title { 
+        color: $uh-red1;
+    }
+    .modal-header { 
+        color: $uh-red2;
+        background-color: $uh-red2;
+    }
+    .modal-body { 
+        background-color: $uh-red3;
+    }
+    .modal-footer { 
+        border-top-color: $uh-red3;
+    }
+}
+
+
