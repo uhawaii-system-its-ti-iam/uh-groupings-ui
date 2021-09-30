@@ -157,8 +157,6 @@ describe("AdminController", function () {
             scope.removeFromGroupsCallbackOnSuccess(res);
             expect(scope.emptySelect).toBeTrue();
         });
-
-
     });
 
     describe("removeFromGroups", function () {
@@ -170,6 +168,22 @@ describe("AdminController", function () {
             spyOn(gs, "getMemberAttributes");
             scope.removeFromGroups();
             expect(gs.getMemberAttributes).toHaveBeenCalled();
+        });
+    });
+
+    describe("updateCheckBoxes", function () {
+        beforeEach(function () {
+            scope.pagedItemsPerson[scope.currentPagePerson] = {
+                inBasis: false,
+                inExclude: false,
+                inInclude: true,
+                isSelected: false
+            };
+        });
+        it("should negate scope.checkAll", function () {
+            let checkAll = scope.checkAll;
+            scope.updateCheckBoxes();
+            expect(scope.checkAll).toEqual(!checkAll);
         });
     });
 
