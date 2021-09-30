@@ -27,7 +27,7 @@ public class UserTest {
 
         assertEquals("a", user.getUsername());
         assertEquals("a", user.getUid());
-        assertNull(user.getUhuuid());
+        assertNull(user.getUhUuid());
         assertNull(user.getAttributes());
 
         authorities = new LinkedHashSet<>();
@@ -36,7 +36,7 @@ public class UserTest {
 
         assertEquals("b", user.getUsername());
         assertEquals("b", user.getUid());
-        assertEquals("12345", user.getUhuuid());
+        assertEquals("12345", user.getUhUuid());
         assertNull(user.getAttributes());
 
         user.setAttributes(new UhCasAttributes());

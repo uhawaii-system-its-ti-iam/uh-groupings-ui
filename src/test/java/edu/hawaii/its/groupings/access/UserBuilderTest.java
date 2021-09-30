@@ -1,25 +1,41 @@
 package edu.hawaii.its.groupings.access;
 
+import edu.hawaii.its.api.controller.GroupingsRestController;
 import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.controller.WithMockUhUser;
+import org.checkerframework.common.value.qual.StaticallyExecutable;
+import org.jasig.cas.client.authentication.SimplePrincipal;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.context.WebApplicationContext;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @ActiveProfiles("localTest")
 @RunWith(SpringRunner.class)
@@ -29,103 +45,54 @@ public class UserBuilderTest {
     @Autowired
     private UserBuilder userBuilder;
 
-    @Test
-    public void testAdminUsers() {
-        Map<String, String> map = new HashMap<>();
-        map.put("uid", "duckart");
-        map.put("uhuuid", "89999999");
-        User user = userBuilder.make(map);
+    @Autowired
+    private AuthorizationService authorizationService;
 
-        // Basics.
-        assertEquals("duckart", user.getUsername());
-        assertEquals("duckart", user.getUid());
-        assertEquals("89999999", user.getUhuuid());
+    @MockBean
+    private GroupingsRestController groupingsRestController;
 
-        // Granted Authorities.
-        assertTrue(user.getAuthorities().size() > 0);
-        assertTrue(user.hasRole(Role.ANONYMOUS));
-        assertTrue(user.hasRole(Role.UH));
-        assertTrue(user.hasRole(Role.EMPLOYEE));
-        assertTrue(user.hasRole(Role.ADMIN));
+    @Autowired
+    private UserContextService userContextService;
 
-        map = new HashMap<>();
-        map.put("uid", "someuser");
-        map.put("uhuuid", "10000001");
-        user = userBuilder.make(map);
+    @Autowired
+    private WebApplicationContext context;
 
-        assertEquals("someuser", user.getUsername());
-        assertEquals("someuser", user.getUid());
-        assertEquals("10000001", user.getUhuuid());
-
-        assertTrue(user.getAuthorities().size() > 0);
-        assertTrue(user.hasRole(Role.ANONYMOUS));
-        assertTrue(user.hasRole(Role.UH));
-        assertTrue(user.hasRole(Role.EMPLOYEE));
-        assertTrue(user.hasRole(Role.ADMIN));
+    @Before
+    public void setUp() {
+        webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
     }
 
     @Test
-    public void testEmployees() {
-        Map<String, String> map = new HashMap<>();
-        map.put("uid", "jjcale");
-        map.put("uhuuid", "10000004");
-        User user = userBuilder.make(map);
-
-        // Basics.
-        assertEquals("jjcale", user.getUsername());
-        assertEquals("jjcale", user.getUid());
-        assertEquals("10000004", user.getUhuuid());
-
-        // Granted Authorities.
-        assertEquals(3, user.getAuthorities().size());
-        assertTrue(user.hasRole(Role.ANONYMOUS));
-        assertTrue(user.hasRole(Role.UH));
-        assertTrue(user.hasRole(Role.EMPLOYEE));
-
-        assertFalse(user.hasRole(Role.ADMIN));
+    public void basics() {
+        assertNotNull(authorizationService);
     }
 
     @Test
-    public void testEmployeesWithMultivalueUid() {
-        Map<String, Object> map = new HashMap<>();
-        ArrayList<Object> uids = new ArrayList<>();
-        uids.add("aaaaaaa");
-        uids.add("bbbbbbb");
-        map.put("uid", uids);
-        map.put("uhuuid", "10000003");
+    @WithMockUhUser
+    public void testAdminUser() {
+        Map<String, String> map = new HashMap<>();
+
+        Principal principal = new SimplePrincipal(userContextService.getCurrentUhUuid());
+
+        map.put("uid", userContextService.getCurrentUser().getUid());
+        map.put("uhUuid", userContextService.getCurrentUhUuid());
+
+
+        given(groupingsRestController.hasOwnerPrivs(principal))
+                .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
+        given(groupingsRestController.hasAdminPrivs(principal))
+                .willReturn(new ResponseEntity<>("true", HttpStatus.OK));
+
         User user = userBuilder.make(map);
 
-        // Basics.
-        assertEquals("aaaaaaa", user.getUsername());
-        assertEquals("aaaaaaa", user.getUid());
-        assertEquals("10000003", user.getUhuuid());
-
-        // Granted Authorities.
+        // Check results.
         assertEquals(4, user.getAuthorities().size());
         assertTrue(user.hasRole(Role.ANONYMOUS));
         assertTrue(user.hasRole(Role.UH));
-        assertTrue(user.hasRole(Role.EMPLOYEE));
         assertTrue(user.hasRole(Role.ADMIN));
-    }
-
-    @Test
-    public void testNotAnEmployee() {
-        Map<String, String> map = new HashMap<>();
-        map.put("uid", "nobody");
-        map.put("uhuuid", "10000009");
-        User user = userBuilder.make(map);
-
-        // Basics.
-        assertEquals("nobody", user.getUsername());
-        assertEquals("nobody", user.getUid());
-        assertEquals("10000009", user.getUhuuid());
-
-        // Granted Authorities.
-        assertEquals(2, user.getAuthorities().size());
-        assertTrue(user.hasRole(Role.ANONYMOUS));
-        assertTrue(user.hasRole(Role.UH));
-        assertFalse(user.hasRole(Role.EMPLOYEE));
-        assertFalse(user.hasRole(Role.ADMIN));
+        assertTrue(user.hasRole(Role.OWNER));
     }
 
     @Test
@@ -139,7 +106,7 @@ public class UserBuilderTest {
             userBuilder.make(map);
             fail("Should not reach here.");
         } catch (Exception e) {
-            assertEquals(e.getClass(), UsernameNotFoundException.class);
+            assertThat(UsernameNotFoundException.class, equalTo(e.getClass()));
             assertThat(e.getMessage(), containsString("uid is empty"));
         }
     }
@@ -153,7 +120,7 @@ public class UserBuilderTest {
             userBuilder.make(map);
             fail("Should not reach here.");
         } catch (Exception e) {
-            assertEquals(e.getClass(), UsernameNotFoundException.class);
+            assertThat(UsernameNotFoundException.class, equalTo(e.getClass()));
             assertThat(e.getMessage(), containsString("uid is empty"));
         }
     }
