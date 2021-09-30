@@ -56,6 +56,17 @@
             groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.createApiErrorModal);
         };
 
+        $scope.searchForUserGroupingInformationOnSuccessCallback = function (res) {
+            $scope.personList = _.sortBy(res, "name");
+            $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+            $scope.user = $scope.personToLookup;
+            $scope.loading = false;
+        };
+        $scope.searchForUserGroupingInformationOnErrorCallback = function (res) {
+            $scope.loading = false;
+            $scope.resStatus = res.status;
+            $scope.user = $scope.personToLookup;
+        };
         /**
          * Fetch a list of memberships pertaining to $scope.personToLookUp.
          */
@@ -64,16 +75,10 @@
                 $scope.emptyInput = true;
             } else {
                 $scope.loading = true;
-                groupingsService.getMembershipAssignmentForUser(function (res) {
-                    $scope.personList = _.sortBy(res, "name");
-                    $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-                    $scope.user = $scope.personToLookup;
-                    $scope.loading = false;
-                }, function (res) {
-                    $scope.loading = false;
-                    $scope.resStatus = res.status;
-                    $scope.user = $scope.personToLookup;
-                }, $scope.personToLookup);
+                groupingsService.getMembershipAssignmentForUser(
+                    $scope.searchForUserGroupingInformationOnSuccessCallback,
+                    $scope.searchForUserGroupingInformationOnErrorCallback,
+                    $scope.personToLookup);
             }
         };
 
