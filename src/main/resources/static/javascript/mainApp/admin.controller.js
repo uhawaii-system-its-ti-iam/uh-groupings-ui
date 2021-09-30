@@ -77,13 +77,31 @@
             }
         };
 
+        $scope.removeFromGroupsCallbackOnSuccess = function (res) {
+            if (res === "") {
+                return;
+            }
+            let userToRemove = {
+                username: res.uid,
+                name: res.cn,
+                uhUuid: res.uhUuid
+            };
+            if (_.isEmpty($scope.selectedGroupingsPaths)) {
+                $scope.emptySelect = true;
+            } else {
+                $scope.createRemoveFromGroupsModal({
+                    user: userToRemove,
+                    groupPaths: $scope.selectedGroupingsPaths,
+                    listName: $scope.selectedGroupingsNames
+                });
+            }
+
+        };
         /**
          * Removes selected user from a list of groupings.
          */
         $scope.removeFromGroups = function () {
-            // Array of names to be displayed in the modal.
             $scope.selectedGroupingsNames = [];
-            // Array of grouping paths that will be passed to the API for deletion.
             $scope.selectedGroupingsPaths = [];
 
             let i = 0;
@@ -111,25 +129,7 @@
             });
 
             if ($scope.personToLookup != null) {
-                groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
-                    if (attributes === "") {
-                        return;
-                    }
-                    let userToRemove = {
-                        username: attributes.uid,
-                        name: attributes.cn,
-                        uhUuid: attributes.uhUuid
-                    };
-                    if (_.isEmpty($scope.selectedGroupingsPaths)) {
-                        $scope.emptySelect = true;
-                    } else {
-                        $scope.createRemoveFromGroupsModal({
-                            user: userToRemove,
-                            groupPaths: $scope.selectedGroupingsPaths,
-                            listName: $scope.selectedGroupingsNames
-                        });
-                    }
-                });
+                groupingsService.getMemberAttributes($scope.personToLookup, $scope.removeFromGroupsCallbackOnSuccess);
             }
         };
 

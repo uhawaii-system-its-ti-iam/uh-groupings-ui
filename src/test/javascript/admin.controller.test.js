@@ -90,4 +90,16 @@ describe("AdminController", function () {
         });
     });
 
+    describe("removeFromGroups", function () {
+        beforeEach(function () {
+            scope.personToLookup = "iamtest01";
+        });
+
+        it("should call groupingsService.getMemberAttributes", function () {
+            spyOn(gs, "getMemberAttributes");
+            scope.removeFromGroups();
+            expect(gs.getMemberAttributes).toHaveBeenCalled();
+        });
+    });
+
 });
