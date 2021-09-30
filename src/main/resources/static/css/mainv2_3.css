@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+/* DO NOT TOUCH THIS CSS FILE */
 .text-primary {
   color: #004252 !important;
 }
@@ -23,7 +28,20 @@ form.seamless button {
 .btn:hover #name, .btn:focus #name, .btn:active #name {
   color: #e3f2ef;
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+.btn.dark-teal-bg:hover, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:active {
+=======
+
 .btn.dark-teal-bg:active, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:hover {
+>>>>>>> 28b93c20 (Resolve git conflicts)
+=======
+.btn.dark-teal-bg:active, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:hover {
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+.btn.dark-teal-bg:hover, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:active {
+>>>>>>> 5fff0452 (Codacy fixes)
   color: #efefef;
   background: #004e59;
 }
@@ -37,6 +55,32 @@ form.seamless button {
   background-image: -webkit-linear-gradient(top, #b05b54, #af534b);
   background-image: -o-linear-gradient(top, #b05b54, #af534b);
   background-image: linear-gradient(to bottom, #b05b54, #af534b);
+<<<<<<< HEAD
+}
+.btn-bottom {
+  position: absolute;
+  bottom: 0;
+  margin: -39px auto;
+}
+
+.btn-sm {
+  padding: 0px 5px;
+}
+
+.btn-sm.btn-sm-clipboard {
+  padding: 3px 5px 2px;
+}
+
+.btn.btn-primary,
+.btn.btn-lg {
+  color: #ffffff;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  text-shadow: 0px 1px 1px #444;
+  /*fix vendor prefixes from line 23 - 26*/
+  background-image: linear-gradient(to bottom, #7db1c4, #5a9cb4);
+=======
+>>>>>>> 2acaf0b7 (Recompile CSS files)
   background-repeat: repeat-x;
   background-color: #b05b54;
 }
@@ -47,7 +91,15 @@ form.seamless button {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+<<<<<<< HEAD
+<<<<<<< HEAD
+  text-shadow: 0 1px 1px #444;
+=======
   text-shadow: 0px 1px 1px #444;
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+  text-shadow: 0 1px 1px #444;
+>>>>>>> d549f573 (Codacy fixes)
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -62,7 +114,15 @@ form.seamless button {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+<<<<<<< HEAD
+<<<<<<< HEAD
+  text-shadow: 0 1px 1px #444;
+=======
   text-shadow: 0px 1px 1px #444;
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+  text-shadow: 0 1px 1px #444;
+>>>>>>> d549f573 (Codacy fixes)
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -79,7 +139,15 @@ form.seamless button {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+<<<<<<< HEAD
+<<<<<<< HEAD
+  text-shadow: 0 1px 1px #444;
+=======
   text-shadow: 0px 1px 1px #444;
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+  text-shadow: 0 1px 1px #444;
+>>>>>>> d549f573 (Codacy fixes)
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -87,12 +155,24 @@ form.seamless button {
   background-repeat: repeat-x;
   background-color: #6fa9be;
 }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 2acaf0b7 (Recompile CSS files)
 .btn-outline-secondary:hover, .btn-outline-secondary:focus, .btn-outline-secondary:active {
   background-color: #004e59;
   border-color: #004e59;
 }
 .btn-sm {
+<<<<<<< HEAD
+<<<<<<< HEAD
+  padding: 0 5px;
+=======
   padding: 0px 5px;
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+  padding: 0 5px;
+>>>>>>> d549f573 (Codacy fixes)
 }
 .btn-sm:hover {
   background: #004e59;
@@ -100,6 +180,16 @@ form.seamless button {
 .btn-sm.btn-clipboard {
   padding: 3px 5px 2px;
 }
+<<<<<<< HEAD
+
+.btn:hover #name,
+.btn:focus #name,
+.btn:active #name {
+  color: #e3f2ef;
+}
+
+=======
+>>>>>>> 2acaf0b7 (Recompile CSS files)
 .btn-light:hover {
   color: white;
   background-color: #4c90a8;
@@ -108,11 +198,31 @@ form.seamless button {
 .description-form-button {
   color: #004252;
   border: none;
-  height: 2.356rem;
+<<<<<<< HEAD
+<<<<<<< HEAD
   background-color: white;
+  padding: 0 5px;
+  margin: 0 -1px;
+  height: 2.356rem;
   width: auto;
+=======
+  height: 2.356rem;
+=======
+>>>>>>> 0fc62666 (Codacy fixes)
+  background-color: white;
+<<<<<<< HEAD
   padding: 0px 5px;
   margin: 0px -1px;
+<<<<<<< HEAD
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+=======
+  padding: 0 5px;
+  margin: 0 -1px;
+>>>>>>> d549f573 (Codacy fixes)
+  height: 2.356rem;
+  width: auto;
+>>>>>>> 0fc62666 (Codacy fixes)
 }
 
 .description-input {
@@ -124,7 +234,21 @@ form.seamless button {
   color: #d21515;
 }
 
+<<<<<<< HEAD
+.btn.dark-teal-bg:hover, .btn.dark-teal-bg :focus, .btn.dark-teal-bg :active {
+  color: #efefef;
+  background: #004e59;
+}
+
+.btn.btn-remove {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+.fa.fa-fw.fa-edit {
+=======
 .far.fa-fw.fa-edit {
+>>>>>>> 2acaf0b7 (Recompile CSS files)
   color: #004252;
 }
 .far.fa-fw.fa-edit.white-style {
@@ -132,11 +256,35 @@ form.seamless button {
   color: white;
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+.dark-teal-bg a,
+.black-bg a {
+  color: white;
+  text-decoration: underline;
+}
+.dark-teal-bg a:active, .dark-teal-bg a:focus, .dark-teal-bg a:hover,
+.black-bg a:active,
+.black-bg a:focus,
+.black-bg a:hover {
+=======
 .dark-teal-bg a, .black-bg a {
   color: white;
   text-decoration: underline;
 }
 .dark-teal-bg a:active, .dark-teal-bg a:focus, .dark-teal-bg a:hover, .black-bg a:active, .black-bg a:focus, .black-bg a:hover {
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+.dark-teal-bg a,
+.black-bg a {
+  color: white;
+  text-decoration: underline;
+}
+.dark-teal-bg a:active, .dark-teal-bg a:focus, .dark-teal-bg a:hover,
+.black-bg a:active,
+.black-bg a:focus,
+.black-bg a:hover {
+>>>>>>> 5fff0452 (Codacy fixes)
   color: lightgrey;
 }
 
@@ -212,7 +360,19 @@ h4 {
 .tab-color {
   color: #212121;
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
+.tab-color:hover,
+.tab-color :focus,
+.tab-color :active {
+=======
 .tab-color:hover, .tab-color :focus, .tab-color :active {
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+.tab-color:hover,
+.tab-color :focus,
+.tab-color :active {
+>>>>>>> 5fff0452 (Codacy fixes)
   color: #212121;
 }
 
@@ -289,7 +449,19 @@ h4 {
 .navbar .navbar-nav .nav-link {
   color: #454545;
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .nav-link :focus,
+.navbar .navbar-nav .nav-link :active {
+=======
 .navbar .navbar-nav .nav-link:hover, .navbar .navbar-nav .nav-link :focus, .navbar .navbar-nav .nav-link :active {
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .nav-link :focus,
+.navbar .navbar-nav .nav-link :active {
+>>>>>>> 5fff0452 (Codacy fixes)
   color: #0d7078;
 }
 .navbar .navbar-nav .nav-item {
@@ -352,7 +524,15 @@ h4 {
   .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
     border: none;
     background-color: #e3f2ef;
+<<<<<<< HEAD
+<<<<<<< HEAD
+    padding: 0 0 2px 0;
+=======
     padding: 0px 0px 2px 0px;
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+    padding: 0 0 2px 0;
+>>>>>>> d549f573 (Codacy fixes)
   }
 }
 
@@ -387,7 +567,13 @@ th {
 
 table {
   width: 80%;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
   /* Styling for table information in modals, groupings, admins, and memberships*/
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+>>>>>>> 5fff0452 (Codacy fixes)
 }
 table .p-10 {
   white-space: nowrap;
@@ -408,7 +594,15 @@ table .w-20 {
 .sort-icon::after {
   content: '\f107';
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
+.sort-icon.reverse::after {
+=======
 .sort-icon.reverse:after {
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+.sort-icon.reverse::after {
+>>>>>>> 5fff0452 (Codacy fixes)
   content: '\f106';
 }
 
@@ -529,12 +723,32 @@ form.seamless input {
 }
 
 .form-alert {
-  margin-top: 1rem;
+<<<<<<< HEAD
+<<<<<<< HEAD
   height: 45px;
-  line-height: 42px;
-  padding: 0px 15px;
+  padding: 0 15px;
   margin-bottom: 1rem;
+  margin-top: 1rem;
   border-radius: 5px;
+  line-height: 45px;
+=======
+  margin-top: 1rem;
+=======
+>>>>>>> 0fc62666 (Codacy fixes)
+  height: 45px;
+  padding: 0 15px;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  border-radius: 5px;
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+  line-height: 30px;
+>>>>>>> 0fc62666 (Codacy fixes)
+=======
+  line-height: 45px;
+>>>>>>> ba848c24 (Fix extra padding on error message)
 }
 
 .description-alert {
@@ -542,7 +756,15 @@ form.seamless input {
   margin-top: 2px;
   height: 35px;
   line-height: 30px;
+<<<<<<< HEAD
+<<<<<<< HEAD
+  padding: 0 15px;
+=======
   padding: 0px 15px;
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+  padding: 0 15px;
+>>>>>>> d549f573 (Codacy fixes)
 }
 
 .manage-admins td:first-child {
@@ -571,7 +793,21 @@ label input {
   margin-top: 3rem;
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5fff0452 (Codacy fixes)
+.black-bg a:hover,
+.black-bg a :focus,
+.black-bg a :active, .dark-teal-bg a:hover,
+.dark-teal-bg a :focus,
+.dark-teal-bg a :active {
+<<<<<<< HEAD
+=======
 .black-bg a:hover, .black-bg a :focus, .black-bg a :active, .dark-teal-bg a:hover, .dark-teal-bg a :focus, .dark-teal-bg a :active {
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+>>>>>>> 5fff0452 (Codacy fixes)
   color: lightgrey;
 }
 
@@ -588,6 +824,9 @@ label input {
   padding-top: 25px;
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
 .manage-groupings td:first-child i {
   flex-basis: 20px;
   margin-right: 8px;
@@ -598,16 +837,45 @@ label input {
 .manage-groupings td:last-child {
   max-width: 220px;
 }
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+>>>>>>> 5fff0452 (Codacy fixes)
 .manage-groupings td span.path {
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
+<<<<<<< HEAD
+<<<<<<< HEAD
+  white-space: nowrap;
+  width: calc(100% - 40px);
+=======
   width: calc(100% - 40px);
   white-space: nowrap;
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+  white-space: nowrap;
+  width: calc(100% - 40px);
+>>>>>>> 0fc62666 (Codacy fixes)
 }
 .manage-groupings td:last-child {
   max-width: 220px;
 }
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5fff0452 (Codacy fixes)
+.manage-groupings td:first-child i {
+  flex-basis: 20px;
+  margin-right: 8px;
+}
+.manage-groupings td:first-child span {
+  flex: 1;
+}
+<<<<<<< HEAD
+=======
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+>>>>>>> 5fff0452 (Codacy fixes)
 .manage-groupings tr td {
   padding: 0px;
 }
@@ -634,7 +902,15 @@ label input {
 }
 .card.card-tab-content .card-header {
   border-top-left-radius: 0px;
+<<<<<<< HEAD
+<<<<<<< HEAD
+  margin-top: 0px;
+=======
   margin-top: 0rem;
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+  margin-top: 0px;
+>>>>>>> 0fc62666 (Codacy fixes)
 }
 @media (max-width: 767.98px) {
   .card-title {
@@ -671,8 +947,18 @@ label input {
   #selectedGroupHeader {
     display: table;
     /* The row is now a table */
+<<<<<<< HEAD
+<<<<<<< HEAD
+    margin: auto;
+    /* Centering */
+=======
     /* Centering */
     margin: auto;
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+    margin: auto;
+    /* Centering */
+>>>>>>> 5fff0452 (Codacy fixes)
     width: 100%;
     padding: 0px;
   }
@@ -699,9 +985,21 @@ body {
   /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
   display: flex;
   /* Creates flexboxes. */
+<<<<<<< HEAD
+<<<<<<< HEAD
+  flex-direction: column;
+  /* Makes the body display vertical. */
+  min-height: 100vh;
+=======
   min-height: 100vh;
   flex-direction: column;
   /* Makes the body display vertical. */
+>>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+  flex-direction: column;
+  /* Makes the body display vertical. */
+  min-height: 100vh;
+>>>>>>> 0fc62666 (Codacy fixes)
 }
 body h1 {
   color: #212121;
@@ -774,3 +1072,8 @@ td.uh-pre {
 }
 
 /*# sourceMappingURL=mainv2_3.css.map */
+<<<<<<< HEAD
+=======
+>>>>>>> 4243cae6 (Delete colors.css)
+=======
+>>>>>>> 2acaf0b7 (Recompile CSS files)

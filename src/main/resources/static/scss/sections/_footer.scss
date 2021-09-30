@@ -2,13 +2,25 @@
     margin-top: 3rem;
 }
 
-.black-bg a, .dark-teal-bg a{ 
-    &:hover, :focus, :active{ 
-        color: lightgrey; 
+.black-bg a, .dark-teal-bg a{
+<<<<<<< HEAD
+<<<<<<< HEAD
+    &:hover,
+    :focus,
+    :active{
+=======
+    &:hover, :focus, :active{
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+    &:hover,
+    :focus,
+    :active{
+>>>>>>> 5fff0452 (Codacy fixes)
+        color: lightgrey;
     }
 }
 
-@include media-breakpoint(max-portrait-phone) { 
+@include media-breakpoint(max-portrait-phone) {
     .img-fluid {
         width: 210px;
     }

@@ -6,99 +6,188 @@ form.seamless button {
     flex-basis: 40px;
 }
 
-.btn { 
+.btn {
 
     // Logout button.
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+    &:hover,
+    &:focus,
+    &:active {
+        #name {
+=======
     &:hover, &:focus, &:active { 
-        & #name { 
+        #name { 
+>>>>>>> 0fc62666 (Codacy fixes)
+=======
+    &:hover, &:focus, &:active {
+=======
+    &:hover,
+    &:focus,
+    &:active {
+>>>>>>> 5fff0452 (Codacy fixes)
+        #name {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
             color:$seafoam;
         }
     }
 
-    &.dark-teal-bg { 
-        &:active, &:focus, &:hover { 
+    &.dark-teal-bg {
+<<<<<<< HEAD
+<<<<<<< HEAD
+        &:hover,
+        &:focus,
+        &:active {
+=======
+        &:active, &:focus, &:hover {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 5fff0452 (Codacy fixes)
             color: $uh-white;
-            background: $green-blue; 
+            background: $green-blue;
         }
     }
 
     // Remove button.
-    &.btn-remove { 
-        margin-left: 2px; 
+    &.btn-remove {
+        margin-left: 2px;
         margin-right: 2px;
-        @include btn-rmv; 
-        
-        &:hover, &:focus, &:active { 
+        @include btn-rmv;
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+        &:hover,
+        &:focus,
+        &:active {
+=======
+        &:hover, &:focus, &:active {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 5fff0452 (Codacy fixes)
             background: darkred;
         }
     }
 
-    &.btn-primary, &.btn-lg { 
+    &.btn-primary, &.btn-lg {
         @include gradient;
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+        &:hover,
+        &:focus,
+        &:active {
+=======
         
-        &:hover, &:focus, &:active { 
+=======
+
+<<<<<<< HEAD
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+        &:hover, &:focus, &:active {
+>>>>>>> 0fc62666 (Codacy fixes)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 5fff0452 (Codacy fixes)
             background: $green-blue right center;
         }
     }
 
     // Buttons for membership, admin, owner in home page
-    &.btn-bottom { 
+    &.btn-bottom {
         @include gradient;
     }
 
-    &-bottom { 
+    &-bottom {
         position: absolute;
         bottom: 0;
         margin: -39px auto;
     }
 
     // Default button
-    &-default { 
-        @include gradient; 
+    &-default {
+        @include gradient;
     }
 
     // Changes the logout color when you hover.
-    &-outline-secondary { 
-        &:hover, &:focus, &:active { 
+    &-outline-secondary {
+<<<<<<< HEAD
+<<<<<<< HEAD
+        &:hover,
+        &:focus,
+        &:active {
+=======
+        &:hover, &:focus, &:active {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 5fff0452 (Codacy fixes)
             background-color: $green-blue;
             border-color: $green-blue;
         }
     }
 
     // Button for copying path, clipboard, and CSV
-    &-sm { 
+    &-sm {
+<<<<<<< HEAD
+<<<<<<< HEAD
+        padding: 0 5px;
+=======
         padding: 0px 5px;
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+        padding: 0 5px;
+>>>>>>> d549f573 (Codacy fixes)
 
-        &:hover { 
+        &:hover {
             background: $green-blue;
         }
 
-        &.btn-clipboard { 
+        &.btn-clipboard {
             padding: 3px 5px 2px;
         }
     }
 
-    &-light:hover { 
+    &-light:hover {
         color: white;
         background-color: $uh-blue4;
     }
 }
 
-// Change description for cards. 
+// Change description for cards.
 .description-form-button {
     color: $dark-teal;
     border: none;
-    height: 2.356rem;
-    background-color: white; 
-    width: auto; 
-    padding: 0px 5px; 
+    background-color: white;
+<<<<<<< HEAD
+<<<<<<< HEAD
+    padding: 0 5px;
+    margin: 0 -1px;
+=======
+    padding: 0px 5px;
     margin: 0px -1px;
+>>>>>>> 0fc62666 (Codacy fixes)
+=======
+    padding: 0 5px;
+    margin: 0 -1px;
+>>>>>>> d549f573 (Codacy fixes)
+    height: 2.356rem;
+    width: auto;
 }
 
 .description-input {
     border: white;
 }
- 
+
 .far.fa-trash-alt {
     margin-right: .75rem;
     color: $uh-red;
@@ -107,7 +196,7 @@ form.seamless button {
 .far.fa-fw.fa-edit {
     color: $dark-teal;
 
-    &.white-style { 
+    &.white-style {
         border: none;
         color:white;
     }

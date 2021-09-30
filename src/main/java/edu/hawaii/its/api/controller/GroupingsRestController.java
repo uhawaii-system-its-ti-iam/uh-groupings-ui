@@ -200,6 +200,16 @@ public class GroupingsRestController {
     }
 
     /**
+     * Get the number of memberships that the current user is associated with.
+     */
+    @GetMapping(value = "/members/memberships")
+    public ResponseEntity<String> numberOfMemberships(Principal principal) {
+        logger.info("Entered REST numberOfMemberships...");
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/memberships", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
      * Get a list of grouping paths that the current user can opt into.
      */
     @GetMapping(value = "/groupings/optInGroups")
@@ -339,6 +349,16 @@ public class GroupingsRestController {
     public ResponseEntity<String> groupingsOwned(Principal principal) {
         logger.info("Entered REST GroupingAssignment...");
         String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * Request the number of grouping paths owned by principal.
+     */
+    @GetMapping(value = "/owners/grouping")
+    public ResponseEntity<String> numberOfGroupings(Principal principal) {
+        logger.info("Entered REST numberOfGroupings...");
+        String uri = String.format(API_2_1_BASE + "/owners/%s/grouping", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
