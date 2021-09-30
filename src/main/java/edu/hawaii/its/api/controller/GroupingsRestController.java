@@ -99,6 +99,7 @@ public class GroupingsRestController {
         String uri = String.format(API_2_1_BASE + "/members/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
+
     /**
      * Get a list of grouping paths that the current user can opt into.
      */
@@ -450,6 +451,16 @@ public class GroupingsRestController {
     }
 
     /**
+     * Check if principle is an owner, of any grouping.
+     */
+    @GetMapping(value = "/owners")
+    public ResponseEntity hasOwnerPrivs(Principal principal) {
+        logger.info("Entered REST isOwner...");
+        String uri = String.format(API_2_1_BASE + "/owners", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
      * @return a list of groupings that a user owns
      */
     @RequestMapping(value = "/owners/{uid}/groupings",
@@ -508,6 +519,7 @@ public class GroupingsRestController {
     }
 
     //todo Remove
+
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to a Listserv
      *
@@ -529,6 +541,7 @@ public class GroupingsRestController {
     }
 
     //todo Remove
+
     /**
      * This allows an owner of a Grouping to change whether or not a Grouping is connected to LDAP.
      *
@@ -552,7 +565,7 @@ public class GroupingsRestController {
     /**
      * This allows an owner of a Grouping to enable that a Grouping connected to a given sync destination
      *
-     * @param path: the path to the Grouping
+     * @param path:       the path to the Grouping
      * @param syncDestId: id of the syncDest to be enabled
      * @return information about the success of the operation
      */
@@ -573,7 +586,7 @@ public class GroupingsRestController {
     /**
      * This allows an owner of a Grouping to disable that a Grouping connected to a given sync destination
      *
-     * @param path: the path to the Grouping
+     * @param path:       the path to the Grouping
      * @param syncDestId: id of the syncDest to be disabled
      * @return information about the success of the operation
      */
@@ -640,7 +653,18 @@ public class GroupingsRestController {
     }
 
     /**
+     * Check if principle is an administrator.
+     */
+    @GetMapping(value = "/admins")
+    public ResponseEntity hasAdminPrivs(Principal principal) {
+        logger.info("Entered REST isAdmin...");
+        String uri = String.format(API_2_1_BASE + "/admins", principal.getName());
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
      * Returns a list of supported sync destinations
+     *
      * @return List of Sync Destinations
      */
     @RequestMapping(value = "/syncDestinations",
