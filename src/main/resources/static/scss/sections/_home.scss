@@ -8,11 +8,11 @@ body {
     font-family: 'Source Sans Pro', 'Helvetica', Arial, sans-serif;
     padding-top: 3.5rem; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
     display: flex; /* Creates flexboxes. */
-    min-height: 100vh;
     flex-direction: column; /* Makes the body display vertical. */
+    min-height: 100vh;
 
     // For the Role: and Welcome *name*
-    & h1 { 
+    h1 {
         color: $uh-black; 
         font-weight: 700;
     }
@@ -28,7 +28,7 @@ main, .container {
     position: relative;
     width: 100px;
 
-    & .user-role { 
+    .user-role { 
         bottom: 0;
         position: absolute;
         right: -.25rem;

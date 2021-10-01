@@ -5,7 +5,7 @@ th {
 }
 
 table { 
-    width: 80%; 
+    width: 80%;
     /* Styling for table information in modals, groupings, admins, and memberships*/
     .p-10 { 
         white-space: nowrap;
@@ -36,12 +36,12 @@ table {
     }
 }
 
-// Styling for the grouping path. 
+// Styling for the grouping path.
 form.seamless {
     display: flex;
     min-width: 12rem;
     
-    & input { 
+    input { 
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
         flex: 1;
@@ -93,7 +93,7 @@ form.seamless {
 .pagination { 
     float: right;
 
-    & .page-item.disabled{ 
+    .page-item.disabled{ 
         cursor: not-allowed;
     }
 }

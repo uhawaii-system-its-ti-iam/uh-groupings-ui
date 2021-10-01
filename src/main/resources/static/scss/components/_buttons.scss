@@ -10,7 +10,7 @@ form.seamless button {
 
     // Logout button.
     &:hover, &:focus, &:active { 
-        & #name { 
+        #name { 
             color:$seafoam;
         }
     }
@@ -33,10 +33,10 @@ form.seamless button {
         }
     }
 
-    &.btn-primary, &.btn-lg { 
+    &.btn-primary, &.btn-lg {
         @include gradient;
         
-        &:hover, &:focus, &:active { 
+        &:hover, &:focus, &:active {
             background: $green-blue right center;
         }
     }
@@ -84,15 +84,15 @@ form.seamless button {
     }
 }
 
-// Change description for cards. 
+// Change description for cards.
 .description-form-button {
     color: $dark-teal;
     border: none;
-    height: 2.356rem;
-    background-color: white; 
-    width: auto; 
-    padding: 0px 5px; 
+    background-color: white;
+    padding: 0px 5px;
     margin: 0px -1px;
+    height: 2.356rem;
+    width: auto;
 }
 
 .description-input {

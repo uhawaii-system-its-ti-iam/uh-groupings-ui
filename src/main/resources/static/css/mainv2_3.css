@@ -109,11 +109,11 @@ form.seamless button {
 .description-form-button {
   color: #004252;
   border: none;
-  height: 2.356rem;
   background-color: white;
-  width: auto;
   padding: 0px 5px;
   margin: 0px -1px;
+  height: 2.356rem;
+  width: auto;
 }
 
 .description-input {
@@ -530,12 +530,12 @@ form.seamless input {
 }
 
 .form-alert {
-  margin-top: 1rem;
   height: 45px;
-  line-height: 42px;
   padding: 0px 15px;
   margin-bottom: 1rem;
+  margin-top: 1rem;
   border-radius: 5px;
+  line-height: 30px;
 }
 
 .description-alert {
@@ -603,8 +603,8 @@ label input {
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: calc(100% - 40px);
   white-space: nowrap;
+  width: calc(100% - 40px);
 }
 .manage-groupings td:last-child {
   max-width: 220px;
@@ -635,7 +635,7 @@ label input {
 }
 .card.card-tab-content .card-header {
   border-top-left-radius: 0px;
-  margin-top: 0rem;
+  margin-top: 0px;
 }
 @media (max-width: 767.98px) {
   .card-title {
@@ -700,9 +700,9 @@ body {
   /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
   display: flex;
   /* Creates flexboxes. */
-  min-height: 100vh;
   flex-direction: column;
   /* Makes the body display vertical. */
+  min-height: 100vh;
 }
 body h1 {
   color: #212121;
