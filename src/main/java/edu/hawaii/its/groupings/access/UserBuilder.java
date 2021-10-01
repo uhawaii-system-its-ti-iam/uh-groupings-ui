@@ -42,7 +42,7 @@ public final class UserBuilder {
         // Don't move this statement above the exists call
         // above because exists implicitly checks that the
         // Long data type conversion will work okay.
-        user.setUhuuid(uhuuid);
+        user.setUhUuid(uhuuid);
 
         // Put all the attributes into the user
         // object just for the demonstration.

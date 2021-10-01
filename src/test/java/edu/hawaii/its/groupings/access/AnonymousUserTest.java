@@ -22,7 +22,7 @@ public class AnonymousUserTest {
         assertNotNull(user);
         assertEquals("anonymous", user.getUsername());
         assertEquals("anonymous", user.getUid());
-        assertNull(user.getUhuuid());
+        assertNull(user.getUhUuid());
         assertEquals("", user.getPassword());
         assertEquals(1, user.getAuthorities().size());
         assertTrue(user.hasRole(Role.ANONYMOUS));

@@ -13,7 +13,7 @@ public class User extends org.springframework.security.core.userdetails.User {
 
     public User(String username, String uhuuid, Collection<GrantedAuthority> authorities) {
         super(username, "", authorities);
-        setUhuuid(uhuuid);
+        setUhUuid(uhuuid);
     }
 
     public User(String username, Collection<GrantedAuthority> authorities) {
@@ -24,11 +24,11 @@ public class User extends org.springframework.security.core.userdetails.User {
         return getUsername();
     }
 
-    public String getUhuuid() {
+    public String getUhUuid() {
         return uhuuid;
     }
 
-    public void setUhuuid(String uhuuid) { this.uhuuid = uhuuid; }
+    public void setUhUuid(String uhuuid) { this.uhuuid = uhuuid; }
 
     public String getAttribute(String name) {
         return attributes.getValue(name);
@@ -53,7 +53,7 @@ public class User extends org.springframework.security.core.userdetails.User {
     @Override
     public String toString() {
         return "User [uid=" + getUid()
-                + ", uhuuid=" + getUhuuid()
+                + ", uhuuid=" + getUhUuid()
                 + ", super-class: " + super.toString() + "]";
     }
 }
