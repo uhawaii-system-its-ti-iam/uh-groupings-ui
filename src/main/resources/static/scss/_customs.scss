@@ -36,6 +36,7 @@ $media_queries: (
 ); 
 
 // Bootstrap overrides 
+/* DO NOT TOUCH THIS CSS FILE */
 .text-primary {
   color: $dark-teal !important;
 }
@@ -48,16 +49,7 @@ $media_queries: (
   color: $uh-blue1 !important;
 }
 
-<<<<<<< HEAD
 // Create fade background when opening modals
-=======
-//this is to create the fade background for danger modal
->>>>>>> 300c8be9 (Merge conflicts)
 .fade:not(.show) { 
   opacity: 1;
 }
-
-<<<<<<< HEAD
-=======
-//import bootstrap
->>>>>>> 300c8be9 (Merge conflicts)
