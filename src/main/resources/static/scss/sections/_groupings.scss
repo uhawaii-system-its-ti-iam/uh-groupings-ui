@@ -1,33 +1,37 @@
 // In admin, memberships, and groupings.
-.manage-groupings { 
-    & td:first-child { 
-        & i { 
+.manage-groupings {
+    td:first-child {
+        i {
             flex-basis: 20px; 
             margin-right: 8px;
         }
-        & span { 
+        span {
             flex: 1;
         }
     }
-    & td:last-child {
+
+    td:last-child {
         max-width: 220px;
     }
-    & td { 
-        & span { 
-            &.path { 
+
+    td {
+        span {
+            &.path {
                 display: inline-block;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                width: calc(100% - 40px);
                 white-space: nowrap;
+                width: calc(100% - 40px);
             }
         }
         &:last-child { 
             max-width: 220px;
         }
     }
-    & tr { 
-        & td { 
+
+    // Manage Memberships
+    tr { 
+        td { 
             padding: 0px;
         }
     }
@@ -56,9 +60,9 @@
     margin-top: 1rem;
 
     &.card-tab-content { 
-        & .card-header { 
+        .card-header { 
             border-top-left-radius: 0px;
-            margin-top: 0rem;
+            margin-top: 0px;
         }
     }
 
