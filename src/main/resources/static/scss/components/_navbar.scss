@@ -1,60 +1,62 @@
-.navbar { 
+.navbar {
     background-color: white;
     padding-top: 0;
     padding-bottom: 0;
 
-    .navbar-nav { 
-        .nav-link { 
+    .navbar-nav {
+        .nav-link {
             color: $uh-dark-gray;
-            &:hover, :focus, :active { 
+            &:hover,
+            :focus,
+            :active {
                 color: $uh-teal
             }
         }
-        .nav-item { 
-            padding-left: .3125rem; 
+        .nav-item {
+            padding-left: .3125rem;
             padding-right: .3125rem;
         }
     }
 
-    @include media-breakpoint(min-desktop) { 
-        .nav{ 
+    @include media-breakpoint(min-desktop) {
+        .nav {
             padding: 2.5rem 1.25rem 0 0;
             background-color: white;
         }
-        .navbar-brand { 
+        .navbar-brand {
             padding: 0;
-            & > img { 
+            > img {
                 background-color: transparent;
             }
         }
     }
 }
 
-.fixed-top .navbar-brand { 
+.fixed-top .navbar-brand {
     padding: 0;
 }
 
 .nav-tabs {
-    .nav-link { 
-        border: none; 
+    .nav-link {
+        border: none;
     }
-    .nav-item { 
+    .nav-item {
         margin-top: 1rem;
     }
 }
 
-.nav-link { 
+.nav-link {
     white-space: nowrap;
 }
 
-.nav.nav-tabs { 
+.nav.nav-tabs {
     border-bottom: none;
 }
 
 .tooltip {
     pointer-events: none;
 
-    @include media-breakpoint(max-tablet) { 
+    @include media-breakpoint(max-tablet) {
         .tooltip {
             display: none;
         }
@@ -67,7 +69,7 @@
     height: 2.75rem;
 
     // Centers elements in side navbar
-    > .nav-link { 
+    > .nav-link {
         padding-left: .75rem;
     }
 }
@@ -75,10 +77,10 @@
 .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
     align-items: center;
 
-    @include media-breakpoint(max-portrait-phone) { 
+    @include media-breakpoint(max-portrait-phone) {
             border: none;
             background-color: #e3f2ef;
-            padding: 0px 0px 2px 0px;   
+            padding: 0 0 2px 0;
     }
 }
 
@@ -89,18 +91,18 @@
 
 .nav-pills {
     // Set icon styling for nav-bar icons.
-    .nav-link { 
+    .nav-link {
         color: $dark-teal;
         height: 44px;
 
-        &.active { 
+        &.active {
             position: relative;
             background-color: white;
             background: white;
             color: $dark-teal;
 
-            &:after { 
-                @include media-breakpoint(min-tablet) { 
+            &:after {
+                @include media-breakpoint(min-tablet) {
                     border-width: 10px 10px 10px 0;
                     border-color: transparent #fff transparent transparent;
                     top: 25%;

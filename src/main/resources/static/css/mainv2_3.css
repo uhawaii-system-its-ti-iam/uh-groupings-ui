@@ -1,3 +1,4 @@
+/* DO NOT TOUCH THIS CSS FILE */
 .text-primary {
   color: #004252 !important;
 }
@@ -23,7 +24,7 @@ form.seamless button {
 .btn:hover #name, .btn:focus #name, .btn:active #name {
   color: #e3f2ef;
 }
-.btn.dark-teal-bg:active, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:hover {
+.btn.dark-teal-bg:hover, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:active {
   color: #efefef;
   background: #004e59;
 }
@@ -47,7 +48,7 @@ form.seamless button {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  text-shadow: 0px 1px 1px #444;
+  text-shadow: 0 1px 1px #444;
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -62,7 +63,7 @@ form.seamless button {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  text-shadow: 0px 1px 1px #444;
+  text-shadow: 0 1px 1px #444;
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -79,7 +80,7 @@ form.seamless button {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  text-shadow: 0px 1px 1px #444;
+  text-shadow: 0 1px 1px #444;
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -92,7 +93,7 @@ form.seamless button {
   border-color: #004e59;
 }
 .btn-sm {
-  padding: 0px 5px;
+  padding: 0 5px;
 }
 .btn-sm:hover {
   background: #004e59;
@@ -108,11 +109,11 @@ form.seamless button {
 .description-form-button {
   color: #004252;
   border: none;
-  height: 2.356rem;
   background-color: white;
+  padding: 0 5px;
+  margin: 0 -1px;
+  height: 2.356rem;
   width: auto;
-  padding: 0px 5px;
-  margin: 0px -1px;
 }
 
 .description-input {
@@ -132,11 +133,15 @@ form.seamless button {
   color: white;
 }
 
-.dark-teal-bg a, .black-bg a {
+.dark-teal-bg a,
+.black-bg a {
   color: white;
   text-decoration: underline;
 }
-.dark-teal-bg a:active, .dark-teal-bg a:focus, .dark-teal-bg a:hover, .black-bg a:active, .black-bg a:focus, .black-bg a:hover {
+.dark-teal-bg a:active, .dark-teal-bg a:focus, .dark-teal-bg a:hover,
+.black-bg a:active,
+.black-bg a:focus,
+.black-bg a:hover {
   color: lightgrey;
 }
 
@@ -212,7 +217,9 @@ h4 {
 .tab-color {
   color: #212121;
 }
-.tab-color:hover, .tab-color :focus, .tab-color :active {
+.tab-color:hover,
+.tab-color :focus,
+.tab-color :active {
   color: #212121;
 }
 
@@ -289,7 +296,9 @@ h4 {
 .navbar .navbar-nav .nav-link {
   color: #454545;
 }
-.navbar .navbar-nav .nav-link:hover, .navbar .navbar-nav .nav-link :focus, .navbar .navbar-nav .nav-link :active {
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .nav-link :focus,
+.navbar .navbar-nav .nav-link :active {
   color: #0d7078;
 }
 .navbar .navbar-nav .nav-item {
@@ -352,7 +361,7 @@ h4 {
   .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
     border: none;
     background-color: #e3f2ef;
-    padding: 0px 0px 2px 0px;
+    padding: 0 0 2px 0;
   }
 }
 
@@ -387,7 +396,6 @@ th {
 
 table {
   width: 80%;
-  /* Styling for table information in modals, groupings, admins, and memberships*/
 }
 table .p-10 {
   white-space: nowrap;
@@ -408,7 +416,7 @@ table .w-20 {
 .sort-icon::after {
   content: '\f107';
 }
-.sort-icon.reverse:after {
+.sort-icon.reverse::after {
   content: '\f106';
 }
 
@@ -529,12 +537,12 @@ form.seamless input {
 }
 
 .form-alert {
-  margin-top: 1rem;
   height: 45px;
-  line-height: 42px;
-  padding: 0px 15px;
+  padding: 0 15px;
   margin-bottom: 1rem;
+  margin-top: 1rem;
   border-radius: 5px;
+  line-height: 45px;
 }
 
 .description-alert {
@@ -542,7 +550,7 @@ form.seamless input {
   margin-top: 2px;
   height: 35px;
   line-height: 30px;
-  padding: 0px 15px;
+  padding: 0 15px;
 }
 
 .manage-admins td:first-child {
@@ -571,7 +579,11 @@ label input {
   margin-top: 3rem;
 }
 
-.black-bg a:hover, .black-bg a :focus, .black-bg a :active, .dark-teal-bg a:hover, .dark-teal-bg a :focus, .dark-teal-bg a :active {
+.black-bg a:hover,
+.black-bg a :focus,
+.black-bg a :active, .dark-teal-bg a:hover,
+.dark-teal-bg a :focus,
+.dark-teal-bg a :active {
   color: lightgrey;
 }
 
@@ -588,25 +600,22 @@ label input {
   padding-top: 25px;
 }
 
+.manage-groupings td span.path {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: calc(100% - 40px);
+}
+.manage-groupings td:last-child {
+  max-width: 220px;
+}
 .manage-groupings td:first-child i {
   flex-basis: 20px;
   margin-right: 8px;
 }
 .manage-groupings td:first-child span {
   flex: 1;
-}
-.manage-groupings td:last-child {
-  max-width: 220px;
-}
-.manage-groupings td span.path {
-  display: inline-block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: calc(100% - 40px);
-  white-space: nowrap;
-}
-.manage-groupings td:last-child {
-  max-width: 220px;
 }
 .manage-groupings tr td {
   padding: 0px;
@@ -634,7 +643,7 @@ label input {
 }
 .card.card-tab-content .card-header {
   border-top-left-radius: 0px;
-  margin-top: 0rem;
+  margin-top: 0px;
 }
 @media (max-width: 767.98px) {
   .card-title {
@@ -671,8 +680,8 @@ label input {
   #selectedGroupHeader {
     display: table;
     /* The row is now a table */
-    /* Centering */
     margin: auto;
+    /* Centering */
     width: 100%;
     padding: 0px;
   }
@@ -699,9 +708,9 @@ body {
   /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
   display: flex;
   /* Creates flexboxes. */
-  min-height: 100vh;
   flex-direction: column;
   /* Makes the body display vertical. */
+  min-height: 100vh;
 }
 body h1 {
   color: #212121;

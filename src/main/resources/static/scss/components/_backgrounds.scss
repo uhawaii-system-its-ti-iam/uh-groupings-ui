@@ -1,56 +1,61 @@
-.dark-teal-bg a, .black-bg a { 
-    color: white; 
+.dark-teal-bg a,
+.black-bg a {
+    color: white;
     text-decoration: underline;
 
-    &:active, &:focus, &:hover { 
+    &:active,
+    &:focus,
+    &:hover {
         color: lightgrey;
     }
 }
 
-.btn { 
-    &.dark-teal-bg { 
-        &:active, &:focus, &:hover { 
+.btn {
+    &.dark-teal-bg {
+        &:active,
+        &:focus,
+        &:hover {
             color: $uh-white;
-            background: $green-blue; 
+            background: $green-blue;
         }
     }
 }
 
-.deep-blue-bg { 
-    background-color: $deep-blue; 
+.deep-blue-bg {
+    background-color: $deep-blue;
     color: white;
 }
 
-.black-bg { 
-    background-color: $uh-black; 
+.black-bg {
+    background-color: $uh-black;
     color: white;
 }
 
-.seafoam-bg { 
-    background-color: $seafoam; 
+.seafoam-bg {
+    background-color: $seafoam;
     color: $uh-black;
 }
 
 .green-blue-bg {
-    background-color: $green-blue; 
+    background-color: $green-blue;
 }
 
-.dark-teal-bg { 
-    background-color: $dark-teal; 
+.dark-teal-bg {
+    background-color: $dark-teal;
 }
 
-.teal-bg { 
+.teal-bg {
     background-color: $uh-teal;
 }
 
-.blue-bg { 
+.blue-bg {
     background-color: $uh-blue1;
 }
 
-.light-teal-bg { 
+.light-teal-bg {
     background-color: $light-teal;
 }
 
-.teal-tint-bg { 
+.teal-tint-bg {
     background-color: $teal-tint;
 }

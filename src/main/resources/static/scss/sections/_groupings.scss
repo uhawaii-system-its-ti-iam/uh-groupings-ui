@@ -1,33 +1,34 @@
 // In admin, memberships, and groupings.
-.manage-groupings { 
-    & td:first-child { 
-        & i { 
-            flex-basis: 20px; 
-            margin-right: 8px;
-        }
-        & span { 
-            flex: 1;
-        }
-    }
-    & td:last-child {
-        max-width: 220px;
-    }
-    & td { 
-        & span { 
-            &.path { 
+.manage-groupings {
+    td {
+        span {
+            &.path {
                 display: inline-block;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                width: calc(100% - 40px);
                 white-space: nowrap;
+                width: calc(100% - 40px);
             }
         }
-        &:last-child { 
+
+        &:last-child {
             max-width: 220px;
         }
+
+        &:first-child {
+            i {
+                flex-basis: 20px;
+                margin-right: 8px;
+            }
+            span {
+                flex: 1;
+            }
+        }
     }
-    & tr { 
-        & td { 
+
+    // Manage Memberships
+    tr {
+        td {
             padding: 0px;
         }
     }
@@ -38,7 +39,7 @@
     height: 25px !important;
 }
 
-#selectall { 
+#selectall {
     margin-left: 0;
 }
 
@@ -46,49 +47,49 @@
     float: left;
 }
 
-#groupingsContainer { 
+#groupingsContainer {
     display: none;
 }
 
 // Groupings card
-.card { 
+.card {
     overflow: hidden;
     margin-top: 1rem;
 
-    &.card-tab-content { 
-        & .card-header { 
+    &.card-tab-content {
+        .card-header {
             border-top-left-radius: 0px;
-            margin-top: 0rem;
+            margin-top: 0px;
         }
     }
 
-    @include media-breakpoint(max-landscape-phone) { 
+    @include media-breakpoint(max-landscape-phone) {
         &-title {
-            text-align: center; 
-            &-text { 
+            text-align: center;
+            &-text {
                 text-align: center;
             }
         }
     }
 }
 
-// Basis and Exclude tab. 
+// Basis and Exclude tab.
 
 // Members to remove section.
-.input-group { 
+.input-group {
     width: 35em;
 }
 
-.basis-column { 
+.basis-column {
     width: 3%;
 }
 
 // Add margin to "add" button in owners, exclude, and include.
-.add-margin { 
+.add-margin {
     margin-left: 2px;
 }
 
-.inline-block { 
+.inline-block {
     display: inline-block;
 }
 
@@ -98,11 +99,10 @@
  * button, so on mobile, the button sits on top of the
  * grouping name, eliminating whitespace.
  */
- @include media-breakpoint(max-landscape-phone){ 
+ @include media-breakpoint(max-landscape-phone){
     #selectedGroupHeader {
         display: table; /* The row is now a table */
-        /* Centering */
-        margin: auto;
+        margin: auto; /* Centering */
         width: 100%;
         padding: 0px;
     }

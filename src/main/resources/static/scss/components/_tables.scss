@@ -4,44 +4,46 @@ th {
     text-transform: uppercase;
 }
 
-table { 
-    width: 80%; 
-    /* Styling for table information in modals, groupings, admins, and memberships*/
-    .p-10 { 
+table {
+    width: 80%;
+
+    // Styling for table information in modals, groupings, admins, and memberships
+    .p-10 {
         white-space: nowrap;
-        padding: 5px 20px !important
+        padding: 5px 20px !important;
     }
-    .p-11 { 
-        white-space: nowrap; 
-        padding: 5px 25px !important
+    .p-11 {
+        white-space: nowrap;
+        padding: 5px 25px !important;
     }
-    .p-12 { 
-        white-space: nowrap; 
-        padding: 5px 30px !important
+    .p-12 {
+        white-space: nowrap;
+        padding: 5px 30px !important;
     }
-    .w-20 { 
-        width: 20%
+    .w-20 {
+        width: 20%;
     }
 }
 
 // Arrows for sorting info on table
-.sort-icon { 
+.sort-icon {
     // Angle down
-    &::after { 
+    &::after {
         content: '\f107';
     }
+
     // Angle up
-    &.reverse:after {
+    &.reverse::after {
         content: '\f106';
     }
 }
 
-// Styling for the grouping path. 
+// Styling for the grouping path.
 form.seamless {
     display: flex;
     min-width: 12rem;
-    
-    & input { 
+
+    input {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
         flex: 1;
@@ -49,16 +51,16 @@ form.seamless {
     }
 }
 
-// Modal tables 
+// Modal tables
 
-// Sets margin for "are you sure". 
-.modal-tables { 
+// Sets margin for "are you sure".
+.modal-tables {
     margin-bottom: 30px;
 }
 
 // Styling for multi-add modal tables
-.import-table { 
-    &-tbody { 
+.import-table {
+    &-tbody {
         display: block;
         height: 175px;
         overflow: auto;
@@ -72,28 +74,28 @@ form.seamless {
     }
 }
 
-.clickable { 
+.clickable {
     cursor: pointer;
 
-    &.center-checkbox { 
+    &.center-checkbox {
         vertical-align: top;
         margin-left: 5px;
     }
 }
 
-#blankCheckbox{ 
+#blankCheckbox{
     margin-left: 1rem;
 }
 
-.form-check-input { 
+.form-check-input {
     position: relative;
 }
 
-// Pagination 
-.pagination { 
+// Pagination
+.pagination {
     float: right;
 
-    & .page-item.disabled{ 
+    .page-item.disabled{
         cursor: not-allowed;
     }
 }
@@ -105,6 +107,6 @@ form.seamless {
 }
 
 // Styles first, last, next and prev in pagination
-.page-link { 
+.page-link {
     color: $text-color;
 }
