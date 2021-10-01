@@ -101,6 +101,11 @@
             <artifactId>spring-tx</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jruby</groupId>
+            <artifactId>jruby-complete</artifactId>
+            <version>9.3.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
@@ -306,6 +311,8 @@
                                 <echo>$ mvn -Dmaven.test.skip=true clean package</echo>
                                 <echo>$ mvn jasmine:test</echo>
                                 <echo>$ mvn clean test jacoco:report</echo>
+                                <echo>$ mvn sass:watch</echo> 
+                                <echo>$ mvn sass:update-stylesheet</echo>
                                 <echo/>
                                 <echo>To run the integrations tests with your Grouper server:</echo>
                                 <echo>$ mvn -Dtest=TestGroupingsRestController test</echo>
@@ -368,6 +375,21 @@
                 </executions>
                 <configuration>
                     <jvmTarget>1.8</jvmTarget>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>nl.geodienstencentrum.maven</groupId>
+                <artifactId>sass-maven-plugin</artifactId>
+                <version>3.7.2</version>
+                <configuration>
+                    <resources>
+                    <resource>
+                        <source>
+                        <directory>${basedir}/src/main/resources/static/scss</directory>
+                        </source>
+                        <destination>${basedir}/src/main/resources/static/css</destination>
+                    </resource>
+                    </resources>
                 </configuration>
             </plugin>
             <plugin>

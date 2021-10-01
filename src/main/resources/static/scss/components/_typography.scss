@@ -19,12 +19,10 @@ h4 {
     font-size: 1rem;
 }
 
-/* For html span code */
 .modal-black-text {
-    color: black
+    color: black;
 }
 
-// Tabs on admin.html 
 .tab-color { 
     color: $uh-black;
 
@@ -33,7 +31,6 @@ h4 {
     }
 }
 
-/* For html span code */
 .font-weight-bold {
     font-weight: bold;
 }
@@ -43,12 +40,15 @@ h4 {
     font-weight: normal;
 }
 
-//when you hover over the clipboard text
 .hover-text { 
     font-size: 0px;
 }
-
-//align no memberships available text 
+ 
 .no-memberships-text { 
     text-align: center;
+}
+
+// Makes the "here" text in info.html blue.
+.link{
+    color: $uh-blue2;
 }
