@@ -13,40 +13,26 @@
 </div>
 <div class="modal-body" id="modal-body">
     <p>
-<<<<<<< HEAD
         <span class="modal-black-text">You are about to add the following member to the {{listName}} list.</span>
-=======
-        <span style="color: black">You are about to add the following member to the {{listName}} list.</span>
->>>>>>> da90f928 (Cleaned up mulitple uses of span tags)
     </p>
     <table class="modal-tables">
         <tr>
             <th th:utext="#{screen.message.modal.add.name}"></th>
-<<<<<<< HEAD
             <th class="font-weight-normal">{{fullNameToAdd}}</th>
-=======
-            <th class="font-weight-normal" style="text-transform: initial">{{fullNameToAdd}}</th>
->>>>>>> 02618910 (Fixed Slow Import Modal on adding multiple members on Exclude and fixed presentation errors on modals)
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.add.uhUserName}"></th>
-            <th class="font-weight-normal" style="text-transform: initial">{{uidToAdd}}</th>
+            <th class="font-weight-normal">{{uidToAdd}}</th>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.add.uhUserId}"></th>
-            <th class="font-weight-normal" style="text-transform: initial">{{uhUuidToAdd}}</th>
+            <th class="font-weight-normal">{{uhUuidToAdd}}</th>
         </tr>
     </table>
     <p>
-<<<<<<< HEAD
         <span class="modal-black-text">Are you sure you want to add</span>
         <span class="font-weight-bold"> {{ user }}</span>
         <span class="modal-black-text"> to the {{listName}} list?</span>
-=======
-        <span style="color: black">Are you sure you want to remove</span>
-        <span style="font-weight: bold"> {{ userToRemove.name }}</span>
-        <span style="color: black"> from the {{listName}} list?</span>
->>>>>>> da90f928 (Cleaned up mulitple uses of span tags)
     </p>
 </div>
 

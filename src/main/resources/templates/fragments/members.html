@@ -5,17 +5,10 @@
         <div class="row">
             <div class="col-md-8">
                 <h1 class="font-weight-bold text-dark pt-2 mb-0">All Members ({{groupingMembers.length}})</h1>
-<<<<<<< HEAD
                 <p class=" mb-1 inline-block" ng-show="paginatingProgress"
                    th:text="#{screen.message.common.loading.gettingmembers}"></p>
                 <div class="spinner-border spinner-border-sm inline-block"
                      ng-hide="!paginatingProgress"
-=======
-                <p class=" mb-1" style="display:inline-block" ng-hide="paginatingComplete"
-                   th:text="#{screen.message.common.loading.gettingmembers}"></p>
-                <div class="spinner-border spinner-border-sm" style="display:inline-block"
-                     ng-hide="paginatingComplete"
->>>>>>> 2482519c (Fixed the Getting Members Loading bug)
                      role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
