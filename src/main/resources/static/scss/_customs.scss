@@ -36,6 +36,7 @@ $media_queries: (
 ); 
 
 // Bootstrap overrides 
+/* DO NOT TOUCH THIS CSS FILE */
 .text-primary {
   color: $dark-teal !important;
 }
@@ -52,4 +53,3 @@ $media_queries: (
 .fade:not(.show) { 
   opacity: 1;
 }
-
