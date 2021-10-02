@@ -8,10 +8,11 @@ describe("GroupingsService", function () {
     let groupingPath;
     let onSuccess;
     let onError;
-    const debugPrint = true;
+    let debugPrint;
 
     beforeEach(inject(function (groupingsService, dataProvider, BASE_URL) {
         gs = groupingsService;
+        debugPrint = true;
         dp = dataProvider;
         groupingPath = "grouping:path";
         if (debugPrint) {
@@ -24,6 +25,14 @@ describe("GroupingsService", function () {
 
     it("should define groupingsService", function () {
         expect(gs).toBeDefined();
+    });
+
+    describe("hello", function () {
+        it("should call dataProvider.loadData", function () {
+            spyOn(dp, "loadData");
+            gs.hello();
+            expect(dp.loadData).toHaveBeenCalled();
+        });
     });
 
     describe("getGrouping", function () {
@@ -264,7 +273,7 @@ describe("GroupingsService", function () {
             expect(dp.updateData).toHaveBeenCalled();
         });
     });
-   
+
     describe("getGroupingsOwned", function () {
         it("should call dataProvider.loadData", function () {
             spyOn(dp, "loadData");
