@@ -194,6 +194,17 @@ describe("AdminController", function () {
             expect(scope.waitingForImportResponse).toBeFalse();
 
         })
+    });
+
+    describe("removeAdmin", function () {
+        beforeEach(function () {
+            scope.pagedItemsAdmins[0] = "zzzz";
+        })
+        it("should call scope.createRemoveErrorModal", function () {
+            spyOn(scope, "createRemoveErrorModal");
+            scope.removeAdmin(0,0);
+            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
+        })
     })
 
 });
