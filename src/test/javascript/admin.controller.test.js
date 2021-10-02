@@ -186,5 +186,14 @@ describe("AdminController", function () {
             expect(scope.checkAll).toEqual(!checkAll);
         });
     });
+    describe("addAdmin", function () {
+
+        it("should set waitingForImportResponse to false", function () {
+            scope.waitingForImportResponse = true;
+            scope.addAdmin()
+            expect(scope.waitingForImportResponse).toBeFalse();
+
+        })
+    })
 
 });
