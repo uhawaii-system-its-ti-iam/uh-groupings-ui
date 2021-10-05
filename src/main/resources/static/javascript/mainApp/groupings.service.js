@@ -60,6 +60,16 @@
             },
 
             /**
+             * Retrive the current user's username
+             * @param onSuccess
+             * @param onError
+             */
+            getCurrentUsername(onSuccess, onError) {
+                let endpoint = BASE_URL + "username";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * Update the description of grouping at path.
              * @param data {String}
              * @param path {String}

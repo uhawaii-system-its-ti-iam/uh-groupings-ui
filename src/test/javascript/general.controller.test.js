@@ -59,7 +59,6 @@ describe("GeneralController", function () {
 
             expect(scope.currentUser).toEqual("jdoe");
         });
-
         it("should make an API call to getNumberOfMembeships", function () {
             httpBackend.expectGET(BASE_URL + "members/memberships/").respond(200, mockResponse);
             expect(httpBackend.flush).not.toThrow();

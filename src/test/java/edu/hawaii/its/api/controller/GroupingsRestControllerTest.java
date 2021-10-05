@@ -81,11 +81,21 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void currentUsernameTest() throws Exception {
+<<<<<<< HEAD
         MvcResult result = mockMvc.perform(get(REST_CONTROLLER_BASE + "/currentUser"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{'username':" + USERNAME + "}"))
                 .andReturn();
         assertThat(result, equalTo(result));
+=======
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        MvcResult result = mockMvc.perform(get(REST_CONTROLLER_BASE + "/username"))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertThat(result.getResponse().getContentAsString(), equalTo("{\"currentUser\":\"" + USERNAME + "\"}"));
+>>>>>>> 2f8cd692... Find another way to access .currentUser
     }
 
     @Test

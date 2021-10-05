@@ -127,6 +127,7 @@
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
         /**
+<<<<<<< HEAD
          * Get the username of the current user
          */
         groupingsService.getCurrentUser((res) => {
