@@ -79,6 +79,18 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
+    public void currentUsernameTest() throws Exception {
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        MvcResult result = mockMvc.perform(get(REST_CONTROLLER_BASE + "/username"))
+                .andExpect(status().isOk())
+                .andReturn();
+        assertThat(result.getResponse().getContentAsString(), equalTo("{\"currentUser\":\"" + USERNAME + "\"}"));
+    }
+
+    @Test
+    @WithMockUhUser
     public void getGrouping() throws Exception {
         String uri = REST_CONTROLLER_BASE + "groupings/" + GROUPING;
 
