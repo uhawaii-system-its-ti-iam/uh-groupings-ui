@@ -41,8 +41,6 @@
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
 
-        $scope.currentUser = $window.document.getElementById("name").innerHTML;
-
         $scope.groupingsList = [];
         $scope.pagedItemsGroupings = [];
         $scope.currentPageGroupings = 0;
@@ -125,6 +123,16 @@
         let noDescriptionMessage = "No description given for this Grouping.";
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
+
+        /**
+         * Get and set currentUser
+         */
+        groupingsService.getCurrentUsername((res) => {
+                $scope.currentUser = res.currentUser;
+            }, (res) => {
+                console.log(res);
+            }
+        );
 
         /**
          * Get the number of memberships that the current user is associated with.
