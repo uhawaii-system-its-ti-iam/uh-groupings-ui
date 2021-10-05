@@ -106,6 +106,19 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), API_2_1_BASE + "/generic", HttpMethod.GET);
     }
 
+    /**
+     * Get the current user's username.
+     */
+    @GetMapping(value = "/username")
+    public ResponseEntity<String> currentUsername(Principal principal) {
+        logger.info(" REST currentUser...");
+        String currentUser = principal.getName();
+        logger.info("currentUser: " + currentUser);
+        //has to be a JSON object or else get Error: $http:baddata
+        //Bad JSON Data
+        return ResponseEntity.ok("{\"currentUser\":\"" + currentUser + "\"}");
+    }
+
     @GetMapping(value = "/adminLists")
     public ResponseEntity<String> adminLists(Principal principal) {
         logger.info("Entered REST adminListHolder...");
