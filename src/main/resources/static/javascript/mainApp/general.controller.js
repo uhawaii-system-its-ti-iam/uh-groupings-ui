@@ -635,6 +635,25 @@
                 $scope.updateAddMembers(options.usersToAdd, options.listName);
             });
         };
+        /**
+         * Checks if the user is in the Grouper database
+         * Initializes the name of the member to display on modals
+         * @param {object} attributes - the user's attributes
+         */
+        $scope.initMemberDisplayName = function (attributes) {
+            $scope.fullNameToAdd = attributes.cn;
+            $scope.givenNameToAdd = attributes.givenName;
+            $scope.uhUuidToAdd = attributes.uhUuid;
+            $scope.uidToAdd = attributes.uid;
+
+            if ($scope.fullNameToAdd.length > 0) {
+                $scope.user = $scope.fullNameToAdd;
+            } else if ($scope.uidToAdd.length > 0) {
+                $scope.user = $scope.uidToAdd;
+            } else {
+                $scope.user = $scope.uhUuidToAdd;
+            }
+        };
 
         /**
          * Creates a modal that asks for confirmation when adding a user.
@@ -644,14 +663,18 @@
          */
         $scope.createConfirmAddModal = function (options) {
             const userToAdd = options.userToAdd;
-
             groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                $scope.nameToAdd = attributes.cn;
-                $scope.uhuuidToAdd = attributes.uhuuid;
-                $scope.uidToAdd = attributes.uid;
-
-                $scope.listName = options.listName;
-
+                if (attributes === "" ||
+                    attributes.fullNameToAdd === null ||
+                    attributes.uid === null ||
+                    attributes.givenName === null ||
+                    attributes.uhuuid === null ||
+                    attributes.cn === null ||
+                    attributes.sn === null) {
+                    return $scope.createAddErrorModal(userToAdd);
+                } else {
+                    $scope.initMemberDisplayName(attributes);
+                }
                 // Ask for confirmation from the user to add the member
                 $scope.confirmAddModalInstance = $uibModal.open({
                     templateUrl: "modal/confirmAddModal",
@@ -661,12 +684,13 @@
                 });
 
                 $scope.confirmAddModalInstance.result.then(function () {
+                    $scope.waitingForImportResponse = true;
                     $scope.updateAddMember(userToAdd, options.listName);
                 });
             }, function (res) {
-                if (res.statusCode === 404) {
-                    $scope.createAddErrorModal(userToAdd);
-                }
+                $scope.user = userToAdd;
+                $scope.resStatus = res.status;
+                $scope.createAddErrorModal(userToAdd);
             });
         };
 
