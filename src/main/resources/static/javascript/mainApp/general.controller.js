@@ -466,8 +466,7 @@
                     if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
                         member.whereListed = "Basis, Include";
                     }
-                }
-                else if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
+                } else if (_.some($scope.groupingInclude, { uuid: memberUuid })) {
                     member.whereListed = "Include";
                 }
             });
@@ -478,29 +477,22 @@
          * @param {string} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
-            var groupingPath = $scope.selectedGrouping.path;
-            groupingsService.getGrouping(groupingPath, 1, PAGE_SIZE, "name", true, function () {
-                var userToAdd = $scope.userToAdd;
-                var inBasis = _.some($scope.groupingBasis, { username: userToAdd });
-                if (_.isEmpty(userToAdd)) {
-                    $scope.createAddErrorModal(userToAdd);
-                } else if ($scope.existInList(userToAdd, list)) {
-                    $scope.createCheckModal(userToAdd, list, false, inBasis);
-                } else if ($scope.isInAnotherList(userToAdd, list)) {
-                    $scope.createCheckModal(userToAdd, list, true, inBasis);
-                } else if ((inBasis && list == "Include") || (!inBasis && list == "Exclude")) {
-                    $scope.createBasisWarningModal(userToAdd, list, inBasis);
-                } else {
-                    $scope.createConfirmAddModal({
-                        userToAdd: userToAdd,
-                        listName: list
-                    });
-                }
-            }, function (res) {
-                if (res.statusCode === 403) {
-                    $scope.createOwnerErrorModal();
-                }
-            });
+            var userToAdd = $scope.userToAdd;
+            var inBasis = _.some($scope.groupingBasis, { username: userToAdd });
+            if (_.isEmpty(userToAdd)) {
+                $scope.createAddErrorModal(userToAdd);
+            } else if ($scope.existInList(userToAdd, list)) {
+                $scope.createCheckModal(userToAdd, list, false, inBasis);
+            } else if ($scope.isInAnotherList(userToAdd, list)) {
+                $scope.createCheckModal(userToAdd, list, true, inBasis);
+            } else if ((inBasis && list == "Include") || (!inBasis && list == "Exclude")) {
+                $scope.createBasisWarningModal(userToAdd, list, inBasis);
+            } else {
+                $scope.createConfirmAddModal({
+                    userToAdd: userToAdd,
+                    listName: list
+                });
+            }
         };
         /**
          * Lets a user import multiple members to a grouping, in the long run this method triggers the
