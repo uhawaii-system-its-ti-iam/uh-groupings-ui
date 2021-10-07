@@ -485,7 +485,7 @@
                 $scope.createCheckModal(userToAdd, list, false, inBasis);
             } else if ($scope.isInAnotherList(userToAdd, list)) {
                 $scope.createCheckModal(userToAdd, list, true, inBasis);
-            } else if ((inBasis && list == "Include") || (!inBasis && list == "Exclude")) {
+            } else if ((inBasis && list === "Include") || (!inBasis && list === "Exclude")) {
                 $scope.createBasisWarningModal(userToAdd, list, inBasis);
             } else {
                 $scope.createConfirmAddModal({
