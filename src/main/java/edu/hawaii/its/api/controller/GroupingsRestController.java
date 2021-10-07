@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
 
 @RestController
@@ -109,14 +110,12 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), API_2_1_BASE + "/generic", HttpMethod.GET);
     }
 
-    /**
-     * Get the current user's username.
-     */
-    @GetMapping(value = "/username")
-    public ResponseEntity<String> currentUsername() {
+    @GetMapping(value = "/currentUser")
+    public ResponseEntity<User> currentUser() {
         logger.info(" REST currentUser...");
-        String currentUser = userContextService.getCurrentUsername();
+        User currentUser = userContextService.getCurrentUser();
         logger.info("currentUser: " + currentUser);
+
         return ResponseEntity.ok().body(currentUser);
     }
 

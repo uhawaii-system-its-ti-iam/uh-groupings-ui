@@ -12,6 +12,8 @@
 
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
 
+        $scope.currentUser = {};
+
         $scope.userToAdd = "";
         $scope.usersToAdd = "";
         $scope.multiAddThreshold = 100;
@@ -127,10 +129,8 @@
         /**
          * Get and set currentUser
          */
-        groupingsService.getCurrentUsername((res) => {
-                $scope.currentUser = res;
-            }, (res) => {
-                console.log(res);
+        groupingsService.getCurrentUser((res) => {
+                $scope.currentUser = res.username;
             }
         );
 
