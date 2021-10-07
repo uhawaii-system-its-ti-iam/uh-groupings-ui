@@ -8,6 +8,14 @@
         var timeLimit = 20000;
 
         return {
+            httpGet(url, success) {
+                $http.get(encodeURI(url))
+                    .then(function (response) {
+                        success(response.data)
+                    }, function (response) {
+                    });
+            },
+
             /**
              * Perform a GET request to the specified URL.
              * @param {string} url - the URL to perform the request on
