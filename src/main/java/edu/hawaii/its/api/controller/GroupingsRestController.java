@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.access.UserContextService;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -77,6 +78,9 @@ public class GroupingsRestController {
     @Autowired
     HttpRequestService httpRequestService;
 
+    @Autowired
+    UserContextService userContextService;
+
     /*
      * Checks to make sure that the API is running and that there are no issues with the overrides file.
      * Gets the active profiles and only runs the tests the active profile relies on the API.
@@ -110,13 +114,11 @@ public class GroupingsRestController {
      * Get the current user's username.
      */
     @GetMapping(value = "/username")
-    public ResponseEntity<String> currentUsername(Principal principal) {
+    public ResponseEntity<String> currentUsername() {
         logger.info(" REST currentUser...");
-        String currentUser = principal.getName();
+        String currentUser = userContextService.getCurrentUsername();
         logger.info("currentUser: " + currentUser);
-        //has to be a JSON object or else get Error: $http:baddata
-        //Bad JSON Data
-        return ResponseEntity.ok("{\"currentUser\":\"" + currentUser + "\"}");
+        return ResponseEntity.ok().body(currentUser);
     }
 
     @GetMapping(value = "/adminLists")
