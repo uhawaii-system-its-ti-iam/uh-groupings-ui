@@ -36,9 +36,9 @@ describe("GeneralController", function () {
         let mockUser;
         let mockResponse;
         beforeEach(function () {
-            mockUser = "jdoe";
+            mockUser = { username: "jdoe" };
             mockResponse = 999;
-            httpBackend.whenGET(BASE_URL + "username")
+            httpBackend.whenGET(BASE_URL + "currentUser")
                 .respond(200, mockUser);
 
             httpBackend.whenGET(BASE_URL + "members/memberships/")
@@ -49,11 +49,11 @@ describe("GeneralController", function () {
         });
 
         it("should make an API call to getCurrentUser", function () {
-            httpBackend.expectGET(BASE_URL + "username").respond(200, mockUser);
+            httpBackend.expectGET(BASE_URL + "currentUser").respond(200, mockUser);
             expect(httpBackend.flush).not.toThrow();
         });
         it("should initialize currentUser", function () {
-            httpBackend.expectGET(BASE_URL + "username").respond(200, mockUser);
+            httpBackend.expectGET(BASE_URL + "currentUser").respond(200, mockUser);
             httpBackend.flush();
 
             expect(scope.currentUser).toEqual("jdoe");
