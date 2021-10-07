@@ -62,11 +62,10 @@
             /**
              * Retrive the current user's username
              * @param onSuccess
-             * @param onError
              */
-            getCurrentUsername(onSuccess, onError) {
-                let endpoint = BASE_URL + "username";
-                dataProvider.loadData(endpoint, onSuccess, onError);
+            getCurrentUser(onSuccess) {
+                let endpoint = BASE_URL + "currentUser";
+                dataProvider.httpGet(endpoint, onSuccess);
             },
 
             /**

@@ -12,6 +12,8 @@
 
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
 
+        $scope.currentUser = {};
+
         $scope.userToAdd = "";
         $scope.usersToAdd = "";
         $scope.multiAddThreshold = 100;
@@ -127,7 +129,6 @@
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
 
         /**
-<<<<<<< HEAD
          * Get the username of the current user
          */
         groupingsService.getCurrentUser((res) => {
