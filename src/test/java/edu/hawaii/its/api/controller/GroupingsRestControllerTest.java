@@ -86,7 +86,7 @@ public class GroupingsRestControllerTest {
         MvcResult result = mockMvc.perform(get(REST_CONTROLLER_BASE + "/username"))
                 .andExpect(status().isOk())
                 .andReturn();
-        assertThat(result.getResponse().getContentAsString(), equalTo("{\"currentUser\":\"" + USERNAME + "\"}"));
+        assertThat(result.getResponse().getContentAsString(), equalTo(USERNAME));
     }
 
     @Test

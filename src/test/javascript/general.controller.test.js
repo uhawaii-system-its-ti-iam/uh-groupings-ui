@@ -36,7 +36,7 @@ describe("GeneralController", function () {
         let mockUser;
         let mockResponse;
         beforeEach(function () {
-            mockUser = "{\"currentUser\":\"jdoe\"}";
+            mockUser = "jdoe";
             mockResponse = 999;
             httpBackend.whenGET(BASE_URL + "username")
                 .respond(200, mockUser);
