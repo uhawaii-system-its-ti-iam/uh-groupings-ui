@@ -65,7 +65,7 @@
              */
             getCurrentUser(onSuccess) {
                 let endpoint = BASE_URL + "currentUser";
-                dataProvider.httpGet(endpoint, onSuccess);
+                dataProvider.retrieveData(endpoint, onSuccess);
             },
 
             /**
