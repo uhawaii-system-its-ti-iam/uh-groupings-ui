@@ -130,7 +130,7 @@
          * Get and set currentUser
          */
         groupingsService.getCurrentUser((res) => {
-                $scope.currentUser = res.username;
+                $scope.currentUser = res.data.username;
             }
         );
 
