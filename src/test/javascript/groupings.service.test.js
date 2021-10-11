@@ -13,6 +13,10 @@ describe("GroupingsService", function () {
         gs = groupingsService;
         dp = dataProvider;
         groupingPath = "grouping:path";
+        onSuccess = () => {
+        };
+        onError = () => {
+        };
     }));
 
     it("should define groupingsService", function () {
