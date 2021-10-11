@@ -8,19 +8,11 @@ describe("GroupingsService", function () {
     let groupingPath;
     let onSuccess;
     let onError;
-    let debugPrint;
 
     beforeEach(inject(function (groupingsService, dataProvider, BASE_URL) {
         gs = groupingsService;
-        debugPrint = true;
         dp = dataProvider;
         groupingPath = "grouping:path";
-        if (debugPrint) {
-            onSuccess = function (res) {
-                console.log(res);
-            };
-            onError = onSuccess;
-        }
     }));
 
     it("should define groupingsService", function () {
