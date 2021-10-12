@@ -9,18 +9,56 @@ form.seamless button {
 .btn {
 
     // Logout button.
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
     &:hover,
     &:focus,
     &:active {
         #name {
+<<<<<<< HEAD
+=======
+    &:hover, &:focus, &:active { 
+        #name { 
+>>>>>>> 0fc62666 (Codacy fixes)
+=======
+    &:hover, &:focus, &:active {
+=======
+    &:hover,
+    &:focus,
+    &:active {
+>>>>>>> 5fff0452 (Codacy fixes)
+        #name {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
             color:$seafoam;
         }
     }
 
     &.dark-teal-bg {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
         &:hover,
         &:focus,
         &:active {
+=======
+        &:active, &:focus, &:hover {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 5fff0452 (Codacy fixes)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
             color: $uh-white;
             background: $green-blue;
         }
@@ -32,19 +70,56 @@ form.seamless button {
         margin-right: 2px;
         @include btn-rmv;
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
         &:hover,
         &:focus,
         &:active {
+=======
+        &:hover, &:focus, &:active {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 5fff0452 (Codacy fixes)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
             background: darkred;
         }
     }
 
     &.btn-primary, &.btn-lg {
         @include gradient;
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 
         &:hover,
         &:focus,
         &:active {
+<<<<<<< HEAD
+=======
+        
+=======
+
+<<<<<<< HEAD
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+        &:hover, &:focus, &:active {
+>>>>>>> 0fc62666 (Codacy fixes)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
             background: $green-blue right center;
         }
     }
@@ -67,9 +142,25 @@ form.seamless button {
 
     // Changes the logout color when you hover.
     &-outline-secondary {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
         &:hover,
         &:focus,
         &:active {
+=======
+        &:hover, &:focus, &:active {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 5fff0452 (Codacy fixes)
+=======
+        &:hover,
+        &:focus,
+        &:active {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
             background-color: $green-blue;
             border-color: $green-blue;
         }
@@ -77,7 +168,19 @@ form.seamless button {
 
     // Button for copying path, clipboard, and CSV
     &-sm {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
         padding: 0 5px;
+=======
+        padding: 0px 5px;
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+        padding: 0 5px;
+>>>>>>> d549f573 (Codacy fixes)
+=======
+        padding: 0 5px;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 
         &:hover {
             background: $green-blue;
@@ -99,8 +202,23 @@ form.seamless button {
     color: $dark-teal;
     border: none;
     background-color: white;
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     padding: 0 5px;
     margin: 0 -1px;
+=======
+    padding: 0px 5px;
+    margin: 0px -1px;
+>>>>>>> 0fc62666 (Codacy fixes)
+=======
+    padding: 0 5px;
+    margin: 0 -1px;
+>>>>>>> d549f573 (Codacy fixes)
+=======
+    padding: 0 5px;
+    margin: 0 -1px;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
     height: 2.356rem;
     width: auto;
 }

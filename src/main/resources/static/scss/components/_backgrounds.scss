@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 .dark-teal-bg a,
 .black-bg a {
     color: white;
@@ -6,15 +9,67 @@
     &:active,
     &:focus,
     &:hover {
+=======
+.dark-teal-bg a, .black-bg a {
+    color: white;
+    text-decoration: underline;
+
+    &:active, &:focus, &:hover {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+.dark-teal-bg a,
+.black-bg a {
+    color: white;
+    text-decoration: underline;
+
+    &:active,
+    &:focus,
+    &:hover {
+>>>>>>> 5fff0452 (Codacy fixes)
+=======
+.dark-teal-bg a,
+.black-bg a {
+    color: white;
+    text-decoration: underline;
+
+    &:active,
+    &:focus,
+    &:hover {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
         color: lightgrey;
     }
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 .btn {
     &.dark-teal-bg {
         &:active,
         &:focus,
         &:hover {
+<<<<<<< HEAD
+=======
+.btn { 
+    
+    &.dark-teal-bg { 
+        &:active, &:focus, &:hover { 
+>>>>>>> 0fc62666 (Codacy fixes)
+=======
+.btn {
+    &.dark-teal-bg {
+<<<<<<< HEAD
+        &:active, &:focus, &:hover {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+        &:active,
+        &:focus,
+        &:hover {
+>>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
             color: $uh-white;
             background: $green-blue;
         }

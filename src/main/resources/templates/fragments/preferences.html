@@ -67,7 +67,19 @@
                 <div>
                     <div>
                         <div class="form-check" ng-repeat="syncDest in syncDestArray">
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
                             <div ng-if="!syncDest.hidden">
+=======
+                            <div ng-if="syncDest.hidden">
+>>>>>>> 5ef71016 (Implement conditional for sync dest rendering.)
+=======
+                            <div ng-if="!syncDest.hidden">
+>>>>>>> 51d19108 (Print sync dest on hidden=false.)
+=======
+                            <div ng-if="!syncDest.hidden">
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
                                 <input class="form-check-input" type="checkbox" id="syncDest.isSynced-{{syncDest.name}}"
                                        ng-model="syncDest.isSynced"
                                        ng-change="createSyncDestModal(syncDest.name)"/>
@@ -80,6 +92,16 @@
                                       title="{{syncDest.tooltip}}"
                                       th:attr="ng-click='createPreferenceInfoModal(syncDest.tooltip)',
                               ng-keypress='$event.keyCode === 13 ? createPreferenceInfoModal(syncDest.tooltip) : null'"></span>
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5ef71016 (Implement conditional for sync dest rendering.)
+=======
+>>>>>>> 51d19108 (Print sync dest on hidden=false.)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
                             </div>
                         </div>
                     </div>

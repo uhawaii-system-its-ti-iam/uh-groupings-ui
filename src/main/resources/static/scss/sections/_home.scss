@@ -13,7 +13,19 @@ body {
 
     // For the Role: and Welcome *name*
     h1 {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
         color: $uh-black;
+=======
+        color: $uh-black; 
+>>>>>>> 0fc62666 (Codacy fixes)
+=======
+        color: $uh-black;
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+        color: $uh-black;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
         font-weight: 700;
     }
 }
@@ -28,7 +40,19 @@ main, .container {
     position: relative;
     width: 100px;
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     .user-role {
+=======
+    .user-role { 
+>>>>>>> 0fc62666 (Codacy fixes)
+=======
+    .user-role {
+>>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+    .user-role {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
         bottom: 0;
         position: absolute;
         right: -.25rem;
