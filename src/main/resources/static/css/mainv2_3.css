@@ -48,7 +48,7 @@ form.seamless button {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  text-shadow: 0px 1px 1px #444;
+  text-shadow: 0 1px 1px #444;
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -63,7 +63,7 @@ form.seamless button {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  text-shadow: 0px 1px 1px #444;
+  text-shadow: 0 1px 1px #444;
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -80,7 +80,7 @@ form.seamless button {
   color: #ffffff;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  text-shadow: 0px 1px 1px #444;
+  text-shadow: 0 1px 1px #444;
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -93,7 +93,7 @@ form.seamless button {
   border-color: #004e59;
 }
 .btn-sm {
-  padding: 0px 5px;
+  padding: 0 5px;
 }
 .btn-sm:hover {
   background: #004e59;
@@ -110,8 +110,8 @@ form.seamless button {
   color: #004252;
   border: none;
   background-color: white;
-  padding: 0px 5px;
-  margin: 0px -1px;
+  padding: 0 5px;
+  margin: 0 -1px;
   height: 2.356rem;
   width: auto;
 }
@@ -353,7 +353,7 @@ h4 {
   .nav-item.mx-auto .nav-link.rounded-circle .side-nav {
     border: none;
     background-color: #e3f2ef;
-    padding: 0px 0px 2px 0px;
+    padding: 0 0 2px 0;
   }
 }
 
@@ -531,7 +531,7 @@ form.seamless input {
 
 .form-alert {
   height: 45px;
-  padding: 0px 15px;
+  padding: 0 15px;
   margin-bottom: 1rem;
   margin-top: 1rem;
   border-radius: 5px;
@@ -543,7 +543,7 @@ form.seamless input {
   margin-top: 2px;
   height: 35px;
   line-height: 30px;
-  padding: 0px 15px;
+  padding: 0 15px;
 }
 
 .manage-admins td:first-child {
