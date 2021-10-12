@@ -1,4 +1,4 @@
-h1, h2, h3, h5, .text-left, span { 
+h1, h2, h3, h5, .text-left, span {
     color: $text-color;
 }
 
@@ -23,7 +23,7 @@ h4 {
     color: black;
 }
 
-.tab-color { 
+.tab-color {
     color: $uh-black;
 
     &:hover, :focus, :active {
@@ -40,11 +40,11 @@ h4 {
     font-weight: normal;
 }
 
-.hover-text { 
+.hover-text {
     font-size: 0px;
 }
- 
-.no-memberships-text { 
+
+.no-memberships-text {
     text-align: center;
 }
 

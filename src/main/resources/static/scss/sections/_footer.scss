@@ -2,13 +2,13 @@
     margin-top: 3rem;
 }
 
-.black-bg a, .dark-teal-bg a{ 
-    &:hover, :focus, :active{ 
-        color: lightgrey; 
+.black-bg a, .dark-teal-bg a{
+    &:hover, :focus, :active{
+        color: lightgrey;
     }
 }
 
-@include media-breakpoint(max-portrait-phone) { 
+@include media-breakpoint(max-portrait-phone) {
     .img-fluid {
         width: 210px;
     }

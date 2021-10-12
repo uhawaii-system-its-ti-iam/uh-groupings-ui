@@ -6,79 +6,79 @@ form.seamless button {
     flex-basis: 40px;
 }
 
-.btn { 
+.btn {
 
     // Logout button.
-    &:hover, &:focus, &:active { 
-        #name { 
+    &:hover, &:focus, &:active {
+        #name {
             color:$seafoam;
         }
     }
 
-    &.dark-teal-bg { 
-        &:active, &:focus, &:hover { 
+    &.dark-teal-bg {
+        &:active, &:focus, &:hover {
             color: $uh-white;
-            background: $green-blue; 
+            background: $green-blue;
         }
     }
 
     // Remove button.
-    &.btn-remove { 
-        margin-left: 2px; 
+    &.btn-remove {
+        margin-left: 2px;
         margin-right: 2px;
-        @include btn-rmv; 
-        
-        &:hover, &:focus, &:active { 
+        @include btn-rmv;
+
+        &:hover, &:focus, &:active {
             background: darkred;
         }
     }
 
     &.btn-primary, &.btn-lg {
         @include gradient;
-        
+
         &:hover, &:focus, &:active {
             background: $green-blue right center;
         }
     }
 
     // Buttons for membership, admin, owner in home page
-    &.btn-bottom { 
+    &.btn-bottom {
         @include gradient;
     }
 
-    &-bottom { 
+    &-bottom {
         position: absolute;
         bottom: 0;
         margin: -39px auto;
     }
 
     // Default button
-    &-default { 
-        @include gradient; 
+    &-default {
+        @include gradient;
     }
 
     // Changes the logout color when you hover.
-    &-outline-secondary { 
-        &:hover, &:focus, &:active { 
+    &-outline-secondary {
+        &:hover, &:focus, &:active {
             background-color: $green-blue;
             border-color: $green-blue;
         }
     }
 
     // Button for copying path, clipboard, and CSV
-    &-sm { 
+    &-sm {
         padding: 0px 5px;
 
-        &:hover { 
+        &:hover {
             background: $green-blue;
         }
 
-        &.btn-clipboard { 
+        &.btn-clipboard {
             padding: 3px 5px 2px;
         }
     }
 
-    &-light:hover { 
+    &-light:hover {
         color: white;
         background-color: $uh-blue4;
     }
@@ -98,7 +98,7 @@ form.seamless button {
 .description-input {
     border: white;
 }
- 
+
 .far.fa-trash-alt {
     margin-right: .75rem;
     color: $uh-red;
@@ -107,7 +107,7 @@ form.seamless button {
 .far.fa-fw.fa-edit {
     color: $dark-teal;
 
-    &.white-style { 
+    &.white-style {
         border: none;
         color:white;
     }
