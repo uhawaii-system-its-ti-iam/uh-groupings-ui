@@ -2,7 +2,7 @@
 .manage-groupings {
     td:first-child {
         i {
-            flex-basis: 20px; 
+            flex-basis: 20px;
             margin-right: 8px;
         }
         span {
@@ -24,14 +24,14 @@
                 width: calc(100% - 40px);
             }
         }
-        &:last-child { 
+        &:last-child {
             max-width: 220px;
         }
     }
 
     // Manage Memberships
-    tr { 
-        td { 
+    tr {
+        td {
             padding: 0px;
         }
     }
@@ -42,7 +42,7 @@
     height: 25px !important;
 }
 
-#selectall { 
+#selectall {
     margin-left: 0;
 }
 
@@ -50,33 +50,33 @@
     float: left;
 }
 
-#groupingsContainer { 
+#groupingsContainer {
     display: none;
 }
 
 // Groupings card
-.card { 
+.card {
     overflow: hidden;
     margin-top: 1rem;
 
-    &.card-tab-content { 
-        .card-header { 
+    &.card-tab-content {
+        .card-header {
             border-top-left-radius: 0px;
             margin-top: 0px;
         }
     }
 
-    @include media-breakpoint(max-landscape-phone) { 
+    @include media-breakpoint(max-landscape-phone) {
         &-title {
-            text-align: center; 
-            &-text { 
+            text-align: center;
+            &-text {
                 text-align: center;
             }
         }
     }
 }
 
-// Basis and Exclude tab. 
+// Basis and Exclude tab.
 
 // Members to remove section.
 .input-group {
@@ -102,7 +102,7 @@
  * button, so on mobile, the button sits on top of the
  * grouping name, eliminating whitespace.
  */
- @include media-breakpoint(max-landscape-phone){ 
+ @include media-breakpoint(max-landscape-phone){
     #selectedGroupHeader {
         display: table; /* The row is now a table */
         /* Centering */
