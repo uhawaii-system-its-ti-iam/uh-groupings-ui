@@ -3,7 +3,9 @@
 }
 
 .black-bg a, .dark-teal-bg a{
-    &:hover, :focus, :active{
+    &:hover,
+    :focus,
+    :active{
         color: lightgrey;
     }
 }

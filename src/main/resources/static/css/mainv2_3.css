@@ -24,7 +24,7 @@ form.seamless button {
 .btn:hover #name, .btn:focus #name, .btn:active #name {
   color: #e3f2ef;
 }
-.btn.dark-teal-bg:active, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:hover {
+.btn.dark-teal-bg:hover, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:active {
   color: #efefef;
   background: #004e59;
 }
@@ -133,11 +133,15 @@ form.seamless button {
   color: white;
 }
 
-.dark-teal-bg a, .black-bg a {
+.dark-teal-bg a,
+.black-bg a {
   color: white;
   text-decoration: underline;
 }
-.dark-teal-bg a:active, .dark-teal-bg a:focus, .dark-teal-bg a:hover, .black-bg a:active, .black-bg a:focus, .black-bg a:hover {
+.dark-teal-bg a:active, .dark-teal-bg a:focus, .dark-teal-bg a:hover,
+.black-bg a:active,
+.black-bg a:focus,
+.black-bg a:hover {
   color: lightgrey;
 }
 
@@ -213,7 +217,9 @@ h4 {
 .tab-color {
   color: #212121;
 }
-.tab-color:hover, .tab-color :focus, .tab-color :active {
+.tab-color:hover,
+.tab-color :focus,
+.tab-color :active {
   color: #212121;
 }
 
@@ -290,7 +296,9 @@ h4 {
 .navbar .navbar-nav .nav-link {
   color: #454545;
 }
-.navbar .navbar-nav .nav-link:hover, .navbar .navbar-nav .nav-link :focus, .navbar .navbar-nav .nav-link :active {
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .nav-link :focus,
+.navbar .navbar-nav .nav-link :active {
   color: #0d7078;
 }
 .navbar .navbar-nav .nav-item {
@@ -388,7 +396,6 @@ th {
 
 table {
   width: 80%;
-  /* Styling for table information in modals, groupings, admins, and memberships*/
 }
 table .p-10 {
   white-space: nowrap;
@@ -409,7 +416,7 @@ table .w-20 {
 .sort-icon::after {
   content: '\f107';
 }
-.sort-icon.reverse:after {
+.sort-icon.reverse::after {
   content: '\f106';
 }
 
@@ -572,7 +579,11 @@ label input {
   margin-top: 3rem;
 }
 
-.black-bg a:hover, .black-bg a :focus, .black-bg a :active, .dark-teal-bg a:hover, .dark-teal-bg a :focus, .dark-teal-bg a :active {
+.black-bg a:hover,
+.black-bg a :focus,
+.black-bg a :active, .dark-teal-bg a:hover,
+.dark-teal-bg a :focus,
+.dark-teal-bg a :active {
   color: lightgrey;
 }
 
@@ -589,16 +600,6 @@ label input {
   padding-top: 25px;
 }
 
-.manage-groupings td:first-child i {
-  flex-basis: 20px;
-  margin-right: 8px;
-}
-.manage-groupings td:first-child span {
-  flex: 1;
-}
-.manage-groupings td:last-child {
-  max-width: 220px;
-}
 .manage-groupings td span.path {
   display: inline-block;
   overflow: hidden;
@@ -608,6 +609,13 @@ label input {
 }
 .manage-groupings td:last-child {
   max-width: 220px;
+}
+.manage-groupings td:first-child i {
+  flex-basis: 20px;
+  margin-right: 8px;
+}
+.manage-groupings td:first-child span {
+  flex: 1;
 }
 .manage-groupings tr td {
   padding: 0px;
@@ -672,8 +680,8 @@ label input {
   #selectedGroupHeader {
     display: table;
     /* The row is now a table */
-    /* Centering */
     margin: auto;
+    /* Centering */
     width: 100%;
     padding: 0px;
   }
