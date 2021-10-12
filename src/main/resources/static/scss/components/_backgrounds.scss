@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 .dark-teal-bg a,
 .black-bg a {
     color: white;
@@ -25,17 +26,31 @@
     &:focus,
     &:hover {
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+.dark-teal-bg a,
+.black-bg a {
+    color: white;
+    text-decoration: underline;
+
+    &:active,
+    &:focus,
+    &:hover {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
         color: lightgrey;
     }
 }
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 .btn {
     &.dark-teal-bg {
         &:active,
         &:focus,
         &:hover {
+<<<<<<< HEAD
 =======
 .btn { 
     
@@ -53,6 +68,8 @@
         &:focus,
         &:hover {
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
             color: $uh-white;
             background: $green-blue;
         }

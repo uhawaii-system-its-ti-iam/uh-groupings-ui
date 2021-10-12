@@ -1,7 +1,10 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 2acaf0b7 (Recompile CSS files)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 /* DO NOT TOUCH THIS CSS FILE */
 .text-primary {
   color: #004252 !important;
@@ -31,6 +34,7 @@ form.seamless button {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 .btn.dark-teal-bg:hover, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:active {
 =======
 
@@ -42,6 +46,9 @@ form.seamless button {
 =======
 .btn.dark-teal-bg:hover, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:active {
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+.btn.dark-teal-bg:hover, .btn.dark-teal-bg:focus, .btn.dark-teal-bg:active {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   color: #efefef;
   background: #004e59;
 }
@@ -93,6 +100,7 @@ form.seamless button {
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   text-shadow: 0 1px 1px #444;
 =======
   text-shadow: 0px 1px 1px #444;
@@ -100,6 +108,9 @@ form.seamless button {
 =======
   text-shadow: 0 1px 1px #444;
 >>>>>>> d549f573 (Codacy fixes)
+=======
+  text-shadow: 0 1px 1px #444;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -116,6 +127,7 @@ form.seamless button {
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   text-shadow: 0 1px 1px #444;
 =======
   text-shadow: 0px 1px 1px #444;
@@ -123,6 +135,9 @@ form.seamless button {
 =======
   text-shadow: 0 1px 1px #444;
 >>>>>>> d549f573 (Codacy fixes)
+=======
+  text-shadow: 0 1px 1px #444;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -141,6 +156,7 @@ form.seamless button {
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   text-shadow: 0 1px 1px #444;
 =======
   text-shadow: 0px 1px 1px #444;
@@ -148,6 +164,9 @@ form.seamless button {
 =======
   text-shadow: 0 1px 1px #444;
 >>>>>>> d549f573 (Codacy fixes)
+=======
+  text-shadow: 0 1px 1px #444;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   background-image: -moz-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -webkit-linear-gradient(top, #7db1c4, #5a9cb4);
   background-image: -o-linear-gradient(top, #7db1c4, #5a9cb4);
@@ -166,6 +185,7 @@ form.seamless button {
 .btn-sm {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   padding: 0 5px;
 =======
   padding: 0px 5px;
@@ -173,6 +193,9 @@ form.seamless button {
 =======
   padding: 0 5px;
 >>>>>>> d549f573 (Codacy fixes)
+=======
+  padding: 0 5px;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 }
 .btn-sm:hover {
   background: #004e59;
@@ -200,11 +223,15 @@ form.seamless button {
   border: none;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   background-color: white;
   padding: 0 5px;
   margin: 0 -1px;
   height: 2.356rem;
   width: auto;
+<<<<<<< HEAD
 =======
   height: 2.356rem;
 =======
@@ -223,6 +250,8 @@ form.seamless button {
   height: 2.356rem;
   width: auto;
 >>>>>>> 0fc62666 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 }
 
 .description-input {
@@ -258,6 +287,7 @@ form.seamless button {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 .dark-teal-bg a,
 .black-bg a {
   color: white;
@@ -280,11 +310,21 @@ form.seamless button {
   color: white;
   text-decoration: underline;
 }
+=======
+.dark-teal-bg a,
+.black-bg a {
+  color: white;
+  text-decoration: underline;
+}
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 .dark-teal-bg a:active, .dark-teal-bg a:focus, .dark-teal-bg a:hover,
 .black-bg a:active,
 .black-bg a:focus,
 .black-bg a:hover {
+<<<<<<< HEAD
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   color: lightgrey;
 }
 
@@ -362,6 +402,7 @@ h4 {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 .tab-color:hover,
 .tab-color :focus,
 .tab-color :active {
@@ -373,6 +414,11 @@ h4 {
 .tab-color :focus,
 .tab-color :active {
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+.tab-color:hover,
+.tab-color :focus,
+.tab-color :active {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   color: #212121;
 }
 
@@ -451,6 +497,7 @@ h4 {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 .navbar .navbar-nav .nav-link:hover,
 .navbar .navbar-nav .nav-link :focus,
 .navbar .navbar-nav .nav-link :active {
@@ -462,6 +509,11 @@ h4 {
 .navbar .navbar-nav .nav-link :focus,
 .navbar .navbar-nav .nav-link :active {
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .nav-link :focus,
+.navbar .navbar-nav .nav-link :active {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   color: #0d7078;
 }
 .navbar .navbar-nav .nav-item {
@@ -526,6 +578,7 @@ h4 {
     background-color: #e3f2ef;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     padding: 0 0 2px 0;
 =======
     padding: 0px 0px 2px 0px;
@@ -533,6 +586,9 @@ h4 {
 =======
     padding: 0 0 2px 0;
 >>>>>>> d549f573 (Codacy fixes)
+=======
+    padding: 0 0 2px 0;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   }
 }
 
@@ -569,11 +625,14 @@ table {
   width: 80%;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   /* Styling for table information in modals, groupings, admins, and memberships*/
 >>>>>>> 2acaf0b7 (Recompile CSS files)
 =======
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 }
 table .p-10 {
   white-space: nowrap;
@@ -596,6 +655,7 @@ table .w-20 {
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 .sort-icon.reverse::after {
 =======
 .sort-icon.reverse:after {
@@ -603,6 +663,9 @@ table .w-20 {
 =======
 .sort-icon.reverse::after {
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+.sort-icon.reverse::after {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   content: '\f106';
 }
 
@@ -725,6 +788,7 @@ form.seamless input {
 .form-alert {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   height: 45px;
   padding: 0 15px;
   margin-bottom: 1rem;
@@ -735,11 +799,14 @@ form.seamless input {
   margin-top: 1rem;
 =======
 >>>>>>> 0fc62666 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   height: 45px;
   padding: 0 15px;
   margin-bottom: 1rem;
   margin-top: 1rem;
   border-radius: 5px;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 2acaf0b7 (Recompile CSS files)
@@ -749,6 +816,9 @@ form.seamless input {
 =======
   line-height: 45px;
 >>>>>>> ba848c24 (Fix extra padding on error message)
+=======
+  line-height: 45px;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 }
 
 .description-alert {
@@ -758,6 +828,7 @@ form.seamless input {
   line-height: 30px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   padding: 0 15px;
 =======
   padding: 0px 15px;
@@ -765,6 +836,9 @@ form.seamless input {
 =======
   padding: 0 15px;
 >>>>>>> d549f573 (Codacy fixes)
+=======
+  padding: 0 15px;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 }
 
 .manage-admins td:first-child {
@@ -795,19 +869,25 @@ label input {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 .black-bg a:hover,
 .black-bg a :focus,
 .black-bg a :active, .dark-teal-bg a:hover,
 .dark-teal-bg a :focus,
 .dark-teal-bg a :active {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 .black-bg a:hover, .black-bg a :focus, .black-bg a :active, .dark-teal-bg a:hover, .dark-teal-bg a :focus, .dark-teal-bg a :active {
 >>>>>>> 2acaf0b7 (Recompile CSS files)
 =======
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
   color: lightgrey;
 }
 
@@ -826,6 +906,7 @@ label input {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 .manage-groupings td:first-child i {
   flex-basis: 20px;
@@ -840,10 +921,13 @@ label input {
 >>>>>>> 2acaf0b7 (Recompile CSS files)
 =======
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 .manage-groupings td span.path {
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   white-space: nowrap;
@@ -856,14 +940,21 @@ label input {
   white-space: nowrap;
   width: calc(100% - 40px);
 >>>>>>> 0fc62666 (Codacy fixes)
+=======
+  white-space: nowrap;
+  width: calc(100% - 40px);
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 }
 .manage-groupings td:last-child {
   max-width: 220px;
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 .manage-groupings td:first-child i {
   flex-basis: 20px;
   margin-right: 8px;
@@ -872,10 +963,13 @@ label input {
   flex: 1;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 2acaf0b7 (Recompile CSS files)
 =======
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 .manage-groupings tr td {
   padding: 0px;
 }
@@ -904,6 +998,7 @@ label input {
   border-top-left-radius: 0px;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   margin-top: 0px;
 =======
   margin-top: 0rem;
@@ -911,6 +1006,9 @@ label input {
 =======
   margin-top: 0px;
 >>>>>>> 0fc62666 (Codacy fixes)
+=======
+  margin-top: 0px;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 }
 @media (max-width: 767.98px) {
   .card-title {
@@ -949,6 +1047,7 @@ label input {
     /* The row is now a table */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     margin: auto;
     /* Centering */
 =======
@@ -959,6 +1058,10 @@ label input {
     margin: auto;
     /* Centering */
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+    margin: auto;
+    /* Centering */
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
     width: 100%;
     padding: 0px;
   }
@@ -987,6 +1090,7 @@ body {
   /* Creates flexboxes. */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   flex-direction: column;
   /* Makes the body display vertical. */
   min-height: 100vh;
@@ -1000,6 +1104,11 @@ body {
   /* Makes the body display vertical. */
   min-height: 100vh;
 >>>>>>> 0fc62666 (Codacy fixes)
+=======
+  flex-direction: column;
+  /* Makes the body display vertical. */
+  min-height: 100vh;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
 }
 body h1 {
   color: #212121;

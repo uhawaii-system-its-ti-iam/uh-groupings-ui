@@ -404,10 +404,14 @@ public class GroupingsRestControllerTest {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
         MvcResult result = mockMvc.perform(get(REST_CONTROLLER_BASE + "/members/memberships"))
                 .andExpect(status().isOk())
                 .andReturn();
         assertThat(result, equalTo(result));
+<<<<<<< HEAD
 =======
         mockMvc.perform(get(REST_CONTROLLER_BASE + "/members/memberships")).andExpect(status().isOk());
 >>>>>>> 9101ee23 (Homepage now uses getNumberOfMemberships and getNumberOfGroupings to get data)
@@ -422,6 +426,8 @@ public class GroupingsRestControllerTest {
                 .andReturn();
         assertThat(result, equalTo(result));
 >>>>>>> bc20da73 (more fixes for codacy)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
     }
 
     @Test
@@ -430,6 +436,7 @@ public class GroupingsRestControllerTest {
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -446,11 +453,16 @@ public class GroupingsRestControllerTest {
                 .andReturn();
 >>>>>>> 8f116053 (fixes for codacy)
 =======
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
         MvcResult result = mockMvc.perform(get(REST_CONTROLLER_BASE + "/owners/grouping"))
                 .andExpect(status().isOk())
                 .andReturn();
         assertThat(result, equalTo(result));
+<<<<<<< HEAD
 >>>>>>> bc20da73 (more fixes for codacy)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
     }
 
 }

@@ -5,15 +5,20 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     .navbar-nav {
 =======
     .navbar-nav { 
 >>>>>>> 0fc62666 (Codacy fixes)
+=======
+    .navbar-nav {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
         .nav-link {
             color: $uh-dark-gray;
             &:hover,
             :focus,
             :active {
+<<<<<<< HEAD
 =======
     .navbar-nav {
         .nav-link {
@@ -26,6 +31,8 @@
             :focus,
             :active {
 >>>>>>> 5fff0452 (Codacy fixes)
+=======
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
                 color: $uh-teal
             }
         }
@@ -35,6 +42,7 @@
         }
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     @include media-breakpoint(min-desktop) {
@@ -47,11 +55,16 @@
     @include media-breakpoint(min-desktop) {
         .nav {
 >>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+    @include media-breakpoint(min-desktop) {
+        .nav {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
             padding: 2.5rem 1.25rem 0 0;
             background-color: white;
         }
         .navbar-brand {
             padding: 0;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             > img {
@@ -61,6 +74,9 @@
 =======
             > img {
 >>>>>>> 20beefb9 (Remove trailing whitespace)
+=======
+            > img {
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
                 background-color: transparent;
             }
         }
@@ -117,6 +133,7 @@
             background-color: #e3f2ef;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             padding: 0 0 2px 0;
 =======
             padding: 0px 0px 2px 0px;
@@ -124,6 +141,9 @@
 =======
             padding: 0 0 2px 0;
 >>>>>>> d549f573 (Codacy fixes)
+=======
+            padding: 0 0 2px 0;
+>>>>>>> 85c66c12bc429fd095d4bec9de492bb66a54126c
     }
 }
 
