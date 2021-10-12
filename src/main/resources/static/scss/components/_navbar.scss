@@ -6,7 +6,9 @@
     .navbar-nav {
         .nav-link {
             color: $uh-dark-gray;
-            &:hover, :focus, :active {
+            &:hover,
+            :focus,
+            :active {
                 color: $uh-teal
             }
         }

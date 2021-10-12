@@ -26,7 +26,9 @@ h4 {
 .tab-color {
     color: $uh-black;
 
-    &:hover, :focus, :active {
+    &:hover,
+    :focus,
+    :active {
         color: $uh-black;
     }
 }
@@ -49,6 +51,6 @@ h4 {
 }
 
 // Makes the "here" text in info.html blue.
-.link{
+.link {
     color: $uh-blue2;
 }

@@ -9,14 +9,18 @@ form.seamless button {
 .btn {
 
     // Logout button.
-    &:hover, &:focus, &:active {
+    &:hover,
+    &:focus,
+    &:active {
         #name {
             color:$seafoam;
         }
     }
 
     &.dark-teal-bg {
-        &:active, &:focus, &:hover {
+        &:hover,
+        &:focus,
+        &:active {
             color: $uh-white;
             background: $green-blue;
         }
@@ -28,7 +32,9 @@ form.seamless button {
         margin-right: 2px;
         @include btn-rmv;
 
-        &:hover, &:focus, &:active {
+        &:hover,
+        &:focus,
+        &:active {
             background: darkred;
         }
     }
@@ -36,7 +42,9 @@ form.seamless button {
     &.btn-primary, &.btn-lg {
         @include gradient;
 
-        &:hover, &:focus, &:active {
+        &:hover,
+        &:focus,
+        &:active {
             background: $green-blue right center;
         }
     }
@@ -59,7 +67,9 @@ form.seamless button {
 
     // Changes the logout color when you hover.
     &-outline-secondary {
-        &:hover, &:focus, &:active {
+        &:hover,
+        &:focus,
+        &:active {
             background-color: $green-blue;
             border-color: $green-blue;
         }

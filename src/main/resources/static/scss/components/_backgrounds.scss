@@ -1,15 +1,20 @@
-.dark-teal-bg a, .black-bg a {
+.dark-teal-bg a,
+.black-bg a {
     color: white;
     text-decoration: underline;
 
-    &:active, &:focus, &:hover {
+    &:active,
+    &:focus,
+    &:hover {
         color: lightgrey;
     }
 }
 
 .btn {
     &.dark-teal-bg {
-        &:active, &:focus, &:hover {
+        &:active,
+        &:focus,
+        &:hover {
             color: $uh-white;
             background: $green-blue;
         }
