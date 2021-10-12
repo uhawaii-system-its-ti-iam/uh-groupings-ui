@@ -8,7 +8,7 @@
      * @param dataProvider - service that handles redirection to the feedback page upon error
      * @param groupingsService - service for creating requests to the groupings API
      */
-    function MembershipJsController($scope, $uibModal, $window, $controller, groupingsService, dataProvider) {
+    function MembershipJsController($scope, $uibModal, $window, $controller, groupingsService, dataProvider, Message) {
 
         $scope.membershipsList = [];
         $scope.pagedItemsMemberships = [];
@@ -24,6 +24,19 @@
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
         /**
+         * Chunk an array of objects into an array of paged object arrays.
+         */
+        function objToPageArray(obj, size) {
+            let i = 0;
+            let arr = [];
+            while (i < obj.length) {
+                arr.push(obj.slice(i, size + i));
+                i += size;
+            }
+            return arr;
+        }
+
+        /**
          *  Load the groups a user is a member in, the groups the user is able to opt in to, and the groups the user
          *  is able to opt out of.
          */
@@ -34,7 +47,7 @@
             groupingsService.getMembershipResults((res) => {
                     // Codacy throws an error regarding the '_' in the uniqBy function. This error will be ignored until a solution is found.
                     $scope.membershipsList = _.sortBy(_.uniqBy(res, "name"), "name");
-                    $scope.pagedItemsMemberships = $scope.objToPageArray($scope.membershipsList, 20);
+                    $scope.pagedItemsMemberships = objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
                 },
                 (res) => {
@@ -155,6 +168,7 @@
 
     /**
      * Saves the current tab on refresh.
+     */
     jQuery.noConflict();
     $(document).ready(function () {
         $("[data-toggle='tab']").on("show.bs.tab", function (e) {
@@ -165,7 +179,6 @@
             $("#memberTab a[href='" + activeTab + "']").tab("show");
         }
     });
-     */
 
     UHGroupingsApp.controller("MembershipJsController", MembershipJsController);
 

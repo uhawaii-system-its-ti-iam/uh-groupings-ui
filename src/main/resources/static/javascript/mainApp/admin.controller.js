@@ -21,10 +21,8 @@
 
         let totalCheckBoxCount = 0;
         let currentCheckBoxCount = 0;
-        let PAGE_SIZE = 20;
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
-
 
         $scope.createRoleErrorModal = function () {
             $scope.loading = false;
@@ -37,36 +35,23 @@
         };
 
         /**
-         * Callback which takes the admin tab data and moves it into adminList and groupingsList, each of these objects
-         * is then paginated.
-         */
-        $scope.getAdminListsCallbackOnSuccess = function (res) {
-            $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
-            $scope.pagedItemsAdmins = $scope.objToPageArray($scope.adminsList, PAGE_SIZE);
-
-            $scope.groupingsList = _.sortBy(res.allGroupingPaths, "name");
-            $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, PAGE_SIZE);
-            $scope.loading = false;
-        };
-        /**
          * Complete initialization by fetching a list of admins and list of all groupings.
          */
         $scope.init = function () {
             $scope.loading = true;
-            groupingsService.getAdminLists($scope.getAdminListsCallbackOnSuccess, $scope.createApiErrorModal);
+            groupingsService.getAdminLists(function (res) {
+                $scope.adminsList = _.sortBy(res.adminGroup.members, "name");
+                $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
+
+                $scope.groupingsList = _.sortBy(res.allGroupingPaths, "name");
+                $scope.filter($scope.groupingsList, "pagedItemsGroupings", "currentPageGroupings", $scope.groupingsQuery, true);
+                $scope.loading = false;
+
+            }, function () {
+                $scope.createApiErrorModal();
+            });
         };
 
-        $scope.searchForUserGroupingInformationOnSuccessCallback = function (res) {
-            $scope.personList = _.sortBy(res, "name");
-            $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
-            $scope.user = $scope.personToLookup;
-            $scope.loading = false;
-        };
-        $scope.searchForUserGroupingInformationOnErrorCallback = function (res) {
-            $scope.loading = false;
-            $scope.resStatus = res.status;
-            $scope.user = $scope.personToLookup;
-        };
         /**
          * Fetch a list of memberships pertaining to $scope.personToLookUp.
          */
@@ -75,38 +60,47 @@
                 $scope.emptyInput = true;
             } else {
                 $scope.loading = true;
-                groupingsService.getMembershipAssignmentForUser(
-                    $scope.searchForUserGroupingInformationOnSuccessCallback,
-                    $scope.searchForUserGroupingInformationOnErrorCallback,
-                    $scope.personToLookup);
+                groupingsService.getMembershipAssignmentForUser(function (res) {
+                    $scope.personList = _.sortBy(res, "name");
+                    $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+                    $scope.user = $scope.personToLookup;
+                    $scope.loading = false;
+                }, function (res) {
+                    $scope.loading = false;
+                    $scope.resStatus = res.status;
+                    $scope.user = $scope.personToLookup;
+                }, $scope.personToLookup);
             }
         };
 
-        $scope.removeFromGroupsCallbackOnSuccess = function (res) {
-            if (res === "") {
-                return;
-            }
-            let userToRemove = {
-                username: res.uid,
-                name: res.cn,
-                uhUuid: res.uhUuid
-            };
-            if (_.isEmpty($scope.selectedGroupingsPaths)) {
-                $scope.emptySelect = true;
-            } else {
-                $scope.createRemoveFromGroupsModal({
-                    user: userToRemove,
-                    groupPaths: $scope.selectedGroupingsPaths,
-                    listName: $scope.selectedGroupingsNames
-                });
-            }
-
+        /**
+         * Separate the list of Admins into pages.
+         */
+        $scope.displayAdmins = function () {
+            $scope.resetGroupingInformation();
+            $scope.filter($scope.adminsList, "pagedItemsAdmins", "currentPageAdmins", $scope.adminsQuery, true);
+            $scope.pagedItemsGroupings = $scope.groupToPages($scope.groupingsList);
+            $scope.showGrouping = false;
         };
+
+        /**
+         * Separate the list of persons into pages.
+         */
+        $scope.displayPerson = function () {
+            $scope.resetGroupingInformation();
+            $scope.filter($scope.personList, "pagedItemsPerson", "currentPagePerson", $scope.personQuery, true);
+            $scope.pagedItemsPerson = $scope.groupToPages($scope.personList);
+            $scope.showGrouping = false;
+            $scope.personToLookup = "";
+        };
+
         /**
          * Removes selected user from a list of groupings.
          */
         $scope.removeFromGroups = function () {
+            // Array of names to be displayed in the modal.
             $scope.selectedGroupingsNames = [];
+            // Array of grouping paths that will be passed to the API for deletion.
             $scope.selectedGroupingsPaths = [];
 
             let i = 0;
@@ -134,7 +128,25 @@
             });
 
             if ($scope.personToLookup != null) {
-                groupingsService.getMemberAttributes($scope.personToLookup, $scope.removeFromGroupsCallbackOnSuccess);
+                groupingsService.getMemberAttributes($scope.personToLookup, function (attributes) {
+                    if (attributes === "") {
+                        return;
+                    }
+                    let userToRemove = {
+                        username: attributes.uid,
+                        name: attributes.cn,
+                        uhUuid: attributes.uhUuid
+                    };
+                    if (_.isEmpty($scope.selectedGroupingsPaths)) {
+                        $scope.emptySelect = true;
+                    } else {
+                        $scope.createRemoveFromGroupsModal({
+                            user: userToRemove,
+                            groupPaths: $scope.selectedGroupingsPaths,
+                            listName: $scope.selectedGroupingsNames
+                        });
+                    }
+                });
             }
         };
 
@@ -212,7 +224,44 @@
                 $scope.createRemoveErrorModal(userType);
             }
         };
+
+        /**
+         * Copy grouping path to clipboard and toggle 'copied!' popover.
+         */
+        $scope.copyPath = function (grouping) {
+            $("[data-content='copy']").popover("hide");
+
+            $("[data-content='copied!']").popover();
+            setTimeout(function () {
+                $("[data-content='copied!']").popover("hide");
+            }, 1000);
+
+            let copyText = document.getElementById(grouping.path);
+            copyText.select();
+            document.execCommand("copy");
+        };
+
+        /**
+         * Toggle 'copy' popover when clipboard is being hovered.
+         */
+        $scope.hoverCopy = function () {
+            $("[data-content='copy']").popover();
+        };
     }
+
+    /**
+     * Saves the current tab on refresh.
+     */
+    jQuery.noConflict();
+    $(document).ready(function () {
+        $("[data-toggle='tab']").on("show.bs.tab", function (e) {
+            localStorage.setItem("activeTab", $(e.target).attr("href"));
+        });
+        let activeTab = localStorage.getItem("activeTab");
+        if (activeTab) {
+            $("#adminTab a[href='" + activeTab + "']").tab("show");
+        }
+    });
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
 }());

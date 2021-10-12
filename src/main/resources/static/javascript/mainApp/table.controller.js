@@ -15,20 +15,6 @@
         const FILTER_COLUMNS_TO_IGNORE = ["basis", "$$hashKey"];
         const DEFAULT_COLUMN_NAME = "name";
 
-
-        /**
-         * Chunk an array of objects into an array of paged object arrays.
-         * [{},{},{},{}] into [[{},{}],[{},{}]]
-         */
-        $scope.objToPageArray = function (obj, size) {
-            let i = 0;
-            let arr = [];
-            while (i < obj.length) {
-                arr.push(obj.slice(i, size + i));
-                i += size;
-            }
-            return arr;
-        };
         /**
          * Paginate a list of items.
          * @param {object} list The un-paginated list.
