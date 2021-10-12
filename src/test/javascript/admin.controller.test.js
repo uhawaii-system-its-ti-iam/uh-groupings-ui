@@ -5,206 +5,178 @@ describe("AdminController", function () {
 
     let scope;
     let controller;
-    let gs;
+    let httpBackend;
+    let BASE_URL;
+    let window;
 
-    beforeEach(inject(function ($rootScope, $controller, groupingsService) {
+    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_) {
         scope = $rootScope.$new();
         controller = $controller("AdminJsController", {
-            $scope: scope
+            $scope: scope,
+            $window: window
         });
-        gs = groupingsService;
+        httpBackend = _$httpBackend_;
+        BASE_URL = _BASE_URL_;
     }));
 
     it("should define the admin controller", function () {
         expect(controller).toBeDefined();
     });
 
-    describe("init", function () {
-        it("should call groupingsService.getAdminLists", function () {
-            spyOn(gs, "getAdminLists");
-            scope.init();
-            expect(gs.getAdminLists).toHaveBeenCalled();
-        });
-    });
-    describe("getAdminListsCallbackOnSuccess", function () {
-        let res = {};
-        beforeEach(function () {
-            res = {
-                "allGroupingPaths": [
-                    {
-                        "path": "path",
-                        "name": "name"
-                    },
-                    {
-                        "path": "path",
-                        "name": "name"
-                    }
-                ],
-                "adminGroup": {
-                    "members": [
-                        {
-                            "username": "username",
-                            "uhUuid": "uhUuid",
-                            "firstName": "firstName",
-                            "lastName": "lastName",
-                            "name": "name"
-                        },
-                        {
-                            "username": "username",
-                            "uhUuid": "uhUuid",
-                            "firstName": "firstName",
-                            "lastName": "lastName",
-                            "name": "name"
-                        }
-                    ]
-                }
-            };
-        });
-        it("should call objToPageArray", function () {
-            spyOn(scope, "objToPageArray");
-            scope.getAdminListsCallbackOnSuccess(res);
-            expect(scope.objToPageArray).toHaveBeenCalled();
-        });
-        it("should instantiate scope.pagedItemsAdmins", function () {
-            scope.getAdminListsCallbackOnSuccess(res);
-            expect(scope.pagedItemsAdmins).toBeDefined();
-        });
-        it("should instantiate scope.groupingsList", function () {
-            scope.getAdminListsCallbackOnSuccess(res);
-            expect(scope.groupingsList).toBeDefined();
-        });
-        it("should set scope.loading to false", function () {
-            scope.getAdminListsCallbackOnSuccess(res);
-            expect(scope.loading).toBeFalse();
-        });
-    });
+    describe("displayAdmins", function () {
+        it("should call resetGroupingInformation", function () {
+            spyOn(scope, "resetGroupingInformation").and.callThrough();
+            scope.displayAdmins();
 
-    describe("searchForUserGroupingInformationOnSuccessCallback", function () {
-        let res;
-        beforeEach(function () {
-            res = [
-                {
-                    "identifier": null,
-                    "person": null,
-                    "group": null,
-                    "path": "path-to-grouping-name",
-                    "name": "grouping-name",
-                    "inBasis": false,
-                    "inInclude": false,
-                    "inExclude": false,
-                    "inOwner": true,
-                    "inBasisAndInclude": false,
-                    "optOutEnabled": true,
-                    "optInEnabled": false,
-                    "selfOpted": false
-                }];
+            expect(scope.resetGroupingInformation).toHaveBeenCalled();
+        });
 
+        it("should repaginate the groupings list table (since the filter is reset)", function () {
+            spyOn(scope, "groupToPages").and.callThrough();
+            scope.displayAdmins();
+
+            expect(scope.groupToPages).toHaveBeenCalledWith(scope.groupingsList);
         });
-        it("should call scope.filter", function () {
-            spyOn(scope, "filter");
-            scope.searchForUserGroupingInformationOnSuccessCallback(res);
-            expect(scope.filter).toHaveBeenCalled();
-        });
-        it("should set scope.personList equal to api response", function () {
-            scope.searchForUserGroupingInformationOnSuccessCallback(res);
-            expect(scope.personList).toEqual(res);
-        });
-        it("should set scope.user equal to scope.personToLookup", function () {
-            scope.searchForUserGroupingInformationOnSuccessCallback(res);
-            expect(expect(scope.user).toEqual(scope.personToLookup));
-        });
-        it("should set scope.loading to be false", function () {
-            scope.searchForUserGroupingInformationOnSuccessCallback(res);
-            expect(scope.loading).toBeFalse();
-        });
-    });
-    describe("searchForUserGroupingInformationOnErrorCallback", function () {
-        beforeEach(function () {
-            scope.searchForUserGroupingInformationOnErrorCallback([]);
-        });
-        it("should set scope.loading to be false", function () {
-            expect(scope.loading).toBeFalse();
-        });
-        it("should set scope.user equal to scope.personToLookup", function () {
-            expect(expect(scope.user).toEqual(scope.personToLookup));
+
+        describe("a user is currently looking at a selected grouping", function () {
+            beforeEach(function () {
+                scope.showGrouping = true;
+            });
+
+            it("should no longer show the selected grouping", function () {
+                scope.displayAdmins();
+
+                expect(scope.showGrouping).toBe(false);
+            });
         });
     });
 
     describe("searchForUserGroupingInformation", function () {
         beforeEach(function () {
-            scope.personToLookup = "iamtst01";
+            scope.personToLookup = "test";
         });
-        it("should call groupingsService.getMembershipAssignmentForUser", function () {
-            spyOn(gs, "getMembershipAssignmentForUser").and.callThrough();
+        it("should search for person", function () {
+            spyOn(scope, "searchForUserGroupingInformation").and.callThrough();
             scope.searchForUserGroupingInformation();
-            expect(gs.getMembershipAssignmentForUser).toHaveBeenCalled();
+            expect(scope.searchForUserGroupingInformation).toHaveBeenCalled();
         });
     });
 
-    describe("removeFromGroupsCallbackOnSuccess", function () {
-        let res;
+    describe("mergeManagePersonDuplicateValues", function () {
         beforeEach(function () {
-            scope.personToLookup = "iamtst01";
-            res = {
-                "uid": "iamtst01",
-                "uhUuid": "iamtst01",
-                "givenName": "tst01name",
-                "cn": "tst01name",
-                "sn": "tst01name"
-            };
+            scope.personList = [
+                {
+                    name: "test1",
+                    inInclude: 0,
+                    inExclude: 0,
+                    inBasis: 1,
+                    inOwner: 0,
+                    inBasisAndInclude: 0
+                },
+                {
+                    name: "test1",
+                    inInclude: 1,
+                    inExclude: 0,
+                    inBasis: 1,
+                    inOwner: 0,
+                    inBasisAndInclude: 1
+                },
+                {
+                    name: "test2",
+                    inInclude: 0,
+                    inExclude: 1,
+                    inBasis: 0,
+                    inOwner: 0,
+                    inBasisAndInclude: 0
+                },
+                {
+                    name: "test3",
+                    inInclude: 1,
+                    inExclude: 0,
+                    inBasis: 0,
+                    inOwner: 0,
+                    inBasisAndInclude: 0
+                },
+                {
+                    name: "test3",
+                    inInclude: 0,
+                    inExclude: 0,
+                    inBasis: 1,
+                    inOwner: 0,
+                    inBasisAndInclude: 1
+                },
+                {
+                    name: "test3",
+                    inInclude: 0,
+                    inExclude: 0,
+                    inBasis: 0,
+                    inOwner: 1,
+                    inBasisAndInclude: 0
+                }
+            ];
         });
-        it("should set scope.emptySelect to true when scope.selectedGroupingsPaths is empty", function () {
-            scope.removeFromGroupsCallbackOnSuccess(res);
-            expect(scope.emptySelect).toBeTrue();
+        it("should merge the grouping values into each unique Grouping", function () {
+            let mergeManagePersonDuplicateValues = jasmine.createSpy()
+                .and.callFake(function (dups) {
+                    let result = [];
+                    dups.forEach((membership, index) => {
+                        dups.forEach((m, index2) => {
+                            if (membership.name === m.name && index !== index2) {
+                                membership.inInclude |= m.inInclude;
+                                membership.inExclude |= m.inExclude;
+                                membership.inBasis |= m.inBasis;
+                                membership.inOwner |= m.inOwner;
+                                membership.inBasisAndInclude |= m.inBasisAndInclude;
+                            }
+                        });
+                    });
+                    dups.forEach((membership, index) => {
+                        let index1 = dups.findIndex((e) => {
+                            return e.name === membership.name;
+                        });
+                        if (index1 === index) {
+                            // Push the merged result from the duplicates
+                            result.push({
+                                "name": membership.name,
+                                "inInclude": membership.inInclude,
+                                "inExclude": membership.inExclude,
+                                "inBasis": membership.inBasis,
+                                "inOwner": membership.inOwner,
+                                "inBasisAndInclude": membership.inBasisAndInclude
+                            });
+                        }
+                    });
+                    return result;
+                });
+            let arr = [];
+            arr = mergeManagePersonDuplicateValues(scope.personList);
+            expect(mergeManagePersonDuplicateValues).toHaveBeenCalledWith(scope.personList);
+            expect(arr).not.toEqual(scope.personList);
+            expect(arr).toContain({
+                name: "test1",
+                inInclude: 1,
+                inExclude: 0,
+                inBasis: 1,
+                inOwner: 0,
+                inBasisAndInclude: 1
+            });
+            expect(arr).toContain({
+                name: "test2",
+                inInclude: 0,
+                inExclude: 1,
+                inBasis: 0,
+                inOwner: 0,
+                inBasisAndInclude: 0
+            });
+            expect(arr).toContain({
+                name: "test3",
+                inInclude: 1,
+                inExclude: 0,
+                inBasis: 1,
+                inOwner: 1,
+                inBasisAndInclude: 1
+            });
         });
     });
-
-    describe("removeFromGroups", function () {
-        beforeEach(function () {
-            scope.personToLookup = "";
-        });
-
-        it("should call groupingsService.getMemberAttributes", function () {
-            spyOn(gs, "getMemberAttributes");
-            scope.removeFromGroups();
-            expect(gs.getMemberAttributes).toHaveBeenCalled();
-        });
-    });
-
-    describe("updateCheckBoxes", function () {
-        beforeEach(function () {
-            scope.pagedItemsPerson[scope.currentPagePerson] = {
-                inBasis: false,
-                inExclude: false,
-                inInclude: true,
-                isSelected: false
-            };
-        });
-        it("should negate scope.checkAll", function () {
-            let checkAll = scope.checkAll;
-            scope.updateCheckBoxes();
-            expect(scope.checkAll).toEqual(!checkAll);
-        });
-    });
-    describe("addAdmin", function () {
-
-        it("should set waitingForImportResponse to false", function () {
-            scope.waitingForImportResponse = true;
-            scope.addAdmin()
-            expect(scope.waitingForImportResponse).toBeFalse();
-
-        })
-    });
-
-    describe("removeAdmin", function () {
-        beforeEach(function () {
-            scope.pagedItemsAdmins[0] = "zzzz";
-        })
-        it("should call scope.createRemoveErrorModal", function () {
-            spyOn(scope, "createRemoveErrorModal");
-            scope.removeAdmin(0,0);
-            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
-        })
-    })
 
 });

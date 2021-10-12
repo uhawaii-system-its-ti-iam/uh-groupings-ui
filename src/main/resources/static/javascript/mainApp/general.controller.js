@@ -1639,6 +1639,25 @@
             $scope.currentPagePerson = 0;
         }
 
+        /**
+         * Reset the selected group in the side navbar to the list of all members.
+         */
+        function resetPillsToAllMembers() {
+            const pills = $("#group-pills")[0].children;
+            const pillContents = $("#pill-content")[0].children;
+            for (let i = 0; i < pills.length; i++) {
+                const anchorTag = $(pills[i].children[0]);
+                const pillContent = $(pillContents[i]);
+                if (i === 0 && !anchorTag.hasClass("active")) {
+                    anchorTag.addClass("active");
+                    pillContent.addClass("show active");
+                } else if (i !== 0 && anchorTag.hasClass("active")) {
+                    anchorTag.removeClass("active");
+                    pillContent.removeClass("show active");
+                }
+            }
+        }
+
         function resetFilterQueries() {
             $scope.basisQuery = "";
             $scope.excludeQuery = "";
@@ -1710,6 +1729,7 @@
          */
         $scope.resetGroupingInformation = function () {
             resetGroupingMembers();
+            resetPillsToAllMembers();
             resetFilterQueries();
             clearMemberInput();
             $scope.columnSort = {};
