@@ -526,8 +526,8 @@ describe("GeneralController", function () {
             it("should contain the information of every member in the list", function () {
                 const csv = scope.convertListToCsv(scope.groupingExclude);
 
-                expect(csv).toContain("Four,User,user4,00000004,user4@hawaii.edu,\r\n");
-                expect(csv).toContain("Five,User,user5,00000005,user5@hawaii.edu,\r\n");
+                expect(csv).toContain("Four,User,user4,00000004,user4@hawaii.edu");
+                expect(csv).toContain("Five,User,user5,00000005,user5@hawaii.edu");
                 expect(csv).toContain("Nine,User,,00000009,\r\n");
             });
         });
