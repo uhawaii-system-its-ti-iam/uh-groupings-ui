@@ -318,7 +318,7 @@ describe("GeneralController", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Exclude");
 
-              //  expect(scope.isInAnotherList).toHaveBeenCalled();
+                //  expect(scope.isInAnotherList).toHaveBeenCalled();
                 expect(scope.isInAnotherList("user1", "Exclude")).toBe(true);
             });
         });
@@ -330,7 +330,7 @@ describe("GeneralController", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Include");
 
-               // expect(scope.isInAnotherList).toHaveBeenCalled();
+                // expect(scope.isInAnotherList).toHaveBeenCalled();
                 expect(scope.isInAnotherList("user5", "Include")).toBe(true);
             });
         });

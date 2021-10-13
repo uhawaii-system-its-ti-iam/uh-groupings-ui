@@ -259,65 +259,65 @@
                     $scope.paginatingComplete = false;
 
                     switch (type) {
-                      case "All": {
-                        //Gets members in grouping
-                        $scope.groupingMembers = setGroupMembers(res.composite.members);
-                        $scope.addWhereListed($scope.groupingMembers);
-                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
-                        break;
-                      }
-                      case "Basis": {
-                        // Gets members in the basis group
-                        $scope.groupingBasis = setGroupMembers(res.basis.members);
-                        $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
-                        break;
-                      }
-                      case "Include": {
-                        //Gets members in the include group
-                        $scope.groupingInclude = setGroupMembers(res.include.members);
-                        $scope.addInBasis($scope.groupingInclude);
-                        $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
-                        break;
-                      }
-                      case "Exclude": {
-                        //Gets members in the exclude group
-                        $scope.groupingExclude = setGroupMembers(res.exclude.members);
-                        $scope.addInBasis($scope.groupingExclude);
-                        $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
-                        break;
-                      }
-                      case "Owner": {
-                        //Gets owners of the grouping
-                        $scope.groupingOwners = setGroupMembers(res.owners.members);
-                        $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-                        $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
-                        break;
-                      }
-                      default: {
-                        //Gets members in grouping
-                        $scope.groupingMembers = setGroupMembers(res.composite.members);
-                        $scope.addWhereListed($scope.groupingMembers);
-                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
+                        case "All": {
+                            //Gets members in grouping
+                            $scope.groupingMembers = setGroupMembers(res.composite.members);
+                            $scope.addWhereListed($scope.groupingMembers);
+                            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
+                            break;
+                        }
+                        case "Basis": {
+                            // Gets members in the basis group
+                            $scope.groupingBasis = setGroupMembers(res.basis.members);
+                            $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
+                            break;
+                        }
+                        case "Include": {
+                            //Gets members in the include group
+                            $scope.groupingInclude = setGroupMembers(res.include.members);
+                            $scope.addInBasis($scope.groupingInclude);
+                            $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
+                            break;
+                        }
+                        case "Exclude": {
+                            //Gets members in the exclude group
+                            $scope.groupingExclude = setGroupMembers(res.exclude.members);
+                            $scope.addInBasis($scope.groupingExclude);
+                            $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
+                            break;
+                        }
+                        case "Owner": {
+                            //Gets owners of the grouping
+                            $scope.groupingOwners = setGroupMembers(res.owners.members);
+                            $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                            $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
+                            break;
+                        }
+                        default: {
+                            //Gets members in grouping
+                            $scope.groupingMembers = setGroupMembers(res.composite.members);
+                            $scope.addWhereListed($scope.groupingMembers);
+                            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
 
-                        // Gets members in the basis group
-                        $scope.groupingBasis = setGroupMembers(res.basis.members);
-                        $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
+                            // Gets members in the basis group
+                            $scope.groupingBasis = setGroupMembers(res.basis.members);
+                            $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
 
-                        //Gets members in the include group
-                        $scope.groupingInclude = setGroupMembers(res.include.members);
-                        $scope.addInBasis($scope.groupingInclude);
-                        $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
+                            //Gets members in the include group
+                            $scope.groupingInclude = setGroupMembers(res.include.members);
+                            $scope.addInBasis($scope.groupingInclude);
+                            $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
 
-                        //Gets members in the exclude group
-                        $scope.groupingExclude = setGroupMembers(res.exclude.members);
-                        $scope.addInBasis($scope.groupingExclude);
-                        $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
+                            //Gets members in the exclude group
+                            $scope.groupingExclude = setGroupMembers(res.exclude.members);
+                            $scope.addInBasis($scope.groupingExclude);
+                            $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
 
-                        //Gets owners of the grouping
-                        $scope.groupingOwners = setGroupMembers(res.owners.members);
-                        $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-                        $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
-                      }
+                            //Gets owners of the grouping
+                            $scope.groupingOwners = setGroupMembers(res.owners.members);
+                            $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                            $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
+                        }
                     }
 
                     $scope.allowOptIn = res.optInOn;
