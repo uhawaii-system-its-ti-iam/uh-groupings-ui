@@ -32,7 +32,6 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -76,16 +75,6 @@ public class GroupingsRestControllerTest {
         mockMvc.perform(get(REST_CONTROLLER_BASE))
                 .andExpect(status().isOk());
 
-    }
-
-    @Test
-    @WithMockUhUser
-    public void currentUsernameTest() throws Exception {
-        MvcResult result = mockMvc.perform(get(REST_CONTROLLER_BASE + "/currentUser"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{'username':" + USERNAME + "}"))
-                .andReturn();
-        assertThat(result, equalTo(result));
     }
 
     @Test
