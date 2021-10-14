@@ -11,7 +11,6 @@ UHGroupingsApp.constant("Message", {
     },
     Csv: {
         GROUP_NOT_LOADED: "Export will be available once all members are loaded.",
-        GROUP_LOADED: "Export entire member list to CSV.",
-        EMAIL_SUFFIX: "@hawaii.edu"
+        GROUP_LOADED: "Export entire member list to CSV."
     }
 });

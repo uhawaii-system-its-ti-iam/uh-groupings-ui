@@ -10,6 +10,14 @@
         return {
 
             /**
+             * Say hello.
+             */
+            hello(onSuccess, onError) {
+                let endpoint = BASE_URL + "/";
+                dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
              * Get page of a grouping.
              * @param {String} path - The path to the grouping.
              * @param {Number} page - The number to fetch.
@@ -49,15 +57,6 @@
                 }
                 endpoint = endpoint + params;
                 dataProvider.loadData(endpoint, onSuccess, onError);
-            },
-
-            /**
-             * Retrive the current user's username
-             * @param onSuccess
-             */
-            getCurrentUser(onSuccess) {
-                let endpoint = BASE_URL + "currentUser";
-                dataProvider.retrieveData(endpoint, onSuccess);
             },
 
             /**
