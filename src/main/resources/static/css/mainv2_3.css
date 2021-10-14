@@ -378,8 +378,16 @@ h4 {
   background: white;
   color: #004252;
 }
+.nav-pills .nav-link.active::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  right: -24px;
+}
 @media (min-width: 768px) {
-  .nav-pills .nav-link.active:after {
+  .nav-pills .nav-link.active::after {
     border-width: 10px 10px 10px 0;
     border-color: transparent #fff transparent transparent;
     top: 25%;
