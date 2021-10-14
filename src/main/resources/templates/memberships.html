@@ -16,11 +16,11 @@
         <p class="lead text-center text-md-left" th:utext="#{screen.message.memberships.page.description}"></p>
         <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="memberTab">
             <li role="presentation" class="nav-item" ng-click="memberFilterReset()">
-                <a href="#current-memberships" data-toggle="tab" class="nav-link active" style="color: var(--uh-black)" role="tab">
+                <a href="#current-memberships" data-toggle="tab" class="nav-link active tab-color" role="tab">
                     Current Memberships
                 </a>
             <li class="nav-item" role="presentation" ng-click="memberFilterReset()">
-                <a href="#membership-opportunities" data-toggle="tab" class="nav-link" style="color: var(--uh-black)" role="tab">
+                <a href="#membership-opportunities" data-toggle="tab" class="nav-link tab-color" role="tab">
                     Membership Opportunities
                 </a>
             </li>
@@ -78,9 +78,9 @@
                                         <input aria-label="Grouping Path" type="text" class="form-control form-control-sm border-0 input-sm"
                                                value={{l.path}}
                                                id={{l.path}}>
-                                        <div style="font-size:0;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="copy">
-                                            <div style="font-size:0;" data-toggle="popover" data-placement="top" data-trigger="click" data-content="copied!">
-                                                <button class="btn btn-sm" aria-label="Copy Path Button" ng-click=copyPath(l) tabindex="-1" ng-mouseover=hoverCopy()>
+                                        <div class="hover-text" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="copy">
+                                            <div class="hover-text" data-toggle="popover" data-placement="top" data-trigger="click" data-content="copied!">
+                                                <button class="btn btn-sm btn-clipboard" aria-label="Copy Path Button" ng-click=copyPath(l) tabindex="-1" ng-mouseover=hoverCopy()>
                                                     <i class="far fa-fw fa-clipboard" aria-hidden="true"></i>
                                                 </button>
                                             </div>
@@ -110,7 +110,7 @@
                         <div th:replace="fragments/pagination :: pagination(currentPage='currentPageMemberships', pagedItems='pagedItemsMemberships')"></div>
                     </div>
                 </div>
-                <div ng-if="membershipsList.length === 0" align="center">
+                <div ng-if="membershipsList.length === 0" class="no-memberships-text">
                     <p class="font-weight-bold" ng-hide="loading"
                        th:text="#{screen.message.membership.empty.membershipsList}">
                         No Groupings Available
@@ -161,9 +161,9 @@
                                         <input aria-label="Grouping Path" type="text" class="form-control form-control-sm border-0"
                                                value={{o.path}}
                                                id={{o.path}}>
-                                        <div style="font-size:0;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="copy">
-                                            <div style="font-size:0;" data-toggle="popover" data-placement="top" data-trigger="click" data-content="copied!">
-                                                <button class="btn btn-sm" aria-label="Copy Path Button" ng-click=copyPath(o) tabindex="-1" ng-mouseover=hoverCopy()>
+                                        <div class="hover-text" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="copy">
+                                            <div class="hover-text" data-toggle="popover" data-placement="top" data-trigger="click" data-content="copied!">
+                                                <button class="btn btn-sm btn-clipboard" aria-label="Copy Path Button" ng-click=copyPath(o) tabindex="-1" ng-mouseover=hoverCopy()>
                                                     <i class="far fa-fw fa-clipboard" aria-hidden="true"></i>
                                                 </button>
                                             </div>
@@ -186,7 +186,7 @@
                         <div th:replace="fragments/pagination :: pagination(currentPage='currentPageOptIn', pagedItems='pagedItemsOptInList')"></div>
                     </div>
                 </div>
-                <div ng-if="optInList.length === 0" align="center">
+                <div ng-if="optInList.length === 0" class="no-memberships-text">
                     <p class="font-weight-bold" ng-hide="loading"
                        th:text="#{screen.message.membership.empty.optIn}">
                         No Groupings Available

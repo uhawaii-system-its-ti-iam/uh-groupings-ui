@@ -13,29 +13,28 @@
 </div>
 <div class="modal-body" id="modal-body">
     <p>
-        <span style="color: black" th:text="#{screen.message.modal.add.confirmation}"></span>
-        <span style="color: black">{{listName}} list.</span>
+        <span class="modal-black-text" th:text="#{screen.message.modal.add.confirmation}"></span>
+        <span class="modal-black-text">{{listName}} list.</span>
     </p>
-    <table style="width: 80%;margin-bottom: 30px;">
+    <table>
         <tr>
             <th th:utext="#{screen.message.modal.add.name}"></th>
-            <th class="font-weight-normal" style="text-transform: initial">{{fullNameToAdd}}</th>
+            <th class="font-weight-normal">{{fullNameToAdd}}</th>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.add.uhUserName}"></th>
-            <th class="font-weight-normal" style="text-transform: initial">{{uidToAdd}}</th>
+            <th class="font-weight-normal">{{uidToAdd}}</th>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.add.uhUserId}"></th>
-            <th class="font-weight-normal" style="text-transform: initial">{{uhUuidToAdd}}</th>
+            <th class="font-weight-normal">{{uhUuidToAdd}}</th>
         </tr>
     </table>
 
-    <p> Are you sure you want to add
-        <span style="font-weight: bold">{{user}}</span>
-        <span style="color: black"> to the </span>
-        <span style="color: black">{{listName}}</span>
-        <span style="color: black"> list?</span>
+    <p>
+        <span class="modal-black-text">Are you sure you want to add</span>
+        <span class="font-weight-bold">{{user}}</span>
+        <span class="modal-black-text"> to the {{listName}} list?</span>
     </p>
 </div>
 

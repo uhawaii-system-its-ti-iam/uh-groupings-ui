@@ -4,9 +4,9 @@
         <div class="row">
             <div class="col-md-8">
                 <h1 class="font-weight-bold text-dark pt-2 mb-0">Basis Members ({{groupingBasis.length}})</h1>
-                <p class=" mb-1" style="display:inline-block" ng-show="paginatingProgress"
+                <p class=" mb-1 inline-block" ng-show="paginatingProgress"
                    th:text="#{screen.message.common.loading.gettingmembers}"></p>
-                <div class="spinner-border spinner-border-sm" style="display:inline-block"
+                <div class="spinner-border spinner-border-sm inline-block"
                      ng-hide="!paginatingProgress"
                      role="status">
                     <span class="sr-only">Loading...</span>
@@ -19,8 +19,7 @@
                        ng-model="basisQuery" class="form-control" aria-label="Filter Members..."
                        ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery, true)"/>
                 <!-- Export to CSV button -->
-                <div class="float-right"
-                     style="display:inline-block">
+                <div class="float-right inline-block">
                     <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
                             ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
                             uib-tooltip="{{ getCSVToolTipMessage() }}"

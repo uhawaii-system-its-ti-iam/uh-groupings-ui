@@ -93,13 +93,13 @@ form.seamless button {
   border-color: #004e59;
 }
 .btn-sm {
-  padding: 1px 5px;
+  padding: 0px 5px;
 }
 .btn-sm:hover {
   background: #004e59;
 }
 .btn-sm.btn-clipboard {
-  padding: 3px 5px 2px;
+  padding: 1px 5px 2px;
 }
 .btn-light:hover {
   color: white;
@@ -394,6 +394,7 @@ th {
 
 table {
   width: 80%;
+  margin-bottom: 30px;
 }
 table .p-10 {
   white-space: nowrap;
@@ -409,7 +410,7 @@ table .p-12 {
 }
 table .w-20 {
   width: 20%;
-  padding: 5px 25px !important;
+  padding: 8px;
 }
 
 .sort-icon::after {
@@ -437,7 +438,7 @@ form.seamless input {
 .import-table-tbody {
   display: block;
   height: 175px;
-  overflow: auto;
+  overflow: hidden;
 }
 .import-table-thead-tbody-tr {
   display: table;

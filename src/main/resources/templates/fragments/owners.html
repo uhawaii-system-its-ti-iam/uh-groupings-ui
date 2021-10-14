@@ -11,8 +11,7 @@
                        ng-model="ownersQuery" class="form-control" aria-label="Filter Members..."
                        ng-change="filter(groupingOwners, 'pagedItemsOwners', 'currentPageOwners', ownersQuery, true)"/>
                 <!-- Export to CSV button -->
-                <div class="float-right"
-                     style="display:inline-block">
+                <div class="float-right inline-block">
                     <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
                             ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
                             uib-tooltip="{{ getCSVToolTipMessage() }}"
@@ -83,14 +82,12 @@
                                aria-label="Enter one or more UH members to add to the Owners list"
                                id="owner-input"/>
                         <div>
-                            <button class="btn btn-primary"
+                            <button class="btn btn-primary add-margin"
                                     ng-blur="errorDismissed = true; resetErrors()"
-                                    ng-click="resetErrors(); addOwner(); errorDismissed = false"
-                                    style="margin-left: 2px">
+                                    ng-click="resetErrors(); addOwner(); errorDismissed = false">
                                 Add
                             </button>
-                            <div class="spinner-border spinner-border-sm" ng-if="waitingForImportResponse"
-                                 style="display:inline-block">
+                            <div class="spinner-border spinner-border-sm inline-block" ng-if="waitingForImportResponse">
                             </div>
                         </div>
                     </div>

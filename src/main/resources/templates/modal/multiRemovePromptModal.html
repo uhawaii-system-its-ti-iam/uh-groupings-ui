@@ -29,8 +29,8 @@
         </div>
     </div>
     <p>
-        <span style="color: black" th:text="#{screen.message.modal.multiremove.message}"></span>
-        <span style="color: black">{{ listName }} list.</span>
+        <span class="modal-black-text" th:text="#{screen.message.modal.multiremove.message}"></span>
+        <span class="modal-black-text">{{ listName }} list.</span>
     </p>
     <div class="container">
         <table>
@@ -44,9 +44,9 @@
             </thead>
             <tbody class="import-table-tbody">
             <tr class="import-table-thead-tbody-tr" ng-repeat="member in multiRemoveResults">
-                <td style="font-weight: normal"> {{member.username}}</td>
-                <td style="font-weight: normal"> {{member.uhUuid}}</td>
-                <td style="font-weight: normal"> {{member.name}}</td>
+                <td class="font-weight-normal"> {{member.username}}</td>
+                <td class="font-weight-normal"> {{member.uhUuid}}</td>
+                <td class="font-weight-normal"> {{member.name}}</td>
             </tr>
             </tbody>
         </table>

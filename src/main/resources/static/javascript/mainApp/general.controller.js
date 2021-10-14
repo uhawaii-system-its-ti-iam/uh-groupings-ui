@@ -604,7 +604,7 @@
                             launchDynamicModal(
                                 Message.Title.LARGE_IMPORT,
                                 `You are attempting to import ${numMembers} new users to the ${listName} list.
-                             Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
+                             Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with
                              the import results will be sent.`,
                                 8000);
                         }

@@ -75,14 +75,14 @@ form.seamless button {
 
     // Button for copying path, clipboard, and CSV
     &-sm {
-        padding: 1px 5px;
+        padding: 0px 5px;
 
         &:hover {
             background: $green-blue;
         }
 
         &.btn-clipboard {
-            padding: 3px 5px 2px;
+            padding: 1px 5px 2px;
         }
     }
 

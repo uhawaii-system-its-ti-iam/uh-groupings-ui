@@ -7,7 +7,7 @@
         </button>
     </div>
 
-    <div class="container" id="sel" style="display: none"
+    <div class="container hide-content" id="sel"
          th:classappend="${tabContent ? 'card-tab-content' : ''}">
         <div class="card mb-5 mt-0"
              ng-init="changeStyleAttribute('sel', 'display', 'unset')">
@@ -28,9 +28,8 @@
                         <div class="col-md-12">
                             <div ng-show="(descriptionLoaded)">
                                 <p class="text-light mb-0"><b>Description:</b> {{ descriptionDisplay() }} &nbsp;<button
-                                        style="border: none; color: white"
                                         ng-click="editDescription()"
-                                        class="clickable far fa-edit mr-2 teal-bg" tabindex="0"
+                                        class="clickable far fa-fw fa-edit mr-2 teal-bg white-style" tabindex="0"
                                         aria-label="Edit Description"></button>
                                 </p>
                             </div>
@@ -51,7 +50,7 @@
                                            ng-trim="false"/>
                                     <span ng-show="descriptionForm" class="grouping-description-form">
                                         <button type="button"
-                                                class="btn-sm description-form-button"
+                                                class="description-form-button"
                                                 data-toggle="tooltip" data-placement="top" title="Save description"
                                                 ng-click="saveDescription()">
                                         <i class="clickable far fa-check-circle fa-2x" aria-hidden="true"></i>
@@ -59,7 +58,7 @@
                                     </span>
                                     <span ng-show="descriptionForm" class="grouping-description-form">
                                         <button type="button"
-                                                class="btn-sm description-form-button"
+                                                class="description-form-button"
                                                 data-toggle="tooltip" data-placement="top" title="Cancel changes"
                                                 ng-click="cancelDescriptionEdit()">
                                         <i class="clickable far fa-times-circle fa-2x" aria-hidden="true"></i>
