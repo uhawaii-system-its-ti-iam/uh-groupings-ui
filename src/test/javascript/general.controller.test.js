@@ -83,6 +83,43 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("get home page numbers", function () {
+        let mockResponse;
+        beforeEach(function () {
+            mockResponse = 999;
+
+            httpBackend.whenGET(BASE_URL + "members/memberships/")
+                .respond(200, mockResponse);
+
+            httpBackend.whenGET(BASE_URL + "owners/grouping/")
+                .respond(200, mockResponse);
+        });
+
+        it("should make an API call to getNumberOfMembeships", function () {
+            httpBackend.expectGET(BASE_URL + "members/memberships/").respond(200, mockResponse);
+            expect(httpBackend.flush).not.toThrow();
+        });
+
+        it("should initialize numberOfMemberships", function () {
+            httpBackend.expectGET(BASE_URL + "members/memberships/").respond(200, mockResponse);
+            httpBackend.flush();
+
+            expect(scope.numberOfMemberships).toEqual(999);
+        });
+
+        it("should make an API call to getNumberOfGroupings", function () {
+            httpBackend.expectGET(BASE_URL + "owners/grouping/").respond(200, mockResponse);
+            expect(httpBackend.flush).not.toThrow();
+        });
+
+        it("should initialize numberOfGroupings", function () {
+            httpBackend.expectGET(BASE_URL + "owners/grouping/").respond(200, mockResponse);
+            httpBackend.flush();
+
+            expect(scope.numberOfGroupings).toEqual(999);
+        });
+    });
+
     // Set up mock data
     beforeEach(function () {
         scope.selectedGrouping = { name: "grouping1", path: "path:path2:grouping1" };
