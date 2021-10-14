@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.owasp.html.Sanitizers;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -27,11 +26,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.access.UserContextService;
 
 @RestController
 @RequestMapping("/api/groupings")
 public class GroupingsRestController {
-
+    
     private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
 
     private org.owasp.html.PolicyFactory policy;
@@ -77,6 +78,9 @@ public class GroupingsRestController {
     @Autowired
     HttpRequestService httpRequestService;
 
+    @Autowired
+    UserContextService userContextService;
+
     /*
      * Checks to make sure that the API is running and that there are no issues with the overrides file.
      * Gets the active profiles and only runs the tests the active profile relies on the API.
@@ -104,6 +108,15 @@ public class GroupingsRestController {
     @GetMapping(value = "/generic")
     public ResponseEntity<String> generic(Principal principal) {
         return httpRequestService.makeApiRequest(principal.getName(), API_2_1_BASE + "/generic", HttpMethod.GET);
+    }
+
+    @GetMapping(value = "/currentUser")
+    public ResponseEntity<User> currentUser() {
+        logger.info(" REST currentUser...");
+        User currentUser = userContextService.getCurrentUser();
+        logger.info("currentUser: " + currentUser);
+
+        return ResponseEntity.ok().body(currentUser);
     }
 
     @GetMapping(value = "/adminLists")
@@ -139,7 +152,7 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{adminToDelete}/deleteAdmin")
     public ResponseEntity<String> deleteAdmin(Principal principal,
-            @PathVariable String adminToDelete) {
+                                              @PathVariable String adminToDelete) {
         logger.info("Entered REST deleteAdmin...");
         String safeInput = policy.sanitize(adminToDelete);
         String uri = String.format(API_2_1_BASE + "/admins/%s", safeInput);
@@ -151,8 +164,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupings}/{userToDelete}/removeFromGroups")
     public ResponseEntity<String> removeFromGroups(Principal principal,
-            @PathVariable String groupings,
-            @PathVariable String userToDelete) {
+                                                   @PathVariable String groupings,
+                                                   @PathVariable String userToDelete) {
         logger.info("Entered REST removeFromGroups...");
         String safeGroupings = policy.sanitize(groupings);
         String safeUserToDelete = policy.sanitize(userToDelete);
@@ -165,9 +178,9 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{path}/{include}/{exclude}/resetGroup")
     public ResponseEntity<String> resetGroup(Principal principal,
-            @PathVariable String path,
-            @PathVariable String include,
-            @PathVariable String exclude) {
+                                             @PathVariable String path,
+                                             @PathVariable String include,
+                                             @PathVariable String exclude) {
         logger.info("Entered REST resetGroup...");
         String safePath = policy.sanitize(path);
         String safeInclude = policy.sanitize(include);
@@ -223,7 +236,7 @@ public class GroupingsRestController {
     @GetMapping(value = "/members/{uid}/groupings",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> membershipAssignment(Principal principal,
-            @PathVariable String uid) {
+                                                       @PathVariable String uid) {
         logger.info("Entered REST MembershipAssignment...");
         String uri = String.format(API_2_1_BASE + "/members/%s/groupings", uid);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
@@ -258,8 +271,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{userToAdd}/addMemberToIncludeGroup")
     public ResponseEntity<String> addMemberToIncludeGroup(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String userToAdd) {
+                                                          @PathVariable String groupingPath,
+                                                          @PathVariable String userToAdd) {
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUserToAdd = policy.sanitize(userToAdd);
         logger.info("Entered REST addMemberToIncludeGroup...");
@@ -272,8 +285,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{usersToAdd}/addMembersToIncludeGroup")
     public ResponseEntity<String> addMembersToIncludeGroup(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String usersToAdd) {
+                                                           @PathVariable String groupingPath,
+                                                           @PathVariable String usersToAdd) {
         logger.info("Entered REST addMembersToIncludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUsersToAdd = policy.sanitize(usersToAdd);
@@ -287,8 +300,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{userToAdd}/addMemberToExcludeGroup")
     public ResponseEntity<String> addMemberToExcludeGroup(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String userToAdd) {
+                                                          @PathVariable String groupingPath,
+                                                          @PathVariable String userToAdd) {
         logger.info("Entered REST addMemberToExcludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUserToAdd = policy.sanitize(userToAdd);
@@ -301,8 +314,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{usersToAdd}/addMembersToExcludeGroup")
     public ResponseEntity<String> addMembersToExcludeGroup(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String usersToAdd) {
+                                                           @PathVariable String groupingPath,
+                                                           @PathVariable String usersToAdd) {
         logger.info("Entered REST addMembersToExcludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUsersToAdd = policy.sanitize(usersToAdd);
@@ -316,8 +329,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{usersToDelete}/removeMembersFromIncludeGroup")
     public ResponseEntity<String> removeMembersFromIncludeGroup(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String usersToDelete) {
+                                                                @PathVariable String groupingPath,
+                                                                @PathVariable String usersToDelete) {
         logger.info("Entered REST deleteMembersFromIncludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUserToDelete = policy.sanitize(usersToDelete);
@@ -332,8 +345,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{usersToDelete}/removeMembersFromExcludeGroup")
     public ResponseEntity<String> removeMembersFromExcludeGroup(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String usersToDelete) {
+                                                                @PathVariable String groupingPath,
+                                                                @PathVariable String usersToDelete) {
         logger.info("Entered REST deleteMembersFromExcludeGroup...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeUserToDelete = policy.sanitize(usersToDelete);
@@ -392,8 +405,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{newOwner}/assignOwnership")
     public ResponseEntity<String> assignOwnership(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String newOwner) {
+                                                  @PathVariable String groupingPath,
+                                                  @PathVariable String newOwner) {
         logger.info("Entered REST assignOwnership...");
         String safeGrouping = policy.sanitize(groupingPath);
         String safeNewOwner = policy.sanitize(newOwner);
@@ -406,8 +419,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{ownerToRemove}/removeOwnership")
     public ResponseEntity<String> removeOwnership(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String ownerToRemove) {
+                                                  @PathVariable String groupingPath,
+                                                  @PathVariable String ownerToRemove) {
         logger.info("Entered REST removeOwnership...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeOwnerToRemove = policy.sanitize(ownerToRemove);
@@ -420,11 +433,11 @@ public class GroupingsRestController {
      */
     @GetMapping(value = "/groupings/{path:.+}")
     public ResponseEntity<String> grouping(Principal principal,
-            @PathVariable String path,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size,
-            @RequestParam(required = false) String sortString,
-            @RequestParam(required = false) Boolean isAscending) {
+                                           @PathVariable String path,
+                                           @RequestParam(required = false) Integer page,
+                                           @RequestParam(required = false) Integer size,
+                                           @RequestParam(required = false) String sortString,
+                                           @RequestParam(required = false) Boolean isAscending) {
         logger.info("Entered REST getGrouping...");
         String baseUri = String.format(API_2_1_BASE + "/groupings/%s?", path);
 
@@ -459,8 +472,8 @@ public class GroupingsRestController {
      */
     @PutMapping(value = "/groupings/{path}/description")
     public ResponseEntity<String> updateDescription(Principal principal,
-            @PathVariable String path,
-            @RequestBody(required = false) String description) {
+                                                    @PathVariable String path,
+                                                    @RequestBody(required = false) String description) {
         logger.info("Entered REST updateDescription...");
         String safePath = policy.sanitize(path);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/description", safePath);
@@ -472,8 +485,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/groupings/{path}/syncDests/{syncDestId}/enable")
     public ResponseEntity<String> enableSyncDest(Principal principal,
-            @PathVariable String path,
-            @PathVariable String syncDestId) {
+                                                 @PathVariable String path,
+                                                 @PathVariable String syncDestId) {
         logger.info("Entered REST enableSyncDest...");
         String safeGrouping = policy.sanitize(path);
         String safeSyncDestId = policy.sanitize(syncDestId);
@@ -486,8 +499,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/groupings/{path}/syncDests/{syncDestId}/disable")
     public ResponseEntity<String> disableSyncDest(Principal principal,
-            @PathVariable String path,
-            @PathVariable String syncDestId) {
+                                                  @PathVariable String path,
+                                                  @PathVariable String syncDestId) {
         logger.info("Entered REST disableSyncDest...");
         String safeGrouping = policy.sanitize(path);
         String safeSyncDestId = policy.sanitize(syncDestId);
@@ -499,8 +512,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{groupingPath}/{optInOn}/setOptIn")
     public ResponseEntity<String> setOptIn(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable boolean optInOn) {
+                                           @PathVariable String groupingPath,
+                                           @PathVariable boolean optInOn) {
         logger.info("Entered REST setOptIn...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         return changePreference(safeGroupingPath, principal.getName(), OPT_IN, optInOn);
@@ -511,8 +524,8 @@ public class GroupingsRestController {
      */
     @PostMapping(value = "/{grouping}/{optOutOn}/setOptOut")
     public ResponseEntity<String> setOptOut(Principal principal,
-            @PathVariable String grouping,
-            @PathVariable boolean optOutOn) {
+                                            @PathVariable String grouping,
+                                            @PathVariable boolean optOutOn) {
 
         String safeGrouping = policy.sanitize(grouping);
 
@@ -524,7 +537,8 @@ public class GroupingsRestController {
      * Fetch a list of supported sync destinations for grouping at path.
      */
     @GetMapping(value = "/groupings/{path}/syncDestinations")
-    public ResponseEntity<String> getAllSyncDestinations(Principal principal, @PathVariable String path) {
+    public ResponseEntity<String> getAllSyncDestinations(Principal principal,
+                                                         @PathVariable String path) {
         logger.info("Entered REST getAllSyncDestinations...");
         String safePath = policy.sanitize(path);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/syncDestinations", safePath);

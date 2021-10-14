@@ -12,6 +12,8 @@
 
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
 
+        $scope.currentUser = {};
+
         $scope.userToAdd = "";
         $scope.usersToAdd = "";
         $scope.multiAddThreshold = 100;
@@ -40,8 +42,6 @@
 
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
-
-        $scope.currentUser = $window.document.getElementById("name").innerHTML;
 
         $scope.groupingsList = [];
         $scope.pagedItemsGroupings = [];
@@ -125,6 +125,14 @@
         let noDescriptionMessage = "No description given for this Grouping.";
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
+
+        /**
+         * Get and set currentUser
+         */
+        groupingsService.getCurrentUser((res) => {
+                $scope.currentUser = res.data.username;
+            }
+        );
 
         /**
          * Get the number of memberships that the current user is associated with.
@@ -1629,6 +1637,25 @@
             $scope.currentPagePerson = 0;
         }
 
+        /**
+         * Reset the selected group in the side navbar to the list of all members.
+         */
+        function resetPillsToAllMembers() {
+            const pills = $("#group-pills")[0].children;
+            const pillContents = $("#pill-content")[0].children;
+            for (let i = 0; i < pills.length; i++) {
+                const anchorTag = $(pills[i].children[0]);
+                const pillContent = $(pillContents[i]);
+                if (i === 0 && !anchorTag.hasClass("active")) {
+                    anchorTag.addClass("active");
+                    pillContent.addClass("show active");
+                } else if (i !== 0 && anchorTag.hasClass("active")) {
+                    anchorTag.removeClass("active");
+                    pillContent.removeClass("show active");
+                }
+            }
+        }
+
         function resetFilterQueries() {
             $scope.basisQuery = "";
             $scope.excludeQuery = "";
@@ -1700,6 +1727,7 @@
          */
         $scope.resetGroupingInformation = function () {
             resetGroupingMembers();
+            resetPillsToAllMembers();
             resetFilterQueries();
             clearMemberInput();
             $scope.columnSort = {};
@@ -2071,7 +2099,7 @@
                 if (table[i].username === "") {
                     line += "";
                 } else {
-                    line += table[i].username + "@hawaii.edu,";
+                    line += table[i].username + Message.Csv.EMAIL_SUFFIX;
                 }
                 str += line + "\r\n";
             }

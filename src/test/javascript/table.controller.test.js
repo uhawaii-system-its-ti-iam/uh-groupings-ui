@@ -16,26 +16,6 @@ describe("TableController", function () {
         expect(controller).toBeDefined();
     });
 
-    describe("objToPageArray", function () {
-        let arr = [];
-        beforeEach(function () {
-            for (let i = 100; i < 200; i++) {
-                let str = String.fromCharCode(i);
-                arr.push({ name: str, value: str });
-            }
-        });
-        it("should paginate the array of 100 abjects into an array of 5 arrays with 20 objects each", function () {
-            expect(arr).toBeDefined();
-            expect(arr.length).toBe(100);
-            arr = scope.objToPageArray(arr, 20);
-            expect(arr).toBeDefined();
-            expect(arr.length).toBe(5);
-            arr.forEach(function (element) {
-                expect(element).toBeDefined();
-                expect(element.length).toBe(20);
-            });
-        });
-    });
     describe("groupToPages", function () {
 
         it("should return three pages for a list of fifteen items, given five items per page", function () {
