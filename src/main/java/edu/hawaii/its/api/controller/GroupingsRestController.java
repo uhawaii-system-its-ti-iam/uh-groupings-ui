@@ -113,6 +113,7 @@ public class GroupingsRestController {
 
     @GetMapping(value = "/currentUser")
     public ResponseEntity<User> currentUser() {
+        logger.info("Entered REST currentUser...");
         User currentUser = userContextService.getCurrentUser();
         return ResponseEntity.ok().body(currentUser);
     }
