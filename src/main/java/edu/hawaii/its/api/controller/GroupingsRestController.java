@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.access.User;
+import edu.hawaii.its.groupings.access.UserContextService;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -77,6 +79,9 @@ public class GroupingsRestController {
     @Autowired
     HttpRequestService httpRequestService;
 
+    @Autowired
+    UserContextService userContextService;
+
     /*
      * Checks to make sure that the API is running and that there are no issues with the overrides file.
      * Gets the active profiles and only runs the tests the active profile relies on the API.
@@ -104,6 +109,14 @@ public class GroupingsRestController {
     @GetMapping(value = "/generic")
     public ResponseEntity<String> generic(Principal principal) {
         return httpRequestService.makeApiRequest(principal.getName(), API_2_1_BASE + "/generic", HttpMethod.GET);
+    }
+
+    @GetMapping(value = "/currentUser")
+    public ResponseEntity<User> currentUser() {
+        logger.info(" REST currentUser...");
+        User currentUser = userContextService.getCurrentUser();
+        logger.info("currentUser: " + currentUser);
+        return ResponseEntity.ok().body(currentUser);
     }
 
     @GetMapping(value = "/adminLists")
