@@ -948,10 +948,10 @@
          * @param {object} attributes - the user's attributes
          */
         $scope.initMemberDisplayName = function (attributes) {
-            $scope.fullNameToAdd = attributes.cn;
-            $scope.givenNameToAdd = attributes.givenName;
+            $scope.fullNameToAdd = attributes.name;
+            $scope.givenNameToAdd = attributes.firstName;
             $scope.uhUuidToAdd = attributes.uhUuid;
-            $scope.uidToAdd = attributes.uid;
+            $scope.uidToAdd = attributes.username;
 
             if ($scope.fullNameToAdd.length > 0) {
                 $scope.user = $scope.fullNameToAdd;
@@ -968,9 +968,9 @@
          * @param {object} list - the the list the user is being added to
          */
         $scope.existsInGrouper = function (user, list) {
-            groupingsService.getMemberAttributes(user, function (attributes) {
-                if (attributes.uhUuid > 0) {
-                    $scope.initMemberDisplayName(attributes);
+            groupingsService.getMemberAttributes(user, function (person) {
+                if (person.uhUuid > 0) {
+                    $scope.initMemberDisplayName(person);
                     $scope.addMember(list);
                 } else {
                     $scope.user = user;
@@ -995,11 +995,11 @@
             const userToAdd = options.userToAdd;
             $scope.listName = options.listName;
 
-            groupingsService.getMemberAttributes(userToAdd, function (attributes) {
-                if (attributes === "") {
+            groupingsService.getMemberAttributes(userToAdd, function (person) {
+                if (person === "") {
                     return;
                 } else {
-                    $scope.initMemberDisplayName(attributes);
+                    $scope.initMemberDisplayName(person);
                 }
                 // Ask for confirmation from the user to add the member
                 $scope.confirmAddModalInstance = $uibModal.open({
