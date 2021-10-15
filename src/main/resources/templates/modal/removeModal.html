@@ -29,13 +29,13 @@
         </div>
     </div>
     <p>
-        <span style="color: black" th:text="#{screen.message.modal.remove.confirmation}"></span>
-        <span style="color: black">{{listName}} list.</span>
+        <span class="modal-black-text" th:text="#{screen.message.modal.remove.confirmation}"></span>
+        <span class="modal-black-text">{{listName}} list.</span>
     </p>
-    <table style="width: 80%;margin-bottom: 30px;">
+    <table>
         <tr>
             <th th:utext="#{screen.message.modal.remove.name}"></th>
-            <th style="font-weight: normal">{{ userToRemove.name }}</th>
+            <th class="font-weight-normal">{{ userToRemove.name }}</th>
         </tr>
         <tr>
             <th th:utext="#{screen.message.modal.remove.uhUserName}"></th>
@@ -46,11 +46,10 @@
             <th class="font-weight-normal">{{ userToRemove.uhUuid }}</th>
         </tr>
     </table>
-    <p> Are you sure you want to remove
-        <span style="font-weight: bold">{{ userToRemove.name }}</span>
-        <span style="color: black"> from the </span>
-        <span style="color: black">{{listName}}</span>
-        <span style="color: black"> list?</span>
+    <p>
+        <span class="modal-black-text">Are you sure you want to remove</span>
+        <span class="font-weight-bold">{{ userToRemove.name }}</span>
+        <span class="modal-black-text"> from the {{listName}} list?</span>
     </p>
 </div>
 <div class="modal-footer">

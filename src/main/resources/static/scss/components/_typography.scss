@@ -1,0 +1,56 @@
+h1, h2, h3, h5, .text-left, span {
+    color: $text-color;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 2rem;
+    padding: 0px;
+}
+
+h3 {
+    font-size: 1.17rem;
+}
+
+h4 {
+    font-size: 1rem;
+}
+
+.modal-black-text {
+    color: black;
+}
+
+.tab-color {
+    color: $uh-black;
+
+    &:hover,
+    :focus,
+    :active {
+        color: $uh-black;
+    }
+}
+
+.font-weight-bold {
+    font-weight: bold;
+}
+
+// Normal font weight for th and td
+.font-weight-normal  {
+    font-weight: normal;
+}
+
+.hover-text {
+    font-size: 0px;
+}
+
+.no-memberships-text {
+    text-align: center;
+}
+
+// Makes the "here" text in info.html blue.
+.link {
+    color: $uh-blue2;
+}
