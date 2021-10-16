@@ -80,7 +80,7 @@ public class GroupingsRestController {
     HttpRequestService httpRequestService;
 
     @Autowired
-    UserContextService userContextService;
+    private UserContextService userContextService;
 
     /*
      * Checks to make sure that the API is running and that there are no issues with the overrides file.
@@ -113,7 +113,6 @@ public class GroupingsRestController {
 
     @GetMapping(value = "/currentUser")
     public ResponseEntity<User> currentUser() {
-        logger.info("Entered REST currentUser...");
         User currentUser = userContextService.getCurrentUser();
         return ResponseEntity.ok().body(currentUser);
     }

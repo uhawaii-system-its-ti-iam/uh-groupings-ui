@@ -2079,7 +2079,7 @@
                 if (table[i].username === "") {
                     line += "";
                 } else {
-                    line += table[i].username + "@hawaii.edu,";
+                    line += table[i].username + Message.Csv.EMAIL_SUFFIX;
                 }
                 str += line + "\r\n";
             }
