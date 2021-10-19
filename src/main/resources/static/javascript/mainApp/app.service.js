@@ -5,9 +5,32 @@
      */
     UHGroupingsApp.factory("dataProvider", function ($http, $window) {
 
-        var timeLimit = 20000;
+        const timeLimit = 20000;
 
         return {
+
+            /**
+             * Perform a GET request to the specified URL.
+             * @param {string} arguments[0] - if provided it will be the URL to perform the request on
+             * @param {function} arguments[1] - if provided it will be the function to perform on a successful request (200)
+             * @param {function} arguments[2] - if provided it will execute if response returns as an error.
+             */
+            retrieveData: function() {
+                switch (arguments.length) {
+                    case 3:
+                        $http.get(encodeURI(arguments[0]))
+                            .then(arguments[1], arguments[2]);
+                        break;
+                    case 2:
+                        $http.get(encodeURI(arguments[0]))
+                            .then(arguments[1]);
+                        break;
+                    default:
+                        // Ignore request.
+                        break;
+                }
+            },
+
             /**
              * Perform a GET request to the specified URL.
              * @param {string} url - the URL to perform the request on

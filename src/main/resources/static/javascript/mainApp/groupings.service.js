@@ -72,6 +72,14 @@
             },
 
             /**
+             * Get a User object containing information of the current user
+             */
+            getCurrentUser(onSuccess) {
+                let endpoint = BASE_URL + "currentUser";
+                dataProvider.retrieveData(endpoint, onSuccess);
+            },
+
+            /**
              * Get a list of all admins and groupings.
              */
             getAdminLists(onSuccess, onError) {
