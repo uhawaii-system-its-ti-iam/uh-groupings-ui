@@ -15,7 +15,7 @@
              * @param {function} arguments[1] - if provided it will be the function to perform on a successful request (200)
              * @param {function} arguments[2] - if provided it will execute if response returns as an error.
              */
-            retrieveData: function() {
+            retrieveData() {
                 switch (arguments.length) {
                     case 3:
                         $http.get(encodeURI(arguments[0]))
