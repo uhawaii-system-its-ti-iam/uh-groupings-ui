@@ -1221,12 +1221,15 @@
          */
         $scope.prepBatchRemove = function (listName, currentPage) {
             $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+            if (!_.isEmpty($scope.usersToAdd)) {
+                $scope.membersToModify = $scope.usersToAdd;
+            }
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
             } else {
                 $scope.listName = listName;
                 $scope.currentPage = currentPage;
-                let membersToRemove = $scope.membersToModify.join();
+                let membersToRemove = $scope.membersToModify;
                 let numMembersToRemove = (($scope.membersToModify.length) + ($scope.membersToAddOrRemove.split(/[[a-z0-9]+/).length - 1));
                 if (numMembersToRemove > 1) {
                     if ($scope.membersToModify.length !== 0) {
@@ -1273,7 +1276,7 @@
                 default:
                     break;
             }
-            let arrayOfMembers = members.split(",");
+            let arrayOfMembers = members.split(/[ ,]+/);
             for (let member of arrayOfMembers) {
                 let currentMember = returnMemberObjectFromUserIdentifier(member, listToSearch);
                 if (currentMember === undefined) {
