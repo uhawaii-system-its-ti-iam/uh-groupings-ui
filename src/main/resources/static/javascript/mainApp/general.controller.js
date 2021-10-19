@@ -969,7 +969,7 @@
          */
         $scope.existsInGrouper = function (user, list) {
             groupingsService.getMemberAttributes(user, function (person) {
-                if (person.uhUuid > 0) {
+                if (person.uhUuid !== "" || person.username !== "") {
                     $scope.initMemberDisplayName(person);
                     $scope.addMember(list);
                 } else {
