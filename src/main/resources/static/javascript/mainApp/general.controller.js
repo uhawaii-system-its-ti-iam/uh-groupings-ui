@@ -624,7 +624,7 @@
          * Used for the remove text file button in importModal.html
          */
         $scope.removeTextFile = function () {
-            document.getElementById('upload').value = null;
+            angular.element(document.querySelector('#upload')).val(null);
         }
 
         /**
