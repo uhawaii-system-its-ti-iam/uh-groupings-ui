@@ -1,10 +1,5 @@
 describe("GeneralController", function () {
 
-    // Set up mock element for setting the current user
-    const mockElement = document.createElement("div");
-    mockElement.innerHTML = "jdoe";
-    document.getElementById = jasmine.createSpy("name").and.returnValue(mockElement);
-
     beforeEach(module("UHGroupingsApp"));
     beforeEach(module("ngMockE2E"));
 
@@ -37,20 +32,32 @@ describe("GeneralController", function () {
         expect(scope.sortBy).toBeDefined();
     });
 
-    it("should correctly set the currentUser", function () {
-        expect(scope.currentUser).toEqual("jdoe");
-    });
-
-    describe("get home page numbers", function () {
+    describe("get current user and home page numbers: ", function () {
+        let mockUser;
         let mockResponse;
         beforeEach(function () {
+            mockUser = { username: "jdoe" };
             mockResponse = 999;
+            httpBackend.whenGET(BASE_URL + "currentUser")
+                .respond(200, mockUser);
 
             httpBackend.whenGET(BASE_URL + "members/memberships/")
                 .respond(200, mockResponse);
 
             httpBackend.whenGET(BASE_URL + "owners/grouping/")
                 .respond(200, mockResponse);
+        });
+
+        it("should make an API call to getCurrentUser", function () {
+            httpBackend.expectGET(BASE_URL + "currentUser").respond(200, mockUser);
+            expect(httpBackend.flush).not.toThrow();
+        });
+
+        it("should initialize currentUser", function () {
+            httpBackend.expectGET(BASE_URL + "currentUser").respond(200, mockUser);
+            httpBackend.flush();
+
+            expect(scope.currentUser).toEqual("jdoe");
         });
 
         it("should make an API call to getNumberOfMembeships", function () {
@@ -526,8 +533,8 @@ describe("GeneralController", function () {
             it("should contain the information of every member in the list", function () {
                 const csv = scope.convertListToCsv(scope.groupingExclude);
 
-                expect(csv).toContain("Four,User,user4,00000004,user4@hawaii.edu,\r\n");
-                expect(csv).toContain("Five,User,user5,00000005,user5@hawaii.edu,\r\n");
+                expect(csv).toContain("Four,User,user4,00000004,user4@hawaii.edu");
+                expect(csv).toContain("Five,User,user5,00000005,user5@hawaii.edu");
                 expect(csv).toContain("Nine,User,,00000009,\r\n");
             });
         });
@@ -537,6 +544,7 @@ describe("GeneralController", function () {
     describe("showWarningRemovingSelf", function () {
         describe("removing self from a list", function () {
             beforeEach(function () {
+                scope.currentUser = "jdoe";
                 scope.userToRemove = {
                     username: "jdoe",
                     name: "John Doe",

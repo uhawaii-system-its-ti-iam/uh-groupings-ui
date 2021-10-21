@@ -41,7 +41,7 @@
         $scope.itemsAlreadyInList = [];
         $scope.itemsInOtherList = [];
 
-        $scope.currentUser = $window.document.getElementById("name").innerHTML;
+        $scope.currentUser = {};
 
         $scope.groupingsList = [];
         $scope.pagedItemsGroupings = [];
@@ -125,6 +125,14 @@
         let noDescriptionMessage = "No description given for this Grouping.";
 
         angular.extend(this, $controller("TableJsController", { $scope: $scope }));
+
+        /**
+         * Get the username of the current user
+         */
+        groupingsService.getCurrentUser((res) => {
+                $scope.currentUser = res.data.username;
+            }
+        );
 
         /**
          * Get the number of memberships that the current user is associated with.
@@ -2071,7 +2079,7 @@
                 if (table[i].username === "") {
                     line += "";
                 } else {
-                    line += table[i].username + "@hawaii.edu,";
+                    line += table[i].username + Message.Csv.EMAIL_SUFFIX;
                 }
                 str += line + "\r\n";
             }
