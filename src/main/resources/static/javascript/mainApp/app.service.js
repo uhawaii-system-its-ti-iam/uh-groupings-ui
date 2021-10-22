@@ -6,7 +6,6 @@
     UHGroupingsApp.factory("dataProvider", function ($http, $window) {
 
         const timeLimit = 20000;
-<<<<<<< HEAD
 
         return {
 
@@ -17,18 +16,6 @@
              * @param {function} arguments[2] - if provided it will execute if response returns as an error.
              */
             retrieveData() {
-=======
-
-
-        return {
-            /**
-             * Perform a GET request to the specified URL.
-             * @param {string} arguments[1] - the URL to perform the request on
-             * @param {function} arguments[2] - the function to perform on a successful request (200)
-             * @param {function} arguments[3] - Execute if response returns as an error.
-             */
-            retrieveData: function() {
->>>>>>> dc3a3162... add retrieveData
                 switch (arguments.length) {
                     case 3:
                         $http.get(encodeURI(arguments[0]))
