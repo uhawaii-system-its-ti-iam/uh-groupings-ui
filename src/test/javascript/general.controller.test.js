@@ -147,6 +147,27 @@ describe("GeneralController", function () {
         scope.allowOptOut = true;
     });
 
+
+    describe("parseAddRemoveInputStr", function () {
+        let spaceSeparated = "Hello I love you";
+        let commaSeparated = "Hello,I,love,you";
+        let commaAndSpaceSeparated = "Hello, I love,you";
+        let single = "Hello";
+
+        it("should take a space separated string and replace the spaces with ','", function () {
+            expect(scope.parseAddRemoveInputStr(spaceSeparated)).toEqual(commaSeparated);
+        });
+        it("should take a comma separated string and do nothing", function () {
+            expect(scope.parseAddRemoveInputStr(commaSeparated)).toEqual(commaSeparated);
+        });
+        it("should take a comma and space separated string and replace the spaces amd commas with ','", function () {
+            expect(scope.parseAddRemoveInputStr(commaAndSpaceSeparated)).toEqual(commaSeparated);
+        });
+        it("should do nothing with a string that has no commas or spaces", function () {
+            expect(scope.parseAddRemoveInputStr(single)).toEqual(single);
+        });
+    });
+
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven

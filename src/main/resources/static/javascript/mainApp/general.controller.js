@@ -1239,6 +1239,8 @@
                         }
                     }
                     membersToRemove = membersToRemove.concat($scope.membersToAddOrRemove.split(/[ ,]+/).join(","));
+                    membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
+                    console.log(membersToRemove);
                     removeMembers(membersToRemove, listName, currentPage);
                 } else {
                     if (membersToRemove === "") {
@@ -1288,6 +1290,13 @@
         }
 
         /**
+         * Replace all spaces and commas with commas.
+         */
+        $scope.parseAddRemoveInputStr = function (str) {
+            return str.split(/[ ,]+/).join(",");
+        };
+
+        /**
          * Takes the string of member UH numbers created from 'prepMultiRemove' and provides it
          * to the endpoint to perform the batch removal.
          * @param membersToRemove - Comma separated string of members to remove from the list.
@@ -1319,10 +1328,10 @@
          * @param response - An object that contains the result code.
          */
         $scope.batchRemoveResponseHandler = function (response) {
-            let success = true;
+            let success = false;
             for (let person of response) {
-                if (person.result !== "SUCCESS") {
-                    success = false;
+                if (person.result === "SUCCESS") {
+                    success = true;
                 }
             }
             if (success) {
