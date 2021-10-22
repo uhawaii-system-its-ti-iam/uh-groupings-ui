@@ -1287,6 +1287,7 @@
                     $scope.multiRemoveResults.push(currentMember);
                 }
             }
+            return $scope.multiRemoveResults.length > 0;
         }
 
         /**
@@ -1303,7 +1304,14 @@
          * @param listName - Name of list to remove the members from.
          */
         function removeMembers(membersToRemove, listName) {
-            fetchMemberProperties(membersToRemove);
+            if (!fetchMemberProperties(membersToRemove)) {
+                return $scope.removeErrorModalInstance = $uibModal.open({
+                    templateUrl: "modal/removeErrorModal",
+                    backdrop: "static",
+                    scope: $scope,
+                    keyboard: false
+                });
+            }
             $scope.multiRemovePromptModalInstance = $uibModal.open({
                 templateUrl: "modal/multiRemovePromptModal",
                 backdrop: "static",
