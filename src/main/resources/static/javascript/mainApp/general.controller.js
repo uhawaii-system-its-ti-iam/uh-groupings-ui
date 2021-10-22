@@ -1240,7 +1240,6 @@
                     }
                     membersToRemove = membersToRemove.concat($scope.membersToAddOrRemove.split(/[ ,]+/).join(","));
                     membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
-                    console.log(membersToRemove);
                     removeMembers(membersToRemove, listName, currentPage);
                 } else {
                     if (membersToRemove === "") {
