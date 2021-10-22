@@ -37,10 +37,6 @@ describe("GeneralController", function () {
         expect(scope.sortBy).toBeDefined();
     });
 
-    it("should correctly set the currentUser", function () {
-        expect(scope.currentUser).toEqual("jdoe");
-    });
-
     // Set up mock data
     beforeEach(function () {
         scope.selectedGrouping = { name: "grouping1", path: "path:path2:grouping1" };
