@@ -1310,9 +1310,7 @@
          * @param listName - Name of list to remove the members from.
          */
         function removeMembers(membersToRemove, listName) {
-            let b = fetchMemberProperties(membersToRemove);
-            console.log(b);
-            if (!b) {
+            if (!fetchMemberProperties(membersToRemove)) {
                 return $scope.removeErrorModalInstance = $uibModal.open({
                     templateUrl: "modal/removeErrorModal",
                     backdrop: "static",
@@ -1320,7 +1318,6 @@
                     keyboard: false
                 });
             }
-            console.log(membersToRemove);
             $scope.multiRemovePromptModalInstance = $uibModal.open({
                 templateUrl: "modal/multiRemovePromptModal",
                 backdrop: "static",
