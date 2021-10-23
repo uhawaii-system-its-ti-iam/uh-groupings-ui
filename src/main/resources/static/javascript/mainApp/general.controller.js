@@ -1291,7 +1291,6 @@
                     break;
             }
             let arrayOfMembers = members.split(",");
-            console.log(arrayOfMembers);
             for (let member of arrayOfMembers) {
                 let currentMember = returnMemberObjectFromUserIdentifier(member, listToSearch);
                 if (currentMember === undefined) {
