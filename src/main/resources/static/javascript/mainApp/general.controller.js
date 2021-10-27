@@ -1200,8 +1200,7 @@
          * @param objectName - The name of the object that is extracted from.
          */
         $scope.extractSelectedUsersFromCheckboxes = function (objectName) {
-            $scope.membersToModify = _.keys(_.pickBy(objectName));
-            return $scope.membersToModify.join(",");
+            return _.keys(_.pickBy(objectName)).join(",");
         };
 
         /**
@@ -1235,7 +1234,8 @@
          * @param currentPage - The page that you are currently on.
          */
         $scope.prepBatchRemove = function (listName, currentPage) {
-            $scope.usersToAdd = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+            $scope.membersToModify = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+            $scope.membersInCheckboxList = {};
             if (!_.isEmpty($scope.usersToAdd)) {
                 $scope.membersToModify = $scope.usersToAdd;
             }
@@ -1244,15 +1244,10 @@
             } else {
                 $scope.listName = listName;
                 $scope.currentPage = currentPage;
-                let membersToRemove = $scope.membersToModify;
-                let numMembersToRemove = (($scope.membersToModify.length) + ($scope.membersToAddOrRemove.split(/[[a-z0-9]+/).length - 1));
+                let membersToRemove = $scope.parseAddRemoveInputStr($scope.membersToModify);
+                let numMembersToRemove = membersToRemove.split(",").length;
+                $scope.membersToModify = [];
                 if (numMembersToRemove > 1) {
-                    if ($scope.membersToModify.length !== 0) {
-                        membersToRemove = membersToRemove.concat(",");
-                        if ($scope.membersToAddOrRemove === "") {
-                            membersToRemove = membersToRemove.slice(0, -1);
-                        }
-                    }
                     membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
                     removeMembers(membersToRemove, listName, currentPage);
                 } else {
@@ -1425,6 +1420,7 @@
         function handleMemberRemove() {
             $scope.getGroupingInformation();
             $scope.syncDestArray = [];
+            $scope.membersToModify = [];
         }
 
         function handleMultiMemberRemove() {
