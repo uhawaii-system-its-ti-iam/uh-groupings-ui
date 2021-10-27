@@ -1326,9 +1326,11 @@
             $scope.loading = false;
             $scope.multiRemovePromptModalInstance.result.then(async function () {
                 $scope.loading = true;
-                let fun = "removeMembersFrom";
-                await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
-                ($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                if (listName === "Include") {
+                    await groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                } else if (listName === "Exclude") {
+                    await groupingsService.removeMembersFromExclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                }
             }, function (reason) {
                 if (reason === "cancel") {
                     clearMemberInput(listName);
@@ -1345,6 +1347,7 @@
             for (let person of response) {
                 if (person.result === "SUCCESS") {
                     success = true;
+                    break;
                 }
             }
             if (success) {
