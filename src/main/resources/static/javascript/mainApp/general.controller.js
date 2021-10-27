@@ -1201,6 +1201,7 @@
          */
         $scope.extractSelectedUsersFromCheckboxes = function (objectName) {
             $scope.membersToModify = _.keys(_.pickBy(objectName));
+            return $scope.membersToModify.join(",");
         };
 
         /**
@@ -1234,7 +1235,7 @@
          * @param currentPage - The page that you are currently on.
          */
         $scope.prepBatchRemove = function (listName, currentPage) {
-            $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+            $scope.usersToAdd = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
             if (!_.isEmpty($scope.usersToAdd)) {
                 $scope.membersToModify = $scope.usersToAdd;
             }
