@@ -267,65 +267,65 @@
                     $scope.paginatingComplete = false;
 
                     switch (type) {
-                      case "All": {
-                        //Gets members in grouping
-                        $scope.groupingMembers = setGroupMembers(res.composite.members);
-                        $scope.addWhereListed($scope.groupingMembers);
-                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
-                        break;
-                      }
-                      case "Basis": {
-                        // Gets members in the basis group
-                        $scope.groupingBasis = setGroupMembers(res.basis.members);
-                        $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
-                        break;
-                      }
-                      case "Include": {
-                        //Gets members in the include group
-                        $scope.groupingInclude = setGroupMembers(res.include.members);
-                        $scope.addInBasis($scope.groupingInclude);
-                        $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
-                        break;
-                      }
-                      case "Exclude": {
-                        //Gets members in the exclude group
-                        $scope.groupingExclude = setGroupMembers(res.exclude.members);
-                        $scope.addInBasis($scope.groupingExclude);
-                        $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
-                        break;
-                      }
-                      case "Owner": {
-                        //Gets owners of the grouping
-                        $scope.groupingOwners = setGroupMembers(res.owners.members);
-                        $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-                        $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
-                        break;
-                      }
-                      default: {
-                        //Gets members in grouping
-                        $scope.groupingMembers = setGroupMembers(res.composite.members);
-                        $scope.addWhereListed($scope.groupingMembers);
-                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
+                        case "All": {
+                            //Gets members in grouping
+                            $scope.groupingMembers = setGroupMembers(res.composite.members);
+                            $scope.addWhereListed($scope.groupingMembers);
+                            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
+                            break;
+                        }
+                        case "Basis": {
+                            // Gets members in the basis group
+                            $scope.groupingBasis = setGroupMembers(res.basis.members);
+                            $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
+                            break;
+                        }
+                        case "Include": {
+                            //Gets members in the include group
+                            $scope.groupingInclude = setGroupMembers(res.include.members);
+                            $scope.addInBasis($scope.groupingInclude);
+                            $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
+                            break;
+                        }
+                        case "Exclude": {
+                            //Gets members in the exclude group
+                            $scope.groupingExclude = setGroupMembers(res.exclude.members);
+                            $scope.addInBasis($scope.groupingExclude);
+                            $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
+                            break;
+                        }
+                        case "Owner": {
+                            //Gets owners of the grouping
+                            $scope.groupingOwners = setGroupMembers(res.owners.members);
+                            $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                            $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
+                            break;
+                        }
+                        default: {
+                            //Gets members in grouping
+                            $scope.groupingMembers = setGroupMembers(res.composite.members);
+                            $scope.addWhereListed($scope.groupingMembers);
+                            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
 
-                        // Gets members in the basis group
-                        $scope.groupingBasis = setGroupMembers(res.basis.members);
-                        $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
+                            // Gets members in the basis group
+                            $scope.groupingBasis = setGroupMembers(res.basis.members);
+                            $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
 
-                        //Gets members in the include group
-                        $scope.groupingInclude = setGroupMembers(res.include.members);
-                        $scope.addInBasis($scope.groupingInclude);
-                        $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
+                            //Gets members in the include group
+                            $scope.groupingInclude = setGroupMembers(res.include.members);
+                            $scope.addInBasis($scope.groupingInclude);
+                            $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
 
-                        //Gets members in the exclude group
-                        $scope.groupingExclude = setGroupMembers(res.exclude.members);
-                        $scope.addInBasis($scope.groupingExclude);
-                        $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
+                            //Gets members in the exclude group
+                            $scope.groupingExclude = setGroupMembers(res.exclude.members);
+                            $scope.addInBasis($scope.groupingExclude);
+                            $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
 
-                        //Gets owners of the grouping
-                        $scope.groupingOwners = setGroupMembers(res.owners.members);
-                        $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-                        $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
-                      }
+                            //Gets owners of the grouping
+                            $scope.groupingOwners = setGroupMembers(res.owners.members);
+                            $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                            $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
+                        }
                     }
 
                     $scope.allowOptIn = res.optInOn;
@@ -634,6 +634,7 @@
          */
         $scope.readTextFile = function ($event) {
             let input = $event.currentTarget.parentNode.childNodes[3];
+
             let file = input.files[0];
             if (file == undefined) {
                 console.log("undef");
@@ -977,7 +978,7 @@
          */
         $scope.existsInGrouper = function (user, list) {
             groupingsService.getMemberAttributes(user, function (person) {
-                if (person.uhUuid > 0) {
+                if (person.uhUuid !== "") {
                     $scope.initMemberDisplayName(person);
                     $scope.addMember(list);
                 } else {
@@ -1194,13 +1195,17 @@
         };
 
         /**
-         * Helper function - Batch remove
-         * Extracts all keys in the checkbox object that have
-         * the value of true (members that are selected with the checkbox)
-         * @param objectName - The name of the object that is extracted from.
+         * Take in a list of booleans and return a comma separated string containing the identifiers of all true booleans.
+         * @param obj: {obj1: true, obj2: false, obj3: true}
+         * @returns {string}: "obj1,obj3"
          */
-        $scope.extractSelectedUsersFromCheckboxes = function (objectName) {
-            $scope.membersToModify = _.keys(_.pickBy(objectName));
+        $scope.extractSelectedUsersFromCheckboxes = function (obj) {
+            for (const [key, value] of Object.entries(obj)) {
+                if (value !== true && value !== false) {
+                    return "";
+                }
+            }
+            return _.keys(_.pickBy(obj)).join(",");
         };
 
         /**
@@ -1219,6 +1224,16 @@
         }
 
         /**
+         *  Replace commas and spaces in str with commas.
+         */
+        $scope.parseAddRemoveInputStr = function (str) {
+            if (!_.isString(str)) {
+                return "";
+            }
+            return str.split(/[ ,]+/).join(",");
+        };
+
+        /**
          * Prepares the data gathered from helper functions for the batch delete.
          *
          * Creates a string of UH numbers to provide to the batch removal endpoint.
@@ -1228,22 +1243,23 @@
          * @param currentPage - The page that you are currently on.
          */
         $scope.prepBatchRemove = function (listName, currentPage) {
-            $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+            if (!_.isEmpty($scope.membersInCheckboxList)) {
+                $scope.membersToModify = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+                $scope.membersInCheckboxList = {};
+            }
+            if (!_.isEmpty($scope.usersToAdd)) {
+                $scope.membersToModify = $scope.usersToAdd;
+            }
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
             } else {
                 $scope.listName = listName;
                 $scope.currentPage = currentPage;
-                let membersToRemove = $scope.membersToModify.join();
-                let numMembersToRemove = (($scope.membersToModify.length) + ($scope.membersToAddOrRemove.split(/[[a-z0-9]+/).length - 1));
+                let membersToRemove = $scope.parseAddRemoveInputStr($scope.membersToModify);
+                let numMembersToRemove = membersToRemove.split(",").length;
+                $scope.membersToModify = [];
                 if (numMembersToRemove > 1) {
-                    if ($scope.membersToModify.length !== 0) {
-                        membersToRemove = membersToRemove.concat(",");
-                        if ($scope.membersToAddOrRemove === "") {
-                            membersToRemove = membersToRemove.slice(0, -1);
-                        }
-                    }
-                    membersToRemove = membersToRemove.concat($scope.membersToAddOrRemove.split(/[ ,]+/).join(","));
+                    membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
                     removeMembers(membersToRemove, listName, currentPage);
                 } else {
                     if (membersToRemove === "") {
@@ -1290,6 +1306,7 @@
                     $scope.multiRemoveResults.push(currentMember);
                 }
             }
+            return $scope.multiRemoveResults.length > 0;
         }
 
         /**
@@ -1299,7 +1316,10 @@
          * @param listName - Name of list to remove the members from.
          */
         function removeMembers(membersToRemove, listName) {
-            fetchMemberProperties(membersToRemove);
+            if (!fetchMemberProperties(membersToRemove)) {
+                return launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR, undefined);
+            }
+
             $scope.multiRemovePromptModalInstance = $uibModal.open({
                 templateUrl: "modal/multiRemovePromptModal",
                 backdrop: "static",
@@ -1309,9 +1329,11 @@
             $scope.loading = false;
             $scope.multiRemovePromptModalInstance.result.then(async function () {
                 $scope.loading = true;
-                let fun = "removeMembersFrom";
-                await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
-                ($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                if (listName === "Include") {
+                    await groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                } else if (listName === "Exclude") {
+                    await groupingsService.removeMembersFromExclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                }
             }, function (reason) {
                 if (reason === "cancel") {
                     clearMemberInput(listName);
@@ -1324,10 +1346,11 @@
          * @param response - An object that contains the result code.
          */
         $scope.batchRemoveResponseHandler = function (response) {
-            let success = true;
+            let success = false;
             for (let person of response) {
-                if (person.result !== "SUCCESS") {
-                    success = false;
+                if (person.result === "SUCCESS") {
+                    success = true;
+                    break;
                 }
             }
             if (success) {
@@ -1408,6 +1431,7 @@
         function handleMemberRemove() {
             $scope.getGroupingInformation();
             $scope.syncDestArray = [];
+            $scope.membersToModify = [];
         }
 
         function handleMultiMemberRemove() {
