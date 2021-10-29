@@ -1,6 +1,7 @@
 {
-    "globals": {
-        "angular": true,
-        "casdemoApp": true
-    }
+  "globals": {
+    "angular": true,
+    "UHGroupingsApp": true,
+    "_": true
+  }
 }
