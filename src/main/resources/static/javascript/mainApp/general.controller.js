@@ -1317,7 +1317,7 @@
          */
         function removeMembers(membersToRemove, listName) {
             if (!fetchMemberProperties(membersToRemove)) {
-                return launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR, undefined);
+                return launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
             }
 
             $scope.multiRemovePromptModalInstance = $uibModal.open({
