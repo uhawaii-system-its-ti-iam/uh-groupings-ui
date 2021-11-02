@@ -51,10 +51,13 @@
             </tbody>
         </table>
     </div>
-    <p> Are you sure you want to remove these members? </p>
+</div>
+<div class="modal-body">
+    <span class="modal-black-text">Invalid Users: </span>
+    <span class="modal-black-text">{{membersNotInList}}</span>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="batchRemovePromptModalAccept()">Yes</button>
+    <button class="btn btn-primary" ng-click="batchRemovePromptModalAccept()">Remove</button>
     <button class="btn btn-default" ng-click="batchRemovePromptModalCancel()" data-dismiss="modal">Cancel</button>
 </div>
 

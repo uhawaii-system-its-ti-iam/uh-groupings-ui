@@ -75,6 +75,7 @@
          * Handle responses for opting into or out of a grouping.
          */
         function handleSuccessfulOpt(res) {
+            console.log(res);   
             if (res[0].result === "SUCCESS") {
                 $scope.init();
             } else {
@@ -155,8 +156,8 @@
 
     /**
      * Saves the current tab on refresh.
-    jQuery.noConflict();
-    $(document).ready(function () {
+     jQuery.noConflict();
+     $(document).ready(function () {
         $("[data-toggle='tab']").on("show.bs.tab", function (e) {
             localStorage.setItem("activeTab", $(e.target).attr("href"));
         });

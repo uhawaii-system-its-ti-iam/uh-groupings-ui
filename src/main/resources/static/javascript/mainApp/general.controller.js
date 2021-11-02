@@ -17,6 +17,7 @@
         $scope.multiAddThreshold = 100;
         $scope.maxImport = 100000;
         $scope.multiAddResults = [];
+        $scope.multiAddFailures = "";
         $scope.multiAddResultsGeneric = [];
         $scope.personProps = [];
         $scope.resetResults = [];
@@ -31,6 +32,7 @@
         $scope.multiRemoveThreshold = 100;
         $scope.multiRemoveResults = [];
         $scope.multiRemoveResultsGeneric = [];
+        $scope.multiRemoveFailures = "";
 
         // Variables for batch delete helper functions
         $scope.membersToAddOrRemove = "";
@@ -676,15 +678,18 @@
                     8000);
             };
             let handleSuccessfulAdd = function (res) {
+                console.log(res);
                 $scope.waitingForImportResponse = false; /* Small spinner off. */
                 $scope.launchMultiAddResultModal(listName);
                 let data = res;
+                let failedAdds = [];
                 for (let i = 0; i < res.length; i++) {
                     data[parseInt(i, 10)] = res[parseInt(i, 10)];
                 }
                 for (let i = 0; i < data.length; i++) {
                     let result = data[parseInt(i, 10)].result;
                     if ("FAILURE" === result) {
+                        failedAdds.push(data[parseInt(i, 10)].userIdentifier);
                         continue;
                     }
                     let person = {
@@ -697,6 +702,9 @@
                 }
                 if ($scope.multiAddResults.length > 0) {
                     $scope.personProps = Object.keys($scope.multiAddResults[0]);
+                }
+                if (!_.isEmpty(failedAdds)) {
+                    $scope.multiAddFailures = failedAdds.join(", ");
                 }
             };
 
@@ -1298,15 +1306,19 @@
                     break;
             }
             let arrayOfMembers = members.split(",");
+            let membersNotInList = [];
             for (let member of arrayOfMembers) {
                 let currentMember = returnMemberObjectFromUserIdentifier(member, listToSearch);
                 if (currentMember === undefined) {
-                    $scope.membersNotInList.push(member);
+                    membersNotInList.push(member);
                 } else {
                     $scope.multiRemoveResults.push(currentMember);
                 }
             }
-            return $scope.multiRemoveResults.length > 0;
+            if (!_.isEmpty(membersNotInList)) {
+                $scope.membersNotInList = membersNotInList.join(", ");
+            }
+            return !_.isEmpty($scope.multiRemoveResults);
         }
 
         /**
