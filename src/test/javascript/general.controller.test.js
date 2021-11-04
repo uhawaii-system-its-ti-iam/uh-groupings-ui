@@ -541,6 +541,14 @@ describe("GeneralController", function () {
 
     });
 
+    describe("readTextFile", function () {
+        it("should call readTextFile upon button click", function () {
+            spyOn(scope, "readTextFile").and.callThrough();
+            scope.readTextFile();
+            expect(scope.readTextFile()).toHaveBeenCalled();
+        });
+    });
+
     describe("showWarningRemovingSelf", function () {
         describe("removing self from a list", function () {
             beforeEach(function () {

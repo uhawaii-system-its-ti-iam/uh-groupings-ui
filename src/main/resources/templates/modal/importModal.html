@@ -8,10 +8,13 @@
 </div>
 <div class="modal-body" id="modal-body">
     <div>
-        <p> Upload a text file (.txt). The file should consist of a list of UH user names or ids separated by newline characters. </p>
-        <input type="file" accept="text/plain">
-        <button class="btn btn-primary" ng-click="readTextFile($event); cancelImportModalInstance()">
+        <p> Upload a text file (.txt) to add new users to this Grouping. The file should consist of a list of UH user names or ids separated by newline characters. </p>
+        <input type="file" id="upload" accept="text/plain">
+        <button class="btn btn-primary" ng-click="readTextFile(); cancelImportModalInstance()">
             Import
+        </button>
+        <button class="btn btn-primary" ng-click="removeTextFile();">
+            Clear
         </button>
     </div>
 </div>

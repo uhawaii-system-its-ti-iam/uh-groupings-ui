@@ -626,15 +626,13 @@
         };
 
         /**
-         * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
-         * separated by newline characters. This function is called implicitly from include.html and exclude.html.
-         * In some cases if the html is updated the node index of input.files will change. If this happens then
-         * $event.currentTarget.parentNode.childNodes should be passed into a console.log and inspected to determine
-         * which index of childNodes is housing the input.
+         * Read a text file(.txt) from client side. The file should consist of
+         * a list of UH usernames or ids separated by newline characters. This
+         * function is called implicitly from include.html and exclude.html.
+         * The file is retrieved from the html input with id 'upload'.
          */
-        $scope.readTextFile = function ($event) {
-            let input = $event.currentTarget.parentNode.childNodes[3];
-            let file = input.files[0];
+        $scope.readTextFile = function () {
+            let file = document.getElementById('upload').files[0];
             if (file == undefined) {
                 console.log("undef");
             }
@@ -646,6 +644,13 @@
             };
             reader.readAsText(file);
         };
+
+        /**
+         * Clears the input file with html id 'upload'
+         */
+        $scope.removeTextFile = function () {
+            angular.element(document.querySelector('#upload')).val(null);
+        }
 
         /**
          * Get the Person properties from members and puts them in a list
