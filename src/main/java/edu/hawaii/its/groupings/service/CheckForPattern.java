@@ -37,7 +37,6 @@ public class CheckForPattern {
 
         try {
             File dir = new File(folderLocation);
-            if (dir != null) {
 
                 File[] fileResources = dir.listFiles((dir1, name) -> name.endsWith(fileExtension));
                 if (fileResources != null) {
@@ -70,7 +69,6 @@ public class CheckForPattern {
                         }
                     }
                 }
-            }
         } catch (Exception e) {
             logger.error("Error: ", e);
         }
