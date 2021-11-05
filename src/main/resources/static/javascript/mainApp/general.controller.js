@@ -1074,7 +1074,6 @@
             if (_.isEmpty(ownerToAdd)) {
                 $scope.emptyInput = true;
             } else {
-                $scope.existsInGrouper(ownerToAdd, list);
                 if ($scope.existInList(ownerToAdd, list)) {
                     $scope.user = ownerToAdd;
                     $scope.listName = list;
