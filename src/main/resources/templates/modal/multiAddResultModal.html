@@ -32,6 +32,10 @@
         </table>
     </div>
 </div>
+<div class="modal-body">
+    <span class="modal-black-text">Invalid Users: </span>
+    <span class="modal-black-text">{{multiAddFailures}}</span>
+</div>
 <div class="modal-footer">
     <button class="btn btn-primary" type="submit"
             ng-click="exportGroupToCsvGeneric(groupingCSV, selectedGrouping.name, listName)"
