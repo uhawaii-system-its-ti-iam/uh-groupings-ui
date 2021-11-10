@@ -1268,7 +1268,7 @@
                 $scope.membersToModify = [];
                 if (numMembersToRemove > 1) {
                     membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
-                    removeMembers(membersToRemove, listName, currentPage);
+                    removeMembers(membersToRemove, listName);
                 } else {
                     if (membersToRemove === "") {
                         $scope.memberToRemove = $scope.membersToAddOrRemove;
