@@ -362,7 +362,7 @@ describe("GeneralController", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Exclude");
 
-              //  expect(scope.isInAnotherList).toHaveBeenCalled();
+                //  expect(scope.isInAnotherList).toHaveBeenCalled();
                 expect(scope.isInAnotherList("user1", "Exclude")).toBe(true);
             });
         });
@@ -374,7 +374,7 @@ describe("GeneralController", function () {
                 spyOn(scope, "isInAnotherList").and.callThrough();
                 scope.addMember("Include");
 
-               // expect(scope.isInAnotherList).toHaveBeenCalled();
+                // expect(scope.isInAnotherList).toHaveBeenCalled();
                 expect(scope.isInAnotherList("user5", "Include")).toBe(true);
             });
         });
@@ -574,5 +574,49 @@ describe("GeneralController", function () {
         });
 
     });
+    describe("parseAddRemoveInputStr", function () {
+        let spaceSeparated = "Hello I love you";
+        let commaSeparated = "Hello,I,love,you";
+        let commaAndSpaceSeparated = "Hello, I love,you";
+        let single = "Hello";
 
+        it("should take a space separated string and replace the spaces with ','", function () {
+            expect(scope.parseAddRemoveInputStr(spaceSeparated)).toEqual(commaSeparated);
+        });
+        it("should take a comma separated string and do nothing", function () {
+            expect(scope.parseAddRemoveInputStr(commaSeparated)).toEqual(commaSeparated);
+        });
+        it("should take a comma and space separated string and replace the spaces amd commas with ','", function () {
+            expect(scope.parseAddRemoveInputStr(commaAndSpaceSeparated)).toEqual(commaSeparated);
+        });
+        it("should do nothing with a string that has no commas or spaces", function () {
+            expect(scope.parseAddRemoveInputStr(single)).toEqual(single);
+        });
+        it("should return an empty string if value passed is not a string", function () {
+            expect(scope.parseAddRemoveInputStr(true)).toEqual("");
+
+        });
+    });
+
+    describe("extractSelectedUsersFromCheckboxes", function () {
+        let obj = {};
+        let str = "test";
+        let expectedResult = "";
+        for (let i = 0; i < 10; i++) {
+            let ident = str + i.toString();
+            let val = Boolean(i % 2);
+            obj[ident] = val;
+            if (val) {
+                expectedResult += ident + ",";
+            }
+        }
+        expectedResult = expectedResult.slice(0, -1);
+
+        it("should create a comma separated string of all object identifiers set to true", function () {
+            expect(scope.extractSelectedUsersFromCheckboxes(obj)).toEqual(expectedResult);
+        });
+        it("should return an empty string if object contains anything but boolean values", function () {
+            expect(scope.extractSelectedUsersFromCheckboxes({ test1: "test1", test2: true, test3: false })).toEqual("");
+        });
+    });
 });
