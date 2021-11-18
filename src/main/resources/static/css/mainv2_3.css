@@ -438,7 +438,7 @@ form.seamless input {
 .import-table-tbody {
   display: block;
   height: 175px;
-  overflow: hidden;
+  overflow-y: auto;
 }
 .import-table-thead-tbody-tr {
   display: table;
