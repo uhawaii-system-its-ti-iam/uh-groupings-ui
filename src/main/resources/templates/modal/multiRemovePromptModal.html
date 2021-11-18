@@ -43,18 +43,21 @@
             </tr>
             </thead>
             <tbody class="import-table-tbody">
-            <tr class="import-table-thead-tbody-tr" ng-repeat="member in multiRemoveResults">
-                <td class="font-weight-normal"> {{member.username}}</td>
-                <td class="font-weight-normal"> {{member.uhUuid}}</td>
-                <td class="font-weight-normal"> {{member.name}}</td>
+            <tr class="import-table-thead-tbody-tr" ng-repeat="person in multiRemoveResults">
+                <td class="modal-names" ng-repeat="prop in personProps">
+                    {{ person[prop] }}
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
-    <p> Are you sure you want to remove these members? </p>
+</div>
+<div class="modal-body">
+    <span class="modal-black-text">Invalid Users: </span>
+    <span class="modal-black-text">{{membersNotInList}}</span>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="batchRemovePromptModalAccept()">Yes</button>
+    <button class="btn btn-primary" ng-click="batchRemovePromptModalAccept()">Remove</button>
     <button class="btn btn-default" ng-click="batchRemovePromptModalCancel()" data-dismiss="modal">Cancel</button>
 </div>
 

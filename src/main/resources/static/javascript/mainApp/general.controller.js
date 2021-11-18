@@ -17,6 +17,7 @@
         $scope.multiAddThreshold = 100;
         $scope.maxImport = 100000;
         $scope.multiAddResults = [];
+        $scope.multiAddFailures = "";
         $scope.multiAddResultsGeneric = [];
         $scope.personProps = [];
         $scope.resetResults = [];
@@ -31,6 +32,7 @@
         $scope.multiRemoveThreshold = 100;
         $scope.multiRemoveResults = [];
         $scope.multiRemoveResultsGeneric = [];
+        $scope.multiRemoveFailures = "";
 
         // Variables for batch delete helper functions
         $scope.membersToAddOrRemove = "";
@@ -267,65 +269,65 @@
                     $scope.paginatingComplete = false;
 
                     switch (type) {
-                      case "All": {
-                        //Gets members in grouping
-                        $scope.groupingMembers = setGroupMembers(res.composite.members);
-                        $scope.addWhereListed($scope.groupingMembers);
-                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
-                        break;
-                      }
-                      case "Basis": {
-                        // Gets members in the basis group
-                        $scope.groupingBasis = setGroupMembers(res.basis.members);
-                        $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
-                        break;
-                      }
-                      case "Include": {
-                        //Gets members in the include group
-                        $scope.groupingInclude = setGroupMembers(res.include.members);
-                        $scope.addInBasis($scope.groupingInclude);
-                        $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
-                        break;
-                      }
-                      case "Exclude": {
-                        //Gets members in the exclude group
-                        $scope.groupingExclude = setGroupMembers(res.exclude.members);
-                        $scope.addInBasis($scope.groupingExclude);
-                        $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
-                        break;
-                      }
-                      case "Owner": {
-                        //Gets owners of the grouping
-                        $scope.groupingOwners = setGroupMembers(res.owners.members);
-                        $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-                        $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
-                        break;
-                      }
-                      default: {
-                        //Gets members in grouping
-                        $scope.groupingMembers = setGroupMembers(res.composite.members);
-                        $scope.addWhereListed($scope.groupingMembers);
-                        $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
+                        case "All": {
+                            //Gets members in grouping
+                            $scope.groupingMembers = setGroupMembers(res.composite.members);
+                            $scope.addWhereListed($scope.groupingMembers);
+                            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
+                            break;
+                        }
+                        case "Basis": {
+                            // Gets members in the basis group
+                            $scope.groupingBasis = setGroupMembers(res.basis.members);
+                            $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
+                            break;
+                        }
+                        case "Include": {
+                            //Gets members in the include group
+                            $scope.groupingInclude = setGroupMembers(res.include.members);
+                            $scope.addInBasis($scope.groupingInclude);
+                            $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
+                            break;
+                        }
+                        case "Exclude": {
+                            //Gets members in the exclude group
+                            $scope.groupingExclude = setGroupMembers(res.exclude.members);
+                            $scope.addInBasis($scope.groupingExclude);
+                            $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
+                            break;
+                        }
+                        case "Owner": {
+                            //Gets owners of the grouping
+                            $scope.groupingOwners = setGroupMembers(res.owners.members);
+                            $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                            $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
+                            break;
+                        }
+                        default: {
+                            //Gets members in grouping
+                            $scope.groupingMembers = setGroupMembers(res.composite.members);
+                            $scope.addWhereListed($scope.groupingMembers);
+                            $scope.filter($scope.groupingMembers, "pagedItemsMembers", "currentPageMembers", $scope.membersQuery, true);
 
-                        // Gets members in the basis group
-                        $scope.groupingBasis = setGroupMembers(res.basis.members);
-                        $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
+                            // Gets members in the basis group
+                            $scope.groupingBasis = setGroupMembers(res.basis.members);
+                            $scope.filter($scope.groupingBasis, "pagedItemsBasis", "currentPageBasis", $scope.basisQuery, true);
 
-                        //Gets members in the include group
-                        $scope.groupingInclude = setGroupMembers(res.include.members);
-                        $scope.addInBasis($scope.groupingInclude);
-                        $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
+                            //Gets members in the include group
+                            $scope.groupingInclude = setGroupMembers(res.include.members);
+                            $scope.addInBasis($scope.groupingInclude);
+                            $scope.filter($scope.groupingInclude, "pagedItemsInclude", "currentPageInclude", $scope.includeQuery, true);
 
-                        //Gets members in the exclude group
-                        $scope.groupingExclude = setGroupMembers(res.exclude.members);
-                        $scope.addInBasis($scope.groupingExclude);
-                        $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
+                            //Gets members in the exclude group
+                            $scope.groupingExclude = setGroupMembers(res.exclude.members);
+                            $scope.addInBasis($scope.groupingExclude);
+                            $scope.filter($scope.groupingExclude, "pagedItemsExclude", "currentPageExclude", $scope.excludeQuery, true);
 
-                        //Gets owners of the grouping
-                        $scope.groupingOwners = setGroupMembers(res.owners.members);
-                        $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
-                        $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
-                      }
+                            //Gets owners of the grouping
+                            $scope.groupingOwners = setGroupMembers(res.owners.members);
+                            $scope.pagedItemsOwners = $scope.groupToPages($scope.groupingOwners);
+                            $scope.filter($scope.groupingOwners, "pagedItemsOwners", "currentPageMembers", $scope.ownersQuery, true);
+                        }
                     }
 
                     $scope.allowOptIn = res.optInOn;
@@ -634,8 +636,9 @@
          */
         $scope.readTextFile = function ($event) {
             let input = $event.currentTarget.parentNode.childNodes[3];
+
             let file = input.files[0];
-            if (file == undefined) {
+            if (file === undefined) {
                 console.log("undef");
             }
             let reader = new FileReader();
@@ -649,7 +652,7 @@
 
         /**
          * Get the Person properties from members and puts them in a list
-         * @param {List} attributes - list of attributes for a UH member
+         * @param {string[]} attributes - list of attributes for a UH member
          */
         $scope.getPersonProps = function (attributes) {
             $scope.personProps = [];
@@ -675,15 +678,18 @@
                     8000);
             };
             let handleSuccessfulAdd = function (res) {
+                console.log(res);
                 $scope.waitingForImportResponse = false; /* Small spinner off. */
                 $scope.launchMultiAddResultModal(listName);
                 let data = res;
+                let failedAdds = [];
                 for (let i = 0; i < res.length; i++) {
                     data[parseInt(i, 10)] = res[parseInt(i, 10)];
                 }
                 for (let i = 0; i < data.length; i++) {
                     let result = data[parseInt(i, 10)].result;
                     if ("FAILURE" === result) {
+                        failedAdds.push(data[parseInt(i, 10)].userIdentifier);
                         continue;
                     }
                     let person = {
@@ -696,6 +702,9 @@
                 }
                 if ($scope.multiAddResults.length > 0) {
                     $scope.personProps = Object.keys($scope.multiAddResults[0]);
+                }
+                if (!_.isEmpty(failedAdds)) {
+                    $scope.multiAddFailures = failedAdds.join(", ");
                 }
             };
 
@@ -818,7 +827,7 @@
 
         /**
          * Add a user to a group.
-         * @param {string} list - the list the user is being added to (either Include or Exclude)
+         * @param {Object} list - the list the user is being added to (either Include or Exclude)
          */
         $scope.addMember = function (list) {
             $scope.waitingForImportResponse = true;
@@ -871,12 +880,11 @@
             } else if (list === "admins") {
                 groupingsService.addAdmin(userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
-            // $scope.init();
         };
 
         /**
          * @param {string} user - the user you are checking to see if they are in another list.
-         * @param {string} list - the list the user is currently being added to
+         * @param {Object} list - the list the user is currently being added to
          * @returns {boolean} - true if the person is already in another list, else false.
          */
         $scope.isInAnotherList = function (user, list) {
@@ -892,7 +900,7 @@
 
         /**
          * @param {string} user - the user you are checking to see if they are already in the list being added to
-         * @param {string} list - the list the user is currently being added to
+         * @param {Object} list - the list the user is currently being added to
          * @returns {boolean} true if the user is already in the list being added to, otherwise returns false
          */
         $scope.existInList = function (user, list) {
@@ -904,7 +912,7 @@
                     _.some($scope.groupingExclude, { uhUuid: user });
             } else if (list === "owners") {
                 return _.some($scope.groupingOwners, { username: user }) ||
-                    _.some($scope.groupingOwners, { uhUuid: user });
+                    _.some($scope.groupingOwners, { uhUuid: user })
             }
             return false;
         };
@@ -913,6 +921,8 @@
          * Create a modal that asks whether or not they want to add a person that is already in another list.
          * @param user - Username of the user they are trying to add.
          * @param listName - name of the list they are adding to (either Include or Exclude)
+         * @param swap - User being swapped
+         * @param inBasis - boolean if user is in basis or not
          */
         $scope.createCheckModal = function (user, listName, swap, inBasis) {
             $scope.listName = listName;
@@ -946,7 +956,7 @@
                 keyboard: false
             });
             $scope.confirmAddModalInstance.result.then(function () {
-                $scope.updateAddMembers(options.usersToAdd, options.listName);
+                $scope.updateAddMember(options.usersToAdd, options.listName);
             });
         };
 
@@ -956,17 +966,17 @@
          * @param {object} attributes - the user's attributes
          */
         $scope.initMemberDisplayName = function (attributes) {
-            $scope.fullNameToAdd = attributes.name;
-            $scope.givenNameToAdd = attributes.firstName;
-            $scope.uhUuidToAdd = attributes.uhUuid;
-            $scope.uidToAdd = attributes.username;
+            $scope.fullName = attributes.name;
+            $scope.givenName = attributes.firstName;
+            $scope.uhUuid = attributes.uhUuid;
+            $scope.uid = attributes.username;
 
-            if ($scope.fullNameToAdd.length > 0) {
-                $scope.user = $scope.fullNameToAdd;
-            } else if ($scope.uidToAdd.length > 0) {
-                $scope.user = $scope.uidToAdd;
+            if ($scope.fullName.length > 0) {
+                $scope.user = $scope.fullName;
+            } else if ($scope.uid.length > 0) {
+                $scope.user = $scope.uid;
             } else {
-                $scope.user = $scope.uhUuidToAdd;
+                $scope.user = $scope.uhUuid;
             }
         };
 
@@ -977,7 +987,7 @@
          */
         $scope.existsInGrouper = function (user, list) {
             groupingsService.getMemberAttributes(user, function (person) {
-                if (person.uhUuid > 0) {
+                if (person.uhUuid !== "") {
                     $scope.initMemberDisplayName(person);
                     $scope.addMember(list);
                 } else {
@@ -987,7 +997,7 @@
             }, function (res) {
                 $scope.resStatus = res.status;
                 $scope.user = user;
-                if (res.status == -1) {
+                if (res.status === -1) {
                     $scope.createApiErrorModal();
                 }
             });
@@ -995,7 +1005,7 @@
 
         /**
          * Creates a modal that asks for confirmation when adding a user.
-         * @param {object} options - the options object
+         * @param {{userToAdd: (*|string), listName: Object}} options - the options object
          * @param {string} options.userToAdd - the user to add
          * @param {string} options.listName - name of the list being added to
          */
@@ -1035,7 +1045,7 @@
         };
 
         /**
-         * Dismisse the CheckModal and closes it with proceeding with checkModalInstance's result.then function.
+         * Dismiss the CheckModal and closes it with proceeding with checkModalInstance's result.then function.
          */
         $scope.closeCheckModal = function () {
             $scope.checkModalInstance.dismiss();
@@ -1066,7 +1076,7 @@
                 $scope.emptyInput = true;
             } else {
                 if ($scope.existInList(ownerToAdd, list)) {
-                    $scope.user = ownerToAdd;
+                    $scope.existsInGrouper(ownerToAdd, list);
                     $scope.listName = list;
                     $scope.swap = false;
                 } else {
@@ -1136,6 +1146,7 @@
                 keyboard: false
             });
         };
+
         /**
          * Remove a single member from include/exclude by using the "trashcan" UI implementation.
          * @param {string} listName - the list to remove the user from (either Include or Exclude)
@@ -1194,13 +1205,17 @@
         };
 
         /**
-         * Helper function - Batch remove
-         * Extracts all keys in the checkbox object that have
-         * the value of true (members that are selected with the checkbox)
-         * @param objectName - The name of the object that is extracted from.
+         * Take in a list of booleans and return a comma separated string containing the identifiers of all true booleans.
+         * @param obj: {obj1: true, obj2: false, obj3: true}
+         * @returns {string}: "obj1,obj3"
          */
-        $scope.extractSelectedUsersFromCheckboxes = function (objectName) {
-            $scope.membersToModify = _.keys(_.pickBy(objectName));
+        $scope.extractSelectedUsersFromCheckboxes = function (obj) {
+            for (const [key, value] of Object.entries(obj)) {
+                if (value !== true && value !== false) {
+                    return "";
+                }
+            }
+            return _.keys(_.pickBy(obj)).join(",");
         };
 
         /**
@@ -1219,6 +1234,16 @@
         }
 
         /**
+         *  Replace commas and spaces in str with commas.
+         */
+        $scope.parseAddRemoveInputStr = function (str) {
+            if (!_.isString(str)) {
+                return "";
+            }
+            return str.split(/[ ,]+/).join(",");
+        };
+
+        /**
          * Prepares the data gathered from helper functions for the batch delete.
          *
          * Creates a string of UH numbers to provide to the batch removal endpoint.
@@ -1228,22 +1253,23 @@
          * @param currentPage - The page that you are currently on.
          */
         $scope.prepBatchRemove = function (listName, currentPage) {
-            $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+            if (!_.isEmpty($scope.membersInCheckboxList)) {
+                $scope.membersToModify = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+                $scope.membersInCheckboxList = {};
+            }
+            if (!_.isEmpty($scope.usersToAdd)) {
+                $scope.membersToModify = $scope.usersToAdd;
+            }
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
             } else {
                 $scope.listName = listName;
                 $scope.currentPage = currentPage;
-                let membersToRemove = $scope.membersToModify.join();
-                let numMembersToRemove = (($scope.membersToModify.length) + ($scope.membersToAddOrRemove.split(/[[a-z0-9]+/).length - 1));
+                let membersToRemove = $scope.parseAddRemoveInputStr($scope.membersToModify);
+                let numMembersToRemove = membersToRemove.split(",").length;
+                $scope.membersToModify = [];
                 if (numMembersToRemove > 1) {
-                    if ($scope.membersToModify.length !== 0) {
-                        membersToRemove = membersToRemove.concat(",");
-                        if ($scope.membersToAddOrRemove === "") {
-                            membersToRemove = membersToRemove.slice(0, -1);
-                        }
-                    }
-                    membersToRemove = membersToRemove.concat($scope.membersToAddOrRemove.split(/[ ,]+/).join(","));
+                    membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
                     removeMembers(membersToRemove, listName, currentPage);
                 } else {
                     if (membersToRemove === "") {
@@ -1282,14 +1308,26 @@
                     break;
             }
             let arrayOfMembers = members.split(",");
+            let membersNotInList = [];
             for (let member of arrayOfMembers) {
                 let currentMember = returnMemberObjectFromUserIdentifier(member, listToSearch);
                 if (currentMember === undefined) {
-                    $scope.membersNotInList.push(member);
-                } else {
-                    $scope.multiRemoveResults.push(currentMember);
+                    membersNotInList.push(member);
                 }
+                let person = {
+                    "uid": currentMember.username,
+                    "uhUuid": currentMember.uhUuid,
+                    "name": currentMember.name
+                }
+                $scope.multiRemoveResults.push(person);
             }
+            if ($scope.multiRemoveResults.length > 0) {
+                $scope.personProps = Object.keys($scope.multiRemoveResults[0]);
+            }
+            if (!_.isEmpty(membersNotInList)) {
+                $scope.membersNotInList = membersNotInList.join(", ");
+            }
+            return !_.isEmpty($scope.multiRemoveResults);
         }
 
         /**
@@ -1299,7 +1337,10 @@
          * @param listName - Name of list to remove the members from.
          */
         function removeMembers(membersToRemove, listName) {
-            fetchMemberProperties(membersToRemove);
+            if (!fetchMemberProperties(membersToRemove)) {
+                return launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
+            }
+
             $scope.multiRemovePromptModalInstance = $uibModal.open({
                 templateUrl: "modal/multiRemovePromptModal",
                 backdrop: "static",
@@ -1309,9 +1350,11 @@
             $scope.loading = false;
             $scope.multiRemovePromptModalInstance.result.then(async function () {
                 $scope.loading = true;
-                let fun = "removeMembersFrom";
-                await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
-                ($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                if (listName === "Include") {
+                    await groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                } else if (listName === "Exclude") {
+                    await groupingsService.removeMembersFromExclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                }
             }, function (reason) {
                 if (reason === "cancel") {
                     clearMemberInput(listName);
@@ -1324,10 +1367,11 @@
          * @param response - An object that contains the result code.
          */
         $scope.batchRemoveResponseHandler = function (response) {
-            let success = true;
+            let success = false;
             for (let person of response) {
-                if (person.result !== "SUCCESS") {
-                    success = false;
+                if (person.result === "SUCCESS") {
+                    success = true;
+                    break;
                 }
             }
             if (success) {
@@ -1408,6 +1452,7 @@
         function handleMemberRemove() {
             $scope.getGroupingInformation();
             $scope.syncDestArray = [];
+            $scope.membersToModify = [];
         }
 
         function handleMultiMemberRemove() {
@@ -1478,32 +1523,43 @@
          * @param {string} options.listName - where the user is being removed from
          */
         $scope.createRemoveModal = function (options) {
+            const userToRemove = options.user.uhUuid;
             $scope.userToRemove = options.user;
             $scope.listName = options.listName;
 
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
-            $scope.removeModalInstance = $uibModal.open({
-                templateUrl: "modal/removeModal",
-                windowClass: windowClass,
-                scope: $scope,
-                backdrop: "static"
-            });
-
-            $scope.removeModalInstance.result.then(function () {
-                $scope.loading = true;
-                let userToRemove = options.user.uhUuid;
-                let groupingPath = $scope.selectedGrouping.path;
-
-                if ($scope.listName === "Include") {
-                    groupingsService.removeMembersFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
-                } else if ($scope.listName === "Exclude") {
-                    groupingsService.removeMembersFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
-                } else if ($scope.listName === "owners") {
-                    groupingsService.removeOwner(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
-                } else if ($scope.listName === "admins") {
-                    groupingsService.removeAdmin(options.user.username, handleAdminRemove, handleUnsuccessfulRequest);
+            groupingsService.getMemberAttributes(userToRemove, function(person) {
+                if (person === "") {
+                    return;
+                }  else {
+                    $scope.initMemberDisplayName(person);
                 }
+                //Ask for confirmation from the user to remove the member
+                $scope.removeModalInstance = $uibModal.open({
+                    templateUrl: "modal/removeModal",
+                    windowClass: windowClass,
+                    scope: $scope,
+                    backdrop: "static"
+                });
+
+                $scope.removeModalInstance.result.then(function () {
+                    $scope.loading = true;
+                    let groupingPath = $scope.selectedGrouping.path;
+
+                    if ($scope.listName === "Include") {
+                        groupingsService.removeMembersFromInclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                    } else if ($scope.listName === "Exclude") {
+                        groupingsService.removeMembersFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
+                    } else if ($scope.listName === "owners") {
+                        groupingsService.removeOwner(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
+                    } else if ($scope.listName === "admins") {
+                        groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
+                    }
+                });
+            }, function(res) {
+                $scope.user = userToRemove;
+                $scope.resStatus = res.status;
             });
         };
 
@@ -1519,8 +1575,7 @@
         };
 
         /**
-         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
-         * a request is made to delete the user.
+         * Create a modal that prompts the user whether they want to remove themselves from multiple groupings
          * @param {object} options - the options object
          * @param {object} options.user - the user being removed
          * @param {string} options.groupPaths - groups the user is being removed from
@@ -1787,25 +1842,17 @@
         };
 
         $scope.resetGroup = function () {
+            let i;
             let listNames = "";
             let exBool = false;
             let inBool = false;
-            if (Object.entries($scope.groupingInclude).length === 0 || $scope.includeCheck == false) {
+            if (Object.entries($scope.groupingInclude).length === 0 || $scope.includeCheck === false) {
                 $scope.resetInclude = "empty";
             } else {
                 inBool = true;
                 $scope.resetInclude = [];
-                for (var i = 0; i < $scope.groupingInclude.length; i++) {
+                for (i = 0; i < $scope.groupingInclude.length; i++) {
                     $scope.resetInclude.push($scope.groupingInclude[i].uhUuid);
-                }
-            }
-            if (Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck == false) {
-                $scope.resetExclude = "empty";
-            } else {
-                exBool = true;
-                $scope.resetExclude = [];
-                for (var i = 0; i < $scope.groupingExclude.length; i++) {
-                    $scope.resetExclude.push($scope.groupingExclude[i].uhUuid);
                 }
             }
 
@@ -1817,12 +1864,12 @@
                 listNames = "Exclude list";
             }
 
-            let resetAll = null;
-            if ($scope.excludeCheck == true && $scope.includeCheck == true) {
+            let resetAll;
+            if ($scope.excludeCheck === true && $scope.includeCheck === true) {
                 resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
-            } else if ($scope.excludeCheck == true && $scope.includeCheck == false) {
+            } else if ($scope.excludeCheck === true && $scope.includeCheck === false) {
                 resetAll = $scope.groupingExclude;
-            } else if ($scope.excludeCheck == false && $scope.includeCheck == true) {
+            } else if ($scope.excludeCheck === false && $scope.includeCheck === true) {
                 resetAll = $scope.groupingInclude;
             } else {
                 resetAll = "";
@@ -1841,11 +1888,7 @@
         };
 
         $scope.updateIncludeCheck = function () {
-            if ($scope.includeCheck === false) {
-                $scope.includeCheck = true;
-            } else {
-                $scope.includeCheck = false;
-            }
+            $scope.includeCheck = $scope.includeCheck === false;
         };
 
         $scope.updateExcludeCheck = function () {
@@ -1876,8 +1919,7 @@
             const indexOfSyncDest = $scope.syncDestArray.map((e) => {
                 return e.name;
             }).indexOf(syncDestName);
-            const syncDestOn = $scope.syncDestArray[indexOfSyncDest].isSynced;
-            return syncDestOn;
+            return $scope.syncDestArray[indexOfSyncDest].isSynced;
         };
 
         /**
@@ -2084,36 +2126,6 @@
                 str += line + "\r\n";
             }
             return str;
-        };
-
-        /**
-         * Export generic data in a table to a CSV file
-         * @param {object[]} table - the table to export
-         * @param grouping - grouping name that you are exporting from
-         * @param list - grouping list (i.e. include or exclude)
-         */
-        $scope.exportGroupToCsvGeneric = function (table, grouping, list) {
-
-            table = $scope.multiAddResultsGeneric;
-            let data, filename, link;
-
-            let csv = $scope.convertListToCsvGeneric(table);
-            if (csv === null) {
-                $scope.createApiErrorModal();
-                return;
-            }
-
-            filename = grouping + ":" + list + "_list.csv";
-
-            csv = "data:text/csv;charset=utf-8," + csv;
-            data = encodeURI(csv);
-
-            link = document.createElement("a");
-            link.setAttribute("href", data);
-            link.setAttribute("download", filename);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         };
 
         /**

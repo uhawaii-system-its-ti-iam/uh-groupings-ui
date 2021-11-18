@@ -68,7 +68,8 @@ form.seamless {
     &-tbody {
         display: block;
         height: 175px;
-        overflow: hidden;
+        width: 400px;
+        overflow-y: auto;
     }
 
     &-thead-tbody-tr {
