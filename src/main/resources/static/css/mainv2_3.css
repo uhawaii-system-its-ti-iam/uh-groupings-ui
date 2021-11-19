@@ -519,6 +519,10 @@ form.seamless input {
   }
 }
 
+.column-padding {
+    padding-top: 20px;
+}
+
 .modal-danger {
   color: #721c24;
 }
