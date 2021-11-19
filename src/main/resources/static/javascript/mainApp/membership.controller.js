@@ -33,8 +33,8 @@
             // Request a list of membership objects from the API.
             groupingsService.getMembershipResults((res) => {
                     // Codacy throws an error regarding the '_' in the uniqBy function. This error will be ignored until a solution is found.
-                    $scope.membershipsList = _.sortBy(_.uniqBy(res, "name"), "name");
-                    $scope.pagedItemsMemberships = $scope.objToPageArray($scope.membershipsList, 20);
+                  $scope.membershipsList = _.filter(_.sortBy(_.uniqBy(res, "name"), "name"), (membership) => {return membership.inInclude || membership.inOwner;});
+                  $scope.pagedItemsMemberships = $scope.objToPageArray($scope.membershipsList, 20);
                     $scope.loading = false;
                 },
                 (res) => {
@@ -98,6 +98,7 @@
         };
 
         $scope.closeOptErrorModal = function () {
+            $scope.optErrorModalInstance.close();
             $scope.optErrorModalInstance.close();
         };
 
