@@ -311,7 +311,7 @@
                                 <echo>$ mvn jasmine:test</echo>
                                 <echo>$ mvn clean test jacoco:report</echo>
                                 <echo>$ mvn sass:watch</echo>
-                                <echo>$ mvn sass:update-stylesheet</echo>
+                                <echo>$ mvn sass:update-stylesheets</echo>
                                 <echo/>
                                 <echo>To run the integrations tests with your Grouper server:</echo>
                                 <echo>$ mvn -Dtest=TestGroupingsRestController test</echo>

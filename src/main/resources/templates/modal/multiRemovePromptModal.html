@@ -43,10 +43,10 @@
             </tr>
             </thead>
             <tbody class="import-table-tbody">
-            <tr class="import-table-thead-tbody-tr" ng-repeat="member in multiRemoveResults">
-                <td class="font-weight-normal"> {{member.username}}</td>
-                <td class="font-weight-normal"> {{member.uhUuid}}</td>
-                <td class="font-weight-normal"> {{member.name}}</td>
+            <tr class="import-table-thead-tbody-tr" ng-repeat="person in multiRemoveResults">
+                <td class="modal-names" ng-repeat="prop in personProps">
+                    {{ person[prop] }}
+                </td>
             </tr>
             </tbody>
         </table>
