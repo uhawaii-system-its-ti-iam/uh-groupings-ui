@@ -1311,30 +1311,31 @@
          */
         function removeMembers(membersToRemove, listName) {
             if (!fetchMemberProperties(membersToRemove)) {
-                return $scope.removeErrorModalInstance = $uibModal.open({
+                $scope.removeErrorModalInstance = $uibModal.open({
                     templateUrl: "modal/removeErrorModal",
                     backdrop: "static",
                     scope: $scope,
                     keyboard: false
                 });
+            } else {
+                $scope.multiRemovePromptModalInstance = $uibModal.open({
+                    templateUrl: "modal/multiRemovePromptModal",
+                    backdrop: "static",
+                    scope: $scope,
+                    keyboard: false
+                });
+                $scope.loading = false;
+                $scope.multiRemovePromptModalInstance.result.then(async function () {
+                    $scope.loading = true;
+                    let fun = "removeMembersFrom";
+                    await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
+                    ($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                }, function (reason) {
+                    if (reason === "cancel") {
+                        clearMemberInput(listName);
+                    }
+                });
             }
-            $scope.multiRemovePromptModalInstance = $uibModal.open({
-                templateUrl: "modal/multiRemovePromptModal",
-                backdrop: "static",
-                scope: $scope,
-                keyboard: false
-            });
-            $scope.loading = false;
-            $scope.multiRemovePromptModalInstance.result.then(async function () {
-                $scope.loading = true;
-                let fun = "removeMembersFrom";
-                await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
-                ($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
-            }, function (reason) {
-                if (reason === "cancel") {
-                    clearMemberInput(listName);
-                }
-            });
         }
 
         /**
