@@ -977,7 +977,7 @@
          */
         $scope.existsInGrouper = function (user, list) {
             groupingsService.getMemberAttributes(user, function (attributes) {
-                if (attributes.uhUuid > 0) {
+                if (attributes.uhUuid !== "") {
                     $scope.initMemberDisplayName(attributes);
                     $scope.addMember(list);
                 } else {
@@ -1219,6 +1219,13 @@
         }
 
         /**
+         *  Replace commas and spaces in str with commas.
+         */
+        $scope.parseAddRemoveInputStr = function (str) {
+            return str.split(/[ ,]+/).join(",");
+        };
+
+        /**
          * Prepares the data gathered from helper functions for the batch delete.
          *
          * Creates a string of UH numbers to provide to the batch removal endpoint.
@@ -1229,12 +1236,15 @@
          */
         $scope.prepBatchRemove = function (listName, currentPage) {
             $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
+            if (!_.isEmpty($scope.usersToAdd)) {
+                $scope.membersToModify = $scope.usersToAdd;
+            }
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
             } else {
                 $scope.listName = listName;
                 $scope.currentPage = currentPage;
-                let membersToRemove = $scope.membersToModify.join();
+                let membersToRemove = $scope.membersToModify;
                 let numMembersToRemove = (($scope.membersToModify.length) + ($scope.membersToAddOrRemove.split(/[[a-z0-9]+/).length - 1));
                 if (numMembersToRemove > 1) {
                     if ($scope.membersToModify.length !== 0) {
@@ -1243,7 +1253,7 @@
                             membersToRemove = membersToRemove.slice(0, -1);
                         }
                     }
-                    membersToRemove = membersToRemove.concat($scope.membersToAddOrRemove.split(/[ ,]+/).join(","));
+                    membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
                     removeMembers(membersToRemove, listName, currentPage);
                 } else {
                     if (membersToRemove === "") {
@@ -1290,6 +1300,7 @@
                     $scope.multiRemoveResults.push(currentMember);
                 }
             }
+            return $scope.multiRemoveResults.length > 0;
         }
 
         /**
@@ -1299,24 +1310,32 @@
          * @param listName - Name of list to remove the members from.
          */
         function removeMembers(membersToRemove, listName) {
-            fetchMemberProperties(membersToRemove);
-            $scope.multiRemovePromptModalInstance = $uibModal.open({
-                templateUrl: "modal/multiRemovePromptModal",
-                backdrop: "static",
-                scope: $scope,
-                keyboard: false
-            });
-            $scope.loading = false;
-            $scope.multiRemovePromptModalInstance.result.then(async function () {
-                $scope.loading = true;
-                let fun = "removeMembersFrom";
-                await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
-                ($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
-            }, function (reason) {
-                if (reason === "cancel") {
-                    clearMemberInput(listName);
-                }
-            });
+            if (!fetchMemberProperties(membersToRemove)) {
+                $scope.removeErrorModalInstance = $uibModal.open({
+                    templateUrl: "modal/removeErrorModal",
+                    backdrop: "static",
+                    scope: $scope,
+                    keyboard: false
+                });
+            } else {
+                $scope.multiRemovePromptModalInstance = $uibModal.open({
+                    templateUrl: "modal/multiRemovePromptModal",
+                    backdrop: "static",
+                    scope: $scope,
+                    keyboard: false
+                });
+                $scope.loading = false;
+                $scope.multiRemovePromptModalInstance.result.then(async function () {
+                    $scope.loading = true;
+                    let fun = "removeMembersFrom";
+                    await groupingsService[(listName === "Include") ? (fun + "Include") : (fun + "Exclude")]
+                    ($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                }, function (reason) {
+                    if (reason === "cancel") {
+                        clearMemberInput(listName);
+                    }
+                });
+            }
         }
 
         /**
@@ -1324,10 +1343,10 @@
          * @param response - An object that contains the result code.
          */
         $scope.batchRemoveResponseHandler = function (response) {
-            let success = true;
+            let success = false;
             for (let person of response) {
-                if (person.result !== "SUCCESS") {
-                    success = false;
+                if (person.result === "SUCCESS") {
+                    success = true;
                 }
             }
             if (success) {
