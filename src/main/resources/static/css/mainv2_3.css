@@ -489,6 +489,10 @@ form.seamless input {
   transform: none;
 }
 
+.modal-attributes {
+  text-transform: initial;
+}
+
 .modal-backdrop.in {
   filter: alpha(opacity=50);
   opacity: 0.5;
@@ -517,10 +521,6 @@ form.seamless input {
   .modal-dialog .modal-dialog::before {
     height: calc(100vh - (1.75rem * 2));
   }
-}
-
-.column-padding {
-    padding-top: 20px;
 }
 
 .modal-danger {

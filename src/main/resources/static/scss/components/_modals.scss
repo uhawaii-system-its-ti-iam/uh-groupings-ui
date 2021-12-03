@@ -8,6 +8,10 @@
     transform: none;
 }
 
+.modal-attributes {
+    text-transform: initial;
+}
+
 .modal-backdrop.in {
     filter: alpha(opacity=50);
     opacity: 0.5;
