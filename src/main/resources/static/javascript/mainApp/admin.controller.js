@@ -87,8 +87,8 @@
                 return;
             }
             let userToRemove = {
-                username: res.uid,
-                name: res.cn,
+                username: res.username,
+                name: res.name,
                 uhUuid: res.uhUuid
             };
             if (_.isEmpty($scope.selectedGroupingsPaths)) {
