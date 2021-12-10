@@ -1566,37 +1566,6 @@
         };
 
         /**
-         * Create a modal that prompts the user whether they want to remove themselves from multiple groupings
-         * @param {object} options - the options object
-         * @param {object} options.user - the user being removed
-         * @param {string} options.groupPaths - groups the user is being removed from
-         * @param {string} options.listName - groups the user is being removed from
-         */
-        $scope.createRemoveFromGroupsModal = function (options) {
-            $scope.userToRemove = options.user;
-            $scope.groupPaths = options.groupPaths.join(", ");
-            $scope.listName = options.listName.join(", ");
-
-            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
-
-            $scope.removeModalInstance = $uibModal.open({
-                templateUrl: "modal/removeModal",
-                windowClass: windowClass,
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
-
-            $scope.removeModalInstance.result.then(function () {
-                $scope.loading = true;
-                let userToRemove = options.user.username;
-                let groupingPath = $scope.groupPaths;
-                groupingsService.removeFromGroups(groupingPath, userToRemove, handleMultiMemberRemove, handleUnsuccessfulRequest);
-                $scope.personToLookup = userToRemove;
-            });
-        };
-
-        /**
          * Close the modal, then proceeds with deleting a user from a grouping.
          */
         $scope.proceedRemoveUser = function () {
