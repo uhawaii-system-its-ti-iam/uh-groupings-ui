@@ -620,7 +620,7 @@
                     }
                 } else {
                     $scope.userToAdd = $scope.usersToAdd;
-                    $scope.existsInGrouper($scope.userToAdd, listName);
+                    $scope.validateAndAddUser($scope.userToAdd, listName);
                 }
             }
         };
@@ -951,7 +951,6 @@
         };
 
         /**
-         * Checks if the user is in the Grouper database
          * Initializes the name of the member to display on modals
          * @param {object} attributes - the user's attributes
          */
@@ -975,9 +974,9 @@
          * @param {object} user - the user you are checking to see if they are in Grouper
          * @param {object} list - the the list the user is being added to
          */
-        $scope.existsInGrouper = function (user, list) {
+        $scope.validateAndAddUser = function (user, list) {
             groupingsService.getMemberAttributes(user, function (attributes) {
-                if (attributes.uhUuid !== "") {
+                if (attributes.uhUuid !== null) {
                     $scope.initMemberDisplayName(attributes);
                     $scope.addMember(list);
                 } else {
@@ -1065,16 +1064,7 @@
             if (_.isEmpty(ownerToAdd)) {
                 $scope.emptyInput = true;
             } else {
-                if ($scope.existInList(ownerToAdd, list)) {
-                    $scope.user = ownerToAdd;
-                    $scope.listName = list;
-                    $scope.swap = false;
-                } else {
-                    $scope.createConfirmAddModal({
-                        userToAdd: ownerToAdd,
-                        listName: list
-                    });
-                }
+                $scope.validateAndAddUser(ownerToAdd, list);
             }
         };
 
