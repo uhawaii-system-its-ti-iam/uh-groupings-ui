@@ -257,6 +257,70 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("validateAndAddUser", function () {
+        describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", function () {
+            const validUser = {
+                name: "Valid User",
+                username: "validUser",
+                uhUuid: "00000010",
+                firstName: "Valid",
+                lastName: "User"
+            };
+            beforeEach(function () {
+                scope.userToAdd = "validUser";
+                httpBackend.whenGET(BASE_URL + "currentUser")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "members/memberships/")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "owners/grouping/")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "members/" + validUser.username)
+                    .respond(200, validUser);
+            });
+
+            it("user should be validated", function () {
+                spyOn(scope, "createConfirmAddModal").and.callThrough();
+                scope.validateAndAddUser(validUser.username, "Include");
+                httpBackend.expectGET(BASE_URL + "members/" + validUser.username)
+                    .respond(200, validUser);
+
+                expect(httpBackend.flush).not.toThrow();
+                expect(scope.createConfirmAddModal).toHaveBeenCalled();
+            });
+        });
+
+        describe("user adds 'invalidUser', who is not in the Grouper database", function () {
+            const invalidUser = {
+                name: null,
+                username: null,
+                uhUuid: null,
+                firstName: null,
+                lastName: null
+            };
+            beforeEach(function () {
+                httpBackend.whenGET(BASE_URL + "currentUser")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "members/memberships/")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "owners/grouping/")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "members/" + "invalidUser")
+                    .respond(200, invalidUser);
+            });
+
+            it("user should be invalidated", function () {
+                spyOn(scope, "createCheckModal").and.callThrough();
+                scope.validateAndAddUser("invalidUser","Include");
+                httpBackend.expectGET(BASE_URL + "members/" + "invalidUser")
+                    .respond(200, invalidUser);
+
+                expect(httpBackend.flush).not.toThrow();
+                expect(scope.resStatus).toEqual(404);
+                expect(scope.createCheckModal).not.toHaveBeenCalled();
+            });
+        });
+    });
+
     describe("addMember", function () {
         describe("user adds 'user8', who is not in any list, to the Include list", function () {
             beforeEach(function () {
