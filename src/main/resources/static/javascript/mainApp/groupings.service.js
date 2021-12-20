@@ -177,7 +177,7 @@
              * Remove a member from the list of admins.
              */
             removeAdmin(adminToRemove, onSuccess, onError) {
-                let endpoint = BASE_URL + adminToRemove + "/deleteAdmin";
+                let endpoint = BASE_URL + adminToRemove + "/removeAdmin";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 

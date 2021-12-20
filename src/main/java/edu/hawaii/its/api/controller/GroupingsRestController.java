@@ -148,11 +148,11 @@ public class GroupingsRestController {
     /**
      * Delete a member from the admin group.
      */
-    @PostMapping(value = "/{adminToDelete}/deleteAdmin")
-    public ResponseEntity<String> deleteAdmin(Principal principal,
-            @PathVariable String adminToDelete) {
-        logger.info("Entered REST deleteAdmin...");
-        String safeInput = policy.sanitize(adminToDelete);
+    @PostMapping(value = "/{adminToRemove}/removeAdmin")
+    public ResponseEntity<String> removeAdmin(Principal principal,
+            @PathVariable String adminToRemove) {
+        logger.info("Entered REST removeAdmin...");
+        String safeInput = policy.sanitize(adminToRemove);
         String uri = String.format(API_2_1_BASE + "/admins/%s", safeInput);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }

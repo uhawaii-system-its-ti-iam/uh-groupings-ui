@@ -8,10 +8,14 @@ describe("GroupingsService", function () {
     let groupingPath;
     let onSuccess;
     let onError;
+    let httpBackend;
+    let BASE_URL;
 
-    beforeEach(inject(function (groupingsService, dataProvider, BASE_URL) {
+    beforeEach(inject(function (groupingsService, dataProvider, _BASE_URL_, _$httpBackend_) {
         gs = groupingsService;
         dp = dataProvider;
+        BASE_URL = _BASE_URL_;
+        httpBackend = _$httpBackend_;
         groupingPath = "grouping:path";
         onSuccess = () => {
         };
@@ -64,10 +68,17 @@ describe("GroupingsService", function () {
     });
 
     describe("getAdminLists", function () {
+
         it("should call dataProvider.loadData", function () {
             spyOn(dp, "loadData");
             gs.getAdminLists(onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", function () {
+            gs.getAdminLists(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "adminLists").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -79,6 +90,12 @@ describe("GroupingsService", function () {
             gs.addMembersToInclude(usersToAdd, groupingPath, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
+
+        it("should use the correct path", function () {
+            gs.addMembersToInclude(usersToAdd, groupingPath, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + usersToAdd + "/addMembersToIncludeGroup").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("addMembersToIncludeAsync", function () {
@@ -89,6 +106,12 @@ describe("GroupingsService", function () {
             gs.addMembersToIncludeAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
             expect(dp.updateDataWithTimeoutModal).toHaveBeenCalled();
         });
+
+        it("should use the correct path", function () {
+            gs.addMembersToInclude(usersToAdd, groupingPath, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + usersToAdd + "/addMembersToIncludeGroup").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("addMembersToExclude", function () {
@@ -97,6 +120,11 @@ describe("GroupingsService", function () {
             spyOn(dp, "updateData");
             gs.addMembersToExclude(usersToAdd, groupingPath, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
+        });
+        it("should use the correct path", function () {
+            gs.addMembersToExclude(usersToAdd, groupingPath, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + usersToAdd + "/addMembersToExcludeGroup").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -108,6 +136,11 @@ describe("GroupingsService", function () {
             gs.addMembersToExcludeAsync(usersToAdd, groupingPath, onSuccess, onError, modal);
             expect(dp.updateDataWithTimeoutModal).toHaveBeenCalled();
         });
+        it("should use the correct path", function () {
+            gs.addMembersToExclude(usersToAdd, groupingPath, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + usersToAdd + "/addMembersToExcludeGroup").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("assignOwnership", function () {
@@ -117,6 +150,11 @@ describe("GroupingsService", function () {
             gs.assignOwnership(groupingPath, newOwner, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
+        it("should use the correct path", function () {
+            gs.assignOwnership(groupingPath, newOwner, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + newOwner + "/assignOwnership").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("addAdmin", function () {
@@ -125,6 +163,11 @@ describe("GroupingsService", function () {
             spyOn(dp, "updateData");
             gs.addAdmin(adminToAdd, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
+        });
+        it("should use the correct path", function () {
+            gs.addAdmin(adminToAdd, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + adminToAdd + "/addAdmin").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -136,6 +179,11 @@ describe("GroupingsService", function () {
             gs.removeFromGroups(groups, member, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
+        it("should use the correct path", function () {
+            gs.removeFromGroups(groups, member, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groups + "/" + member + "/removeFromGroups").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("removeMembersFromInclude", function () {
@@ -144,6 +192,11 @@ describe("GroupingsService", function () {
             spyOn(dp, "updateData");
             gs.removeMembersFromInclude(groupingPath, members, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
+        });
+        it("should use the correct path", function () {
+            gs.removeMembersFromInclude(groupingPath, members, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + members + "/removeMembersFromIncludeGroup").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -154,6 +207,11 @@ describe("GroupingsService", function () {
             gs.removeMembersFromExclude(groupingPath, members, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
+        it("should use the correct path", function () {
+            gs.removeMembersFromExclude(groupingPath, members, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + members + "/removeMembersFromExcludeGroup").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("removeOwner", function () {
@@ -162,6 +220,11 @@ describe("GroupingsService", function () {
             spyOn(dp, "updateData");
             gs.removeOwner(groupingPath, ownerToRemove, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
+        });
+        it("should use the correct path", function () {
+            gs.removeOwner(groupingPath, ownerToRemove, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + ownerToRemove + "/removeOwnership").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -172,6 +235,11 @@ describe("GroupingsService", function () {
             gs.removeAdmin(adminToRemove, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
+        it("should use the correct path", function () {
+            gs.removeAdmin(adminToRemove, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + adminToRemove + "/removeAdmin").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("getMemberAttributes", function () {
@@ -181,6 +249,11 @@ describe("GroupingsService", function () {
             gs.getMemberAttributes(member, onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
+        it("should use the correct path", function () {
+            gs.getMemberAttributes(member, onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "members/" + member).respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("optOut", function () {
@@ -188,6 +261,11 @@ describe("GroupingsService", function () {
             spyOn(dp, "updateData");
             gs.optOut(groupingPath, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
+        });
+        it("should use the correct path", function () {
+            gs.optOut(groupingPath, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/optOut").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -197,6 +275,12 @@ describe("GroupingsService", function () {
             gs.optIn(groupingPath, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
+
+        it("should use the correct path", function () {
+            gs.optIn(groupingPath, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/optIn").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("getMembershipResults", function () {
@@ -205,14 +289,40 @@ describe("GroupingsService", function () {
             gs.getMembershipResults(onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
+
+        it("should use the correct path", function () {
+            gs.getMembershipResults(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "members/groupings/").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
+    describe("getNumberOfMemberships", function () {
+        it("should call dataProvider.loadData", function () {
+            spyOn(dp, "loadData");
+            gs.getNumberOfMemberships(onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", function () {
+            gs.getNumberOfMemberships(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "members/memberships/").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+
+    });
     describe("getMembershipAssignmentForUser", function () {
         let username;
         it("should call dataProvider.loadData", function () {
             spyOn(dp, "loadData");
             gs.getMembershipAssignmentForUser(onSuccess, onError, username);
             expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", function () {
+            gs.getMembershipAssignmentForUser(onSuccess, onError, username);
+            httpBackend.expectGET(BASE_URL + "members/" + username + "/groupings/").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -221,6 +331,12 @@ describe("GroupingsService", function () {
             spyOn(dp, "loadData");
             gs.getOptInGroups(onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", function () {
+            gs.getOptInGroups(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "groupings/optInGroups/").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -231,6 +347,11 @@ describe("GroupingsService", function () {
             gs.setOptIn(groupingPath, optInOn, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
+        it("should use the correct path", function () {
+            gs.setOptIn(groupingPath, optInOn, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + optInOn + "/setOptIn").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("setOptOut", function () {
@@ -239,6 +360,11 @@ describe("GroupingsService", function () {
             spyOn(dp, "updateData");
             gs.setOptOut(groupingPath, optOutOn, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
+        });
+        it("should use the correct path", function () {
+            gs.setOptOut(groupingPath, optOutOn, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + optOutOn + "/setOptOut").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -250,6 +376,12 @@ describe("GroupingsService", function () {
             gs.resetGroup(groupingPath, include, exclude, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
+
+        it("should use the correct path", function () {
+            gs.resetGroup(groupingPath, include, exclude, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + include + "/" + exclude + "/resetGroup").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("getSyncDestList", function () {
@@ -257,6 +389,12 @@ describe("GroupingsService", function () {
             spyOn(dp, "loadData");
             gs.getSyncDestList(groupingPath, onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
+        });
+
+        it("should use the correct path", function () {
+            gs.getSyncDestList(groupingPath, onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "groupings/" + groupingPath + "/syncDestinations").respond(200);
+            expect(httpBackend.flush).not.toThrow();
         });
     });
 
@@ -268,6 +406,18 @@ describe("GroupingsService", function () {
             gs.setSyncDest(groupingPath, syncDestId, turnOn, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
+
+        it("should use the correct path for enable", function () {
+            gs.setSyncDest(groupingPath, syncDestId, true, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/enable").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+
+        it("should use the correct path for disable", function () {
+            gs.setSyncDest(groupingPath, syncDestId, false, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + "groupings/" + groupingPath + "/syncDests/" + syncDestId + "/disable").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
 
     describe("getGroupingsOwned", function () {
@@ -276,5 +426,23 @@ describe("GroupingsService", function () {
             gs.getGroupingsOwned(onSuccess, onError);
             expect(dp.loadData).toHaveBeenCalled();
         });
+        it("should use the correct path", function () {
+            gs.getGroupingsOwned(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "owners/groupings").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
     });
+
+    describe("getNumberOfGroupings", function () {
+        it("should call dataProvider.loadData", function () {
+            spyOn(dp, "loadData");
+            gs.getNumberOfGroupings(onSuccess, onError);
+            expect(dp.loadData).toHaveBeenCalled();
+        });
+        it("should use the correct path", function () {
+            gs.getNumberOfGroupings(onSuccess, onError);
+            httpBackend.expectGET(BASE_URL + "owners/grouping/").respond(200);
+            expect(httpBackend.flush).not.toThrow();
+        });
+    })
 });
