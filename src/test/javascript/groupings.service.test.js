@@ -444,5 +444,5 @@ describe("GroupingsService", function () {
             httpBackend.expectGET(BASE_URL + "owners/grouping/").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
-    })
+    });
 });
