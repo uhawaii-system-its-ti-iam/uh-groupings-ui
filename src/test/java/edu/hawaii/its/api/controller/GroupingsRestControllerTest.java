@@ -138,21 +138,19 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUhUser(username = "admin")
-    public void deleteAdminTest() throws Exception {
-        String uri = REST_CONTROLLER_BASE + "newAdmin/deleteAdmin";
+    public void removeAdminTest() throws Exception {
+        String uri = REST_CONTROLLER_BASE + "newAdmin/removeAdmin";
 
         given(httpRequestService.makeApiRequest(eq(ADMIN_USERNAME), anyString(), eq(HttpMethod.DELETE)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
-        mockMvc.perform(post(uri)
-                .with(csrf()))
-                .andExpect(status().isOk());
+        mockMvc.perform(post(uri).with(csrf())).andExpect(status().isOk());
     }
 
     @Test
@@ -164,7 +162,7 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -178,11 +176,11 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri_includes)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post(uri_excludes)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -196,11 +194,11 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri_includes)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post(uri_excludes)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -213,7 +211,7 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -226,7 +224,7 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
 
     }
@@ -241,11 +239,11 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri_true)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post(uri_false)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -259,11 +257,11 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri_true)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post(uri_false)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -277,11 +275,11 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri_true)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post(uri_false)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -295,11 +293,11 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri_true)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
 
         mockMvc.perform(post(uri_false)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -310,7 +308,7 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(REST_CONTROLLER_BASE + GROUPING + "/optIn")
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -323,7 +321,7 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         mockMvc.perform(post(uri)
-                .with(csrf()))
+                        .with(csrf()))
                 .andExpect(status().isOk());
     }
 
