@@ -48,6 +48,48 @@
             $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, PAGE_SIZE);
             $scope.loading = false;
         };
+
+        function handleMultiMemberRemoveOnSuccess() {
+            $scope.loading = false;
+            $scope.searchForUserGroupingInformation();
+        }
+
+        function handleMultiMemberRemoveOnFailure() {
+            $scope.loading = false;
+        }
+
+        /**
+         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * a request is made to delete the user.
+         * @param {object} options - the options object
+         * @param {object} options.user - the user being removed
+         * @param {string} options.groupPaths - groups the user is being removed from
+         * @param {string} options.listName - groups the user is being removed from
+         */
+        $scope.createRemoveFromGroupsModal = function (options) {
+            $scope.userToRemove = options.user;
+            $scope.groupPaths = options.groupPaths.join(", ");
+            $scope.listName = options.listName.join(", ");
+
+            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+
+            $scope.removeModalInstance = $uibModal.open({
+                windowClass,
+                templateUrl: "modal/removeModal",
+                scope: $scope,
+                backdrop: "static",
+                keyboard: false
+            });
+
+            $scope.removeModalInstance.result.then(function () {
+                $scope.loading = true;
+                let userToRemove = options.user.uhUuid;
+                let groupingPath = $scope.groupPaths;
+                groupingsService.removeFromGroups(groupingPath, userToRemove, handleMultiMemberRemoveOnSuccess, handleMultiMemberRemoveOnFailure);
+                $scope.personToLookup = userToRemove;
+            });
+        };
+
         /**
          * Complete initialization by fetching a list of admins and list of all groupings.
          */
@@ -87,8 +129,8 @@
                 return;
             }
             let userToRemove = {
-                username: res.uid,
-                name: res.cn,
+                username: res.username,
+                name: res.name,
                 uhUuid: res.uhUuid
             };
             if (_.isEmpty($scope.selectedGroupingsPaths)) {
@@ -108,40 +150,46 @@
         $scope.removeFromGroups = function () {
             $scope.selectedGroupingsNames = [];
             $scope.selectedGroupingsPaths = [];
-
-            let i = 0;
-            _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
-                if (grouping.isSelected) {
-                    let basePath = grouping.path.substring(0, grouping.path.lastIndexOf(":") + 1);
-                    basePath = basePath.slice(0, -1);
-                    let groupName = basePath;
-                    groupName = groupName.split(":").pop();
-                    $scope.selectedGroupingsNames.push(groupName);
-                    if (grouping.inOwner) {
-                        let temp = basePath + ":owners";
-                        $scope.selectedGroupingsPaths.push(temp);
-                    }
-                    if (grouping.inInclude) {
-                        let temp = basePath + ":include";
-                        $scope.selectedGroupingsPaths.push(temp);
-                    }
-                    if (grouping.inExclude) {
-                        let temp = basePath + ":exclude";
-                        $scope.selectedGroupingsPaths.push(temp);
-                    }
-                }
-                i++;
-            });
+            $scope.createGroupPathsAndNames($scope.pagedItemsPerson[$scope.currentPagePerson], $scope.selectedGroupingsNames, $scope.selectedGroupingsPaths);
 
             if ($scope.personToLookup != null) {
                 groupingsService.getMemberAttributes($scope.personToLookup, $scope.removeFromGroupsCallbackOnSuccess);
             }
         };
 
+        /**
+         * Pluck selectedGroupingsNames and selectedGroupingsPaths from currentPage
+         */
+        $scope.createGroupPathsAndNames = function (currentPage, selectedGroupingsNames, selectedGroupingsPaths) {
+            _.forEach(currentPage, function (grouping) {
+                if (grouping.isSelected) {
+                    selectedGroupingsNames.push(grouping.name);
+                    if (grouping.inOwner) {
+                        let temp = grouping.path + ":owners";
+                        $scope.selectedGroupingsPaths.push(temp);
+                        selectedGroupingsPaths.push(temp);
+                    }
+                    if (grouping.inInclude) {
+                        let temp = grouping.path + ":include";
+                        $scope.selectedGroupingsPaths.push(temp);
+                        selectedGroupingsPaths.push(temp);
+                    }
+                    if (grouping.inExclude) {
+                        let temp = grouping.path + ":exclude";
+                        $scope.selectedGroupingsPaths.push(temp);
+                        selectedGroupingsPaths.push(temp);
+                    }
+                }
+            });
+        };
+
         $scope.updateCheckBoxes = function () {
             $scope.checkAll = !$scope.checkAll;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
-                if (grouping.inOwner || grouping.inInclude || grouping.inExclude) {
+                if (grouping.inOwner) {
+                    grouping.isSelected = $scope.checkAll;
+                }
+                if (grouping.inInclude || grouping.inExclude) {
                     grouping.isSelected = $scope.checkAll;
                 }
             });
@@ -166,7 +214,7 @@
         function inAdminList(user) {
             return _.some($scope.adminsList, { username: user }) ||
                 _.some($scope.adminsList, { uhUuid: user });
-        };
+        }
 
         /**
          * Adds a user to the admin list.
