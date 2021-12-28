@@ -13,7 +13,7 @@
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
 
         $scope.userToAdd = "";
-        $scope.usersToAdd = "";
+        $scope.usersToAddOrRemove = "";
         $scope.multiAddThreshold = 100;
         $scope.maxImport = 100000;
         $scope.multiAddResults = [];
@@ -597,13 +597,13 @@
          */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
-            if (_.isEmpty($scope.usersToAdd)) {
+            if (_.isEmpty($scope.usersToAddOrRemove)) {
                 $scope.emptyInput = true;
             } else {
-                let numMembers = ($scope.usersToAdd.split(" ").length - 1);
+                let numMembers = ($scope.usersToAddOrRemove.split(" ").length - 1);
                 if (numMembers > 0) {
-                    let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
-                    $scope.usersToAdd = [];
+                    let users = $scope.usersToAddOrRemove.split(/[ ,]+/).join(",");
+                    $scope.usersToAddOrRemove = [];
                     if (numMembers > $scope.maxImport) {
                         launchDynamicModal(
                             Message.Title.IMPORT_OUT_OF_BOUNDS,
@@ -621,7 +621,7 @@
                         $scope.addMultipleMembers(users, listName);
                     }
                 } else {
-                    $scope.userToAdd = $scope.usersToAdd;
+                    $scope.userToAdd = $scope.usersToAddOrRemove;
                     $scope.validateAndAddUser($scope.userToAdd, listName);
                 }
             }
@@ -641,7 +641,7 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.usersToAdd = (str.split(/[\r\n]+/).join(" ")).slice();
+                $scope.usersToAddOrRemove = (str.split(/[\r\n]+/).join(" ")).slice();
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
@@ -1069,7 +1069,7 @@
          * Give a user ownership of a grouping.
          */
         $scope.addOwner = function () {
-            const ownerToAdd = $scope.ownerToAdd;
+            const ownerToAdd = $scope.ownersToAddOrRemove;
             const list = "owners";
             $scope.userToAdd = ownerToAdd;
             if (_.isEmpty(ownerToAdd)) {
@@ -1248,8 +1248,8 @@
                 $scope.membersToModify = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
                 $scope.membersInCheckboxList = {};
             }
-            if (!_.isEmpty($scope.usersToAdd)) {
-                $scope.membersToModify = $scope.usersToAdd;
+            if (!_.isEmpty($scope.usersToAddOrRemove)) {
+                $scope.membersToModify = $scope.usersToAddOrRemove;
             }
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
@@ -1444,10 +1444,6 @@
             $scope.getGroupingInformation();
             $scope.syncDestArray = [];
             $scope.membersToModify = [];
-        }
-
-        function handleMultiMemberRemove() {
-            $scope.searchForUserGroupingInformation();
         }
 
         function handleGroupingReset() {
@@ -1672,7 +1668,7 @@
                 case "Include":
                 case "Exclude":
                     $scope.userToAdd = "";
-                    $scope.usersToAdd = "";
+                    $scope.usersToAddOrRemove = "";
                     $scope.userNameList = [];
                     $scope.multiAddResults = [];
                     $scope.waitingForImportResponse = false;
@@ -1692,14 +1688,14 @@
                     resetCheckboxes();
                     break;
                 case "owners":
-                    $scope.ownerToAdd = "";
+                    $scope.ownersToAddOrRemove = "";
                     break;
                 case "admins":
                     $scope.adminToAdd = "";
                     break;
                 default:
                     $scope.userToAdd = "";
-                    $scope.ownerToAdd = "";
+                    $scope.ownersToAddOrRemove = "";
                     $scope.adminToAdd = "";
             }
         }
