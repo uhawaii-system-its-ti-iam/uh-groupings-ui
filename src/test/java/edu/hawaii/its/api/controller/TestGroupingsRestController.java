@@ -164,8 +164,8 @@ public class TestGroupingsRestController {
         groupingsRestController.removeMembersFromExcludeGroup(tst0Principal, GROUPING, tst[5]);
 
         //remove from owners
-        groupingsRestController.removeOwnership(tst0Principal, GROUPING, tst[1]);
-        groupingsRestController.removeOwnership(tst0Principal,GROUPING, tst[5]);
+        groupingsRestController.removeOwnerships(tst0Principal, GROUPING, tst[1]);
+        groupingsRestController.removeOwnerships(tst0Principal,GROUPING, tst[5]);
 
         //set statuses
         groupingsRestController.setOptOut(tst0Principal, GROUPING, true);
@@ -233,7 +233,7 @@ public class TestGroupingsRestController {
 
         assertTrue(g.getOwners().getUsernames().contains(tst[1]));
 
-        mapGSR(API_BASE + GROUPING + "/" + tst[1] + "/removeOwnership");
+        mapGSR(API_BASE + GROUPING + "/" + tst[1] + "/removeOwnerships");
 
         g = mapGrouping(GROUPING);
 
@@ -328,7 +328,7 @@ public class TestGroupingsRestController {
         grouping = mapGrouping(GROUPING);
 
         assertTrue(grouping.getOwners().getNames().contains(tstName[5]));
-        mapGSR(API_BASE + grouping.getPath() + "/" + tst[5] + "/removeOwnership");
+        mapGSR(API_BASE + grouping.getPath() + "/" + tst[5] + "/removeOwnerships");
         grouping = mapGrouping(GROUPING);
 
         assertFalse(grouping.getOwners().getNames().contains(tstName[5]));

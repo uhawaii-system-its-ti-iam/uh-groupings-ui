@@ -1251,6 +1251,9 @@
             if (!_.isEmpty($scope.usersToAdd)) {
                 $scope.membersToModify = $scope.usersToAdd;
             }
+            if (!_.isEmpty(($scope.ownerToAdd))) {
+                $scope.membersToModify = $scope.ownerToAdd;
+            }
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
             } else {
@@ -1294,6 +1297,9 @@
                     break;
                 case "Include":
                     listToSearch = $scope.groupingInclude;
+                    break;
+                case "owners":
+                    listToSearch = $scope.groupingOwners;
                     break;
                 default:
                     break;
@@ -1345,6 +1351,8 @@
                     await groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
                 } else if (listName === "Exclude") {
                     await groupingsService.removeMembersFromExclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                } else if (listName === "owners") {
+                    await groupingsService.removeOwners($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
                 }
             }, function (reason) {
                 if (reason === "cancel") {
@@ -1543,7 +1551,7 @@
                     } else if ($scope.listName === "Exclude") {
                         groupingsService.removeMembersFromExclude(groupingPath, userToRemove, handleMemberRemove, handleUnsuccessfulRequest);
                     } else if ($scope.listName === "owners") {
-                        groupingsService.removeOwner(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
+                        groupingsService.removeOwners(groupingPath, userToRemove, handleOwnerRemove, handleUnsuccessfulRequest);
                     } else if ($scope.listName === "admins") {
                         groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
                     }
@@ -1693,6 +1701,7 @@
                     break;
                 case "owners":
                     $scope.ownerToAdd = "";
+                    $scope.multiRemoveResults = [];
                     break;
                 case "admins":
                     $scope.adminToAdd = "";

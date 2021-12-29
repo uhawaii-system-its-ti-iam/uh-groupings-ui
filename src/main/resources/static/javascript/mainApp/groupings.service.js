@@ -166,10 +166,10 @@
             },
 
             /**
-             * Remove a member from the owners group of a grouping.
+             * Remove owners from owners group of grouping
              */
-            removeOwner(path, ownerToRemove, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + ownerToRemove + "/removeOwnership";
+            removeOwners(path, owners, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + owners + "/removeOwnerships";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 

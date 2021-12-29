@@ -415,14 +415,14 @@ public class GroupingsRestController {
     /**
      * Cancel owner privileges of ownerToRemove for the grouping at groupingPath.
      */
-    @PostMapping(value = "/{groupingPath}/{ownerToRemove}/removeOwnership")
-    public ResponseEntity<String> removeOwnership(Principal principal,
+    @PostMapping(value = "/{groupingPath}/{ownerToRemove}/removeOwnerships")
+    public ResponseEntity<String> removeOwnerships(Principal principal,
             @PathVariable String groupingPath,
             @PathVariable String ownerToRemove) {
-        logger.info("Entered REST removeOwnership...");
+        logger.info("Entered REST removeOwnerships...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeOwnerToRemove = policy.sanitize(ownerToRemove);
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", safeGroupingPath, safeOwnerToRemove);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/removeOwners/%s", safeGroupingPath, safeOwnerToRemove);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 

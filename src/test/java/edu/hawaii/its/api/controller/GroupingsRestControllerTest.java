@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
@@ -219,16 +220,18 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
-    public void getRemoveOwnership() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/user/removeOwnership";
+    public void getRemoveOwnerships() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/user/removeOwnerships";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.DELETE)))
-                .willReturn(new ResponseEntity(HttpStatus.OK));
+                .willReturn(new ResponseEntity<>(HttpStatus.OK));
 
-        mockMvc.perform(post(uri)
-                        .with(csrf()))
-                .andExpect(status().isOk());
+        MvcResult result = mockMvc.perform(post(uri)
+                .with(csrf()))
+                .andExpect(status().isOk()).andReturn();
 
+        result.getResponse().getStatus();
+        assertThat(result, notNullValue());
     }
 
     @Test

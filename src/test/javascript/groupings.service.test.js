@@ -224,12 +224,12 @@ describe("GroupingsService", function () {
         let ownerToRemove;
         it("should call dataProvider.updateData", function () {
             spyOn(dp, "updateData");
-            gs.removeOwner(groupingPath, ownerToRemove, onSuccess, onError);
+            gs.removeOwners(groupingPath, ownerToRemove, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
         it("should use the correct path", function () {
-            gs.removeOwner(groupingPath, ownerToRemove, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + ownerToRemove + "/removeOwnership").respond(200);
+            gs.removeOwners(groupingPath, ownerToRemove, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + ownerToRemove + "/removeOwnerships").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });
