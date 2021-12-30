@@ -127,10 +127,10 @@
             },
 
             /**
-             * Add a member to the exclude group of a grouping.
+             * Add a member to the owners group of a grouping.
              */
-            assignOwnership(path, newOwner, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + newOwner + "/assignOwnership";
+            addOwners(path, newOwner, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + newOwner + "/addOwners";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 

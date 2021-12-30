@@ -144,9 +144,9 @@ public class TestGroupingsRestController {
         uhUser06 = new User(tst[5], tst[5], uhAuthorities);
 
         //add to owners
-        groupingsRestController.assignOwnership(adminPrincipal, GROUPING, tst[0]);
-        groupingsRestController.assignOwnership(adminPrincipal, GROUPING_STORE_EMPTY, tst[0]);
-        groupingsRestController.assignOwnership(adminPrincipal, GROUPING_TRUE_EMPTY, tst[0]);
+        groupingsRestController.addOwners(adminPrincipal, GROUPING, tst[0]);
+        groupingsRestController.addOwners(adminPrincipal, GROUPING_STORE_EMPTY, tst[0]);
+        groupingsRestController.addOwners(adminPrincipal, GROUPING_TRUE_EMPTY, tst[0]);
 
         //put in include
         groupingsRestController.addMembersToIncludeGroup(tst0Principal, GROUPING, tst[0]);

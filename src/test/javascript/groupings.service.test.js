@@ -149,16 +149,16 @@ describe("GroupingsService", function () {
         });
     });
 
-    describe("assignOwnership", function () {
+    describe("addOwners", function () {
         let newOwner;
         it("should call dataProvider.updateData", function () {
             spyOn(dp, "updateData");
-            gs.assignOwnership(groupingPath, newOwner, onSuccess, onError);
+            gs.addOwners(groupingPath, newOwner, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
         it("should use the correct path", function () {
-            gs.assignOwnership(groupingPath, newOwner, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + newOwner + "/assignOwnership").respond(200);
+            gs.addOwners(groupingPath, newOwner, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + newOwner + "/addOwners").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

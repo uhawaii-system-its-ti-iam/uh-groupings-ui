@@ -208,14 +208,17 @@ public class GroupingsRestControllerTest {
     @Test
     @WithMockUhUser
     public void getAssignOwnership() throws Exception {
-        String uri = REST_CONTROLLER_BASE + GROUPING + "/user/assignOwnership";
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/user/assignOwnerships";
 
         given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.PUT)))
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
-        mockMvc.perform(post(uri)
-                        .with(csrf()))
-                .andExpect(status().isOk());
+        MvcResult result = mockMvc.perform(post(uri)
+                .with(csrf()))
+                .andExpect(status().isOk()).andReturn();
+
+        result.getResponse().getStatus();
+        assertThat(result, notNullValue());
     }
 
     @Test
