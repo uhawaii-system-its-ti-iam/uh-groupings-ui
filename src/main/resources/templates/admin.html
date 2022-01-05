@@ -57,7 +57,7 @@
                     ></div>
                 </div>
                 <!-- Manage Admins -->
-                <div class="tab-pane fade" id="manage-admins" role="tab">
+                <div class="tab-pane fade" id="manage-admins" role="tabpanel">
                     <div class="row m-auto pt-3 pb-3">
                         <div class="col-lg-9 col-md-8 col-12 p-0">
                             <h2 class="card-title mt-md-1 mt-0 mb-1">Designate Admins</h2>
@@ -90,6 +90,7 @@
                                        ng-class="{ reverse: columnSort.adminsList.reverse }"></i>
                                 </th>
                                 <th class="delete" scope="col">
+                                    Remove
                                 </th>
                             </tr>
                             </thead>
@@ -112,7 +113,7 @@
                                         </i>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="p-10">
                                     <i class="far fa-trash-alt pull-right clickable pt-1" role="button"
                                        data-toggle="tooltip" data-placement="top"
                                        tabindex="0" aria-label="Remove {{l.name}} as admin. There must be at least one admin remaining."
