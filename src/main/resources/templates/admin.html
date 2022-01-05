@@ -153,7 +153,7 @@
                     </div>
                 </div>
                 <!-- Manage Person -->
-                <div class="tab-pane fade" id="manage-person" role="tab">
+                <div class="tab-pane fade" id="manage-person" role="tabpanel">
                     <div class="row m-auto pt-3 pb-3">
                         <div class="col-lg-9 col-md-8 col-12 p-0">
                             <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Person</h2>
@@ -272,10 +272,10 @@
                                 </td>
                                 <td class="p-10" tabindex="0">
                                     <div ng-if="l.inOwner || l.inInclude || l.inExclude">
-                                        <label><input type="checkbox" ng-model="l.isSelected" ng-change="update(l)"></label>
+                                        <label aria-label="Remove"><input type="checkbox" ng-model="l.isSelected" ng-change="update(l)"></label>
                                     </div>
                                     <div ng-if="!l.inOwner && !l.inInclude && !l.inExclude">
-                                        <label><input type="checkbox"
+                                        <label aria-label="Remove"><input type="checkbox"
                                                       ng-model="l.isSelected" ng-change="update(l)" disabled></label>
                                     </div>
                                 </td>
