@@ -35,7 +35,7 @@
                 <thead>
                 <tr>
                     <th scope="col" class="clickable center-checkbox">
-                        <input class="form-check-input" type="checkbox" id="selectall"
+                        <input class="form-check-input" type="checkbox"
                                ng-model="allSelected"
                                ng-click="toggleCheckAllSelection('Exclude')"
                                value="option1" data-toggle="tooltip" data-placement="top" title="Check all"
@@ -71,8 +71,7 @@
                 <tbody>
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
                     <td>
-                        <input class="form-check-input singlechkbox" type="checkbox"
-                               id="blankCheckbox"
+                        <input class="form-check-input blank-checkbox" type="checkbox"
                                ng-model="membersInCheckboxList[e.uhUuid]"
                                ng-click="$event.stopPropagation()
                                ">
