@@ -36,7 +36,7 @@
                 <thead>
                 <tr>
                     <th scope="col" class="clickable center-checkbox" style="vertical-align: top; margin-left: 5px">
-                        <input class="form-check-input" type="checkbox" id="selectall"
+                        <input class="form-check-input" type="checkbox"
                                style="margin-left: 0"
                                ng-model="allSelected"
                                ng-click="toggleCheckAllSelection('Exclude')"
@@ -73,8 +73,7 @@
                 <tbody>
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
                     <td class="p-10" style="margin-left: 4px">
-                        <input class="form-check-input singlechkbox" type="checkbox"
-                               id="blankCheckbox"
+                        <input class="form-check-input blank-checkbox" type="checkbox"
                                style="margin-left: 0"
                                ng-model="membersInCheckboxList[e.uhUuid]"
                                ng-click="$event.stopPropagation()
@@ -82,7 +81,7 @@
                     </td>
                     <td class="p-10" tabindex="0">
                         {{e.name}}
-                        <span class="far fa-trash-alt fa-pull-right clickable pt-1"  role="button"
+                        <span class="far fa-trash-alt fa-pull-right clickable pt-1" role="button"
                               data-toggle="tooltip" data-placement="top"
                               onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                               tabindex="0" aria-label="Remove {{e.name}} from the Exclude members list"
@@ -130,7 +129,8 @@
                             </button>
                             <button class="btn btn-remove"
                                     ng-click="resetErrors(); prepBatchRemove('Exclude', pagedItemsExclude[currentPageExclude]); errorDismissed = false"
-                                    style="margin-left: 2px; margin-right: 2px">Remove</button>
+                                    style="margin-left: 2px; margin-right: 2px">Remove
+                            </button>
                             <button class="btn btn-primary"
                                     ng-click="launchImportModal('Exclude')">Import File
                             </button>
