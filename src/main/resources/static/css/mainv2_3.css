@@ -455,12 +455,13 @@ form.seamless input {
   margin-left: 5px;
 }
 
-#blankCheckbox {
-  margin-left: 1rem;
-}
-
 .form-check-input {
   position: relative;
+  margin-left: 0;
+}
+
+.blank-checkbox {
+  margin-left: 1rem;
 }
 
 .pagination {
@@ -625,7 +626,11 @@ label input {
   height: 25px !important;
 }
 
-#selectall {
+#select-all-include {
+  margin-left: 0;
+}
+
+#select-all-exclude {
   margin-left: 0;
 }
 
