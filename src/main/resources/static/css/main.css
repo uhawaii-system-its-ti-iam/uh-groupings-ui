@@ -565,6 +565,9 @@ form.seamless button {
     padding: 7px 15px;;
 }
 
+.blank-checkbox {
+    margin-left: 1rem;
+}
 
 .import-table-tbody {
     display: block;
