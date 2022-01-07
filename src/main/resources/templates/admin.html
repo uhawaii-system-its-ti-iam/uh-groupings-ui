@@ -9,30 +9,28 @@
 <body ng-app="UHGroupingsApp" ng-controller="AdminJsController" data-ng-init="init()">
 <nav th:replace="menubar :: copy"></nav>
 
-<!--  Content container -->
-<div class="seafoam-bg pt-4">
-    <div class="container">
-        <h1 class="text-center text-md-left">UH Groupings Administration</h1>
-        <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
-        <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="adminTab">
-            <li role="presentation" class="nav-item">
-                <a href="#manage-groupings" data-toggle="tab" class="nav-link active tab-color" role="tab">
-                    Manage Groupings
-                </a>
-            <li class="nav-item" role="presentation">
-                <a href="#manage-admins" data-toggle="tab" class="nav-link tab-color"  role="tab">
-                    Manage Admins
-                </a>
-            <li class="nav-item" role="presentation" ng-click="displayPerson()">
-                <a href="#manage-person" data-toggle="tab" class="nav-link tab-color" role="tab">
-                    Manage Person
-                </a>
-            </li>
-        </ul>
-    </div>
-</div>
-
 <main>
+    <div class="seafoam-bg pt-4">
+        <div class="container">
+            <h1 class="text-center text-md-left">UH Groupings Administration</h1>
+            <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
+            <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="adminTab">
+                <li role="presentation" class="nav-item">
+                    <a href="#manage-groupings" data-toggle="tab" class="nav-link active tab-color" role="tab">
+                        Manage Groupings
+                    </a>
+                <li class="nav-item" role="presentation">
+                    <a href="#manage-admins" data-toggle="tab" class="nav-link tab-color" role="tab">
+                        Manage Admins
+                    </a>
+                <li class="nav-item" role="presentation" ng-click="displayPerson()">
+                    <a href="#manage-person" data-toggle="tab" class="nav-link tab-color" role="tab">
+                        Manage Person
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div id="overlay" ng-show="loading">
             <div class="loader" ng-show="loading"></div>
@@ -41,7 +39,7 @@
             <div class="tab-content" role="tablist"
                  ng-init="changeStyleAttribute('adminContainer', 'display', 'unset')">
                 <!-- Manage Groupings -->
-                <div class="tab-pane fade show active" id="manage-groupings" role="tab">
+                <div class="tab-pane fade show active" id="manage-groupings" role="tabpanel">
                     <div class="row m-auto pt-3 pb-3">
                         <div class="col-lg-9 col-md-8 col-12 p-0">
                             <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Groupings</h2>
@@ -116,7 +114,8 @@
                                 <td class="p-10">
                                     <i class="far fa-trash-alt pull-right clickable pt-1" role="button"
                                        data-toggle="tooltip" data-placement="top"
-                                       tabindex="0" aria-label="Remove {{l.name}} as admin. There must be at least one admin remaining."
+                                       tabindex="0"
+                                       aria-label="Remove {{l.name}} as admin. There must be at least one admin remaining."
                                        onmouseover="$(this).tooltip('show')" onmouseout="$(this).tooltip('dispose')"
                                        th:title="#{screen.message.admin.tooltip.nav.delete.admin}"
                                        ng-click="removeAdmin(currentPageAdmins, $index)" aria-hidden="false"
@@ -154,7 +153,7 @@
                     </div>
                 </div>
                 <!-- Manage Person -->
-                <div class="tab-pane fade" id="manage-person" role="tab">
+                <div class="tab-pane fade" id="manage-person" role="tabpanel">
                     <div class="row m-auto pt-3 pb-3">
                         <div class="col-lg-9 col-md-8 col-12 p-0">
                             <h2 class="card-title mt-md-1 mt-0 mb-1">Manage Person</h2>
@@ -203,7 +202,8 @@
                             </form>
                             <!--message for no groupings selected-->
 
-                            <div ng-show="!errorDismissed2 && !loading && emptySelect" class="alert alert-danger form-alert fade show"
+                            <div ng-show="!errorDismissed2 && !loading && emptySelect"
+                                 class="alert alert-danger form-alert fade show"
                                  role="alert">
                                 <p th:text="#{screen.message.modal.search.noChecks}"></p>
                             </div>
@@ -273,10 +273,10 @@
                                 </td>
                                 <td class="p-10" tabindex="0">
                                     <div ng-if="l.inOwner || l.inInclude || l.inExclude">
-                                        <label><input type="checkbox" ng-model="l.isSelected" ng-change="update(l)"></label>
+                                        <label aria-label="Remove"><input type="checkbox" ng-model="l.isSelected" ng-change="update(l)"></label>
                                     </div>
                                     <div ng-if="!l.inOwner && !l.inInclude && !l.inExclude">
-                                        <label><input type="checkbox"
+                                        <label aria-label="Remove"><input type="checkbox"
                                                       ng-model="l.isSelected" ng-change="update(l)" disabled></label>
                                     </div>
                                 </td>
