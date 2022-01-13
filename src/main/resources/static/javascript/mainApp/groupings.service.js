@@ -294,21 +294,6 @@
             getNumberOfGroupings(onSuccess, onError) {
                 let endpoint = BASE_URL + "owners/grouping/";
                 dataProvider.loadData(endpoint, onSuccess, onError);
-            },
-
-            /**
-             * Parse a generic response data type.
-             */
-            parseGenericResponseData(response) {
-                let parsedObject = {};
-                if (!(_.isEqual(["data", "map"], Object.keys(response))))
-                    parsedObject = { "Response Parse Error": "Keys were not set due to response format", ...response };
-                else {
-                    let keys = Object.keys(response.map);
-                    for (let i = 0; i < keys.length; i++)
-                        parsedObject[keys[i]] = response.data[response.map[keys[i]]];
-                }
-                return parsedObject;
             }
         };
     });
