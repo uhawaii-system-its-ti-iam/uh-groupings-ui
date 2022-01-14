@@ -77,6 +77,8 @@
                 <tr ng-repeat="i in pagedItemsInclude[currentPageInclude]" class="table table-sm">
                     <td>
                         <input class="form-check-input position-left blank-checkbox" type="checkbox"
+							   tabindex="0"
+							   aria-label="Remove {{i.name}} from the include."
                                style="margin-left: 0"
                                ng-model="membersInCheckboxList[i.uhUuid]"
                                ng-click="$event.stopPropagation()">
