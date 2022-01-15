@@ -38,7 +38,8 @@ public class User extends org.springframework.security.core.userdetails.User {
         return attributes;
     }
 
-    public void setAttributes(UhAttributes attributes) { this.attributes = attributes;
+    public void setAttributes(UhAttributes attributes) {
+        this.attributes = attributes;
     }
 
     public String getName() {
