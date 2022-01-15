@@ -92,11 +92,10 @@ public class GroupingsRestController {
         logger.info("GroupingsRestController started.");
 
         policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-
         if (!Arrays.asList(env.getActiveProfiles()).contains("localTest")) {
-
-            // Stops the application from running if the API is not up and displays error message to console.
-            Assert.isTrue(isBackendUp().getStatusCode().is2xxSuccessful(),
+            Assert.isTrue(httpRequestService.makeApiRequest(CREDENTIAL_CHECK_USER, API_2_1_BASE + "/", HttpMethod.GET)
+                            .getStatusCode()
+                            .is2xxSuccessful(),
                     "Please start the UH Groupings API first.");
         }
     }
@@ -104,11 +103,6 @@ public class GroupingsRestController {
     @GetMapping(value = "/")
     public ResponseEntity<String> hello() {
         return ResponseEntity.ok("University of Hawaii UHGroupings");
-    }
-
-    @GetMapping(value = "/generic")
-    public ResponseEntity<String> generic(Principal principal) {
-        return httpRequestService.makeApiRequest(principal.getName(), API_2_1_BASE + "/generic", HttpMethod.GET);
     }
 
     @GetMapping(value = "/currentUser")
@@ -129,7 +123,7 @@ public class GroupingsRestController {
      */
     @GetMapping(value = "/admins")
     public ResponseEntity<String> hasAdminPrivs(Principal principal) {
-        logger.info("Entered REST isAdmin...");
+        logger.info("Entered REST hasAdminPrivs...");
         String uri = String.format(API_2_1_BASE + "/admins", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
@@ -221,22 +215,22 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
-    /**
-     * Get a list of grouping paths that the current user can opt into.
-     */
-    @GetMapping(value = "/groupings/optInGroups")
-    public ResponseEntity<String> getOptInGroups(Principal principal) {
-        logger.info("Entered REST optInGroups...");
-        String uri = String.format(API_2_1_BASE + "/groupings/optInGroups/%s", principal.getName());
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
-    }
-
     @GetMapping(value = "/members/{uid}/groupings",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> membershipAssignment(Principal principal,
             @PathVariable String uid) {
         logger.info("Entered REST MembershipAssignment...");
         String uri = String.format(API_2_1_BASE + "/members/%s/groupings", uid);
+        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
+    }
+
+    /**
+     * Get a list of grouping paths that the current user can opt into.
+     */
+    @GetMapping(value = "/groupings/optInGroups")
+    public ResponseEntity<String> optInGroups(Principal principal) {
+        logger.info("Entered REST optInGroups...");
+        String uri = String.format(API_2_1_BASE + "/groupings/optInGroups/%s", principal.getName());
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
     }
 
@@ -265,20 +259,6 @@ public class GroupingsRestController {
     }
 
     /**
-     * Add a user to include group of grouping at path.
-     */
-    @PostMapping(value = "/{groupingPath}/{userToAdd}/addMemberToIncludeGroup")
-    public ResponseEntity<String> addMemberToIncludeGroup(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String userToAdd) {
-        String safeGroupingPath = policy.sanitize(groupingPath);
-        String safeUserToAdd = policy.sanitize(userToAdd);
-        logger.info("Entered REST addMemberToIncludeGroup...");
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", safeGroupingPath, safeUserToAdd);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
-    }
-
-    /**
      * Add a list of usersToAdd to include group of grouping at path.
      */
     @PostMapping(value = "/{groupingPath}/{usersToAdd}/addMembersToIncludeGroup")
@@ -290,20 +270,6 @@ public class GroupingsRestController {
         String safeUsersToAdd = policy.sanitize(usersToAdd);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/includeMembers/%s", safeGroupingPath,
                 safeUsersToAdd);
-        return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
-    }
-
-    /**
-     * Add a user to exclude group of grouping at path.
-     */
-    @PostMapping(value = "/{groupingPath}/{userToAdd}/addMemberToExcludeGroup")
-    public ResponseEntity<String> addMemberToExcludeGroup(Principal principal,
-            @PathVariable String groupingPath,
-            @PathVariable String userToAdd) {
-        logger.info("Entered REST addMemberToExcludeGroup...");
-        String safeGroupingPath = policy.sanitize(groupingPath);
-        String safeUserToAdd = policy.sanitize(userToAdd);
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/excludeMembers/%s", safeGroupingPath, safeUserToAdd);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.PUT);
     }
 
@@ -430,6 +396,7 @@ public class GroupingsRestController {
      * Fetch a page of the specified Grouping.
      */
     @GetMapping(value = "/groupings/{path:.+}")
+    // todo getGrouping
     public ResponseEntity<String> grouping(Principal principal,
             @PathVariable String path,
             @RequestParam(required = false) Integer page,
@@ -535,7 +502,7 @@ public class GroupingsRestController {
      * Fetch a list of supported sync destinations for grouping at path.
      */
     @GetMapping(value = "/groupings/{path}/syncDestinations")
-    public ResponseEntity<String> getAllSyncDestinations(Principal principal, @PathVariable String path) {
+    public ResponseEntity<String> allSyncDestinations(Principal principal, @PathVariable String path) {
         logger.info("Entered REST getAllSyncDestinations...");
         String safePath = policy.sanitize(path);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/syncDestinations", safePath);
@@ -562,15 +529,5 @@ public class GroupingsRestController {
         }
         String uri = String.format(API_2_1_BASE + "/groupings/%s/syncDests/%s/%s", grouping, syncDest, ending);
         return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
-    }
-
-    private ResponseEntity<String> credentialCheck() {
-        String uri = API_2_1_BASE + "/adminsGroupings";
-        return httpRequestService.makeApiRequest(CREDENTIAL_CHECK_USER, uri, HttpMethod.GET);
-    }
-
-    private ResponseEntity<String> isBackendUp() {
-        String uri = API_2_1_BASE + "/";
-        return httpRequestService.makeApiRequest(CREDENTIAL_CHECK_USER, uri, HttpMethod.GET);
     }
 }
