@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.hawaii.its.ti.iam</groupId>
@@ -115,14 +115,14 @@
             <artifactId>spring-security-cas</artifactId>
         </dependency>
         <dependency>
-           <groupId>org.jasig.cas.client</groupId>
-           <artifactId>cas-client-core</artifactId>
-           <version>${org.jasig.cas.client-version}</version>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-core</artifactId>
+            <version>${org.jasig.cas.client-version}</version>
         </dependency>
         <dependency>
-           <groupId>org.jasig.cas.client</groupId>
-           <artifactId>cas-client-support-saml</artifactId>
-           <version>${org.jasig.cas.client-version}</version>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-support-saml</artifactId>
+            <version>${org.jasig.cas.client-version}</version>
         </dependency>
 
         <!-- Test -->
@@ -201,8 +201,8 @@
             <version>2.3.0</version>
             <exclusions>
                 <exclusion>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -268,12 +268,21 @@
                 <version>3.0-beta-02</version>
                 <configuration>
                     <preloadSources>
-                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js"></source>
+                        <source>classpath/META-INF/resources/webjars/angularjs/${angularjs-version}/angular.min.js">
+                        </source>
                         <source>classpath/META-INF/resources/webjars/jquery/${jquery-version}/jquery.min.js</source>
-                        <source>classpath/META-INF/resources/webjars/bootstrap/${bootstrap-version}/js/bootstrap.min.js</source>
-                        <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap.min.js</source>
-                        <source>classpath/META-INF/resources/webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls.min.js</source>
-                        <source>classpath/META-INF/resources/webjars/angular-mocks/${angular-mocks-version}/angular-mocks.js</source>
+                        <source>
+                            classpath/META-INF/resources/webjars/bootstrap/${bootstrap-version}/js/bootstrap.min.js
+                        </source>
+                        <source>
+                            classpath/META-INF/resources/webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap.min.js
+                        </source>
+                        <source>
+                            classpath/META-INF/resources/webjars/angular-ui-bootstrap/${angular-ui-bootstrap-version}/ui-bootstrap-tpls.min.js
+                        </source>
+                        <source>
+                            classpath/META-INF/resources/webjars/angular-mocks/${angular-mocks-version}/angular-mocks.js
+                        </source>
                         <source>classpath/META-INF/resources/webjars/lodash/${lodash-version}/lodash.min.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/admin.controller.js</source>
@@ -281,7 +290,8 @@
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/groupings.service.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/app.constants.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/general.controller.js</source>
-                        <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.controller.js</source>
+                        <source>${basedir}/src/main/resources/static/javascript/mainApp/membership.controller.js
+                        </source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/owner.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/table.controller.js</source>
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/timeout.controller.js</source>
@@ -303,21 +313,19 @@
                             <target>
                                 <echo>Now that you have a clean project,</echo>
                                 <echo>here are some common goals for this project:</echo>
-                                <echo>$ mvn clean test</echo>
-                                <echo>$ mvn clean test -Dtest=*SystemTest </echo>
-                                <echo>$ mvn clean test -Dspring.profiles.active=test -Dtest=Test* </echo>
-                                <echo>$ mvn clean package</echo>
-                                <echo>$ mvn -Dmaven.test.skip=true clean package</echo>
-                                <echo>$ mvn jasmine:test</echo>
-                                <echo>$ mvn clean test jacoco:report</echo>
-                                <echo>$ mvn sass:watch</echo>
-                                <echo>$ mvn sass:update-stylesheets</echo>
                                 <echo/>
-                                <echo>To run the integrations tests with your Grouper server:</echo>
-                                <echo>$ mvn -Dtest=TestGroupingsRestController test</echo>
+                                <echo>To run the unit tests with your Grouper server:</echo>
+                                <echo>$ mvn clean test</echo>
+                                <echo>To run the javascript tests with jasmine:</echo>
+                                <echo>$ mvn clean jasmine:test</echo>
+                                <echo>To create a jacoco test report:</echo>
+                                <echo>$ mvn clean test jacoco:report</echo>
                                 <echo/>
                                 <echo>To run UH Groupings locally:</echo>
                                 <echo>$ mvn clean spring-boot:run</echo>
+                                <echo/>
+                                <echo>To access a list of possible commands:</echo>
+                                <echo>https://www.hawaii.edu/bwiki/display/SITARd/Unit+Testing#UnitTesting-RunningYourTest</echo>
                             </target>
                         </configuration>
                     </execution>
@@ -382,12 +390,12 @@
                 <version>3.7.2</version>
                 <configuration>
                     <resources>
-                    <resource>
-                        <source>
-                        <directory>${basedir}/src/main/resources/static/scss</directory>
-                        </source>
-                        <destination>${basedir}/src/main/resources/static/css</destination>
-                    </resource>
+                        <resource>
+                            <source>
+                                <directory>${basedir}/src/main/resources/static/scss</directory>
+                            </source>
+                            <destination>${basedir}/src/main/resources/static/css</destination>
+                        </resource>
                     </resources>
                 </configuration>
             </plugin>
