@@ -388,7 +388,7 @@ public class GroupingsRestController {
         logger.info("Entered REST removeOwnerships...");
         String safeGroupingPath = policy.sanitize(groupingPath);
         String safeOwnerToRemove = policy.sanitize(ownerToRemove);
-        String uri = String.format(API_2_1_BASE + "/groupings/%s/removeOwners/%s", safeGroupingPath, safeOwnerToRemove);
+        String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", safeGroupingPath, safeOwnerToRemove);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.DELETE);
     }
 
