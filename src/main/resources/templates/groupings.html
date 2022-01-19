@@ -1,9 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
       lang="en">
-<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <head th:replace="header :: copy(headingTitle='UH Groupings Owners')"></head>
 <body ng-app="UHGroupingsApp" ng-controller="OwnerJsController" data-ng-init="init()">
 <nav th:replace="menubar :: copy"></nav>
