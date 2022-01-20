@@ -647,9 +647,9 @@
             reader.readAsText(file);
         };
 
-        $scope.removeTextFile = function() {
-            angular.element(document.querySelector('#upload')).val(null);
-        }
+        $scope.removeTextFile = function () {
+            angular.element(document.querySelector("#upload")).val(null);
+        };
 
         /**
          * Get the Person properties from members and puts them in a list
@@ -913,7 +913,7 @@
                     _.some($scope.groupingExclude, { uhUuid: user });
             } else if (list === "owners") {
                 return _.some($scope.groupingOwners, { username: user }) ||
-                    _.some($scope.groupingOwners, { uhUuid: user })
+                    _.some($scope.groupingOwners, { uhUuid: user });
             }
             return false;
         };
@@ -1272,11 +1272,16 @@
                         $scope.memberToRemove = membersToRemove;
                     }
                     $scope.memberToRemove = returnMemberObjectFromUserIdentifier($scope.memberToRemove, currentPage);
-                    $scope.createRemoveModal({
-                        user: $scope.memberToRemove,
-                        listName: listName,
-                        scope: $scope
-                    });
+                    if (listName === "owners" && $scope.groupingOwners.length === 1) {
+                        const userType = "owner";
+                        $scope.createRemoveErrorModal(userType);
+                    } else {
+                        $scope.createRemoveModal({
+                            user: $scope.memberToRemove,
+                            listName: listName,
+                            scope: $scope
+                        });
+                    }
                 }
             }
         };
@@ -1310,12 +1315,13 @@
                 let currentMember = returnMemberObjectFromUserIdentifier(member, listToSearch);
                 if (currentMember === undefined) {
                     membersNotInList.push(member);
+                    continue;
                 }
                 let person = {
                     "uid": currentMember.username,
                     "uhUuid": currentMember.uhUuid,
                     "name": currentMember.name
-                }
+                };
                 $scope.multiRemoveResults.push(person);
             }
             if ($scope.multiRemoveResults.length > 0) {
@@ -1338,12 +1344,17 @@
                 return launchDynamicModal(Message.Title.REMOVE_INPUT_ERROR, Message.Body.REMOVE_INPUT_ERROR);
             }
 
-            $scope.multiRemovePromptModalInstance = $uibModal.open({
-                templateUrl: "modal/multiRemovePromptModal",
-                backdrop: "static",
-                scope: $scope,
-                keyboard: false
-            });
+            if ($scope.multiRemoveResults.length === $scope.groupingOwners.length && listName === "owners") {
+                const userType = "owner";
+                $scope.createRemoveErrorModal(userType);
+            } else {
+                $scope.multiRemovePromptModalInstance = $uibModal.open({
+                    templateUrl: "modal/multiRemovePromptModal",
+                    backdrop: "static",
+                    scope: $scope,
+                    keyboard: false
+                });
+            }
             $scope.loading = false;
             $scope.multiRemovePromptModalInstance.result.then(async function () {
                 $scope.loading = true;
@@ -1454,10 +1465,6 @@
             $scope.membersToModify = [];
         }
 
-        function handleMultiMemberRemove() {
-            $scope.searchForUserGroupingInformation();
-        }
-
         function handleGroupingReset() {
             $scope.getGroupingInformation();
             $scope.loading = false;
@@ -1528,13 +1535,13 @@
 
             const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
 
-            groupingsService.getMemberAttributes(userToRemove, function(person) {
-               if (person === "") {
-                   return;
-               }  else {
-                   $scope.initMemberDisplayName(person);
-               }
-               //Ask for confirmation from the user to remove the member
+            groupingsService.getMemberAttributes(userToRemove, function (person) {
+                if (person === "") {
+                    return;
+                } else {
+                    $scope.initMemberDisplayName(person);
+                }
+                //Ask for confirmation from the user to remove the member
                 $scope.removeModalInstance = $uibModal.open({
                     templateUrl: "modal/removeModal",
                     windowClass: windowClass,
@@ -1556,7 +1563,7 @@
                         groupingsService.removeAdmin(userToRemove, handleAdminRemove, handleUnsuccessfulRequest);
                     }
                 });
-            }, function(res) {
+            }, function (res) {
                 $scope.user = userToRemove;
                 $scope.resStatus = res.status;
             });
@@ -1702,6 +1709,7 @@
                 case "owners":
                     $scope.ownerToAdd = "";
                     $scope.multiRemoveResults = [];
+                    $scope.membersNotInList = [];
                     break;
                 case "admins":
                     $scope.adminToAdd = "";
