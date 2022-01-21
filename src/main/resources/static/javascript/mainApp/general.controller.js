@@ -714,6 +714,8 @@
                 await groupingsService.addMembersToIncludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
             } else if (listName === "Exclude") {
                 await groupingsService.addMembersToExcludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);
+            } else if (listName === "owners") {
+                await groupingsService.addOwnerships(groupingPath, list, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
         };
 
@@ -877,7 +879,7 @@
             } else if (list === "Exclude") {
                 groupingsService.addMembersToExclude(userToAdd, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "owners") {
-                groupingsService.assignOwnership(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
+                groupingsService.addOwnerships(groupingPath, userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             } else if (list === "admins") {
                 groupingsService.addAdmin(userToAdd, handleSuccessfulAdd, handleUnsuccessfulRequest);
             }
@@ -1066,16 +1068,32 @@
         };
 
         /**
-         * Give a user ownership of a grouping.
+         * Give a user or multiple users ownership of a grouping.
          */
-        $scope.addOwner = function () {
+        $scope.addOwners = function () {
             const ownerToAdd = $scope.ownerToAdd;
             const list = "owners";
             $scope.userToAdd = ownerToAdd;
             if (_.isEmpty(ownerToAdd)) {
                 $scope.emptyInput = true;
             } else {
-                $scope.validateAndAddUser(ownerToAdd, list);
+                let numOwners = ($scope.ownerToAdd.split(" ").length - 1);
+                if (numOwners > 0) {
+                    let users = $scope.parseAddRemoveInputStr(ownerToAdd);
+                    $scope.ownerToAdd = [];
+                    if (numOwners > $scope.multiAddThreshold) {
+                        launchDynamicModal(
+                            Message.Title.LARGE_IMPORT,
+                            `You are attempting to import ${numMembers} new users to the ${listName} list.
+                             Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with
+                             the import results will be sent.`,
+                            8000);
+                    }
+                    $scope.addMultipleMembers(users, list);
+                } else {
+                    $scope.userToAdd = ownerToAdd;
+                    $scope.validateAndAddUser(ownerToAdd, list);
+                }
             }
         };
 
@@ -1347,6 +1365,7 @@
             if ($scope.multiRemoveResults.length === $scope.groupingOwners.length && listName === "owners") {
                 const userType = "owner";
                 $scope.createRemoveErrorModal(userType);
+                clearMemberInput(listName);
             } else {
                 $scope.multiRemovePromptModalInstance = $uibModal.open({
                     templateUrl: "modal/multiRemovePromptModal",
@@ -1354,22 +1373,22 @@
                     scope: $scope,
                     keyboard: false
                 });
+                $scope.loading = false;
+                $scope.multiRemovePromptModalInstance.result.then(async function () {
+                    $scope.loading = true;
+                    if (listName === "Include") {
+                        await groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                    } else if (listName === "Exclude") {
+                        await groupingsService.removeMembersFromExclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                    } else if (listName === "owners") {
+                        await groupingsService.removeOwners($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
+                    }
+                }, function (reason) {
+                    if (reason === "cancel") {
+                        clearMemberInput(listName);
+                    }
+                });
             }
-            $scope.loading = false;
-            $scope.multiRemovePromptModalInstance.result.then(async function () {
-                $scope.loading = true;
-                if (listName === "Include") {
-                    await groupingsService.removeMembersFromInclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
-                } else if (listName === "Exclude") {
-                    await groupingsService.removeMembersFromExclude($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
-                } else if (listName === "owners") {
-                    await groupingsService.removeOwners($scope.selectedGrouping.path, membersToRemove, $scope.batchRemoveResponseHandler, handleUnsuccessfulRequest);
-                }
-            }, function (reason) {
-                if (reason === "cancel") {
-                    clearMemberInput(listName);
-                }
-            });
         }
 
         /**
@@ -1709,7 +1728,9 @@
                 case "owners":
                     $scope.ownerToAdd = "";
                     $scope.multiRemoveResults = [];
+                    $scope.multiAddResults = [];
                     $scope.membersNotInList = [];
+                    $scope.multiAddFailures = [];
                     break;
                 case "admins":
                     $scope.adminToAdd = "";
