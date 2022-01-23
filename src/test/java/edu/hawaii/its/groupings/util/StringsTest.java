@@ -1,11 +1,13 @@
 package edu.hawaii.its.groupings.util;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -41,23 +43,24 @@ public class StringsTest {
     }
 
     @Test
-    public void truncate() {
+    public void trunctate() {
         String s = "abcdefghijk";
-        assertThat(Strings.truncate(s, 3), is("abc"));
-        assertThat(Strings.truncate(s, 2), is("ab"));
-        assertThat(Strings.truncate(s, 1), is("a"));
-        assertThat(Strings.truncate(s, 0), is(""));
-        assertThat(Strings.truncate(s, 11), is(s));
-        assertThat(Strings.truncate(s, 12), is(s));
+        assertThat(Strings.truncate(s, 3), equalTo("abc"));
+        assertThat(Strings.truncate(s, 2), equalTo("ab"));
+        assertThat(Strings.truncate(s, 1), equalTo("a"));
+        assertThat(Strings.truncate(s, 0), equalTo(""));
+        assertThat(Strings.truncate(s, 11), equalTo(s));
+        assertThat(Strings.truncate(s, 12), equalTo(s));
 
         assertNull(Strings.truncate(null, 0));
         assertNull(Strings.truncate(null, 1));
 
         // Note this result:
         try {
-            assertThat(Strings.truncate(s, -1), is(s));
-        } catch (IndexOutOfBoundsException ex) {
-            assertEquals(s, Strings.truncate(s, -1));
+            Strings.truncate(s, -1);
+            fail("Should not reach here.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(IndexOutOfBoundsException.class));
         }
     }
 
