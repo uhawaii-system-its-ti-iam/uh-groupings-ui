@@ -1,17 +1,15 @@
 package edu.hawaii.its.api.controller;
 
 import java.security.Principal;
-import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.hawaii.its.api.service.HttpRequestService;
 import edu.hawaii.its.groupings.access.User;
 import edu.hawaii.its.groupings.access.UserContextService;
+import edu.hawaii.its.groupings.configuration.Realm;
+import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
 
 @RestController
 @RequestMapping("/api/groupings")
@@ -36,7 +36,7 @@ public class GroupingsRestController {
 
     private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
 
-    private org.owasp.html.PolicyFactory policy;
+    private final PolicyFactory policy;
 
     @Value("${app.groupings.controller.uuid}")
     private String uuid;
@@ -65,40 +65,46 @@ public class GroupingsRestController {
     @Value("${groupings.api.opt_out}")
     private String OPT_OUT;
 
-    /*
-     * This is a dummy name and should never become a real user. In the event that it does, it would cause the app to
-     * crash. A solution to this would be either remove the dummy user from the database or use a different fake name
-     * that would then become the dummy name.
-     */
-    @Value("${groupings.api.check}")
-    private String CREDENTIAL_CHECK_USER;
-
-    @Autowired
-    private Environment env;
-
-    @Autowired
-    HttpRequestService httpRequestService;
-
-    @Autowired
-    private UserContextService userContextService;
+    @Value("${app.api.handshake.enabled:true}")
+    private Boolean API_HANDSHAKE_ENABLED = true;
 
     /*
      * Checks to make sure that the API is running and that there are no issues with the overrides file.
      * Gets the active profiles and only runs the tests the active profile relies on the API.
      */
+    @Value("${groupings.api.check}")
+    private String CREDENTIAL_CHECK_USER;
+
+    @Autowired
+    private HttpRequestService httpRequestService;
+
+    @Autowired
+    private Realm realm;
+
+    @Autowired
+    private UserContextService userContextService;
+
+    // Constructor.
+    public GroupingsRestController() {
+        policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+    }
+
+    /*
+     * Checks to make sure that the API is running and that there are no issues with
+     * the overrides file. Gets the active profiles and only runs the tests the
+     * active profile relies on the API.
+     */
     @PostConstruct
     public void init() {
         Assert.hasLength(uuid, "Property 'app.groupings.controller.uuid' is required.");
-        logger.info("GroupingsRestController started.");
+        logger.info("API_HANDSHAKE_ENABLED: " + API_HANDSHAKE_ENABLED);
+        Assert.notNull(API_HANDSHAKE_ENABLED, "Property 'app.api.handshake.enabled' is required.");
 
-        policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-
-        if (!Arrays.asList(env.getActiveProfiles()).contains("localTest")) {
-
-            // Stops the application from running if the API is not up and displays error message to console.
-            Assert.isTrue(isBackendUp().getStatusCode().is2xxSuccessful(),
-                    "Please start the UH Groupings API first.");
+        if (shouldDoApiHandshake()) {
+            doApiHandshake();
         }
+
+        logger.info(getClass().getSimpleName() + " started.");
     }
 
     @GetMapping(value = "/")
@@ -524,10 +530,8 @@ public class GroupingsRestController {
     public ResponseEntity<String> setOptOut(Principal principal,
             @PathVariable String grouping,
             @PathVariable boolean optOutOn) {
-
-        String safeGrouping = policy.sanitize(grouping);
-
         logger.info("Entered REST setOptOut...");
+        String safeGrouping = policy.sanitize(grouping);
         return changePreference(safeGrouping, principal.getName(), OPT_OUT, optOutOn);
     }
 
@@ -543,7 +547,7 @@ public class GroupingsRestController {
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Helper Functions
+    // Helper Methods
     //////////////////////////////////////////////////////////////////////
 
     private ResponseEntity<String> changePreference(String grouping, String username, String preference, Boolean isOn) {
@@ -564,13 +568,49 @@ public class GroupingsRestController {
         return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
     }
 
-    private ResponseEntity<String> credentialCheck() {
-        String uri = API_2_1_BASE + "/adminsGroupings";
-        return httpRequestService.makeApiRequest(CREDENTIAL_CHECK_USER, uri, HttpMethod.GET);
+    protected Boolean shouldDoApiHandshake() {
+        if (!API_HANDSHAKE_ENABLED) {
+            logger.info("API handshake disabled.");
+            return false;
+        }
+
+        return !realm.isAnyProfileActive("default", "localTest");
     }
 
-    private ResponseEntity<String> isBackendUp() {
-        String uri = API_2_1_BASE + "/";
-        return httpRequestService.makeApiRequest(CREDENTIAL_CHECK_USER, uri, HttpMethod.GET);
+    protected void doApiHandshake() {
+        if (shouldDoApiHandshake()) {
+            boolean success = false;
+            try {
+                final String username = CREDENTIAL_CHECK_USER;
+                final String url = API_2_1_BASE + "/";
+                success = httpRequestService.makeApiRequest(username, url, HttpMethod.GET)
+                        .getStatusCode()
+                        .is2xxSuccessful();
+            } catch (Exception e) {
+                logger.debug("API Handshack error: ", e);
+            }
+
+            if (!success) {
+                String text = "Please start the UH Groupings API first.";
+                throw new ApiServerHandshakeException(text);
+            }
+        }
     }
+
+    public HttpRequestService getHttpRequestService() {
+        return httpRequestService;
+    }
+
+    public void setHttpRequestService(HttpRequestService httpRequestService) {
+        this.httpRequestService = httpRequestService;
+    }
+
+    public Realm getRealm() {
+        return realm;
+    }
+
+    public void setRealm(Realm realm) {
+        this.realm = realm;
+    }
+
 }
