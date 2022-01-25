@@ -153,12 +153,12 @@ describe("GroupingsService", function () {
         let newOwner;
         it("should call dataProvider.updateData", function () {
             spyOn(dp, "updateData");
-            gs.assignOwnership(groupingPath, newOwner, onSuccess, onError);
+            gs.addOwnerships(groupingPath, newOwner, onSuccess, onError);
             expect(dp.updateData).toHaveBeenCalled();
         });
         it("should use the correct path", function () {
-            gs.assignOwnership(groupingPath, newOwner, onSuccess, onError);
-            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + newOwner + "/assignOwnership").respond(200);
+            gs.addOwnerships(groupingPath, newOwner, onSuccess, onError);
+            httpBackend.expectPOST(BASE_URL + groupingPath + "/" + newOwner + "/addOwnerships").respond(200);
             expect(httpBackend.flush).not.toThrow();
         });
     });

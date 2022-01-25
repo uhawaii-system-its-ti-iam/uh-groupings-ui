@@ -367,11 +367,11 @@ public class GroupingsRestController {
      * read and write privileges
      * of a grouping.
      */
-    @PostMapping(value = "/{groupingPath}/{newOwner}/assignOwnership")
-    public ResponseEntity<String> assignOwnership(Principal principal,
+    @PostMapping(value = "/{groupingPath}/{newOwner}/addOwnerships")
+    public ResponseEntity<String> addOwnerships(Principal principal,
             @PathVariable String groupingPath,
             @PathVariable String newOwner) {
-        logger.info("Entered REST assignOwnership...");
+        logger.info("Entered REST addOwnerships...");
         String safeGrouping = policy.sanitize(groupingPath);
         String safeNewOwner = policy.sanitize(newOwner);
         String uri = String.format(API_2_1_BASE + "/groupings/%s/owners/%s", safeGrouping, safeNewOwner);

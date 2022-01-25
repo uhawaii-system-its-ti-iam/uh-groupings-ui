@@ -129,8 +129,8 @@
             /**
              * Add a member to the exclude group of a grouping.
              */
-            assignOwnership(path, newOwner, onSuccess, onError) {
-                let endpoint = BASE_URL + path + "/" + newOwner + "/assignOwnership";
+            addOwnerships(path, newOwner, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/" + newOwner + "/addOwnerships";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
 
@@ -141,6 +141,7 @@
                 let endpoint = BASE_URL + adminToAdd + "/addAdmin";
                 dataProvider.updateData(endpoint, onSuccess, onError);
             },
+
             /**
              * Remove a member from multiple groups.
              */
