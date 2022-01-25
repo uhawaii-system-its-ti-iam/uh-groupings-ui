@@ -1,0 +1,117 @@
+// In admin, memberships, and groupings.
+.manage-groupings {
+    td {
+        span {
+            &.path {
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: calc(100% - 40px);
+            }
+        }
+
+        &:last-child {
+            max-width: 220px;
+        }
+
+        &:first-child {
+            i {
+                flex-basis: 20px;
+                margin-right: 8px;
+            }
+            span {
+                flex: 1;
+            }
+        }
+    }
+
+    // Manage Memberships
+    tr {
+        td {
+            padding: 0px;
+        }
+    }
+}
+
+// Style for the grouping path.
+.form-control-sm {
+    height: 25px !important;
+}
+
+#selectall {
+    margin-left: 0;
+}
+
+.description-input {
+    float: left;
+}
+
+#groupingsContainer {
+    display: none;
+}
+
+// Groupings card
+.card {
+    overflow: hidden;
+    margin-top: 1rem;
+
+    &.card-tab-content {
+        .card-header {
+            border-top-left-radius: 0px;
+            margin-top: 0px;
+        }
+    }
+
+    @include media-breakpoint(max-landscape-phone) {
+        &-title {
+            text-align: center;
+            &-text {
+                text-align: center;
+            }
+        }
+    }
+}
+
+// Basis and Exclude tab.
+
+// Members to remove section.
+.input-group {
+    width: 35em;
+}
+
+.basis-column {
+    width: 3%;
+}
+
+// Add margin to "add" button in owners, exclude, and include.
+.add-margin {
+    margin-left: 2px;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+/**
+ * Styling for selected grouping header.
+ * Styles the grouping name and 'Return to Groupings'
+ * button, so on mobile, the button sits on top of the
+ * grouping name, eliminating whitespace.
+ */
+ @include media-breakpoint(max-landscape-phone){
+    #selectedGroupHeader {
+        display: table; /* The row is now a table */
+        margin: auto; /* Centering */
+        width: 100%;
+        padding: 0px;
+    }
+
+    #groupNameCol {
+        display: table-footer-group; /* Makes the grouping name the footer of table */
+    }
+
+    #returnToGroup {
+        display: table-header-group; /* Makes the button the header of table */
+    }
+}

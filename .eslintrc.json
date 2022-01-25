@@ -1,0 +1,7 @@
+{
+  "globals": {
+    "angular": true,
+    "UHGroupingsApp": true,
+    "_": true
+  }
+}

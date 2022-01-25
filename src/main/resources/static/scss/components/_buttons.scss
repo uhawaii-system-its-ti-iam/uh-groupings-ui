@@ -1,0 +1,122 @@
+@import 'mixins';
+
+form.seamless button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    flex-basis: 40px;
+}
+
+.btn {
+
+    // Logout button.
+    &:hover,
+    &:focus,
+    &:active {
+        #name {
+            color:$seafoam;
+        }
+    }
+
+    &.dark-teal-bg {
+        &:hover,
+        &:focus,
+        &:active {
+            color: $uh-white;
+            background: $green-blue;
+        }
+    }
+
+    // Remove button.
+    &.btn-remove {
+        margin-left: 2px;
+        margin-right: 2px;
+        @include btn-rmv;
+        &:hover,
+        &:focus,
+        &:active {
+            background: darkred;
+        }
+    }
+
+    &.btn-primary, &.btn-lg {
+        @include gradient;
+        &:hover,
+        &:focus,
+        &:active {
+            background: $green-blue right center;
+        }
+    }
+
+    // Buttons for membership, admin, owner in home page
+    &.btn-bottom {
+        @include gradient;
+    }
+
+    &-bottom {
+        position: absolute;
+        bottom: 0;
+        margin: -39px auto;
+    }
+
+    // Default button
+    &-default {
+        @include gradient;
+    }
+
+    // Changes the logout color when you hover.
+    &-outline-secondary {
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: $green-blue;
+            border-color: $green-blue;
+        }
+    }
+
+    // Button for copying path, clipboard, and CSV
+    &-sm {
+        padding: 0px 5px;
+
+        &:hover {
+            background: $green-blue;
+        }
+
+        &.btn-clipboard {
+            padding: 1px 5px 2px;
+        }
+    }
+
+    &-light:hover {
+        color: white;
+        background-color: $uh-blue4;
+    }
+}
+
+// Change description for cards.
+.description-form-button {
+    color: $dark-teal;
+    border: none;
+    background-color: white;
+    padding: 0 5px;
+    margin: 0 -1px;
+    height: 2.356rem;
+    width: auto;
+}
+
+.description-input {
+    border: white;
+}
+
+.far.fa-trash-alt {
+    margin-right: .75rem;
+    color: $uh-red;
+}
+
+.far.fa-fw.fa-edit {
+    color: $dark-teal;
+
+    &.white-style {
+        border: none;
+        color:white;
+    }
+}

@@ -1,0 +1,85 @@
+html {
+    position: relative;
+    min-height: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: 'Source Sans Pro', 'Helvetica', Arial, sans-serif;
+    padding-top: 3.5rem; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    display: flex; /* Creates flexboxes. */
+    flex-direction: column; /* Makes the body display vertical. */
+    min-height: 100vh;
+
+    // For the Role: and Welcome *name*
+    h1 {
+        color: $uh-black;
+        font-weight: 700;
+    }
+}
+
+// Holds name and description.
+main, .container {
+    flex: 1;
+}
+
+.user-icon {
+    height: 100px;
+    position: relative;
+    width: 100px;
+
+    .user-role {
+        bottom: 0;
+        position: absolute;
+        right: -.25rem;
+    }
+}
+
+.dashboard-item-icon .fa-wrench {
+    transform: rotate(-90deg);
+}
+
+td.uh-pre {
+    @include prefix((
+        white-space: pre-wrap
+    ), webkit moz o hp);
+    white-space: pre;
+    white-space: pre-line;
+    display: inline-block;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+// The loading circle
+.loader {
+    border: 16px solid white;
+    border-top: 16px solid black;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    animation: spin 1s linear infinite;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left: -5.357em;
+    margin-top: -5.357em;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
