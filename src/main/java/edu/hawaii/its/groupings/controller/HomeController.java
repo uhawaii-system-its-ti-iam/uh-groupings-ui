@@ -3,9 +3,12 @@ package edu.hawaii.its.groupings.controller;
 import edu.hawaii.its.groupings.access.UserContextService;
 import edu.hawaii.its.groupings.service.EmailService;
 import edu.hawaii.its.groupings.type.Feedback;
+
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -13,13 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.util.Locale;
-import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -165,11 +164,6 @@ public class HomeController {
     @GetMapping(value = "/modal/syncDestModal")
     public String syncDestModal() {
         return "modal/syncDestModal";
-    }
-
-    @GetMapping(value = "/modal/emailListModal")
-    public String emailListModal() {
-        return "modal/emailListModal";
     }
 
     @GetMapping(value = "/modal/removeErrorModal")

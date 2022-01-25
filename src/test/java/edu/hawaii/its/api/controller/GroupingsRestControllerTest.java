@@ -1,32 +1,17 @@
 package edu.hawaii.its.api.controller;
 
-import edu.hawaii.its.api.service.HttpRequestService;
-import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
-import edu.hawaii.its.groupings.controller.WithMockUhUser;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.context.WebApplicationContext;
-
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.BDDMockito.given;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockingDetails;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,6 +23,29 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.lang.reflect.Field;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
+
+import edu.hawaii.its.api.service.HttpRequestService;
+import edu.hawaii.its.groupings.configuration.Realm;
+import edu.hawaii.its.groupings.configuration.SpringBootWebApplication;
+import edu.hawaii.its.groupings.controller.WithMockUhUser;
+import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("localTest")
@@ -52,6 +60,9 @@ public class GroupingsRestControllerTest {
 
     @MockBean
     private HttpRequestService httpRequestService;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Autowired
     private WebApplicationContext context;
@@ -264,7 +275,7 @@ public class GroupingsRestControllerTest {
                 .willReturn(new ResponseEntity(HttpStatus.OK));
 
         assertNotNull(mockMvc.perform(get(uri)
-                        .with(csrf()))
+                .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn());
 
@@ -607,6 +618,89 @@ public class GroupingsRestControllerTest {
 
         verify(httpRequestService, times(1))
                 .makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
+    public void shouldDoApiHandshake() throws Exception {
+        GroupingsRestController controller = applicationContext.getBean(GroupingsRestController.class);
+
+        Realm realm = controller.getRealm();
+        assertFalse(realm.isAnyProfileActive("default"));
+        assertTrue(realm.isAnyProfileActive("localTest"));
+
+        // What we are testing.
+        assertFalse(controller.shouldDoApiHandshake());
+
+        Realm realmMock = mock(Realm.class);
+        controller.setRealm(realmMock); // Swap in mock.
+        assertTrue(mockingDetails(controller.getRealm()).isMock());
+        given(realmMock.isAnyProfileActive("default", "localTest"))
+                .willReturn(false);
+
+        // What we are testing.
+        assertTrue(controller.shouldDoApiHandshake());
+
+        // Mock real realm back.
+        controller.setRealm(realm);
+        assertFalse(mockingDetails(controller.getRealm()).isMock());
+
+        // Let's cheat a little to get at some private fields.
+        Class<?> c0 = controller.getClass();
+        Field field0 = c0.getDeclaredField("API_HANDSHAKE_ENABLED");
+        field0.setAccessible(true);
+        Boolean existingValue = (Boolean) field0.get(controller);
+        assertTrue(existingValue);
+        field0.set(controller, Boolean.FALSE);
+
+        // What we are testing.
+        assertFalse(controller.shouldDoApiHandshake());
+
+        // Put property value back.
+        field0.set(controller, Boolean.TRUE);
+    }
+
+    @Test
+    @WithMockUhUser
+    public void doApiHandshake() {
+        GroupingsRestController controller = applicationContext.getBean(GroupingsRestController.class);
+        assertFalse(controller.shouldDoApiHandshake());
+        try {
+            controller.doApiHandshake();
+        } catch (Exception e) {
+            fail("Should not reach here.");
+        }
+
+        Realm realm = controller.getRealm();
+        Realm realmMock = mock(Realm.class);
+        controller.setRealm(realmMock); // Swap in mock.
+        assertTrue(mockingDetails(controller.getRealm()).isMock());
+        given(realmMock.isAnyProfileActive("default", "localTest"))
+                .willReturn(false);
+
+        try {
+            controller.doApiHandshake();
+            fail("Should not reach here.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(ApiServerHandshakeException.class));
+        }
+
+        // Cause in an internal exception.
+        HttpRequestService httpRequestServiceOriginal = controller.getHttpRequestService();
+        controller.setHttpRequestService(null);
+
+        try {
+            controller.doApiHandshake();
+            fail("Should not reach here.");
+        } catch (Exception e) {
+            assertThat(e, instanceOf(ApiServerHandshakeException.class));
+        }
+
+        // Put stuff back.
+        controller.setHttpRequestService(httpRequestServiceOriginal);
+        controller.setRealm(realm);
+        assertFalse(mockingDetails(controller.getRealm()).isMock());
 
     }
+
 }

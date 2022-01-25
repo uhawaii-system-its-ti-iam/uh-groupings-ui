@@ -6,7 +6,7 @@ public class Strings {
 
     // Private constructor; prevent instantiation.
     private Strings() {
-        // Emtpy.
+        // Emtpy. 
     }
 
     public static String fill(final char ch, final int size) {
@@ -25,15 +25,9 @@ public class Strings {
     }
 
     public static String truncate(String value, int length) {
-        String s = value;
-
-        try {
-            if (s != null && s.length() > length) {
-                s = s.substring(0, length);
-            }
-        } catch (IndexOutOfBoundsException e) {
-            System.err.println("Index is out of Bounds " + e.getMessage());
+        if (value != null && value.length() > length) {
+            return value.substring(0, length);
         }
-        return s;
+        return value;
     }
 }

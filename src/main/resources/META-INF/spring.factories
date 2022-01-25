@@ -1,2 +1,3 @@
 org.springframework.boot.diagnostics.FailureAnalyzer=\
-    edu.hawaii.its.groupings.exceptions.PasswordFoundAnalyzer
+    edu.hawaii.its.groupings.exceptions.PasswordFoundAnalyzer,\
+    edu.hawaii.its.groupings.exceptions.ApiServerHandshakeAnalyzer
