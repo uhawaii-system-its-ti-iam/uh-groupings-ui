@@ -35,7 +35,7 @@
                     // Codacy throws an error regarding the '_' in the uniqBy function. This error will be ignored until a solution is found.
                   $scope.membershipsList = _.filter(_.sortBy(_.uniqBy(res, "name"), "name"), (membership) => {return membership.inInclude || membership.inOwner;});
                   $scope.pagedItemsMemberships = $scope.objToPageArray($scope.membershipsList, 20);
-                    $scope.loading = false;
+                  $scope.loading = false;
                 },
                 (res) => {
                     $scope.createApiErrorModal();
