@@ -139,7 +139,7 @@
          */
         groupingsService.getNumberOfMemberships((res) => {
                 $scope.numberOfMemberships = res;
-            }
+            }, (res) => { }
         );
 
         /**
