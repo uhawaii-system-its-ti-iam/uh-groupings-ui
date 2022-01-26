@@ -4,10 +4,12 @@ UHGroupingsApp.constant("Message", {
     Title: {
         IMPORT_OUT_OF_BOUNDS: "Out of Bounds Import Warning",
         LARGE_IMPORT: "Large Import Warning",
-        SLOW_IMPORT: "Slow Import Warning"
+        SLOW_IMPORT: "Slow Import Warning",
+        NO_MEMBERS_ADDED: "No Members Were Added"
     },
     Body: {
-        SLOW_IMPORT: "Feel free to exit your browser, an email will be sent of the add results."
+        SLOW_IMPORT: "Feel free to exit your browser, an email will be sent of the add results.",
+        NO_MEMBERS_ADDED: "All the members you attempted to add were ether invalid or already exist in the group."
     },
     Csv: {
         GROUP_NOT_LOADED: "Export will be available once all members are loaded.",

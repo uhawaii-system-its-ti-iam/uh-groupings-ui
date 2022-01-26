@@ -139,7 +139,8 @@
          */
         groupingsService.getNumberOfMemberships((res) => {
                 $scope.numberOfMemberships = res;
-            }, (res) => { }
+            }, (res) => {
+            }
         );
 
         /**
@@ -603,13 +604,13 @@
                     let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
                     $scope.usersToAdd = [];
                     if (numMembers > $scope.maxImport) {
-                        launchDynamicModal(
+                        $scope.launchDynamicModal(
                             Message.Title.IMPORT_OUT_OF_BOUNDS,
                             `Importing more than ${$scope.maxImport} users is not allowed.`,
                             8000);
                     } else {
                         if (numMembers > $scope.multiAddThreshold) {
-                            launchDynamicModal(
+                            $scope.launchDynamicModal(
                                 Message.Title.LARGE_IMPORT,
                                 `You are attempting to import ${numMembers} new users to the ${listName} list.
                              Imports larger than ${$scope.multiAddThreshold} can take a few minutes.  An email with 
@@ -669,21 +670,23 @@
             let groupingPath = $scope.selectedGrouping.path;
 
             let timeoutModal = function () {
-                return launchDynamicModal(
+                return $scope.launchDynamicModal(
                     Message.Title.SLOW_IMPORT,
                     Message.Body.SLOW_IMPORT,
                     8000);
             };
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Small spinner off. */
-                $scope.launchMultiAddResultModal(listName);
+
                 let data = res;
                 for (let i = 0; i < res.length; i++) {
                     data[parseInt(i, 10)] = res[parseInt(i, 10)];
                 }
                 for (let i = 0; i < data.length; i++) {
                     let result = data[parseInt(i, 10)].result;
-                    if ("FAILURE" === result) {
+                    let userWasAdded = data[parseInt(i, 10)].userWasAdded;
+
+                    if ("FAILURE" === result || !userWasAdded) {
                         continue;
                     }
                     let person = {
@@ -696,6 +699,9 @@
                 }
                 if ($scope.multiAddResults.length > 0) {
                     $scope.personProps = Object.keys($scope.multiAddResults[0]);
+                    $scope.launchMultiAddResultModal(listName);
+                } else {
+                    $scope.launchDynamicModal(Message.Title.NO_MEMBERS_ADDED, Message.Body.NO_MEMBERS_ADDED);
                 }
             };
 
@@ -783,7 +789,7 @@
          * @param body - message body to be displayed in modal body
          * @param timeTillClose - Millisecond till modal is modal is automatically closed.
          */
-        function launchDynamicModal(title, body, timeTillClose) {
+        $scope.launchDynamicModal = function (title, body, timeTillClose) {
             $scope.currentModalTitle = title;
             $scope.currentModalBody = body;
 
@@ -802,7 +808,7 @@
                     $scope.createDynamicModal.dismiss();
                 }
             };
-        }
+        };
 
         /**
          * Remove Items from the pendingList Array
