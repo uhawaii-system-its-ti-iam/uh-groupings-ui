@@ -70,7 +70,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="e in pagedItemsExclude[currentPageExclude]" class="table table-sm">
-                    <td>
+                    <td class="p-10">
                         <input class="form-check-input blank-checkbox" type="checkbox"
                                ng-model="membersInCheckboxList[e.uhUuid]"
                                ng-click="$event.stopPropagation()
