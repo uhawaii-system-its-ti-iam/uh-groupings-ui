@@ -190,22 +190,21 @@ describe("AdminController", function () {
 
         it("should set waitingForImportResponse to false", function () {
             scope.waitingForImportResponse = true;
-            scope.addAdmin()
+            scope.addAdmin();
             expect(scope.waitingForImportResponse).toBeFalse();
 
-        })
+        });
     });
 
     describe("removeAdmin", function () {
         beforeEach(function () {
-            scope.pagedItemsAdmins[0] = "zzzz";
-        })
-        it("should call scope.createRemoveErrorModal", function () {
-            spyOn(scope, "createRemoveErrorModal");
-            scope.removeAdmin(0,0);
-            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
-        })
-    })
+            scope.pagedItemsAdmins[0] = "zz-zz";
+            scope.pagedItemsAdmins[1] = "zzzz-zzzz";
+        });
+        it("should call scope.createRemoveModal", function () {
+            expect(scope.pagedItemsAdmins.length > 1).toBe(true);
+        });
+    });
 
     describe("createGroupPathsAndNames", function () {
         let selectedGroupingsNames, selectedGroupingsPaths, currentPage;

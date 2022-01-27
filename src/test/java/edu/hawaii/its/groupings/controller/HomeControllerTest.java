@@ -6,6 +6,7 @@ import edu.hawaii.its.groupings.type.Feedback;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -240,7 +241,7 @@ public class HomeControllerTest {
     @WithMockUhUser
     public void requestFeedbackWithException() throws Exception {
         HttpSession session = mockMvc.perform(get("/feedback")
-                .sessionAttr("feedback", new Feedback("exception")))
+                        .sessionAttr("feedback", new Feedback("exception")))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("feedback"))
                 .andExpect(model().attribute("feedback", hasProperty("exceptionMessage", equalTo("exception"))))
@@ -255,8 +256,8 @@ public class HomeControllerTest {
     @WithMockUhUser
     public void feedbackSubmit() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post("/feedback")
-                .with(csrf())
-                .flashAttr("feedback", new Feedback()))
+                        .with(csrf())
+                        .flashAttr("feedback", new Feedback()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/feedback"))
                 .andExpect(flash().attribute("success", equalTo(true)))
@@ -387,16 +388,6 @@ public class HomeControllerTest {
         MvcResult mvcResult = mockMvc.perform(get("/modal/syncDestModal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("modal/syncDestModal"))
-                .andReturn();
-        assertNotNull(mvcResult);
-    }
-
-    @Test
-    @WithMockUhUser(username = "uh")
-    public void requestRemoveErrorModal() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/modal/removeErrorModal"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("modal/removeErrorModal"))
                 .andReturn();
         assertNotNull(mvcResult);
     }
