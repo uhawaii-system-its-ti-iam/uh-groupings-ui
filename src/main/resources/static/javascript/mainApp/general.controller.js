@@ -13,7 +13,7 @@
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
 
         $scope.userToAdd = "";
-        $scope.usersToAdd = "";
+        $scope.manageMembers = "";
         $scope.multiAddThreshold = 100;
         $scope.maxImport = 100000;
         $scope.multiAddResults = [];
@@ -590,19 +590,19 @@
         };
 
         /**
-         * Take $scope.usersToAdd count the number of words it contains and split it into a comma separated string, then
+         * Take $scope.manageMembers count the number of words it contains and split it into a comma separated string, then
          * decide whether to a multi add or a single add is necessary.
          * @param listName
          */
         $scope.addMembers = function (listName) {
             $scope.listName = listName;
-            if (_.isEmpty($scope.usersToAdd)) {
+            if (_.isEmpty($scope.manageMembers)) {
                 $scope.emptyInput = true;
             } else {
-                let numMembers = ($scope.usersToAdd.split(" ").length - 1);
+                let numMembers = ($scope.manageMembers.split(" ").length - 1);
                 if (numMembers > 0) {
-                    let users = $scope.usersToAdd.split(/[ ,]+/).join(",");
-                    $scope.usersToAdd = [];
+                    let users = $scope.manageMembers.split(/[ ,]+/).join(",");
+                    $scope.manageMembers = [];
                     if (numMembers > $scope.maxImport) {
                         $scope.launchDynamicModal(
                             Message.Title.IMPORT_OUT_OF_BOUNDS,
@@ -620,7 +620,7 @@
                         $scope.addMultipleMembers(users, listName);
                     }
                 } else {
-                    $scope.userToAdd = $scope.usersToAdd;
+                    $scope.userToAdd = $scope.manageMembers;
                     $scope.validateAndAddUser($scope.userToAdd, listName);
                 }
             }
@@ -640,7 +640,7 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.usersToAdd = (str.split(/[\r\n]+/).join(" ")).slice();
+                $scope.manageMembers = (str.split(/[\r\n]+/).join(" ")).slice();
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
@@ -945,7 +945,7 @@
         /**
          * Create a modal that asks for confirmation when importing multiple users.
          * @param {object} options - the options object
-         * @param {string} options.usersToAdd - the users to import
+         * @param {string} options.manageMembers - the users to import
          * @param {string} options.listName - name of the list being added to
          */
         $scope.createConfirmAddMembersModal = function (options) {
@@ -956,7 +956,7 @@
                 keyboard: false
             });
             $scope.confirmAddModalInstance.result.then(function () {
-                $scope.updateAddMember(options.usersToAdd, options.listName);
+                $scope.updateAddMember(options.manageMembers, options.listName);
             });
         };
 
@@ -1068,16 +1068,16 @@
          * Give a user or multiple users ownership of a grouping.
          */
         $scope.addOwners = function () {
-            const ownerToAdd = $scope.ownerToAdd;
+            const manageOwners = $scope.manageOwners;
             const list = "owners";
-            $scope.userToAdd = ownerToAdd;
-            if (_.isEmpty(ownerToAdd)) {
+            $scope.userToAdd = manageOwners;
+            if (_.isEmpty(manageOwners)) {
                 $scope.emptyInput = true;
             } else {
-                let numOwners = ($scope.ownerToAdd.split(" ").length - 1);
+                let numOwners = ($scope.manageOwners.split(" ").length - 1);
                 if (numOwners > 0) {
-                    let users = $scope.parseAddRemoveInputStr(ownerToAdd);
-                    $scope.ownerToAdd = [];
+                    let users = $scope.parseAddRemoveInputStr(manageOwners);
+                    $scope.manageOwners = [];
                     if (numOwners > $scope.multiAddThreshold) {
                         $scope.launchDynamicModal(
                             Message.Title.LARGE_IMPORT,
@@ -1088,8 +1088,8 @@
                     }
                     $scope.addMultipleMembers(users, list);
                 } else {
-                    $scope.userToAdd = ownerToAdd;
-                    $scope.validateAndAddUser(ownerToAdd, list);
+                    $scope.userToAdd = manageOwners;
+                    $scope.validateAndAddUser(manageOwners, list);
                 }
             }
         };
@@ -1263,11 +1263,11 @@
                 $scope.membersToModify = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
                 $scope.membersInCheckboxList = {};
             }
-            if (!_.isEmpty($scope.usersToAdd)) {
-                $scope.membersToModify = $scope.usersToAdd;
+            if (!_.isEmpty($scope.manageMembers)) {
+                $scope.membersToModify = $scope.manageMembers;
             }
-            if (!_.isEmpty(($scope.ownerToAdd))) {
-                $scope.membersToModify = $scope.ownerToAdd;
+            if (!_.isEmpty(($scope.manageOwners))) {
+                $scope.membersToModify = $scope.manageOwners;
             }
             if (_.isEmpty($scope.membersToModify)) {
                 $scope.emptyInput = true;
@@ -1703,7 +1703,7 @@
                 case "Include":
                 case "Exclude":
                     $scope.userToAdd = "";
-                    $scope.usersToAdd = "";
+                    $scope.manageMembers = "";
                     $scope.userNameList = [];
                     $scope.multiAddResults = [];
                     $scope.waitingForImportResponse = false;
@@ -1723,7 +1723,7 @@
                     resetCheckboxes();
                     break;
                 case "owners":
-                    $scope.ownerToAdd = "";
+                    $scope.manageOwners = "";
                     $scope.multiRemoveResults = [];
                     $scope.multiAddResults = [];
                     $scope.membersNotInList = [];
@@ -1733,7 +1733,7 @@
                     break;
                 default:
                     $scope.userToAdd = "";
-                    $scope.ownerToAdd = "";
+                    $scope.manageOwners = "";
                     $scope.adminToAdd = "";
             }
         }
