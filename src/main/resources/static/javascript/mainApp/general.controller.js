@@ -1214,7 +1214,7 @@
          *  Replace commas and spaces in str with commas.
          */
         $scope.parseAddRemoveInputStr = function (str) {
-            return str.split(/[ ,]+/).join(",");
+            return str.toString().split(/[ ,]+/).join(",");
         };
 
         /**
@@ -1251,7 +1251,7 @@
                     if (membersToRemove === "") {
                         $scope.memberToRemove = $scope.membersToAddOrRemove;
                     } else {
-                        $scope.memberToRemove = membersToRemove;
+                        $scope.memberToRemove = membersToRemove.toString();
                     }
                     $scope.memberToRemove = returnMemberObjectFromUserIdentifier($scope.memberToRemove, currentPage);
                     $scope.createRemoveModal({
