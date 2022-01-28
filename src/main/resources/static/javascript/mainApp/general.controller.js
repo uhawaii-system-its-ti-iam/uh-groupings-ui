@@ -169,11 +169,7 @@
             $scope.loading = false;
             $scope.waitingForImportResponse = false;
             $scope.resStatus = res.status;
-            if (res.status === 403) {
-                $scope.createOwnerErrorModal();
-            } else {
-                $scope.createApiErrorModal();
-            }
+            $scope.createApiErrorModal();
         }
 
         /** Remove all nameless members from members and return a sorted object of distinct members.
@@ -1307,12 +1303,7 @@
          */
         function removeMembers(membersToRemove, listName) {
             if (!fetchMemberProperties(membersToRemove)) {
-                $scope.removeErrorModalInstance = $uibModal.open({
-                    templateUrl: "modal/removeErrorModal",
-                    backdrop: "static",
-                    scope: $scope,
-                    keyboard: false
-                });
+                $scope.launchDynamicModal(Message.Title.NO_MEMBERS_REMOVED, Message.Body.NO_MEMBERS_REMOVED);
             } else {
                 $scope.multiRemovePromptModalInstance = $uibModal.open({
                     templateUrl: "modal/multiRemovePromptModal",
@@ -1412,8 +1403,7 @@
                     listName: "owners"
                 });
             } else {
-                const userType = "owner";
-                $scope.createRemoveErrorModal(userType);
+                $scope.launchDynamicModal(Message.Title.LAST_OWNER_NOT_REMOVED, Message.Body.LAST_OWNER_NOT_REMOVED);
             }
         };
 
@@ -1559,28 +1549,6 @@
 
         $scope.closeEmptyGroupModal = function () {
             $scope.emptyGroupModalInstance.dismiss();
-        };
-
-        /**
-         * Creates a modal stating there was an error removing the user from a group.
-         * @param {string} userType - the type of user being removed (either admin or owner)
-         */
-        $scope.createRemoveErrorModal = function (userType) {
-            $scope.userType = userType;
-
-            $scope.removeErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/removeErrorModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
-        };
-
-        /**
-         * Close the remove error modal.
-         */
-        $scope.closeRemoveErrorModal = function () {
-            $scope.removeErrorModalInstance.close();
         };
 
         $scope.removeMultipleUsers = (list) => {

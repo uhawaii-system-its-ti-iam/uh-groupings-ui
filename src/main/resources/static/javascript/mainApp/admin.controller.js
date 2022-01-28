@@ -8,7 +8,7 @@
      * @param $uibModal - the UI Bootstrap service for creating modals
      * @param dataProvider - service function that provides GET and POST requests for getting or updating data
      */
-    function AdminJsController($scope, $window, $uibModal, $controller, dataProvider, groupingsService) {
+    function AdminJsController($scope, $window, $uibModal, $controller, dataProvider, groupingsService, Message) {
 
         $scope.adminsList = [];
         $scope.pagedItemsAdmins = [];
@@ -256,8 +256,7 @@
                     listName: "admins"
                 });
             } else {
-                const userType = "admin";
-                $scope.createRemoveErrorModal(userType);
+                $scope.launchDynamicModal(Message.Title.LAST_ADMIN_NOT_REMOVED, Message.Body.LAST_ADMIN_NOT_REMOVED);
             }
         };
     }
