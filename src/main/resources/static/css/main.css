@@ -316,6 +316,7 @@ table .p-12 {
 .modal-names {
     overflow: hidden;
     text-overflow: ellipsis;
+    text-transform: initial;
 }
 
 .modal-dialog {
