@@ -86,7 +86,7 @@
                 let userToRemove = options.user.uhUuid;
                 let groupingPath = $scope.groupPaths;
                 groupingsService.removeFromGroups(groupingPath, userToRemove, handleMultiMemberRemoveOnSuccess, handleMultiMemberRemoveOnFailure);
-                $scope.personToLookup = userToRemove;
+                $scope.personToLookup = options.user.username;
             });
         };
 
