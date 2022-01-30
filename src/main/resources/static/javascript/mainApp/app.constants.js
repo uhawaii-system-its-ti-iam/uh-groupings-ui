@@ -12,7 +12,7 @@ UHGroupingsApp.constant("Message", {
     },
     Body: {
         SLOW_IMPORT: "Feel free to exit your browser, an email will be sent of the add results.",
-        NO_MEMBERS_ADDED: "All the members you attempted to add are ether invalid or already exist in the group.",
+        NO_MEMBERS_ADDED: "All the members you attempted to add are either invalid or already exist in the group.",
         NO_MEMBERS_REMOVED: "All the members you attempted to remove are ether invalid or do not exist in the group.",
         LAST_OWNER_NOT_REMOVED: "You are unable to remove this owner. There must be at least one owner remaining.",
         LAST_ADMIN_NOT_REMOVED: "You are unable to remove this admin. There must be at least one admin remaining."
