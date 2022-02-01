@@ -176,17 +176,6 @@
             });
         };
 
-        $scope.updateCheckAll = function (grouping) {
-            totalCheckBoxCount = $scope.personList.length;
-
-            if (grouping.isSelected) {
-                currentCheckBoxCount = currentCheckBoxCount + 1;
-            } else {
-                currentCheckBoxCount = currentCheckBoxCount - 1;
-            }
-            $scope.checkAll = (currentCheckBoxCount === totalCheckBoxCount);
-        };
-
         /**
          * Checks if the user is already an admin
          * @param {string} user - the user you are checking to see if they are already in the list being added to
