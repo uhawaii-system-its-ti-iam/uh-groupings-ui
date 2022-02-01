@@ -171,41 +171,6 @@ describe("AdminController", function () {
         });
     });
 
-    describe("updateCheckBoxes", function () {
-        beforeEach(function () {
-            scope.pagedItemsPerson[scope.currentPagePerson] = {
-                inBasis: false,
-                inExclude: false,
-                inInclude: true,
-                isSelected: false
-            };
-        });
-        it("should negate scope.checkAll", function () {
-            let checkAll = scope.checkAll;
-            scope.updateCheckBoxes();
-            expect(scope.checkAll).toEqual(!checkAll);
-        });
-    });
-    describe("addAdmin", function () {
-
-        it("should set waitingForImportResponse to false", function () {
-            scope.waitingForImportResponse = true;
-            scope.addAdmin();
-            expect(scope.waitingForImportResponse).toBeFalse();
-
-        });
-    });
-
-    describe("removeAdmin", function () {
-        beforeEach(function () {
-            scope.pagedItemsAdmins[0] = "zzzz";
-        });
-        it("should call scope.createRemoveErrorModal", function () {
-            spyOn(scope, "createRemoveErrorModal");
-            scope.removeAdmin(0, 0);
-            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
-        });
-    });
 
     describe("createGroupPathsAndNames", function () {
         let selectedGroupingsNames, selectedGroupingsPaths, currentPage;
@@ -264,6 +229,62 @@ describe("AdminController", function () {
             expect(selectedGroupingsPaths.length).toEqual(2);
         });
 
+    });
+
+    describe("updateCheckBoxes", function () {
+        beforeEach(function () {
+            scope.pagedItemsPerson[scope.currentPagePerson] = {
+                inBasis: false,
+                inExclude: false,
+                inInclude: true,
+                isSelected: false
+            };
+        });
+        it("should negate scope.checkAll", function () {
+            let checkAll = scope.checkAll;
+            scope.updateCheckBoxes();
+            expect(scope.checkAll).toEqual(!checkAll);
+        });
+    });
+
+    describe("addAdmin", function () {
+
+        it("should check that the admin to add is in the admin list", () => {
+            scope.adminToAdd = "iamtst01"
+            scope.addAdmin();
+            expect(scope.listName).toBe("admins");
+        });
+
+        it("should check if the admin to add is empty", function () {
+            scope.emptyInput = false;
+            scope.addAdmin();
+            expect(scope.emptyInput).toBeTrue();
+        })
+
+        it("should set waitingForImportResponse to false", function () {
+            scope.waitingForImportResponse = true;
+            scope.addAdmin();
+            expect(scope.waitingForImportResponse).toBeFalse();
+
+        });
+    });
+
+    describe("removeAdmin", function () {
+        beforeEach(function () {
+            scope.pagedItemsAdmins[0] = "zzzz";
+        });
+
+        it("should call scope.createRemoveModal", () => {
+            scope.adminsList = ["iamtst01", "iamtst02", "iamtst03"];
+            spyOn(scope, "createRemoveModal");
+            scope.removeAdmin(0, 0);
+            expect(scope.createRemoveModal).toHaveBeenCalled();
+        })
+        it("should call scope.createRemoveErrorModal", function () {
+            spyOn(scope, "createRemoveErrorModal");
+            scope.removeAdmin(0, 0);
+            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
+        });
     });
 
 });
