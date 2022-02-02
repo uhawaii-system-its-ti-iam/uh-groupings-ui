@@ -8,6 +8,7 @@
                 <div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" ng-model="allowOptIn" id="allowOptIn"
+                               style="margin-left: -1.25rem"
                                ng-change="updateAllowOptIn()"/>
                         <label class="form-check-label" for="allowOptIn">
                             Allow people to add themselves to this group
@@ -21,6 +22,7 @@
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="allowOptOut" ng-model="allowOptOut"
+                               style="margin-left: -1.25rem"
                                ng-change="updateAllowOptOut()"/>
                         <label class="form-check-label" for="allowOptOut">
                             Allow people to remove themselves from this group
@@ -38,12 +40,14 @@
                     <form ng-submit="resetGroup()">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="resetIncludeCheck"
+                                   style="margin-left: -1.25rem"
                                    ng-click="updateIncludeCheck()"
                                    ng-model="includeCheck" ng-disabled="includeDisable">
                             <label class="form-check-label" for="resetIncludeCheck">Reset Include</label>
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="resetExcludeCheck"
+                                   style="margin-left: -1.25rem"
                                    ng-click="updateExcludeCheck()"
                                    ng-model="excludeCheck" ng-disabled="excludeDisable">
                             <label class="form-check-label" for="resetExcludeCheck">Reset Exclude</label>
@@ -69,6 +73,7 @@
                         <div class="form-check" ng-repeat="syncDest in syncDestArray">
                             <div ng-if="!syncDest.hidden">
                                 <input class="form-check-input" type="checkbox" id="syncDest.isSynced-{{syncDest.name}}"
+                                       style="margin-left: -1.25rem"
                                        ng-model="syncDest.isSynced"
                                        ng-change="createSyncDestModal(syncDest.name)"/>
                                 <label class="form-check-label" for="syncDest.isSynced-{{syncDest.name}}">
