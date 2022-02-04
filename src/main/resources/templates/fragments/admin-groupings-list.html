@@ -20,7 +20,7 @@
             <tr ng-repeat="l in pagedItemsGroupings[currentPageGroupings] ">
                 <td class="p-10 clickable align-middle" tabindex="0" aria-label="Click to Manage {{l.name}}"
                     ng-keypress="$event.keyCode === 13 ? displayGrouping(currentPageGroupings, $index) : null"
-                    ng-click="displayGrouping(currentPageGroupings, $index)">
+                    ng-click="displayGrouping(currentPageGroupings, $index); toggleShowAdminTab();">
                     <i class="far fa-fw fa-edit" aria-hidden="true"></i>
                     {{l.name}}
                 </td>
