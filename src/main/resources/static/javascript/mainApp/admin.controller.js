@@ -48,48 +48,6 @@
             $scope.pagedItemsGroupings = $scope.objToPageArray($scope.groupingsList, PAGE_SIZE);
             $scope.loading = false;
         };
-
-        function handleMultiMemberRemoveOnSuccess() {
-            $scope.loading = false;
-            $scope.searchForUserGroupingInformation();
-        }
-
-        function handleMultiMemberRemoveOnFailure() {
-            $scope.loading = false;
-        }
-
-        /**
-         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
-         * a request is made to delete the user.
-         * @param {object} options - the options object
-         * @param {object} options.user - the user being removed
-         * @param {string} options.groupPaths - groups the user is being removed from
-         * @param {string} options.listName - groups the user is being removed from
-         */
-        $scope.createRemoveFromGroupsModal = function (options) {
-            $scope.userToRemove = options.user;
-            $scope.groupPaths = options.groupPaths.join(", ");
-            $scope.listName = options.listName.join(", ");
-
-            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
-
-            $scope.removeModalInstance = $uibModal.open({
-                windowClass,
-                templateUrl: "modal/removeModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
-
-            $scope.removeModalInstance.result.then(function () {
-                $scope.loading = true;
-                let userToRemove = options.user.uhUuid;
-                let groupingPath = $scope.groupPaths;
-                groupingsService.removeFromGroups(groupingPath, userToRemove, handleMultiMemberRemoveOnSuccess, handleMultiMemberRemoveOnFailure);
-                $scope.personToLookup = options.user.username;
-            });
-        };
-
         /**
          * Complete initialization by fetching a list of admins and list of all groupings.
          */
@@ -157,26 +115,25 @@
             }
         };
 
-        /**
+        /*
          * Pluck selectedGroupingsNames and selectedGroupingsPaths from currentPage
          */
         $scope.createGroupPathsAndNames = function (currentPage, selectedGroupingsNames, selectedGroupingsPaths) {
             _.forEach(currentPage, function (grouping) {
                 if (grouping.isSelected) {
-                    selectedGroupingsNames.push(grouping.name);
+                    let basePath = grouping.path;
+                    let groupName = grouping.name;
+                    selectedGroupingsNames.push(groupName);
                     if (grouping.inOwner) {
-                        let temp = grouping.path + ":owners";
-                        $scope.selectedGroupingsPaths.push(temp);
+                        let temp = basePath + ":owners";
                         selectedGroupingsPaths.push(temp);
                     }
                     if (grouping.inInclude) {
-                        let temp = grouping.path + ":include";
-                        $scope.selectedGroupingsPaths.push(temp);
+                        let temp = basePath + ":include";
                         selectedGroupingsPaths.push(temp);
                     }
                     if (grouping.inExclude) {
-                        let temp = grouping.path + ":exclude";
-                        $scope.selectedGroupingsPaths.push(temp);
+                        let temp = basePath + ":exclude";
                         selectedGroupingsPaths.push(temp);
                     }
                 }
@@ -186,10 +143,7 @@
         $scope.updateCheckBoxes = function () {
             $scope.checkAll = !$scope.checkAll;
             _.forEach($scope.pagedItemsPerson[$scope.currentPagePerson], function (grouping) {
-                if (grouping.inOwner) {
-                    grouping.isSelected = $scope.checkAll;
-                }
-                if (grouping.inInclude || grouping.inExclude) {
+                if (grouping.inOwner || grouping.inInclude || grouping.inExclude) {
                     grouping.isSelected = $scope.checkAll;
                 }
             });
@@ -258,6 +212,57 @@
             } else {
                 $scope.launchDynamicModal(Message.Title.LAST_ADMIN_NOT_REMOVED, Message.Body.LAST_ADMIN_NOT_REMOVED);
             }
+        };
+
+        function handleRemoveFromGroupsOnSuccess() {
+            $scope.loading = false;
+            $scope.searchForUserGroupingInformation();
+        }
+
+        function handleRemoveFromGroupsOnError() {
+            $scope.loading = false;
+        }
+
+        /**
+         * Create a modal that prompts the user whether they want to delete the user or not. If 'Yes' is pressed, then
+         * a request is made to delete the user.
+         * @param {object} options - the options object
+         * @param {object} options.user - the user being removed
+         * @param {string} options.groupPaths - groups the user is being removed from
+         * @param {string} options.listName - groups the user is being removed from
+         */
+        $scope.createRemoveFromGroupsModal = function (options) {
+            const userToRemove = options.user.uhUuid;
+            $scope.userToRemove = options.user;
+            $scope.groupPaths = options.groupPaths.join(", ");
+            $scope.listName = options.listName.join(", ");
+
+            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+
+            groupingsService.getMemberAttributes(userToRemove, function(person) {
+                if (person === "") {
+                    return;
+                }  else {
+                    $scope.initMemberDisplayName(person);
+                }
+                $scope.removeModalInstance = $uibModal.open({
+                    templateUrl: "modal/removeModal",
+                    windowClass,
+                    scope: $scope,
+                    backdrop: "static",
+                    keyboard: false
+                });
+
+                $scope.removeModalInstance.result.then(function () {
+                    $scope.loading = true;
+                    let userToRemove = options.user.uhUuid;
+                    let groupingPath = $scope.groupPaths;
+                    groupingsService.removeFromGroups(groupingPath, userToRemove, handleRemoveFromGroupsOnSuccess, handleRemoveFromGroupsOnError);
+                });
+            }, function(res) {
+                $scope.user = userToRemove;
+                $scope.resStatus = res.status;
+            });
         };
     }
 
