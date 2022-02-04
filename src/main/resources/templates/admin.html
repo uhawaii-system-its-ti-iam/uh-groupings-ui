@@ -12,7 +12,7 @@
         <div class="container">
             <h1 class="text-center text-md-left">UH Groupings Administration</h1>
             <p class="lead text-center text-md-left" th:utext="#{screen.message.admin.page.description}"></p>
-            <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="adminTab">
+            <ul class="nav nav-tabs flex-sm-row flex-column" role="tablist" id="adminTab" ng-show="showAdminTab">
                 <li role="presentation" class="nav-item">
                     <a href="#manage-groupings" data-toggle="tab" class="nav-link active tab-color" role="tab">
                         Manage Groupings

@@ -101,6 +101,7 @@
         $scope.group = "";
         $scope.resStatus = 0;
         $scope.inGrouper = false;
+        $scope.showAdminTab = true;
 
         // used with ng-view on selected-grouping.html to toggle description editing.
         $scope.descriptionForm = false;
@@ -162,6 +163,9 @@
             $scope.showGrouping = true;
         };
 
+        $scope.toggleShowAdminTab = function () {
+            $scope.showAdminTab = $scope.showAdminTab === false;
+        }
         /**
          * Generic handler for unsuccessful requests to the API.
          */
