@@ -460,7 +460,7 @@ form.seamless input {
 }
 
 .form-check-input {
-  position: absolute;
+  position: relative;
   margin-left: 0;
 }
 
