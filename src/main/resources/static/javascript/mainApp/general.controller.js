@@ -13,6 +13,7 @@
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
 
         $scope.userToAdd = "";
+        $scope.userNotAdded = [];
         $scope.manageMembers = "";
         $scope.multiAddThreshold = 100;
         $scope.maxImport = 100000;
@@ -673,6 +674,8 @@
          * @returns {Promise<void>}
          */
         $scope.addMultipleMembers = async function (list, listName) {
+            let membersNotInList = [];
+            let arrayOfMembers = list.split(",");
             let groupingPath = $scope.selectedGrouping.path;
 
             let timeoutModal = function () {
@@ -681,6 +684,7 @@
                     Message.Body.SLOW_IMPORT,
                     8000);
             };
+
             let handleSuccessfulAdd = function (res) {
                 $scope.waitingForImportResponse = false; /* Small spinner off. */
                 let data = res;
@@ -692,8 +696,10 @@
                     let userWasAdded = data[parseInt(i, 10)].userWasAdded;
 
                     if ("FAILURE" === result || !userWasAdded) {
-                        continue;
+                        membersNotInList.push(arrayOfMembers[i]);
+                        $scope.membersNotInList = membersNotInList.join(", ");
                     }
+
                     let person = {
                         "uid": data[parseInt(i, 10)].uid,
                         "uhUuid": data[parseInt(i, 10)].uhUuid,
@@ -702,6 +708,7 @@
                     $scope.multiAddResults.push(person);
                     $scope.multiAddResultsGeneric.push(person);
                 }
+
                 if ($scope.multiAddResults.length > 0) {
                     $scope.personProps = Object.keys($scope.multiAddResults[0]);
                     $scope.launchMultiAddResultModal(listName);
@@ -1722,7 +1729,6 @@
                     $scope.membersNotInList = [];
                     $scope.memberName = "";
                     $scope.memberUhUuid = "";
-                    $scope.membersNotInList = [];
                     $scope.membersInCheckboxList = {};
                     resetCheckboxes();
                     break;
