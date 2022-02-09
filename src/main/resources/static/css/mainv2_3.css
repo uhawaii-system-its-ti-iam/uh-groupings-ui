@@ -480,6 +480,10 @@ form.seamless input {
   color: #1c6070;
 }
 
+.column-padding {
+  padding-top: 20px;
+}
+
 .modal-open .modal {
   overflow-y: hidden;
   overflow-x: hidden;
