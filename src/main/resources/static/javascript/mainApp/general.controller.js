@@ -673,6 +673,8 @@
          * @returns {Promise<void>}
          */
         $scope.addMultipleMembers = async function (list, listName) {
+            let membersNotInList = [];
+            let arrayOfMembers = list.split(",");
             let groupingPath = $scope.selectedGrouping.path;
 
             let timeoutModal = function () {
@@ -692,7 +694,8 @@
                     let userWasAdded = data[parseInt(i, 10)].userWasAdded;
 
                     if ("FAILURE" === result || !userWasAdded) {
-                        continue;
+                        membersNotInList.push(arrayOfMembers[i]);
+                        $scope.membersNotInList = membersNotInList.join(", ");
                     }
                     let person = {
                         "uid": data[parseInt(i, 10)].uid,
