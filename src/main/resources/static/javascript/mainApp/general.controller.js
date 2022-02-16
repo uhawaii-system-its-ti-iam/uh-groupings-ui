@@ -637,7 +637,9 @@
          * The file is retrieved from the html input with id 'upload'.
          */
         $scope.readTextFile = function () {
-            let file = input.files[0];
+            let file = $scope.import.files[0];
+            console.log(input);
+            console.log(input.files);
             if (file === undefined) {
                 console.log("undef");
             }
