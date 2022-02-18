@@ -25,11 +25,11 @@ https://github.com/uhawaii-system-its-ti-iam/uh-groupings-ui
 ##### Building
 To run the Application from the Command Line:
 
-    $ mvn clean spring-boot:run
+    $ ./mvnw clean spring-boot:run
 
 To build a deployable war file for local development, if preferred:
 
-    $ mvn clean package
+    $ ./mvnw clean package
 
 You should have a deployable war file in the target directory.
 Deploy as usual in a servlet container, e.g. tomcat.
@@ -46,15 +46,15 @@ line arguments.
 
 To run the Unit Tests with a standard build:
 
-    $ mvn clean test
+    $ ./mvnw clean test
 
 To run a test class:
 
-    $ mvn clean test -Dtest=StringsTest
+    $ ./mvnw clean test -Dtest=StringsTest
 
 To run a single method in a test class:
 
-    $ mvn clean test -Dtest=StringsTest#trunctate
+    $ ./mvnw clean test -Dtest=StringsTest#trunctate
 
 ##### Running System Tests
 The project files include a handful of System Tests.
@@ -66,4 +66,4 @@ appropriate command line argument.
 
 To run the System Tests:
 
-    $ mvn -Dtest=*SystemTest clean test
+    $ ./mvnw -Dtest=*SystemTest clean test
