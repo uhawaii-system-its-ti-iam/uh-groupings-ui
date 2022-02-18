@@ -696,6 +696,9 @@ label input {
     display: table-header-group;
     /* Makes the button the header of table */
   }
+
+
+
 }
 html {
   position: relative;

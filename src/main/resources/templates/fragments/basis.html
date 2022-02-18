@@ -18,16 +18,6 @@
                 <input placeholder="Filter Members..." type="text" title="Filter Members"
                        ng-model="basisQuery" class="form-control" aria-label="Filter Members..."
                        ng-change="filter(groupingBasis, 'pagedItemsBasis', 'currentPageBasis', basisQuery, true)"/>
-                <!-- Export to CSV button -->
-                <div class="float-right inline-block">
-                    <button class="btn btn-sm btn-primary float-right mb-1 mt-1" type="submit"
-                            ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
-                            uib-tooltip="{{ getCSVToolTipMessage() }}"
-                            ng-disabled="!paginatingComplete">
-                        <i class="fa fa-sync mr-2" aria-hidden="true"></i>
-                        Export to CSV
-                    </button>
-                </div>
             </div>
         </div>
 
