@@ -5,17 +5,14 @@
                 ng-click="returnToGroupingsList(); cancelDescriptionEdit(); toggleShowAdminTab();">
             <i class="fas fa-arrow-left mr-1"></i> Return to Groupings List
         </button>
-    </div>
-
-    <!-- Export to CSV button -->
-    <div>
-        <button class="btn btn-primary mb-1 mt-1" type="submit"
-                ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
-                uib-tooltip="{{ getCSVToolTipMessage() }}"
-                ng-disabled="!paginatingComplete">
-            <i class="fa fa-sync mr-2" aria-hidden="true"></i>
-            Export to CSV
-        </button>
+        <!-- Export to CSV button -->
+            <button class="btn btn-primary float-right mb-1 mt-1" type="submit"
+                    ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
+                    uib-tooltip="{{ getCSVToolTipMessage() }}"
+                    ng-disabled="!paginatingComplete">
+                <i class="fa fa-sync mr-2" aria-hidden="true"></i>
+                Export to CSV
+            </button>
     </div>
 
     <div class="container hide-content" id="sel"
