@@ -636,10 +636,8 @@
          * function is called implicitly from include.html and exclude.html.
          * The file is retrieved from the html input with id 'upload'.
          */
-        $scope.readTextFile = function () {
-            let file = $scope.import.files[0];
-            console.log(input);
-            console.log(input.files);
+        $scope.readTextFile = function ($scope) {
+            let file = $scope.input.files[0];
             if (file === undefined) {
                 console.log("undef");
             }
@@ -651,6 +649,7 @@
             };
             reader.readAsText(file);
         };
+        //UHGroupingsApp.controller("SomeController", SomeController);
 
         $scope.removeTextFile = function () {
             angular.element(document.querySelector("#upload")).val(null);
