@@ -10,7 +10,7 @@ import java.util.Map;
 public class UhCasAttributes implements UhAttributes {
 
     private Map<String, List<String>> uhAttributeMap = new HashMap<>();
-    private final String username; // CAS login username.
+    private final String uid; // CAS login username.
     private final Map<?, ?> map; // Original CAS results.
 
     // Constructor.
@@ -24,8 +24,8 @@ public class UhCasAttributes implements UhAttributes {
     }
 
     // Constructor.
-    public UhCasAttributes(String username, Map<?, ?> map) {
-        this.username = username != null ? username : "";
+    public UhCasAttributes(String uid, Map<?, ?> map) {
+        this.uid = uid != null ? uid : "";
         this.map = map;
         if (map != null) {
             for (Object key : map.keySet()) {
@@ -56,7 +56,8 @@ public class UhCasAttributes implements UhAttributes {
     }
 
     public String getUsername() {
-        return username;
+        //return username;
+        return "";
     }
 
     @Override
@@ -127,7 +128,7 @@ public class UhCasAttributes implements UhAttributes {
 
     @Override
     public String toString() {
-        return "UhCasAttributes [username=" + username
+        return "UhCasAttributes [username=" + uid
                 + ", uhAttributeMap=" + uhAttributeMap
                 + ", map=" + map + "]";
     }

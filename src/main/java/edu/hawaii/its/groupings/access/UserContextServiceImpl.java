@@ -23,9 +23,9 @@ public class UserContextServiceImpl implements UserContextService {
     }
 
     @Override
-    public String getCurrentUsername() {
+    public String getCurrentUid() {
         User user = getCurrentUser();
-        return user != null ? user.getUsername() : "";
+        return user != null ? user.getUid() : "";
     }
 
     @Override

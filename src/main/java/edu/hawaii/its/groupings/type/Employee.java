@@ -5,27 +5,27 @@ import java.io.Serializable;
 public class Employee implements Serializable {
 
     public static final long serialVersionUID = 2L;
-    private Long uhNumber;
+    private Long uhUuid ;
 
     public Employee() {
         // Empty.
     }
 
-    public Employee(Long uhNumber) {
-        this.uhNumber = uhNumber;
+    public Employee(Long uhUuid ) {
+        this.uhUuid  = uhUuid ;
     }
 
-    public Long getUhNumber() {
-        return uhNumber;
+    public Long getUhUuid() {
+        return uhUuid ;
     }
 
-    public void setUhNumber(Long uhNumber) {
-        this.uhNumber = uhNumber;
+    public void setUhUuid(Long uhUuid ) {
+        this.uhUuid  = uhUuid ;
     }
 
     @Override
     public String toString() {
-        return "Employee [uhNumber=" + uhNumber + "]";
+        return "Employee [uhUuid=" + uhUuid  + "]";
     }
 
 }

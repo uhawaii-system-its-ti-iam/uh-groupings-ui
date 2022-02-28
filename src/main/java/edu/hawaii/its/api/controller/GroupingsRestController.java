@@ -518,22 +518,22 @@ public class GroupingsRestController {
     // Helper Methods
     //////////////////////////////////////////////////////////////////////
 
-    private ResponseEntity<String> changePreference(String grouping, String username, String preference, Boolean isOn) {
+    private ResponseEntity<String> changePreference(String grouping, String uid, String preference, Boolean isOn) {
         String ending = "disable";
         if (isOn) {
             ending = "enable";
         }
         String uri = String.format(API_2_1_BASE + "/groupings/%s/preferences/%s/%s", grouping, preference, ending);
-        return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
+        return httpRequestService.makeApiRequest(uid, uri, HttpMethod.PUT);
     }
 
-    private ResponseEntity<String> changeSyncDest(String grouping, String username, String syncDest, Boolean isOn) {
+    private ResponseEntity<String> changeSyncDest(String grouping, String uid, String syncDest, Boolean isOn) {
         String ending = "disable";
         if (isOn) {
             ending = "enable";
         }
         String uri = String.format(API_2_1_BASE + "/groupings/%s/syncDests/%s/%s", grouping, syncDest, ending);
-        return httpRequestService.makeApiRequest(username, uri, HttpMethod.PUT);
+        return httpRequestService.makeApiRequest(uid, uri, HttpMethod.PUT);
     }
 
     protected Boolean shouldDoApiHandshake() {
@@ -549,9 +549,9 @@ public class GroupingsRestController {
         if (shouldDoApiHandshake()) {
             boolean success = false;
             try {
-                final String username = CREDENTIAL_CHECK_USER;
+                final String uid = CREDENTIAL_CHECK_USER;
                 final String url = API_2_1_BASE + "/";
-                success = httpRequestService.makeApiRequest(username, url, HttpMethod.GET)
+                success = httpRequestService.makeApiRequest(uid, url, HttpMethod.GET)
                         .getStatusCode()
                         .is2xxSuccessful();
             } catch (Exception e) {

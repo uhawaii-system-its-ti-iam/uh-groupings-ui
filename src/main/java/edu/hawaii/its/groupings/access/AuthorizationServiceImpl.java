@@ -23,7 +23,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      * Assign roles to user
      */
     @Override
-    public RoleHolder fetchRoles(String uhUuid, String username) {
+    public RoleHolder fetchRoles(String uhUuid, String uid) {
         RoleHolder roleHolder = new RoleHolder();
         Principal principal = new SimplePrincipal(uhUuid);
         roleHolder.add(Role.ANONYMOUS);
@@ -38,7 +38,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         if (checkResult(groupingsRestController.hasAdminPrivs(principal))) {
             roleHolder.add(Role.ADMIN);
         }
-        logger.info("fetchRoles: username: " + username + " " + roleHolder.getAuthorities() + ";");
+        logger.info("fetchRoles: username: " + uid + " " + roleHolder.getAuthorities() + ";");
         return roleHolder;
     }
 
