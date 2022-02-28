@@ -84,12 +84,12 @@ public class HomeController {
         Feedback sessionFeedback = (Feedback) session.getAttribute("feedback");
         if (sessionFeedback != null) {
             sessionFeedback.setType("problem");
-            sessionFeedback.setEmail(userContextService.getCurrentUsername() + "@hawaii.edu");
+            sessionFeedback.setEmail(userContextService.getCurrentUid() + "@hawaii.edu");
             model.addAttribute("feedback", sessionFeedback);
         } else {
             Feedback feedback = new Feedback();
             feedback.setType("general");
-            feedback.setEmail(userContextService.getCurrentUsername() + "@hawaii.edu");
+            feedback.setEmail(userContextService.getCurrentUid() + "@hawaii.edu");
             model.addAttribute("feedback", feedback);
         }
         return "feedback";

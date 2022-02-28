@@ -26,13 +26,13 @@ public class UserContextServiceTest {
     @WithMockUhUser(username = "admin", roles = { "ROLE_ADMIN" })
     public void basics() {
         assertThat(userContextService.getCurrentUhUuid(), equalTo("12345678"));
-        assertThat(userContextService.getCurrentUsername(), equalTo("admin"));
+        assertThat(userContextService.getCurrentUid(), equalTo("admin"));
         assertThat(userContextService.toString(), startsWith("UserContextServiceImpl"));
 
         User user = userContextService.getCurrentUser();
         assertNotNull(user);
         assertThat(user.getUhUuid(), equalTo("12345678"));
-        assertThat(user.getUsername(), equalTo("admin"));
+        assertThat(user.getUid(), equalTo("admin"));
 
         userContextService.setCurrentUhUuid("87654321");
         assertThat(userContextService.getCurrentUhUuid(), equalTo("87654321"));
