@@ -52,7 +52,6 @@ import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
 @SpringBootTest(classes = { SpringBootWebApplication.class })
 public class GroupingsRestControllerTest {
     private static final String GROUPING = "grouping1";
-    private static final String GROUPING2 = "grouping2";
     private static final String GROUPING3 = "grouping3";
     private static final String USERNAME = "user";
     private static final String REST_CONTROLLER_BASE = "/api/groupings/";
