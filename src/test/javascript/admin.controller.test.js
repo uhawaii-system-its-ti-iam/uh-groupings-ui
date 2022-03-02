@@ -6,13 +6,32 @@ describe("AdminController", function () {
     let scope;
     let controller;
     let gs;
+    let mainCtrl;
 
-    beforeEach(inject(function ($rootScope, $controller, groupingsService) {
+    let fakeModal = {
+        result: {
+            then: function(confirmCallback, cancelCallBack) {
+                    this.confirmCallback = confirmCallback;
+                    this.cancelCallBack = cancelCallBack;
+            }
+        },
+        close: function(item) {
+            //the user clicks OK on the modal dialog, call the stored callback w/ the selected item
+            this.result.confirmCallback(item);
+        },
+        dismiss: function(type) {
+            // The user clicked on cancel, call the stored cancel callback
+            this.result.cancelCallBack(type);
+        }
+    }
+
+    beforeEach(inject(function ($rootScope, $controller, $uibModal, groupingsService) {
         scope = $rootScope.$new();
         controller = $controller("AdminJsController", {
             $scope: scope
         });
         gs = groupingsService;
+        spyOn($uibModal, 'open').and.returnValue(fakeModal);
     }));
 
     it("should define the admin controller", function () {
@@ -271,11 +290,29 @@ describe("AdminController", function () {
         });
     });
 
+    describe("createRemoveFromGroupsModal", () => {
+        let options;
+        options = {
+            user: "iamtst01",
+            groupPaths: ["tmp:kahlin:kahlin-large:include", "hawaii.edu:custom:test:listserv-tests:JTTEST-L:include"],
+            listName: ["kahlin-large", "JTTEST-L"]
+        }
+        it(" should show success when modal responds w/ success", () => {
+            scope.adminsList = ["iamtst01", "iamtst02", "iamtst03"];
+            //Mock out the modal closing
+            scope.createRemoveFromGroupsModal(options); //open the modal
+            expect(gs.getMemberAttributes).toHaveBeenCalled();
+            spyOn(gs, "getMemberAttributes");
+            scope.removeModalInstance.dismiss("close");
+            expect(scope.user).toBe("iamtst01");
+            // expect(scope.resStatus).toBe(false);
+        })
+    })
+
     describe("removeAdmin", function () {
         beforeEach(function () {
             scope.pagedItemsAdmins[0] = "zzzz";
         });
-
         it("should call scope.createRemoveModal", () => {
             scope.adminsList = ["iamtst01", "iamtst02", "iamtst03"];
             spyOn(scope, "createRemoveModal");
