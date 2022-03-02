@@ -637,9 +637,6 @@
         $scope.readTextFile = function ($event) {
             let input = $event.currentTarget.parentNode.childNodes[3];
             let file = input.files[0];
-            if (file === undefined) {
-                console.log("undef");
-            }
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
