@@ -637,9 +637,6 @@
         $scope.readTextFile = function ($event) {
             let input = $event.currentTarget.parentNode.childNodes[3];
             let file = input.files[0];
-            if (file == undefined) {
-                console.log("undef");
-            }
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
@@ -996,7 +993,7 @@
             }, function (res) {
                 $scope.resStatus = res.status;
                 $scope.user = user;
-                if (res.status == -1) {
+                if (res.status === -1) {
                     $scope.createApiErrorModal();
                 }
             });
@@ -1745,7 +1742,7 @@
             let listNames = "";
             let exBool = false;
             let inBool = false;
-            if (Object.entries($scope.groupingInclude).length === 0 || $scope.includeCheck == false) {
+            if (Object.entries($scope.groupingInclude).length === 0 || $scope.includeCheck === false) {
                 $scope.resetInclude = "empty";
             } else {
                 inBool = true;
@@ -1754,7 +1751,7 @@
                     $scope.resetInclude.push($scope.groupingInclude[i].uhUuid);
                 }
             }
-            if (Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck == false) {
+            if (Object.entries($scope.groupingExclude).length === 0 || $scope.excludeCheck === false) {
                 $scope.resetExclude = "empty";
             } else {
                 exBool = true;
@@ -1773,11 +1770,11 @@
             }
 
             let resetAll = null;
-            if ($scope.excludeCheck == true && $scope.includeCheck == true) {
+            if ($scope.excludeCheck === true && $scope.includeCheck === true) {
                 resetAll = $scope.groupingInclude.concat($scope.groupingExclude);
-            } else if ($scope.excludeCheck == true && $scope.includeCheck == false) {
+            } else if ($scope.excludeCheck === true && $scope.includeCheck === false) {
                 resetAll = $scope.groupingExclude;
-            } else if ($scope.excludeCheck == false && $scope.includeCheck == true) {
+            } else if ($scope.excludeCheck === false && $scope.includeCheck === true) {
                 resetAll = $scope.groupingInclude;
             } else {
                 resetAll = "";

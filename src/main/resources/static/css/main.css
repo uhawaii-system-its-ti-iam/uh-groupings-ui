@@ -6,8 +6,7 @@ html {
 
 body {
     font-family: 'Source Sans Pro', 'Helvetica', Arial, sans-serif;
-    padding-top: 3.5rem; /*Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-    /*padding-bottom: 3.125rem;*/
+    padding-top: 3.5rem; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
     display: flex; /* Creates flexboxes. */
     min-height: 100vh;
     flex-direction: column; /* Makes the body display vertical. */
@@ -19,7 +18,7 @@ h1 {
 
 h2 {
     font-size: 2rem;
-    padding: 0px;
+    padding: 0;
 }
 
 h3 {
@@ -65,7 +64,6 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    /*background: rgba(0, 0, 0, 0.5);*/
     z-index: 9999;
 }
 
@@ -73,11 +71,11 @@ main {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
 }
-
 td.uh-pre {
     white-space: pre; /* CSS 2.0 */
     white-space: pre-wrap; /* CSS 2.1 */
@@ -97,11 +95,6 @@ td.uh-pre {
     padding-bottom: 0;
 }
 
-.fixed-top .navbar-nav {
-    /*padding: 2.5rem 0 0 0;
-    font-size: .9375rem;*/
-}
-
 .fixed-top .navbar-brand {
     padding: 0;
 }
@@ -119,8 +112,8 @@ td.uh-pre {
 }
 
 .navbar .navbar-nav .nav-item {
-    padding-left: .3125rem;
-    padding-right: .3125rem;
+    padding-left: 0.3125rem;
+    padding-right: 0.3125rem;
 }
 
 .navbar .navbar-nav .nav-link {
@@ -134,17 +127,15 @@ td.uh-pre {
 }
 
 .navbar .navbar-logout {
-    padding: .5rem .5625rem;
-    /*font-size: .9375rem;*/
+    padding: 0.5rem 0.5625rem;
     color: #212529;
     border: 0;
     text-decoration: none;
 }
 
 .navbar .navbar-logout:hover {
-    color: rgba(0, 0, 0, .7);
+    color: rgba(0, 0, 0, 0.7);
 }
-
 .user-icon {
     height: 100px;
     position: relative;
@@ -154,7 +145,7 @@ td.uh-pre {
 .user-icon .user-role {
     bottom: 0;
     position: absolute;
-    right: -.25rem;
+    right: -0.25rem;
 }
 
 .spacer {
@@ -165,34 +156,61 @@ td.uh-pre {
     color: red;
 }
 
+.selected-grouping-card {
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+.selected-grouping-card > .card-header {
+    border-left: 1px solid rgba(0, 0, 0, 0.125);
+    border-right: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.selected-grouping-card table > tbody > tr:first-child > th,
+.selected-grouping-card table > tbody > tr:first-child > td {
+    border-top: 0;
+}
+
+.manage-groupings td:last-child {
+    max-width: 220px;
+}
+
+.manage-groupings tr td {
+    padding: 0;
+}
+
 .card.card-with-table {
     padding: 0;
     margin-top: 1rem;
 }
 
 .card.card-with-table.card-tab-content {
-    margin-top: 0rem;
+    margin-top: 0;
 }
 
-.card.card-tab-content, .card.card-tab-content .card-header {
-    border-top-left-radius: 0px;
-    margin-top: 0rem;
+.card.card-tab-content,
+.card.card-tab-content .card-header {
+    border-top-left-radius: 0;
+    margin-top: 0;
 }
 
 .card-with-table {
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .card-with-table table > thead > tr > th {
     border-top: none;
 }
 
-.card-with-table table > thead > tr > th:first-child, .card-with-table table > tbody > tr > td:first-child {
+.card-with-table table > thead > tr > th:first-child,
+.card-with-table table > tbody > tr > td:first-child {
     border-left: 0;
 }
 
-.card-with-table table > thead > tr > th:last-child, .card-with-table table > tbody > tr > td:last-child {
+.card-with-table table > thead > tr > th:last-child,
+.card-with-table table > tbody > tr > td:last-child {
     border-right: 0;
 }
 
@@ -205,22 +223,22 @@ table .w-30 {
 }
 
 table .p-5 {
-    padding: 5px !important
+    padding: 5px !important;
 }
 
 table .p-10 {
     white-space: nowrap;
-    padding: 5px 20px !important
+    padding: 5px 20px !important;
 }
 
 table .p-11 {
     white-space: nowrap;
-    padding: 5px 25px !important
+    padding: 5px 25px !important;
 }
 
 table .p-12 {
     white-space: nowrap;
-    padding: 5px 30px !important
+    padding: 5px 30px !important;
 }
 
 .pagination .page-item.disabled {
@@ -237,8 +255,7 @@ table .p-12 {
 
 @media (min-width: 992px) {
     body {
-        /*padding-top: 7.1875rem; Required padding for .navbar-fixed-top. Change if height of navigation changes. */
-        /*padding-bottom: 3.125rem;*/
+        /* padding-top: 7.1875rem; Required padding for .navbar-fixed-top. Change if height of navigation changes. */
     }
 
     .navbar {
@@ -265,23 +282,25 @@ table .p-12 {
     }
 }
 
+
 .row.group-header {
-    margin: 0 auto .5rem;
+    margin: 0 auto 0.5rem;
 }
 
 .clickable {
     cursor: pointer;
 }
 
-.sort-icon:after {
+.sort-icon::after {
     content: '\f107';
 }
 
-.sort-icon.reverse:after {
+.sort-icon.reverse::after {
     content: '\f106';
 }
 
-.modal-danger, .modal-danger .modal-title {
+.modal-danger,
+.modal-danger .modal-title {
     color: #721c24;
 }
 
@@ -302,23 +321,6 @@ table .p-12 {
     opacity: 1;
 }
 
-.modal.in .modal-dialog {
-    -webkit-transform: none;
-    transform: none;
-}
-
-.modal-backdrop.in {
-    filter: alpha(opacity=50);
-    opacity: .5;
-}
-
-
-.modal-names {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-transform: initial;
-}
-
 .modal-dialog {
     display: -ms-flexbox;
     display: flex;
@@ -331,6 +333,22 @@ table .p-12 {
     display: block;
     height: calc(100vh - (0.5rem * 2));
     content: "";
+}
+
+.modal.in .modal-dialog {
+    -webkit-transform: none;
+    transform: none;
+}
+
+.modal-backdrop.in {
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
+
+.modal-names {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: initial;
 }
 
 @media (min-width: 576px) {
@@ -347,7 +365,7 @@ table .p-12 {
     .nav.nav-tabs.flex-column > .nav-item > .nav-link {
         border: none;
         background-color: #e3f2ef;
-        padding: 0px 0px 2px 0px;
+        padding: 0 0 2px 0;
     }
 }
 
@@ -357,8 +375,9 @@ table .p-12 {
     }
 }
 
+
 #group-pills {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
 }
 
 #group-pills > .nav-item {
@@ -367,7 +386,7 @@ table .p-12 {
 }
 
 #group-pills > .nav-item > .nav-link {
-    padding-left: .75rem;
+    padding-left: 0.75rem;
 }
 
 .manage-grouping-body {
@@ -378,21 +397,6 @@ table .p-12 {
     padding-top: 20px;
 }
 
-.selected-grouping-card {
-    border-bottom: 0;
-    border-left: 0;
-    border-right: 0;
-}
-
-.selected-grouping-card > .card-header {
-    border-left: 1px solid rgba(0, 0, 0, .125);
-    border-right: 1px solid rgba(0, 0, 0, .125);
-}
-
-.selected-grouping-card table > tbody > tr:first-child > th, .selected-grouping-card table > tbody > tr:first-child > td {
-    border-top: 0;
-}
-
 @media (min-width: 992px) {
     th.grouping-name {
         min-width: 10rem;
@@ -400,8 +404,8 @@ table .p-12 {
 }
 
 th {
-    font-size: .8rem;
-    letter-spacing: .5px;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 
@@ -420,9 +424,6 @@ th {
     flex: 1;
 }
 
-.manage-groupings td:last-child {
-    max-width: 220px;
-}
 
 th.grouping-members {
     min-width: 8rem;
@@ -439,10 +440,6 @@ th.grouping-members {
 .manage-groupings td:last {
     align-items: center;
     display: flex;
-}
-
-.manage-groupings tr td {
-    padding: 0px;
 }
 
 @media (max-width: 789px) {
@@ -490,7 +487,7 @@ form.seamless button {
 }
 
 .far.fa-trash-alt {
-    margin-right: .75rem;
+    margin-right: 0.75rem;
 }
 
 .basis-column {
@@ -532,7 +529,7 @@ form.seamless button {
 }
 
 .btn-sm {
-    padding: 0px 5px;
+    padding: 0 5px;
 }
 
 #footer-top {
@@ -548,8 +545,9 @@ form.seamless button {
     color: black;
 }
 
-.animate-if.ng-enter, .animate-if.ng-leave {
-    transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+.animate-if.ng-enter,
+.animate-if.ng-leave {
+    transition: all cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s;
 }
 
 .animate-if.ng-enter,
@@ -563,7 +561,7 @@ form.seamless button {
 }
 
 .add-import-buttons {
-    padding: 7px 15px;;
+    padding: 7px 15px;
 }
 
 .blank-checkbox {
@@ -609,13 +607,15 @@ form.seamless button {
  * button, so on mobile, the button sits on top of the
  * grouping name, eliminating whitespace.
  */
+
 @media screen and (max-width: 735px) {
     #selectedGroupHeader {
         display: table; /* The row is now a table */
+
         /* Centering */
         margin: auto;
         width: 100%;
-        padding: 0px;
+        padding: 0;
     }
 
     #groupNameCol {
@@ -626,7 +626,6 @@ form.seamless button {
         display: table-header-group; /* Makes the button the header of table */
 
     }
-
 }
 
 /**
@@ -635,6 +634,7 @@ form.seamless button {
  * button, when browser size decreases, the button sits
  * on top of the grouping name, elimitaing whitespace.
  */
+
 @media screen and (min-width: 3000px) {
     #groupNameCol {
         display: inline-block; /* displays group name inline */
@@ -667,7 +667,7 @@ label input {
     margin-top: 2px;
     height: 45px;
     line-height: 42px;
-    padding: 0px 15px;
+    padding: 0 15px;
 }
 
 .description-alert {
@@ -675,7 +675,7 @@ label input {
     margin-top: 2px;
     height: 35px;
     line-height: 30px;
-    padding: 0px 15px;
+    padding: 0 15px;
 }
 
 .description-form-button {
