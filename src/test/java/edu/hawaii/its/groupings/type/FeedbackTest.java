@@ -19,11 +19,6 @@ public class FeedbackTest {
     }
 
     @Test
-    public void construction() {
-        feedback = new Feedback();
-    }
-
-    @Test
     public void setters() {
         assertNotNull(feedback);
         assertNull(feedback.getName());

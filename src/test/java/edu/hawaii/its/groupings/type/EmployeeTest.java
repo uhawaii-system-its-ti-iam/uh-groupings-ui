@@ -21,20 +21,20 @@ public class EmployeeTest {
     @Test
     public void construction() {
         assertNotNull(employee);
-        assertNull(employee.getUhNumber());
+        assertNull(employee.getUhUuid());
 
         employee = new Employee(123456789L);
-        assertThat(employee.getUhNumber(), equalTo(123456789L));
+        assertThat(employee.getUhUuid(), equalTo(123456789L));
     }
 
     @Test
     public void setters() {
         assertNotNull(employee);
-        assertNull(employee.getUhNumber());
+        assertNull(employee.getUhUuid());
         assertNotNull(employee.toString());
 
-        employee.setUhNumber(12345678L);
-        assertThat(employee.getUhNumber(), equalTo(12345678L));
-        assertThat(employee.toString(), containsString("uhNumber=12345678"));
+        employee.setUhUuid(12345678L);
+        assertThat(employee.getUhUuid(), equalTo(12345678L));
+        assertThat(employee.toString(), containsString("uhUuid=12345678"));
     }
 }
