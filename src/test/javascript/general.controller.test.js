@@ -7,14 +7,16 @@ describe("GeneralController", function () {
     let controller;
     let httpBackend;
     let BASE_URL;
+    let gs;
 
-    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_) {
+    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) {
         scope = $rootScope.$new();
         controller = $controller("GeneralJsController", {
             $scope: scope
         });
         httpBackend = _$httpBackend_;
         BASE_URL = _BASE_URL_;
+        gs = groupingsService;
     }));
 
     it("should define the general controller", function () {
@@ -191,6 +193,83 @@ describe("GeneralController", function () {
         scope.allowOptOut = true;
     });
 
+    describe("displayGrouping", () => {
+        beforeEach(function () {
+            scope.pagedItemsGroupings = [["zzzz"]];
+        });
+        it("should set selectedGrouping to 'zzzz'", () => {
+            scope.selectedGrouping = 0;
+           scope.displayGrouping(0, 0);
+           expect(scope.selectedGrouping).toEqual('zzzz');
+        });
+        it("should set showgrouping to true", () => {
+            scope.showGrouping = false;
+            scope.displayGrouping(0,0);
+            expect(scope.showGrouping).toBeTrue();
+        });
+        it("should call getGroupingInformation", () => {
+            spyOn(scope, "getGroupingInformation");
+            scope.displayGrouping(0, 0);
+            expect(scope.getGroupingInformation).toHaveBeenCalled();
+        });
+    });
+
+    describe("toggleShowAdminTab", () => {
+       it("should set showShowAdminTab to true when false", () => {
+           scope.showAdminTab = false;
+           scope.toggleShowAdminTab();
+           expect(scope.showAdminTab).toBeTrue();
+       });
+        it("should set showShowAdminTab to false when true", () => {
+            scope.showAdminTab = true;
+            scope.toggleShowAdminTab();
+            expect(scope.showAdminTab).toBeFalse();
+        });
+    });
+
+    describe("getAllSyncDestinations", () => {
+       it("should call getSyncDestList", () => {
+          spyOn(gs, "getSyncDestList");
+          scope.getAllSyncDestinations();
+          expect(gs.getSyncDestList).toHaveBeenCalled();
+       });
+    });
+
+    describe("getGroupingInformation", () => {
+        let pagesOfGrouping;
+        beforeEach(() => {
+            pagesOfGrouping = {
+                groupingPath: "somePath",
+                currentPage: 1,
+                PAGE_SIZE: 1,
+                sortString: "name",
+                isAscending: true,
+            };
+        });
+
+       it("should set loading to true", () => {
+           scope.getGroupingInformation();
+           expect(scope.loading).toBeTrue();
+       });
+       it("should call getGrouping when asyncThreadCount is 1", () => {
+           spyOn(gs, "getGrouping");
+           scope.getGroupingInformation();
+           expect(gs.getGrouping).toHaveBeenCalled();
+       });
+       it("should set descriptionLoaded & paginatingProgress to true & paginatingComplete to false after calling gs.getGrouping", () => {
+           spyOn(gs, "getGrouping");
+           scope.getGroupingInformation();
+           //maybe implement this another way??
+       });
+    });
+
+    describe("getPages", () => {
+        it("should return a promise", () => {
+            scope.getPages.then(function () {
+
+            })
+        });
+    })
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven
