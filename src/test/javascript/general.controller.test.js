@@ -263,12 +263,50 @@ describe("GeneralController", function () {
        });
     });
 
-    describe("getPages", () => {
-        it("should return a promise", () => {
-            scope.getPages.then(function () {
+    // describe("getPages", () => {
+    //     it("should return a promise", () => {
+    //         scope.getPages.then(function () {
+    //
+    //         })
+    //     });
+    // });
 
-            })
+    describe("descriptionLengthWarning", () => {
+        beforeEach(() => {
+            scope.modelDescription = "theModelDescription";
         });
+        it("should check that the modelDescription length doesn't go over the max", () => {
+           expect(scope.descriptionLengthWarning()).toBeFalse();
+       });
+    });
+
+    describe("editDescription", () => {
+        it("should set descriptionForm to false when true", () => {
+           scope.descriptionForm = true;
+           scope.editDescription();
+           expect(scope.descriptionForm).toBeFalse();
+        });
+        it("should set descriptionForm to true when false", () => {
+            scope.descriptionForm = false;
+            scope.editDescription();
+            expect(scope.descriptionForm).toBeTrue();
+        });
+    });
+
+    describe("cancelDescriptionEdit", () => {
+       it ("should set the modelDescription to the groupingDesciption", () => {
+           scope.cancelDescriptionEdit();
+           expect(scope.modelDescription).toBe("");
+       });
+       it("should set descriptionForm to false when true", () => {
+           scope.descriptionForm = true;
+           scope.cancelDescriptionEdit();
+           expect(scope.descriptionForm).toBeFalse();
+       });
+    });
+
+    describe("saveDescription", () => {
+
     })
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
