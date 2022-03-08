@@ -303,9 +303,10 @@ h4 {
   padding-left: .3125rem;
   padding-right: .3125rem;
 }
+
 @media (min-width: 377px) {
-  #csvButton {
-    float: right;
+    #csvButton {
+      float: right;
   }
 }
 
