@@ -342,6 +342,45 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("getCSVToolTipMessage", () => {
+        it ("should display loaded message when paginatingComplete has loaded", () => {
+            scope.paginatingComplete = true;
+            scope.getCSVToolTipMessage()
+            expect(scope.getCSVToolTipMessage()).toBe(scope.groupLoaded);
+        });
+        it ("should display not loaded message when paginatingComplete has not loaded", () => {
+            scope.paginatingComplete = false;
+            scope.getCSVToolTipMessage();
+            expect(scope.getCSVToolTipMessage()).toBe(scope.groupNotLoaded);
+        });
+    });
+
+    describe("descriptionDisplay", () => {
+        it("should set descriptionLoaded as empty string if false", () => {
+            scope.descriptionLoaded = false;
+            expect(scope.descriptionDisplay()).toBe("");
+        });
+        it("should set modelDescription as empty string and display tracker to 0 when " +
+            "showGrouping is true and displayTracker is 1", () => {
+            scope.showGrouping = true;
+            scope.displayTracker = 1;
+            scope.descriptionLoaded = true;
+            scope.descriptionDisplay();
+            expect(scope.modelDescription).toBe(scope.groupingDescription);
+            expect(scope.displayTracker).toBe(0);
+        });
+        it("should return groupingDescription if groupingDescription.length > 0,", () => {
+            scope.descriptionLoaded = true;
+            scope.groupingDescription = "123";
+            expect(scope.descriptionDisplay()).toBe(scope.groupingDescription);
+        });
+        it("should return noDescriptionMessage if groupingDescription.length < 0", () => {
+            scope.descriptionLoaded = true;
+            scope.groupingDescription.length = -1;
+            expect(scope.descriptionDisplay()).toBe(scope.noDescriptionMessage);
+        });
+    });
+
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven
