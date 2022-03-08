@@ -8,6 +8,16 @@ describe("GeneralController", function () {
     let httpBackend;
     let BASE_URL;
     let gs;
+    let onSuccess;
+    let onFailure;
+
+    onSuccess = () => {
+        console.log("success");
+    }
+
+    onFailure = () => {
+        console.log("success");
+    }
 
     beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) {
         scope = $rootScope.$new();
@@ -263,13 +273,25 @@ describe("GeneralController", function () {
        });
     });
 
-    // describe("getPages", () => {
-    //     it("should return a promise", () => {
-    //         scope.getPages.then(function () {
-    //
-    //         })
-    //     });
-    // });
+    describe("getPages", () => {
+        let pagesOfGrouping;
+        beforeEach(() => {
+            pagesOfGrouping = {
+                groupingPath: "somePath",
+                currentPage: 1,
+                PAGE_SIZE: 1,
+                sortString: "name",
+                isAscending: true,
+            };
+        });
+
+        it("should return a promise", () => {
+            scope.getPages(pagesOfGrouping.groupingPath, pagesOfGrouping.currentPage, pagesOfGrouping.PAGE_SIZE, pagesOfGrouping.sortString, pagesOfGrouping.isAscending).then(function(result) {
+                expect(result).toBe(true);
+                done();
+            });
+        });
+    });
 
     describe("descriptionLengthWarning", () => {
         beforeEach(() => {
@@ -306,8 +328,20 @@ describe("GeneralController", function () {
     });
 
     describe("saveDescription", () => {
+        it("should return the cancelDescriptionEdit function when localeCompare is 0", () => {
+            expect(scope.saveDescription()).toBe(scope.cancelDescriptionEdit());
+        });
+        beforeEach(() => {
+            scope.modelDescription = "descriptionOfAModal";
+        });
+        it("should update the description for a grouping", () => {
+            spyOn(gs, "updateDescription");
+            scope.saveDescription();
+            expect(scope.modelDescription).toBe("descriptionOfAModal");
+            expect(gs.updateDescription).toHaveBeenCalled();
+        });
+    });
 
-    })
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven
@@ -423,6 +457,13 @@ describe("GeneralController", function () {
             expect(arrayOfValidNames.toString()).toEqual("wliang80,gilbertz,ryotabs,mhodges,mairene,chakhon,26223772,12345678,bogusname,fakename,_1234455,_gavin4,_test_123-abc");
         });
 
+    describe("launchImportModal", () => {
+        it ("should check that the import modal is launched", () => {
+            spyOn(scope, "confirmImportInstance");
+            scope.launchImportModal("list");
+                expect(scope.listName).toBe("list");
+            expect(scope.confirmImportInstance).toHaveBeenCalled();
+        });
     });
 
     describe("validateAndAddUser", function () {
