@@ -87,7 +87,7 @@ describe("GeneralController", () => {
     });
 
     // Set up mock data
-    beforeEach( () => {
+    beforeEach(() => {
         scope.selectedGrouping = { name: "grouping1", path: "path:path2:grouping1" };
         scope.itemsPerPage = 20;
 
@@ -193,7 +193,7 @@ describe("GeneralController", () => {
     });
 
     describe("displayGrouping", () => {
-        beforeEach( () => {
+        beforeEach(() => {
             scope.pagedItemsGroupings = [["zzzz"]];
         });
         it("should set selectedGrouping to 'zzzz'", () => {
@@ -372,7 +372,7 @@ describe("GeneralController", () => {
 
     describe("closeApiError", () => {
         beforeEach(() => {
-           scope.createApiErrorModal();
+            scope.createApiErrorModal();
         });
 
         it("should close modal", () => {
@@ -383,9 +383,9 @@ describe("GeneralController", () => {
     });
 
     describe("proceedAddMembers", () => {
-       beforeEach(() => {
-           scope.launchImportModal();
-       });
+        beforeEach(() => {
+            scope.launchImportModal();
+        });
 
         it("should close confirmImportInstance modal", () => {
             spyOn(scope.confirmImportInstance, 'close');
@@ -393,6 +393,15 @@ describe("GeneralController", () => {
             expect(scope.confirmImportInstance.close).toHaveBeenCalled();
         });
     });
+
+    // describe("closeApiError", () => {
+    //     it("should close modal", () => {
+    //         spyOn(scope, "closeApiError").and.callThrough();
+    //         scope.closeApiError();
+    //
+    //         expect(scope.apiErrorModalInstance.close()).toHaveBeenCalled();
+    //     });
+    // });
 
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
@@ -478,7 +487,7 @@ describe("GeneralController", () => {
                 firstName: "Valid",
                 lastName: "User"
             };
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "validUser";
                 httpBackend.whenGET(BASE_URL + "currentUser")
                     .respond(200);
@@ -509,7 +518,7 @@ describe("GeneralController", () => {
                 firstName: null,
                 lastName: null
             };
-            beforeEach( () => {
+            beforeEach(() => {
                 httpBackend.whenGET(BASE_URL + "currentUser")
                     .respond(200);
                 httpBackend.whenGET(BASE_URL + "members/memberships/")
@@ -535,7 +544,7 @@ describe("GeneralController", () => {
 
     describe("addMember", () => {
         describe("user adds 'user8', who is not in any list, to the Include list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user8";
             });
 
@@ -555,7 +564,7 @@ describe("GeneralController", () => {
         });
 
         describe("user adds 'user1' to the Exclude list, who is currently in the Include list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user1";
             });
 
@@ -577,7 +586,7 @@ describe("GeneralController", () => {
         });
 
         describe("user tries to add a blank username to a list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "";
             });
 
@@ -590,7 +599,7 @@ describe("GeneralController", () => {
         });
 
         describe("user tries to add 'user5', who is currently in the Exclude list, to the Exclude list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user5";
             });
 
@@ -603,7 +612,7 @@ describe("GeneralController", () => {
         });
 
         describe("user tries to add 'user7', who is currently in the Basis list, to the Include list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user7";
             });
 
@@ -615,7 +624,7 @@ describe("GeneralController", () => {
         });
 
         describe("user tries to add 'user8', who is currently not in the Basis list, to the Exclude list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user8";
             });
 
@@ -629,7 +638,7 @@ describe("GeneralController", () => {
 
     describe("isInAnotherList", () => {
         describe("user tries to add 'user1', who is currently in the Include list, to the Exclude list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user1";
             });
             it("should return true since 'user1' is currently in the Include list", () => {
@@ -641,7 +650,7 @@ describe("GeneralController", () => {
             });
         });
         describe("user tries to add 'user5', who is currently in the Exclude list, to the Include list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user5";
             });
             it("should return true since 'user5' is currently in the Exclude list", () => {
@@ -653,7 +662,7 @@ describe("GeneralController", () => {
             });
         });
         describe("user tries to add 'user8', who is not in any list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user8";
             });
             it("should return false if the user tries to add 'user8' to the Include list", () => {
@@ -778,7 +787,7 @@ describe("GeneralController", () => {
     });
 
     describe("getPersonProps", () => {
-        beforeEach( () => {
+        beforeEach(() => {
             scope.personProps = "";
         });
         describe("get and modify person props", () => {
@@ -817,7 +826,7 @@ describe("GeneralController", () => {
 
     describe("showWarningRemovingSelf", () => {
         describe("removing self from a list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.currentUser = "jdoe";
                 scope.userToRemove = {
                     username: "jdoe",
@@ -849,7 +858,8 @@ describe("GeneralController", () => {
 
     });
 
-    describe("parseAddRemoveInputStr", () => {
+
+    describe("parseAddRemoveInputStr", function () {
         let spaceSeparated = "Hello I love you";
         let commaSeparated = "Hello,I,love,you";
         let commaAndSpaceSeparated = "Hello, I love,you";
@@ -872,7 +882,6 @@ describe("GeneralController", () => {
 
         });
     });
-
 
     describe("initMemberDisplayName", () => {
 
@@ -1018,9 +1027,9 @@ describe("GeneralController", () => {
     });
 
     describe("proceedCheckModal", () => {
-       beforeEach(() => {
-           scope.createCheckModal('testUser', 'testList','testSwap','testInBasis');
-       });
+        beforeEach(() => {
+            scope.createCheckModal('testUser', 'testList', 'testSwap', 'testInBasis');
+        });
         it("should close the checkModalInstance modal", () => {
             spyOn(scope.checkModalInstance, 'close');
             scope.proceedCheckModal();
@@ -1030,7 +1039,7 @@ describe("GeneralController", () => {
 
     describe("closeCheckModal", () => {
         beforeEach(() => {
-            scope.createCheckModal('testUser', 'testList','testSwap','testInBasis');
+            scope.createCheckModal('testUser', 'testList', 'testSwap', 'testInBasis');
         });
         it("should dismiss the checkModalInstance modal", () => {
             spyOn(scope.checkModalInstance, 'dismiss');
@@ -1040,9 +1049,9 @@ describe("GeneralController", () => {
     });
 
     describe("proceedConfirmAddUser", () => {
-       beforeEach(() => {
-           scope.createConfirmAddMembersModal(scope.listName);
-       });
+        beforeEach(() => {
+            scope.createConfirmAddMembersModal(scope.listName);
+        });
 
         it("should close confirmAddModalInstance", () => {
             spyOn(scope.confirmAddModalInstance, 'close');
@@ -1052,9 +1061,9 @@ describe("GeneralController", () => {
     });
 
     describe("cancelConfirmAddUser", () => {
-       beforeEach(() => {
-          scope.createConfirmAddMembersModal(scope.listName);
-       });
+        beforeEach(() => {
+            scope.createConfirmAddMembersModal(scope.listName);
+        });
 
         it("should dismiss confirmAddModalInstance", () => {
             spyOn(scope.confirmAddModalInstance, 'dismiss');
@@ -1064,9 +1073,9 @@ describe("GeneralController", () => {
     });
 
     describe("closeSuccessfulAddModal", () => {
-       beforeEach(() => {
-           scope.createSuccessfulAddModal('testString');
-       });
+        beforeEach(() => {
+            scope.createSuccessfulAddModal('testString');
+        });
 
         it("should close addModalInstance", () => {
             spyOn(scope.addModalInstance, 'close');
@@ -1076,9 +1085,9 @@ describe("GeneralController", () => {
     });
 
     describe("closeResetNotifModal", () => {
-       beforeEach(() => {
-           scope.createResetNotifModal(scope.group);
-       });
+        beforeEach(() => {
+            scope.createResetNotifModal(scope.group);
+        });
 
         it("should close resetNotifModalInstance", () => {
             spyOn(scope.resetNotifModalInstance, 'close');
@@ -1088,13 +1097,13 @@ describe("GeneralController", () => {
     });
 
     describe("batchRemovePromptModalAccept", () => {
-       beforeEach(() => {
-           scope.multiRemovePromptModalInstance = {
-               close: () => {
-                   // Mock $uib modal close
-               },
-           };
-       });
+        beforeEach(() => {
+            scope.multiRemovePromptModalInstance = {
+                close: () => {
+                    // Mock $uib modal close
+                },
+            };
+        });
 
         it("should close batchRemovePromptModalAccept", () => {
             spyOn(scope.multiRemovePromptModalInstance, 'close');
@@ -1119,9 +1128,9 @@ describe("GeneralController", () => {
     });
 
     describe("closeBatchRemoveConfirmationModalInstance", () => {
-       beforeEach(() => {
-          scope.batchRemoveConfirmationModal(scope.listName);
-       });
+        beforeEach(() => {
+            scope.batchRemoveConfirmationModal(scope.listName);
+        });
 
         it("should close multiRemoveConfirmationModalInstance", () => {
             spyOn(scope.multiRemoveConfirmationModalInstance, 'close');
@@ -1131,13 +1140,13 @@ describe("GeneralController", () => {
     });
 
     describe("proceedRemoveUser", () => {
-       beforeEach(() => {
-           scope.removeModalInstance = {
-               close: {
-                   // Mock $uib modal close
-               },
-           };
-       });
+        beforeEach(() => {
+            scope.removeModalInstance = {
+                close: {
+                    // Mock $uib modal close
+                },
+            };
+        });
 
         it("should close removeModalInstance", () => {
             spyOn(scope.removeModalInstance, 'close');
@@ -1147,9 +1156,9 @@ describe("GeneralController", () => {
     });
 
     describe("proceedResetGroup", () => {
-       beforeEach(() => {
-           scope.createResetGroupModal(scope.group);
-       });
+        beforeEach(() => {
+            scope.createResetGroupModal(scope.group);
+        });
 
         it("should close resetModalInstance", () => {
             spyOn(scope.resetModalInstance, 'close');
@@ -1159,13 +1168,13 @@ describe("GeneralController", () => {
     });
 
     describe("cancelRemoveUser", () => {
-       beforeEach(() => {
-           scope.removeModalInstance = {
-               dismiss: {
-                   // Mock $uib modal dismiss
-               },
-           };
-       });
+        beforeEach(() => {
+            scope.removeModalInstance = {
+                dismiss: {
+                    // Mock $uib modal dismiss
+                },
+            };
+        });
 
         it("should dismiss removeModalInstance", () => {
             spyOn(scope.removeModalInstance, 'dismiss');
@@ -1187,9 +1196,9 @@ describe("GeneralController", () => {
     });
 
     describe("closeEmptyGroupModal", () => {
-       beforeEach(() => {
-           scope.createEmptyGroupModal();
-       });
+        beforeEach(() => {
+            scope.createEmptyGroupModal();
+        });
 
         it("should dismiss emptyGroupModalInstance", () => {
             spyOn(scope.emptyGroupModalInstance, 'dismiss');
@@ -1199,9 +1208,9 @@ describe("GeneralController", () => {
     });
 
     describe("closeRemoveErrorModal", () => {
-       beforeEach(() => {
-           scope.createRemoveErrorModal('testString');
-       });
+        beforeEach(() => {
+            scope.createRemoveErrorModal('testString');
+        });
 
         it("should close removeErrorModalInstance", () => {
             spyOn(scope.removeErrorModalInstance, 'close');
@@ -1211,9 +1220,9 @@ describe("GeneralController", () => {
     });
 
     describe("closePreferenceInfo", () => {
-       beforeEach(() => {
-           scope.createPreferenceInfoModal('testString');
-       });
+        beforeEach(() => {
+            scope.createPreferenceInfoModal('testString');
+        });
 
         it("should close infoModalInstance", () => {
             spyOn(scope.infoModalInstance, 'close');
@@ -1223,9 +1232,9 @@ describe("GeneralController", () => {
     });
 
     describe("closePreferenceError", () => {
-       beforeEach(() => {
-           scope.createPreferenceErrorModal();
-       });
+        beforeEach(() => {
+            scope.createPreferenceErrorModal();
+        });
 
         it("should close preferenceErrorModalInstance", () => {
             spyOn(scope.preferenceErrorModalInstance, 'close');
@@ -1235,9 +1244,9 @@ describe("GeneralController", () => {
     });
 
     describe("proceedBasisWarningModal", () => {
-       beforeEach(() => {
-           scope.createBasisWarningModal('testUser', 'testListName', 'testBasis');
-       });
+        beforeEach(() => {
+            scope.createBasisWarningModal('testUser', 'testListName', 'testBasis');
+        });
 
         it("should close basisWarningModalInstance", () => {
             spyOn(scope.basisWarningModalInstance, 'close');
@@ -1247,9 +1256,9 @@ describe("GeneralController", () => {
     });
 
     describe("closeBasisWarningModal", () => {
-       beforeEach(() => {
-           scope.createBasisWarningModal('testUser', 'testListName', 'testBasis');
-       });
+        beforeEach(() => {
+            scope.createBasisWarningModal('testUser', 'testListName', 'testBasis');
+        });
 
         it("should dismiss basisWarningModalInstance", () => {
             spyOn(scope.basisWarningModalInstance, 'dismiss');
@@ -1259,13 +1268,13 @@ describe("GeneralController", () => {
     });
 
     describe("proceedSyncDestModal", () => {
-       beforeEach(() => {
-           scope.syncDestInstance = {
-             close: {
-                 // Mock $uib modal close
-             }
-           };
-       });
+        beforeEach(() => {
+            scope.syncDestInstance = {
+                close: {
+                    // Mock $uib modal close
+                }
+            };
+        });
 
         it("should close syncDestInstance", () => {
             spyOn(scope.syncDestInstance, 'close');
@@ -1275,13 +1284,13 @@ describe("GeneralController", () => {
     });
 
     describe("closeSyncDestModal", () => {
-       beforeEach(() => {
-           scope.syncDestInstance = {
-               dismiss: {
-                   // Mock $uib modal dismiss
-               },
-           };
-       });
+        beforeEach(() => {
+            scope.syncDestInstance = {
+                dismiss: {
+                    // Mock $uib modal dismiss
+                },
+            };
+        });
 
         it("should dismiss syncDestInstance", () => {
             spyOn(scope.syncDestInstance, 'dismiss');
@@ -1293,15 +1302,15 @@ describe("GeneralController", () => {
     describe("proceedRedirectApiError", () => {
         let testWindowLocationHref = '/testURL';
         beforeEach(() => {
-           scope.proceedRedirectApiError =  {
-               create: scope.createApiErrorModal(),
-               close: () => {
-                   scope.apiErrorModalInstance.close()
-               },
-               setUrl: () => {
-                   testWindowLocationHref = "/uhgroupings/feedback";
-               },
-           };
+            scope.proceedRedirectApiError = {
+                create: scope.createApiErrorModal(),
+                close: () => {
+                    scope.apiErrorModalInstance.close()
+                },
+                setUrl: () => {
+                    testWindowLocationHref = "/uhgroupings/feedback";
+                },
+            };
         });
 
         it("should close apiErrorModalInstance", () => {
@@ -1322,7 +1331,7 @@ describe("GeneralController", () => {
     describe("proceedRedirect", () => {
         let testWindowLocationHref = '/testURL';
         beforeEach(() => {
-            scope.proceedRedirect =  {
+            scope.proceedRedirect = {
                 create: scope.createOwnerErrorModal(),
                 close: () => {
                     scope.OwnerErrorModalInstance.close()
@@ -1332,7 +1341,7 @@ describe("GeneralController", () => {
                 },
             };
         });
-        
+
         it("should close OwnerErrorModalInstance", () => {
             spyOn(scope.OwnerErrorModalInstance, 'close');
             scope.proceedRedirect.close();
@@ -1347,7 +1356,8 @@ describe("GeneralController", () => {
         });
     });
 
-    describe("extractSelectedUsersFromCheckboxes",  () => {
+    describe("extractSelectedUsersFromCheckboxes", () => {
+
         let obj = {};
         let str = "test";
         let expectedResult = "";
