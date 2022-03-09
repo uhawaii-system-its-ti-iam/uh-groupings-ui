@@ -1977,7 +1977,7 @@
         /**
          * Close the preference error modal.
          */
-        $scope.closePreferenceError = function () {
+        $scope.closePreferenceError = function () {5
             $scope.preferenceErrorModalInstance.close();
         };
 

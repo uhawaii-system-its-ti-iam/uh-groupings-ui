@@ -8,6 +8,17 @@ describe("GeneralController", () => {
     let httpBackend;
     let BASE_URL;
     let gs;
+    let onSuccess;
+    let onFailure;
+
+    onSuccess = () => {
+        console.log("success");
+    };
+
+    onFailure = () => {
+        console.log("success");
+    };
+
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) => {
         scope = $rootScope.$new();
         controller = $controller("GeneralJsController", {
@@ -942,7 +953,13 @@ describe("GeneralController", () => {
 
         it("should set includeCheck to false if includeCheck is true", () => {
             scope.includeCheck = true;
-            scope.updateIncludeCheck();
+            scope.updateIncludeCheck()
+            expect(scope.includeCheck).toBeTrue();
+        });
+
+        it("should set includeCheck to false if includeCheck is true", function () {
+            scope.includeCheck = true;
+            scope.updateIncludeCheck()
             expect(scope.includeCheck).toBeFalse();
         });
     });
@@ -1357,7 +1374,6 @@ describe("GeneralController", () => {
     });
 
     describe("extractSelectedUsersFromCheckboxes", () => {
-
         let obj = {};
         let str = "test";
         let expectedResult = "";
