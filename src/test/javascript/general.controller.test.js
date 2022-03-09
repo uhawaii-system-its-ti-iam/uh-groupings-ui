@@ -13,11 +13,11 @@ describe("GeneralController", function () {
 
     onSuccess = () => {
         console.log("success");
-    }
+    };
 
     onFailure = () => {
         console.log("success");
-    }
+    };
 
     beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) {
         scope = $rootScope.$new();
@@ -209,12 +209,12 @@ describe("GeneralController", function () {
         });
         it("should set selectedGrouping to 'zzzz'", () => {
             scope.selectedGrouping = 0;
-           scope.displayGrouping(0, 0);
-           expect(scope.selectedGrouping).toEqual('zzzz');
+            scope.displayGrouping(0, 0);
+            expect(scope.selectedGrouping).toEqual("zzzz");
         });
         it("should set showgrouping to true", () => {
             scope.showGrouping = false;
-            scope.displayGrouping(0,0);
+            scope.displayGrouping(0, 0);
             expect(scope.showGrouping).toBeTrue();
         });
         it("should call getGroupingInformation", () => {
@@ -225,11 +225,11 @@ describe("GeneralController", function () {
     });
 
     describe("toggleShowAdminTab", () => {
-       it("should set showShowAdminTab to true when false", () => {
-           scope.showAdminTab = false;
-           scope.toggleShowAdminTab();
-           expect(scope.showAdminTab).toBeTrue();
-       });
+        it("should set showShowAdminTab to true when false", () => {
+            scope.showAdminTab = false;
+            scope.toggleShowAdminTab();
+            expect(scope.showAdminTab).toBeTrue();
+        });
         it("should set showShowAdminTab to false when true", () => {
             scope.showAdminTab = true;
             scope.toggleShowAdminTab();
@@ -238,11 +238,11 @@ describe("GeneralController", function () {
     });
 
     describe("getAllSyncDestinations", () => {
-       it("should call getSyncDestList", () => {
-          spyOn(gs, "getSyncDestList");
-          scope.getAllSyncDestinations();
-          expect(gs.getSyncDestList).toHaveBeenCalled();
-       });
+        it("should call getSyncDestList", () => {
+            spyOn(gs, "getSyncDestList");
+            scope.getAllSyncDestinations();
+            expect(gs.getSyncDestList).toHaveBeenCalled();
+        });
     });
 
     describe("getGroupingInformation", () => {
@@ -253,24 +253,24 @@ describe("GeneralController", function () {
                 currentPage: 1,
                 PAGE_SIZE: 1,
                 sortString: "name",
-                isAscending: true,
+                isAscending: true
             };
         });
 
-       it("should set loading to true", () => {
-           scope.getGroupingInformation();
-           expect(scope.loading).toBeTrue();
-       });
-       it("should call getGrouping when asyncThreadCount is 1", () => {
-           spyOn(gs, "getGrouping");
-           scope.getGroupingInformation();
-           expect(gs.getGrouping).toHaveBeenCalled();
-       });
-       it("should set descriptionLoaded & paginatingProgress to true & paginatingComplete to false after calling gs.getGrouping", () => {
-           spyOn(gs, "getGrouping");
-           scope.getGroupingInformation();
-           //maybe implement this another way??
-       });
+        it("should set loading to true", () => {
+            scope.getGroupingInformation();
+            expect(scope.loading).toBeTrue();
+        });
+        it("should call getGrouping when asyncThreadCount is 1", () => {
+            spyOn(gs, "getGrouping");
+            scope.getGroupingInformation();
+            expect(gs.getGrouping).toHaveBeenCalled();
+        });
+        it("should set descriptionLoaded & paginatingProgress to true & paginatingComplete to false after calling gs.getGrouping", () => {
+            spyOn(gs, "getGrouping");
+            scope.getGroupingInformation();
+            //maybe implement this another way??
+        });
     });
 
     describe("getPages", () => {
@@ -281,12 +281,12 @@ describe("GeneralController", function () {
                 currentPage: 1,
                 PAGE_SIZE: 1,
                 sortString: "name",
-                isAscending: true,
+                isAscending: true
             };
         });
 
         it("should return a promise", () => {
-            scope.getPages(pagesOfGrouping.groupingPath, pagesOfGrouping.currentPage, pagesOfGrouping.PAGE_SIZE, pagesOfGrouping.sortString, pagesOfGrouping.isAscending).then(function(result) {
+            scope.getPages(pagesOfGrouping.groupingPath, pagesOfGrouping.currentPage, pagesOfGrouping.PAGE_SIZE, pagesOfGrouping.sortString, pagesOfGrouping.isAscending).then(function (result) {
                 expect(result).toBe(true);
                 done();
             });
@@ -298,15 +298,15 @@ describe("GeneralController", function () {
             scope.modelDescription = "theModelDescription";
         });
         it("should check that the modelDescription length doesn't go over the max", () => {
-           expect(scope.descriptionLengthWarning()).toBeFalse();
-       });
+            expect(scope.descriptionLengthWarning()).toBeFalse();
+        });
     });
 
     describe("editDescription", () => {
         it("should set descriptionForm to false when true", () => {
-           scope.descriptionForm = true;
-           scope.editDescription();
-           expect(scope.descriptionForm).toBeFalse();
+            scope.descriptionForm = true;
+            scope.editDescription();
+            expect(scope.descriptionForm).toBeFalse();
         });
         it("should set descriptionForm to true when false", () => {
             scope.descriptionForm = false;
@@ -316,15 +316,15 @@ describe("GeneralController", function () {
     });
 
     describe("cancelDescriptionEdit", () => {
-       it ("should set the modelDescription to the groupingDesciption", () => {
-           scope.cancelDescriptionEdit();
-           expect(scope.modelDescription).toBe("");
-       });
-       it("should set descriptionForm to false when true", () => {
-           scope.descriptionForm = true;
-           scope.cancelDescriptionEdit();
-           expect(scope.descriptionForm).toBeFalse();
-       });
+        it("should set the modelDescription to the groupingDesciption", () => {
+            scope.cancelDescriptionEdit();
+            expect(scope.modelDescription).toBe("");
+        });
+        it("should set descriptionForm to false when true", () => {
+            scope.descriptionForm = true;
+            scope.cancelDescriptionEdit();
+            expect(scope.descriptionForm).toBeFalse();
+        });
     });
 
     describe("saveDescription", () => {
@@ -343,12 +343,12 @@ describe("GeneralController", function () {
     });
 
     describe("getCSVToolTipMessage", () => {
-        it ("should display loaded message when paginatingComplete has loaded", () => {
+        it("should display loaded message when paginatingComplete has loaded", () => {
             scope.paginatingComplete = true;
-            scope.getCSVToolTipMessage()
+            scope.getCSVToolTipMessage();
             expect(scope.getCSVToolTipMessage()).toBe(scope.groupLoaded);
         });
-        it ("should display not loaded message when paginatingComplete has not loaded", () => {
+        it("should display not loaded message when paginatingComplete has not loaded", () => {
             scope.paginatingComplete = false;
             scope.getCSVToolTipMessage();
             expect(scope.getCSVToolTipMessage()).toBe(scope.groupNotLoaded);
@@ -518,7 +518,7 @@ describe("GeneralController", function () {
 
             it("user should be invalidated", function () {
                 spyOn(scope, "createCheckModal").and.callThrough();
-                scope.validateAndAddUser("invalidUser","Include");
+                scope.validateAndAddUser("invalidUser", "Include");
                 httpBackend.expectGET(BASE_URL + "members/" + "invalidUser")
                     .respond(200, invalidUser);
 
@@ -871,12 +871,82 @@ describe("GeneralController", function () {
         });
     });
 
+
+    describe("initMemberDisplayName", () => {
+
+        it("should set user to fullName if fullName.length > 0", () => {
+            let attributes = {
+                name: "testName",
+                firstName: "testFirstName",
+                uhUuid: "testuhUuid",
+                username: "testUsername"
+            };
+
+            scope.initMemberDisplayName(attributes);
+            expect(scope.user).toBe(scope.fullName);
+        });
+
+        it("should set user to uid if fullName.Length == 0 and uid > 0", () => {
+            let attributes = {
+                name: "",
+                firstName: "testFirstName",
+                uhUuid: "testuhUuid",
+                username: "testUsername"
+            };
+
+            scope.initMemberDisplayName(attributes);
+
+            expect(scope.user).toBe(scope.uid);
+        });
+
+        it("should set user to uhUuid if fullName & uid both == 0", () => {
+            let attributes = {
+                name: "",
+                firstName: "testFirstName",
+                uhUuid: "testuhUuid",
+                username: ""
+            };
+
+            scope.initMemberDisplayName(attributes);
+
+            expect(scope.user).toBe(scope.uhUuid);
+        });
+    });
+
     describe("removeItemsFromArray", () => {
         it("should remove items from the pendingList array", () => {
             let pendingList = [1, 1, 2, 3, 4, 5];
             let itemsToRemove = [1, 1];
             pendingList = scope.removeItemsFromArray(pendingList, itemsToRemove);
             expect(pendingList).toEqual([2, 3, 4, 5]);
+        });
+    });
+
+    describe("updateIncludeCheck", () => {
+        it("should set includeCheck to true if includeCheck is false", () => {
+            scope.includeCheck = false;
+            scope.updateIncludeCheck()
+            expect(scope.includeCheck).toBeTrue();
+        });
+
+        it("should set includeCheck to false if includeCheck is true", function () {
+            scope.includeCheck = true;
+            scope.updateIncludeCheck()
+            expect(scope.includeCheck).toBeFalse();
+        });
+    });
+
+    describe( "updateExcludeCheck", () => {
+        it("should set excludeCheck to true if excludeCheck is false", () => {
+            scope.excludeCheck = false;
+            scope.updateExcludeCheck();
+            expect(scope.excludeCheck).toBeTrue();
+        });
+
+        it("should set excludeCheck to false if excludeCheck is true", () => {
+            scope.excludeCheck = true;
+            scope.updateExcludeCheck();
+            expect(scope.excludeCheck).toBeFalse();
         });
     });
 
