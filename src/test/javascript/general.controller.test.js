@@ -1374,6 +1374,7 @@ describe("GeneralController", () => {
     });
 
     describe("extractSelectedUsersFromCheckboxes", () => {
+        expect(scope.inGrouper).toBeFalse()
         let obj = {};
         let str = "test";
         let expectedResult = "";
