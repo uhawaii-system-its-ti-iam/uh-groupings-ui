@@ -950,6 +950,7 @@ describe("GeneralController", function () {
         });
     });
 
+
     describe("resetErrors", () => {
         it("should set resStatus to 0", () => {
             scope.resStatus = 1;
