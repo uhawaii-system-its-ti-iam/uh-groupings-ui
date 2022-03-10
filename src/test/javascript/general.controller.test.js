@@ -950,6 +950,38 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("resetErrors", () => {
+        it("should set resStatus to 0", () => {
+            scope.resStatus = 1;
+            scope.resetErrors();
+            expect(scope.resStatus).toBe(0);
+        });
+
+        it("should set emptyInput to false", () => {
+            scope.emptyInput = true;
+            scope.resetErrors();
+            expect(scope.emptyInput).toBeFalse()
+        });
+
+        it("should set emptySelect to false", () => {
+            scope.emptySelect = true;
+            scope.resetErrors();
+            expect(scope.emptySelect).toBeFalse()
+        });
+
+        it("should set swap to true", () => {
+            scope.swap = false;
+            scope.resetErrors();
+            expect(scope.swap).toBeTrue()
+        });
+
+        it("should inGrouper to false", () => {
+            scope.inGrouper = true;
+            scope.resetErrors();
+            expect(scope.inGrouper).toBeFalse()
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", function () {
         let obj = {};
         let str = "test";
