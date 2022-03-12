@@ -636,8 +636,8 @@
          * function is called implicitly from include.html and exclude.html.
          * The file is retrieved from the html input with id 'upload'.
          */
-        $scope.readTextFile = function () {
-            let file = input.files[0];
+        $scope.readTextFile = function ($event) {
+            let file = document.getElementById('upload').files[0];
             if (file === undefined) {
                 console.log("undef");
             }
