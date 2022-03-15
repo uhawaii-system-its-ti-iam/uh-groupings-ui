@@ -689,14 +689,15 @@
                     if ("FAILURE" === result || !userWasAdded) {
                         membersNotInList.push(arrayOfMembers[i]);
                         $scope.membersNotInList = membersNotInList.join(", ");
+                    }else {
+                        let person = {
+                            "uid": data[parseInt(i, 10)].uid,
+                            "uhUuid": data[parseInt(i, 10)].uhUuid,
+                            "name": data[parseInt(i, 10)].name
+                        };
+                        $scope.multiAddResults.push(person);
+                        $scope.multiAddResultsGeneric.push(person);
                     }
-                    let person = {
-                        "uid": data[parseInt(i, 10)].uid,
-                        "uhUuid": data[parseInt(i, 10)].uhUuid,
-                        "name": data[parseInt(i, 10)].name
-                    };
-                    $scope.multiAddResults.push(person);
-                    $scope.multiAddResultsGeneric.push(person);
                 }
                 if ($scope.multiAddResults.length > 0) {
                     $scope.personProps = Object.keys($scope.multiAddResults[0]);
