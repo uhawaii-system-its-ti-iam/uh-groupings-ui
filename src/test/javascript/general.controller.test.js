@@ -404,7 +404,7 @@ describe("GeneralController", () => {
         });
 
         it("should close confirmImportInstance modal", () => {
-            spyOn(scope.confirmImportInstance, 'close');
+            spyOn(scope.confirmImportInstance, "close");
             scope.proceedAddMembers();
             expect(scope.confirmImportInstance.close).toHaveBeenCalled();
         });
@@ -1049,10 +1049,10 @@ describe("GeneralController", () => {
 
     describe("proceedCheckModal", () => {
         beforeEach(() => {
-            scope.createCheckModal('testUser', 'testList', 'testSwap', 'testInBasis');
+            scope.createCheckModal("testUser", "testList", "testSwap", "testInBasis");
         });
         it("should close the checkModalInstance modal", () => {
-            spyOn(scope.checkModalInstance, 'close');
+            spyOn(scope.checkModalInstance, "close");
             scope.proceedCheckModal();
             expect(scope.checkModalInstance.close).toHaveBeenCalled();
         });
@@ -1060,10 +1060,10 @@ describe("GeneralController", () => {
 
     describe("closeCheckModal", () => {
         beforeEach(() => {
-            scope.createCheckModal('testUser', 'testList', 'testSwap', 'testInBasis');
+            scope.createCheckModal("testUser", "testList", "testSwap", "testInBasis");
         });
         it("should dismiss the checkModalInstance modal", () => {
-            spyOn(scope.checkModalInstance, 'dismiss');
+            spyOn(scope.checkModalInstance, "dismiss");
             scope.closeCheckModal();
             expect(scope.checkModalInstance.dismiss).toHaveBeenCalled();
         });
@@ -1075,7 +1075,7 @@ describe("GeneralController", () => {
         });
 
         it("should close confirmAddModalInstance", () => {
-            spyOn(scope.confirmAddModalInstance, 'close');
+            spyOn(scope.confirmAddModalInstance, "close");
             scope.proceedConfirmAddUser();
             expect(scope.confirmAddModalInstance.close).toHaveBeenCalled();
         });
@@ -1087,7 +1087,7 @@ describe("GeneralController", () => {
         });
 
         it("should dismiss confirmAddModalInstance", () => {
-            spyOn(scope.confirmAddModalInstance, 'dismiss');
+            spyOn(scope.confirmAddModalInstance, "dismiss");
             scope.cancelConfirmAddUser();
             expect(scope.confirmAddModalInstance.dismiss).toHaveBeenCalled();
         });
