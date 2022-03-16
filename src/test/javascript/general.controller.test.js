@@ -1222,6 +1222,18 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("closePreferenceError", () => {
+       beforeEach(() => {
+           scope.createPreferenceErrorModal();
+       });
+
+        it("should close preferenceErrorModalInstance", () => {
+            spyOn(scope.preferenceErrorModalInstance, 'close');
+            scope.closePreferenceError();
+            expect(scope.preferenceErrorModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes",  () => {
         let obj = {};
         let str = "test";
