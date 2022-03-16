@@ -1090,14 +1090,10 @@ describe("GeneralController", () => {
     describe("batchRemovePromptModalAccept", () => {
        beforeEach(() => {
            scope.multiRemovePromptModalInstance = {
-               open: () => {
-                   // Mock $uib modal open
-               },
                close: () => {
                    // Mock $uib modal close
-               }
+               },
            };
-           scope.multiRemovePromptModalInstance.open();
        });
 
         it("should close batchRemovePromptModalAccept", () => {
@@ -1105,7 +1101,21 @@ describe("GeneralController", () => {
             scope.batchRemovePromptModalAccept();
             expect(scope.multiRemovePromptModalInstance.close).toHaveBeenCalled();
         });
+    });
 
+    describe("batchRemovePromptModalCancel", () => {
+        beforeEach(() => {
+            scope.multiRemovePromptModalInstance = {
+                // Mock $uib dismiss
+                dismiss: ('cancel'),
+            };
+        });
+
+        it("should dismiss multiRemovePromptModalInstance", () => {
+            spyOn(scope.multiRemovePromptModalInstance, 'dismiss');
+            scope.batchRemovePromptModalCancel();
+            expect(scope.multiRemovePromptModalInstance.dismiss).toHaveBeenCalled();
+        });
     });
 
     describe("extractSelectedUsersFromCheckboxes",  () => {
