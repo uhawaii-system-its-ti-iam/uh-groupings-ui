@@ -1393,6 +1393,18 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("closeBatchRemoveConfirmationModalInstance", () => {
+        beforeEach(() => {
+            scope.batchRemoveConfirmationModal(scope.listName);
+        });
+
+        it("should close multiRemoveConfirmationModalInstance", () => {
+            spyOn(scope.multiRemoveConfirmationModalInstance, 'close');
+            scope.closeBatchRemoveConfirmationModalInstance();
+            expect(scope.multiRemoveConfirmationModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         expect(scope.inGrouper).toBeFalse();
         let obj = {};
