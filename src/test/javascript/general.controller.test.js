@@ -956,12 +956,9 @@ describe("GeneralController", function () {
     describe("resetFields", () => {
 
         it("should call getGroupingInformation", () => {
-            // spyOn(scope.resetFields(), 'getGroupingInformation').and.callThrough();
-            // expect(scope.resetFields()).toHaveBeenCalled();
-
-            //spyOn(scope.resetFields(type), 'getGroupingInformation').and.callThrough();
-           // spyOn(scope.closePreferenceError(), 'close');
-            //expect(scope.closePreferenceError.close()).toHaveBeenCalled();
+            spyOn(scope, "getGroupingInformation");
+            scope.resetFields();
+            expect(scope.getGroupingInformation).toHaveBeenCalled();
         });
 
         it("should reset userToAdd string", () => {
