@@ -2002,7 +2002,6 @@
          * @param {String} syncDestName Name of the Sync Dest to create modal for
          */
         $scope.createSyncDestModal = function (syncDestName) {
-
             const isSyncDestOn = $scope.getSyncDestValueInArray(syncDestName);
             $scope.setSyncDestInArray(syncDestName, !isSyncDestOn);
             $scope.selectedSyncDest = $scope.getEntireSyncDestInArray(syncDestName);

@@ -1258,6 +1258,22 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("proceedSyncDestModal", () => {
+       beforeEach(() => {
+           scope.syncDestInstance = {
+             close: {
+                 // Mock $uib modal close
+             }
+           };
+       });
+
+        it("should close syncDestInstance", () => {
+            spyOn(scope.syncDestInstance, 'close');
+            scope.proceedSyncDestModal();
+            expect(scope.syncDestInstance.close).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes",  () => {
         let obj = {};
         let str = "test";
