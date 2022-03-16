@@ -1123,7 +1123,7 @@ describe("GeneralController", () => {
             scope.multiRemovePromptModalInstance = {
                 close: () => {
                     // Mock $uib modal close
-                },
+                }
             };
         });
 
@@ -1354,12 +1354,12 @@ describe("GeneralController", () => {
         beforeEach(() => {
             scope.multiRemovePromptModalInstance = {
                 // Mock $uib dismiss
-                dismiss: ('cancel'),
+                dismiss: ("cancel")
             };
         });
 
         it("should dismiss multiRemovePromptModalInstance", () => {
-            spyOn(scope.multiRemovePromptModalInstance, 'dismiss');
+            spyOn(scope.multiRemovePromptModalInstance, "dismiss");
             scope.batchRemovePromptModalCancel();
             expect(scope.multiRemovePromptModalInstance.dismiss).toHaveBeenCalled();
         });
@@ -1399,7 +1399,7 @@ describe("GeneralController", () => {
         });
 
         it("should close multiRemoveConfirmationModalInstance", () => {
-            spyOn(scope.multiRemoveConfirmationModalInstance, 'close');
+            spyOn(scope.multiRemoveConfirmationModalInstance, "close");
             scope.closeBatchRemoveConfirmationModalInstance();
             expect(scope.multiRemoveConfirmationModalInstance.close).toHaveBeenCalled();
         });
@@ -1410,12 +1410,12 @@ describe("GeneralController", () => {
             scope.removeModalInstance = {
                 close: {
                     // Mock $uib modal close
-                },
+                }
             };
         });
 
         it("should close removeModalInstance", () => {
-            spyOn(scope.removeModalInstance, 'close');
+            spyOn(scope.removeModalInstance, "close");
             scope.proceedRemoveUser();
             expect(scope.removeModalInstance.close).toHaveBeenCalled();
         });
@@ -1427,7 +1427,7 @@ describe("GeneralController", () => {
         });
 
         it("should close resetModalInstance", () => {
-            spyOn(scope.resetModalInstance, 'close');
+            spyOn(scope.resetModalInstance, "close");
             scope.proceedResetGroup();
             expect(scope.resetModalInstance.close).toHaveBeenCalled();
         });
@@ -1438,12 +1438,12 @@ describe("GeneralController", () => {
             scope.removeModalInstance = {
                 dismiss: {
                     // Mock $uib modal dismiss
-                },
+                }
             };
         });
 
         it("should dismiss removeModalInstance", () => {
-            spyOn(scope.removeModalInstance, 'dismiss');
+            spyOn(scope.removeModalInstance, "dismiss");
             scope.cancelRemoveUser();
             expect(scope.removeModalInstance.dismiss).toHaveBeenCalled();
         });
@@ -1455,7 +1455,7 @@ describe("GeneralController", () => {
         });
 
         it("should dismiss resetModalInstance", () => {
-            spyOn(scope.resetModalInstance, 'dismiss');
+            spyOn(scope.resetModalInstance, "dismiss");
             scope.cancelResetGroup();
             expect(scope.resetModalInstance.dismiss).toHaveBeenCalled();
         });
@@ -1467,7 +1467,7 @@ describe("GeneralController", () => {
         });
 
         it("should dismiss emptyGroupModalInstance", () => {
-            spyOn(scope.emptyGroupModalInstance, 'dismiss');
+            spyOn(scope.emptyGroupModalInstance, "dismiss");
             scope.closeEmptyGroupModal();
             expect(scope.emptyGroupModalInstance.dismiss).toHaveBeenCalled();
         });
@@ -1475,11 +1475,11 @@ describe("GeneralController", () => {
 
     describe("closeRemoveErrorModal", () => {
         beforeEach(() => {
-            scope.createRemoveErrorModal('testString');
+            scope.createRemoveErrorModal("testString");
         });
 
         it("should close removeErrorModalInstance", () => {
-            spyOn(scope.removeErrorModalInstance, 'close');
+            spyOn(scope.removeErrorModalInstance, "close");
             scope.closeRemoveErrorModal();
             expect(scope.removeErrorModalInstance.close).toHaveBeenCalled();
         });
@@ -1487,13 +1487,25 @@ describe("GeneralController", () => {
 
     describe("closePreferenceInfo", () => {
         beforeEach(() => {
-            scope.createPreferenceInfoModal('testString');
+            scope.createPreferenceInfoModal("testString");
         });
 
         it("should close infoModalInstance", () => {
-            spyOn(scope.infoModalInstance, 'close');
+            spyOn(scope.infoModalInstance, "close");
             scope.closePreferenceInfo();
             expect(scope.infoModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("closePreferenceError", () => {
+        beforeEach(() => {
+            scope.createPreferenceErrorModal();
+        });
+
+        it("should close preferenceErrorModalInstance", () => {
+            spyOn(scope.preferenceErrorModalInstance, "close");
+            scope.closePreferenceError();
+            expect(scope.preferenceErrorModalInstance.close).toHaveBeenCalled();
         });
     });
 
