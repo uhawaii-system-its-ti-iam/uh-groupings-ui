@@ -1473,6 +1473,18 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("closeRemoveErrorModal", () => {
+        beforeEach(() => {
+            scope.createRemoveErrorModal('testString');
+        });
+
+        it("should close removeErrorModalInstance", () => {
+            spyOn(scope.removeErrorModalInstance, 'close');
+            scope.closeRemoveErrorModal();
+            expect(scope.removeErrorModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         expect(scope.inGrouper).toBeFalse();
         let obj = {};
