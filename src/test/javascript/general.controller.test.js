@@ -1299,7 +1299,7 @@ describe("GeneralController", () => {
         });
 
         it("should close syncDestInstance", () => {
-            spyOn(scope.syncDestInstance, "close");
+            spyOn(scope.syncDestInstance, 'close');
             scope.proceedSyncDestModal();
             expect(scope.syncDestInstance.close).toHaveBeenCalled();
         });
