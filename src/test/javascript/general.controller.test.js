@@ -1014,40 +1014,6 @@ describe("GeneralController", function () {
         });
     });
 
-    describe("showWarningRemovingSelf", () => {
-        it("should return true if currentuser === userToRemove.username && listName is 'owners'", () => {
-            //scope.currentUser = 'testUser';
-            console.log("scope.currentUser: " + scope.currentUser.name);
-            scope.userToRemove = "bob";
-            console.log("scope.userToRemove.username: " + scope.userToRemove);
-            // scope.userToRemove = ['testUser'];
-            scope.listName = "owners";
-            let result = scope.showWarningRemovingSelf();
-            expect(result).toBeTrue();
-        });
-
-        it("should return true if currentuser === userToRemove.username && listName is 'admins'", () => {
-            // scope.currentUser = 'testUser';
-            // scope.listName = 'admins'
-        });
-
-        it("should return false if currentuser !== userToRemove.username && listName is 'owners'", () => {
-
-        });
-
-        it("should return false if currentuser !== userToRemove.username && listName is 'admins'", () => {
-
-        });
-
-        it("should return false if currentuser === userToRemove.username && listName is NOT 'owners'", () => {
-
-        });
-
-        it("should return false if currentuser === userToRemove.username && listName is NOT 'admins'", () => {
-
-        });
-    });
-
     describe("extractSelectedUsersFromCheckboxes", function () {
         let obj = {};
         let str = "test";
