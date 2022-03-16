@@ -1063,7 +1063,17 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("closeSuccessfulAddModal", () => {
+       beforeEach(() => {
+           scope.createSuccessfulAddModal('testString');
+       });
 
+        it("should close addModalInstance", () => {
+            spyOn(scope.addModalInstance, 'close');
+            scope.closeSuccessfulAddModal();
+            expect(scope.addModalInstance.close).toHaveBeenCalled();
+        });
+    });
 
     describe("extractSelectedUsersFromCheckboxes",  () => {
         let obj = {};
