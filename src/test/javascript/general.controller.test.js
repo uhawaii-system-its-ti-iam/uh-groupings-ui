@@ -1433,6 +1433,22 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("cancelRemoveUser", () => {
+        beforeEach(() => {
+            scope.removeModalInstance = {
+                dismiss: {
+                    // Mock $uib modal dismiss
+                },
+            };
+        });
+
+        it("should dismiss removeModalInstance", () => {
+            spyOn(scope.removeModalInstance, 'dismiss');
+            scope.cancelRemoveUser();
+            expect(scope.removeModalInstance.dismiss).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         expect(scope.inGrouper).toBeFalse();
         let obj = {};
