@@ -1461,6 +1461,18 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("closeEmptyGroupModal", () => {
+        beforeEach(() => {
+            scope.createEmptyGroupModal();
+        });
+
+        it("should dismiss emptyGroupModalInstance", () => {
+            spyOn(scope.emptyGroupModalInstance, 'dismiss');
+            scope.closeEmptyGroupModal();
+            expect(scope.emptyGroupModalInstance.dismiss).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         expect(scope.inGrouper).toBeFalse();
         let obj = {};
