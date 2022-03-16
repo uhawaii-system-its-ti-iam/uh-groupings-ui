@@ -1246,6 +1246,18 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("closeBasisWarningModal", () => {
+       beforeEach(() => {
+           scope.createBasisWarningModal('testUser', 'testListName', 'testBasis');
+       });
+
+        it("should dismiss basisWarningModalInstance", () => {
+            spyOn(scope.basisWarningModalInstance, 'dismiss');
+            scope.closeBasisWarningModal();
+            expect(scope.basisWarningModalInstance.dismiss).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes",  () => {
         let obj = {};
         let str = "test";
