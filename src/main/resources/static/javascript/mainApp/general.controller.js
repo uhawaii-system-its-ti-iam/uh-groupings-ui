@@ -627,15 +627,9 @@
 
         // Checks that a users name matches the pattern of either a valid uid or a uhUuid
         function sanitizer(name) {
-            const checkUhuuid = new RegExp("^[a-zA-Z0-9]*$");
-            const checkUid = new RegExp("^[0-9]{8}$");
-            const validUhuid = name.match(checkUhuuid);
-            const validUid = name.match(checkUid);
-            if (validUhuid !== null) { 
-                return validUhuid.toString();
-            } 
-            if (validUid !== null) { 
-                return validUid.toString();
+            const validInput = name.match(new RegExp("^[_?a-z-?A-Z0-9]{1,64}$"));
+            if (validInput !== null) { 
+                return validInput.toString();
             }
         }
         
@@ -662,7 +656,6 @@
                 }
                 // Change the array to a string
                 $scope.usersToAdd = sanitizedFile.join(" ");
-                console.log($scope.usersToAdd);
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
