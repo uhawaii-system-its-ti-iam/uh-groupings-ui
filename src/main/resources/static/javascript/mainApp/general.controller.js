@@ -653,8 +653,6 @@
             reader.onload = function (e) {
                 let str = e.target.result;
                 $scope.usersToAdd = (str.split(/[\r\n]+/).join(" ")).slice().split(" ");
-                // Remove trailing comma from the array
-                $scope.usersToAdd.pop();
                 let sanitizedFile = [];
                 for (const users of $scope.usersToAdd) {
                     let sanitizedName = sanitizer(users);
