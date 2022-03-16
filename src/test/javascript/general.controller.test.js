@@ -404,7 +404,7 @@ describe("GeneralController", () => {
         });
 
         it("should close confirmImportInstance modal", () => {
-            spyOn(scope.confirmImportInstance, "close");
+            spyOn(scope.confirmImportInstance, 'close');
             scope.proceedAddMembers();
             expect(scope.confirmImportInstance.close).toHaveBeenCalled();
         });
