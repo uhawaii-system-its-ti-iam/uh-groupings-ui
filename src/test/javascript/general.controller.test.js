@@ -874,8 +874,7 @@ describe("GeneralController", () => {
 
     });
 
-
-    describe("parseAddRemoveInputStr", function () {
+    describe("parseAddRemoveInputStr", () => {
         let spaceSeparated = "Hello I love you";
         let commaSeparated = "Hello,I,love,you";
         let commaAndSpaceSeparated = "Hello, I love,you";
@@ -957,12 +956,6 @@ describe("GeneralController", () => {
         });
 
         it("should set includeCheck to false if includeCheck is true", () => {
-            scope.includeCheck = true;
-            scope.updateIncludeCheck();
-            expect(scope.includeCheck).toBeTrue();
-        });
-
-        it("should set includeCheck to false if includeCheck is true", function () {
             scope.includeCheck = true;
             scope.updateIncludeCheck();
             expect(scope.includeCheck).toBeFalse();
@@ -1082,7 +1075,7 @@ describe("GeneralController", () => {
         });
 
         it("should close confirmAddModalInstance", () => {
-            spyOn(scope.confirmAddModalInstance, "close");
+            spyOn(scope.confirmAddModalInstance, 'close');
             scope.proceedConfirmAddUser();
             expect(scope.confirmAddModalInstance.close).toHaveBeenCalled();
         });
@@ -1094,7 +1087,7 @@ describe("GeneralController", () => {
         });
 
         it("should dismiss confirmAddModalInstance", () => {
-            spyOn(scope.confirmAddModalInstance, "dismiss");
+            spyOn(scope.confirmAddModalInstance, 'dismiss');
             scope.cancelConfirmAddUser();
             expect(scope.confirmAddModalInstance.dismiss).toHaveBeenCalled();
         });
