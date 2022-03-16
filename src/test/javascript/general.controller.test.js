@@ -1075,6 +1075,39 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("closeResetNotifModal", () => {
+       beforeEach(() => {
+           scope.createResetNotifModal(scope.group);
+       });
+
+        it("should close resetNotifModalInstance", () => {
+            spyOn(scope.resetNotifModalInstance, 'close');
+            scope.closeResetNotifModal();
+            expect(scope.resetNotifModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("batchRemovePromptModalAccept", () => {
+       beforeEach(() => {
+           scope.multiRemovePromptModalInstance = {
+               open: () => {
+                   // Mock $uib modal open
+               },
+               close: () => {
+                   // Mock $uib modal close
+               }
+           };
+           scope.multiRemovePromptModalInstance.open();
+       });
+
+        it("should close batchRemovePromptModalAccept", () => {
+            spyOn(scope.multiRemovePromptModalInstance, 'close');
+            scope.batchRemovePromptModalAccept();
+            expect(scope.multiRemovePromptModalInstance.close).toHaveBeenCalled();
+        });
+
+    });
+
     describe("extractSelectedUsersFromCheckboxes",  () => {
         let obj = {};
         let str = "test";
