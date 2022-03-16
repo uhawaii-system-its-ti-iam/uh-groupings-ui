@@ -381,14 +381,17 @@ describe("GeneralController", function () {
         });
     });
 
-    // describe("closeApiError", () => {
-    //     it("should close modal", () => {
-    //         spyOn(scope, "closeApiError").and.callThrough();
-    //         scope.closeApiError();
-    //
-    //         expect(scope.apiErrorModalInstance.close()).toHaveBeenCalled();
-    //     });
-    // });
+    describe("closeApiError", () => {
+        beforeEach(() => {
+           scope.createApiErrorModal();
+        });
+
+        it("should close modal", () => {
+            spyOn(scope.apiErrorModalInstance, 'close');
+            scope.closeApiError();
+            expect(scope.apiErrorModalInstance.close).toHaveBeenCalled();
+        });
+    });
 
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
@@ -955,6 +958,10 @@ describe("GeneralController", function () {
         it("should call getGroupingInformation", () => {
             // spyOn(scope.resetFields(), 'getGroupingInformation').and.callThrough();
             // expect(scope.resetFields()).toHaveBeenCalled();
+
+            //spyOn(scope.resetFields(type), 'getGroupingInformation').and.callThrough();
+           // spyOn(scope.closePreferenceError(), 'close');
+            //expect(scope.closePreferenceError.close()).toHaveBeenCalled();
         });
 
         it("should reset userToAdd string", () => {
