@@ -388,6 +388,11 @@ describe("GeneralController", () => {
 
         it("should close modal", () => {
             spyOn(scope.apiErrorModalInstance, "close");
+            scope.createApiErrorModal();
+        });
+
+        it("should close modal", () => {
+            spyOn(scope.apiErrorModalInstance, "close");
             scope.closeApiError();
             expect(scope.apiErrorModalInstance.close).toHaveBeenCalled();
         });
@@ -984,6 +989,12 @@ describe("GeneralController", () => {
             spyOn(scope, "getGroupingInformation");
             scope.resetFields();
             expect(scope.getGroupingInformation).toHaveBeenCalled();
+            // spyOn(scope.resetFields(), 'getGroupingInformation').and.callThrough();
+            // expect(scope.resetFields()).toHaveBeenCalled();
+
+            //spyOn(scope.resetFields(type), 'getGroupingInformation').and.callThrough();
+            // spyOn(scope.closePreferenceError(), 'close');
+            //expect(scope.closePreferenceError.close()).toHaveBeenCalled();
         });
 
         it("should reset userToAdd string", () => {
