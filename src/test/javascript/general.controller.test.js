@@ -925,18 +925,18 @@ describe("GeneralController", function () {
     describe("updateIncludeCheck", () => {
         it("should set includeCheck to true if includeCheck is false", () => {
             scope.includeCheck = false;
-            scope.updateIncludeCheck()
+            scope.updateIncludeCheck();
             expect(scope.includeCheck).toBeTrue();
         });
 
         it("should set includeCheck to false if includeCheck is true", function () {
             scope.includeCheck = true;
-            scope.updateIncludeCheck()
+            scope.updateIncludeCheck();
             expect(scope.includeCheck).toBeFalse();
         });
     });
 
-    describe( "updateExcludeCheck", () => {
+    describe("updateExcludeCheck", () => {
         it("should set excludeCheck to true if excludeCheck is false", () => {
             scope.excludeCheck = false;
             scope.updateExcludeCheck();
@@ -950,6 +950,37 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("resetFields", () => {
+
+        it("should call getGroupingInformation", () => {
+            // spyOn(scope.resetFields(), 'getGroupingInformation').and.callThrough();
+            // expect(scope.resetFields()).toHaveBeenCalled();
+        });
+
+        it("should reset userToAdd string", () => {
+            scope.userToAdd = "test";
+            scope.resetFields();
+            expect(scope.userToAdd).toBe("");
+        });
+
+        it("should reset membersInCheckboxList array", () => {
+            scope.membersInCheckboxList = [1, 2, 3];
+            scope.resetFields();
+            expect(scope.membersInCheckboxList).toEqual({});
+        });
+
+        it("should set allSelected to false", () => {
+            scope.allSelected = true;
+            scope.resetFields();
+            expect(scope.allSelected).toBeFalse();
+        });
+
+        it("should set waitingForImportResponse to false", () => {
+            scope.waitingForImportResponse = true;
+            scope.resetFields();
+            expect(scope.waitingForImportResponse).toBeFalse();
+        });
+    });
 
     describe("resetErrors", () => {
         it("should set resStatus to 0", () => {
@@ -961,25 +992,59 @@ describe("GeneralController", function () {
         it("should set emptyInput to false", () => {
             scope.emptyInput = true;
             scope.resetErrors();
-            expect(scope.emptyInput).toBeFalse()
+            expect(scope.emptyInput).toBeFalse();
         });
 
         it("should set emptySelect to false", () => {
             scope.emptySelect = true;
             scope.resetErrors();
-            expect(scope.emptySelect).toBeFalse()
+            expect(scope.emptySelect).toBeFalse();
         });
 
         it("should set swap to true", () => {
             scope.swap = false;
             scope.resetErrors();
-            expect(scope.swap).toBeTrue()
+            expect(scope.swap).toBeTrue();
         });
 
         it("should inGrouper to false", () => {
             scope.inGrouper = true;
             scope.resetErrors();
-            expect(scope.inGrouper).toBeFalse()
+            expect(scope.inGrouper).toBeFalse();
+        });
+    });
+
+    describe("showWarningRemovingSelf", () => {
+        it("should return true if currentuser === userToRemove.username && listName is 'owners'", () => {
+            //scope.currentUser = 'testUser';
+            console.log("scope.currentUser: " + scope.currentUser.name);
+            scope.userToRemove = "bob";
+            console.log("scope.userToRemove.username: " + scope.userToRemove);
+            // scope.userToRemove = ['testUser'];
+            scope.listName = "owners";
+            let result = scope.showWarningRemovingSelf();
+            expect(result).toBeTrue();
+        });
+
+        it("should return true if currentuser === userToRemove.username && listName is 'admins'", () => {
+            // scope.currentUser = 'testUser';
+            // scope.listName = 'admins'
+        });
+
+        it("should return false if currentuser !== userToRemove.username && listName is 'owners'", () => {
+
+        });
+
+        it("should return false if currentuser !== userToRemove.username && listName is 'admins'", () => {
+
+        });
+
+        it("should return false if currentuser === userToRemove.username && listName is NOT 'owners'", () => {
+
+        });
+
+        it("should return false if currentuser === userToRemove.username && listName is NOT 'admins'", () => {
+
         });
     });
 
