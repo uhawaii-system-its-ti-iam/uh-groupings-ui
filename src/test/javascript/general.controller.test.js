@@ -393,6 +393,18 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("proceedAddMembers", () => {
+       beforeEach(() => {
+           scope.launchImportModal();
+       });
+
+        it("should close confirmImportInstance modal", () => {
+            spyOn(scope.confirmImportInstance, 'close');
+            scope.proceedAddMembers();
+            expect(scope.confirmImportInstance.close).toHaveBeenCalled();
+        });
+    });
+
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
     // Basis: User One, User Four, User Seven
