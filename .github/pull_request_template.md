@@ -10,9 +10,9 @@ Insert Groupings Ticket Here
 
 # Test Checklist
 
-- [ ] Integration Passed:
-- [ ] Unit Passed:
-- [ ] General Inspection
+- [ ] Unit Tests Passed:
+- [ ] Jasmine Tests Passed:
+- [ ] General Visual Inspection:
 
 # Link to Ticket
 
