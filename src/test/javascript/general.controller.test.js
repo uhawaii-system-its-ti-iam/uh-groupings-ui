@@ -1174,6 +1174,18 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("cancelResetGroup", () => {
+        beforeEach(() => {
+            scope.createResetGroupModal(scope.group);
+        });
+
+        it("should dismiss resetModalInstance", () => {
+            spyOn(scope.resetModalInstance, 'dismiss');
+            scope.cancelResetGroup();
+            expect(scope.resetModalInstance.dismiss).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes",  () => {
         let obj = {};
         let str = "test";
