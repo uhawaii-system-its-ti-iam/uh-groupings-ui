@@ -1118,11 +1118,12 @@ describe("GeneralController", () => {
     });
 
     describe("batchRemovePromptModalAccept", () => {
+
         beforeEach(() => {
             scope.multiRemovePromptModalInstance = {
                 close: () => {
                     // Mock $uib modal close
-                }
+                },
             };
         });
 
@@ -1346,7 +1347,22 @@ describe("GeneralController", () => {
             scope.proceedRedirectApiError.setUrl();
             expect(testWindowLocationHref).toBe("/uhgroupings/feedback");
         });
+    });
 
+
+    describe("batchRemovePromptModalCancel", () => {
+        beforeEach(() => {
+            scope.multiRemovePromptModalInstance = {
+                // Mock $uib dismiss
+                dismiss: ('cancel'),
+            };
+        });
+
+        it("should dismiss multiRemovePromptModalInstance", () => {
+            spyOn(scope.multiRemovePromptModalInstance, 'dismiss');
+            scope.batchRemovePromptModalCancel();
+            expect(scope.multiRemovePromptModalInstance.dismiss).toHaveBeenCalled();
+        });
     });
 
     describe("proceedRedirect", () => {
