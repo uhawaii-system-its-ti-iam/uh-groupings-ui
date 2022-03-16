@@ -1030,6 +1030,28 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("proceedCheckModal", () => {
+       beforeEach(() => {
+           scope.createCheckModal('testUser', 'testList','testSwap','testInBasis');
+       });
+        it("should close the checkModalInstance modal", () => {
+            spyOn(scope.checkModalInstance, 'close');
+            scope.proceedCheckModal();
+            expect(scope.checkModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("closeCheckModal", () => {
+        beforeEach(() => {
+            scope.createCheckModal('testUser', 'testList','testSwap','testInBasis');
+        });
+        it("should dismiss the checkModalInstance modal", () => {
+            spyOn(scope.checkModalInstance, 'dismiss');
+            scope.closeCheckModal();
+            expect(scope.checkModalInstance.dismiss).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", function () {
         let obj = {};
         let str = "test";
