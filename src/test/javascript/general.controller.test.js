@@ -1267,11 +1267,11 @@ describe("GeneralController", () => {
 
     describe("proceedBasisWarningModal", () => {
         beforeEach(() => {
-            scope.createBasisWarningModal("testUser", "testListName", "testBasis");
+            scope.createBasisWarningModal('testUser', 'testListName', 'testBasis');
         });
 
         it("should close basisWarningModalInstance", () => {
-            spyOn(scope.basisWarningModalInstance, "close");
+            spyOn(scope.basisWarningModalInstance, 'close');
             scope.proceedBasisWarningModal();
             expect(scope.basisWarningModalInstance.close).toHaveBeenCalled();
         });
