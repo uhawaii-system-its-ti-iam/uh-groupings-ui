@@ -1485,6 +1485,18 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("closePreferenceInfo", () => {
+        beforeEach(() => {
+            scope.createPreferenceInfoModal('testString');
+        });
+
+        it("should close infoModalInstance", () => {
+            spyOn(scope.infoModalInstance, 'close');
+            scope.closePreferenceInfo();
+            expect(scope.infoModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         expect(scope.inGrouper).toBeFalse();
         let obj = {};
