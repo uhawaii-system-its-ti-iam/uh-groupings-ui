@@ -1054,46 +1054,12 @@ describe("GeneralController", () => {
         });
     });
 
-    describe("showWarningRemovingSelf", () => {
-        it("should return true if currentuser === userToRemove.username && listName is 'owners'", () => {
-            //scope.currentUser = 'testUser';
-            console.log("scope.currentUser: " + scope.currentUser.name);
-            scope.userToRemove = "bob";
-            console.log("scope.userToRemove.username: " + scope.userToRemove);
-            // scope.userToRemove = ['testUser'];
-            scope.listName = "owners";
-            let result = scope.showWarningRemovingSelf();
-            expect(result).toBeTrue();
-        });
-
-        it("should return true if currentuser === userToRemove.username && listName is 'admins'", () => {
-            // scope.currentUser = 'testUser';
-            // scope.listName = 'admins'
-        });
-
-        it("should return false if currentuser !== userToRemove.username && listName is 'owners'", () => {
-
-        });
-
-        it("should return false if currentuser !== userToRemove.username && listName is 'admins'", () => {
-
-        });
-
-        it("should return false if currentuser === userToRemove.username && listName is NOT 'owners'", () => {
-
-        });
-
-        it("should return false if currentuser === userToRemove.username && listName is NOT 'admins'", () => {
-
-        });
-    });
-
     describe("proceedCheckModal", () => {
         beforeEach(() => {
-            scope.createCheckModal("testUser", "testList", "testSwap", "testInBasis");
+            scope.createCheckModal('testUser', 'testList', 'testSwap', 'testInBasis');
         });
         it("should close the checkModalInstance modal", () => {
-            spyOn(scope.checkModalInstance, "close");
+            spyOn(scope.checkModalInstance, 'close');
             scope.proceedCheckModal();
             expect(scope.checkModalInstance.close).toHaveBeenCalled();
         });
@@ -1101,10 +1067,10 @@ describe("GeneralController", () => {
 
     describe("closeCheckModal", () => {
         beforeEach(() => {
-            scope.createCheckModal("testUser", "testList", "testSwap", "testInBasis");
+            scope.createCheckModal('testUser', 'testList', 'testSwap', 'testInBasis');
         });
         it("should dismiss the checkModalInstance modal", () => {
-            spyOn(scope.checkModalInstance, "dismiss");
+            spyOn(scope.checkModalInstance, 'dismiss');
             scope.closeCheckModal();
             expect(scope.checkModalInstance.dismiss).toHaveBeenCalled();
         });
