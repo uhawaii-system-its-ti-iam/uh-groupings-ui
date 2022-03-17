@@ -469,6 +469,43 @@ describe("GeneralController", function () {
             });
         });
     });
+    
+    describe("readTextFile", () => { 
+        let goodFile, badFile, goodFileWithIncorrectUsernames, reader;
+        beforeEach(() => { 
+            reader = new FileReader();
+            let xss1 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>";
+            let xss2 = "<img src onerror=alert('Gavin is testing')/>";
+            let xss3 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>";
+            let xss4 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>";
+            goodFile = 
+                `iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06`;
+            goodFileWithIncorrectUsernames = 
+                `iamtst01\niamtst02\niamtst03\ninvalidUsername\n`
+            badFile = 
+                `iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n${xss1}\n${xss2}\n`;
+            
+            reader.onload = {
+                usersToAdd: (file) => {
+                    scope.usersToAdd = (file.split(/[\r\n]+/).join(" ")).slice();
+                },
+                addMembers: (listName) => {
+                    scope.addMembers(listName);
+                },
+            };
+        });
+        
+        it("should check that scope.usersToAdd has been returned as a space seperated string", () => {
+            reader.onload.usersToAdd(goodFile); 
+            expect(scope.usersToAdd).toBe('iamtst01 iamtst02 iamtst03 iamtst04 iamtst05 iamtst06');
+        });
+        it("should expect scope.addMembers to be called", () => { 
+           scope.listName = "admin";
+           spyOn(scope.readTextFile, "addMembers");
+           scope.readTextFile(Event);
+           expect(scope.readTextFile.addMembers(scope.listName)).toHaveBeenCalled();
+        });
+    })
 
     describe("isInAnotherList", function () {
         describe("user tries to add 'user1', who is currently in the Include list, to the Exclude list", function () {
