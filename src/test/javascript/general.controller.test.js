@@ -1360,7 +1360,6 @@ describe("GeneralController", () => {
                },
                setUrl: () => {
                    testWindowLocationHref = "/uhgroupings/feedback";
-                   return testWindowLocationHref;
                },
            };
         });
@@ -1373,10 +1372,39 @@ describe("GeneralController", () => {
 
         it("should set $window.location.href to proper path", () => {
             testWindowLocationHref = '/badURL';
+            expect(testWindowLocationHref).toBe('/badURL');
             scope.proceedRedirectApiError.setUrl();
             expect(testWindowLocationHref).toBe("/uhgroupings/feedback");
         });
 
+    });
+
+    describe("proceedRedirect", () => {
+        let testWindowLocationHref = '/testURL';
+        beforeEach(() => {
+            scope.proceedRedirect =  {
+                create: scope.createOwnerErrorModal(),
+                close: () => {
+                    scope.OwnerErrorModalInstance.close()
+                },
+                setUrl: () => {
+                    testWindowLocationHref = "/uhgroupings/";
+                },
+            };
+        });
+        
+        it("should close OwnerErrorModalInstance", () => {
+            spyOn(scope.OwnerErrorModalInstance, 'close');
+            scope.proceedRedirect.close();
+            expect(scope.OwnerErrorModalInstance.close).toHaveBeenCalled();
+        });
+
+        it("should set $window.location.href to proper path", () => {
+            testWindowLocationHref = '/badURL';
+            expect(testWindowLocationHref).toBe('/badURL');
+            scope.proceedRedirect.setUrl();
+            expect(testWindowLocationHref).toBe("/uhgroupings/");
+        });
     });
 
     describe("extractSelectedUsersFromCheckboxes",  () => {
