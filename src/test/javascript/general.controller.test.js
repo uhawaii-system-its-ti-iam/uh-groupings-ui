@@ -1267,11 +1267,11 @@ describe("GeneralController", () => {
 
     describe("proceedBasisWarningModal", () => {
         beforeEach(() => {
-            scope.createBasisWarningModal('testUser', 'testListName', 'testBasis');
+            scope.createBasisWarningModal("testUser", "testListName", "testBasis");
         });
 
         it("should close basisWarningModalInstance", () => {
-            spyOn(scope.basisWarningModalInstance, 'close');
+            spyOn(scope.basisWarningModalInstance, "close");
             scope.proceedBasisWarningModal();
             expect(scope.basisWarningModalInstance.close).toHaveBeenCalled();
         });
@@ -1279,11 +1279,11 @@ describe("GeneralController", () => {
 
     describe("closeBasisWarningModal", () => {
         beforeEach(() => {
-            scope.createBasisWarningModal('testUser', 'testListName', 'testBasis');
+            scope.createBasisWarningModal("testUser", "testListName", "testBasis");
         });
 
         it("should dismiss basisWarningModalInstance", () => {
-            spyOn(scope.basisWarningModalInstance, 'dismiss');
+            spyOn(scope.basisWarningModalInstance, "dismiss");
             scope.closeBasisWarningModal();
             expect(scope.basisWarningModalInstance.dismiss).toHaveBeenCalled();
         });
@@ -1299,7 +1299,7 @@ describe("GeneralController", () => {
         });
 
         it("should close syncDestInstance", () => {
-            spyOn(scope.syncDestInstance, 'close');
+            spyOn(scope.syncDestInstance, "close");
             scope.proceedSyncDestModal();
             expect(scope.syncDestInstance.close).toHaveBeenCalled();
         });
@@ -1310,12 +1310,12 @@ describe("GeneralController", () => {
             scope.syncDestInstance = {
                 dismiss: {
                     // Mock $uib modal dismiss
-                },
+                }
             };
         });
 
         it("should dismiss syncDestInstance", () => {
-            spyOn(scope.syncDestInstance, 'dismiss');
+            spyOn(scope.syncDestInstance, "dismiss");
             scope.closeSyncDestModal();
             expect(scope.syncDestInstance.dismiss).toHaveBeenCalled();
         });
@@ -1331,6 +1331,7 @@ describe("GeneralController", () => {
                 },
                 setUrl: () => {
                     testWindowLocationHref = "/uhgroupings/feedback";
+                    return testWindowLocationHref;
                 }
             };
         });
