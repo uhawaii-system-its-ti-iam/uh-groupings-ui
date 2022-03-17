@@ -1290,6 +1290,35 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("proceedRedirectApiError", () => {
+        let testWindowLocationHref = '/testURL';
+        beforeEach(() => {
+           scope.proceedRedirectApiError =  {
+               create: scope.createApiErrorModal(),
+               close: () => {
+                   scope.apiErrorModalInstance.close()
+               },
+               setUrl: () => {
+                   testWindowLocationHref = "/uhgroupings/feedback";
+                   return testWindowLocationHref;
+               },
+           };
+        });
+
+        it("should close apiErrorModalInstance", () => {
+            spyOn(scope.apiErrorModalInstance, 'close');
+            scope.proceedRedirectApiError.close();
+            expect(scope.apiErrorModalInstance.close).toHaveBeenCalled();
+        });
+
+        it("should set $window.location.href to proper path", () => {
+            testWindowLocationHref = '/badURL';
+            scope.proceedRedirectApiError.setUrl();
+            expect(testWindowLocationHref).toBe("/uhgroupings/feedback");
+        });
+
+    });
+
     describe("extractSelectedUsersFromCheckboxes",  () => {
         let obj = {};
         let str = "test";
