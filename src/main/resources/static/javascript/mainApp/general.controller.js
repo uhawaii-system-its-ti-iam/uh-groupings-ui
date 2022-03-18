@@ -627,7 +627,7 @@
 
         // Checks that a users name matches the pattern of either a valid uid or a uhUuid
         function sanitizer(name) {
-            const validInput = name.match(new RegExp("^[_?a-z-?A-Z0-9]{1,64}$"));
+            const validInput = name.match(new RegExp("^[_?a-z-?@?0-9]{1,64}$"));
             if (validInput !== null) { 
                 return validInput.toString();
             }
