@@ -384,17 +384,17 @@ describe("GeneralController", () => {
     describe("closeApiError", () => {
         beforeEach(() => {
             scope.createApiErrorModal();
-        });
 
-        it("should close modal", () => {
-            spyOn(scope.apiErrorModalInstance, "close");
-            scope.createApiErrorModal();
-        });
+            it("should close modal", () => {
+                spyOn(scope.apiErrorModalInstance, "close");
+                scope.createApiErrorModal();
+            });
 
-        it("should close modal", () => {
-            spyOn(scope.apiErrorModalInstance, "close");
-            scope.closeApiError();
-            expect(scope.apiErrorModalInstance.close).toHaveBeenCalled();
+            it("should close modal", () => {
+                spyOn(scope.apiErrorModalInstance, "close");
+                scope.closeApiError();
+                expect(scope.apiErrorModalInstance.close).toHaveBeenCalled();
+            });
         });
     });
 
@@ -409,15 +409,6 @@ describe("GeneralController", () => {
             expect(scope.confirmImportInstance.close).toHaveBeenCalled();
         });
     });
-
-    // describe("closeApiError", () => {
-    //     it("should close modal", () => {
-    //         spyOn(scope, "closeApiError").and.callThrough();
-    //         scope.closeApiError();
-    //
-    //         expect(scope.apiErrorModalInstance.close()).toHaveBeenCalled();
-    //     });
-    // });
 
     // For reference (in index order):
     // Members: User One, User Two, User Three, User Seven, User Eight
@@ -485,14 +476,19 @@ describe("GeneralController", () => {
         });
     });
 
-    // describe("launchImportModal", () => {
-    //     it ("should check that the import modal is launched", () => {
-    //         spyOn(scope, "confirmImportInstance");
-    //         scope.launchImportModal("list");
-    //             expect(scope.listName).toBe("list");
-    //         expect(scope.confirmImportInstance).toHaveBeenCalled();
-    //     });
-    // });
+    describe("launchImportModal", () => {
+        let uibModal;
+
+        beforeEach(inject(function ($injector) {
+            uibModal = $injector.get("$uibModal");
+        }));
+
+        it("should check that the import modal is launched", () => {
+            spyOn(uibModal, "open");
+            scope.launchImportModal(scope.listName);
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
 
     describe("validateAndAddUser", () => {
         describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", () => {
@@ -1118,7 +1114,6 @@ describe("GeneralController", () => {
     });
 
     describe("batchRemovePromptModalAccept", () => {
-
         beforeEach(() => {
             scope.multiRemovePromptModalInstance = {
                 close: () => {
@@ -1331,7 +1326,6 @@ describe("GeneralController", () => {
                 },
                 setUrl: () => {
                     testWindowLocationHref = "/uhgroupings/feedback";
-                    return testWindowLocationHref;
                 }
             };
         });
@@ -1511,7 +1505,6 @@ describe("GeneralController", () => {
     });
 
     describe("extractSelectedUsersFromCheckboxes", () => {
-        expect(scope.inGrouper).toBeFalse();
         let obj = {};
         let str = "test";
         let expectedResult = "";
