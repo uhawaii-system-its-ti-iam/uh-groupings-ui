@@ -626,9 +626,10 @@
         };
 
         // Checks that a users name matches the pattern of either a valid uid or a uhUuid
-        function sanitizer(name) {
-            const validInput = name.match(new RegExp("^[_?a-z-?@?0-9]{1,64}$"));
-            if (validInput !== null) { 
+        $scope.sanitizer = (name) => {
+            const regexPattern = new RegExp("^[_?a-z-?@?0-9]{3,64}$");
+            if (name != null && regexPattern.test(name)) {
+                const validInput = name.match(regexPattern);
                 return validInput.toString();
             }
         }
@@ -646,11 +647,11 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.usersToAdd = (str.split(/[\r\n]+/).join(" ")).slice().split(" ");
+                $scope.usersToAdd = str.split(/[\r\n]+/);
                 let sanitizedFile = [];
                 for (const users of $scope.usersToAdd) {
-                    let sanitizedName = sanitizer(users);
-                    if (sanitizedName !== null) { 
+                    let sanitizedName = $scope.sanitizer(users);
+                    if (sanitizedName != null) { 
                         sanitizedFile.push(sanitizedName); 
                     }
                 }
