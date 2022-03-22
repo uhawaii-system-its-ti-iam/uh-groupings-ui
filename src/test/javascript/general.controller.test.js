@@ -1451,6 +1451,20 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("createOwnerErrorModal", () => {
+        it("should set loading to false", () => {
+            scope.loading = true;
+            scope.createOwnerErrorModal();
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("should check that the OwnerErrorModalInstance is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createOwnerErrorModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
