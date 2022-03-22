@@ -482,6 +482,11 @@ describe("GeneralController", () => {
     });
 
     describe("launchImportModal", () => {
+        it("should set listName to listName passed in", () => {
+            scope.listName = "";
+            scope.launchImportModal("admin");
+            expect(scope.listName).toBe("admin");
+        });
 
         it("should check that the import modal is launched", () => {
             spyOn(uibModal, "open");
@@ -969,7 +974,6 @@ describe("GeneralController", () => {
             };
 
             scope.initMemberDisplayName(attributes);
-
             expect(scope.user).toBe(scope.uid);
         });
 
@@ -982,7 +986,6 @@ describe("GeneralController", () => {
             };
 
             scope.initMemberDisplayName(attributes);
-
             expect(scope.user).toBe(scope.uhUuid);
         });
     });
