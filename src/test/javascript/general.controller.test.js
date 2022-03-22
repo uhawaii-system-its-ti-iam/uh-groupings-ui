@@ -10,6 +10,7 @@ describe("GeneralController", () => {
     let gs;
     let onSuccess;
     let onFailure;
+    let uibModal;
 
     onSuccess = () => {
         console.log("success");
@@ -18,6 +19,10 @@ describe("GeneralController", () => {
     onFailure = () => {
         console.log("success");
     };
+
+    beforeEach(inject(function ($injector) {
+        uibModal = $injector.get("$uibModal");
+    }));
 
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) => {
         scope = $rootScope.$new();
@@ -477,11 +482,6 @@ describe("GeneralController", () => {
     });
 
     describe("launchImportModal", () => {
-        let uibModal;
-
-        beforeEach(inject(function ($injector) {
-            uibModal = $injector.get("$uibModal");
-        }));
 
         it("should check that the import modal is launched", () => {
             spyOn(uibModal, "open");
@@ -1386,12 +1386,6 @@ describe("GeneralController", () => {
     });
 
     describe("createApiErrorModal", () => {
-        let uibModal;
-
-        beforeEach(inject(function ($injector) {
-            uibModal = $injector.get("$uibModal");
-        }));
-
         it("should check that the createApiErrorModal is launched", () => {
             spyOn(uibModal, "open");
             scope.createApiErrorModal();
@@ -1400,12 +1394,6 @@ describe("GeneralController", () => {
     });
 
     describe("createEmptyGroupModal", () => {
-        let uibModal;
-
-        beforeEach(inject(function ($injector) {
-            uibModal = $injector.get("$uibModal");
-        }));
-
         it("should check that the createEmptyGroupModal is launched", () => {
             spyOn(uibModal, "open");
             scope.createEmptyGroupModal();
@@ -1414,12 +1402,6 @@ describe("GeneralController", () => {
     });
 
     describe("createResetNotifModal", () => {
-        let uibModal;
-
-        beforeEach(inject(function ($injector) {
-            uibModal = $injector.get("$uibModal");
-        }));
-
         it("should set group to group that is passed in", () => {
             expect(scope.group).toBe("");
             scope.createResetNotifModal("admin");
@@ -1429,6 +1411,20 @@ describe("GeneralController", () => {
         it("should check that the resetNotifModalInstance is launched", () => {
             spyOn(uibModal, "open");
             scope.createResetNotifModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createRemoveErrorModal", () => {
+        it("should set group to group that is passed in", () => {
+            expect(scope.group).toBe("");
+            scope.createResetNotifModal("admin");
+            expect(scope.group).toBe("admin");
+        });
+
+        it("should check that the removeErrorModalInstance is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createRemoveErrorModal("test");
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
