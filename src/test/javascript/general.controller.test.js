@@ -1059,6 +1059,8 @@ describe("GeneralController", () => {
         });
     });
 
+    // test
+
     describe("cancelConfirmAddUser", () => {
         beforeEach(() => {
             scope.createConfirmAddMembersModal(scope.listName);
