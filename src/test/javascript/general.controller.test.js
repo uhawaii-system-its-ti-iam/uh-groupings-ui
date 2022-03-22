@@ -581,6 +581,58 @@ describe("GeneralController", () => {
                 expect(scope.createConfirmAddModal).toHaveBeenCalled();
             });
         });
+        
+        describe("addMembers", () => {
+            it ("should set listName to the listName that we are passing in", () => {
+                scope.listName = "admin";
+                scope.addMembers(scope.listName);
+                expect((scope.listName)).toBe("admin");
+            });
+
+            it("should make scope.emptyInput true if scope.usersToAdd is empty", () => {
+                scope.emptyInput = false;
+                scope.usersToAdd = null;
+                scope.addMembers(scope.listName);
+                expect(scope.emptyInput).toBeTrue();
+            });
+
+            it("should call addMultipleMembers when the usersToAdd is below our maxImport", () => {
+                spyOn(scope, "addMultipleMembers");
+                scope.usersToAdd = "gavin4 mhodges";
+                scope.addMembers(scope.listName);
+                expect(scope.addMultipleMembers).toHaveBeenCalled();
+            });
+
+            it("should call launchDynamicModal when the usersToAdd is above the multiAddThreshold", () => {
+                spyOn(scope, "launchDynamicModal");
+                let arr = [];
+                for (let i = 0; i < 102; i++) {
+                    arr.push("gavin4");
+                }
+                scope.usersToAdd = arr.toString().split(",").join(" ");
+                scope.addMembers(scope.listName);
+                expect(scope.launchDynamicModal).toHaveBeenCalled();
+            });
+
+            it("should call launchDynamicModal when the members we are adding are above the maxImport", () => {
+                spyOn(scope, "launchDynamicModal");
+                let arr = [];
+                for (let i = 0; i < 100002; i++) {
+                    arr.push("gavin4");
+                }
+                scope.usersToAdd = arr.toString().split(",").join(" ");
+                scope.addMembers(scope.listName);
+                expect(scope.launchDynamicModal).toHaveBeenCalled();
+            });
+
+            it("should call validateAndAddUser when numMembers is less than 0", () => {
+                spyOn(scope, "validateAndAddUser");
+                scope.usersToAdd = "gavin4";
+                scope.addMembers(scope.listName);
+                expect(scope.usersToAdd).toBe('gavin4');
+                expect(scope.validateAndAddUser).toHaveBeenCalled();
+            });
+        });
 
         describe("user adds 'invalidUser', who is not in the Grouper database", () => {
             const invalidUser = {
