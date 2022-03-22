@@ -886,7 +886,7 @@
          * @param {string} list - the list the user is being added to
          */
         $scope.updateAddMember = function (userToAdd, list) {
-            // only initialize groupingPath is listName is not "admins"
+            // only initialize groupingPath if listName is not "admins"
             let groupingPath;
 
             if ($scope.listName !== "admins") {
