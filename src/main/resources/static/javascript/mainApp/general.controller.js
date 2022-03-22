@@ -1,5 +1,4 @@
 (function () {
-
     /**
      * This controller contains shared functions between the admin and groupings page.
      * @param $scope - binding between controller and HTML page
@@ -11,7 +10,6 @@
      */
 
     function GeneralJsController($scope, $window, $uibModal, $controller, groupingsService, dataProvider, PAGE_SIZE, Message) {
-
         $scope.userToAdd = "";
         $scope.usersToAdd = "";
         $scope.multiAddThreshold = 100;
@@ -627,6 +625,15 @@
             }
         };
 
+        // Checks that a users name matches the pattern of either a valid uid or a uhUuid
+        $scope.sanitizer = (name) => {
+            const regexPattern = new RegExp("^[_?a-z-?@?0-9]{3,64}$");
+            if (name != null && regexPattern.test(name)) {
+                const validInput = name.match(regexPattern);
+                return validInput.toString();
+            }
+        }
+        
         /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
          * separated by newline characters. This function is called implicitly from include.html and exclude.html.
@@ -640,7 +647,16 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.usersToAdd = (str.split(/[\r\n]+/).join(" ")).slice();
+                $scope.usersToAdd = str.split(/[\r\n]+/);
+                let sanitizedFile = [];
+                for (const users of $scope.usersToAdd) {
+                    let sanitizedName = $scope.sanitizer(users);
+                    if (sanitizedName != null) { 
+                        sanitizedFile.push(sanitizedName); 
+                    }
+                }
+                // Change the array to a string
+                $scope.usersToAdd = sanitizedFile.join(" ");
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
