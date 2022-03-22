@@ -1516,6 +1516,7 @@ describe("GeneralController", () => {
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
