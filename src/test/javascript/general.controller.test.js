@@ -1399,6 +1399,20 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("createEmptyGroupModal", () => {
+        let uibModal;
+
+        beforeEach(inject(function ($injector) {
+            uibModal = $injector.get("$uibModal");
+        }));
+
+        it("should check that the import modal is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createEmptyGroupModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
