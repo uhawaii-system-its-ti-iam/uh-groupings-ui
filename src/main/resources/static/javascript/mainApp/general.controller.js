@@ -143,7 +143,8 @@
          */
         groupingsService.getNumberOfMemberships((res) => {
                 $scope.numberOfMemberships = res;
-            }, (res) => { }
+            }, (res) => {
+            }
         );
 
         /**
@@ -167,7 +168,8 @@
 
         $scope.toggleShowAdminTab = function () {
             $scope.showAdminTab = $scope.showAdminTab === false;
-        }
+        };
+
         /**
          * Generic handler for unsuccessful requests to the API.
          */
