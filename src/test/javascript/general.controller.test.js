@@ -1392,7 +1392,7 @@ describe("GeneralController", () => {
             uibModal = $injector.get("$uibModal");
         }));
 
-        it("should check that the import modal is launched", () => {
+        it("should check that the createApiErrorModal is launched", () => {
             spyOn(uibModal, "open");
             scope.createApiErrorModal();
             expect(uibModal.open).toHaveBeenCalled();
@@ -1406,9 +1406,29 @@ describe("GeneralController", () => {
             uibModal = $injector.get("$uibModal");
         }));
 
-        it("should check that the import modal is launched", () => {
+        it("should check that the createEmptyGroupModal is launched", () => {
             spyOn(uibModal, "open");
             scope.createEmptyGroupModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createResetNotifModal", () => {
+        let uibModal;
+
+        beforeEach(inject(function ($injector) {
+            uibModal = $injector.get("$uibModal");
+        }));
+
+        it("should set group to group that is passed in", () => {
+            expect(scope.group).toBe("");
+            scope.createResetNotifModal("admin");
+            expect(scope.group).toBe("admin");
+        });
+
+        it("should check that the resetNotifModalInstance is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createResetNotifModal();
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
