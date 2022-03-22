@@ -10,20 +10,20 @@ describe("AdminController", function () {
 
     let fakeModal = {
         result: {
-            then: function(confirmCallback, cancelCallBack) {
-                    this.confirmCallback = confirmCallback;
-                    this.cancelCallBack = cancelCallBack;
+            then: function (confirmCallback, cancelCallBack) {
+                this.confirmCallback = confirmCallback;
+                this.cancelCallBack = cancelCallBack;
             }
         },
-        close: function(item) {
+        close: function (item) {
             //the user clicks OK on the modal dialog, call the stored callback w/ the selected item
             this.result.confirmCallback(item);
         },
-        dismiss: function(type) {
+        dismiss: function (type) {
             // The user clicked on cancel, call the stored cancel callback
             this.result.cancelCallBack(type);
         }
-    }
+    };
 
     beforeEach(inject(function ($rootScope, $controller, $uibModal, groupingsService) {
         scope = $rootScope.$new();
@@ -31,7 +31,7 @@ describe("AdminController", function () {
             $scope: scope
         });
         gs = groupingsService;
-        spyOn($uibModal, 'open').and.returnValue(fakeModal);
+        spyOn($uibModal, "open").and.returnValue(fakeModal);
     }));
 
     it("should define the admin controller", function () {
@@ -45,6 +45,11 @@ describe("AdminController", function () {
             expect(gs.getAdminLists).toHaveBeenCalled();
         });
     });
+    //
+    // describe("createRoleErrorModal", () => {
+    //     beforeEach()
+    // });
+
     describe("getAdminListsCallbackOnSuccess", function () {
         let res = {};
         beforeEach(function () {
@@ -270,12 +275,12 @@ describe("AdminController", function () {
 
     //describe
     //it
-        //function
+    //function
 
     describe("addAdmin", function () {
 
         it("should check that the admin to add is in the admin list", () => {
-            scope.adminToAdd = "iamtst01"
+            scope.adminToAdd = "iamtst01";
             scope.addAdmin();
             expect(scope.listName).toBe("admins");
         });
@@ -284,7 +289,7 @@ describe("AdminController", function () {
             scope.emptyInput = false;
             scope.addAdmin();
             expect(scope.emptyInput).toBeTrue();
-        })
+        });
 
         it("should set waitingForImportResponse to false", function () {
             scope.waitingForImportResponse = true;
@@ -322,7 +327,7 @@ describe("AdminController", function () {
             spyOn(scope, "createRemoveModal");
             scope.removeAdmin(0, 0);
             expect(scope.createRemoveModal).toHaveBeenCalled();
-        })
+        });
         it("should call scope.createRemoveErrorModal", function () {
             spyOn(scope, "createRemoveErrorModal");
             scope.removeAdmin(0, 0);

@@ -8,6 +8,17 @@ describe("GeneralController", () => {
     let httpBackend;
     let BASE_URL;
     let gs;
+    let onSuccess;
+    let onFailure;
+
+    onSuccess = () => {
+        console.log("success");
+    };
+
+    onFailure = () => {
+        console.log("success");
+    };
+
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) => {
         scope = $rootScope.$new();
         controller = $controller("GeneralJsController", {
@@ -87,7 +98,7 @@ describe("GeneralController", () => {
     });
 
     // Set up mock data
-    beforeEach( () => {
+    beforeEach(() => {
         scope.selectedGrouping = { name: "grouping1", path: "path:path2:grouping1" };
         scope.itemsPerPage = 20;
 
@@ -193,7 +204,7 @@ describe("GeneralController", () => {
     });
 
     describe("displayGrouping", () => {
-        beforeEach( () => {
+        beforeEach(() => {
             scope.pagedItemsGroupings = [["zzzz"]];
         });
         it("should set selectedGrouping to 'zzzz'", () => {
@@ -372,23 +383,28 @@ describe("GeneralController", () => {
 
     describe("closeApiError", () => {
         beforeEach(() => {
-           scope.createApiErrorModal();
-        });
+            scope.createApiErrorModal();
 
-        it("should close modal", () => {
-            spyOn(scope.apiErrorModalInstance, 'close');
-            scope.closeApiError();
-            expect(scope.apiErrorModalInstance.close).toHaveBeenCalled();
+            it("should close modal", () => {
+                spyOn(scope.apiErrorModalInstance, "close");
+                scope.createApiErrorModal();
+            });
+
+            it("should close modal", () => {
+                spyOn(scope.apiErrorModalInstance, "close");
+                scope.closeApiError();
+                expect(scope.apiErrorModalInstance.close).toHaveBeenCalled();
+            });
         });
     });
 
     describe("proceedAddMembers", () => {
-       beforeEach(() => {
-           scope.launchImportModal();
-       });
+        beforeEach(() => {
+            scope.launchImportModal();
+        });
 
         it("should close confirmImportInstance modal", () => {
-            spyOn(scope.confirmImportInstance, 'close');
+            spyOn(scope.confirmImportInstance, "close");
             scope.proceedAddMembers();
             expect(scope.confirmImportInstance.close).toHaveBeenCalled();
         });
@@ -520,14 +536,19 @@ describe("GeneralController", () => {
         });
     });
 
-    // describe("launchImportModal", () => {
-    //     it ("should check that the import modal is launched", () => {
-    //         spyOn(scope, "confirmImportInstance");
-    //         scope.launchImportModal("list");
-    //             expect(scope.listName).toBe("list");
-    //         expect(scope.confirmImportInstance).toHaveBeenCalled();
-    //     });
-    // });
+    describe("launchImportModal", () => {
+        let uibModal;
+
+        beforeEach(inject(function ($injector) {
+            uibModal = $injector.get("$uibModal");
+        }));
+
+        it("should check that the import modal is launched", () => {
+            spyOn(uibModal, "open");
+            scope.launchImportModal(scope.listName);
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
 
     describe("validateAndAddUser", () => {
         describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", () => {
@@ -538,7 +559,7 @@ describe("GeneralController", () => {
                 firstName: "Valid",
                 lastName: "User"
             };
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "validUser";
                 httpBackend.whenGET(BASE_URL + "currentUser")
                     .respond(200);
@@ -569,7 +590,7 @@ describe("GeneralController", () => {
                 firstName: null,
                 lastName: null
             };
-            beforeEach( () => {
+            beforeEach(() => {
                 httpBackend.whenGET(BASE_URL + "currentUser")
                     .respond(200);
                 httpBackend.whenGET(BASE_URL + "members/memberships/")
@@ -595,7 +616,7 @@ describe("GeneralController", () => {
 
     describe("addMember", () => {
         describe("user adds 'user8', who is not in any list, to the Include list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user8";
             });
 
@@ -615,7 +636,7 @@ describe("GeneralController", () => {
         });
 
         describe("user adds 'user1' to the Exclude list, who is currently in the Include list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user1";
             });
 
@@ -637,7 +658,7 @@ describe("GeneralController", () => {
         });
 
         describe("user tries to add a blank username to a list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "";
             });
 
@@ -650,7 +671,7 @@ describe("GeneralController", () => {
         });
 
         describe("user tries to add 'user5', who is currently in the Exclude list, to the Exclude list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user5";
             });
 
@@ -663,7 +684,7 @@ describe("GeneralController", () => {
         });
 
         describe("user tries to add 'user7', who is currently in the Basis list, to the Include list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user7";
             });
 
@@ -675,7 +696,7 @@ describe("GeneralController", () => {
         });
 
         describe("user tries to add 'user8', who is currently not in the Basis list, to the Exclude list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user8";
             });
 
@@ -689,7 +710,7 @@ describe("GeneralController", () => {
 
     describe("isInAnotherList", () => {
         describe("user tries to add 'user1', who is currently in the Include list, to the Exclude list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user1";
             });
             it("should return true since 'user1' is currently in the Include list", () => {
@@ -701,7 +722,7 @@ describe("GeneralController", () => {
             });
         });
         describe("user tries to add 'user5', who is currently in the Exclude list, to the Include list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user5";
             });
             it("should return true since 'user5' is currently in the Exclude list", () => {
@@ -713,7 +734,7 @@ describe("GeneralController", () => {
             });
         });
         describe("user tries to add 'user8', who is not in any list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.userToAdd = "user8";
             });
             it("should return false if the user tries to add 'user8' to the Include list", () => {
@@ -838,7 +859,7 @@ describe("GeneralController", () => {
     });
 
     describe("getPersonProps", () => {
-        beforeEach( () => {
+        beforeEach(() => {
             scope.personProps = "";
         });
         describe("get and modify person props", () => {
@@ -877,7 +898,7 @@ describe("GeneralController", () => {
 
     describe("showWarningRemovingSelf", () => {
         describe("removing self from a list", () => {
-            beforeEach( () => {
+            beforeEach(() => {
                 scope.currentUser = "jdoe";
                 scope.userToRemove = {
                     username: "jdoe",
@@ -932,7 +953,6 @@ describe("GeneralController", () => {
 
         });
     });
-
 
     describe("initMemberDisplayName", () => {
 
@@ -1018,6 +1038,12 @@ describe("GeneralController", () => {
             spyOn(scope, "getGroupingInformation");
             scope.resetFields();
             expect(scope.getGroupingInformation).toHaveBeenCalled();
+            // spyOn(scope.resetFields(), 'getGroupingInformation').and.callThrough();
+            // expect(scope.resetFields()).toHaveBeenCalled();
+
+            //spyOn(scope.resetFields(type), 'getGroupingInformation').and.callThrough();
+            // spyOn(scope.closePreferenceError(), 'close');
+            //expect(scope.closePreferenceError.close()).toHaveBeenCalled();
         });
 
         it("should reset userToAdd string", () => {
@@ -1078,11 +1104,11 @@ describe("GeneralController", () => {
     });
 
     describe("proceedCheckModal", () => {
-       beforeEach(() => {
-           scope.createCheckModal('testUser', 'testList','testSwap','testInBasis');
-       });
+        beforeEach(() => {
+            scope.createCheckModal("testUser", "testList", "testSwap", "testInBasis");
+        });
         it("should close the checkModalInstance modal", () => {
-            spyOn(scope.checkModalInstance, 'close');
+            spyOn(scope.checkModalInstance, "close");
             scope.proceedCheckModal();
             expect(scope.checkModalInstance.close).toHaveBeenCalled();
         });
@@ -1090,74 +1116,74 @@ describe("GeneralController", () => {
 
     describe("closeCheckModal", () => {
         beforeEach(() => {
-            scope.createCheckModal('testUser', 'testList','testSwap','testInBasis');
+            scope.createCheckModal("testUser", "testList", "testSwap", "testInBasis");
         });
         it("should dismiss the checkModalInstance modal", () => {
-            spyOn(scope.checkModalInstance, 'dismiss');
+            spyOn(scope.checkModalInstance, "dismiss");
             scope.closeCheckModal();
             expect(scope.checkModalInstance.dismiss).toHaveBeenCalled();
         });
     });
 
     describe("proceedConfirmAddUser", () => {
-       beforeEach(() => {
-           scope.createConfirmAddMembersModal(scope.listName);
-       });
+        beforeEach(() => {
+            scope.createConfirmAddMembersModal(scope.listName);
+        });
 
         it("should close confirmAddModalInstance", () => {
-            spyOn(scope.confirmAddModalInstance, 'close');
+            spyOn(scope.confirmAddModalInstance, "close");
             scope.proceedConfirmAddUser();
             expect(scope.confirmAddModalInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("cancelConfirmAddUser", () => {
-       beforeEach(() => {
-          scope.createConfirmAddMembersModal(scope.listName);
-       });
+        beforeEach(() => {
+            scope.createConfirmAddMembersModal(scope.listName);
+        });
 
         it("should dismiss confirmAddModalInstance", () => {
-            spyOn(scope.confirmAddModalInstance, 'dismiss');
+            spyOn(scope.confirmAddModalInstance, "dismiss");
             scope.cancelConfirmAddUser();
             expect(scope.confirmAddModalInstance.dismiss).toHaveBeenCalled();
         });
     });
 
     describe("closeSuccessfulAddModal", () => {
-       beforeEach(() => {
-           scope.createSuccessfulAddModal('testString');
-       });
+        beforeEach(() => {
+            scope.createSuccessfulAddModal("testString");
+        });
 
         it("should close addModalInstance", () => {
-            spyOn(scope.addModalInstance, 'close');
+            spyOn(scope.addModalInstance, "close");
             scope.closeSuccessfulAddModal();
             expect(scope.addModalInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("closeResetNotifModal", () => {
-       beforeEach(() => {
-           scope.createResetNotifModal(scope.group);
-       });
+        beforeEach(() => {
+            scope.createResetNotifModal(scope.group);
+        });
 
         it("should close resetNotifModalInstance", () => {
-            spyOn(scope.resetNotifModalInstance, 'close');
+            spyOn(scope.resetNotifModalInstance, "close");
             scope.closeResetNotifModal();
             expect(scope.resetNotifModalInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("batchRemovePromptModalAccept", () => {
-       beforeEach(() => {
-           scope.multiRemovePromptModalInstance = {
-               close: () => {
-                   // Mock $uib modal close
-               },
-           };
-       });
+        beforeEach(() => {
+            scope.multiRemovePromptModalInstance = {
+                close: () => {
+                    // Mock $uib modal close
+                }
+            };
+        });
 
         it("should close batchRemovePromptModalAccept", () => {
-            spyOn(scope.multiRemovePromptModalInstance, 'close');
+            spyOn(scope.multiRemovePromptModalInstance, "close");
             scope.batchRemovePromptModalAccept();
             expect(scope.multiRemovePromptModalInstance.close).toHaveBeenCalled();
         });
@@ -1167,68 +1193,68 @@ describe("GeneralController", () => {
         beforeEach(() => {
             scope.multiRemovePromptModalInstance = {
                 // Mock $uib dismiss
-                dismiss: ('cancel'),
+                dismiss: ("cancel")
             };
         });
 
         it("should dismiss multiRemovePromptModalInstance", () => {
-            spyOn(scope.multiRemovePromptModalInstance, 'dismiss');
+            spyOn(scope.multiRemovePromptModalInstance, "dismiss");
             scope.batchRemovePromptModalCancel();
             expect(scope.multiRemovePromptModalInstance.dismiss).toHaveBeenCalled();
         });
     });
 
     describe("closeBatchRemoveConfirmationModalInstance", () => {
-       beforeEach(() => {
-          scope.batchRemoveConfirmationModal(scope.listName);
-       });
+        beforeEach(() => {
+            scope.batchRemoveConfirmationModal(scope.listName);
+        });
 
         it("should close multiRemoveConfirmationModalInstance", () => {
-            spyOn(scope.multiRemoveConfirmationModalInstance, 'close');
+            spyOn(scope.multiRemoveConfirmationModalInstance, "close");
             scope.closeBatchRemoveConfirmationModalInstance();
             expect(scope.multiRemoveConfirmationModalInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("proceedRemoveUser", () => {
-       beforeEach(() => {
-           scope.removeModalInstance = {
-               close: {
-                   // Mock $uib modal close
-               },
-           };
-       });
+        beforeEach(() => {
+            scope.removeModalInstance = {
+                close: {
+                    // Mock $uib modal close
+                }
+            };
+        });
 
         it("should close removeModalInstance", () => {
-            spyOn(scope.removeModalInstance, 'close');
+            spyOn(scope.removeModalInstance, "close");
             scope.proceedRemoveUser();
             expect(scope.removeModalInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("proceedResetGroup", () => {
-       beforeEach(() => {
-           scope.createResetGroupModal(scope.group);
-       });
+        beforeEach(() => {
+            scope.createResetGroupModal(scope.group);
+        });
 
         it("should close resetModalInstance", () => {
-            spyOn(scope.resetModalInstance, 'close');
+            spyOn(scope.resetModalInstance, "close");
             scope.proceedResetGroup();
             expect(scope.resetModalInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("cancelRemoveUser", () => {
-       beforeEach(() => {
-           scope.removeModalInstance = {
-               dismiss: {
-                   // Mock $uib modal dismiss
-               },
-           };
-       });
+        beforeEach(() => {
+            scope.removeModalInstance = {
+                dismiss: {
+                    // Mock $uib modal dismiss
+                }
+            };
+        });
 
         it("should dismiss removeModalInstance", () => {
-            spyOn(scope.removeModalInstance, 'dismiss');
+            spyOn(scope.removeModalInstance, "dismiss");
             scope.cancelRemoveUser();
             expect(scope.removeModalInstance.dismiss).toHaveBeenCalled();
         });
@@ -1240,174 +1266,305 @@ describe("GeneralController", () => {
         });
 
         it("should dismiss resetModalInstance", () => {
-            spyOn(scope.resetModalInstance, 'dismiss');
+            spyOn(scope.resetModalInstance, "dismiss");
             scope.cancelResetGroup();
             expect(scope.resetModalInstance.dismiss).toHaveBeenCalled();
         });
     });
 
     describe("closeEmptyGroupModal", () => {
-       beforeEach(() => {
-           scope.createEmptyGroupModal();
-       });
+        beforeEach(() => {
+            scope.createEmptyGroupModal();
+        });
 
         it("should dismiss emptyGroupModalInstance", () => {
-            spyOn(scope.emptyGroupModalInstance, 'dismiss');
+            spyOn(scope.emptyGroupModalInstance, "dismiss");
             scope.closeEmptyGroupModal();
             expect(scope.emptyGroupModalInstance.dismiss).toHaveBeenCalled();
         });
     });
 
     describe("closeRemoveErrorModal", () => {
-       beforeEach(() => {
-           scope.createRemoveErrorModal('testString');
-       });
+        beforeEach(() => {
+            scope.createRemoveErrorModal("testString");
+        });
 
         it("should close removeErrorModalInstance", () => {
-            spyOn(scope.removeErrorModalInstance, 'close');
+            spyOn(scope.removeErrorModalInstance, "close");
             scope.closeRemoveErrorModal();
             expect(scope.removeErrorModalInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("closePreferenceInfo", () => {
-       beforeEach(() => {
-           scope.createPreferenceInfoModal('testString');
-       });
+        beforeEach(() => {
+            scope.createPreferenceInfoModal("testString");
+        });
 
         it("should close infoModalInstance", () => {
-            spyOn(scope.infoModalInstance, 'close');
+            spyOn(scope.infoModalInstance, "close");
             scope.closePreferenceInfo();
             expect(scope.infoModalInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("closePreferenceError", () => {
-       beforeEach(() => {
-           scope.createPreferenceErrorModal();
-       });
+        beforeEach(() => {
+            scope.createPreferenceErrorModal();
+        });
 
         it("should close preferenceErrorModalInstance", () => {
-            spyOn(scope.preferenceErrorModalInstance, 'close');
+            spyOn(scope.preferenceErrorModalInstance, "close");
             scope.closePreferenceError();
             expect(scope.preferenceErrorModalInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("proceedBasisWarningModal", () => {
-       beforeEach(() => {
-           scope.createBasisWarningModal('testUser', 'testListName', 'testBasis');
-       });
+        beforeEach(() => {
+            scope.createBasisWarningModal("testUser", "testListName", "testBasis");
+        });
 
         it("should close basisWarningModalInstance", () => {
-            spyOn(scope.basisWarningModalInstance, 'close');
+            spyOn(scope.basisWarningModalInstance, "close");
             scope.proceedBasisWarningModal();
             expect(scope.basisWarningModalInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("closeBasisWarningModal", () => {
-       beforeEach(() => {
-           scope.createBasisWarningModal('testUser', 'testListName', 'testBasis');
-       });
+        beforeEach(() => {
+            scope.createBasisWarningModal("testUser", "testListName", "testBasis");
+        });
 
         it("should dismiss basisWarningModalInstance", () => {
-            spyOn(scope.basisWarningModalInstance, 'dismiss');
+            spyOn(scope.basisWarningModalInstance, "dismiss");
             scope.closeBasisWarningModal();
             expect(scope.basisWarningModalInstance.dismiss).toHaveBeenCalled();
         });
     });
 
     describe("proceedSyncDestModal", () => {
-       beforeEach(() => {
-           scope.syncDestInstance = {
-             close: {
-                 // Mock $uib modal close
-             }
-           };
-       });
+        beforeEach(() => {
+            scope.syncDestInstance = {
+                close: {
+                    // Mock $uib modal close
+                }
+            };
+        });
 
         it("should close syncDestInstance", () => {
-            spyOn(scope.syncDestInstance, 'close');
+            spyOn(scope.syncDestInstance, "close");
             scope.proceedSyncDestModal();
             expect(scope.syncDestInstance.close).toHaveBeenCalled();
         });
     });
 
     describe("closeSyncDestModal", () => {
-       beforeEach(() => {
-           scope.syncDestInstance = {
-               dismiss: {
-                   // Mock $uib modal dismiss
-               },
-           };
-       });
+        beforeEach(() => {
+            scope.syncDestInstance = {
+                dismiss: {
+                    // Mock $uib modal dismiss
+                }
+            };
+        });
 
         it("should dismiss syncDestInstance", () => {
-            spyOn(scope.syncDestInstance, 'dismiss');
+            spyOn(scope.syncDestInstance, "dismiss");
             scope.closeSyncDestModal();
             expect(scope.syncDestInstance.dismiss).toHaveBeenCalled();
         });
     });
 
     describe("proceedRedirectApiError", () => {
-        let testWindowLocationHref = '/testURL';
+        let testWindowLocationHref = "/testURL";
         beforeEach(() => {
-           scope.proceedRedirectApiError =  {
-               create: scope.createApiErrorModal(),
-               close: () => {
-                   scope.apiErrorModalInstance.close()
-               },
-               setUrl: () => {
-                   testWindowLocationHref = "/uhgroupings/feedback";
-               },
-           };
+            scope.proceedRedirectApiError = {
+                create: scope.createApiErrorModal(),
+                close: () => {
+                    scope.apiErrorModalInstance.close();
+                },
+                setUrl: () => {
+                    testWindowLocationHref = "/uhgroupings/feedback";
+                }
+            };
         });
 
         it("should close apiErrorModalInstance", () => {
-            spyOn(scope.apiErrorModalInstance, 'close');
+            spyOn(scope.apiErrorModalInstance, "close");
             scope.proceedRedirectApiError.close();
             expect(scope.apiErrorModalInstance.close).toHaveBeenCalled();
         });
 
         it("should set $window.location.href to proper path", () => {
-            testWindowLocationHref = '/badURL';
-            expect(testWindowLocationHref).toBe('/badURL');
+            testWindowLocationHref = "/badURL";
+            expect(testWindowLocationHref).toBe("/badURL");
             scope.proceedRedirectApiError.setUrl();
             expect(testWindowLocationHref).toBe("/uhgroupings/feedback");
         });
+    });
 
+
+    describe("batchRemovePromptModalCancel", () => {
+        beforeEach(() => {
+            scope.multiRemovePromptModalInstance = {
+                // Mock $uib dismiss
+                dismiss: ("cancel")
+            };
+        });
+
+        it("should dismiss multiRemovePromptModalInstance", () => {
+            spyOn(scope.multiRemovePromptModalInstance, "dismiss");
+            scope.batchRemovePromptModalCancel();
+            expect(scope.multiRemovePromptModalInstance.dismiss).toHaveBeenCalled();
+        });
     });
 
     describe("proceedRedirect", () => {
-        let testWindowLocationHref = '/testURL';
+        let testWindowLocationHref = "/testURL";
         beforeEach(() => {
-            scope.proceedRedirect =  {
+            scope.proceedRedirect = {
                 create: scope.createOwnerErrorModal(),
                 close: () => {
-                    scope.OwnerErrorModalInstance.close()
+                    scope.OwnerErrorModalInstance.close();
                 },
                 setUrl: () => {
                     testWindowLocationHref = "/uhgroupings/";
-                },
+                }
             };
         });
-        
+
         it("should close OwnerErrorModalInstance", () => {
-            spyOn(scope.OwnerErrorModalInstance, 'close');
+            spyOn(scope.OwnerErrorModalInstance, "close");
             scope.proceedRedirect.close();
             expect(scope.OwnerErrorModalInstance.close).toHaveBeenCalled();
         });
 
         it("should set $window.location.href to proper path", () => {
-            testWindowLocationHref = '/badURL';
-            expect(testWindowLocationHref).toBe('/badURL');
+            testWindowLocationHref = "/badURL";
+            expect(testWindowLocationHref).toBe("/badURL");
             scope.proceedRedirect.setUrl();
             expect(testWindowLocationHref).toBe("/uhgroupings/");
         });
     });
 
-    describe("extractSelectedUsersFromCheckboxes",  () => {
+    describe("closeBatchRemoveConfirmationModalInstance", () => {
+        beforeEach(() => {
+            scope.batchRemoveConfirmationModal(scope.listName);
+        });
+
+        it("should close multiRemoveConfirmationModalInstance", () => {
+            spyOn(scope.multiRemoveConfirmationModalInstance, "close");
+            scope.closeBatchRemoveConfirmationModalInstance();
+            expect(scope.multiRemoveConfirmationModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("proceedRemoveUser", () => {
+        beforeEach(() => {
+            scope.removeModalInstance = {
+                close: {
+                    // Mock $uib modal close
+                }
+            };
+        });
+
+        it("should close removeModalInstance", () => {
+            spyOn(scope.removeModalInstance, "close");
+            scope.proceedRemoveUser();
+            expect(scope.removeModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("proceedResetGroup", () => {
+        beforeEach(() => {
+            scope.createResetGroupModal(scope.group);
+        });
+
+        it("should close resetModalInstance", () => {
+            spyOn(scope.resetModalInstance, "close");
+            scope.proceedResetGroup();
+            expect(scope.resetModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("cancelRemoveUser", () => {
+        beforeEach(() => {
+            scope.removeModalInstance = {
+                dismiss: {
+                    // Mock $uib modal dismiss
+                }
+            };
+        });
+
+        it("should dismiss removeModalInstance", () => {
+            spyOn(scope.removeModalInstance, "dismiss");
+            scope.cancelRemoveUser();
+            expect(scope.removeModalInstance.dismiss).toHaveBeenCalled();
+        });
+    });
+
+    describe("cancelResetGroup", () => {
+        beforeEach(() => {
+            scope.createResetGroupModal(scope.group);
+        });
+
+        it("should dismiss resetModalInstance", () => {
+            spyOn(scope.resetModalInstance, "dismiss");
+            scope.cancelResetGroup();
+            expect(scope.resetModalInstance.dismiss).toHaveBeenCalled();
+        });
+    });
+
+    describe("closeEmptyGroupModal", () => {
+        beforeEach(() => {
+            scope.createEmptyGroupModal();
+        });
+
+        it("should dismiss emptyGroupModalInstance", () => {
+            spyOn(scope.emptyGroupModalInstance, "dismiss");
+            scope.closeEmptyGroupModal();
+            expect(scope.emptyGroupModalInstance.dismiss).toHaveBeenCalled();
+        });
+    });
+
+    describe("closeRemoveErrorModal", () => {
+        beforeEach(() => {
+            scope.createRemoveErrorModal("testString");
+        });
+
+        it("should close removeErrorModalInstance", () => {
+            spyOn(scope.removeErrorModalInstance, "close");
+            scope.closeRemoveErrorModal();
+            expect(scope.removeErrorModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("closePreferenceInfo", () => {
+        beforeEach(() => {
+            scope.createPreferenceInfoModal("testString");
+        });
+
+        it("should close infoModalInstance", () => {
+            spyOn(scope.infoModalInstance, "close");
+            scope.closePreferenceInfo();
+            expect(scope.infoModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("closePreferenceError", () => {
+        beforeEach(() => {
+            scope.createPreferenceErrorModal();
+        });
+
+        it("should close preferenceErrorModalInstance", () => {
+            spyOn(scope.preferenceErrorModalInstance, "close");
+            scope.closePreferenceError();
+            expect(scope.preferenceErrorModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
         let expectedResult = "";
