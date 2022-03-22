@@ -10,6 +10,7 @@ describe("GeneralController", () => {
     let gs;
     let onSuccess;
     let onFailure;
+    let uibModal;
 
     onSuccess = () => {
         console.log("success");
@@ -18,6 +19,10 @@ describe("GeneralController", () => {
     onFailure = () => {
         console.log("success");
     };
+
+    beforeEach(inject(function ($injector) {
+        uibModal = $injector.get("$uibModal");
+    }));
 
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) => {
         scope = $rootScope.$new();
@@ -477,11 +482,6 @@ describe("GeneralController", () => {
     });
 
     describe("launchImportModal", () => {
-        let uibModal;
-
-        beforeEach(inject(function ($injector) {
-            uibModal = $injector.get("$uibModal");
-        }));
 
         it("should check that the import modal is launched", () => {
             spyOn(uibModal, "open");
@@ -1382,6 +1382,86 @@ describe("GeneralController", () => {
             spyOn(scope.preferenceErrorModalInstance, "close");
             scope.closePreferenceError();
             expect(scope.preferenceErrorModalInstance.close).toHaveBeenCalled();
+        });
+    });
+
+    describe("createApiErrorModal", () => {
+        it("should check that the createApiErrorModal is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createApiErrorModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createEmptyGroupModal", () => {
+        it("should check that the createEmptyGroupModal is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createEmptyGroupModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createResetNotifModal", () => {
+        it("should set group to group that is passed in", () => {
+            expect(scope.group).toBe("");
+            scope.createResetNotifModal("admin");
+            expect(scope.group).toBe("admin");
+        });
+
+        it("should check that the resetNotifModalInstance is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createResetNotifModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createRemoveErrorModal", () => {
+        it("should set userType to userType that is passed in", () => {
+            expect(scope.userType).toBe(undefined);
+            scope.createRemoveErrorModal("admin");
+            expect(scope.userType).toBe("admin");
+        });
+
+        it("should check that the removeErrorModalInstance is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createRemoveErrorModal("test");
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createPreferenceInfoModal", () => {
+        it("should set preferenceInfo to preferenceInfo that is passed in", () => {
+            expect(scope.preferenceInfo).toBe(undefined);
+            scope.createPreferenceInfoModal("test");
+            expect(scope.preferenceInfo).toBe("test");
+        });
+
+        it("should check that the infoModalInstance is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createPreferenceInfoModal("test");
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createPreferenceErrorModal", () => {
+        it("should check that the preferenceErrorModalInstance is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createPreferenceErrorModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createOwnerErrorModal", () => {
+        it("should set loading to false", () => {
+            scope.loading = true;
+            scope.createOwnerErrorModal();
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("should check that the OwnerErrorModalInstance is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createOwnerErrorModal();
+            expect(uibModal.open).toHaveBeenCalled();
         });
     });
 
