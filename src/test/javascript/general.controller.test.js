@@ -310,8 +310,17 @@ describe("GeneralController", function () {
 
     });
 
-    describe("validateAndAddUser", function () {
-        describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", function () {
+    // describe("launchImportModal", () => {
+    //     it ("should check that the import modal is launched", () => {
+    //         spyOn(scope, "confirmImportInstance");
+    //         scope.launchImportModal("list");
+    //         expect(scope.listName).toBe("list");
+    //         expect(scope.confirmImportInstance).toHaveBeenCalled();
+    //     });
+    // });
+
+    describe("validateAndAddUser", () => {
+        describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", () => {
             const validUser = {
                 name: "Valid User",
                 username: "validUser",
@@ -470,20 +479,64 @@ describe("GeneralController", function () {
         });
     });
     
+    describe("addMembers", () => { 
+        it ("should set listName to the listName that we are passing in", () => {
+            scope.listName = "admin";
+            scope.addMembers(scope.listName);
+            expect((scope.listName)).toBe("admin");
+        });
+        
+        it("should make scope.emptyInput true if scope.usersToAdd is empty", () => { 
+            scope.emptyInput = false;
+            scope.usersToAdd = null;
+            scope.addMembers(scope.listName);
+            expect(scope.emptyInput).toBeTrue();
+        });
+
+        it("should call addMultipleMembers when the usersToAdd is below our maxImport", () => { 
+            spyOn(scope, "addMultipleMembers");
+            scope.usersToAdd = "gavin4 mhodges";
+            scope.addMembers(scope.listName);
+            expect(scope.addMultipleMembers).toHaveBeenCalled();
+        });
+
+        it("should call launchDynamicModal when the usersToAdd is above the multiAddThreshold", () => {
+            spyOn(scope, "launchDynamicModal");
+            let arr = [];
+            for (let i = 0; i < 102; i++) { 
+                arr.push("gavin4");
+            }
+            scope.usersToAdd = arr.toString().split(",").join(" ");
+            scope.addMembers(scope.listName);
+            expect(scope.launchDynamicModal).toHaveBeenCalled();
+        });
+
+        it("should call launchDynamicModal when the members we are adding are above the maxImport", () => {
+            spyOn(scope, "launchDynamicModal");
+            let arr = [];
+            for (let i = 0; i < 100002; i++) {
+                arr.push("gavin4");
+            }
+            scope.usersToAdd = arr.toString().split(",").join(" ");
+            scope.addMembers(scope.listName);
+            expect(scope.launchDynamicModal).toHaveBeenCalled();
+        });
+        
+        it("should call validateAndAddUser when numMembers is less than 0", () => {
+            spyOn(scope, "validateAndAddUser");
+            scope.usersToAdd = "gavin4";
+            scope.addMembers(scope.listName);
+            expect(scope.usersToAdd).toBe('gavin4');
+            expect(scope.validateAndAddUser).toHaveBeenCalled();
+        });
+    });
+    
     describe("readTextFile", () => { 
-        let goodFile, badFile, goodFileWithIncorrectUsernames, reader;
+        let goodFile, reader;
         beforeEach(() => { 
             reader = new FileReader();
-            let xss1 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>";
-            let xss2 = "<img src onerror=alert('Gavin is testing')/>";
-            let xss3 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>";
-            let xss4 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>";
             goodFile = 
                 `iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06`;
-            goodFileWithIncorrectUsernames = 
-                `iamtst01\niamtst02\niamtst03\ninvalidUsername\n`
-            badFile = 
-                `iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n${xss1}\n${xss2}\n`;
             
             reader.onload = {
                 usersToAdd: (file) => {
@@ -499,13 +552,7 @@ describe("GeneralController", function () {
             reader.onload.usersToAdd(goodFile); 
             expect(scope.usersToAdd).toBe('iamtst01 iamtst02 iamtst03 iamtst04 iamtst05 iamtst06');
         });
-        it("should expect scope.addMembers to be called", () => { 
-           scope.listName = "admin";
-           spyOn(scope.readTextFile, "addMembers");
-           scope.readTextFile(Event);
-           expect(scope.readTextFile.addMembers(scope.listName)).toHaveBeenCalled();
-        });
-    })
+    });
 
     describe("isInAnotherList", function () {
         describe("user tries to add 'user1', who is currently in the Include list, to the Exclude list", function () {
