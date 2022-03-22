@@ -521,9 +521,9 @@ describe("GeneralController", () => {
                 expect(scope.createConfirmAddModal).toHaveBeenCalled();
             });
         });
-        
+
         describe("addMembers", () => {
-            it ("should set listName to the listName that we are passing in", () => {
+            it("should set listName to the listName that we are passing in", () => {
                 scope.listName = "admin";
                 scope.addMembers(scope.listName);
                 expect((scope.listName)).toBe("admin");
@@ -1516,7 +1516,6 @@ describe("GeneralController", () => {
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
-
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
