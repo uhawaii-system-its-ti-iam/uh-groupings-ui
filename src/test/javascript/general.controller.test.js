@@ -1443,6 +1443,14 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("createPreferenceErrorModal", () => {
+        it("should check that the preferenceErrorModalInstance is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createPreferenceErrorModal();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
