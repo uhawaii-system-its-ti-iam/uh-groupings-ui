@@ -1416,15 +1416,29 @@ describe("GeneralController", () => {
     });
 
     describe("createRemoveErrorModal", () => {
-        it("should set group to group that is passed in", () => {
-            expect(scope.group).toBe("");
-            scope.createResetNotifModal("admin");
-            expect(scope.group).toBe("admin");
+        it("should set userType to userType that is passed in", () => {
+            expect(scope.userType).toBe(undefined);
+            scope.createRemoveErrorModal("admin");
+            expect(scope.userType).toBe("admin");
         });
 
         it("should check that the removeErrorModalInstance is launched", () => {
             spyOn(uibModal, "open");
             scope.createRemoveErrorModal("test");
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createPreferenceInfoModal", () => {
+        it("should set preferenceInfo to preferenceInfo that is passed in", () => {
+            expect(scope.preferenceInfo).toBe(undefined);
+            scope.createPreferenceInfoModal("test");
+            expect(scope.preferenceInfo).toBe("test");
+        });
+
+        it("should check that the infoModalInstance is launched", () => {
+            spyOn(uibModal, "open");
+            scope.createPreferenceInfoModal("test");
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
