@@ -689,7 +689,7 @@
                     if ("FAILURE" === result || !userWasAdded) {
                         membersNotInList.push(arrayOfMembers[i]);
                         $scope.membersNotInList = membersNotInList.join(", ");
-                    }else {
+                    } else {
                         let person = {
                             "uid": data[parseInt(i, 10)].uid,
                             "uhUuid": data[parseInt(i, 10)].uhUuid,
