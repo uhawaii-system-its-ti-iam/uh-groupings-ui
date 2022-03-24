@@ -730,7 +730,7 @@
         };
 
         /**
-         * Launch a modal containing a table of the results(user info) received from the the server's response message.
+         * Launch a modal containing a table of the results(user info) received from the server's response message.
          * @param listName - current list being added to
          */
         $scope.launchMultiAddResultModal = function (listName) {
