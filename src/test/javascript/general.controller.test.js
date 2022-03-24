@@ -1687,6 +1687,30 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("batchRemoveResponseHandler", () => {
+        // let success = false;
+        it("should call batchRemoveConfirmationModal if success is true", () => {
+            let response = [{result: 'SUCCESS', }, {result: 'SUCCESS'}];
+            spyOn(scope, 'batchRemoveConfirmationModal');
+            scope.batchRemoveResponseHandler(response);
+            expect(scope.batchRemoveConfirmationModal).toHaveBeenCalled();
+        });
+
+        it("should not call batchRemoveConfirmationModal if success is false", () => {
+            let response = [{result: 'FAILURE', }, {result: 'FAILURE'}];
+            spyOn(scope, 'batchRemoveConfirmationModal');
+            scope.batchRemoveResponseHandler(response);
+            expect(scope.batchRemoveConfirmationModal).not.toHaveBeenCalled();
+        });
+
+        it("should call batchRemoveConfirmationModal if success is true", () => {
+            let response = [{result: 'SUCCESS', }, {result: 'FAILURE'}];
+            spyOn(scope, 'batchRemoveConfirmationModal');
+            scope.batchRemoveResponseHandler(response);
+            expect(scope.batchRemoveConfirmationModal).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
