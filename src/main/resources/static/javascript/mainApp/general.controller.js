@@ -965,7 +965,6 @@
                 backdrop: "static",
                 keyboard: false
             });
-
             $scope.checkModalInstance.result.then(function () {
                 $scope.waitingForImportResponse = true;
                 $scope.updateAddMember(user, listName);
