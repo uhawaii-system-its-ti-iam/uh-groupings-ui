@@ -1586,6 +1586,21 @@ describe("GeneralController", () => {
     //     });
     // });
 
+    // describe("createCheckModal", () => {
+    //     it("should check if checkModalInstance is launched", () => {
+    //         spyOn(uibModal, 'open').and.callThrough();
+    //         scope.createCheckModal('testUser', 'testListName', 'testSwap', 'testBasis');
+    //         expect(uibModal.open).toHaveBeenCalled();
+    //     });
+    //
+    //     it("should check if then clause is executed", (done) => {
+    //         scope.checkModalInstance.result.then( function(waitingForImportResponse) {
+    //             expect(scope.waitingForImportResponse).toBeTrue();
+    //             done();
+    //         });
+    //     });
+    // });
+
     describe("cancelImportModalInstance", () => {
        beforeEach(() => {
            scope.launchImportModal(scope.listName);
@@ -1595,6 +1610,20 @@ describe("GeneralController", () => {
             spyOn(scope.confirmImportInstance, 'dismiss');
             scope.cancelImportModalInstance();
             expect(scope.confirmImportInstance.dismiss).toHaveBeenCalled();
+        });
+    });
+
+    describe("createRoleErrorModal", () => {
+        it("should set scope.loading to false", () => {
+            scope.loading = true;
+            scope.createRoleErrorModal();
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("should check that RoleErrorModalInstance is launched", () => {
+            spyOn(uibModal, 'open');
+            scope.createRoleErrorModal();
+            expect(uibModal.open).toHaveBeenCalled();
         });
     });
 
