@@ -632,8 +632,8 @@
                 const validInput = name.match(regexPattern);
                 return validInput.toString();
             }
-        }
-        
+        };
+
         /**
          * Read a text file(.txt) from client side. The file should consist of a list of UH user names or ids
          * separated by newline characters. This function is called implicitly from include.html and exclude.html.
@@ -651,8 +651,8 @@
                 let sanitizedFile = [];
                 for (const users of $scope.usersToAdd) {
                     let sanitizedName = $scope.sanitizer(users);
-                    if (sanitizedName != null) { 
-                        sanitizedFile.push(sanitizedName); 
+                    if (sanitizedName != null) {
+                        sanitizedFile.push(sanitizedName);
                     }
                 }
                 // Change the array to a string
@@ -705,14 +705,15 @@
                     if ("FAILURE" === result || !userWasAdded) {
                         membersNotInList.push(arrayOfMembers[i]);
                         $scope.membersNotInList = membersNotInList.join(", ");
+                    } else {
+                        let person = {
+                            "uid": data[parseInt(i, 10)].uid,
+                            "uhUuid": data[parseInt(i, 10)].uhUuid,
+                            "name": data[parseInt(i, 10)].name
+                        };
+                        $scope.multiAddResults.push(person);
+                        $scope.multiAddResultsGeneric.push(person);
                     }
-                    let person = {
-                        "uid": data[parseInt(i, 10)].uid,
-                        "uhUuid": data[parseInt(i, 10)].uhUuid,
-                        "name": data[parseInt(i, 10)].name
-                    };
-                    $scope.multiAddResults.push(person);
-                    $scope.multiAddResultsGeneric.push(person);
                 }
                 if ($scope.multiAddResults.length > 0) {
                     $scope.personProps = Object.keys($scope.multiAddResults[0]);
