@@ -324,7 +324,9 @@
                                 <echo>$ mvn clean spring-boot:run</echo>
                                 <echo/>
                                 <echo>To access a list of possible commands:</echo>
-                                <echo>https://www.hawaii.edu/bwiki/display/SITARd/Unit+Testing#UnitTesting-RunningYourTest</echo>
+                                <echo>
+                                    https://www.hawaii.edu/bwiki/display/SITARd/Unit+Testing#UnitTesting-RunningYourTest
+                                </echo>
                             </target>
                         </configuration>
                     </execution>
