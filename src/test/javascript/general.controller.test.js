@@ -495,7 +495,7 @@ describe("GeneralController", function () {
 
         it("should call addMultipleMembers when the usersToAdd is below our maxImport", () => { 
             spyOn(scope, "addMultipleMembers");
-            scope.usersToAdd = "gavin4 mhodges";
+            scope.usersToAdd = "iamtst01 iamtst02";
             scope.addMembers(scope.listName);
             expect(scope.addMultipleMembers).toHaveBeenCalled();
         });
@@ -504,7 +504,7 @@ describe("GeneralController", function () {
             spyOn(scope, "launchDynamicModal");
             let arr = [];
             for (let i = 0; i < 102; i++) { 
-                arr.push("gavin4");
+                arr.push("iamtst01");
             }
             scope.usersToAdd = arr.toString().split(",").join(" ");
             scope.addMembers(scope.listName);
@@ -515,7 +515,7 @@ describe("GeneralController", function () {
             spyOn(scope, "launchDynamicModal");
             let arr = [];
             for (let i = 0; i < 100002; i++) {
-                arr.push("gavin4");
+                arr.push("iamtst01");
             }
             scope.usersToAdd = arr.toString().split(",").join(" ");
             scope.addMembers(scope.listName);
@@ -524,9 +524,9 @@ describe("GeneralController", function () {
         
         it("should call validateAndAddUser when numMembers is less than 0", () => {
             spyOn(scope, "validateAndAddUser");
-            scope.usersToAdd = "gavin4";
+            scope.usersToAdd = "iamtst01";
             scope.addMembers(scope.listName);
-            expect(scope.usersToAdd).toBe('gavin4');
+            expect(scope.usersToAdd).toBe('iamtst01');
             expect(scope.validateAndAddUser).toHaveBeenCalled();
         });
     });
@@ -721,6 +721,31 @@ describe("GeneralController", function () {
                 expect(scope.personProps).toEqual([["username"], ["uhUuid"], ["name"]]);
             });
         });
+    });
+    
+    describe("addMultipleMembers", () => { 
+        let membersToAdd, addMultipleMembers;
+        beforeEach(() => { 
+            membersToAdd = "iamtst01, iamtst02, iamtst03, iamtst04, iamtst05";
+            addMultipleMembers = {
+                
+            }
+        });
+        
+        it("should launch the dynamic modal", () => { 
+            spyOn(scope, "launchDynamicModal");
+            scope.addMultipleMembers(membersToAdd, "admin");
+            expect(scope.launchDynamicModal).toHaveBeenCalled();
+        }); 
+        
+        it("should turn the small spinner off", () => { 
+           scope.addMultipleMembers(membersToAdd, "admin"); 
+           expect(scope.waitingForImportResponse).toBeTrue();
+       });
+    });
+    
+    describe("validateAndAddUser", () => { 
+       
     });
 
     describe("convertListToCsv", function () {
