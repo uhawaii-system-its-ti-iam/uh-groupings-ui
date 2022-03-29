@@ -142,6 +142,7 @@ describe("AdminController", function () {
             expect(scope.loading).toBeFalse();
         });
     });
+
     describe("searchForUserGroupingInformationOnErrorCallback", function () {
         beforeEach(function () {
             scope.searchForUserGroupingInformationOnErrorCallback([]);

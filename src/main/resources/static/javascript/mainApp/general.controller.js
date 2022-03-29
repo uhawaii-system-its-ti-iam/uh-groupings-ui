@@ -730,7 +730,7 @@
         };
 
         /**
-         * Launch a modal containing a table of the results(user info) received from the the server's response message.
+         * Launch a modal containing a table of the results(user info) received from the server's response message.
          * @param listName - current list being added to
          */
         $scope.launchMultiAddResultModal = function (listName) {
@@ -869,7 +869,7 @@
          * @param {string} list - the list the user is being added to
          */
         $scope.updateAddMember = function (userToAdd, list) {
-            // only initialize groupingPath is listName is not "admins"
+            // only initialize groupingPath if listName is not "admins"
             let groupingPath;
 
             if ($scope.listName !== "admins") {
@@ -948,7 +948,6 @@
                 backdrop: "static",
                 keyboard: false
             });
-
             $scope.checkModalInstance.result.then(function () {
                 $scope.waitingForImportResponse = true;
                 $scope.updateAddMember(user, listName);
