@@ -1,6 +1,6 @@
-# Ticket Name
+# Ticket Link
 
-Insert Groupings Ticket Here
+[Ticket](Insert Link Here)
 
 # List of squashed commits
 
@@ -14,6 +14,3 @@ Insert Groupings Ticket Here
 - [ ] Jasmine Tests Passed:
 - [ ] General Visual Inspection:
 
-# Link to Ticket
-
-[Ticket](Insert Link Here)
