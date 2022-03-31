@@ -1,22 +1,19 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <div class="modal-header">
-    <h5 class="modal-title" id="modal-title">Import</h5>
-    <button type="button" class="close" data-dismiss="dialog" ng-click="cancelImportModalInstance()">
-        <span aria-hidden="true">&times;</span>
-    </button>
+  <h5 class="modal-title" id="modal-title">Import</h5>
+  <button type="button" class="close" data-dismiss="dialog" ng-click="cancelImportModalInstance()">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body" id="modal-body">
-    <div>
-        <p> Upload a text file (.txt). The file should consist of a list of UH user names or ids separated by newline characters. </p>
-        <input type="file" id="upload" accept="text/plain">
-        <button class="btn btn-primary" ng-click="readTextFile(); cancelImportModalInstance()">
-            Import
-        </button>
-        <button class="btn btn-primary" ng-click="removeTextFile();">
-            Clear
-        </button>
-    </div>
+  <div ng-controller="GeneralJsController">
+    <p> Upload a text file (.txt). The file should consist of a list of UH user names or ids separated by newline characters. </p>
+    <input type="file" name="inputFile" ng-model="inputFile" file-model="inputFile" accept="text/plain">
+    <button class="btn btn-primary" ng-click="readTextFile(inputFile); cancelImportModalInstance()">
+      Import
+    </button>
+  </div>
 </div>
 <div class="modal-footer">
 </div>
