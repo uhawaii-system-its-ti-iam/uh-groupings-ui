@@ -6,13 +6,15 @@ describe("GeneralController", function () {
     let scope;
     let controller;
     let httpBackend;
+    let gs;
     let BASE_URL;
 
-    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_) {
+    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) {
         scope = $rootScope.$new();
         controller = $controller("GeneralJsController", {
             $scope: scope
         });
+        gs = groupingsService; 
         httpBackend = _$httpBackend_;
         BASE_URL = _BASE_URL_;
     }));
@@ -309,15 +311,6 @@ describe("GeneralController", function () {
        });
 
     });
-
-    // describe("launchImportModal", () => {
-    //     it ("should check that the import modal is launched", () => {
-    //         spyOn(scope, "confirmImportInstance");
-    //         scope.launchImportModal("list");
-    //         expect(scope.listName).toBe("list");
-    //         expect(scope.confirmImportInstance).toHaveBeenCalled();
-    //     });
-    // });
 
     describe("validateAndAddUser", () => {
         describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", () => {
@@ -724,30 +717,191 @@ describe("GeneralController", function () {
     });
     
     describe("addMultipleMembers", () => { 
-        let membersToAdd, addMultipleMembers;
+        let membersToAdd, addMultipleMembers, validUsers, inValidUsers, person;
         beforeEach(() => { 
-            membersToAdd = "iamtst01, iamtst02, iamtst03, iamtst04, iamtst05";
-            addMultipleMembers = {
-                
+            let membersNotInList = [];
+            membersToAdd = "iamtst01,iamtst02,iamtst03,iamtst04";
+            validUsers = [
+                {
+                    name: "iamtst01",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                    userIdentifier: "iamtst01",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst02",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst02",
+                    uid: "iamtst02",
+                    userIdentifier: "iamtst02",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst03",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03",
+                    userIdentifier: "iamtst03",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst04",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst04",
+                    uid: "iamtst04",
+                    userIdentifier: "iamtst04",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+            ]
+            inValidUsers = [
+                {
+                    name: "iamtst01",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                    userIdentifier: "iamtst01",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst02",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst02",
+                    uid: "iamtst02",
+                    userIdentifier: "iamtst02",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst03",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03",
+                    userIdentifier: "iamtst03",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst04",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst04",
+                    uid: "iamtst04",
+                    userIdentifier: "iamtst04",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+            ]
+            person = [
+                {
+                    name: "iamtst01",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                },
+                {
+                    name: "iamtst02",
+                    uhUuid: "iamtst02",
+                    uid: "iamtst02",
+                },
+                {
+                    name: "iamtst03",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03",
+                },
+                {
+                    name: "iamtst04",
+                    uhUuid: "iamtst04",
+                    uid: "iamtst04",
+                },
+            ]
+
+            /* Mock up of the local handleSuccessful add function. 
+            If the handleSuccessfulAdd function ever changes be sure to update this test as well. */
+            addMultipleMembers = { 
+                handleSuccessfulAdd: (arrayOfMembers, listName) => {
+                    scope.waitingForImportResponse = false; /* Small spinner off. */
+
+                    let data = validUsers;
+                    for (let i = 0; i < validUsers.length; i++) {
+                        data[parseInt(i, 10)] = validUsers[parseInt(i, 10)];
+                    }
+                    for (let i = 0; i < data.length; i++) {
+                        let result = data[parseInt(i, 10)].result;
+                        let userWasAdded = data[parseInt(i, 10)];
+
+                        if ("FAILURE" === result || !userWasAdded) {
+                            membersNotInList.push(arrayOfMembers[i]);
+                            scope.membersNotInList = membersNotInList.join(", ");
+                        } else {
+                            let person = {
+                                "uid": data[parseInt(i, 10)].uid,
+                                "uhUuid": data[parseInt(i, 10)].uhUuid,
+                                "name": data[parseInt(i, 10)].name
+                            };
+                            scope.multiAddResults.push(person);
+                            scope.multiAddResultsGeneric.push(person);
+                        }
+                    }
+                    if (scope.multiAddResults.length > 0) {
+                        scope.personProps = Object.keys(scope.multiAddResults[0]);
+                        scope.launchMultiAddResultModal(listName);
+                    } else {
+                        scope.launchDynamicModal();
+                    }
+                }
             }
+            
         });
         
-        // it("should launch the dynamic modal", () => { 
-        //     spyOn(scope, "launchDynamicModal");
-        //     scope.addMultipleMembers(membersToAdd, "admin");
-        //     expect(scope.launchDynamicModal).toHaveBeenCalled();
-        // }); 
+        it ("should return a list of the members imported", () => { 
+            scope.multiAddResults = [];
+            scope.multiAddResultsGeneric = [];
+            addMultipleMembers.handleSuccessfulAdd(membersToAdd, "Include");
+            expect(scope.multiAddResults.length).toEqual(4);
+            expect(scope.multiAddResultsGeneric.length).toEqual(4);
+            expect(scope.multiAddResults).toEqual(person);
+            expect(scope.multiAddResultsGeneric).toEqual(person);
+        });
         
+        it("should return a call to addmebersToIncludeAsync", () => { 
+            spyOn(gs, 'addMembersToIncludeAsync'); 
+            scope.addMultipleMembers(membersToAdd, "Include");
+            expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+        });
+        
+        it("should return a call to addmebersToExcludeAsync", () => {
+            spyOn(gs, 'addMembersToExcludeAsync');
+            scope.addMultipleMembers(membersToAdd, "Exclude");
+            expect(gs.addMembersToExcludeAsync).toHaveBeenCalled();
+        });
+
         it("should turn the small spinner off", () => { 
            scope.addMultipleMembers(membersToAdd, "admin"); 
            expect(scope.waitingForImportResponse).toBeTrue();
        });
     });
     
-    describe("validateAndAddUser", () => { 
-       
-    });
-
     describe("convertListToCsv", function () {
         describe("user exports a list with members", function () {
             it("should start with the correct column headers", function () {
