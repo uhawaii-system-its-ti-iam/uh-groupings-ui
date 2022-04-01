@@ -599,7 +599,6 @@
          * @param listName
          */
         $scope.addMembers = function (listName) {
-            $scope.listName = listName;
             if (_.isEmpty($scope.manageMembers)) {
                 $scope.emptyInput = true;
             } else {
@@ -645,10 +644,17 @@
          * function is called implicitly from include.html and exclude.html.
          * The file is retrieved from the html input with id 'upload'.
          */
-        $scope.readTextFile = function () {
-            let file = input.files[0];
-            if (file === undefined) {
-                console.log("undef");
+        $scope.readTextFile = function (inputFile) {
+          let reader = new FileReader();
+          reader.onload = function (e) {
+            let str = e.target.result;
+            $scope.manageMembers = str.split(/[\r\n]+/);
+            let sanitizedFile = [];
+            for (const members of $scope.manageMembers) {
+              let sanitizedName = $scope.sanitizer(members);
+              if (sanitizedName != null) {
+                sanitizedFile.push(sanitizedName);
+              }
             }
             let reader = new FileReader();
             reader.onload = function (e) {
