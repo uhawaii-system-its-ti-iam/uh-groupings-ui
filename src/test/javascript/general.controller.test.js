@@ -717,11 +717,21 @@ describe("GeneralController", function () {
     });
     
     describe("addMultipleMembers", () => { 
-        let membersToAdd, addMultipleMembers, validUsers, inValidUsers, person;
+        let membersToAdd, 
+            addMultipleMembers, 
+            res, 
+            invalidRes, 
+            duplicateRes, 
+            validPeople, 
+            invalidMembersToAdd, 
+            duplicateMembersToAdd,
+            duplicatePeople;
         beforeEach(() => { 
             let membersNotInList = [];
             membersToAdd = "iamtst01,iamtst02,iamtst03,iamtst04";
-            validUsers = [
+            invalidMembersToAdd = "invalidName01,invalidName02,invalidName03,invalidName04";
+            duplicateMembersToAdd = "iamtst01,iamtst01,iamtst03";
+            res = [
                 {
                     name: "iamtst01",
                     pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
@@ -767,7 +777,7 @@ describe("GeneralController", function () {
                     userWasRemoved: false
                 },
             ]
-            inValidUsers = [
+            duplicateRes = [
                 {
                     name: "iamtst01",
                     pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
@@ -780,14 +790,14 @@ describe("GeneralController", function () {
                     userWasRemoved: false
                 },
                 {
-                    name: "iamtst02",
+                    name: "iamtst01",
                     pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
                     pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
                     result: "SUCCESS",
-                    uhUuid: "iamtst02",
-                    uid: "iamtst02",
-                    userIdentifier: "iamtst02",
-                    userWasAdded: true,
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                    userIdentifier: "iamtst01",
+                    userWasAdded: false,
                     userWasRemoved: false
                 },
                 {
@@ -801,19 +811,54 @@ describe("GeneralController", function () {
                     userWasAdded: true,
                     userWasRemoved: false
                 },
+            ]
+            invalidRes = [
                 {
-                    name: "iamtst04",
+                    name: "invalidName01",
                     pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
                     pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
-                    result: "SUCCESS",
-                    uhUuid: "iamtst04",
-                    uid: "iamtst04",
-                    userIdentifier: "iamtst04",
+                    result: "FAILURE",
+                    uhUuid: "invalidName01",
+                    uid: "invalidName01",
+                    userIdentifier: "invalidName01",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "invalidName02",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName02",
+                    uid: "invalidName02",
+                    userIdentifier: "invalidName02",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "invalidName03",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName03",
+                    uid: "invalidName03",
+                    userIdentifier: "invalidName03",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "invalidName04",
+                    pathOfAdd: "hawaii.edu:custom:test:julio:acer-dept-its:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:julio:acer-dept-its:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName04",
+                    uid: "invalidName04",
+                    userIdentifier: "invalidName04",
                     userWasAdded: true,
                     userWasRemoved: false
                 },
             ]
-            person = [
+            validPeople = [
                 {
                     name: "iamtst01",
                     uhUuid: "iamtst01",
@@ -835,20 +880,31 @@ describe("GeneralController", function () {
                     uid: "iamtst04",
                 },
             ]
-
+            duplicatePeople = [
+                {
+                    name: "iamtst01",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                },
+                {
+                    name: "iamtst03",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03",
+                },
+            ]
             /* Mock up of the local handleSuccessful add function. 
             If the handleSuccessfulAdd function ever changes be sure to update this test as well. */
             addMultipleMembers = { 
-                handleSuccessfulAdd: (arrayOfMembers, listName) => {
+                handleSuccessfulAdd: (res, listName, list) => {
                     scope.waitingForImportResponse = false; /* Small spinner off. */
-
-                    let data = validUsers;
-                    for (let i = 0; i < validUsers.length; i++) {
-                        data[parseInt(i, 10)] = validUsers[parseInt(i, 10)];
+                    let arrayOfMembers = list.split(",")
+                    let data = res;
+                    for (let i = 0; i < res.length; i++) {
+                        data[parseInt(i, 10)] = res[parseInt(i, 10)];
                     }
                     for (let i = 0; i < data.length; i++) {
                         let result = data[parseInt(i, 10)].result;
-                        let userWasAdded = data[parseInt(i, 10)];
+                        let userWasAdded = data[parseInt(i, 10)].userWasAdded;
 
                         if ("FAILURE" === result || !userWasAdded) {
                             membersNotInList.push(arrayOfMembers[i]);
@@ -874,32 +930,55 @@ describe("GeneralController", function () {
             
         });
         
-        it ("should return a list of the members imported", () => { 
+        it ("should return a list of the members to be imported to the include list", () => { 
             scope.multiAddResults = [];
             scope.multiAddResultsGeneric = [];
-            addMultipleMembers.handleSuccessfulAdd(membersToAdd, "Include");
+            addMultipleMembers.handleSuccessfulAdd(res, "Include", membersToAdd);
             expect(scope.multiAddResults.length).toEqual(4);
             expect(scope.multiAddResultsGeneric.length).toEqual(4);
-            expect(scope.multiAddResults).toEqual(person);
-            expect(scope.multiAddResultsGeneric).toEqual(person);
+            expect(scope.multiAddResults).toEqual(validPeople);
+            expect(scope.multiAddResultsGeneric).toEqual(validPeople);
         });
         
-        it("should return a call to addmebersToIncludeAsync", () => { 
+        it("should return a list of invalid users and 0 members to be imported", () => { 
+            scope.membersNotInList = [];
+            addMultipleMembers.handleSuccessfulAdd(invalidRes, "Include", invalidMembersToAdd);
+            expect(scope.membersNotInList).toEqual('invalidName01, invalidName02, invalidName03, invalidName04');
+            expect(scope.multiAddResults).toEqual([]);
+        });
+
+        it("should add a duplicate user to the invalid list", () => {
+            scope.membersNotInList = [];
+            addMultipleMembers.handleSuccessfulAdd(duplicateRes, "Include", duplicateMembersToAdd);
+            expect(scope.membersNotInList).toEqual("iamtst01");
+            expect(scope.multiAddResults).toEqual(duplicatePeople);
+            expect(scope.multiAddResultsGeneric).toEqual(duplicatePeople);
+        });
+        
+        it("should return a call to addMembersToIncludeAsync", () => { 
             spyOn(gs, 'addMembersToIncludeAsync'); 
             scope.addMultipleMembers(membersToAdd, "Include");
             expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
         });
-        
-        it("should return a call to addmebersToExcludeAsync", () => {
-            spyOn(gs, 'addMembersToExcludeAsync');
-            scope.addMultipleMembers(membersToAdd, "Exclude");
-            expect(gs.addMembersToExcludeAsync).toHaveBeenCalled();
-        });
 
-        it("should turn the small spinner off", () => { 
-           scope.addMultipleMembers(membersToAdd, "admin"); 
-           expect(scope.waitingForImportResponse).toBeTrue();
-       });
+        it("should turn the small spinner off", () => {
+            scope.addMultipleMembers(membersToAdd, "admin");
+            expect(scope.waitingForImportResponse).toBeTrue();
+        });
+        
+        describe("add user to Include and Exclude list", () => {
+            it("should return a call to addMembersToExcludeAsync", () => {
+                spyOn(gs, 'addMembersToExcludeAsync');
+                scope.addMultipleMembers(membersToAdd, "Exclude");
+                expect(gs.addMembersToExcludeAsync).toHaveBeenCalled();
+            });
+
+            it("should return a call to addMembersToIncludeAsync", () => {
+                spyOn(gs, 'addMembersToIncludeAsync');
+                scope.addMultipleMembers(membersToAdd, "Include");
+                expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+            });
+        });
     });
     
     describe("convertListToCsv", function () {

@@ -700,7 +700,7 @@
                 }
                 for (let i = 0; i < data.length; i++) {
                     let result = data[parseInt(i, 10)].result;
-                    let userWasAdded = data[parseInt(i, 10)];
+                    let userWasAdded = data[parseInt(i, 10)].userWasAdded;
 
                     if ("FAILURE" === result || !userWasAdded) {
                         membersNotInList.push(arrayOfMembers[i]);
@@ -722,9 +722,6 @@
                     $scope.launchDynamicModal(Message.Title.NO_MEMBERS_ADDED, Message.Body.NO_MEMBERS_ADDED);
                 }
             };
-            
-            console.log($scope.multiAddResults); 
-            console.log($scope.multiAddResultsGeneric); 
 
             $scope.waitingForImportResponse = true; /* Small spinner on. */
             if (listName === "Include") {
