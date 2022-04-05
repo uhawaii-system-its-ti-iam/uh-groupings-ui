@@ -1684,6 +1684,51 @@ describe("GeneralController", () => {
         });
     });
 
+    // describe("prepBatchRemove", () => {
+    //     it("should set membersToModify to extractSelectedUsersFromCheckboxes", () => {
+    //         scope.membersInCheckboxList = [{'11111111': true,
+    //                                         user: {uhUuid: '11111111'}}];
+    //         scope.prepBatchRemove(scope.listName, scope.currentPage);
+    //         expect(scope.membersToModify).toBe(scope.extractSelectedUsersFromCheckboxes(scope.membersInCheckboxList));
+    //         expect(scope.membersInCheckboxList).toEqual({});
+    //     });
+    //
+    //     it("should set membersToModify to manageMembers if manageMembers is not empty", () => {
+    //         scope.manageMembers = 'testUser1 ,testUser2';
+    //         // scope.membersToModify = 'testUser1 ,testUser2';
+    //         scope.emptyInput = false;
+    //         scope.prepBatchRemove(scope.listName, scope.currentPage);
+    //         expect(scope.emptyInput).toBeTrue();
+    //         expect(scope.membersToRemove).toEqual(scope.manageMembers);
+    //     });
+    // });
+
+    describe("batchRemoveConfirmationModal", () => {
+        it("should set scope.loading to false", () => {
+            scope.loading = true;
+            scope.batchRemoveConfirmationModal('testListName');
+            expect(scope.loading).toBeFalse();
+        });
+
+        it("should open uibModal", () => {
+            spyOn(uibModal, 'open').and.callThrough();
+            scope.batchRemoveConfirmationModal('testListName');
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createResetGroupModal", () => {
+        let option = {user: 'testUser', group: 'testGroup', listNames: 'testList'};
+
+        it("should set scope.groupReset/listNames to passed in option's object group/listNames", () => {
+            scope.groupReset = '';
+            scope.listNames = '';
+            scope.createResetGroupModal(option);
+            expect(scope.groupReset).toBe('testGroup');
+            expect(scope.listNames).toBe('testList');
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
