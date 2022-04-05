@@ -716,6 +716,32 @@ describe("GeneralController", function () {
         });
     });
     
+    describe("addMultipleMembers", () => { 
+        let membersToAdd;
+        beforeEach(() => {
+            membersToAdd = "iamtst01,iamtst02,iamtst03,iamtst04";
+        });
+
+        it("should turn the small spinner off", () => {
+            scope.addMultipleMembers(membersToAdd, "admin");
+            expect(scope.waitingForImportResponse).toBeTrue();
+        });
+        
+        describe("add user to Include and Exclude list", () => {
+            it("should return a call to addMembersToExcludeAsync", () => {
+                spyOn(gs, 'addMembersToExcludeAsync');
+                scope.addMultipleMembers(membersToAdd, "Exclude");
+                expect(gs.addMembersToExcludeAsync).toHaveBeenCalled();
+            });
+
+            it("should return a call to addMembersToIncludeAsync", () => {
+                spyOn(gs, 'addMembersToIncludeAsync');
+                scope.addMultipleMembers(membersToAdd, "Include");
+                expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+            });
+        });
+    });
+    
     describe("convertListToCsv", function () {
         describe("user exports a list with members", function () {
             it("should start with the correct column headers", function () {
