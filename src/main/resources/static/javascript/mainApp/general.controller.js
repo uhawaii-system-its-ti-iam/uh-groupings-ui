@@ -1310,11 +1310,7 @@
                     membersToRemove = $scope.parseAddRemoveInputStr(membersToRemove);
                     removeMembers(membersToRemove, listName);
                 } else {
-                    if (membersToRemove === "") {
-                        $scope.memberToRemove = $scope.membersToAddOrRemove;
-                    } else {
-                        $scope.memberToRemove = membersToRemove;
-                    }
+                    $scope.memberToRemove = membersToRemove;
                     $scope.memberToRemove = returnMemberObjectFromUserIdentifier($scope.memberToRemove, currentPage);
                     if (listName === "owners" && $scope.groupingOwners.length === 1) {
                         const userType = "owner";
