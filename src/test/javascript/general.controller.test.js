@@ -1504,24 +1504,26 @@ describe("GeneralController", () => {
         });
     });
 
-    // describe("launchImportErrorModal", () => {
-    //     // it("should run cancelImportModalInstance", () => {
-    //     //     spyOn(scope, "cancelImportModalInstance");
-    //     //     scope.launchImportErrorModal();
-    //     //     expect(scope.cancelImportModalInstance).toHaveBeenCalled();
-    //     // });
-    //
-    //     it("should check that confirmImportErrorInstance is launched", () => {
-    //         scope.launchMultiAddResultModal("testListName");
-    //         spyOn(scope.multiAddResultModalInstance, "dismiss");
-    //         spyOn(uibModal, "open");
-    //
-    //         scope.launchImportErrorModal();
-    //
-    //         expect(scope.multiAddResultModalInstance.dismiss).toHaveBeenCalled();
-    //         expect(uibModal.open).toHaveBeenCalled();
-    //     });
-    // });
+    describe("launchImportErrorModal", () => {
+        beforeEach(() => {
+            scope.confirmImportInstance = {
+                dismiss: () => {
+                    // Mock $uib modal dismiss
+                }
+            };
+        });
+
+        it("should check that confirmImportErrorInstance is launched", () => {
+            scope.launchMultiAddResultModal("testListName");
+            spyOn(scope.confirmImportInstance, "dismiss").and.callThrough();
+            spyOn(uibModal, "open");
+
+            scope.launchImportErrorModal();
+
+            expect(scope.confirmImportInstance.dismiss).toHaveBeenCalled();
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
 
     describe("closeMultiAddResultInstance", () => {
         beforeEach(() => {
@@ -1535,55 +1537,42 @@ describe("GeneralController", () => {
         });
     });
 
-    // describe("launchMultiAddResultModal", () => {
-    //
-    //     it("should check that the multiAddResultModalInstance is opened", () => {
-    //         spyOn(uibModal, 'open').and.callThrough();
-    //         scope.launchMultiAddResultModal(scope.listName);
-    //         expect(uibModal.open).toHaveBeenCalled();
-    //     });
-    //
-    //     it("should set scope.loading to false", () => {
-    //         scope.loading = true;
-    //         scope.launchMultiAddResultModal(scope.listName);
-    //         expect(scope.loading).toBeFalse();
-    //     });
-    //
-    //
-    //     it("should check if contents of promise is changed when multiAddResultModalInstance.result.finally is called", () => {
-    //         // spyOn(scope, 'result').and.callThrough();
-    //         // scope.launchMultiAddResultModal(scope.listName);
-    //         // expect(scope.multiAddResultModalInstance.result.finally).toHaveBeenCalled();
-    //         // scope.loading = false;
-    //         // scope.launchMultiAddResultModal(scope.listName);
-    //         // expect(scope.loading).toBeTrue();
-    //         // scope.waitingForImportResponse = true;
-    //         // scope.launchMultiAddResultModal(scope.listName);
-    //         // expect(scope.waitingForImportResponse).toBeFalse();
-    //
-    //         scope.multiAddResultModalInstance.result.finally().then((data) => {
-    //             fail();
-    //         }).catch(function(error) {
-    //             //assert error has been thrown correctly
-    //             done();
-    //         });
-    //     });
-    // });
+    describe("launchMultiAddResultModal", () => {
+        it("should check that the multiAddResultModalInstance is opened", () => {
+            spyOn(uibModal, 'open').and.callThrough();
+            scope.launchMultiAddResultModal(scope.listName);
+            expect(uibModal.open).toHaveBeenCalled();
+        });
 
-    // describe("createCheckModal", () => {
-    //     it("should check if checkModalInstance is launched", () => {
-    //         spyOn(uibModal, 'open').and.callThrough();
-    //         scope.createCheckModal('testUser', 'testListName', 'testSwap', 'testBasis');
-    //         expect(uibModal.open).toHaveBeenCalled();
-    //     });
-    //
-    //     it("should check if then clause is executed", (done) => {
-    //         scope.checkModalInstance.result.then( function(waitingForImportResponse) {
-    //             expect(scope.waitingForImportResponse).toBeTrue();
-    //             done();
-    //         });
-    //     });
-    // });
+        it("should set scope.loading to false", () => {
+            scope.loading = true;
+            scope.launchMultiAddResultModal(scope.listName);
+            expect(scope.loading).toBeFalse();
+        });
+    });
+
+    describe("createCheckModal", () => {
+        beforeEach(() => {
+            spyOn(uibModal, 'open').and.callThrough();
+            scope.createCheckModal('testUser', 'testListName', 'testSwap', 'testBasis');
+        });
+
+        it("should set scope.list name to passed in list name", () => {
+            expect(scope.listName).toBe('testListName');
+        });
+
+        it("should set scope.swap to passed in swap", () => {
+            expect(scope.swap).toBe('testSwap');
+        });
+
+        it("should set scope.inBasis to passed in inBasis", () => {
+            expect(scope.inBasis).toBe('testBasis');
+        });
+
+        it("should open uibModal", () => {
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
 
     describe("cancelImportModalInstance", () => {
        beforeEach(() => {
