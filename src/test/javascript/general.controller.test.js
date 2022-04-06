@@ -1698,19 +1698,19 @@ describe("GeneralController", () => {
     });
 
     describe("createResetGroupModal", () => {
-        let option = {user: 'testUser', group: 'testGroup', listNames: 'testList'};
+        let options = {user: 'testUser', group: 'testGroup', listNames: 'testList'};
 
         it("should set scope.groupReset/listNames to passed in option's object group/listNames", () => {
             scope.groupReset = '';
             scope.listNames = '';
-            scope.createResetGroupModal(option);
+            scope.createResetGroupModal(options);
             expect(scope.groupReset).toBe('testGroup');
             expect(scope.listNames).toBe('testList');
         });
 
         it("should open resetModalInstance modal", () => {
             spyOn(uibModal, 'open').and.callThrough();
-            scope.createResetGroupModal(option);
+            scope.createResetGroupModal(options);
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
@@ -1762,29 +1762,47 @@ describe("GeneralController", () => {
     });
 
     describe("createConfirmAddMembersModal", () => {
-        let option = {manageMembers: 'testMembers', listName: 'testList'};
+        let options = {manageMembers: 'testMembers', listName: 'testList'};
 
         it("should open confirmAddModalInstance modal", () => {
             spyOn(uibModal, 'open').and.callThrough();
-            scope.createConfirmAddMembersModal(option);
+            scope.createConfirmAddMembersModal(options);
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
 
     describe("createSuccessfulAddModal", () => {
-        let option = {userToAdd: 'testUser', response: 'testResponse', listName: 'testList'};
+        let options = {userToAdd: 'testUser', response: 'testResponse', listName: 'testList'};
 
         it("should set scope.listName to passed in option object's listName", () => {
-            scope.createSuccessfulAddModal(option);
+            scope.createSuccessfulAddModal(options);
             expect(scope.listName).toBe('testList');
         });
 
         it("should open addModalInstance modal", () => {
             spyOn(uibModal, 'open').and.callThrough();
-            scope.createSuccessfulAddModal(option);
+            scope.createSuccessfulAddModal(options);
             expect(uibModal.open).toHaveBeenCalled();
         });
     })
+
+    describe("removeOwner", () => {
+        let options = {currentPage: 0, index: 0};
+
+        it("should create the remove modal if groupingOwners length > 1", () => {
+            scope.groupingOwners = ['testOwner1', 'testOwner2'];
+            spyOn(scope, 'createRemoveModal');
+            scope.removeOwner(0, 0, options);
+            expect(scope.createRemoveModal).toHaveBeenCalled();
+        });
+
+        it("should create the remove error modal if groupingOwners < 1", () => {
+            scope.groupingOwners = [];
+            spyOn(scope, 'createRemoveErrorModal');
+            scope.removeOwner(0, 0, options);
+            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
+        });
+    });
 
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
