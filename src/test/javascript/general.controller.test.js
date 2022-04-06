@@ -1761,6 +1761,16 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("createConfirmAddMembersModal", () => {
+        let option = {user: 'testUser', group: 'testGroup', listNames: 'testList'};
+
+        it("should open confirmAddModalInstance modal", () => {
+            spyOn(uibModal, 'open').and.callThrough();
+            scope.createConfirmAddMembersModal(option);
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
