@@ -1733,6 +1733,34 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("launchDynamicModal", () => {
+        beforeEach(() => {
+            scope.createDynamicModal = {
+                dismiss: () => {
+                    // Mock $uib modal dismiss
+                }
+            };
+        });
+
+        it("should set currentModalTitle & currentModalBody to passed in title & body", () => {
+            scope.launchDynamicModal('testTitle', 'testBody', 5000);
+            expect(scope.currentModalTitle).toBe('testTitle');
+            expect(scope.currentModalBody).toBe('testBody');
+        });
+
+        it("should open createDynamicModal modal", () => {
+            spyOn(uibModal, 'open').and.callThrough();
+            scope.launchDynamicModal('testTitle', 'testBody', 5000);
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+
+        it("should call dismissDynamicModal to dismiss modal", () => {
+            spyOn(scope.createDynamicModal, 'dismiss').and.callThrough();
+            scope.launchDynamicModal('testTitle', 'testBody', 5000);
+            expect(scope.createDynamicModal.dismiss()).toBeTrue();
+        });
+    });
+
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
