@@ -1255,8 +1255,7 @@ describe("GeneralController", () => {
         });
 
         it("should set $window.location.href to proper path", () => {
-            testWindowLocationHref = "/badURL";
-            expect(testWindowLocationHref).toBe("/badURL");
+            expect(testWindowLocationHref).toBe("/testURL");
             scope.proceedRedirectApiError.setUrl();
             expect(testWindowLocationHref).toBe("/uhgroupings/feedback");
         });
@@ -1593,7 +1592,7 @@ describe("GeneralController", () => {
             expect(scope.loading).toBeFalse();
         });
 
-        it("should check that RoleErrorModalInstance is launched", () => {
+        it("should check that createRoleErrorModal is launched", () => {
             spyOn(uibModal, 'open').and.callThrough();
             scope.createRoleErrorModal();
             expect(uibModal.open).toHaveBeenCalled();
@@ -1624,25 +1623,6 @@ describe("GeneralController", () => {
         });
     });
 
-    // describe("prepBatchRemove", () => {
-    //     it("should set membersToModify to extractSelectedUsersFromCheckboxes", () => {
-    //         scope.membersInCheckboxList = [{'11111111': true,
-    //                                         user: {uhUuid: '11111111'}}];
-    //         scope.prepBatchRemove(scope.listName, scope.currentPage);
-    //         expect(scope.membersToModify).toBe(scope.extractSelectedUsersFromCheckboxes(scope.membersInCheckboxList));
-    //         expect(scope.membersInCheckboxList).toEqual({});
-    //     });
-    //
-    //     it("should set membersToModify to manageMembers if manageMembers is not empty", () => {
-    //         scope.manageMembers = 'testUser1 ,testUser2';
-    //         // scope.membersToModify = 'testUser1 ,testUser2';
-    //         scope.emptyInput = false;
-    //         scope.prepBatchRemove(scope.listName, scope.currentPage);
-    //         expect(scope.emptyInput).toBeTrue();
-    //         expect(scope.membersToRemove).toEqual(scope.manageMembers);
-    //     });
-    // });
-
     describe("batchRemoveConfirmationModal", () => {
         it("should set scope.loading to false", () => {
             scope.loading = true;
@@ -1666,6 +1646,30 @@ describe("GeneralController", () => {
             scope.createResetGroupModal(option);
             expect(scope.groupReset).toBe('testGroup');
             expect(scope.listNames).toBe('testList');
+        });
+
+        it("should open resetModalInstance modal", () => {
+            spyOn(uibModal, 'open').and.callThrough();
+            scope.createResetGroupModal(option);
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    });
+
+    describe("createBasisWarningModal", () => {
+        it("should set scope.listName to passed in listName", () => {
+            scope.createBasisWarningModal('testUser', 'testList', 'testBasis');
+            expect(scope.listName).toEqual('testList');
+        });
+
+        it("should set scope.inBasis to passed in basis", () => {
+            scope.createBasisWarningModal('testUser', 'testList', 'testBasis');
+            expect(scope.inBasis).toEqual('testBasis');
+        });
+
+        it("should open basisWarningModalInstance modal", () => {
+            spyOn(uibModal, 'open').and.callThrough();
+            scope.createBasisWarningModal('testUser', 'testList', 'testBasis');
+            expect(uibModal.open).toHaveBeenCalled();
         });
     });
 
