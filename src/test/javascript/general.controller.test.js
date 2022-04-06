@@ -1702,7 +1702,7 @@ describe("GeneralController", () => {
     });
 
     describe("createConfirmAddMembersModal", () => {
-        let option = {user: 'testUser', group: 'testGroup', listNames: 'testList'};
+        let option = {manageMembers: 'testMembers', listName: 'testList'};
 
         it("should open confirmAddModalInstance modal", () => {
             spyOn(uibModal, 'open').and.callThrough();
@@ -1710,6 +1710,21 @@ describe("GeneralController", () => {
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
+
+    describe("createSuccessfulAddModal", () => {
+        let option = {userToAdd: 'testUser', response: 'testResponse', listName: 'testList'};
+
+        it("should set scope.listName to passed in option object's listName", () => {
+            scope.createSuccessfulAddModal(option);
+            expect(scope.listName).toBe('testList');
+        });
+
+        it("should open addModalInstance modal", () => {
+            spyOn(uibModal, 'open').and.callThrough();
+            scope.createSuccessfulAddModal(option);
+            expect(uibModal.open).toHaveBeenCalled();
+        });
+    })
 
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
