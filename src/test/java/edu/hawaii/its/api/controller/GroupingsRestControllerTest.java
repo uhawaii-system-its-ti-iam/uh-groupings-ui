@@ -591,6 +591,22 @@ public class GroupingsRestControllerTest {
 
     @Test
     @WithMockUhUser
+    public void isSoleOwner() throws Exception {
+        String uri = REST_CONTROLLER_BASE + GROUPING + "/owners/" + USERNAME;
+
+        given(httpRequestService.makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET)))
+                .willReturn(new ResponseEntity(HttpStatus.OK));
+
+        assertNotNull(mockMvc.perform(get(uri).with(csrf()))
+                .andExpect(status().isOk())
+                .andReturn());
+
+        verify(httpRequestService, times(1))
+                .makeApiRequest(eq(USERNAME), anyString(), eq(HttpMethod.GET));
+    }
+
+    @Test
+    @WithMockUhUser
     public void setOptOutFalseTest() throws Exception {
         String uri = REST_CONTROLLER_BASE + GROUPING + "/false/setOptOut";
 

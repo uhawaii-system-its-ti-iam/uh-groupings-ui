@@ -295,7 +295,17 @@
             getNumberOfGroupings(onSuccess, onError) {
                 let endpoint = BASE_URL + "owners/grouping/";
                 dataProvider.loadData(endpoint, onSuccess, onError);
+            },
+
+            /**
+             * Get the number of groupings that the current user owns
+             */
+            isSoleOwner(path, uidToCheck, onSuccess, onError) {
+                let endpoint = BASE_URL + path + "/owners/" + uidToCheck;
+                dataProvider.loadData(endpoint, onSuccess, onError);
             }
+
+
         };
     });
 }());
