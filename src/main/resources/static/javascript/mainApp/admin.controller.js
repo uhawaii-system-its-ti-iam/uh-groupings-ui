@@ -84,8 +84,14 @@
         };
 
         /**
+<<<<<<< HEAD
          * Checks if the user being removed is a sole owner of any grouping before proceeding 
          */
+=======
+         * Checks if the user being removed a sole owner of any grouping
+         */
+
+>>>>>>> efe1a043 (add sole owner removeal warning, owner removeal warning)
         $scope.checkSoleOwner = function (res) {
             if (res === "") {
                 return;

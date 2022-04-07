@@ -298,12 +298,18 @@
             },
 
             /**
+<<<<<<< HEAD
              * Checks if the owner of a grouping is the sole owner
+=======
+             * Get the number of groupings that the current user owns
+>>>>>>> efe1a043 (add sole owner removeal warning, owner removeal warning)
              */
             isSoleOwner(path, uidToCheck, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/owners/" + uidToCheck;
                 dataProvider.loadData(endpoint, onSuccess, onError);
             }
+
+
         };
     });
 }());
