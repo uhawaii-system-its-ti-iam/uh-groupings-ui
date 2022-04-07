@@ -339,6 +339,7 @@
                     $scope.syncDestArray = res.syncDestinations;
                     $scope.loading = false;
                     $scope.paginatingProgress = false;
+                    $scope.paginatingComplete = true;
 
                     //increments page to load and allows members to iteratively be loaded
                     currentPage++;
@@ -380,8 +381,9 @@
             } else {
                 return loadMembersList = false;
             }
+            $scope.paginatingComplete = false;
         };
-
+        
         /**
          * Function to get pages of a grouping asynchronously
          * @param {String} groupingPath - Path to the grouping to retrieve data from
