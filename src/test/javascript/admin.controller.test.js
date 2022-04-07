@@ -212,8 +212,8 @@ describe("AdminController", function () {
         beforeEach(function () {
             selectedGroupingsNames = [];
             selectedGroupingsPaths = [];
-            selectedOwnedGroupings = []
-            selectedOwnedGroupingsNames = []
+            selectedOwnedGroupings = [];
+            selectedOwnedGroupingsNames = [];
             currentPage = [
                 {
                     inBasis: false,
