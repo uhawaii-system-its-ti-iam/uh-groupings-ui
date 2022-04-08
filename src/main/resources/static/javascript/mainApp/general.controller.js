@@ -674,6 +674,40 @@
             $scope.personProps.push(attributes.splice(attributes.indexOf("name"), 1));
         };
 
+        $scope.successfulAddHandler = function (res, list, listName) {
+            let membersNotInList = [];
+            let arrayOfMembers = list.split(",");
+            $scope.waitingForImportResponse = false; /* Small spinner off. */
+
+            let data = res;
+            for (let i = 0; i < res.length; i++) {
+                data[parseInt(i, 10)] = res[parseInt(i, 10)];
+            }
+            for (let i = 0; i < data.length; i++) {
+                let result = data[parseInt(i, 10)].result;
+                let userWasAdded = data[parseInt(i, 10)].userWasAdded;
+
+                if ("FAILURE" === result || !userWasAdded) {
+                    membersNotInList.push(arrayOfMembers[i]);
+                    $scope.membersNotInList = membersNotInList.join(", ");
+                } else {
+                    let person = {
+                        "uid": data[parseInt(i, 10)].uid,
+                        "uhUuid": data[parseInt(i, 10)].uhUuid,
+                        "name": data[parseInt(i, 10)].name
+                    };
+                    $scope.multiAddResults.push(person);
+                    $scope.multiAddResultsGeneric.push(person);
+                }
+            }
+            if ($scope.multiAddResults.length > 0) {
+                $scope.personProps = Object.keys($scope.multiAddResults[0]);
+                $scope.launchMultiAddResultModal(listName);
+            } else {
+                $scope.launchDynamicModal(Message.Title.NO_MEMBERS_ADDED, Message.Body.NO_MEMBERS_ADDED);
+            }
+        };
+        
         /**
          * Send the list of users to be added to the server as an HTTP POST request.
          * @param list - comma separated string of user names to be added
@@ -681,8 +715,6 @@
          * @returns {Promise<void>}
          */
         $scope.addMultipleMembers = async function (list, listName) {
-            let membersNotInList = [];
-            let arrayOfMembers = list.split(",");
             let groupingPath = $scope.selectedGrouping.path;
 
             let timeoutModal = function () {
@@ -691,38 +723,9 @@
                     Message.Body.SLOW_IMPORT,
                     8000);
             };
-            let handleSuccessfulAdd = function (res) {
-                $scope.waitingForImportResponse = false; /* Small spinner off. */
-
-                let data = res;
-                for (let i = 0; i < res.length; i++) {
-                    data[parseInt(i, 10)] = res[parseInt(i, 10)];
-                }
-                for (let i = 0; i < data.length; i++) {
-                    let result = data[parseInt(i, 10)].result;
-                    let userWasAdded = data[parseInt(i, 10)].userWasAdded;
-
-                    if ("FAILURE" === result || !userWasAdded) {
-                        membersNotInList.push(arrayOfMembers[i]);
-                        $scope.membersNotInList = membersNotInList.join(", ");
-                    } else {
-                        let person = {
-                            "uid": data[parseInt(i, 10)].uid,
-                            "uhUuid": data[parseInt(i, 10)].uhUuid,
-                            "name": data[parseInt(i, 10)].name
-                        };
-                        $scope.multiAddResults.push(person);
-                        $scope.multiAddResultsGeneric.push(person);
-                    }
-                }
-                if ($scope.multiAddResults.length > 0) {
-                    $scope.personProps = Object.keys($scope.multiAddResults[0]);
-                    $scope.launchMultiAddResultModal(listName);
-                } else {
-                    $scope.launchDynamicModal(Message.Title.NO_MEMBERS_ADDED, Message.Body.NO_MEMBERS_ADDED);
-                }
-            };
-
+            let handleSuccessfulAdd = (res) => { 
+                $scope.successfulAddHandler(res, list, listName);
+            }
             $scope.waitingForImportResponse = true; /* Small spinner on. */
             if (listName === "Include") {
                 await groupingsService.addMembersToIncludeAsync(list, groupingPath, handleSuccessfulAdd, handleUnsuccessfulRequest, timeoutModal);

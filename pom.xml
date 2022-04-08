@@ -17,6 +17,8 @@
     </parent>
 
     <properties>
+        <js-tests.skip>false</js-tests.skip>
+        <js-jasmine-tests>*.test.js</js-jasmine-tests>
         <maven-war-plugin.version>2.4</maven-war-plugin.version>
         <java.version>1.8</java.version>
         <junit.version>4.12</junit.version>
@@ -282,7 +284,7 @@
                         <source>${basedir}/src/main/resources/static/javascript/mainApp/timeout.controller.js</source>
                     </preloadSources>
                     <specIncludes>
-                        <include>**/**.test.js</include>
+                        <include>**/${js-jasmine-tests}</include>
                     </specIncludes>
                 </configuration>
             </plugin>
