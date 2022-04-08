@@ -208,10 +208,12 @@ describe("AdminController", function () {
     });
 
     describe("createGroupPathsAndNames", function () {
-        let selectedGroupingsNames, selectedGroupingsPaths, currentPage;
+        let selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames, currentPage;
         beforeEach(function () {
             selectedGroupingsNames = [];
             selectedGroupingsPaths = [];
+            selectedOwnedGroupings = [];
+            selectedOwnedGroupingsNames = [];
             currentPage = [
                 {
                     inBasis: false,
@@ -243,21 +245,21 @@ describe("AdminController", function () {
             ];
         });
         it("should concatenate the subgroup onto the grouping paths", function () {
-            scope.createGroupPathsAndNames(currentPage, selectedGroupingsNames, selectedGroupingsPaths);
+            scope.createGroupPathsAndNames(currentPage, selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames);
             expect(selectedGroupingsPaths[0]).toEqual("grouping:grouping-name-group0:owners");
             expect(selectedGroupingsPaths[1]).toEqual("grouping:grouping-name-group1:include");
         });
         it("should create the same amount of paths as names", function () {
-            scope.createGroupPathsAndNames(currentPage, selectedGroupingsNames, selectedGroupingsPaths);
+            scope.createGroupPathsAndNames(currentPage, selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames);
             expect(selectedGroupingsPaths.length).toEqual(selectedGroupingsNames.length);
         });
         it("should fetch the grouping names", function () {
-            scope.createGroupPathsAndNames(currentPage, selectedGroupingsNames, selectedGroupingsPaths);
+            scope.createGroupPathsAndNames(currentPage, selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames);
             expect(selectedGroupingsNames[0]).toEqual("grouping-name0");
             expect(selectedGroupingsNames[1]).toEqual("grouping-name1");
         });
         it("should not fetch data that is not selected", function () {
-            scope.createGroupPathsAndNames(currentPage, selectedGroupingsNames, selectedGroupingsPaths);
+            scope.createGroupPathsAndNames(currentPage, selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames);
             expect(selectedGroupingsNames[2]).toBeUndefined();
             expect(selectedGroupingsPaths[2]).toBeUndefined();
             expect(selectedGroupingsNames.length).toEqual(2);

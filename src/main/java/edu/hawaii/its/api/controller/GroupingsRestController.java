@@ -466,6 +466,17 @@ public class GroupingsRestController {
     }
 
     /**
+     * Checks if the owner of a grouping is the sole owner
+     */
+    @GetMapping(value = "/{path:.+}/owners/{uidToCheck}")
+    public ResponseEntity<String> isSoleOwner(Principal principal, @PathVariable String path, @PathVariable String uidToCheck) {
+        logger.info("Entered REST isSoleOwner...");
+        String baseUri = String.format(API_2_1_BASE + "/%s/owners/%s", path, uidToCheck);
+
+        return httpRequestService.makeApiRequest(principal.getName(), baseUri, HttpMethod.GET);
+    }
+
+    /**
      * Fetch a list of supported sync destinations for grouping at path.
      */
     @GetMapping(value = "/groupings/{path}/syncDestinations")

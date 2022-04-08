@@ -18,6 +18,7 @@
         $scope.currentPagePerson = 0;
         $scope.selectedGroupingsPaths = [];
         $scope.emptySelect = false;
+        $scope.selectedOwnedGroupingsNames = [];
 
         let totalCheckBoxCount = 0;
         let currentCheckBoxCount = 0;
@@ -82,7 +83,10 @@
             }
         };
 
-        $scope.removeFromGroupsCallbackOnSuccess = function (res) {
+        /**
+         * Checks if the user being removed is a sole owner of any grouping before proceeding 
+         */
+        $scope.checkSoleOwner = function (res) {
             if (res === "") {
                 return;
             }
@@ -91,8 +95,27 @@
                 name: res.name,
                 uhUuid: res.uhUuid
             };
+
+            $scope.soleOwnerGroupingNames = [];
+
+            _.forEach($scope.selectedOwnedGroupings, function (grouping) {
+                    groupingsService.isSoleOwner(grouping.path, userToRemove.username, (res) => {
+                        if (res) {
+                            $scope.soleOwnerGroupingNames.push(grouping.name);
+                        }
+                        if (grouping === $scope.selectedOwnedGroupings[$scope.selectedOwnedGroupings.length - 1]) {
+                            $scope.removeFromGroupsCallbackOnSuccess(userToRemove);
+                        }
+                    }, () => $scope.createApiErrorModal());
+                }
+            );
+        };
+
+        $scope.removeFromGroupsCallbackOnSuccess = function (userToRemove) {
             if (_.isEmpty($scope.selectedGroupingsPaths)) {
                 $scope.emptySelect = true;
+            } else if ($scope.soleOwnerGroupingNames.length >= 1) {
+                $scope.createRemoveErrorModal("owner");
             } else {
                 $scope.createRemoveFromGroupsModal({
                     user: userToRemove,
@@ -100,25 +123,27 @@
                     listName: $scope.selectedGroupingsNames
                 });
             }
-
         };
+
         /**
          * Removes selected user from a list of groupings.
          */
         $scope.removeFromGroups = function () {
             $scope.selectedGroupingsNames = [];
             $scope.selectedGroupingsPaths = [];
-            $scope.createGroupPathsAndNames($scope.pagedItemsPerson[$scope.currentPagePerson], $scope.selectedGroupingsNames, $scope.selectedGroupingsPaths);
+            $scope.selectedOwnedGroupings = [];
+            $scope.selectedOwnedGroupingsNames = [];
+            $scope.createGroupPathsAndNames($scope.pagedItemsPerson[$scope.currentPagePerson], $scope.selectedGroupingsNames, $scope.selectedGroupingsPaths, $scope.selectedOwnedGroupingsNames, $scope.selectedOwnedGroupings);
 
             if ($scope.personToLookup != null) {
-                groupingsService.getMemberAttributes($scope.personToLookup, $scope.removeFromGroupsCallbackOnSuccess);
+                groupingsService.getMemberAttributes($scope.personToLookup, $scope.checkSoleOwner);
             }
         };
 
         /*
          * Pluck selectedGroupingsNames and selectedGroupingsPaths from currentPage
          */
-        $scope.createGroupPathsAndNames = function (currentPage, selectedGroupingsNames, selectedGroupingsPaths) {
+        $scope.createGroupPathsAndNames = function (currentPage, selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupingsNames, selectedOwnedGroupings) {
             _.forEach(currentPage, function (grouping) {
                 if (grouping.isSelected) {
                     let basePath = grouping.path;
@@ -127,6 +152,8 @@
                     if (grouping.inOwner) {
                         let temp = basePath + ":owners";
                         selectedGroupingsPaths.push(temp);
+                        selectedOwnedGroupingsNames.push(groupName);
+                        selectedOwnedGroupings.push(grouping);
                     }
                     if (grouping.inInclude) {
                         let temp = basePath + ":include";
@@ -228,13 +255,14 @@
             $scope.userToRemove = options.user;
             $scope.groupPaths = options.groupPaths.join(", ");
             $scope.listName = options.listName.join(", ");
+            $scope.ownerOfListName = $scope.selectedOwnedGroupingsNames.join(", ");
 
-            const windowClass = $scope.showWarningRemovingSelf() ? "modal-danger" : "";
+            const windowClass = $scope.showWarningRemovingSelfFromList() ? "modal-danger" : "";
 
-            groupingsService.getMemberAttributes(userToRemove, function(person) {
+            groupingsService.getMemberAttributes(userToRemove, function (person) {
                 if (person === "") {
                     return;
-                }  else {
+                } else {
                     $scope.initMemberDisplayName(person);
                 }
                 $scope.removeModalInstance = $uibModal.open({
@@ -251,7 +279,7 @@
                     let groupingPath = $scope.groupPaths;
                     groupingsService.removeFromGroups(groupingPath, userToRemove, handleRemoveFromGroupsOnSuccess, handleRemoveFromGroupsOnError);
                 });
-            }, function(res) {
+            }, function (res) {
                 $scope.user = userToRemove;
                 $scope.resStatus = res.status;
             });
