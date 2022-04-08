@@ -84,9 +84,8 @@
         };
 
         /**
-         * Checks if the user being removed a sole owner of any grouping
+         * Checks if the user being removed is a sole owner of any grouping before proceeding 
          */
-
         $scope.checkSoleOwner = function (res) {
             if (res === "") {
                 return;

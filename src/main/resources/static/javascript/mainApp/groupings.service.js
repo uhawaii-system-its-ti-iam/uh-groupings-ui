@@ -298,14 +298,12 @@
             },
 
             /**
-             * Get the number of groupings that the current user owns
+             * Checks if the owner of a grouping is the sole owner
              */
             isSoleOwner(path, uidToCheck, onSuccess, onError) {
                 let endpoint = BASE_URL + path + "/owners/" + uidToCheck;
                 dataProvider.loadData(endpoint, onSuccess, onError);
             }
-
-
         };
     });
 }());

@@ -466,7 +466,7 @@ public class GroupingsRestController {
     }
 
     /**
-     * Get the number of groupings that the current user owns
+     * Checks if the owner of a grouping is the sole owner
      */
     @GetMapping(value = "/{path:.+}/owners/{uidToCheck}")
     public ResponseEntity<String> isSoleOwner(Principal principal, @PathVariable String path, @PathVariable String uidToCheck) {
