@@ -6,13 +6,15 @@ describe("GeneralController", function () {
     let scope;
     let controller;
     let httpBackend;
+    let gs;
     let BASE_URL;
 
-    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_) {
+    beforeEach(inject(function ($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) {
         scope = $rootScope.$new();
         controller = $controller("GeneralJsController", {
             $scope: scope
         });
+        gs = groupingsService;
         httpBackend = _$httpBackend_;
         BASE_URL = _BASE_URL_;
     }));
@@ -256,32 +258,34 @@ describe("GeneralController", function () {
             expect(scope.groupingMembers[0].whereListed).toEqual("Basis & Include");
         });
     });
-    
-    describe("sanitizer", () => { 
+
+    describe("sanitizer", () => {
         let goodFile, badFile, parseFile;
         beforeEach(() => {
-            let bad1, bad2, bad3, bad4, bad5, bad6, bad7, bad8, bad9, bad10,bad11, bad12, bad13, bad14, bad15, bad16, bad17;
-             bad1 = "<img src onerror=alert(\"Gavin is testing\")/>\n";
-             bad2 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>\n";
-             bad3 = "<IMG SRC=\"javascript:alert('XSS');\">\n";
-             bad4 = "<IMG SRC=javascript:alert('XSS')>\n";
-             bad5 = "<IMG SRC=JaVaScRiPt:alert('XSS')>\n";bad6 = "<IMG SRC=javascript:alert(&quot;XSS&quot;)>\n";
-             bad7 = "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>\n";
-             bad8 = "\<a onmouseover=\"alert(document.cookie)\"\>xxs link\</a\>\n";
-             bad9 = "\<a onmouseover=alert(document.cookie)\>xxs link\</a\>\n";
-             bad10 = `<IMG """><SCRIPT>alert("XSS")</SCRIPT>"\>`;
-             bad11 = '<img src=x onerror="&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041">';
-             bad12 = '<div id="init_data" style="display: none">\n' +
-                ' <%= html_encode(data.to_json) %>\n' +
-                '</div>\n';
+            let bad1, bad2, bad3, bad4, bad5, bad6, bad7, bad8, bad9, bad10, bad11, bad12, bad13, bad14, bad15, bad16,
+                bad17;
+            bad1 = "<img src onerror=alert(\"Gavin is testing\")/>\n";
+            bad2 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>\n";
+            bad3 = "<IMG SRC=\"javascript:alert('XSS');\">\n";
+            bad4 = "<IMG SRC=javascript:alert('XSS')>\n";
+            bad5 = "<IMG SRC=JaVaScRiPt:alert('XSS')>\n";
+            bad6 = "<IMG SRC=javascript:alert(&quot;XSS&quot;)>\n";
+            bad7 = "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>\n";
+            bad8 = "\<a onmouseover=\"alert(document.cookie)\"\>xxs link\</a\>\n";
+            bad9 = "\<a onmouseover=alert(document.cookie)\>xxs link\</a\>\n";
+            bad10 = `<IMG """><SCRIPT>alert("XSS")</SCRIPT>"\>`;
+            bad11 = "<img src=x onerror=\"&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041\">";
+            bad12 = "<div id=\"init_data\" style=\"display: none\">\n" +
+                " <%= html_encode(data.to_json) %>\n" +
+                "</div>\n";
             bad13 = `perl -e 'print "<IMG SRC=java\0script:alert(\"XSS\")>";' > out\n`;
             bad14 = `<SCRIPT/XSS SRC="http://xss.rocks/xss.js"></SCRIPT>\n`;
             bad15 = `<BODY BACKGROUND="javascript:alert('XSS')">\n`;
             bad16 = `<STYLE>li {list-style-image: url("javascript:alert('XSS')");}\n`;
             bad17 = `Set.constructor\`alert\x28document.domain\x29</STYLE><UL><LI>XSS</br>\n`;
-            
-            
-            goodFile = "wliang80\ngilbertz\nryotabs\nmhodges\nmairene\nchakhon\n26223772\n12345678\nbogusname\nfakename\n_1234455\n_gavin4\n_test_123-abc";
+
+
+            goodFile = "iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n22222222\n12345678\nbogusname\nfakename\n_1234455\n_iamtst01\n_test_123-abc";
             badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}${bad7}${bad8}${bad9}${bad10}${bad11}${bad12}${bad13}${bad14}${bad15}${bad16}${bad17}`;
             parseFile = (file) => {
                 scope.usersToAdd = file.split(/[\r\n]+/);
@@ -292,26 +296,26 @@ describe("GeneralController", function () {
                         sanitizedFile.push(sanitizedName);
                     }
                 }
-                return sanitizedFile; 
-            }
+                return sanitizedFile;
+            };
         });
 
-        it ("should return an empty array when given harmful input", () => {
+        it("should return an empty array when given harmful input", () => {
             const arrayOfValidNames = parseFile(badFile);
             expect(arrayOfValidNames.length).toEqual(0);
             expect(arrayOfValidNames.toString()).toEqual("");
         });
-        
-        it("should return an array of usernames that match the definition of a uhuuid or a uid", () => { 
+
+        it("should return an array of usernames that match the definition of a uhuuid or a uid", () => {
             const arrayOfValidNames = parseFile(goodFile);
             expect(arrayOfValidNames.length).toEqual(13);
-            expect(arrayOfValidNames.toString()).toEqual("wliang80,gilbertz,ryotabs,mhodges,mairene,chakhon,26223772,12345678,bogusname,fakename,_1234455,_gavin4,_test_123-abc");
-       });
+            expect(arrayOfValidNames.toString()).toEqual("iamtst01,iamtst02,iamtst03,iamtst04,iamtst05,iamtst06,22222222,12345678,bogusname,fakename,_1234455,_iamtst01,_test_123-abc");
+        });
 
     });
 
-    describe("validateAndAddUser", function () {
-        describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", function () {
+    describe("validateAndAddUser", () => {
+        describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", () => {
             const validUser = {
                 name: "Valid User",
                 username: "validUser",
@@ -363,7 +367,7 @@ describe("GeneralController", function () {
 
             it("user should be invalidated", function () {
                 spyOn(scope, "createCheckModal").and.callThrough();
-                scope.validateAndAddUser("invalidUser","Include");
+                scope.validateAndAddUser("invalidUser", "Include");
                 httpBackend.expectGET(BASE_URL + "members/" + "invalidUser")
                     .respond(200, invalidUser);
 
@@ -467,6 +471,81 @@ describe("GeneralController", function () {
                 scope.addMember("Exclude");
                 expect(scope.createBasisWarningModal).toHaveBeenCalled();
             });
+        });
+    });
+
+    describe("addMembers", () => {
+        it("should set listName to the listName that we are passing in", () => {
+            scope.listName = "admin";
+            scope.addMembers(scope.listName);
+            expect((scope.listName)).toBe("admin");
+        });
+
+        it("should make scope.emptyInput true if scope.usersToAdd is empty", () => {
+            scope.emptyInput = false;
+            scope.usersToAdd = null;
+            scope.addMembers(scope.listName);
+            expect(scope.emptyInput).toBeTrue();
+        });
+
+        it("should call addMultipleMembers when the usersToAdd is below our maxImport", () => {
+            spyOn(scope, "addMultipleMembers");
+            scope.usersToAdd = "iamtst01 iamtst02";
+            scope.addMembers(scope.listName);
+            expect(scope.addMultipleMembers).toHaveBeenCalled();
+        });
+
+        it("should call launchDynamicModal when the usersToAdd is above the multiAddThreshold", () => {
+            spyOn(scope, "launchDynamicModal");
+            let arr = [];
+            for (let i = 0; i < 102; i++) {
+                arr.push("iamtst01");
+            }
+            scope.usersToAdd = arr.toString().split(",").join(" ");
+            scope.addMembers(scope.listName);
+            expect(scope.launchDynamicModal).toHaveBeenCalled();
+        });
+
+        it("should call launchDynamicModal when the members we are adding are above the maxImport", () => {
+            spyOn(scope, "launchDynamicModal");
+            let arr = [];
+            for (let i = 0; i < 100002; i++) {
+                arr.push("iamtst01");
+            }
+            scope.usersToAdd = arr.toString().split(",").join(" ");
+            scope.addMembers(scope.listName);
+            expect(scope.launchDynamicModal).toHaveBeenCalled();
+        });
+
+        it("should call validateAndAddUser when numMembers is less than 0", () => {
+            spyOn(scope, "validateAndAddUser");
+            scope.usersToAdd = "iamtst01";
+            scope.addMembers(scope.listName);
+            expect(scope.usersToAdd).toBe("iamtst01");
+            expect(scope.validateAndAddUser).toHaveBeenCalled();
+        });
+    });
+
+    describe("readTextFile", () => {
+        let goodFile, reader;
+        beforeEach(() => {
+            reader = new FileReader();
+            goodFile =
+                `iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06`;
+
+            reader.onload = {
+                usersToAdd: (file) => {
+                    scope.usersToAdd = (file.split(/[\r\n]+/).join(" ")).slice();
+                },
+                addMembers: (listName) => {
+                    scope.addMembers(listName);
+                }
+            };
+        });
+
+        it("should check that scope.usersToAdd has been returned as a space seperated string", () => {
+            reader.onload.usersToAdd(goodFile);
+            expect(scope.usersToAdd).toBe("iamtst01 iamtst02 iamtst03 iamtst04 iamtst05 iamtst06");
         });
     });
 
@@ -639,6 +718,257 @@ describe("GeneralController", function () {
         });
     });
 
+    describe("successfulAddHandler", () => {
+        let membersToAdd,
+            res,
+            invalidRes,
+            duplicateRes,
+            validPeople,
+            invalidMembersToAdd,
+            duplicateMembersToAdd,
+            duplicatePeople;
+        beforeEach(() => {
+            membersToAdd = "iamtst01,iamtst02,iamtst03,iamtst04";
+            invalidMembersToAdd = "invalidName01,invalidName02,invalidName03,invalidName04";
+            duplicateMembersToAdd = "iamtst01,iamtst01,iamtst03";
+            res = [
+                {
+                    name: "iamtst01",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                    userIdentifier: "iamtst01",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst02",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst02",
+                    uid: "iamtst02",
+                    userIdentifier: "iamtst02",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst03",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03",
+                    userIdentifier: "iamtst03",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst04",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst04",
+                    uid: "iamtst04",
+                    userIdentifier: "iamtst04",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                }
+            ];
+            duplicateRes = [
+                {
+                    name: "iamtst01",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                    userIdentifier: "iamtst01",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst01",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                    userIdentifier: "iamtst01",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst03",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03",
+                    userIdentifier: "iamtst03",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                }
+            ];
+            invalidRes = [
+                {
+                    name: "invalidName01",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName01",
+                    uid: "invalidName01",
+                    userIdentifier: "invalidName01",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "invalidName02",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName02",
+                    uid: "invalidName02",
+                    userIdentifier: "invalidName02",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "invalidName03",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName03",
+                    uid: "invalidName03",
+                    userIdentifier: "invalidName03",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "invalidName04",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName04",
+                    uid: "invalidName04",
+                    userIdentifier: "invalidName04",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                }
+            ];
+            validPeople = [
+                {
+                    name: "iamtst01",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01"
+                },
+                {
+                    name: "iamtst02",
+                    uhUuid: "iamtst02",
+                    uid: "iamtst02"
+                },
+                {
+                    name: "iamtst03",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03"
+                },
+                {
+                    name: "iamtst04",
+                    uhUuid: "iamtst04",
+                    uid: "iamtst04"
+                }
+            ];
+            duplicatePeople = [
+                {
+                    name: "iamtst01",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01"
+                },
+                {
+                    name: "iamtst03",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03"
+                }
+            ];
+        });
+
+        it("should return a list of the members to be imported to the include list", () => {
+            scope.multiAddResults = [];
+            scope.multiAddResultsGeneric = [];
+            scope.successfulAddHandler(res, membersToAdd, "Include");
+            expect(scope.multiAddResults.length).toEqual(4);
+            expect(scope.multiAddResultsGeneric.length).toEqual(4);
+            expect(scope.multiAddResults).toEqual(validPeople);
+            expect(scope.multiAddResultsGeneric).toEqual(validPeople);
+        });
+
+        it("should return a list of invalid users and 0 members to be imported", () => {
+            scope.membersNotInList = [];
+            scope.successfulAddHandler(invalidRes, invalidMembersToAdd, "Include");
+            expect(scope.membersNotInList).toEqual("invalidName01, invalidName02, invalidName03, invalidName04");
+            expect(scope.multiAddResults).toEqual([]);
+        });
+
+        it("should not add a duplicate user to the invalid list", () => {
+            scope.membersNotInList = [];
+            scope.successfulAddHandler(duplicateRes, duplicateMembersToAdd, "Include");
+            expect(scope.membersNotInList).toEqual("iamtst01");
+            expect(scope.multiAddResults).toEqual(duplicatePeople);
+            expect(scope.multiAddResultsGeneric).toEqual(duplicatePeople);
+        });
+        
+        it("should call the launchMultiAddResultModal if the multiAddResults length is > 0", () => {
+            spyOn(scope, "launchMultiAddResultModal");
+            // Add people to the multiAddResults array
+            scope.successfulAddHandler(res, membersToAdd, "Include");
+            expect(scope.multiAddResults.length).toBe(4);
+            expect(scope.launchMultiAddResultModal).toHaveBeenCalled();
+            
+        });
+
+        it("should call the launchDynamicModal if the multiAddResults length is < 0", () => {
+            let noResToAdd = [];
+            let  noMembersToAdd = "";
+            scope.multiAddResults = [];
+            spyOn(scope, "launchDynamicModal");
+            scope.successfulAddHandler(noResToAdd, noMembersToAdd, "Include");
+            expect(scope.launchDynamicModal).toHaveBeenCalled();
+        });
+    });
+    
+    describe("addMultipleMembers", () => {
+        let membersToAdd;
+        beforeEach(() => {
+            membersToAdd = "iamtst01,iamtst02,iamtst03,iamtst04";
+        });
+        it("should return a call to addMembersToIncludeAsync", () => {
+            spyOn(gs, "addMembersToIncludeAsync");
+            scope.addMultipleMembers(membersToAdd, "Include");
+            expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+        });
+
+        it("should turn the small spinner off", () => {
+            scope.addMultipleMembers(membersToAdd, "admin");
+            expect(scope.waitingForImportResponse).toBeTrue();
+        });
+
+        describe("add user to Include and Exclude list", () => {
+            it("should return a call to addMembersToExcludeAsync", () => {
+                spyOn(gs, "addMembersToExcludeAsync");
+                scope.addMultipleMembers(membersToAdd, "Exclude");
+                expect(gs.addMembersToExcludeAsync).toHaveBeenCalled();
+            });
+
+            it("should return a call to addMembersToIncludeAsync", () => {
+                spyOn(gs, "addMembersToIncludeAsync");
+                scope.addMultipleMembers(membersToAdd, "Include");
+                expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+            });
+        });
+    });
+
     describe("convertListToCsv", function () {
         describe("user exports a list with members", function () {
             it("should start with the correct column headers", function () {
@@ -712,4 +1042,5 @@ describe("GeneralController", function () {
         });
     });
 
-});
+})
+;
