@@ -2,7 +2,6 @@ package edu.hawaii.its.api.service;
 
 import edu.hawaii.its.api.controller.RestTemplateResponseErrorHandler;
 
-import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -11,16 +10,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.owasp.html.PolicyFactory;
 
 @Service("httpRequestService")
 public class HttpRequestServiceImpl implements HttpRequestService {
 
-    private final PolicyFactory policy;
-
-    public HttpRequestServiceImpl() {
-        policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-    }
 
     @Value("${groupings.api.current_user}")
     private String CURRENT_USER;
@@ -40,8 +33,7 @@ public class HttpRequestServiceImpl implements HttpRequestService {
 
         RestTemplate restTemplate =
                 new RestTemplateBuilder().errorHandler(new RestTemplateResponseErrorHandler()).build();
-        String sanitizedUri = policy.sanitize(uri);
-        return restTemplate.exchange(sanitizedUri, method, httpEntity, String.class);
+        return restTemplate.exchange(uri, method, httpEntity, String.class);
     }
 
     /*
