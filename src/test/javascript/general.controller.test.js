@@ -1237,7 +1237,7 @@ describe("GeneralController", () => {
             });
         });
     });
-
+    
 
     describe("parseAddRemoveInputStr", () => {
         let spaceSeparated = "Hello I love you";
