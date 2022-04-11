@@ -598,15 +598,15 @@
          * decide whether to a multi add or a single add is necessary.
          * @param listName
          */
-        $scope.addMembers = function (listName) {
+        $scope.addMembers = function (listName, manageMembers) {
             $scope.listName = listName;
-            if (_.isEmpty($scope.manageMembers)) {
+            if (_.isEmpty(manageMembers)) {
                 $scope.emptyInput = true;
             } else {
-                let numMembers = ($scope.manageMembers.split(" ").length - 1);
+                let numMembers = (manageMembers.split(" ").length - 1);
                 if (numMembers > 0) {
-                    let users = $scope.manageMembers.split(/[ ,]+/).join(",");
-                    $scope.manageMembers = [];
+                    let users = manageMembers.split(/[ ,]+/).join(",");
+                    manageMembers = [];
                     if (numMembers > $scope.maxImport) {
                         $scope.launchDynamicModal(
                             Message.Title.IMPORT_OUT_OF_BOUNDS,
@@ -624,7 +624,7 @@
                         $scope.addMultipleMembers(users, listName);
                     }
                 } else {
-                    $scope.userToAdd = $scope.manageMembers;
+                    $scope.userToAdd = manageMembers;
                     $scope.validateAndAddUser($scope.userToAdd, listName);
                 }
             }
