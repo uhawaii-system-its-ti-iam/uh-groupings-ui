@@ -18,7 +18,7 @@
                 <div>
                     <h1 class="sr-only">UH Groupings</h1>
                     <img class="img-fluid align-self-center" src="" th:src="@{images/uh-groupings-text.png}"
-                         th:srcset="@{images/uh-groupings-text.png 1x, images/uh-groupings-text-2x.png 2x}"
+                         th:srcset="@{images/uh-groupings-text.png 1x, images/uh-groupings-text-2x.png 2x, images/uh-groupings-text.svg}"
                          alt="UH Groupings logotype">
                     <p class="lead" th:utext="#{screen.message.home.page.leadDescription}"></p>
                     <div sec:authorize="!isAuthenticated()">
@@ -59,7 +59,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="text-center">
-                            <img th:src="@{images/cogs.png}" th:srcset="@{images/cogs.png 1x, images/cogs-2x.png 2x}"
+                            <img th:src="@{images/cogs.png}" th:srcset="@{images/cogs.png 1x, images/cogs-2x.png 2x, images/cogs.svg}"
                                  alt="cogs" role="presentation">
                         </div>
                         <p class="text-center" th:utext="#{screen.message.home.page.groupingFeatures}"></p>
@@ -68,7 +68,7 @@
                     <div class="col-md-4">
                         <div class="text-center">
                             <img th:src="@{images/id-email.png}"
-                                 th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x}" alt="cogs"
+                                 th:srcset="@{images/id-email.png 1x, images/id-email-2x.png 2x, images/id-email.svg}" alt="cogs"
                                  role="presentation">
                         </div>
                         <p class="text-center" th:utext="#{screen.message.home.page.listServ}"></p>
@@ -76,7 +76,7 @@
 
                     <div class="col-md-4">
                         <div class="text-center">
-                            <img th:src="@{images/watch.png}" th:srcset="@{images/watch.png 1x, images/watch-2x.png 2x}"
+                            <img th:src="@{images/watch.png}" th:srcset="@{images/watch.png 1x, images/watch-2x.png 2x, images/watch.svg}"
                                  alt="watch" role="presentation">
                         </div>
                         <p class="text-center" th:utext="#{screen.message.home.page.groupingData}"></p>
