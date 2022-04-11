@@ -987,6 +987,258 @@ describe("GeneralController", () => {
 
     });
 
+    describe("successfulAddHandler", () => {
+        let membersToAdd,
+            res,
+            invalidRes,
+            duplicateRes,
+            validPeople,
+            invalidMembersToAdd,
+            duplicateMembersToAdd,
+            duplicatePeople;
+        beforeEach(() => {
+            membersToAdd = "iamtst01,iamtst02,iamtst03,iamtst04";
+            invalidMembersToAdd = "invalidName01,invalidName02,invalidName03,invalidName04";
+            duplicateMembersToAdd = "iamtst01,iamtst01,iamtst03";
+            res = [
+                {
+                    name: "iamtst01",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                    userIdentifier: "iamtst01",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst02",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst02",
+                    uid: "iamtst02",
+                    userIdentifier: "iamtst02",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst03",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03",
+                    userIdentifier: "iamtst03",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst04",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst04",
+                    uid: "iamtst04",
+                    userIdentifier: "iamtst04",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                }
+            ];
+            duplicateRes = [
+                {
+                    name: "iamtst01",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                    userIdentifier: "iamtst01",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst01",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01",
+                    userIdentifier: "iamtst01",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "iamtst03",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "SUCCESS",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03",
+                    userIdentifier: "iamtst03",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                }
+            ];
+            invalidRes = [
+                {
+                    name: "invalidName01",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName01",
+                    uid: "invalidName01",
+                    userIdentifier: "invalidName01",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "invalidName02",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName02",
+                    uid: "invalidName02",
+                    userIdentifier: "invalidName02",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "invalidName03",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName03",
+                    uid: "invalidName03",
+                    userIdentifier: "invalidName03",
+                    userWasAdded: false,
+                    userWasRemoved: false
+                },
+                {
+                    name: "invalidName04",
+                    pathOfAdd: "hawaii.edu:custom:test:grouping-path:include",
+                    pathOfRemoved: "hawaii.edu:custom:test:grouping-path:exclude",
+                    result: "FAILURE",
+                    uhUuid: "invalidName04",
+                    uid: "invalidName04",
+                    userIdentifier: "invalidName04",
+                    userWasAdded: true,
+                    userWasRemoved: false
+                }
+            ];
+            validPeople = [
+                {
+                    name: "iamtst01",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01"
+                },
+                {
+                    name: "iamtst02",
+                    uhUuid: "iamtst02",
+                    uid: "iamtst02"
+                },
+                {
+                    name: "iamtst03",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03"
+                },
+                {
+                    name: "iamtst04",
+                    uhUuid: "iamtst04",
+                    uid: "iamtst04"
+                }
+            ];
+            duplicatePeople = [
+                {
+                    name: "iamtst01",
+                    uhUuid: "iamtst01",
+                    uid: "iamtst01"
+                },
+                {
+                    name: "iamtst03",
+                    uhUuid: "iamtst03",
+                    uid: "iamtst03"
+                }
+            ];
+        });
+
+        it("should return a list of the members to be imported to the include list", () => {
+            scope.multiAddResults = [];
+            scope.multiAddResultsGeneric = [];
+            scope.successfulAddHandler(res, membersToAdd, "Include");
+            expect(scope.multiAddResults.length).toEqual(4);
+            expect(scope.multiAddResultsGeneric.length).toEqual(4);
+            expect(scope.multiAddResults).toEqual(validPeople);
+            expect(scope.multiAddResultsGeneric).toEqual(validPeople);
+        });
+
+        it("should return a list of invalid users and 0 members to be imported", () => {
+            scope.membersNotInList = [];
+            scope.successfulAddHandler(invalidRes, invalidMembersToAdd, "Include");
+            expect(scope.membersNotInList).toEqual("invalidName01, invalidName02, invalidName03, invalidName04");
+            expect(scope.multiAddResults).toEqual([]);
+        });
+
+        it("should not add a duplicate user to the invalid list", () => {
+            scope.membersNotInList = [];
+            scope.successfulAddHandler(duplicateRes, duplicateMembersToAdd, "Include");
+            expect(scope.membersNotInList).toEqual("iamtst01");
+            expect(scope.multiAddResults).toEqual(duplicatePeople);
+            expect(scope.multiAddResultsGeneric).toEqual(duplicatePeople);
+        });
+
+        it("should call the launchMultiAddResultModal if the multiAddResults length is > 0", () => {
+            spyOn(scope, "launchMultiAddResultModal");
+            // Add people to the multiAddResults array
+            scope.successfulAddHandler(res, membersToAdd, "Include");
+            expect(scope.multiAddResults.length).toBe(4);
+            expect(scope.launchMultiAddResultModal).toHaveBeenCalled();
+
+        });
+
+        it("should call the launchDynamicModal if the multiAddResults length is < 0", () => {
+            let noResToAdd = [];
+            let  noMembersToAdd = "";
+            scope.multiAddResults = [];
+            spyOn(scope, "launchDynamicModal");
+            scope.successfulAddHandler(noResToAdd, noMembersToAdd, "Include");
+            expect(scope.launchDynamicModal).toHaveBeenCalled();
+        });
+    });
+
+    describe("addMultipleMembers", () => {
+        let membersToAdd;
+        beforeEach(() => {
+            membersToAdd = "iamtst01,iamtst02,iamtst03,iamtst04";
+        });
+        it("should return a call to addMembersToIncludeAsync", () => {
+            spyOn(gs, "addMembersToIncludeAsync");
+            scope.addMultipleMembers(membersToAdd, "Include");
+            expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+        });
+
+        it("should turn the small spinner off", () => {
+            scope.addMultipleMembers(membersToAdd, "admin");
+            expect(scope.waitingForImportResponse).toBeTrue();
+        });
+
+        describe("add user to Include and Exclude list", () => {
+            it("should return a call to addMembersToExcludeAsync", () => {
+                spyOn(gs, "addMembersToExcludeAsync");
+                scope.addMultipleMembers(membersToAdd, "Exclude");
+                expect(gs.addMembersToExcludeAsync).toHaveBeenCalled();
+            });
+
+            it("should return a call to addMembersToIncludeAsync", () => {
+                spyOn(gs, "addMembersToIncludeAsync");
+                scope.addMultipleMembers(membersToAdd, "Include");
+                expect(gs.addMembersToIncludeAsync).toHaveBeenCalled();
+            });
+        });
+    });
+
+
     describe("parseAddRemoveInputStr", () => {
         let spaceSeparated = "Hello I love you";
         let commaSeparated = "Hello,I,love,you";
