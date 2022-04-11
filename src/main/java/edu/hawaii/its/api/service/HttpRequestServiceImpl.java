@@ -14,13 +14,16 @@ import org.springframework.web.client.RestTemplate;
 @Service("httpRequestService")
 public class HttpRequestServiceImpl implements HttpRequestService {
 
+
     @Value("${groupings.api.current_user}")
     private String CURRENT_USER;
 
+
     /*
      * Make an http request to the API with path variables.
+     *
+     * LGTM reporting a possible false positive: Groupings-1001
      */
-    @SuppressWarnings("lgtm[java/xss]")
     @Override
     public ResponseEntity<String> makeApiRequest(String currentUser, String uri, HttpMethod method) {
 
@@ -36,7 +39,6 @@ public class HttpRequestServiceImpl implements HttpRequestService {
     /*
      * Make an http request to the API with path variables and description in the body.
      */
-    @SuppressWarnings("lgtm[java/xss]")
     @Override
     public ResponseEntity<String> makeApiRequestWithBody(String currentUser, String uri, String data,
             HttpMethod method) {

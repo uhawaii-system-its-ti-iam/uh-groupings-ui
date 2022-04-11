@@ -1,9 +1,17 @@
 <th:block th:fragment="selected-grouping" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 
     <div class="mt-4">
+        <!-- Return to groupings list button -->
         <button class="btn btn-primary" type="submit"
                 ng-click="returnToGroupingsList(); cancelDescriptionEdit(); toggleShowAdminTab();">
             <i class="fas fa-arrow-left mr-1"></i> Return to Groupings List
+        </button>
+        <!-- Export to CSV button -->
+        <button class="btn btn-primary" type="submit" id="csvButton"
+                ng-click="exportGroupToCsv(groupingMembers, selectedGrouping.name, 'members')"
+                uib-tooltip="{{ getCSVToolTipMessage() }}"
+                ng-disabled="!paginatingComplete">
+            <i class="fa fa-sync mr-1" aria-hidden="true"></i> Export to CSV
         </button>
     </div>
 

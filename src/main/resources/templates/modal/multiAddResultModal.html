@@ -36,15 +36,4 @@
     <span class="modal-black-text">Invalid Users: </span>
     <span class="modal-black-text">{{membersNotInList}}</span>
 </div>
-<div class="modal-footer">
-    <button class="btn btn-primary" type="submit"
-            ng-click="exportGroupToCsvGeneric(groupingCSV, selectedGrouping.name, listName)"
-            ng-hide="!paginatingComplete">
-        <i class="fa fa-refresh mr-2" aria-hidden="true"></i>
-        Export to CSV
-    </button>
-    <button class="btn btn-primary" ng-click="closeMultiAddResultInstance()">Ok</button>
-</div>
-
-
 </html>

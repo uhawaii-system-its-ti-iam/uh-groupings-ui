@@ -35,7 +35,6 @@ import edu.hawaii.its.groupings.exceptions.ApiServerHandshakeException;
 public class GroupingsRestController {
 
     private static final Log logger = LogFactory.getLog(GroupingsRestController.class);
-
     private final PolicyFactory policy;
 
     @Value("${app.groupings.controller.uuid}")
@@ -363,7 +362,6 @@ public class GroupingsRestController {
     @GetMapping(value = "/owners/{uid}/groupings")
     public ResponseEntity<String> groupingsOwnedUid(Principal principal, @PathVariable String uid) {
         logger.info("Entered REST GroupingAssignment...");
-
         String safeUid = policy.sanitize(uid);
         String uri = String.format(API_2_1_BASE + "/owners/%s/groupings", safeUid);
         return httpRequestService.makeApiRequest(principal.getName(), uri, HttpMethod.GET);
@@ -501,6 +499,17 @@ public class GroupingsRestController {
         logger.info("Entered REST setOptOut...");
         String safeGrouping = policy.sanitize(grouping);
         return changePreference(safeGrouping, principal.getName(), OPT_OUT, optOutOn);
+    }
+
+    /**
+     * Checks if the owner of a grouping is the sole owner
+     */
+    @GetMapping(value = "/{path:.+}/owners/{uidToCheck}")
+    public ResponseEntity<String> isSoleOwner(Principal principal, @PathVariable String path, @PathVariable String uidToCheck) {
+        logger.info("Entered REST isSoleOwner...");
+        String baseUri = String.format(API_2_1_BASE + "/%s/owners/%s", path, uidToCheck);
+
+        return httpRequestService.makeApiRequest(principal.getName(), baseUri, HttpMethod.GET);
     }
 
     /**

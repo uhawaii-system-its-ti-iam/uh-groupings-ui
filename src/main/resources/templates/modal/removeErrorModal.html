@@ -6,6 +6,7 @@
 </div>
 <div class="modal-body" id="modal-body">
     <p th:text="#{screen.message.modal.remove.error}"></p>
+    <p ng-if="soleOwnerGroupingNames.length >= 1" th:text="#{screen.message.modal.soleowner.remove.error}"></p>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="closeRemoveErrorModal()">Close</button>

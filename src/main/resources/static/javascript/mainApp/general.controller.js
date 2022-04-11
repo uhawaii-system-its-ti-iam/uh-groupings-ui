@@ -636,6 +636,15 @@
             }
         };
 
+        // Checks that a users name matches the pattern of either a valid uid or a uhUuid
+        $scope.sanitizer = (name) => {
+            const regexPattern = new RegExp("^[_?a-z-?@?0-9]{3,64}$");
+            if (name != null && regexPattern.test(name)) {
+                const validInput = name.match(regexPattern);
+                return validInput.toString();
+            }
+        };
+
         /**
          * Read a text file(.txt) from client side. The file should consist of
          * a list of UH usernames or ids separated by newline characters. This
@@ -650,7 +659,15 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.manageMembers = (str.split(/[\r\n]+/).join(" ")).slice();
+                $scope.manageMembers = str.split(/[\r\n]+/);
+                let sanitizedFile = [];
+                for (const members of $scope.manageMembers) {
+                    let sanitizedName = $scope.sanitizer(members);
+                    if (sanitizedName != null) {
+                        sanitizedFile.push(sanitizedName);
+                    }
+                }
+                $scope.manageMembers = sanitizedFile.join(" ");
                 $scope.addMembers($scope.listName);
             };
             reader.readAsText(file);
@@ -2165,6 +2182,15 @@
         $scope.showWarningRemovingSelf = function () {
             return $scope.currentUser === $scope.userToRemove.username
                 && ($scope.listName === "owners" || $scope.listName === "admins");
+        };
+
+        /**
+         * Determine whether a warning message should be displayed when removing yourself from a list.
+         * @returns {boolean} returns true if you are removing yourself from either the owners or admins list, otherwise
+         * returns false
+         */
+        $scope.showWarningRemovingSelfFromList = function () {
+            return $scope.currentUser === $scope.userToRemove.username;
         };
 
         /*** Determines whether a warning message should be displayed when removing yourself from a list.

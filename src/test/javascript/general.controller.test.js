@@ -481,6 +481,7 @@ describe("GeneralController", () => {
         });
     });
 
+
     describe("launchImportModal", () => {
         it("should set listName to listName passed in", () => {
             scope.listName = "";

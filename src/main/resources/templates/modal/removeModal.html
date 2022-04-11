@@ -28,6 +28,17 @@
             </div>
         </div>
     </div>
+    <div class="modal-danger-message" ng-if="showWarningRemovingSelfFromList()">
+        <p th:utext="#{screen.message.modal.remove.warning}">Warning</p>
+        <div>
+            <div ng-if="selectedOwnedGroupingsNames.length === 1">
+                <p th:text="#{screen.message.modal.multiremove.owner}"></p>
+            </div>
+            <div ng-if="selectedOwnedGroupingsNames.length > 1">
+                <p th:text="#{screen.message.modal.multiremove.multiowner}"></p>
+            </div>
+        </div>
+    </div>
     <p>
         <span class="modal-black-text" th:text="#{screen.message.modal.remove.confirmation}"></span>
         <span class="modal-black-text">{{listName}} list.</span>
