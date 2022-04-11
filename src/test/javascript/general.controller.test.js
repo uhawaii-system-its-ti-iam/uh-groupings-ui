@@ -8,17 +8,7 @@ describe("GeneralController", () => {
     let httpBackend;
     let BASE_URL;
     let gs;
-    let onSuccess;
-    let onFailure;
     let uibModal;
-
-    onSuccess = () => {
-        console.log("success");
-    };
-
-    onFailure = () => {
-        console.log("success");
-    };
 
     beforeEach(inject(function ($injector) {
         uibModal = $injector.get("$uibModal");
@@ -555,121 +545,69 @@ describe("GeneralController", () => {
         });
     });
 
-    // describe("validateAndAddUser", () => {
-    //     describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", () => {
-    //         const validUser = {
-    //             name: "Valid User",
-    //             username: "validUser",
-    //             uhUuid: "00000010",
-    //             firstName: "Valid",
-    //             lastName: "User"
-    //         };
-    //         beforeEach(() => {
-    //             scope.userToAdd = "validUser";
-    //             httpBackend.whenGET(BASE_URL + "currentUser")
-    //                 .respond(200);
-    //             httpBackend.whenGET(BASE_URL + "members/memberships/")
-    //                 .respond(200);
-    //             httpBackend.whenGET(BASE_URL + "owners/grouping/")
-    //                 .respond(200);
-    //             httpBackend.whenGET(BASE_URL + "members/" + validUser.username)
-    //                 .respond(200, validUser);
-    //         });
-    //
-    //         it("user should be validated", () => {
-    //             spyOn(scope, "createConfirmAddModal").and.callThrough();
-    //             scope.validateAndAddUser(validUser.username, "Include");
-    //             httpBackend.expectGET(BASE_URL + "members/" + validUser.username)
-    //                 .respond(200, validUser);
-    //
-    //             expect(httpBackend.flush).not.toThrow();
-    //             expect(scope.createConfirmAddModal).toHaveBeenCalled();
-    //         });
-    //     });
-    //
-    //     describe("addMembers", () => {
-    //         it("should set listName to the listName that we are passing in", () => {
-    //             scope.listName = "admin";
-    //             scope.addMembers(scope.listName);
-    //             expect((scope.listName)).toBe("admin");
-    //         });
-    //
-    //         it("should make scope.emptyInput true if scope.usersToAdd is empty", () => {
-    //             scope.emptyInput = false;
-    //             scope.usersToAdd = null;
-    //             scope.addMembers(scope.listName);
-    //             expect(scope.emptyInput).toBeTrue();
-    //         });
-    //
-    //         it("should call addMultipleMembers when the usersToAdd is below our maxImport", () => {
-    //             spyOn(scope, "addMultipleMembers");
-    //             scope.usersToAdd = "gavin4 mhodges";
-    //             scope.addMembers(scope.listName);
-    //             expect(scope.addMultipleMembers).toHaveBeenCalled();
-    //         });
-    //
-    //         it("should call launchDynamicModal when the usersToAdd is above the multiAddThreshold", () => {
-    //             spyOn(scope, "launchDynamicModal");
-    //             let arr = [];
-    //             for (let i = 0; i < 102; i++) {
-    //                 arr.push("gavin4");
-    //             }
-    //             scope.usersToAdd = arr.toString().split(",").join(" ");
-    //             scope.addMembers(scope.listName);
-    //             expect(scope.launchDynamicModal).toHaveBeenCalled();
-    //         });
-    //
-    //         it("should call launchDynamicModal when the members we are adding are above the maxImport", () => {
-    //             spyOn(scope, "launchDynamicModal");
-    //             let arr = [];
-    //             for (let i = 0; i < 100002; i++) {
-    //                 arr.push("gavin4");
-    //             }
-    //             scope.usersToAdd = arr.toString().split(",").join(" ");
-    //             scope.addMembers(scope.listName);
-    //             expect(scope.launchDynamicModal).toHaveBeenCalled();
-    //         });
-    //
-    //         it("should call validateAndAddUser when numMembers is less than 0", () => {
-    //             spyOn(scope, "validateAndAddUser");
-    //             scope.usersToAdd = "gavin4";
-    //             scope.addMembers(scope.listName);
-    //             expect(scope.usersToAdd).toBe('gavin4');
-    //             expect(scope.validateAndAddUser).toHaveBeenCalled();
-    //         });
-    //     });
-    //
-    //     describe("user adds 'invalidUser', who is not in the Grouper database", () => {
-    //         const invalidUser = {
-    //             name: null,
-    //             username: null,
-    //             uhUuid: null,
-    //             firstName: null,
-    //             lastName: null
-    //         };
-    //         beforeEach(() => {
-    //             httpBackend.whenGET(BASE_URL + "currentUser")
-    //                 .respond(200);
-    //             httpBackend.whenGET(BASE_URL + "members/memberships/")
-    //                 .respond(200);
-    //             httpBackend.whenGET(BASE_URL + "owners/grouping/")
-    //                 .respond(200);
-    //             httpBackend.whenGET(BASE_URL + "members/" + "invalidUser")
-    //                 .respond(200, invalidUser);
-    //         });
-    //
-    //         it("user should be invalidated", () => {
-    //             spyOn(scope, "createCheckModal").and.callThrough();
-    //             scope.validateAndAddUser("invalidUser", "Include");
-    //             httpBackend.expectGET(BASE_URL + "members/" + "invalidUser")
-    //                 .respond(200, invalidUser);
-    //
-    //             expect(httpBackend.flush).not.toThrow();
-    //             expect(scope.resStatus).toEqual(404);
-    //             expect(scope.createCheckModal).not.toHaveBeenCalled();
-    //         });
-    //     });
-    // });
+    describe("validateAndAddUser", () => {
+        describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", () => {
+            const validUser = {
+                name: "Valid User",
+                username: "validUser",
+                uhUuid: "00000010",
+                firstName: "Valid",
+                lastName: "User"
+            };
+            beforeEach(() => {
+                scope.userToAdd = "validUser";
+                httpBackend.whenGET(BASE_URL + "currentUser")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "members/memberships/")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "owners/grouping/")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "members/" + validUser.username)
+                    .respond(200, validUser);
+            });
+
+            it("user should be validated", () => {
+                spyOn(scope, "createConfirmAddModal").and.callThrough();
+                scope.validateAndAddUser(validUser.username, "Include");
+                httpBackend.expectGET(BASE_URL + "members/" + validUser.username)
+                    .respond(200, validUser);
+
+                expect(httpBackend.flush).not.toThrow();
+                expect(scope.createConfirmAddModal).toHaveBeenCalled();
+            });
+        });
+  
+        describe("user adds 'invalidUser', who is not in the Grouper database", () => {
+            const invalidUser = {
+                name: null,
+                username: null,
+                uhUuid: null,
+                firstName: null,
+                lastName: null
+            };
+            beforeEach(() => {
+                httpBackend.whenGET(BASE_URL + "currentUser")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "members/memberships/")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "owners/grouping/")
+                    .respond(200);
+                httpBackend.whenGET(BASE_URL + "members/" + "invalidUser")
+                    .respond(200, invalidUser);
+            });
+
+            it("user should be invalidated", () => {
+                spyOn(scope, "createCheckModal").and.callThrough();
+                scope.validateAndAddUser("invalidUser", "Include");
+                httpBackend.expectGET(BASE_URL + "members/" + "invalidUser")
+                    .respond(200, invalidUser);
+
+                expect(httpBackend.flush).not.toThrow();
+                expect(scope.resStatus).toEqual(404);
+                expect(scope.createCheckModal).not.toHaveBeenCalled();
+            });
+        });
+    });
 
     describe("addMember", () => {
         describe("user adds 'user8', who is not in any list, to the Include list", () => {
@@ -1237,7 +1175,113 @@ describe("GeneralController", () => {
             });
         });
     });
-    
+
+    describe("addMembers", () => {
+        it("should set listName to the listName that we are passing in", () => {
+            scope.listName = "admin";
+            scope.addMembers(scope.listName);
+            expect((scope.listName)).toBe("admin");
+        });
+
+        it("should make scope.emptyInput true if scope.manageMembers is empty", () => {
+            scope.emptyInput = false;
+            scope.manageMembers = null;
+            scope.addMembers(scope.listName);
+            expect(scope.emptyInput).toBeTrue();
+        });
+
+        it("should call addMultipleMembers when the usersToAdd is below our maxImport", () => {
+            spyOn(scope, "addMultipleMembers");
+            scope.manageMembers = "iamtst01 iamtst02";
+            scope.addMembers(scope.listName);
+            expect(scope.addMultipleMembers).toHaveBeenCalled();
+        });
+
+        it("should call launchDynamicModal when the usersToAdd is above the multiAddThreshold", () => {
+            spyOn(scope, "launchDynamicModal");
+            let arr = [];
+            for (let i = 0; i < 102; i++) {
+                arr.push("iamtst01");
+            }
+            scope.manageMembers = arr.toString().split(",").join(" ");
+            scope.addMembers(scope.listName);
+            expect(scope.launchDynamicModal).toHaveBeenCalled();
+        });
+
+        it("should call launchDynamicModal when the members we are adding are above the maxImport", () => {
+            spyOn(scope, "launchDynamicModal");
+            let arr = [];
+            for (let i = 0; i < 100002; i++) {
+                arr.push("iamtst01");
+            }
+            scope.manageMembers = arr.toString().split(",").join(" ");
+            scope.addMembers(scope.listName);
+            expect(scope.launchDynamicModal).toHaveBeenCalled();
+        });
+
+        it("should call validateAndAddUser when numMembers is less than 0", () => {
+            spyOn(scope, "validateAndAddUser");
+            scope.manageMembers = "iamtst01";
+            scope.addMembers(scope.listName);
+            expect(scope.manageMembers).toBe("iamtst01");
+            expect(scope.validateAndAddUser).toHaveBeenCalled();
+        });
+    });
+
+    describe("sanitizer", () => {
+        let goodFile, badFile, parseFile;
+        beforeEach(() => {
+            let bad1, bad2, bad3, bad4, bad5, bad6, bad7, bad8, bad9, bad10, bad11, bad12, bad13, bad14, bad15, bad16,
+                bad17;
+            bad1 = "<img src onerror=alert(\"Gavin is testing\")/>\n";
+            bad2 = "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>\n";
+            bad3 = "<IMG SRC=\"javascript:alert('XSS');\">\n";
+            bad4 = "<IMG SRC=javascript:alert('XSS')>\n";
+            bad5 = "<IMG SRC=JaVaScRiPt:alert('XSS')>\n";
+            bad6 = "<IMG SRC=javascript:alert(&quot;XSS&quot;)>\n";
+            bad7 = "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>\n";
+            bad8 = "\<a onmouseover=\"alert(document.cookie)\"\>xxs link\</a\>\n";
+            bad9 = "\<a onmouseover=alert(document.cookie)\>xxs link\</a\>\n";
+            bad10 = `<IMG """><SCRIPT>alert("XSS")</SCRIPT>"\>`;
+            bad11 = "<img src=x onerror=\"&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041\">";
+            bad12 = "<div id=\"init_data\" style=\"display: none\">\n" +
+                " <%= html_encode(data.to_json) %>\n" +
+                "</div>\n";
+            bad13 = `perl -e 'print "<IMG SRC=java\0script:alert(\"XSS\")>";' > out\n`;
+            bad14 = `<SCRIPT/XSS SRC="http://xss.rocks/xss.js"></SCRIPT>\n`;
+            bad15 = `<BODY BACKGROUND="javascript:alert('XSS')">\n`;
+            bad16 = `<STYLE>li {list-style-image: url("javascript:alert('XSS')");}\n`;
+            bad17 = `Set.constructor\`alert\x28document.domain\x29</STYLE><UL><LI>XSS</br>\n`;
+
+
+            goodFile = "iamtst01\niamtst02\niamtst03\niamtst04\niamtst05\niamtst06\n22222222\n12345678\nbogusname\nfakename\n_1234455\n_iamtst01\n_test_123-abc";
+            badFile = `${bad1}${bad2}${bad3}${bad4}${bad5}${bad6}${bad7}${bad8}${bad9}${bad10}${bad11}${bad12}${bad13}${bad14}${bad15}${bad16}${bad17}`;
+            parseFile = (file) => {
+                scope.manageMembers = file.split(/[\r\n]+/);
+                let sanitizedFile = [];
+                for (const users of scope.manageMembers) {
+                    let sanitizedName = scope.sanitizer(users);
+                    if (sanitizedName != null) {
+                        sanitizedFile.push(sanitizedName);
+                    }
+                }
+                return sanitizedFile;
+            };
+        });
+
+        it("should return an empty array when given harmful input", () => {
+            const arrayOfValidNames = parseFile(badFile);
+            expect(arrayOfValidNames.length).toEqual(0);
+            expect(arrayOfValidNames.toString()).toEqual("");
+        });
+
+        it("should return an array of usernames that match the definition of a uhuuid or a uid", () => {
+            const arrayOfValidNames = parseFile(goodFile);
+            expect(arrayOfValidNames.length).toEqual(13);
+            expect(arrayOfValidNames.toString()).toEqual("iamtst01,iamtst02,iamtst03,iamtst04,iamtst05,iamtst06,22222222,12345678,bogusname,fakename,_1234455,_iamtst01,_test_123-abc");
+        });
+
+    });
 
     describe("parseAddRemoveInputStr", () => {
         let spaceSeparated = "Hello I love you";
