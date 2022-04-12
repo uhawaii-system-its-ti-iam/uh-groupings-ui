@@ -2117,4 +2117,12 @@ describe("GeneralController", () => {
         expect(scope.listName).toEqual(options.listName);
       });
     });
+
+    describe("updateAllowOptIn", () => {
+      it('should call groupings service setOptIn', () => {
+        spyOn(gs, 'setOptIn').and.callThrough();
+        scope.updateAllowOptIn();
+        expect(gs.setOptIn).toHaveBeenCalled();
+      });
+    });
 });
