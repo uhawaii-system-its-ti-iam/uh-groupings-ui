@@ -576,15 +576,6 @@ describe("GeneralController", () => {
                 scope.userToAdd = "user1";
             });
 
-            /*
-            it("should return true since 'user1' is currently in the Include list", () => {
-                spyOn(scope, "isInAnotherList").and.callThrough();
-                scope.addMember("Exclude");
-                expect(scope.isInAnotherList).toHaveBeenCalled();
-                expect(scope.isInAnotherList("user1", "Exclude")).toBe(true);
-            });
-             */
-
             it("should create a modal asking if the user wants to remove 'user1' from the Include list", () => {
                     spyOn(scope, "createCheckModal").and.callThrough();
                     scope.addMember("Exclude");
@@ -643,6 +634,8 @@ describe("GeneralController", () => {
             });
         });
     });
+    
+    
 
     describe("isInAnotherList", () => {
         describe("user tries to add 'user1', who is currently in the Include list, to the Exclude list", () => {
@@ -1117,6 +1110,36 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("updateAddMember", () => { 
+        it("should call the addMembersToInclude groupingsService call when list is Include", () => { 
+            spyOn(gs, "addMembersToInclude");
+            scope.listName = "Include";
+            scope.updateAddMember("iamtst01", scope.listName);
+            expect(gs.addMembersToInclude).toHaveBeenCalled();
+        });
+
+        it("should call the addMembersToExclude groupingsService call when list is Exclude", () => {
+            spyOn(gs, "addMembersToExclude");
+            scope.listName = "Exclude";
+            scope.updateAddMember("iamtst01", scope.listName);
+            expect(gs.addMembersToExclude).toHaveBeenCalled();
+        });
+
+        it("should call the addOwnerships groupingsService call when list is owners", () => {
+            spyOn(gs, "addOwnerships");
+            scope.listName = "owners";
+            scope.updateAddMember("iamtst01", scope.listName);
+            expect(gs.addOwnerships).toHaveBeenCalled();
+        });
+
+        it("should call the addAdmin groupingsService call when list is admins", () => {
+            spyOn(gs, "addAdmin");
+            scope.listName = "admins";
+            scope.updateAddMember("iamtst01", scope.listName);
+            expect(gs.addAdmin).toHaveBeenCalled();
+        });
+    });
+    
     describe("addMembers", () => {
         it("should set listName to the listName that we are passing in", () => {
             scope.listName = "admin";
