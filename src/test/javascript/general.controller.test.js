@@ -1458,6 +1458,51 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("addOwners", () => {
+        beforeEach(() => { 
+            scope.listName = "owners";
+        });
+        
+        it("should set the emptyInput to true", () => { 
+            scope.manageOwners = [];
+            scope.addOwners();
+            expect(scope.emptyInput).toBeTrue();
+        });
+        
+        it("should make scope.emptyInput true if scope.manageMembers is empty", () => {
+            scope.emptyInput = false;
+            scope.manageOwners = null;
+            scope.addOwners(scope.listName);
+            expect(scope.emptyInput).toBeTrue();
+        });
+
+        it("should call addMultipleMembers when the usersToAdd is below our maxImport", () => {
+            spyOn(scope, "addMultipleMembers");
+            scope.manageOwners = "iamtst01 iamtst02";
+            scope.addOwners(scope.listName);
+            expect(scope.addMultipleMembers).toHaveBeenCalled();
+        });
+
+        it("should call launchDynamicModal when the usersToAdd is above the multiAddThreshold", () => {
+            spyOn(scope, "launchDynamicModal");
+            let arr = [];
+            for (let i = 0; i < 102; i++) {
+                arr.push("iamtst01");
+            }
+            scope.manageOwners = arr.toString().split(",").join(" ");
+            scope.addOwners(scope.listName);
+            expect(scope.launchDynamicModal).toHaveBeenCalled();
+        });
+
+        it("should call validateAndAddUser when numMembers is less than 0", () => {
+            spyOn(scope, "validateAndAddUser");
+            scope.manageOwners = "iamtst01";
+            scope.addOwners(scope.listName);
+            expect(scope.userToAdd).toBe("iamtst01");
+            expect(scope.validateAndAddUser).toHaveBeenCalled();
+        });
+    });
+
     describe("closeSuccessfulAddModal", () => {
         beforeEach(() => {
             scope.createSuccessfulAddModal("testString");
