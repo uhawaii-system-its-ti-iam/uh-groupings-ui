@@ -536,45 +536,6 @@ describe("GeneralController", () => {
 
     });
 
-    describe("validateAndAddUser", function () {
-        describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", function () {
-            const validUser = {
-                name: "Valid User",
-                username: "validUser",
-                uhUuid: "00000010",
-                firstName: "Valid",
-                lastName: "User"
-            };
-            beforeEach(function () {
-                scope.userToAdd = "validUser";
-                httpBackend.whenGET(BASE_URL + "currentUser")
-                    .respond(200);
-                httpBackend.whenGET(BASE_URL + "members/memberships/")
-                    .respond(200);
-                httpBackend.whenGET(BASE_URL + "owners/grouping/")
-                    .respond(200);
-                httpBackend.whenGET(BASE_URL + "members/" + validUser.username)
-                    .respond(200, validUser);
-            });
-
-            it("user should be validated", function () {
-                spyOn(scope, "createConfirmAddModal").and.callThrough();
-                scope.validateAndAddUser(validUser.username, "Include");
-                httpBackend.expectGET(BASE_URL + "members/" + validUser.username)
-                    .respond(200, validUser);
-
-                expect(httpBackend.flush).not.toThrow();
-                expect(scope.createConfirmAddModal).toHaveBeenCalled();
-            });
-        });
-
-        it("should check that the import modal is launched", () => {
-            spyOn(uibModal, "open").and.callThrough();
-            scope.launchImportModal(scope.listName);
-            expect(uibModal.open).toHaveBeenCalled();
-        });
-    });
-
     describe("validateAndAddUser", () => {
         describe("user adds 'validUser', who is a valid user and is not in any list, to the Include list", () => {
             const validUser = {
