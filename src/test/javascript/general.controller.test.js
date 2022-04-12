@@ -264,7 +264,7 @@ describe("GeneralController", () => {
         it("should set descriptionLoaded & paginatingProgress to true & paginatingComplete to false after calling gs.getGrouping", () => {
             spyOn(gs, "getGrouping").and.callThrough();
             scope.getGroupingInformation();
-            //maybe implement this another way??
+            expect(gs.getGrouping).toHaveBeenCalled();
         });
     });
 
