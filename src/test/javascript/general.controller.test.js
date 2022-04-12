@@ -471,6 +471,20 @@ describe("GeneralController", () => {
         });
     });
 
+  describe("launchImportModal", () => {
+    it("should set listName to listName passed in", () => {
+      scope.listName = "";
+      scope.launchImportModal("admin");
+      expect(scope.listName).toBe("admin");
+    });
+
+    it("should check that the import modal is launched", () => {
+      spyOn(uibModal, "open").and.callThrough();
+      scope.launchImportModal(scope.listName);
+      expect(uibModal.open).toHaveBeenCalled();
+    });
+  });
+
     describe("sanitizer", () => {
         let goodFile, badFile, parseFile;
         beforeEach(() => {
