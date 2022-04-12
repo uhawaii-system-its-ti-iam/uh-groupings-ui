@@ -202,13 +202,8 @@ describe("AdminController", function () {
         beforeEach(function () {
             selectedGroupingsNames = [];
             selectedGroupingsPaths = [];
-<<<<<<< HEAD
             selectedOwnedGroupings = [];
             selectedOwnedGroupingsNames = [];
-=======
-            selectedOwnedGroupings = []
-            selectedOwnedGroupingsNames = []
->>>>>>> efe1a043 (add sole owner removeal warning, owner removeal warning)
             currentPage = [
                 {
                     inBasis: false,
