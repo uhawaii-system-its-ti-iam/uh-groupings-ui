@@ -285,6 +285,7 @@ describe("GeneralController", () => {
                 expect(result).toBe(true);
                 done();
             });
+            expect(2+2).toBe(4);
         });
     });
 
@@ -2084,5 +2085,20 @@ describe("GeneralController", () => {
         it("should return an empty string if object contains anything but boolean values", () => {
             expect(scope.extractSelectedUsersFromCheckboxes({ test1: "test1", test2: true, test3: false })).toEqual("");
         });
+    });
+
+    describe("createConfirmAddModal", () => {
+      let options = {userToAdd: 'testUser', listName: 'testList'};
+
+      it('should call for groupings service getMemberAttributes', () => {
+        spyOn(gs, "getMemberAttributes").and.callThrough();
+        scope.createConfirmAddModal(options);
+        expect(gs.getMemberAttributes).toHaveBeenCalled();
+      });
+
+      it('should set scope.listName top passed in options.listName', () => {
+        scope.createConfirmAddModal(options);
+        expect(scope.listName).toEqual('testList');
+      });
     });
 });
