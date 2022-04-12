@@ -2101,4 +2101,20 @@ describe("GeneralController", () => {
         expect(scope.listName).toEqual('testList');
       });
     });
+
+    describe("createRemoveModal", () => {
+      let options = {user: {uhUuid: 'testId'}, listName: 'testList'};
+
+      beforeEach(() => {
+        scope.createRemoveModal(options);
+      });
+
+      it('should set scope.userToRemove to passed in option.user', () => {
+        expect(scope.userToRemove).toEqual({uhUuid: 'testId'});
+      });
+
+      it('should set scope.listName to passed in option.listName', () => {
+        expect(scope.listName).toEqual(options.listName);
+      });
+    });
 });
