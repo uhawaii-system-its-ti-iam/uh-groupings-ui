@@ -10,11 +10,7 @@ describe("GeneralController", () => {
     let gs;
     let uibModal;
 
-    beforeEach(inject(function ($injector) {
-        uibModal = $injector.get("$uibModal");
-    }));
-
-    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) => {
+    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, $window) => {
         scope = $rootScope.$new();
         controller = $controller("GeneralJsController", {
             $scope: scope
@@ -22,6 +18,8 @@ describe("GeneralController", () => {
         httpBackend = _$httpBackend_;
         BASE_URL = _BASE_URL_;
         gs = groupingsService;
+        uibModal = $uibModal;
+        window = $window;
     }));
 
     it("should define the general controller", () => {
@@ -2248,4 +2246,82 @@ describe("GeneralController", () => {
         expect(result).toBeFalse();
       });
     });
+
+    // describe("proceedLogoutUser", () => {
+    //   it('should close RoleErrorModalInstance', () => {
+    //     scope.createRoleErrorModal();
+    //     spyOn(scope.RoleErrorModalInstance, 'close').and.callThrough();
+    //
+    //     spyOn(window)
+    //     scope.proceedLogoutUser();
+    //     expect(scope.RoleErrorModalInstance.close).toHaveBeenCalled();
+    //   });
+    // });
+
+  describe("resetGroup", () => {
+    it("should set scope.resetInclude to 'empty' if entries in groupingInclude is 0 or scope.includeCheck is false", function () {
+      scope.resetInclude = 'test';
+      scope.includeCheck = false;
+      scope.resetGroup();
+      expect(scope.resetInclude).toEqual("empty");
+    });
+
+    it("should set scope.resetInclude to 'empty' if entries in groupingInclude is 0 or scope.includeCheck is false", function () {
+      scope.resetInclude = 'test';
+      scope.includeCheck = true;
+      scope.groupingInclude = [];
+      scope.resetGroup();
+      expect(scope.resetInclude).toEqual("empty");
+    });
+
+    it("should push uhUuid from scope.groupingInclude into scope.resetInclude", () => {
+      scope.includeCheck = true;
+      scope.groupingInclude = [{uhUuid:'testId1'}, {uhUuid:'testId2'}];
+      scope.resetGroup();
+      expect(scope.resetInclude).toEqual(['testId1', 'testId2']);
+    });
+
+    it("should set scope.resetResults to groupingInclude concat w/ groupingExclude if exclude & include checks are true", () => {
+      scope.excludeCheck = true;
+      scope.includeCheck = true;
+      scope.resetGroup();
+      expect(scope.resetResults).toEqual(scope.groupingInclude.concat(scope.groupingExclude));
+    });
+
+    it("should set scope.resetResults to groupingExclude if exclude is true and include is false", () => {
+      scope.excludeCheck = true;
+      scope.includeCheck = false;
+      scope.resetGroup();
+      expect(scope.resetResults).toEqual(scope.groupingExclude);
+    });
+
+    it("should set scope.resetResults to groupingInclude if exclude is false and include is true", () => {
+      scope.excludeCheck = false;
+      scope.includeCheck = true;
+      scope.resetGroup();
+      expect(scope.resetResults).toEqual(scope.groupingInclude);
+    });
+
+    it("should set scope.resetResults to '' if both exclude and include is false", () => {
+      scope.excludeCheck = false;
+      scope.includeCheck = false;
+      scope.resetGroup();
+      expect(scope.resetResults).toEqual('');
+    });
+
+    it("should call scope.getPersonProps if resetResults[0] is not undefined", () => {
+      scope.groupingInclude =['username', 'uhUuid', 'name'];
+      scope.excludeCheck = false;
+      scope.includeCheck = true;
+      spyOn(scope, 'getPersonProps').and.callThrough();
+      scope.resetGroup();
+      expect(scope.getPersonProps).toHaveBeenCalled()
+    });
+
+    it('should call createResetGroupModal', () => {
+      spyOn(scope, 'createResetGroupModal').and.callThrough();
+      scope.resetGroup();
+      expect(scope.createResetGroupModal).toHaveBeenCalled();
+    });
+  });
 });
