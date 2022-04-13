@@ -2170,4 +2170,12 @@ describe("GeneralController", () => {
         expect(gs.setOptIn).toHaveBeenCalled();
       });
     });
+
+    describe("updateAllowOptOut", () => {
+      it('should call groupings service', () => {
+        spyOn(gs, 'setOptOut').and.callThrough();
+        scope.updateAllowOptOut();
+        expect(gs.setOptOut).toHaveBeenCalled();
+      });
+    });
 });
