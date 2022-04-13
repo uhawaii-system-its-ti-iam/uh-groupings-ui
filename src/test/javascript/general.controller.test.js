@@ -2185,5 +2185,67 @@ describe("GeneralController", () => {
         scope.resetGroupingInformation();
         expect(scope.columnSort).toEqual({});
       });
+
+      it('should reset syncDestArray, resetResults, and personProps arrays', () => {
+        scope.syncDestArray = ['test'];
+        scope.resetResults = ['test'];
+        scope.personProps = ['test'];
+
+        scope.resetGroupingInformation();
+
+        expect(scope.syncDestArray).toEqual([]);
+        expect(scope.resetResults).toEqual([]);
+        expect(scope.personProps).toEqual([]);
+      });
+    });
+
+    describe("showWarningRemovingSelfResetModal", () => {
+      let result;
+      it('should return true if usersToRemove includes currentUser && listName is "owners" ', () => {
+        scope.currentUser = 'testUser';
+        scope.usersToRemove = ['testUser'];
+        scope.listName = 'owners';
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeTrue();
+      });
+
+      it('should return true if usersToRemove includes currentUser && listName is "admins" ', () => {
+        scope.currentUser = 'testUser';
+        scope.usersToRemove = ['testUser'];
+        scope.listName = 'admins';
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeTrue();
+      });
+
+      it('should return false if usersToRemove includes currentUser && listName is not "owners" or "admins" ', () => {
+        scope.currentUser = 'testUser';
+        scope.usersToRemove = ['testUser'];
+        scope.listName = 'badListName';
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeFalse();
+      });
+
+      it('should return false if usersToRemove does not include currentUser && listName is "owners" ', () => {
+        scope.currentUser = 'badTestUser';
+        scope.usersToRemove = ['testUser'];
+        scope.listName = 'owners';
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeFalse();
+      });
+
+      it('should return false if usersToRemove does not include currentUser && listName is "admins" ', () => {
+        scope.currentUser = 'badTestUser';
+        scope.usersToRemove = ['testUser'];
+        scope.listName = 'admins';
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeFalse();
+      });
+
+      it('should return false if usersToRemove does not include currentUser', () => {
+        scope.currentUser = 'badTestUser';
+        scope.usersToRemove = ['testUser'];
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeFalse();
+      });
     });
 });
