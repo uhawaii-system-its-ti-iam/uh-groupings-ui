@@ -2324,4 +2324,13 @@ describe("GeneralController", () => {
       expect(scope.createResetGroupModal).toHaveBeenCalled();
     });
   });
+
+  describe("getCookie", () => {
+    let result;
+
+    it('should return empty string when cookie not found', function () {
+      result = scope.getCookie('badCookie');
+      expect(result).toEqual('');
+    });
+  });
 });
