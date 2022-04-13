@@ -285,6 +285,7 @@ describe("GeneralController", () => {
                 expect(result).toBe(true);
                 done();
             });
+            expect(2+2).toBe(4);
         });
     });
 
@@ -2129,5 +2130,44 @@ describe("GeneralController", () => {
         it("should return an empty string if object contains anything but boolean values", () => {
             expect(scope.extractSelectedUsersFromCheckboxes({ test1: "test1", test2: true, test3: false })).toEqual("");
         });
+    });
+
+    describe("createConfirmAddModal", () => {
+      let options = {userToAdd: 'testUser', listName: 'testList'};
+
+      it('should call for groupings service getMemberAttributes', () => {
+        spyOn(gs, "getMemberAttributes").and.callThrough();
+        scope.createConfirmAddModal(options);
+        expect(gs.getMemberAttributes).toHaveBeenCalled();
+      });
+
+      it('should set scope.listName top passed in options.listName', () => {
+        scope.createConfirmAddModal(options);
+        expect(scope.listName).toEqual('testList');
+      });
+    });
+
+    describe("createRemoveModal", () => {
+      let options = {user: {uhUuid: 'testId'}, listName: 'testList'};
+
+      beforeEach(() => {
+        scope.createRemoveModal(options);
+      });
+
+      it('should set scope.userToRemove to passed in option.user', () => {
+        expect(scope.userToRemove).toEqual({uhUuid: 'testId'});
+      });
+
+      it('should set scope.listName to passed in option.listName', () => {
+        expect(scope.listName).toEqual(options.listName);
+      });
+    });
+
+    describe("updateAllowOptIn", () => {
+      it('should call groupings service setOptIn', () => {
+        spyOn(gs, 'setOptIn').and.callThrough();
+        scope.updateAllowOptIn();
+        expect(gs.setOptIn).toHaveBeenCalled();
+      });
     });
 });
