@@ -2178,4 +2178,12 @@ describe("GeneralController", () => {
         expect(gs.setOptOut).toHaveBeenCalled();
       });
     });
+
+    describe("resetGroupingInformation", () => {
+      it('should reset columnSort object', () => {
+        scope.columnSort = {adminsList: {property: 'name'}};
+        scope.resetGroupingInformation();
+        expect(scope.columnSort).toEqual({});
+      });
+    });
 });
