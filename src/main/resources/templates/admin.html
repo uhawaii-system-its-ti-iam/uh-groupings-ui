@@ -34,7 +34,7 @@
             <div class="loader" ng-show="loading"></div>
         </div>
         <div ng-show="!showGrouping" id="adminContainer" class="hide-content">
-            <div class="tab-content" role="tablist"
+            <div class="tab-content"
                  ng-init="changeStyleAttribute('adminContainer', 'display', 'unset')">
                 <!-- Manage Groupings -->
                 <div class="tab-pane fade show active" id="manage-groupings" role="tabpanel">
@@ -49,8 +49,8 @@
                                    ng-change="filter(groupingsList, 'pagedItemsGroupings', 'currentPageGroupings', groupingsQuery, true)"/>
                         </div>
                     </div>
-                    <div th:replace="fragments/admin-groupings-list :: admin-groupings-list(title='Manage Groupings', tabContent=true)"
-                    ></div>
+                        <div th:replace="fragments/admin-groupings-list :: admin-groupings-list(title='Manage Groupings', tabContent=true)"
+                        ></div>
                 </div>
                 <!-- Manage Admins -->
                 <div class="tab-pane fade" id="manage-admins" role="tabpanel">
