@@ -300,25 +300,6 @@ describe("AdminController", function () {
         });
     });
 
-    // describe("createRemoveFromGroupsModal", () => {
-    //     let options;
-    //     options = {
-    //         user: "iamtst01",
-    //         groupPaths: ["tmp:kahlin:kahlin-large:include", "hawaii.edu:custom:test:listserv-tests:JTTEST-L:include"],
-    //         listName: ["kahlin-large", "JTTEST-L"]
-    //     }
-    //     it(" should show success when modal responds w/ success", () => {
-    //         scope.adminsList = ["iamtst01", "iamtst02", "iamtst03"];
-    //         //Mock out the modal closing
-    //         scope.createRemoveFromGroupsModal(options); //open the modal
-    //         expect(gs.getMemberAttributes).toHaveBeenCalled();
-    //         spyOn(gs, "getMemberAttributes");
-    //         scope.removeModalInstance.dismiss("close");
-    //         expect(scope.user).toBe("iamtst01");
-    //         // expect(scope.resStatus).toBe(false);
-    //     })
-    // })
-
     describe("removeAdmin", function () {
         beforeEach(function () {
             scope.pagedItemsAdmins[0] = "zzzz";

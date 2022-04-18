@@ -1963,6 +1963,15 @@ describe("GeneralController", () => {
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
+    
+    describe("removeMemberWithTrashcan", () => { 
+        it("should call the createRemoveModal", () => {
+            let listName = "Include"
+           spyOn(scope, "createRemoveModal");
+           scope.removeMemberWithTrashcan(listName, 0, 0);
+           expect(scope.createRemoveModal).toHaveBeenCalled();
+        });
+    });
 
     describe("batchRemoveResponseHandler", () => {
         // let success = false;
