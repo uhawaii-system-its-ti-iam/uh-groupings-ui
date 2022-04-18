@@ -10,11 +10,7 @@ describe("GeneralController", () => {
     let gs;
     let uibModal;
 
-    beforeEach(inject(function ($injector) {
-        uibModal = $injector.get("$uibModal");
-    }));
-
-    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService) => {
+    beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, $window) => {
         scope = $rootScope.$new();
         controller = $controller("GeneralJsController", {
             $scope: scope
@@ -22,6 +18,8 @@ describe("GeneralController", () => {
         httpBackend = _$httpBackend_;
         BASE_URL = _BASE_URL_;
         gs = groupingsService;
+        uibModal = $uibModal;
+        window = $window;
     }));
 
     it("should define the general controller", () => {
@@ -285,6 +283,7 @@ describe("GeneralController", () => {
                 expect(result).toBe(true);
                 done();
             });
+            expect(2+2).toBe(4);
         });
     });
 
@@ -2139,4 +2138,208 @@ describe("GeneralController", () => {
             expect(scope.extractSelectedUsersFromCheckboxes({ test1: "test1", test2: true, test3: false })).toEqual("");
         });
     });
+
+    describe("createConfirmAddModal", () => {
+      let options = {userToAdd: 'testUser', listName: 'testList'};
+
+      it('should call for groupings service getMemberAttributes', () => {
+        spyOn(gs, "getMemberAttributes").and.callThrough();
+        scope.createConfirmAddModal(options);
+        expect(gs.getMemberAttributes).toHaveBeenCalled();
+      });
+
+      it('should set scope.listName top passed in options.listName', () => {
+        scope.createConfirmAddModal(options);
+        expect(scope.listName).toEqual('testList');
+      });
+    });
+
+    describe("createRemoveModal", () => {
+      let options = {user: {uhUuid: 'testId'}, listName: 'testList'};
+
+      beforeEach(() => {
+        scope.createRemoveModal(options);
+      });
+
+      it('should set scope.userToRemove to passed in option.user', () => {
+        expect(scope.userToRemove).toEqual({uhUuid: 'testId'});
+      });
+
+      it('should set scope.listName to passed in option.listName', () => {
+        expect(scope.listName).toEqual(options.listName);
+      });
+    });
+
+    describe("updateAllowOptIn", () => {
+      it('should call groupings service setOptIn', () => {
+        spyOn(gs, 'setOptIn').and.callThrough();
+        scope.updateAllowOptIn();
+        expect(gs.setOptIn).toHaveBeenCalled();
+      });
+    });
+
+    describe("updateAllowOptOut", () => {
+      it('should call groupings service', () => {
+        spyOn(gs, 'setOptOut').and.callThrough();
+        scope.updateAllowOptOut();
+        expect(gs.setOptOut).toHaveBeenCalled();
+      });
+    });
+
+    describe("resetGroupingInformation", () => {
+      it('should reset columnSort object', () => {
+        scope.columnSort = {adminsList: {property: 'name'}};
+        scope.resetGroupingInformation();
+        expect(scope.columnSort).toEqual({});
+      });
+
+      it('should reset syncDestArray, resetResults, and personProps arrays', () => {
+        scope.syncDestArray = ['test'];
+        scope.resetResults = ['test'];
+        scope.personProps = ['test'];
+
+        scope.resetGroupingInformation();
+
+        expect(scope.syncDestArray).toEqual([]);
+        expect(scope.resetResults).toEqual([]);
+        expect(scope.personProps).toEqual([]);
+      });
+    });
+
+    describe("showWarningRemovingSelfResetModal", () => {
+      let result;
+      it('should return true if usersToRemove includes currentUser && listName is "owners" ', () => {
+        scope.currentUser = 'testUser';
+        scope.usersToRemove = ['testUser'];
+        scope.listName = 'owners';
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeTrue();
+      });
+
+      it('should return true if usersToRemove includes currentUser && listName is "admins" ', () => {
+        scope.currentUser = 'testUser';
+        scope.usersToRemove = ['testUser'];
+        scope.listName = 'admins';
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeTrue();
+      });
+
+      it('should return false if usersToRemove includes currentUser && listName is not "owners" or "admins" ', () => {
+        scope.currentUser = 'testUser';
+        scope.usersToRemove = ['testUser'];
+        scope.listName = 'badListName';
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeFalse();
+      });
+
+      it('should return false if usersToRemove does not include currentUser && listName is "owners" ', () => {
+        scope.currentUser = 'badTestUser';
+        scope.usersToRemove = ['testUser'];
+        scope.listName = 'owners';
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeFalse();
+      });
+
+      it('should return false if usersToRemove does not include currentUser && listName is "admins" ', () => {
+        scope.currentUser = 'badTestUser';
+        scope.usersToRemove = ['testUser'];
+        scope.listName = 'admins';
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeFalse();
+      });
+
+      it('should return false if usersToRemove does not include currentUser', () => {
+        scope.currentUser = 'badTestUser';
+        scope.usersToRemove = ['testUser'];
+        result = scope.showWarningRemovingSelfResetModal();
+        expect(result).toBeFalse();
+      });
+    });
+
+    // describe("proceedLogoutUser", () => {
+    //   it('should close RoleErrorModalInstance', () => {
+    //     scope.createRoleErrorModal();
+    //     spyOn(scope.RoleErrorModalInstance, 'close').and.callThrough();
+    //
+    //     spyOn(window)
+    //     scope.proceedLogoutUser();
+    //     expect(scope.RoleErrorModalInstance.close).toHaveBeenCalled();
+    //   });
+    // });
+
+  describe("resetGroup", () => {
+    it("should set scope.resetInclude to 'empty' if entries in groupingInclude is 0 or scope.includeCheck is false", function () {
+      scope.resetInclude = 'test';
+      scope.includeCheck = false;
+      scope.resetGroup();
+      expect(scope.resetInclude).toEqual("empty");
+    });
+
+    it("should set scope.resetInclude to 'empty' if entries in groupingInclude is 0 or scope.includeCheck is false", function () {
+      scope.resetInclude = 'test';
+      scope.includeCheck = true;
+      scope.groupingInclude = [];
+      scope.resetGroup();
+      expect(scope.resetInclude).toEqual("empty");
+    });
+
+    it("should push uhUuid from scope.groupingInclude into scope.resetInclude", () => {
+      scope.includeCheck = true;
+      scope.groupingInclude = [{uhUuid:'testId1'}, {uhUuid:'testId2'}];
+      scope.resetGroup();
+      expect(scope.resetInclude).toEqual(['testId1', 'testId2']);
+    });
+
+    it("should set scope.resetResults to groupingInclude concat w/ groupingExclude if exclude & include checks are true", () => {
+      scope.excludeCheck = true;
+      scope.includeCheck = true;
+      scope.resetGroup();
+      expect(scope.resetResults).toEqual(scope.groupingInclude.concat(scope.groupingExclude));
+    });
+
+    it("should set scope.resetResults to groupingExclude if exclude is true and include is false", () => {
+      scope.excludeCheck = true;
+      scope.includeCheck = false;
+      scope.resetGroup();
+      expect(scope.resetResults).toEqual(scope.groupingExclude);
+    });
+
+    it("should set scope.resetResults to groupingInclude if exclude is false and include is true", () => {
+      scope.excludeCheck = false;
+      scope.includeCheck = true;
+      scope.resetGroup();
+      expect(scope.resetResults).toEqual(scope.groupingInclude);
+    });
+
+    it("should set scope.resetResults to '' if both exclude and include is false", () => {
+      scope.excludeCheck = false;
+      scope.includeCheck = false;
+      scope.resetGroup();
+      expect(scope.resetResults).toEqual('');
+    });
+
+    it("should call scope.getPersonProps if resetResults[0] is not undefined", () => {
+      scope.groupingInclude =['username', 'uhUuid', 'name'];
+      scope.excludeCheck = false;
+      scope.includeCheck = true;
+      spyOn(scope, 'getPersonProps').and.callThrough();
+      scope.resetGroup();
+      expect(scope.getPersonProps).toHaveBeenCalled()
+    });
+
+    it('should call createResetGroupModal', () => {
+      spyOn(scope, 'createResetGroupModal').and.callThrough();
+      scope.resetGroup();
+      expect(scope.createResetGroupModal).toHaveBeenCalled();
+    });
+  });
+
+  describe("getCookie", () => {
+    let result;
+
+    it('should return empty string when cookie not found', function () {
+      result = scope.getCookie('badCookie');
+      expect(result).toEqual('');
+    });
+  });
 });
