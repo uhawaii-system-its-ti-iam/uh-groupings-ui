@@ -1270,6 +1270,63 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("prepBatchRemove", () => {
+        let currentPage;
+        beforeEach(() => {
+            currentPage = [{'iamtst01': true,
+                user: {uhUuid: 'iamtst01'}, username: 'iamtst01'}]
+        });
+        it("should set membersToModify to extractSelectedUsersFromCheckboxes", () => {
+            scope.membersInCheckboxList = [{'11111111': true,
+                user: {uhUuid: '11111111'}}];
+            scope.prepBatchRemove(scope.listName, scope.currentPage);
+            expect(scope.membersToModify).toBe(scope.extractSelectedUsersFromCheckboxes(scope.membersInCheckboxList));
+            expect(scope.membersInCheckboxList).toEqual({});
+        });
+
+        it("should set emptyInput to true if membersToModify is empty", () => {
+            scope.manageMembers = '';
+            scope.membersToModify = '';
+            scope.emptyInput = false;
+            scope.prepBatchRemove(scope.listName, scope.currentPage);
+            expect(scope.emptyInput).toBeTrue();
+        });
+
+        it("should set the appropriate variables", () => {
+            scope.listName = '';
+            scope.currentPage = '';
+            scope.membersToModify = "iamtst01";
+            scope.prepBatchRemove('Include', currentPage);
+            expect(scope.listName).toEqual('Include');
+            expect(scope.currentPage).toEqual(currentPage);
+            expect(scope.membersToModify).toEqual([]);
+        });
+
+        it("should call the createRemoveModal", () => {
+            scope.membersToModify = "iamtst01";
+            spyOn(scope, "createRemoveModal");
+            scope.prepBatchRemove('Include', currentPage);
+            expect(scope.memberToRemove).toEqual({'iamtst01': true,
+                user: {uhUuid: 'iamtst01'}, username: 'iamtst01'});
+            expect(scope.createRemoveModal).toHaveBeenCalled();
+        });
+
+        it("should set memberToRemove to undefined if the membersToModify does not match the currentPage", () => {
+            scope.membersToModify = "iamtst02";
+            spyOn(scope, "createRemoveModal");
+            scope.prepBatchRemove('Include', currentPage);
+            expect(scope.memberToRemove).toBeUndefined();
+            expect(scope.createRemoveModal).toHaveBeenCalled();
+        });
+        
+        it("should call the createRemoveErrorModal when the listName is owners", () => {
+            scope.membersToModify = "iamtst01";
+            spyOn(scope, "createRemoveErrorModal");
+            scope.prepBatchRemove('owners', currentPage);
+            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
+        });
+    });
+
     describe("initMemberDisplayName", () => {
 
         it("should set user to fullName if fullName.length > 0", () => {
