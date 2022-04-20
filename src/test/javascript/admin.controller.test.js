@@ -58,6 +58,36 @@ describe("AdminController", function () {
       });
     });
 
+    describe("createRemoveFromGroupsModal", () => {
+      let options = {user: {uhUuid: 'testId'}, groupPaths: 'testPath', listName: 'testList'};
+
+      it("should set scope variables to passed in option's object", () => {
+        scope.userToRemove = {};
+        scope.groupPaths = 'badPath';
+        scope.listName = 'badList';
+        scope.createRemoveFromGroupsModal(options);
+
+        expect(scope.userToRemove).toEqual({uhUuid: 'testId'});
+        expect(scope.groupPaths).toBe('testPath');
+        expect(scope.listName).toBe('testList');
+        expect(scope.ownerOfListName).toBe('');
+      });
+
+      it('should call showWarningRemovingSelfFromList function', () => {
+        spyOn(scope, 'showWarningRemovingSelfFromList').and.callThrough();
+        scope.createRemoveFromGroupsModal(options);
+
+        expect(scope.showWarningRemovingSelfFromList).toHaveBeenCalled();
+      });
+
+      it('should call groupingsService', () => {
+        spyOn(gs, 'getMemberAttributes').and.callThrough();
+        scope.createRemoveFromGroupsModal(options);
+
+        expect(gs.getMemberAttributes).toHaveBeenCalled();
+      });
+    });
+
     describe("getAdminListsCallbackOnSuccess", function () {
         let res = {};
         beforeEach(function () {

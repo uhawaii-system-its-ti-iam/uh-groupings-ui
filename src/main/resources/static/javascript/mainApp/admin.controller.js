@@ -242,8 +242,8 @@
         $scope.createRemoveFromGroupsModal = function (options) {
             const userToRemove = options.user.uhUuid;
             $scope.userToRemove = options.user;
-            $scope.groupPaths = options.groupPaths.join(", ");
-            $scope.listName = options.listName.join(", ");
+            $scope.groupPaths = options.groupPaths;
+            $scope.listName = options.listName;
             $scope.ownerOfListName = $scope.selectedOwnedGroupingsNames.join(", ");
 
             const windowClass = $scope.showWarningRemovingSelfFromList() ? "modal-danger" : "";
