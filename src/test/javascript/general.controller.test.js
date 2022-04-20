@@ -2328,9 +2328,61 @@ describe("GeneralController", () => {
   describe("getCookie", () => {
     let result;
 
-    it('should return empty string when cookie not found', function () {
+    it('should return empty string when cookie not found', () => {
       result = scope.getCookie('badCookie');
       expect(result).toEqual('');
     });
   });
+
+  // WIP
+  // describe("createSyncDestModal", () => {
+  //   it('should set variable and call getSyncDestValueInArray', () => {
+  //     let isSyncDestOn = true;
+  //
+  //
+  //
+  //     scope.createSyncDestModal('JTTEST-L');
+  //     console.log('test1');
+  //
+  //     expect(scope.getSyncDestValueInArray).toHaveBeenCalled();
+  //   });
+  //
+  //   it('should open syncDestInstance uibModal', () => {
+  //     spyOn(uibModal, 'open').and.callThrough();
+  //     console.log('test2');
+  //
+  //     scope.createSyncDestModal('JTTEST-L');
+  //     expect(uibModal.open).toHaveBeenCalled();
+  //   });
+  // });
+
+  describe("transferMembersFromPageToCheckboxObject", () => {
+    // gs.currentPage
+    // it('should call scope.membersInCheckboxList', function () {
+    //   spyOn(scope, 'membersInCheckboxList');
+    //   scope.transferMembersFromPageToCheckboxObject(1);
+    //   expect(scope.membersInCheckboxList).toHaveBeenCalled();
+
+      // spyOn<any>(gs, 'fetchMemberProperties').and.callThrough();
+      // fetchMemberProperties(members);
+    // });
+  });
+
+  // describe("toggleCheckAllSelection", () => {
+  //   it('should set scope.allSelected which is a boolean value to the opposite value', () => {
+  //     scope.allSelected = true;
+  //     scope.toggleCheckAllSelection('Exclude');
+  //     expect(scope.allSelected).toBeFalse();
+  //   });
+  //
+  //   it('should go through forloop and call membersInCheckboxList', () => {
+  //     scope.allSelected = false;
+  //     scope.membersInCheckboxList = [false];
+  //     scope.currentPageExclude = 0;
+  //     scope.pagedItemsExclude = [[{uhUuid:1}]];
+  //     scope.toggleCheckAllSelection("Exclude");
+  //     console.log(scope.membersInCheckboxList[0]);
+  //     expect(scope.membersInCheckboxList[0]).toBeTrue();
+  //   });
+  // });
 });

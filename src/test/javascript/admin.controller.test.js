@@ -7,6 +7,7 @@ describe("AdminController", function () {
     let controller;
     let gs;
     let mainCtrl;
+    let uibModal;
 
     let fakeModal = {
         result: {
@@ -31,6 +32,7 @@ describe("AdminController", function () {
             $scope: scope
         });
         gs = groupingsService;
+        uibModal = $uibModal;
         spyOn($uibModal, "open").and.returnValue(fakeModal);
     }));
 
@@ -45,10 +47,16 @@ describe("AdminController", function () {
             expect(gs.getAdminLists).toHaveBeenCalled();
         });
     });
-    //
-    // describe("createRoleErrorModal", () => {
-    //     beforeEach()
-    // });
+
+    describe("createRoleErrorModal", () => {
+      it('should set scope.loading to false and open uibModal', () => {
+        scope.loading = true;
+        scope.createRoleErrorModal();
+
+        expect(scope.loading).toBeFalse();
+        expect(uibModal.open).toHaveBeenCalled();
+      });
+    });
 
     describe("getAdminListsCallbackOnSuccess", function () {
         let res = {};
