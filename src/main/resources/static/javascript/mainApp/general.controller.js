@@ -341,7 +341,6 @@
                     $scope.allowOptOut = res.optOutOn;
 
                     $scope.syncDestArray = res.syncDestinations;
-                  console.log(res)
                     $scope.loading = false;
                     $scope.paginatingProgress = false;
 
@@ -1295,7 +1294,6 @@
          */
         $scope.prepBatchRemove = function (listName, currentPage) {
             if (!_.isEmpty($scope.membersInCheckboxList)) {
-              //good
                 $scope.membersToModify = $scope.extractSelectedUsersFromCheckboxes($scope.membersInCheckboxList);
                 $scope.membersInCheckboxList = {};
             }
@@ -1306,7 +1304,6 @@
                 $scope.membersToModify = $scope.manageOwners;
             }
             if (_.isEmpty($scope.membersToModify)) {
-              // good
                 $scope.emptyInput = true;
             } else {
                 $scope.listName = listName;

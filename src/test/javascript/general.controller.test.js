@@ -2356,17 +2356,16 @@ describe("GeneralController", () => {
   //   });
   // });
 
-  describe("transferMembersFromPageToCheckboxObject", () => {
-    // gs.currentPage
-    // it('should call scope.membersInCheckboxList', function () {
-    //   spyOn(scope, 'membersInCheckboxList');
-    //   scope.transferMembersFromPageToCheckboxObject(1);
-    //   expect(scope.membersInCheckboxList).toHaveBeenCalled();
-
-      // spyOn<any>(gs, 'fetchMemberProperties').and.callThrough();
-      // fetchMemberProperties(members);
-    // });
-  });
+  // describe("transferMembersFromPageToCheckboxObject", () => {
+  //   let currentPage = [{uhUuid: 0}];
+  //   // scope.membersInCheckboxList = {name: 'test', age: 2};
+  //   console.log(scope.membersInCheckboxList);
+  //   it('should ', () => {
+  //     // scope.transferMembersFromPageToCheckboxObject(currentPage);
+  //     // expect(scope.membersInCheckboxList[0]).toBe(false);
+  //   });
+  //
+  // });
 
   // describe("toggleCheckAllSelection", () => {
   //   it('should set scope.allSelected which is a boolean value to the opposite value', () => {
