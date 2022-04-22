@@ -633,9 +633,10 @@
 
         // Checks that a users name matches the pattern of either a valid uid or a uhUuid
         $scope.sanitizer = (name) => {
+            const trimmedLowercaseName = name.toLowerCase().trim();
             const regexPattern = new RegExp("^[_?a-z-?@?0-9]{3,64}$");
-            if (name != null && regexPattern.test(name)) {
-                const validInput = name.match(regexPattern);
+            if (trimmedLowercaseName != null && regexPattern.test(trimmedLowercaseName)) {
+                const validInput = trimmedLowercaseName.match(regexPattern);
                 return validInput.toString();
             }
         };
@@ -650,7 +651,7 @@
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.manageMembers = str.split(/[\r\n]+/);
+                $scope.manageMembers = str.split(/[\r\n,]+/);
                 let sanitizedFile = [];
                 for (const members of $scope.manageMembers) {
                     let sanitizedName = $scope.sanitizer(members);
@@ -661,7 +662,7 @@
                 $scope.manageMembers = sanitizedFile.join(" ");
                 $scope.addMembers($scope.listName);
             };
-            reader.readAsText(file);
+            reader.readAsText(inputFile);
         };
 
         $scope.removeTextFile = function () {

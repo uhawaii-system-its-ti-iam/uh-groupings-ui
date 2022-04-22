@@ -7,13 +7,7 @@
     </button>
 </div>
 <div class="modal-body" id="modal-body">
-    <p> Upload a text file (.txt)<br> The file should consist of a list of UH Usernames or UH Numbers. Please only list one
-        person per line.</p>
-    <p>For Example: <br/>
-        uhusername1<br/>
-        uhusername2<br/>
-        uhusername3
-    </p>
+    <p> Upload a text file (.txt)<br> The file should consist of a list of UH Usernames or UH Numbers separated by commas or listed one per line. </p>
     <input type="file" ng-model="inputFile" file-model="inputFile" accept="text/plain">
     <button class="btn btn-primary" ng-click="readTextFile(inputFile); cancelImportModalInstance()">
         Import
