@@ -1,16 +1,22 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       lang="en">
 <div class="modal-header">
-  <h5 class="modal-title" id="modal-title">Import</h5>
-  <button type="button" class="close" data-dismiss="dialog" ng-click="cancelImportModalInstance()">
-    <span aria-hidden="true">&times;</span>
-  </button>
+    <h5 class="modal-title" id="modal-title">Import</h5>
+    <button type="button" class="close" data-dismiss="dialog" ng-click="cancelImportModalInstance()">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
 <div class="modal-body" id="modal-body">
-    <p> Upload a text file (.txt). The file should consist of a list of UH user names or ids separated by newline characters. </p>
+    <p> Upload a text file (.txt)<br> The file should consist of a list of UH Usernames or UH Numbers. Please only list one
+        person per line.</p>
+    <p>For Example: <br/>
+        uhusername1<br/>
+        uhusername2<br/>
+        uhusername3
+    </p>
     <input type="file" ng-model="inputFile" file-model="inputFile" accept="text/plain">
     <button class="btn btn-primary" ng-click="readTextFile(inputFile); cancelImportModalInstance()">
-      Import
+        Import
     </button>
 </div>
 <div class="modal-footer">

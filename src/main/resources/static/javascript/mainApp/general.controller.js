@@ -141,7 +141,8 @@
          */
         groupingsService.getNumberOfMemberships((res) => {
                 $scope.numberOfMemberships = res;
-            }, (res) => { }
+            }, (res) => {
+            }
         );
 
         /**
@@ -165,7 +166,8 @@
 
         $scope.toggleShowAdminTab = function () {
             $scope.showAdminTab = $scope.showAdminTab === false;
-        }
+        };
+
         /**
          * Generic handler for unsuccessful requests to the API.
          */
@@ -645,17 +647,6 @@
          * The file is retrieved from the html input with id 'upload'.
          */
         $scope.readTextFile = function (inputFile) {
-          let reader = new FileReader();
-          reader.onload = function (e) {
-            let str = e.target.result;
-            $scope.manageMembers = str.split(/[\r\n]+/);
-            let sanitizedFile = [];
-            for (const members of $scope.manageMembers) {
-              let sanitizedName = $scope.sanitizer(members);
-              if (sanitizedName != null) {
-                sanitizedFile.push(sanitizedName);
-              }
-            }
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
