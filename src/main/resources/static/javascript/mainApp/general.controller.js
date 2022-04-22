@@ -1977,7 +1977,6 @@
         $scope.updateSingleSyncDest = function (syncDestName) {
             const groupingPath = $scope.selectedGrouping.path;
             const syncDestOn = $scope.getSyncDestValueInArray(syncDestName);
-
             groupingsService.setSyncDest(groupingPath, syncDestName, syncDestOn, handleSuccessfulPreferenceToggle, handleUnsuccessfulRequest);
         };
 
