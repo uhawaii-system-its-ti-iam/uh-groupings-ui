@@ -141,7 +141,8 @@
          */
         groupingsService.getNumberOfMemberships((res) => {
                 $scope.numberOfMemberships = res;
-            }, (res) => { }
+            }, (res) => {
+            }
         );
 
         /**
@@ -165,7 +166,8 @@
 
         $scope.toggleShowAdminTab = function () {
             $scope.showAdminTab = $scope.showAdminTab === false;
-        }
+        };
+
         /**
          * Generic handler for unsuccessful requests to the API.
          */
@@ -599,7 +601,6 @@
          * @param listName
          */
         $scope.addMembers = function (listName) {
-            $scope.listName = listName;
             if (_.isEmpty($scope.manageMembers)) {
                 $scope.emptyInput = true;
             } else {
@@ -632,9 +633,10 @@
 
         // Checks that a users name matches the pattern of either a valid uid or a uhUuid
         $scope.sanitizer = (name) => {
+            const trimmedLowercaseName = name.toLowerCase().trim();
             const regexPattern = new RegExp("^[_?a-z-?@?0-9]{3,64}$");
-            if (name != null && regexPattern.test(name)) {
-                const validInput = name.match(regexPattern);
+            if (trimmedLowercaseName != null && regexPattern.test(trimmedLowercaseName)) {
+                const validInput = trimmedLowercaseName.match(regexPattern);
                 return validInput.toString();
             }
         };
@@ -645,15 +647,11 @@
          * function is called implicitly from include.html and exclude.html.
          * The file is retrieved from the html input with id 'upload'.
          */
-        $scope.readTextFile = function () {
-            let file = input.files[0];
-            if (file === undefined) {
-                console.log("undef");
-            }
+        $scope.readTextFile = function (inputFile) {
             let reader = new FileReader();
             reader.onload = function (e) {
                 let str = e.target.result;
-                $scope.manageMembers = str.split(/[\r\n]+/);
+                $scope.manageMembers = str.split(/[\r\n,]+/);
                 let sanitizedFile = [];
                 for (const members of $scope.manageMembers) {
                     let sanitizedName = $scope.sanitizer(members);
@@ -664,7 +662,7 @@
                 $scope.manageMembers = sanitizedFile.join(" ");
                 $scope.addMembers($scope.listName);
             };
-            reader.readAsText(file);
+            reader.readAsText(inputFile);
         };
 
         $scope.removeTextFile = function () {
