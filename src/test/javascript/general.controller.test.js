@@ -2154,6 +2154,41 @@ describe("GeneralController", () => {
             expect(scope.createRemoveModal).toHaveBeenCalled();
         });
     });
+    
+    describe("transferMembersFromPageToCheckboxObject", () => { 
+        let currentPage;
+        beforeEach(() => {
+            currentPage = [
+                {
+                    firstName: "Monir",
+                    inBasis: "No",
+                    lastName: "Hodges",
+                    name: "Monir F Hodges",
+                    uhUuid: "11111111",
+                    username: "monir"
+                },
+                {
+                    firstName: "Monir",
+                    inBasis: "No",
+                    lastName: "Hodges",
+                    name: "Monir F Hodges",
+                    uhUuid: "11111112",
+                    username: "monir"
+                }
+            ]
+            scope.membersInCheckboxList = {
+                11111112: true,
+                11111111: true,
+            }
+        })
+       it("should make the members in the checkbox list false", () => { 
+           scope.transferMembersFromPageToCheckboxObject(currentPage);
+           expect(scope.membersInCheckboxList).toEqual({
+               11111112: false,
+               11111111: false,
+           });
+       }); 
+    });
 
     describe("batchRemoveResponseHandler", () => {
         // let success = false;
