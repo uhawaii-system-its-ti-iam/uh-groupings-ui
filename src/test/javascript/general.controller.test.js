@@ -1927,11 +1927,59 @@ describe("GeneralController", () => {
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
+    
+    describe("getEntireSyncDestInArray", () => {
+        let testSyncDest, testSyncDest1, testSyncDest2;
+        beforeEach(() => {
+            testSyncDest = {
+                description: "",
+                hidden: true,
+                name: "testSyncDest",
+                synced: false,
+                isSynced: true,
+                tooltip: "Synchronize the grouping's membership with a corresponding GOOGLE-GROUP list, which will be created as needed."
+            };
+            testSyncDest1 = {
+                description: "",
+                hidden: true,
+                name: "testSyncDest1",
+                synced: true,
+                isSynced: true,
+                tooltip: "Synchronize the grouping's membership with a corresponding GOOGLE-GROUP list, which will be created as needed."
+            };
+            testSyncDest2 = {
+                description: "",
+                hidden: false,
+                name: "testSyncDest2",
+                synced: false,
+                isSynced: false,
+                tooltip: "Synchronize the grouping's membership with a corresponding GOOGLE-GROUP list, which will be created as needed."
+            };
+            scope.syncDestArray.push(testSyncDest);
+            scope.syncDestArray.push(testSyncDest1);
+            scope.syncDestArray.push(testSyncDest2);
+        });
+        
+       it("should return the entire sync dest object of the testSyncDest", () => { 
+           let result = scope.getEntireSyncDestInArray(testSyncDest.name);
+           expect(result).toEqual(testSyncDest);
+       });
+
+        it("should return the entire sync dest object of the testSyncDest1", () => {
+            let result = scope.getEntireSyncDestInArray(testSyncDest1.name);
+            expect(result).toEqual(testSyncDest1);
+        });
+
+        it("should return the entire sync dest object of the testSyncDest2", () => {
+            let result = scope.getEntireSyncDestInArray(testSyncDest2.name);
+            expect(result).toEqual(testSyncDest2);
+        });
+    });
 
     describe("setSyncDestInArray", () => {
-        let test;
+        let testSyncDest;
         beforeEach(() => {
-            test = {
+            testSyncDest = {
                 description: "Google-Group: #uh-iam-group",
                 hidden: true,
                 name: "testSyncDest",
@@ -1942,13 +1990,13 @@ describe("GeneralController", () => {
         });
 
         it("should set the given sync dest from true to false", () => {
-            scope.syncDestArray.push(test);
-            scope.setSyncDestInArray(test.name, true);
+            scope.syncDestArray.push(testSyncDest);
+            scope.setSyncDestInArray(testSyncDest.name, true);
             expect(scope.syncDestArray[0].isSynced).toBeTrue();
         });
         it("should set the given sync dest from false to true", () => {
-            scope.syncDestArray.push(test);
-            scope.setSyncDestInArray(test.name, false);
+            scope.syncDestArray.push(testSyncDest);
+            scope.setSyncDestInArray(testSyncDest.name, false);
             expect(scope.syncDestArray[0].isSynced).toBeFalse();
         });
     });
