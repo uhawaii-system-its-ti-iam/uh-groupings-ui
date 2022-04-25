@@ -1239,8 +1239,12 @@
                 pageItems = $scope.pagedItemsInclude;
                 pageNumber = $scope.currentPageInclude;
             }
+            console.log(pageItems);
+            console.log(pageNumber);
             for (let i = 0; i < pageItems[pageNumber].length; i++) {
                 $scope.membersInCheckboxList[((pageItems[pageNumber][i]).uhUuid)] = $scope.allSelected;
+                console.log( $scope.membersInCheckboxList[((pageItems[pageNumber][i]))]);
+                console.log( $scope.membersInCheckboxList[((pageItems[pageNumber][i]).uhUuid)]);
             }
         };
 

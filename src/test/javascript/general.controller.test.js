@@ -1659,27 +1659,18 @@ describe("GeneralController", () => {
             expect(scope.syncDestInstance.dismiss).toHaveBeenCalled();
         });
     });
-    //
-    // describe("proceedLogoutUser", () => {
-    //
-    //     // beforeEach(function() {
-    //     //     await TestBed.configureTestingModule({ 
-    //     //         providers: [
-    //     //             provide: Window,
-    //     //             useValue: { location: { href: '' } },
-    //     //         ]
-    //     //     }).compileComponents();
-    //     // });
-    //
-    //   it('should close RoleErrorModalInstance', () => {
-    //     scope.createRoleErrorModal();
-    //     spyOn(scope.RoleErrorModalInstance, 'close').and.callThrough();
-    //
-    //     spyOn(window)
-    //     scope.proceedLogoutUser();
-    //     expect(scope.RoleErrorModalInstance.close).toHaveBeenCalled();
-    //   });
-    // });
+
+    describe("proceedLogoutUser", () => {
+
+      it('should close RoleErrorModalInstance', () => {
+        scope.createRoleErrorModal();
+        spyOn(scope.RoleErrorModalInstance, 'close').and.callThrough();
+
+        spyOn(window)
+        scope.proceedLogoutUser();
+        expect(scope.RoleErrorModalInstance.close).toHaveBeenCalled();
+      });
+    });
 
     describe("proceedRedirectApiError", () => {
         let testWindowLocationHref = "/testURL";
@@ -2335,6 +2326,23 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("toggleCheckAllSelection", () => { 
+        beforeEach(() => { 
+                
+        });
+        
+        it("should set allSelected to true if false", () => { 
+            scope.allSelected = false;
+            scope.toggleCheckAllSelection("Include");
+            expect(scope.allSelected).toBeTrue();
+        });
+        it("should set allSelected to false if true", () => {
+            scope.allSelected = true;
+            scope.toggleCheckAllSelection("Include");
+            expect(scope.allSelected).toBeFalse();
+        });
+    });
+    
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
