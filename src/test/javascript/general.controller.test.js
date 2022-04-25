@@ -10,6 +10,9 @@ describe("GeneralController", () => {
     let gs;
     let uibModal;
 
+    /*global inject, a*/
+    /*eslint no-undef: "error"*/
+
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, $window) => {
         scope = $rootScope.$new();
         controller = $controller("GeneralJsController", {

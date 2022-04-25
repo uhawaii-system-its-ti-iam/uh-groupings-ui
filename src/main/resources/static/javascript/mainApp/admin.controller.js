@@ -26,17 +26,6 @@
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
-
-        $scope.createRoleErrorModal = function () {
-            $scope.loading = false;
-            $scope.RoleErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/roleErrorModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
-        };
-
         /**
          * Callback which takes the admin tab data and moves it into adminList and groupingsList, each of these objects
          * is then paginated.
@@ -242,8 +231,8 @@
         $scope.createRemoveFromGroupsModal = function (options) {
             const userToRemove = options.user.uhUuid;
             $scope.userToRemove = options.user;
-            $scope.groupPaths = options.groupPaths.join(", ");
-            $scope.listName = options.listName.join(", ");
+            $scope.groupPaths = options.groupPaths;
+            $scope.listName = options.listName;
             $scope.ownerOfListName = $scope.selectedOwnedGroupingsNames.join(", ");
 
             const windowClass = $scope.showWarningRemovingSelfFromList() ? "modal-danger" : "";
