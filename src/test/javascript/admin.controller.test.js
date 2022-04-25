@@ -298,6 +298,21 @@ describe("AdminController", function () {
       let checkAll = scope.checkAll;
       scope.updateCheckBoxes();
       expect(scope.checkAll).toEqual(!checkAll);
+    describe("removeAdmin", function () {
+        beforeEach(function () {
+            scope.pagedItemsAdmins[0] = "zzzz";
+        });
+        it("should call scope.createRemoveModal", () => {
+            scope.adminsList = ["iamtst01", "iamtst02", "iamtst03"];
+            spyOn(scope, "createRemoveModal");
+            scope.removeAdmin(0, 0);
+            expect(scope.createRemoveModal).toHaveBeenCalled();
+        });
+        it("should call scope.createRemoveErrorModal", function () {
+            spyOn(scope, "createRemoveErrorModal");
+            scope.removeAdmin(0, 0);
+            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
+        });
     });
   });
 
