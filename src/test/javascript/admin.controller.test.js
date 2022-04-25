@@ -40,16 +40,6 @@ describe("AdminController", function () {
         expect(controller).toBeDefined();
     });
 
-    describe("createRoleErrorModal", () => {
-      it('should set scope.loading to false and open uibModal', () => {
-        scope.loading = true;
-        scope.createRoleErrorModal();
-
-        expect(scope.loading).toBeFalse();
-        expect(uibModal.open).toHaveBeenCalled();
-      });
-    });
-
   describe("getAdminListsCallbackOnSuccess", () => {
     let res = {};
     beforeEach(() => {
@@ -183,16 +173,16 @@ describe("AdminController", function () {
   });
 
   describe("checkSoleOwner", () => {
-    let res = {username: 'testUsername', name: 'testName', uhUuid: 'testId'};
-    it('should empty soleOwnerGroupingNames', () => {
-      scope.soleOwnerGroupingNames = ['test1', 'test2'];
+    let res = {username: "testUsername", name: "testName", uhUuid: "testId"};
+    it("should empty soleOwnerGroupingNames", () => {
+      scope.soleOwnerGroupingNames = ["test1", "test2"];
       scope.checkSoleOwner(res);
 
       expect(scope.soleOwnerGroupingNames).toEqual([]);
     });
 
-    it('should call iterate through selectedOwnedGroupings through forEach', () => {
-      spyOn(_, 'forEach');
+    it("should call iterate through selectedOwnedGroupings through forEach", () => {
+      spyOn(_, "forEach");
       scope.checkSoleOwner(res);
 
       expect(_.forEach).toHaveBeenCalled();
@@ -279,7 +269,7 @@ describe("AdminController", function () {
       expect(selectedGroupingsPaths.length).toEqual(selectedGroupingsNames.length);
     });
 
-    it("should fetch the grouping names", () =>{
+    it("should fetch the grouping names", () => {
       scope.createGroupPathsAndNames(currentPage, selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames);
       expect(selectedGroupingsNames[0]).toEqual("grouping-name0");
       expect(selectedGroupingsNames[1]).toEqual("grouping-name1");
@@ -318,13 +308,13 @@ describe("AdminController", function () {
       expect(scope.listName).toBe("admins");
     });
 
-    it("should check if the admin to add is empty", () =>{
+    it("should check if the admin to add is empty", () => {
       scope.emptyInput = false;
       scope.addAdmin();
       expect(scope.emptyInput).toBeTrue();
     });
 
-    it("should set waitingForImportResponse to false", () =>{
+    it("should set waitingForImportResponse to false", () => {
       scope.waitingForImportResponse = true;
       scope.addAdmin();
       expect(scope.waitingForImportResponse).toBeFalse();
@@ -350,29 +340,29 @@ describe("AdminController", function () {
   });
 
   describe("createRemoveFromGroupsModal", () => {
-      let options = {user: {uhUuid: 'testId'}, groupPaths: 'testPath', listName: 'testList'};
+      let options = {user: {uhUuid: "testId"}, groupPaths: "testPath", listName: "testList"};
 
       it("should set scope variables to passed in option's object", () => {
         scope.userToRemove = {};
-        scope.groupPaths = 'badPath';
-        scope.listName = 'badList';
+        scope.groupPaths = "badPath";
+        scope.listName = "badList";
         scope.createRemoveFromGroupsModal(options);
 
-        expect(scope.userToRemove).toEqual({uhUuid: 'testId'});
-        expect(scope.groupPaths).toBe('testPath');
-        expect(scope.listName).toBe('testList');
-        expect(scope.ownerOfListName).toBe('');
+        expect(scope.userToRemove).toEqual({uhUuid: "testId"});
+        expect(scope.groupPaths).toBe("testPath");
+        expect(scope.listName).toBe("testList");
+        expect(scope.ownerOfListName).toBe("");
       });
 
-      it('should call showWarningRemovingSelfFromList function', () => {
-        spyOn(scope, 'showWarningRemovingSelfFromList').and.callThrough();
+      it("should call showWarningRemovingSelfFromList function", () => {
+        spyOn(scope, "showWarningRemovingSelfFromList").and.callThrough();
         scope.createRemoveFromGroupsModal(options);
 
         expect(scope.showWarningRemovingSelfFromList).toHaveBeenCalled();
       });
 
-      it('should call groupingsService', () => {
-        spyOn(gs, 'getMemberAttributes').and.callThrough();
+      it("should call groupingsService", () => {
+        spyOn(gs, "getMemberAttributes").and.callThrough();
         scope.createRemoveFromGroupsModal(options);
 
         expect(gs.getMemberAttributes).toHaveBeenCalled();

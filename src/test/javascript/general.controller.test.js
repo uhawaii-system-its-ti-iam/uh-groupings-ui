@@ -10,6 +10,9 @@ describe("GeneralController", () => {
     let gs;
     let uibModal;
 
+    /*global inject, a*/
+    /*eslint no-undef: "error"*/
+
     beforeEach(inject(($rootScope, $controller, _BASE_URL_, _$httpBackend_, groupingsService, $uibModal, $window) => {
         scope = $rootScope.$new();
         controller = $controller("GeneralJsController", {
@@ -1902,7 +1905,7 @@ describe("GeneralController", () => {
 
     describe("launchMultiAddResultModal", () => {
         it("should check that the multiAddResultModalInstance is opened", () => {
-            spyOn(uibModal, 'open').and.callThrough();
+            spyOn(uibModal, "open").and.callThrough();
             scope.launchMultiAddResultModal(scope.listName);
             expect(uibModal.open).toHaveBeenCalled();
         });
@@ -1916,20 +1919,20 @@ describe("GeneralController", () => {
 
     describe("createCheckModal", () => {
         beforeEach(() => {
-            spyOn(uibModal, 'open').and.callThrough();
-            scope.createCheckModal('testUser', 'testListName', 'testSwap', 'testBasis');
+            spyOn(uibModal, "open").and.callThrough();
+            scope.createCheckModal("testUser", "testListName", "testSwap", "testBasis");
         });
 
         it("should set scope.list name to passed in list name", () => {
-            expect(scope.listName).toBe('testListName');
+            expect(scope.listName).toBe("testListName");
         });
 
         it("should set scope.swap to passed in swap", () => {
-            expect(scope.swap).toBe('testSwap');
+            expect(scope.swap).toBe("testSwap");
         });
 
         it("should set scope.inBasis to passed in inBasis", () => {
-            expect(scope.inBasis).toBe('testBasis');
+            expect(scope.inBasis).toBe("testBasis");
         });
 
         it("should open uibModal", () => {
@@ -1943,7 +1946,7 @@ describe("GeneralController", () => {
        });
 
         it("should dismiss confirmImportInstance", () => {
-            spyOn(scope.confirmImportInstance, 'dismiss').and.callThrough();
+            spyOn(scope.confirmImportInstance, "dismiss").and.callThrough();
             scope.cancelImportModalInstance();
             expect(scope.confirmImportInstance.dismiss).toHaveBeenCalled();
         });
@@ -1957,7 +1960,7 @@ describe("GeneralController", () => {
         });
 
         it("should check that createRoleErrorModal is launched", () => {
-            spyOn(uibModal, 'open').and.callThrough();
+            spyOn(uibModal, "open").and.callThrough();
             scope.createRoleErrorModal();
             expect(uibModal.open).toHaveBeenCalled();
         });
@@ -1966,22 +1969,22 @@ describe("GeneralController", () => {
     describe("batchRemoveResponseHandler", () => {
         // let success = false;
         it("should call batchRemoveConfirmationModal if success is true", () => {
-            let response = [{result: 'SUCCESS', }, {result: 'SUCCESS'}];
-            spyOn(scope, 'batchRemoveConfirmationModal').and.callThrough();
+            let response = [{result: "SUCCESS", }, {result: "SUCCESS"}];
+            spyOn(scope, "batchRemoveConfirmationModal").and.callThrough();
             scope.batchRemoveResponseHandler(response);
             expect(scope.batchRemoveConfirmationModal).toHaveBeenCalled();
         });
 
         it("should not call batchRemoveConfirmationModal if success is false", () => {
-            let response = [{result: 'FAILURE', }, {result: 'FAILURE'}];
-            spyOn(scope, 'batchRemoveConfirmationModal').and.callThrough();
+            let response = [{result: "FAILURE", }, {result: "FAILURE"}];
+            spyOn(scope, "batchRemoveConfirmationModal").and.callThrough();
             scope.batchRemoveResponseHandler(response);
             expect(scope.batchRemoveConfirmationModal).not.toHaveBeenCalled();
         });
 
         it("should call batchRemoveConfirmationModal if success is true", () => {
-            let response = [{result: 'SUCCESS', }, {result: 'FAILURE'}];
-            spyOn(scope, 'batchRemoveConfirmationModal').and.callThrough();
+            let response = [{result: "SUCCESS", }, {result: "FAILURE"}];
+            spyOn(scope, "batchRemoveConfirmationModal").and.callThrough();
             scope.batchRemoveResponseHandler(response);
             expect(scope.batchRemoveConfirmationModal).toHaveBeenCalled();
         });
@@ -1990,30 +1993,30 @@ describe("GeneralController", () => {
     describe("batchRemoveConfirmationModal", () => {
         it("should set scope.loading to false", () => {
             scope.loading = true;
-            scope.batchRemoveConfirmationModal('testListName');
+            scope.batchRemoveConfirmationModal("testListName");
             expect(scope.loading).toBeFalse();
         });
 
         it("should open uibModal", () => {
-            spyOn(uibModal, 'open').and.callThrough();
-            scope.batchRemoveConfirmationModal('testListName');
+            spyOn(uibModal, "open").and.callThrough();
+            scope.batchRemoveConfirmationModal("testListName");
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
 
     describe("createResetGroupModal", () => {
-        let options = {user: 'testUser', group: 'testGroup', listNames: 'testList'};
+        let options = {user: "testUser", group: "testGroup", listNames: "testList"};
 
         it("should set scope.groupReset/listNames to passed in option's object group/listNames", () => {
-            scope.groupReset = '';
-            scope.listNames = '';
+            scope.groupReset = "";
+            scope.listNames = "";
             scope.createResetGroupModal(options);
-            expect(scope.groupReset).toBe('testGroup');
-            expect(scope.listNames).toBe('testList');
+            expect(scope.groupReset).toBe("testGroup");
+            expect(scope.listNames).toBe("testList");
         });
 
         it("should open resetModalInstance modal", () => {
-            spyOn(uibModal, 'open').and.callThrough();
+            spyOn(uibModal, "open").and.callThrough();
             scope.createResetGroupModal(options);
             expect(uibModal.open).toHaveBeenCalled();
         });
@@ -2021,18 +2024,18 @@ describe("GeneralController", () => {
 
     describe("createBasisWarningModal", () => {
         it("should set scope.listName to passed in listName", () => {
-            scope.createBasisWarningModal('testUser', 'testList', 'testBasis');
-            expect(scope.listName).toEqual('testList');
+            scope.createBasisWarningModal("testUser", "testList", "testBasis");
+            expect(scope.listName).toEqual("testList");
         });
 
         it("should set scope.inBasis to passed in basis", () => {
-            scope.createBasisWarningModal('testUser', 'testList', 'testBasis');
-            expect(scope.inBasis).toEqual('testBasis');
+            scope.createBasisWarningModal("testUser", "testList", "testBasis");
+            expect(scope.inBasis).toEqual("testBasis");
         });
 
         it("should open basisWarningModalInstance modal", () => {
-            spyOn(uibModal, 'open').and.callThrough();
-            scope.createBasisWarningModal('testUser', 'testList', 'testBasis');
+            spyOn(uibModal, "open").and.callThrough();
+            scope.createBasisWarningModal("testUser", "testList", "testBasis");
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
@@ -2047,44 +2050,44 @@ describe("GeneralController", () => {
         });
 
         it("should set currentModalTitle & currentModalBody to passed in title & body", () => {
-            scope.launchDynamicModal('testTitle', 'testBody', 5000);
-            expect(scope.currentModalTitle).toBe('testTitle');
-            expect(scope.currentModalBody).toBe('testBody');
+            scope.launchDynamicModal("testTitle", "testBody", 5000);
+            expect(scope.currentModalTitle).toBe("testTitle");
+            expect(scope.currentModalBody).toBe("testBody");
         });
 
         it("should open createDynamicModal modal", () => {
-            spyOn(uibModal, 'open').and.callThrough();
-            scope.launchDynamicModal('testTitle', 'testBody', 5000);
+            spyOn(uibModal, "open").and.callThrough();
+            scope.launchDynamicModal("testTitle", "testBody", 5000);
             expect(uibModal.open).toHaveBeenCalled();
         });
 
         it("should call dismissDynamicModal to dismiss modal", () => {
-            spyOn(scope.createDynamicModal, 'dismiss').and.callThrough();
-            scope.launchDynamicModal('testTitle', 'testBody', 5000);
+            spyOn(scope.createDynamicModal, "dismiss").and.callThrough();
+            scope.launchDynamicModal("testTitle", "testBody", 5000);
             expect(scope.createDynamicModal.dismiss()).toBeTrue();
         });
     });
 
     describe("createConfirmAddMembersModal", () => {
-        let options = {manageMembers: 'testMembers', listName: 'testList'};
+        let options = {manageMembers: "testMembers", listName: "testList"};
 
         it("should open confirmAddModalInstance modal", () => {
-            spyOn(uibModal, 'open').and.callThrough();
+            spyOn(uibModal, "open").and.callThrough();
             scope.createConfirmAddMembersModal(options);
             expect(uibModal.open).toHaveBeenCalled();
         });
     });
 
     describe("createSuccessfulAddModal", () => {
-        let options = {userToAdd: 'testUser', response: 'testResponse', listName: 'testList'};
+        let options = {userToAdd: "testUser", response: "testResponse", listName: "testList"};
 
         it("should set scope.listName to passed in option object's listName", () => {
             scope.createSuccessfulAddModal(options);
-            expect(scope.listName).toBe('testList');
+            expect(scope.listName).toBe("testList");
         });
 
         it("should open addModalInstance modal", () => {
-            spyOn(uibModal, 'open').and.callThrough();
+            spyOn(uibModal, "open").and.callThrough();
             scope.createSuccessfulAddModal(options);
             expect(uibModal.open).toHaveBeenCalled();
         });
@@ -2094,15 +2097,15 @@ describe("GeneralController", () => {
         let options = {currentPage: 0, index: 0};
 
         it("should create the remove modal if groupingOwners length > 1", () => {
-            scope.groupingOwners = ['testOwner1', 'testOwner2'];
-            spyOn(scope, 'createRemoveModal');
+            scope.groupingOwners = ["testOwner1", "testOwner2"];
+            spyOn(scope, "createRemoveModal");
             scope.removeOwner(0, 0, options);
             expect(scope.createRemoveModal).toHaveBeenCalled();
         });
 
         it("should create the remove error modal if groupingOwners < 1", () => {
             scope.groupingOwners = [];
-            spyOn(scope, 'createRemoveErrorModal');
+            spyOn(scope, "createRemoveErrorModal");
             scope.removeOwner(0, 0, options);
             expect(scope.createRemoveErrorModal).toHaveBeenCalled();
         });
@@ -2131,63 +2134,63 @@ describe("GeneralController", () => {
     });
 
     describe("createConfirmAddModal", () => {
-      let options = {userToAdd: 'testUser', listName: 'testList'};
+      let options = {userToAdd: "testUser", listName: "testList"};
 
-      it('should call for groupings service getMemberAttributes', () => {
+      it("should call for groupings service getMemberAttributes", () => {
         spyOn(gs, "getMemberAttributes").and.callThrough();
         scope.createConfirmAddModal(options);
         expect(gs.getMemberAttributes).toHaveBeenCalled();
       });
 
-      it('should set scope.listName top passed in options.listName', () => {
+      it("should set scope.listName top passed in options.listName", () => {
         scope.createConfirmAddModal(options);
-        expect(scope.listName).toEqual('testList');
+        expect(scope.listName).toEqual("testList");
       });
     });
 
     describe("createRemoveModal", () => {
-      let options = {user: {uhUuid: 'testId'}, listName: 'testList'};
+      let options = {user: {uhUuid: "testId"}, listName: "testList"};
 
       beforeEach(() => {
         scope.createRemoveModal(options);
       });
 
-      it('should set scope.userToRemove to passed in option.user', () => {
-        expect(scope.userToRemove).toEqual({uhUuid: 'testId'});
+      it("should set scope.userToRemove to passed in option.user", () => {
+        expect(scope.userToRemove).toEqual({uhUuid: "testId"});
       });
 
-      it('should set scope.listName to passed in option.listName', () => {
+      it("should set scope.listName to passed in option.listName", () => {
         expect(scope.listName).toEqual(options.listName);
       });
     });
 
     describe("updateAllowOptIn", () => {
-      it('should call groupings service setOptIn', () => {
-        spyOn(gs, 'setOptIn').and.callThrough();
+      it("should call groupings service setOptIn", () => {
+        spyOn(gs, "setOptIn").and.callThrough();
         scope.updateAllowOptIn();
         expect(gs.setOptIn).toHaveBeenCalled();
       });
     });
 
     describe("updateAllowOptOut", () => {
-      it('should call groupings service', () => {
-        spyOn(gs, 'setOptOut').and.callThrough();
+      it("should call groupings service", () => {
+        spyOn(gs, "setOptOut").and.callThrough();
         scope.updateAllowOptOut();
         expect(gs.setOptOut).toHaveBeenCalled();
       });
     });
 
     describe("resetGroupingInformation", () => {
-      it('should reset columnSort object', () => {
-        scope.columnSort = {adminsList: {property: 'name'}};
+      it("should reset columnSort object", () => {
+        scope.columnSort = {adminsList: {property: "name"}};
         scope.resetGroupingInformation();
         expect(scope.columnSort).toEqual({});
       });
 
-      it('should reset syncDestArray, resetResults, and personProps arrays', () => {
-        scope.syncDestArray = ['test'];
-        scope.resetResults = ['test'];
-        scope.personProps = ['test'];
+      it("should reset syncDestArray, resetResults, and personProps arrays", () => {
+        scope.syncDestArray = ["test"];
+        scope.resetResults = ["test"];
+        scope.personProps = ["test"];
 
         scope.resetGroupingInformation();
 
@@ -2199,58 +2202,58 @@ describe("GeneralController", () => {
 
     describe("showWarningRemovingSelfResetModal", () => {
       let result;
-      it('should return true if usersToRemove includes currentUser && listName is "owners" ', () => {
-        scope.currentUser = 'testUser';
-        scope.usersToRemove = ['testUser'];
-        scope.listName = 'owners';
+      it("should return true if usersToRemove includes currentUser && listName is 'owners' ", () => {
+        scope.currentUser = "testUser";
+        scope.usersToRemove = ["testUser"];
+        scope.listName = "owners";
         result = scope.showWarningRemovingSelfResetModal();
         expect(result).toBeTrue();
       });
 
-      it('should return true if usersToRemove includes currentUser && listName is "admins" ', () => {
-        scope.currentUser = 'testUser';
-        scope.usersToRemove = ['testUser'];
-        scope.listName = 'admins';
+      it("should return true if usersToRemove includes currentUser && listName is 'admins' ", () => {
+        scope.currentUser = "testUser";
+        scope.usersToRemove = ["testUser"];
+        scope.listName = "admins";
         result = scope.showWarningRemovingSelfResetModal();
         expect(result).toBeTrue();
       });
 
-      it('should return false if usersToRemove includes currentUser && listName is not "owners" or "admins" ', () => {
-        scope.currentUser = 'testUser';
-        scope.usersToRemove = ['testUser'];
-        scope.listName = 'badListName';
+      it("should return false if usersToRemove includes currentUser && listName is not 'owners' or 'admins' ", () => {
+        scope.currentUser = "testUser";
+        scope.usersToRemove = ["testUser"];
+        scope.listName = "badListName";
         result = scope.showWarningRemovingSelfResetModal();
         expect(result).toBeFalse();
       });
 
-      it('should return false if usersToRemove does not include currentUser && listName is "owners" ', () => {
-        scope.currentUser = 'badTestUser';
-        scope.usersToRemove = ['testUser'];
-        scope.listName = 'owners';
+      it("should return false if usersToRemove does not include currentUser && listName is 'owners' ", () => {
+        scope.currentUser = "badTestUser";
+        scope.usersToRemove = ["testUser"];
+        scope.listName = "owners";
         result = scope.showWarningRemovingSelfResetModal();
         expect(result).toBeFalse();
       });
 
-      it('should return false if usersToRemove does not include currentUser && listName is "admins" ', () => {
-        scope.currentUser = 'badTestUser';
-        scope.usersToRemove = ['testUser'];
-        scope.listName = 'admins';
+      it("should return false if usersToRemove does not include currentUser && listName is 'admins' ", () => {
+        scope.currentUser = "badTestUser";
+        scope.usersToRemove = ["testUser"];
+        scope.listName = "admins";
         result = scope.showWarningRemovingSelfResetModal();
         expect(result).toBeFalse();
       });
 
-      it('should return false if usersToRemove does not include currentUser', () => {
-        scope.currentUser = 'badTestUser';
-        scope.usersToRemove = ['testUser'];
+      it("should return false if usersToRemove does not include currentUser", () => {
+        scope.currentUser = "badTestUser";
+        scope.usersToRemove = ["testUser"];
         result = scope.showWarningRemovingSelfResetModal();
         expect(result).toBeFalse();
       });
     });
 
     // describe("proceedLogoutUser", () => {
-    //   it('should close RoleErrorModalInstance', () => {
+    //   it("should close RoleErrorModalInstance", () => {
     //     scope.createRoleErrorModal();
-    //     spyOn(scope.RoleErrorModalInstance, 'close').and.callThrough();
+    //     spyOn(scope.RoleErrorModalInstance, "close").and.callThrough();
     //
     //     spyOn(window)
     //     scope.proceedLogoutUser();
@@ -2260,14 +2263,14 @@ describe("GeneralController", () => {
 
   describe("resetGroup", () => {
     it("should set scope.resetInclude to 'empty' if entries in groupingInclude is 0 or scope.includeCheck is false", function () {
-      scope.resetInclude = 'test';
+      scope.resetInclude = "test";
       scope.includeCheck = false;
       scope.resetGroup();
       expect(scope.resetInclude).toEqual("empty");
     });
 
     it("should set scope.resetInclude to 'empty' if entries in groupingInclude is 0 or scope.includeCheck is false", function () {
-      scope.resetInclude = 'test';
+      scope.resetInclude = "test";
       scope.includeCheck = true;
       scope.groupingInclude = [];
       scope.resetGroup();
@@ -2276,9 +2279,9 @@ describe("GeneralController", () => {
 
     it("should push uhUuid from scope.groupingInclude into scope.resetInclude", () => {
       scope.includeCheck = true;
-      scope.groupingInclude = [{uhUuid:'testId1'}, {uhUuid:'testId2'}];
+      scope.groupingInclude = [{uhUuid:"testId1"}, {uhUuid:"testId2"}];
       scope.resetGroup();
-      expect(scope.resetInclude).toEqual(['testId1', 'testId2']);
+      expect(scope.resetInclude).toEqual(["testId1", "testId2"]);
     });
 
     it("should set scope.resetResults to groupingInclude concat w/ groupingExclude if exclude & include checks are true", () => {
@@ -2306,20 +2309,20 @@ describe("GeneralController", () => {
       scope.excludeCheck = false;
       scope.includeCheck = false;
       scope.resetGroup();
-      expect(scope.resetResults).toEqual('');
+      expect(scope.resetResults).toEqual("");
     });
 
     it("should call scope.getPersonProps if resetResults[0] is not undefined", () => {
-      scope.groupingInclude =['username', 'uhUuid', 'name'];
+      scope.groupingInclude =["username", "uhUuid", "name"];
       scope.excludeCheck = false;
       scope.includeCheck = true;
-      spyOn(scope, 'getPersonProps').and.callThrough();
+      spyOn(scope, "getPersonProps").and.callThrough();
       scope.resetGroup();
       expect(scope.getPersonProps).toHaveBeenCalled()
     });
 
-    it('should call createResetGroupModal', () => {
-      spyOn(scope, 'createResetGroupModal').and.callThrough();
+    it("should call createResetGroupModal", () => {
+      spyOn(scope, "createResetGroupModal").and.callThrough();
       scope.resetGroup();
       expect(scope.createResetGroupModal).toHaveBeenCalled();
     });
@@ -2328,39 +2331,39 @@ describe("GeneralController", () => {
   describe("getCookie", () => {
     let result;
 
-    it('should return empty string when cookie not found', () => {
-      result = scope.getCookie('badCookie');
-      expect(result).toEqual('');
+    it("should return empty string when cookie not found", () => {
+      result = scope.getCookie("badCookie");
+      expect(result).toEqual("");
     });
   });
 
   // WIP
   // describe("createSyncDestModal", () => {
-  //   it('should set variable and call getSyncDestValueInArray', () => {
+  //   it("should set variable and call getSyncDestValueInArray", () => {
   //     let isSyncDestOn = true;
   //
   //
   //
-  //     scope.createSyncDestModal('JTTEST-L');
-  //     console.log('test1');
+  //     scope.createSyncDestModal("JTTEST-L");
+  //     console.log("test1");
   //
   //     expect(scope.getSyncDestValueInArray).toHaveBeenCalled();
   //   });
   //
-  //   it('should open syncDestInstance uibModal', () => {
-  //     spyOn(uibModal, 'open').and.callThrough();
-  //     console.log('test2');
+  //   it("should open syncDestInstance uibModal", () => {
+  //     spyOn(uibModal, "open").and.callThrough();
+  //     console.log("test2");
   //
-  //     scope.createSyncDestModal('JTTEST-L');
+  //     scope.createSyncDestModal("JTTEST-L");
   //     expect(uibModal.open).toHaveBeenCalled();
   //   });
   // });
 
   // describe("transferMembersFromPageToCheckboxObject", () => {
   //   let currentPage = [{uhUuid: 0}];
-  //   // scope.membersInCheckboxList = {name: 'test', age: 2};
+  //   // scope.membersInCheckboxList = {name: "test", age: 2};
   //   console.log(scope.membersInCheckboxList);
-  //   it('should ', () => {
+  //   it("should ", () => {
   //     // scope.transferMembersFromPageToCheckboxObject(currentPage);
   //     // expect(scope.membersInCheckboxList[0]).toBe(false);
   //   });
@@ -2368,13 +2371,13 @@ describe("GeneralController", () => {
   // });
 
   // describe("toggleCheckAllSelection", () => {
-  //   it('should set scope.allSelected which is a boolean value to the opposite value', () => {
+  //   it("should set scope.allSelected which is a boolean value to the opposite value", () => {
   //     scope.allSelected = true;
-  //     scope.toggleCheckAllSelection('Exclude');
+  //     scope.toggleCheckAllSelection("Exclude");
   //     expect(scope.allSelected).toBeFalse();
   //   });
   //
-  //   it('should go through forloop and call membersInCheckboxList', () => {
+  //   it("should go through forloop and call membersInCheckboxList", () => {
   //     scope.allSelected = false;
   //     scope.membersInCheckboxList = [false];
   //     scope.currentPageExclude = 0;

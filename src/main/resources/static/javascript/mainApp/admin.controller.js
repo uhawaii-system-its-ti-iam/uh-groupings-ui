@@ -26,17 +26,6 @@
 
         angular.extend(this, $controller("GeneralJsController", { $scope: $scope }));
 
-
-        $scope.createRoleErrorModal = function () {
-            $scope.loading = false;
-            $scope.RoleErrorModalInstance = $uibModal.open({
-                templateUrl: "modal/roleErrorModal",
-                scope: $scope,
-                backdrop: "static",
-                keyboard: false
-            });
-        };
-
         /**
          * Callback which takes the admin tab data and moves it into adminList and groupingsList, each of these objects
          * is then paginated.
