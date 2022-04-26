@@ -89,6 +89,12 @@ td.uh-pre {
     word-break: break-all;
 }
 
+@media (min-width: 377px) {
+    #csvButton {
+        float: right;
+    }
+}
+
 .navbar {
     background-color: white;
     padding-top: 0;
