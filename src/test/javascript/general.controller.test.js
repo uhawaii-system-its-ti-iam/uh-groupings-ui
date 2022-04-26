@@ -1662,27 +1662,6 @@ describe("GeneralController", () => {
             expect(scope.syncDestInstance.dismiss).toHaveBeenCalled();
         });
     });
-    //
-    // describe("proceedLogoutUser", () => {
-    //
-    //     // beforeEach(function() {
-    //     //     await TestBed.configureTestingModule({ 
-    //     //         providers: [
-    //     //             provide: Window,
-    //     //             useValue: { location: { href: '' } },
-    //     //         ]
-    //     //     }).compileComponents();
-    //     // });
-    //
-    //   it('should close RoleErrorModalInstance', () => {
-    //     scope.createRoleErrorModal();
-    //     spyOn(scope.RoleErrorModalInstance, 'close').and.callThrough();
-    //
-    //     spyOn(window)
-    //     scope.proceedLogoutUser();
-    //     expect(scope.RoleErrorModalInstance.close).toHaveBeenCalled();
-    //   });
-    // });
 
     describe("proceedRedirectApiError", () => {
         let testWindowLocationHref = "/testURL";
@@ -1976,6 +1955,33 @@ describe("GeneralController", () => {
         it("should return the entire sync dest object of the testSyncDest2", () => {
             let result = scope.getEntireSyncDestInArray(testSyncDest2.name);
             expect(result).toEqual(testSyncDest2);
+        });
+    });
+
+    describe("createSyncDestModal", () => {
+        let testSyncDest;
+        beforeEach(() => {
+            testSyncDest = {
+                description: "Google-Group: #uh-iam-group",
+                hidden: true,
+                name: "testSyncDest",
+                synced: false,
+                isSynced: true,
+                tooltip: "Synchronize the grouping's membership with a corresponding GOOGLE-GROUP list, which will be created as needed."
+            };
+        });
+
+        it("should create syncDestInstance and set selectedSyncDest", () => {
+            spyOn(scope, "setSyncDestInArray").and.callThrough();
+            spyOn(uibModal, "open").and.callThrough();
+            scope.syncDestArray.push(testSyncDest);
+            scope.setSyncDestInArray(testSyncDest.name, true);
+
+            scope.createSyncDestModal(testSyncDest.name);
+
+            expect(scope.setSyncDestInArray).toHaveBeenCalled();
+            expect(uibModal.open).toHaveBeenCalled();
+            expect(scope.selectedSyncDest).toEqual(scope.getEntireSyncDestInArray(testSyncDest.name));
         });
     });
 
@@ -2572,7 +2578,7 @@ describe("GeneralController", () => {
     describe("getCookie", () => {
         let result;
 
-        it("should return empty string when cookie not found", function () {
+        it("should return empty string when cookie not found", () => {
             result = scope.getCookie("badCookie");
             expect(result).toEqual("");
         });
