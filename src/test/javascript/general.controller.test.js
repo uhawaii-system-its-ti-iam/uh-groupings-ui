@@ -282,11 +282,9 @@ describe("GeneralController", () => {
         });
 
         it("should return a promise", () => {
-            scope.getPages(pagesOfGrouping.groupingPath, pagesOfGrouping.currentPage, pagesOfGrouping.PAGE_SIZE, pagesOfGrouping.sortString, pagesOfGrouping.isAscending).then((result) => {
-                expect(result).toBe(true);
-                done();
-            });
-            expect(2 + 2).toBe(4);
+            spyOn(gs, 'getGrouping').and.returnValue(Promise.resolve(true));
+            scope.getPages(pagesOfGrouping.groupingPath, pagesOfGrouping.currentPage, pagesOfGrouping.PAGE_SIZE, pagesOfGrouping.sortString, pagesOfGrouping.isAscending);
+            expect(gs.getGrouping).toHaveBeenCalled();
         });
     });
 
