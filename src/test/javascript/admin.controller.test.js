@@ -1,44 +1,44 @@
 describe("AdminController", function () {
 
-    beforeEach(module("UHGroupingsApp"));
-    beforeEach(module("ngMockE2E"));
+  beforeEach(module("UHGroupingsApp"));
+  beforeEach(module("ngMockE2E"));
 
-    let scope;
-    let controller;
-    let gs;
-    let mainCtrl;
-    let uibModal;
+  let scope;
+  let controller;
+  let gs;
+  let mainCtrl;
+  let uibModal;
 
-    let fakeModal = {
-        result: {
-            then: (confirmCallback, cancelCallBack) => {
-                this.confirmCallback = confirmCallback;
-                this.cancelCallBack = cancelCallBack;
-            }
-        },
-        close: (item) => {
-            //the user clicks OK on the modal dialog, call the stored callback w/ the selected item
-            this.result.confirmCallback(item);
-        },
-        dismiss: (type) => {
-            // The user clicked on cancel, call the stored cancel callback
-            this.result.cancelCallBack(type);
-        }
-    };
+  let fakeModal = {
+    result: {
+      then: (confirmCallback, cancelCallBack) => {
+        this.confirmCallback = confirmCallback;
+        this.cancelCallBack = cancelCallBack;
+      }
+    },
+    close: (item) => {
+      //the user clicks OK on the modal dialog, call the stored callback w/ the selected item
+      this.result.confirmCallback(item);
+    },
+    dismiss: (type) => {
+      // The user clicked on cancel, call the stored cancel callback
+      this.result.cancelCallBack(type);
+    }
+  };
 
-    beforeEach(inject(($rootScope, $controller, $uibModal, groupingsService) => {
-        scope = $rootScope.$new();
-        controller = $controller("AdminJsController", {
-            $scope: scope
-        });
-        gs = groupingsService;
-        uibModal = $uibModal;
-        spyOn($uibModal, "open").and.returnValue(fakeModal);
-    }));
-
-    it("should define the admin controller", () => {
-        expect(controller).toBeDefined();
+  beforeEach(inject(($rootScope, $controller, $uibModal, groupingsService) => {
+    scope = $rootScope.$new();
+    controller = $controller("AdminJsController", {
+      $scope: scope
     });
+    gs = groupingsService;
+    uibModal = $uibModal;
+    spyOn($uibModal, "open").and.returnValue(fakeModal);
+  }));
+
+  it("should define the admin controller", () => {
+    expect(controller).toBeDefined();
+  });
 
     describe("getAdminListsCallbackOnSuccess", () => {
         let res = {};
@@ -177,7 +177,6 @@ describe("AdminController", function () {
         it("should empty soleOwnerGroupingNames", () => {
             scope.soleOwnerGroupingNames = ["test1", "test2"];
             scope.checkSoleOwner(res);
-
             expect(scope.soleOwnerGroupingNames).toEqual([]);
         });
 
@@ -208,10 +207,57 @@ describe("AdminController", function () {
         });
     });
 
+
     describe("removeFromGroups", () => {
         beforeEach(() => {
             scope.personToLookup = "";
         });
+      
+    it("should call groupingsService.getMemberAttributes", () => {
+      spyOn(gs, "getMemberAttributes");
+      scope.removeFromGroups();
+      expect(gs.getMemberAttributes).toHaveBeenCalled();
+    });
+   });
+
+  describe("createGroupPathsAndNames", () => {
+    let selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames,
+        currentPage;
+    beforeEach(() => {
+      selectedGroupingsNames = [];
+      selectedGroupingsPaths = [];
+      selectedOwnedGroupings = [];
+      selectedOwnedGroupingsNames = [];
+      currentPage = [
+        {
+          inBasis: false,
+          inInclude: false,
+          inExclude: false,
+          inOwner: true,
+          isSelected: true,
+          path: "grouping:grouping-name-group0",
+          name: "grouping-name0"
+        },
+        {
+          inBasis: false,
+          inInclude: true,
+          inExclude: false,
+          inOwner: false,
+          isSelected: true,
+          path: "grouping:grouping-name-group1",
+          name: "grouping-name1"
+        },
+        {
+          inBasis: false,
+          inInclude: false,
+          inExclude: false,
+          inOwner: true,
+          isSelected: false,
+          path: "grouping:grouping-name-group2",
+          name: "grouping-name2"
+        }
+      ];
+    });
 
         it("should call groupingsService.getMemberAttributes", () => {
             spyOn(gs, "getMemberAttributes");

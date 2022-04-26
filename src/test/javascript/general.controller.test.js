@@ -2342,6 +2342,45 @@ describe("GeneralController", () => {
         });
     });
 
+    describe("toggleCheckAllSelection", () => { 
+        beforeEach(() => { 
+            scope.pagedItemsInclude = [
+                [
+                    {
+                        firstName: "iamtst01",
+                        inBasis: "No",
+                        lastName: "iamtst01",
+                        name: "iamtst01",
+                        uhUuid: "12345678",
+                        username: "monir",
+                    }
+                ],
+            ]
+            scope.membersInCheckboxList = scope.pagedItemsInclude;
+        });
+        
+        it("should set allSelected to true if false", () => { 
+            scope.allSelected = false;
+            scope.toggleCheckAllSelection("Include");
+            expect(scope.allSelected).toBeTrue();
+        });
+        it("should set allSelected to false if true", () => {
+            scope.allSelected = true;
+            scope.toggleCheckAllSelection("Include");
+            expect(scope.allSelected).toBeFalse();
+        });
+        it("should set the membersInCheckboxList.uhUuid to the value of scope.allSelected", () => {
+            scope.allSelected = false;
+           scope.toggleCheckAllSelection("Include");
+           expect(scope.membersInCheckboxList[((scope.pagedItemsInclude[0][0]).uhUuid)]).toEqual(true);
+        });
+        it("should set the membersInCheckboxList.uhUuid to the value of scope.allSelected", () => {
+            scope.allSelected = true;
+            scope.toggleCheckAllSelection("Include");
+            expect(scope.membersInCheckboxList[((scope.pagedItemsInclude[0][0]).uhUuid)]).toEqual(false);
+        });
+    });
+    
     describe("extractSelectedUsersFromCheckboxes", () => {
         let obj = {};
         let str = "test";
