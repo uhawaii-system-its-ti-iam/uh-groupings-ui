@@ -1,44 +1,44 @@
 describe("AdminController", function () {
 
-    beforeEach(module("UHGroupingsApp"));
-    beforeEach(module("ngMockE2E"));
+  beforeEach(module("UHGroupingsApp"));
+  beforeEach(module("ngMockE2E"));
 
-    let scope;
-    let controller;
-    let gs;
-    let mainCtrl;
-    let uibModal;
+  let scope;
+  let controller;
+  let gs;
+  let mainCtrl;
+  let uibModal;
 
-    let fakeModal = {
-        result: {
-            then: (confirmCallback, cancelCallBack) => {
-                this.confirmCallback = confirmCallback;
-                this.cancelCallBack = cancelCallBack;
-            }
-        },
-        close: (item) => {
-            //the user clicks OK on the modal dialog, call the stored callback w/ the selected item
-            this.result.confirmCallback(item);
-        },
-        dismiss: (type) => {
-            // The user clicked on cancel, call the stored cancel callback
-            this.result.cancelCallBack(type);
-        }
-    };
+  let fakeModal = {
+    result: {
+      then: (confirmCallback, cancelCallBack) => {
+        this.confirmCallback = confirmCallback;
+        this.cancelCallBack = cancelCallBack;
+      }
+    },
+    close: (item) => {
+      //the user clicks OK on the modal dialog, call the stored callback w/ the selected item
+      this.result.confirmCallback(item);
+    },
+    dismiss: (type) => {
+      // The user clicked on cancel, call the stored cancel callback
+      this.result.cancelCallBack(type);
+    }
+  };
 
-    beforeEach(inject(($rootScope, $controller, $uibModal, groupingsService) => {
-        scope = $rootScope.$new();
-        controller = $controller("AdminJsController", {
-            $scope: scope
-        });
-        gs = groupingsService;
-        uibModal = $uibModal;
-        spyOn($uibModal, "open").and.returnValue(fakeModal);
-    }));
-
-    it("should define the admin controller", () => {
-        expect(controller).toBeDefined();
+  beforeEach(inject(($rootScope, $controller, $uibModal, groupingsService) => {
+    scope = $rootScope.$new();
+    controller = $controller("AdminJsController", {
+      $scope: scope
     });
+    gs = groupingsService;
+    uibModal = $uibModal;
+    spyOn($uibModal, "open").and.returnValue(fakeModal);
+  }));
+
+  it("should define the admin controller", () => {
+    expect(controller).toBeDefined();
+  });
 
   describe("getAdminListsCallbackOnSuccess", () => {
     let res = {};
@@ -173,7 +173,7 @@ describe("AdminController", function () {
   });
 
   describe("checkSoleOwner", () => {
-    let res = {username: "testUsername", name: "testName", uhUuid: "testId"};
+    let res = { username: "testUsername", name: "testName", uhUuid: "testId" };
     it("should empty soleOwnerGroupingNames", () => {
       scope.soleOwnerGroupingNames = ["test1", "test2"];
       scope.checkSoleOwner(res);
@@ -221,7 +221,8 @@ describe("AdminController", function () {
   });
 
   describe("createGroupPathsAndNames", () => {
-    let selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames, currentPage;
+    let selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames,
+        currentPage;
     beforeEach(() => {
       selectedGroupingsNames = [];
       selectedGroupingsPaths = [];
@@ -298,21 +299,23 @@ describe("AdminController", function () {
       let checkAll = scope.checkAll;
       scope.updateCheckBoxes();
       expect(scope.checkAll).toEqual(!checkAll);
-    describe("removeAdmin", function () {
-        beforeEach(function () {
-            scope.pagedItemsAdmins[0] = "zzzz";
-        });
-        it("should call scope.createRemoveModal", () => {
-            scope.adminsList = ["iamtst01", "iamtst02", "iamtst03"];
-            spyOn(scope, "createRemoveModal");
-            scope.removeAdmin(0, 0);
-            expect(scope.createRemoveModal).toHaveBeenCalled();
-        });
-        it("should call scope.createRemoveErrorModal", function () {
-            spyOn(scope, "createRemoveErrorModal");
-            scope.removeAdmin(0, 0);
-            expect(scope.createRemoveErrorModal).toHaveBeenCalled();
-        });
+    });
+  });
+
+  describe("removeAdmin", function () {
+    beforeEach(function () {
+      scope.pagedItemsAdmins[0] = "zzzz";
+    });
+    it("should call scope.createRemoveModal", () => {
+      scope.adminsList = ["iamtst01", "iamtst02", "iamtst03"];
+      spyOn(scope, "createRemoveModal");
+      scope.removeAdmin(0, 0);
+      expect(scope.createRemoveModal).toHaveBeenCalled();
+    });
+    it("should call scope.createRemoveErrorModal", function () {
+      spyOn(scope, "createRemoveErrorModal");
+      scope.removeAdmin(0, 0);
+      expect(scope.createRemoveErrorModal).toHaveBeenCalled();
     });
   });
 
@@ -355,32 +358,32 @@ describe("AdminController", function () {
   });
 
   describe("createRemoveFromGroupsModal", () => {
-      let options = {user: {uhUuid: "testId"}, groupPaths: "testPath", listName: "testList"};
+    let options = { user: { uhUuid: "testId" }, groupPaths: "testPath", listName: "testList" };
 
-      it("should set scope variables to passed in option's object", () => {
-        scope.userToRemove = {};
-        scope.groupPaths = "badPath";
-        scope.listName = "badList";
-        scope.createRemoveFromGroupsModal(options);
+    it("should set scope variables to passed in option's object", () => {
+      scope.userToRemove = {};
+      scope.groupPaths = "badPath";
+      scope.listName = "badList";
+      scope.createRemoveFromGroupsModal(options);
 
-        expect(scope.userToRemove).toEqual({uhUuid: "testId"});
-        expect(scope.groupPaths).toBe("testPath");
-        expect(scope.listName).toBe("testList");
-        expect(scope.ownerOfListName).toBe("");
-      });
-
-      it("should call showWarningRemovingSelfFromList function", () => {
-        spyOn(scope, "showWarningRemovingSelfFromList").and.callThrough();
-        scope.createRemoveFromGroupsModal(options);
-
-        expect(scope.showWarningRemovingSelfFromList).toHaveBeenCalled();
-      });
-
-      it("should call groupingsService", () => {
-        spyOn(gs, "getMemberAttributes").and.callThrough();
-        scope.createRemoveFromGroupsModal(options);
-
-        expect(gs.getMemberAttributes).toHaveBeenCalled();
-      });
+      expect(scope.userToRemove).toEqual({ uhUuid: "testId" });
+      expect(scope.groupPaths).toBe("testPath");
+      expect(scope.listName).toBe("testList");
+      expect(scope.ownerOfListName).toBe("");
     });
+
+    it("should call showWarningRemovingSelfFromList function", () => {
+      spyOn(scope, "showWarningRemovingSelfFromList").and.callThrough();
+      scope.createRemoveFromGroupsModal(options);
+
+      expect(scope.showWarningRemovingSelfFromList).toHaveBeenCalled();
+    });
+
+    it("should call groupingsService", () => {
+      spyOn(gs, "getMemberAttributes").and.callThrough();
+      scope.createRemoveFromGroupsModal(options);
+
+      expect(gs.getMemberAttributes).toHaveBeenCalled();
+    });
+  });
 });
