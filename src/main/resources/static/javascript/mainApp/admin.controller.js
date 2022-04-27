@@ -94,6 +94,9 @@
 
             $scope.soleOwnerGroupingNames = [];
 
+            if ($scope.selectedOwnedGroupings.length === 0) {
+                $scope.removeFromGroupsCallbackOnSuccess(userToRemove);
+            }
             _.forEach($scope.selectedOwnedGroupings, function (grouping) {
                     groupingsService.isSoleOwner(grouping.path, userToRemove.username, (res) => {
                         if (res) {
