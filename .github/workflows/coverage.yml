@@ -28,7 +28,7 @@ jobs:
         java-version: 1.8
 
     - name: Build with Maven
-      run: mvn -q test jacoco:report -D'logging.level.edu.hawaii.its.uh-groupings-ui=OFF' -D'logging.level.org.springframework=ERROR' -D'spring.main.banner-mode=off'
+      run: mvn -B -q test -D'logging.level.edu.hawaii.its.groupings=OFF' -D'logging.level.edu.hawaii.its.api=OFF' -D'logging.level.org.springframework=ERROR' -D'spring.main.banner-mode=off'
 
     - name: Generate Jacoco Badge
       id: jacoco
