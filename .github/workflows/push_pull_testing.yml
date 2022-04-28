@@ -18,4 +18,4 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
     - name: Test code
-      run: mvn -B -q test -D'logging.level.edu.hawaii.its.casdemo=OFF' -D'logging.level.org.springframework=ERROR' -D'spring.main.banner-mode=off'
+      run: mvn -B -q test -D'logging.level.edu.hawaii.its.groupings=OFF' -D'logging.level.edu.hawaii.its.api=OFF' -D'logging.level.org.springframework=ERROR' -D'spring.main.banner-mode=off'
