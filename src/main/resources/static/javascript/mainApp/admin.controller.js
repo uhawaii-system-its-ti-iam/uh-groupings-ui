@@ -84,7 +84,7 @@
         };
 
         /**
-         * Checks if the user being removed is a sole owner of any grouping before proceeding 
+         * Checks if the user being removed is a sole owner of any grouping before proceeding
          */
         $scope.checkSoleOwner = function (res) {
             if (res === "") {
@@ -296,6 +296,30 @@
         function handleRemoveFromGroupsOnError() {
             $scope.loading = false;
         }
+
+        /**
+         * Copy the path of a grouping through the clipboard button
+         * @param {Object} grouping - the current selected grouping
+         */
+        $scope.copyPath = function (grouping) {
+            $("[data-content='copy']").popover("hide");
+
+            $("[data-content='copied!']").popover();
+            setTimeout(function () {
+                $("[data-content='copied!']").popover("hide");
+            }, 1000);
+
+            let copyText = document.getElementById(grouping.path);
+            copyText.select();
+            document.execCommand("copy");
+        };
+
+        /**
+         * Toggle 'copy' popover when clipboard is being hovered.
+         */
+        $scope.hoverCopy = function () {
+            $("[data-content='copy']").popover();
+        };
     }
 
     UHGroupingsApp.controller("AdminJsController", AdminJsController);
