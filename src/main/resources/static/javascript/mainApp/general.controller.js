@@ -24,7 +24,8 @@
         $scope.resetUser = [];
         $scope.resetID = [];
         $scope.resetName = [];
-        $scope.uhUuidPatern = "^[_?a-z-?@?0-9]{3,64}$";
+        // This is a regex Pattern that contains all valid UH Identifiers which consists of uid (Username) and uhUuid (UH Numbers) chars.
+        $scope.uhIdentifierPattern = new RegExp("^[_?a-z-?@?0-9]{3,64}$");
 
         // Batch delete
         $scope.memberToRemove = "";
@@ -635,9 +636,8 @@
         // Checks that a users name matches the pattern of either a valid uid or a uhUuid
         $scope.sanitizer = (name) => {
             const trimmedLowercaseName = name.toLowerCase().trim();
-            const regexPattern = new RegExp($scope.uhUuidPatern);
-            if (trimmedLowercaseName != null && regexPattern.test(trimmedLowercaseName)) {
-                const validInput = trimmedLowercaseName.match(regexPattern);
+            if (trimmedLowercaseName != null && $scope.uhIdentifierPattern.test(trimmedLowercaseName)) {
+                const validInput = trimmedLowercaseName.match($scope.uhIdentifierPattern);
                 return validInput.toString();
             }
         };
