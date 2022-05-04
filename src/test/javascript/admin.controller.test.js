@@ -219,53 +219,6 @@ describe("AdminController", function () {
       expect(gs.getMemberAttributes).toHaveBeenCalled();
     });
    });
-
-  describe("createGroupPathsAndNames", () => {
-    let selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames,
-        currentPage;
-    beforeEach(() => {
-      selectedGroupingsNames = [];
-      selectedGroupingsPaths = [];
-      selectedOwnedGroupings = [];
-      selectedOwnedGroupingsNames = [];
-      currentPage = [
-        {
-          inBasis: false,
-          inInclude: false,
-          inExclude: false,
-          inOwner: true,
-          isSelected: true,
-          path: "grouping:grouping-name-group0",
-          name: "grouping-name0"
-        },
-        {
-          inBasis: false,
-          inInclude: true,
-          inExclude: false,
-          inOwner: false,
-          isSelected: true,
-          path: "grouping:grouping-name-group1",
-          name: "grouping-name1"
-        },
-        {
-          inBasis: false,
-          inInclude: false,
-          inExclude: false,
-          inOwner: true,
-          isSelected: false,
-          path: "grouping:grouping-name-group2",
-          name: "grouping-name2"
-        }
-      ];
-    });
-
-        it("should call groupingsService.getMemberAttributes", () => {
-            spyOn(gs, "getMemberAttributes");
-            scope.removeFromGroups();
-            expect(gs.getMemberAttributes).toHaveBeenCalled();
-        });
-    });
-
     describe("createGroupPathsAndNames", () => {
         let selectedGroupingsNames, selectedGroupingsPaths, selectedOwnedGroupings, selectedOwnedGroupingsNames,
             currentPage;
